@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>One More | Descubre tu forma de empezar</title>
+  <style>
+    :root{--bg:#f5f8fc;--card:#fff;--text:#17324d;--muted:#66809a;--line:#dce7f2;--brand:#0c5bd8;--brand2:#20b486;--brand3:#8057f5;--shadow:0 20px 50px rgba(17,42,67,.10);--radius:24px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);background:radial-gradient(circle at 0% 0%, rgba(12,91,216,.08), transparent 28%),radial-gradient(circle at 100% 0%, rgba(32,180,134,.10), transparent 25%),linear-gradient(180deg,#f8fbff 0%,#f3f7fb 100%)}
+    .wrap{width:min(1080px,calc(100% - 20px));margin:18px auto 40px}.card{background:var(--card);border:1px solid rgba(255,255,255,.75);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;padding:34px;overflow:hidden;position:relative}.hero:after{content:"";position:absolute;right:-90px;bottom:-90px;width:240px;height:240px;border-radius:50%;background:linear-gradient(135deg, rgba(12,91,216,.18), rgba(32,180,134,.16));filter:blur(10px)}
+    .badge{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;border:1px solid rgba(12,91,216,.12);background:rgba(12,91,216,.08);color:var(--brand);font-weight:800}
+    h1{margin:18px 0 10px;font-size:clamp(2rem,4vw,3.25rem);line-height:1.04;letter-spacing:-.04em}.lead{margin:0;color:var(--muted);font-size:1.08rem;line-height:1.65;max-width:650px}
+    .hero-points{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:22px}.pill{padding:14px 16px;border:1px solid var(--line);border-radius:18px;background:#fbfdff;font-weight:700;color:#35536f}
+    .hero-side{display:grid;gap:14px;align-content:start}.big-stat{border-radius:24px;padding:24px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff}.big-stat small{display:block;opacity:.92;font-weight:700;margin-bottom:10px}.big-stat strong{display:block;font-size:1.9rem;line-height:1.08}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.mini{border:1px solid var(--line);background:#fbfdff;border-radius:20px;padding:18px}.mini span{display:block;color:#55728a}.mini strong{display:block;margin-top:6px;font-size:1.1rem}
+    button{border:none;cursor:pointer;font:inherit;padding:14px 18px;border-radius:16px;font-weight:800;transition:.15s ease}button:hover{transform:translateY(-1px)}
+    .btn-primary{color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));box-shadow:0 14px 30px rgba(12,91,216,.18)}.btn-secondary{color:#2c4964;background:#eef5fb;border:1px solid var(--line)}.btn-ghost{color:#60778f;background:transparent;border:1px dashed var(--line)}
+    .cta-row,.nav,.chips{display:flex;flex-wrap:wrap;gap:12px}.cta-row,.nav{margin-top:24px}.section{margin-top:18px;padding:24px}.section h2{margin:0 0 8px;font-size:1.55rem;letter-spacing:-.02em}.muted{color:var(--muted)}
+    .progress{margin:18px 0 10px;height:12px;background:#eaf1f7;border:1px solid var(--line);border-radius:999px;overflow:hidden}.progress>div{height:100%;width:0%;background:linear-gradient(90deg,var(--brand),var(--brand2));transition:width .3s ease}
+    .chip,.tag{padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:#f8fbfe;color:#62788f;font-size:.92rem;font-weight:800}.chip.active{background:rgba(12,91,216,.08);color:var(--brand);border-color:rgba(12,91,216,.18)}.tag{padding:10px 14px;display:inline-flex;align-items:center;gap:8px}
+    .step{display:none;animation:fade .25s ease}.step.active{display:block}@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}.step h3{margin:6px 0 6px;font-size:1.35rem}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}.field{display:flex;flex-direction:column;gap:8px}.field.full{grid-column:1/-1}label{font-weight:800;color:#28435d}
+    input,select,textarea{width:100%;padding:14px 15px;border-radius:16px;border:1px solid var(--line);background:#fbfdff;color:var(--text);font:inherit;outline:none}input:focus,select:focus,textarea:focus{border-color:rgba(12,91,216,.35);box-shadow:0 0 0 4px rgba(12,91,216,.08)}textarea{min-height:90px;resize:vertical}
+    .options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}.option{position:relative}.option input{position:absolute;inset:0;opacity:0;cursor:pointer}.option span{display:block;min-height:68px;padding:14px;border-radius:18px;border:1px solid var(--line);background:#fbfdff;color:#49657d;font-weight:800;line-height:1.35;transition:.15s ease}.option input:checked+span{background:rgba(12,91,216,.08);color:var(--brand);border-color:rgba(12,91,216,.18);box-shadow:0 10px 24px rgba(12,91,216,.08)}
+    .error{display:none;margin-top:14px;padding:12px 14px;border-radius:14px;background:#fff1f1;border:1px solid #f0caca;color:#a24444;line-height:1.45}.error.show{display:block}
+    .results{display:none}.results.show{display:block}.head-result{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:20px}.dash{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
+    .panel,.tile,.info-card,.final-cta,.video-card{border:1px solid var(--line);background:#fff;border-radius:22px;padding:20px}.panel h3,.info-card h4,.video-card h4{margin:0 0 10px}
+    .profile-card{background:linear-gradient(135deg,#0c5bd8,#8057f5);color:#fff;border-radius:22px;padding:22px;margin-bottom:14px}.profile-card small{opacity:.92;font-weight:700}.profile-card strong{display:block;font-size:2rem;line-height:1.05;margin-top:8px}
+    .meter{display:grid;gap:12px}.meter-item .line{height:14px;background:#eaf1f7;border-radius:999px;overflow:hidden;border:1px solid var(--line);margin-top:8px}.meter-item .fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--brand),var(--brand2));transition:width .4s ease}
+    .split{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}.tile h4{margin:0 0 8px;font-size:.98rem;color:#62788f}.tile p{margin:0;font-weight:800;line-height:1.45}
+    .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}.info-card p{margin:0;color:#56718a;line-height:1.6}
+    .video-wrap{position:relative;width:100%;padding-top:56.25%;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#eef5fb}.video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+    .future-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}.goal{padding:18px;border-radius:20px;border:1px solid var(--line);background:#fff;font-weight:800;color:#3a5a76}
+    .paths{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}.path-card{border:1px solid var(--line);border-radius:20px;background:#fff;padding:18px}.path-card.recommended{border-color:rgba(32,180,134,.28);box-shadow:0 16px 28px rgba(32,180,134,.10);background:linear-gradient(180deg, rgba(32,180,134,.06), #fff)}
+    .path-badge{display:inline-block;margin-bottom:10px;padding:7px 11px;border-radius:999px;font-size:.82rem;font-weight:800;background:rgba(32,180,134,.10);color:var(--brand2);border:1px solid rgba(32,180,134,.16)}
+    .final-cta{margin-top:18px;background:linear-gradient(135deg, rgba(12,91,216,.08), rgba(32,180,134,.10))}.final-cta h3{margin:0 0 8px}.foot{margin-top:16px;color:#6f8497;font-size:.94rem;line-height:1.55}.small-note{font-size:.9rem;color:#6f8497;line-height:1.55}
+    @media (max-width:960px){.hero,.dash,.cards,.paths,.future-grid,.split{grid-template-columns:1fr}}
+    @media (max-width:760px){.wrap{width:min(100% - 14px,1080px)}.hero,.section{padding:18px}.grid,.options,.grid-2,.hero-points{grid-template-columns:1fr}}
+    @media print{body{background:#fff}.hero .cta-row,.nav,.final-cta .cta-row{display:none!important}.card{box-shadow:none;border:1px solid #ddd}.results{display:block!important}.wrap{width:100%;margin:0}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero card">
+    <div>
+      <div class="badge">✨ One More · Descubre tu forma de empezar</div>
+      <h1>Conoce si esta oportunidad puede encajar contigo de una manera simple y clara.</h1>
+      <p class="lead">Esta experiencia está hecha para ayudarte a entender mejor tu punto de partida. No necesitas saber de negocios ni de redes para avanzar: aquí verás una ruta fácil de comprender según tu perfil.</p>
+      <div class="hero-points">
+        <div class="pill">💡 Explicación simple</div>
+        <div class="pill">📲 Resultado claro</div>
+        <div class="pill">🎥 Video integrado</div>
+        <div class="pill">🤝 Oportunidad sin presión</div>
+      </div>
+      <div class="cta-row">
+        <button class="btn-primary" onclick="document.getElementById('test').scrollIntoView({behavior:'smooth'})">Comenzar</button>
+        <button class="btn-secondary" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Ver introducción</button>
+      </div>
+    </div>
+    <div class="hero-side">
+      <div class="big-stat">
+        <small>En pocos pasos vas a descubrir</small>
+        <strong>si tu camino ideal es consumir, compartir o conocer una forma sencilla de crecer</strong>
+      </div>
+      <div class="grid-2">
+        <div class="mini"><span>🧠 Al inicio</span><strong>Detectamos tu nivel</strong></div>
+        <div class="mini"><span>📘 Luego</span><strong>Te lo explicamos fácil</strong></div>
+        <div class="mini"><span>🎯 Al final</span><strong>Te damos una ruta</strong></div>
+        <div class="mini"><span>💬 Acción</span><strong>WhatsApp directo</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section card" id="about">
+    <h2>Una forma distinta de conocer una oportunidad</h2>
+    <p class="muted">Aquí no vas a encontrar lenguaje complicado ni presión. La idea es ayudarte a ver si esta propuesta conecta contigo y explicártela según lo que ya conoces hoy.</p>
+    <div class="cards">
+      <article class="info-card">
+        <h4>Si ya conoces redes de mercadeo</h4>
+        <p>La app te hablará con términos más familiares: consumo inteligente, compartir, equipo, duplicación y plan explicado en sencillo.</p>
+      </article>
+      <article class="info-card">
+        <h4>Si no conoces este mundo</h4>
+        <p>Te lo mostraremos con palabras normales: probar, recomendar, ayudar a otros y abrir una posibilidad de ingreso sin complicaciones.</p>
+      </article>
+      <article class="info-card">
+        <h4>Todo en versión corta</h4>
+        <p>Menos preguntas, más claridad, una explicación breve y un cierre natural para seguir conversando si te interesa.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section card" id="test">
+    <h2>Cuéntame un poco de ti</h2>
+    <p class="muted">Con estas respuestas te mostraremos una explicación más ajustada a tu nivel y a tu interés actual.</p>
+    <div class="progress"><div id="progressBar"></div></div>
+    <div class="chips" id="chips"></div>
+    <div class="tag" id="stepInfo">Paso 1 de 4</div>
+    <div id="errorBox" class="error"></div>
+
+    <form id="prospectForm" novalidate>
+      <div class="step active">
+        <h3>Primero, lo más importante</h3>
+        <div class="grid">
+          <div class="field full">
+            <label for="nombre">Tu nombre</label>
+            <input id="nombre" type="text" placeholder="Ej. José Lugo">
+          </div>
+          <div class="field full">
+            <label>¿Conoces de redes de mercadeo?</label>
+            <div class="options">
+              <label class="option"><input type="radio" name="nivelRedes" value="Sí conozco de redes de mercadeo"><span>Sí conozco de redes de mercadeo</span></label>
+              <label class="option"><input type="radio" name="nivelRedes" value="No conozco de redes de mercadeo"><span>No conozco de redes de mercadeo</span></label>
+            </div>
+          </div>
+          <div class="field full">
+            <label>¿Qué te llama más la atención hoy?</label>
+            <div class="options">
+              <label class="option"><input type="radio" name="interesBase" value="Mejorar mi bienestar"><span>Mejorar mi bienestar</span></label>
+              <label class="option"><input type="radio" name="interesBase" value="Conocer productos"><span>Conocer productos</span></label>
+              <label class="option"><input type="radio" name="interesBase" value="Tener ingreso extra"><span>Tener ingreso extra</span></label>
+              <label class="option"><input type="radio" name="interesBase" value="Entender una oportunidad completa"><span>Entender una oportunidad completa</span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <h3>Tu momento actual</h3>
+        <div class="grid">
+          <div class="field full">
+            <label>¿Con cuál frase te identificas más?</label>
+            <div class="options">
+              <label class="option"><input type="radio" name="momento" value="Quiero algo práctico y simple"><span>Quiero algo práctico y simple</span></label>
+              <label class="option"><input type="radio" name="momento" value="Quiero entender bien antes de decidir"><span>Quiero entender bien antes de decidir</span></label>
+              <label class="option"><input type="radio" name="momento" value="Necesito una opción para generar más dinero"><span>Necesito una opción para generar más dinero</span></label>
+              <label class="option"><input type="radio" name="momento" value="Estoy abierto a construir algo más serio"><span>Estoy abierto a construir algo más serio</span></label>
+            </div>
+          </div>
+          <div class="field full">
+            <label>¿Qué te gustaría lograr en los próximos meses?</label>
+            <div class="options">
+              <label class="option"><input type="checkbox" name="vision" value="Sentirme mejor"><span>Sentirme mejor</span></label>
+              <label class="option"><input type="checkbox" name="vision" value="Tener más energía"><span>Tener más energía</span></label>
+              <label class="option"><input type="checkbox" name="vision" value="Ingresos extra"><span>Ingresos extra</span></label>
+              <label class="option"><input type="checkbox" name="vision" value="Más tiempo libre"><span>Más tiempo libre</span></label>
+              <label class="option"><input type="checkbox" name="vision" value="Aprender algo nuevo"><span>Aprender algo nuevo</span></label>
+              <label class="option"><input type="checkbox" name="vision" value="Ayudar a otros"><span>Ayudar a otros</span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <h3>Tu forma de avanzar</h3>
+        <div class="grid">
+          <div class="field">
+            <label for="apertura">Hoy te sientes más</label>
+            <select id="apertura">
+              <option value="">Selecciona</option>
+              <option>Solo quiero información sencilla</option>
+              <option>Quiero entender cómo funciona</option>
+              <option>Quiero ver si realmente encaja conmigo</option>
+              <option>Estoy listo para conocer la mejor forma de empezar</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="entrada">Lo que más te gustaría hacer primero</label>
+            <select id="entrada">
+              <option value="">Selecciona</option>
+              <option>Probar</option>
+              <option>Comprar y recomendar</option>
+              <option>Ver cómo generar ingreso</option>
+              <option>Entender todo el modelo</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label for="comentario">Comentario opcional</label>
+            <textarea id="comentario" placeholder="Si quieres, cuéntame qué te gustaría entender mejor."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <h3>Último paso</h3>
+        <div class="grid">
+          <div class="field full">
+            <label>¿Qué te gustaría recibir al final?</label>
+            <div class="options">
+              <label class="option"><input type="radio" name="cierrePreferido" value="Una explicación simple"><span>Una explicación simple</span></label>
+              <label class="option"><input type="radio" name="cierrePreferido" value="Una ruta para empezar poco a poco"><span>Una ruta para empezar poco a poco</span></label>
+              <label class="option"><input type="radio" name="cierrePreferido" value="Una explicación del negocio"><span>Una explicación del negocio</span></label>
+              <label class="option"><input type="radio" name="cierrePreferido" value="Una recomendación personalizada"><span>Una recomendación personalizada</span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav">
+        <button type="button" class="btn-secondary" id="prevBtn">Atrás</button>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button type="button" class="btn-ghost" onclick="resetApp()">Reiniciar</button>
+          <button type="button" class="btn-primary" id="nextBtn">Siguiente</button>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <section class="section card results" id="results">
+    <div class="head-result">
+      <div>
+        <h2 id="resultTitle">Tu resultado está listo</h2>
+        <p class="muted" id="resultLead">Aquí tienes una explicación más alineada con tu forma de entender esta oportunidad.</p>
+      </div>
+      <div class="tag" id="resultTag">Ruta recomendada</div>
+    </div>
+
+    <div class="dash">
+      <div>
+        <div class="profile-card">
+          <small>Ruta sugerida</small>
+          <strong id="profileName">Ruta</strong>
+          <p id="profileMessage" style="margin:12px 0 0;line-height:1.6;opacity:.96"></p>
+        </div>
+        <div class="panel">
+          <h3>Explicación para tu perfil</h3>
+          <p id="strategicText" class="muted" style="margin:0;line-height:1.7"></p>
+        </div>
+        <div class="split">
+          <div class="tile"><h4>Tu mejor primer paso</h4><p id="nextIdeal">-</p></div>
+          <div class="tile"><h4>Forma recomendada de empezar</h4><p id="entryType">-</p></div>
+          <div class="tile"><h4>Lenguaje usado</h4><p id="languageType">-</p></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Qué tanto encaja contigo hoy</h3>
+        <div class="meter">
+          <div class="meter-item"><strong>Bienestar</strong><div class="line"><div class="fill" id="fillWellness"></div></div></div>
+          <div class="meter-item"><strong>Productos</strong><div class="line"><div class="fill" id="fillProducts"></div></div></div>
+          <div class="meter-item"><strong>Ingreso adicional</strong><div class="line"><div class="fill" id="fillIncome"></div></div></div>
+          <div class="meter-item"><strong>Modelo de negocio</strong><div class="line"><div class="fill" id="fillBusiness"></div></div></div>
+        </div>
+        <div class="foot">Este resultado es orientativo y está pensado para que entiendas mejor cuál es tu forma más natural de entrar.</div>
+      </div>
+    </div>
+
+    <div class="section" style="padding:0;margin-top:18px">
+      <h2 id="sectionExplainTitle">Así se entiende mejor esta oportunidad</h2>
+      <div class="cards">
+        <article class="info-card">
+          <h4 id="card1Title">Empezar simple</h4>
+          <p id="card1Text">Puedes iniciar conociendo los productos y viendo si esto conecta contigo de manera real.</p>
+        </article>
+        <article class="info-card">
+          <h4 id="card2Title">Compartir con naturalidad</h4>
+          <p id="card2Text">Cuando algo te gusta y te hace sentido, compartirlo suele ser un siguiente paso natural.</p>
+        </article>
+        <article class="info-card">
+          <h4 id="card3Title">Crecer a tu ritmo</h4>
+          <p id="card3Text">No todo el mundo entra para hacer lo mismo. Algunos prueban, otros recomiendan y otros construyen más.</p>
+        </article>
+      </div>
+    </div>
+
+    <div class="video-card" style="margin-top:18px">
+      <h4>Video de referencia</h4>
+      <p class="muted" id="videoText" style="margin-top:0">Este video te ayudará a ver la idea de una forma más clara y cercana.</p>
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/Q2qhgyUifiU" title="Video One More" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
+      <p class="small-note" id="videoNote" style="margin:12px 0 0">Míralo como una referencia breve para entender mejor el enfoque.</p>
+    </div>
+
+    <div style="margin-top:18px">
+      <h2>Lo que podrías buscar en esta etapa</h2>
+      <div class="future-grid" id="futureGrid"></div>
+      <div class="panel" style="margin-top:14px">
+        <h3>Mensaje final para tu momento actual</h3>
+        <p id="futureText" class="muted" style="margin:0;line-height:1.7"></p>
+      </div>
+    </div>
+
+    <div style="margin-top:18px">
+      <h2>Tu camino puede verse así</h2>
+      <div class="paths" id="paths"></div>
+    </div>
+
+    <div class="final-cta">
+      <h3>La idea no es convencerte a la fuerza. La idea es que veas si esto hace sentido para ti.</h3>
+      <p class="muted" id="ctaText" style="margin:0;line-height:1.65"></p>
+      <div class="cta-row">
+        <button class="btn-primary" onclick="sendWhatsApp()">Quiero más información por WhatsApp</button>
+        <button class="btn-secondary" onclick="copyResult()">Copiar resultado</button>
+        <button class="btn-secondary" onclick="window.print()">Guardar / imprimir PDF</button>
+        <button class="btn-ghost" onclick="resetApp()">Hacer otra evaluación</button>
+      </div>
+    </div>
+
+    <div class="foot">Esta herramienta es una guía orientativa. Busca explicar una posibilidad de manera clara, natural y fácil de entender.</div>
+  </section>
+</div>
+
+<script>
+const WHATSAPP_NUMBER="584146950059";
+const steps=[...document.querySelectorAll(".step")],chipsBox=document.getElementById("chips"),progressBar=document.getElementById("progressBar"),stepInfo=document.getElementById("stepInfo"),nextBtn=document.getElementById("nextBtn"),prevBtn=document.getElementById("prevBtn"),errorBox=document.getElementById("errorBox"),resultsSection=document.getElementById("results"),titles=["Inicio","Momento","Forma","Final"];
+let currentStep=0,lastResult=null;
+
+function initChips(){chipsBox.innerHTML="";titles.forEach((t,i)=>{const el=document.createElement("span");el.className="chip"+(i===0?" active":"");el.textContent=t;chipsBox.appendChild(el)})}
+function updateWizard(){steps.forEach((s,i)=>s.classList.toggle("active",i===currentStep));[...chipsBox.children].forEach((c,i)=>c.classList.toggle("active",i===currentStep));progressBar.style.width=(((currentStep+1)/steps.length)*100)+"%";stepInfo.textContent=`Paso ${currentStep+1} de ${steps.length}`;prevBtn.style.visibility=currentStep===0?"hidden":"visible";nextBtn.textContent=currentStep===steps.length-1?"Ver resultado":"Siguiente";hideError()}
+function showError(msg){errorBox.textContent=msg;errorBox.classList.add("show")}
+function hideError(){errorBox.classList.remove("show");errorBox.textContent=""}
+function checkedValue(name){return document.querySelector(`input[name="${name}"]:checked`)?.value||""}
+function checkedValues(name){return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(el=>el.value)}
+function validateStep(step){
+  const nombre=document.getElementById("nombre").value.trim();
+  if(step===0){if(!nombre)return"Escribe tu nombre para personalizar el resultado.";if(!checkedValue("nivelRedes"))return"Selecciona si conoces o no conoces de redes de mercadeo.";if(!checkedValue("interesBase"))return"Selecciona qué te llama más la atención hoy."}
+  if(step===1){if(!checkedValue("momento"))return"Selecciona la frase con la que más te identificas.";if(checkedValues("vision").length===0)return"Selecciona al menos un objetivo que te gustaría lograr."}
+  if(step===2){if(!document.getElementById("apertura").value)return"Selecciona cómo te sientes hoy frente a esta oportunidad.";if(!document.getElementById("entrada").value)return"Selecciona lo que más te gustaría hacer primero."}
+  if(step===3){if(!checkedValue("cierrePreferido"))return"Selecciona qué te gustaría recibir al final."}
+  return"";
+}
+nextBtn.addEventListener("click",()=>{const err=validateStep(currentStep);if(err){showError(err);return}if(currentStep<steps.length-1){currentStep++;updateWizard()}else renderResult()});
+prevBtn.addEventListener("click",()=>{if(currentStep>0){currentStep--;updateWizard()}});
+function getFormData(){return{nombre:document.getElementById("nombre").value.trim(),nivelRedes:checkedValue("nivelRedes"),interesBase:checkedValue("interesBase"),momento:checkedValue("momento"),vision:checkedValues("vision"),apertura:document.getElementById("apertura").value,entrada:document.getElementById("entrada").value,cierrePreferido:checkedValue("cierrePreferido"),comentario:document.getElementById("comentario").value.trim()}}
+function scoreProfile(d){
+  let wellness=20,products=20,income=20,business=20;
+  if(d.interesBase==="Mejorar mi bienestar")wellness+=28;
+  if(d.interesBase==="Conocer productos")products+=28;
+  if(d.interesBase==="Tener ingreso extra")income+=28;
+  if(d.interesBase==="Entender una oportunidad completa")business+=28;
+  if(d.momento==="Quiero algo práctico y simple"){products+=10;wellness+=8}
+  if(d.momento==="Quiero entender bien antes de decidir"){products+=8;business+=8}
+  if(d.momento==="Necesito una opción para generar más dinero"){income+=18;business+=8}
+  if(d.momento==="Estoy abierto a construir algo más serio"){business+=18;income+=8}
+  d.vision.forEach(v=>{if(v==="Sentirme mejor")wellness+=8;if(v==="Tener más energía")wellness+=8;if(v==="Ingresos extra")income+=12;if(v==="Más tiempo libre")business+=8;if(v==="Aprender algo nuevo")business+=6;if(v==="Ayudar a otros")products+=6})
+  if(d.entrada==="Probar"){products+=10;wellness+=6}
+  if(d.entrada==="Comprar y recomendar"){products+=12;income+=8}
+  if(d.entrada==="Ver cómo generar ingreso"){income+=12;business+=10}
+  if(d.entrada==="Entender todo el modelo"){business+=16}
+  if(d.apertura==="Solo quiero información sencilla")products+=6;
+  if(d.apertura==="Quiero entender cómo funciona"){business+=8;products+=4}
+  if(d.apertura==="Quiero ver si realmente encaja conmigo"){wellness+=4;income+=6;business+=6}
+  if(d.apertura==="Estoy listo para conocer la mejor forma de empezar"){income+=8;business+=10}
+  const ranking=[["Bienestar",wellness],["Productos",products],["Ingreso extra",income],["Modelo de negocio",business]].sort((a,b)=>b[1]-a[1]);
+  const top=ranking[0][0],conoce=d.nivelRedes==="Sí conozco de redes de mercadeo";
+  let route="",message="",explain="",next="",entry="",cta="",future="";
+  if(top==="Bienestar"){route="Ruta Bienestar";message="Tu perfil muestra que lo más natural para ti sería empezar por la experiencia, entender el valor de los productos y ver si esto conecta contigo desde algo real.";explain=conoce?"Como ya conoces redes de mercadeo, aquí la mejor lógica sería entrar desde consumo inteligente. Primero validas experiencia, luego decides si quieres recomendar o desarrollar algo más.":"Como aún no vienes de redes de mercadeo, la forma más sencilla de verlo es esta: primero conoces, pruebas y entiendes. Después decides si esto podría tener un lugar en tu vida.";next="Conocer la experiencia primero";entry="Empezar simple, sin presión";cta="Tu mejor siguiente paso es ver la propuesta con calma, entender qué ofrece y decidir desde una experiencia auténtica.";future="A veces el mejor comienzo no es pensar en grande de inmediato, sino encontrar algo que te haga sentido y que puedas vivir con tranquilidad."}
+  else if(top==="Productos"){route="Ruta Consumo Inteligente";message="Tu resultado indica que podrías conectar muy bien con una entrada práctica: conocer productos, entender su valor y después ver si quieres compartir esta experiencia con otros.";explain=conoce?"En términos de redes, esta sería una entrada de consumo con posibilidad de sharing orgánico. Es una forma sana de conocer el sistema antes de pensar en duplicación o desarrollo.":"Dicho fácil: sería empezar usando y entendiendo. Si luego te gusta, puedes recomendarlo de forma natural a personas cercanas.";next="Probar y evaluar con criterio";entry="Comprar, conocer y decidir";cta="Tu mejor siguiente paso es ver qué opción te permitiría empezar de manera simple, clara y sin sentir que tienes que hacer más de lo que hoy deseas.";future="Cuando una propuesta se entiende fácil y se vive primero, resulta mucho más natural decidir si quieres quedarte solo con la experiencia o abrir algo más."}
+  else if(top==="Ingreso extra"){route="Ruta Ingreso Adicional";message="Tu perfil tiene una afinidad clara con una oportunidad que no solo te deja conocer productos, sino también abrir una nueva posibilidad de generar ingresos de manera más flexible.";explain=conoce?"Como ya manejas lenguaje de redes, esto puede verse como una entrada orientada a monetizar recomendación, activar consumo y mover un plan sencillo sin complicarlo.":"En palabras simples: podrías empezar con algo que te guste, aprender cómo compartirlo y convertir eso en una entrada adicional poco a poco.";next="Entender cómo se gana dinero aquí";entry="Productos + ingreso adicional";cta="Tu mejor siguiente paso es recibir una explicación clara de cómo se empieza, cómo se comparte y de qué manera esto podría transformarse en una fuente de ingreso complementaria.";future="Hay momentos en los que uno no busca solo información. Busca una nueva posibilidad. Y tu resultado muestra justamente esa apertura."}
+  else {route="Ruta Oportunidad Completa";message="Tu evaluación muestra que podrías conectar con el modelo completo: conocer el producto, entender la propuesta y ver si esta oportunidad encaja contigo de una forma más amplia.";explain=conoce?"Como ya conoces redes de mercadeo, aquí la conversación puede ir a conceptos como plan simple, desarrollo gradual, consumo, recomendación y construcción con visión.":"Dicho de forma sencilla: esta no sería solo una experiencia de producto. También podría ser una forma diferente de crecer, aprender y abrir algo propio a tu ritmo.";next="Ver la oportunidad de forma más amplia";entry="Explicación del modelo completo";cta="Tu mejor siguiente paso es recibir una guía clara para ver si esta propuesta te conviene solo como experiencia, como ingreso extra o como algo más grande.";future="Cuando una persona ve que puede empezar pequeño pero crecer si quiere, la decisión se vuelve más fácil y más natural."}
+  return{top,route,message,explain,next,entry,cta,future,values:{wellness:Math.min(100,wellness),products:Math.min(100,products),income:Math.min(100,income),business:Math.min(100,business)},languageType:conoce?"Redes de mercadeo en sencillo":"Explicación simple y clara"}
+}
+function renderFuture(goals){const box=document.getElementById("futureGrid");box.innerHTML="";goals.forEach(goal=>{const item=document.createElement("div");item.className="goal";item.textContent="✨ "+goal;box.appendChild(item)})}
+function renderPaths(result){
+  const box=document.getElementById("paths"),knows=result.languageType.includes("Redes");
+  const data=knows?[{title:"Consumir con intención",text:"Conocer el producto y vivir la experiencia como base.",rec:result.top==="Bienestar"||result.top==="Productos"},{title:"Compartir con naturalidad",text:"Recomendar desde lo que te haga sentido, sin forzar.",rec:result.top==="Productos"||result.top==="Ingreso extra"},{title:"Desarrollar si quieres más",text:"Ver el plan sencillo y crecer a tu propio ritmo.",rec:result.top==="Ingreso extra"||result.top==="Modelo de negocio"}]:[{title:"Conocer primero",text:"Entender la propuesta de una manera clara y simple.",rec:result.top==="Bienestar"||result.top==="Productos"},{title:"Probar y recomendar",text:"Si te gusta, compartirlo con personas cercanas de forma natural.",rec:result.top==="Productos"||result.top==="Ingreso extra"},{title:"Abrir una posibilidad",text:"Descubrir si esto también puede convertirse en una opción de ingreso.",rec:result.top==="Ingreso extra"||result.top==="Modelo de negocio"}];
+  box.innerHTML="";data.forEach((p,idx)=>{const el=document.createElement("article");el.className="path-card"+(p.rec?" recommended":"");el.innerHTML=`${p.rec?'<div class="path-badge">Se ve bien para ti</div>':''}<h4>${idx+1}. ${p.title}</h4><p>${p.text}</p>`;box.appendChild(el)})
+}
+function applyLanguageContent(result){
+  const knows=result.languageType.includes("Redes");
+  document.getElementById("sectionExplainTitle").textContent=knows?"Así se entiende esta oportunidad en lenguaje de redes":"Así se entiende esta oportunidad con palabras simples";
+  if(knows){
+    document.getElementById("card1Title").textContent="Consumo inteligente";
+    document.getElementById("card1Text").textContent="Puedes iniciar desde la experiencia del producto y usar eso como base antes de pensar en algo más grande.";
+    document.getElementById("card2Title").textContent="Compartir sin presión";
+    document.getElementById("card2Text").textContent="Cuando entiendes el valor, compartir se vuelve natural. No se trata de perseguir personas, sino de conversar con claridad.";
+    document.getElementById("card3Title").textContent="Plan sencillo";
+    document.getElementById("card3Text").textContent="Aquí la idea es ver el modelo de forma simple: consumo, recomendación, equipo y crecimiento gradual.";
+    document.getElementById("videoText").textContent="Este video sirve como referencia para entender el negocio de una manera directa y resumida.";
+    document.getElementById("videoNote").textContent="Úsalo como apoyo visual para ver el enfoque del negocio sin alargar demasiado la explicación.";
+  } else {
+    document.getElementById("card1Title").textContent="Empezar entendiendo";
+    document.getElementById("card1Text").textContent="Primero conoces de qué trata todo esto, sin sentir que tienes que dominar términos nuevos.";
+    document.getElementById("card2Title").textContent="Compartir algo que te haga sentido";
+    document.getElementById("card2Text").textContent="Si una experiencia te gusta, lo más normal es contárselo a otras personas. Aquí esa parte se ve así de simple.";
+    document.getElementById("card3Title").textContent="Crecer si quieres";
+    document.getElementById("card3Text").textContent="Nadie tiene que empezar grande. Puedes ir paso a paso y luego decidir si quieres abrir algo más.";
+    document.getElementById("videoText").textContent="Este video te puede ayudar a comprender la idea general del negocio en un formato más visual.";
+    document.getElementById("videoNote").textContent="Está insertado como referencia para que lo veas dentro de la app sin complicarte.";
+  }
+}
+function renderResult(){
+  const d=getFormData(),result=scoreProfile(d);lastResult={...d,...result};
+  document.getElementById("resultTitle").textContent=`${d.nombre}, tu resultado está listo`;
+  document.getElementById("resultLead").textContent="No se trata de empujarte a una decisión. Se trata de mostrarte qué camino se ve más natural para ti hoy.";
+  document.getElementById("resultTag").textContent=result.route;
+  document.getElementById("profileName").textContent=result.route;
+  document.getElementById("profileMessage").textContent=result.message;
+  document.getElementById("strategicText").textContent=result.explain;
+  document.getElementById("nextIdeal").textContent=result.next;
+  document.getElementById("entryType").textContent=result.entry;
+  document.getElementById("languageType").textContent=result.languageType;
+  document.getElementById("ctaText").textContent=result.cta;
+  document.getElementById("fillWellness").style.width=result.values.wellness+"%";
+  document.getElementById("fillProducts").style.width=result.values.products+"%";
+  document.getElementById("fillIncome").style.width=result.values.income+"%";
+  document.getElementById("fillBusiness").style.width=result.values.business+"%";
+  applyLanguageContent(result);renderFuture(d.vision);renderPaths(result);document.getElementById("futureText").textContent=result.future;
+  resultsSection.classList.add("show");resultsSection.scrollIntoView({behavior:"smooth"});
+}
+function buildWhatsAppMessage(){
+  const d=lastResult||{...getFormData(),...scoreProfile(getFormData())};
+  const text=`Hola Angélica Acosta, acabo de completar la evaluación de One More y quiero más información.
+
+*Nombre:* ${d.nombre}
+*Conocimiento de redes:* ${d.nivelRedes}
+*Lo que más me interesa:* ${d.interesBase}
+*Mi momento actual:* ${d.momento}
+*Lo que quiero lograr:* ${d.vision.join(", ")}
+*Cómo me siento hoy:* ${d.apertura}
+*Lo que me gustaría hacer primero:* ${d.entrada}
+*Lo que quería recibir al final:* ${d.cierrePreferido}
+
+*Ruta sugerida por la app:* ${d.route}
+*Mi mejor primer paso:* ${d.next}
+
+${d.comentario ? `*Comentario adicional:* ${d.comentario}
+` : ""}Quiero que me expliques cuál sería la mejor forma de empezar según mi perfil.`;
+  return encodeURIComponent(text);
+}
+function sendWhatsApp(){window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${buildWhatsAppMessage()}`,"_blank")}
+function copyResult(){
+  const d=lastResult||{...getFormData(),...scoreProfile(getFormData())};
+  const text=["Resultado One More",`Nombre: ${d.nombre}`,`Conocimiento de redes: ${d.nivelRedes}`,`Ruta sugerida: ${d.route}`,`Interés principal: ${d.interesBase}`,`Mejor primer paso: ${d.next}`].join("\n");
+  navigator.clipboard.writeText(text).then(()=>alert("Resultado copiado.")).catch(()=>alert("No se pudo copiar."));
+}
+function resetApp(){document.getElementById("prospectForm").reset();currentStep=0;lastResult=null;hideError();updateWizard();resultsSection.classList.remove("show");window.scrollTo({top:0,behavior:"smooth"})}
+initChips();updateWizard();window.sendWhatsApp=sendWhatsApp;window.copyResult=copyResult;window.resetApp=resetApp;
+</script>
+</body>
+</html>

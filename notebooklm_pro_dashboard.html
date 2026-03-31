@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NotebookLM PRO | Ventas y Reclutamiento</title>
+  <style>
+    :root{
+      --bg:#0a0a0a;
+      --bg-soft:#111111;
+      --panel:#151515;
+      --panel-2:#1c1c1c;
+      --text:#f5f0df;
+      --muted:#b7aa84;
+      --gold:#d4af37;
+      --gold-soft:#8f7330;
+      --line:rgba(212,175,55,.18);
+      --ok:#1bbf73;
+      --danger:#e05a5a;
+      --shadow:0 20px 60px rgba(0,0,0,.45);
+      --radius:20px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:linear-gradient(180deg,#050505,#0c0c0c 40%,#090909);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+    a{color:inherit;text-decoration:none}
+    button,input,textarea,select{font:inherit}
+
+    .app{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+    .sidebar{position:sticky;top:0;height:100vh;padding:26px 18px;background:rgba(9,9,9,.95);backdrop-filter:blur(8px);border-right:1px solid var(--line)}
+    .brand{padding:18px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,rgba(212,175,55,.12),rgba(212,175,55,.02));box-shadow:var(--shadow)}
+    .brand h1{margin:0;font-size:1.1rem;letter-spacing:.08em;text-transform:uppercase}
+    .brand p{margin:8px 0 0;color:var(--muted);font-size:.92rem;line-height:1.5}
+
+    .nav{margin-top:22px;display:flex;flex-direction:column;gap:8px}
+    .nav button{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border-radius:16px;border:1px solid transparent;background:transparent;color:var(--text);cursor:pointer;text-align:left;transition:.2s ease}
+    .nav button:hover,.nav button.active{background:rgba(212,175,55,.08);border-color:var(--line);transform:translateX(2px)}
+    .nav .num{width:28px;height:28px;display:grid;place-items:center;border-radius:999px;background:rgba(212,175,55,.12);color:var(--gold);font-weight:700;font-size:.85rem}
+
+    .content{padding:28px 28px 60px}
+    .hero{display:grid;grid-template-columns:1.25fr .95fr;gap:20px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+    .hero .title{font-size:clamp(2rem,4vw,3.5rem);line-height:1.05;margin:0 0 12px}
+    .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;border:1px solid var(--line);color:var(--gold);font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;background:rgba(212,175,55,.06)}
+    .lead{color:#e6dcc1;line-height:1.7;font-size:1rem}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+
+    .btn{padding:13px 18px;border-radius:14px;border:1px solid var(--line);background:var(--panel-2);color:var(--text);cursor:pointer;transition:.2s ease;display:inline-flex;align-items:center;gap:10px}
+    .btn:hover{transform:translateY(-1px);border-color:rgba(212,175,55,.36)}
+    .btn.gold{background:linear-gradient(180deg,#d4af37,#9b7b1d);color:#130f04;border:none;font-weight:800}
+    .btn.ghost{background:transparent}
+
+    .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .stat{padding:18px;border-radius:18px;background:var(--panel);border:1px solid var(--line)}
+    .stat strong{display:block;font-size:1.55rem;color:var(--gold)}
+    .stat span{display:block;margin-top:6px;color:var(--muted);line-height:1.45}
+
+    .section{margin-top:22px}
+    .section h2{margin:0 0 8px;font-size:1.5rem}
+    .section p.section-intro{margin:0 0 18px;color:#d7caab;line-height:1.7}
+
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+    .mini{padding:18px;border-radius:18px;background:var(--panel);border:1px solid var(--line)}
+    .mini h3{margin:0 0 10px;font-size:1.05rem}
+    .mini p,.mini li{color:#dccfae;line-height:1.6}
+    .mini ul{margin:0;padding-left:18px}
+
+    .tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+    .tab-btn{padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:var(--panel);cursor:pointer;color:var(--text)}
+    .tab-btn.active{background:rgba(212,175,55,.08);color:var(--gold)}
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+
+    .textarea,.input,select{width:100%;background:#0f0f0f;border:1px solid var(--line);border-radius:16px;color:var(--text);padding:14px 16px;outline:none}
+    .textarea{min-height:210px;resize:vertical;line-height:1.65}
+    .field{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+    .field label{font-size:.92rem;color:var(--muted)}
+
+    .toolbar{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+    .codebox{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;background:#0c0c0c;border:1px solid var(--line);border-radius:18px;padding:18px;color:#f1e6c8;line-height:1.65}
+
+    .checklist{display:grid;gap:10px;margin-top:10px}
+    .check{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:#0f0f0f}
+    .check input{margin-top:4px;accent-color:var(--gold)}
+    .check span{line-height:1.5;color:#e4d9bc}
+
+    .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .flow .step{padding:18px;border-radius:18px;background:var(--panel);border:1px solid var(--line);position:relative}
+    .flow .step::after{content:"→";position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:1.4rem}
+    .flow .step:last-child::after{display:none}
+    .step b{display:block;margin-bottom:8px;color:var(--gold)}
+    .step p{margin:0;color:#ddd1b4;line-height:1.55}
+
+    .footer-note{margin-top:18px;padding:16px 18px;border-left:3px solid var(--gold);background:rgba(212,175,55,.06);border-radius:0 16px 16px 0;color:#e4d9bd;line-height:1.7}
+    .hidden{display:none}
+
+    @media (max-width:1100px){
+      .app{grid-template-columns:1fr}
+      .sidebar{position:relative;height:auto}
+      .hero,.grid-3,.grid-2,.flow{grid-template-columns:1fr}
+      .stats{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:700px){
+      .content{padding:18px 16px 42px}
+      .stats{grid-template-columns:1fr}
+      .hero-actions,.toolbar,.tabs{flex-direction:column}
+      .btn,.tab-btn{width:100%;justify-content:center}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>NotebookLM PRO</h1>
+        <p>Sistema premium para vender, reclutar y posicionarte con un flujo listo para ejecutar.</p>
+      </div>
+
+      <nav class="nav" id="nav">
+        <button class="active" data-target="inicio"><span class="num">01</span> Inicio</button>
+        <button data-target="notebooks"><span class="num">02</span> Notebooks</button>
+        <button data-target="embudo"><span class="num">03</span> Embudo</button>
+        <button data-target="prompts"><span class="num">04</span> Prompts</button>
+        <button data-target="whatsapp"><span class="num">05</span> WhatsApp</button>
+        <button data-target="configuracion"><span class="num">06</span> Configuración</button>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <section id="inicio" class="page">
+        <div class="hero">
+          <div class="card">
+            <span class="eyebrow">Sistema comercial premium</span>
+            <h1 class="title">Dashboard HTML PRO para ventas y reclutamiento con NotebookLM</h1>
+            <p class="lead">Este panel organiza tus 3 notebooks estratégicos, tu embudo, tus mensajes de cierre y tus enlaces de conversión. Está diseñado para que puedas personalizarlo rápido, duplicarlo para tu equipo y usarlo como base visual de trabajo o presentación.</p>
+            <div class="hero-actions">
+              <button class="btn gold" onclick="goTo('configuracion')">Personalizar sistema</button>
+              <button class="btn" onclick="goTo('prompts')">Abrir prompts</button>
+              <button class="btn ghost" onclick="goTo('whatsapp')">Configurar cierres</button>
+            </div>
+            <div class="footer-note">
+              <strong>Importante:</strong> este HTML queda listo como sistema visual y operativo. La conexión real con NotebookLM se hace pegando los enlaces de tus notebooks y usando este panel como centro de mando. No inventa integración API que hoy no exista públicamente en este archivo.
+            </div>
+          </div>
+          <div class="card">
+            <div class="stats">
+              <div class="stat"><strong>3</strong><span>Notebooks estratégicos listos para organizar y usar.</span></div>
+              <div class="stat"><strong>30s</strong><span>Para copiar un prompt, generar un enlace y salir a vender.</span></div>
+              <div class="stat"><strong>1</strong><span>Centro de mando para producto, reclutamiento y autoridad.</span></div>
+              <div class="stat"><strong>∞</strong><span>Base duplicable para socios, líderes o campañas.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Arquitectura del sistema</h2>
+          <p class="section-intro">La lógica correcta es simple: contenido que atrae, enlace que filtra, NotebookLM que educa, WhatsApp que convierte.</p>
+          <div class="grid-3">
+            <div class="mini">
+              <h3>Notebook 1 · Reclutamiento</h3>
+              <p>Convierte prospectos en socios. Explica oportunidad, resuelve objeciones y mueve a registro o llamada.</p>
+            </div>
+            <div class="mini">
+              <h3>Notebook 2 · Producto</h3>
+              <p>Identifica necesidad, recomienda producto ideal y orienta la conversación hacia compra o seguimiento.</p>
+            </div>
+            <div class="mini">
+              <h3>Notebook 3 · Autoridad</h3>
+              <p>Educa, inspira y construye confianza para que el prospecto llegue más preparado al cierre.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="notebooks" class="page hidden">
+        <div class="section">
+          <h2>Centro de notebooks</h2>
+          <p class="section-intro">Carga tus fuentes, pega el enlace de cada notebook y usa los prompts maestros sin perder tiempo.</p>
+
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="rec">Reclutamiento</button>
+            <button class="tab-btn" data-tab="prod">Producto</button>
+            <button class="tab-btn" data-tab="auth">Autoridad</button>
+          </div>
+
+          <div class="tab-panel active" id="tab-rec">
+            <div class="grid-2">
+              <div class="card">
+                <h3>Fuentes recomendadas</h3>
+                <div class="checklist">
+                  <label class="check"><input type="checkbox"><span>Plan de compensación actualizado</span></label>
+                  <label class="check"><input type="checkbox"><span>Presentación del negocio</span></label>
+                  <label class="check"><input type="checkbox"><span>Objeciones frecuentes reales</span></label>
+                  <label class="check"><input type="checkbox"><span>Historia personal y resultados</span></label>
+                  <label class="check"><input type="checkbox"><span>Testimonios y casos de crecimiento</span></label>
+                </div>
+                <div class="field" style="margin-top:16px">
+                  <label>Enlace del notebook</label>
+                  <input class="input notebook-link" data-link="rec" placeholder="Pega aquí el enlace del notebook de reclutamiento">
+                </div>
+                <div class="toolbar">
+                  <button class="btn gold" onclick="openNotebook('rec')">Abrir notebook</button>
+                </div>
+              </div>
+              <div class="card">
+                <h3>Prompt maestro</h3>
+                <div class="codebox" id="prompt-rec">Actúa como un experto en mercadeo en red y cierre de ventas.
+
+Tu función es:
+- Educar prospectos sobre el negocio
+- Responder objeciones
+- Guiar hacia la decisión de ingreso
+
+Estilo:
+- Claro, directo, persuasivo
+- Sin presión agresiva
+- Enfocado en beneficios reales
+
+Siempre:
+1. Explica simple
+2. Refuerza oportunidad
+3. Cierra con acción (WhatsApp o registro)
+
+Si la persona duda, responde con seguridad y ejemplos.
+Si pregunta precios, redirige a valor + resultado.</div>
+                <div class="toolbar">
+                  <button class="btn" onclick="copyText('prompt-rec')">Copiar prompt</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="tab-prod">
+            <div class="grid-2">
+              <div class="card">
+                <h3>Fuentes recomendadas</h3>
+                <div class="checklist">
+                  <label class="check"><input type="checkbox"><span>Ficha de productos y beneficios</span></label>
+                  <label class="check"><input type="checkbox"><span>Ingredientes y uso correcto</span></label>
+                  <label class="check"><input type="checkbox"><span>Problemas que resuelven</span></label>
+                  <label class="check"><input type="checkbox"><span>Preguntas frecuentes de clientes</span></label>
+                  <label class="check"><input type="checkbox"><span>Testimonios y comparativas</span></label>
+                </div>
+                <div class="field" style="margin-top:16px">
+                  <label>Enlace del notebook</label>
+                  <input class="input notebook-link" data-link="prod" placeholder="Pega aquí el enlace del notebook de producto">
+                </div>
+                <div class="toolbar">
+                  <button class="btn gold" onclick="openNotebook('prod')">Abrir notebook</button>
+                </div>
+              </div>
+              <div class="card">
+                <h3>Prompt maestro</h3>
+                <div class="codebox" id="prompt-prod">Actúa como asesor experto en salud y ventas.
+
+Tu función es:
+- Recomendar productos según necesidad del cliente
+- Explicar beneficios de forma simple
+- Resolver dudas con claridad
+
+Estilo:
+- Cercano, confiable
+- Enfocado en solución
+
+Siempre:
+1. Detecta necesidad
+2. Recomienda producto ideal
+3. Explica beneficio clave
+4. Cierra con acción (compra o WhatsApp)
+
+Nunca satures con información técnica.
+Prioriza resultados.</div>
+                <div class="toolbar">
+                  <button class="btn" onclick="copyText('prompt-prod')">Copiar prompt</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="tab-auth">
+            <div class="grid-2">
+              <div class="card">
+                <h3>Fuentes recomendadas</h3>
+                <div class="checklist">
+                  <label class="check"><input type="checkbox"><span>Libros, notas y aprendizajes clave</span></label>
+                  <label class="check"><input type="checkbox"><span>Contenido de liderazgo y mentalidad</span></label>
+                  <label class="check"><input type="checkbox"><span>IA aplicada a negocio y productividad</span></label>
+                  <label class="check"><input type="checkbox"><span>Historias, reflexiones y experiencias</span></label>
+                  <label class="check"><input type="checkbox"><span>Frases, frameworks y enseñanzas útiles</span></label>
+                </div>
+                <div class="field" style="margin-top:16px">
+                  <label>Enlace del notebook</label>
+                  <input class="input notebook-link" data-link="auth" placeholder="Pega aquí el enlace del notebook de autoridad">
+                </div>
+                <div class="toolbar">
+                  <button class="btn gold" onclick="openNotebook('auth')">Abrir notebook</button>
+                </div>
+              </div>
+              <div class="card">
+                <h3>Prompt maestro</h3>
+                <div class="codebox" id="prompt-auth">Actúa como mentor en crecimiento personal, negocios y mentalidad.
+
+Tu función es:
+- Educar
+- Inspirar
+- Generar autoridad
+
+Estilo:
+- Profundo pero simple
+- Inspirador y accionable
+
+Siempre:
+1. Enseña algo útil
+2. Conecta con emociones
+3. Lleva a reflexión
+4. Sugiere acción
+
+Evita ser genérico. Sé directo y poderoso.</div>
+                <div class="toolbar">
+                  <button class="btn" onclick="copyText('prompt-auth')">Copiar prompt</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="embudo" class="page hidden">
+        <div class="section">
+          <h2>Embudo de conversión</h2>
+          <p class="section-intro">Usa este recorrido como estructura operativa para no publicar por publicar. Cada pieza debe empujar al siguiente paso.</p>
+          <div class="flow">
+            <div class="step"><b>1. Atracción</b><p>Reels, historias, carruseles, hooks, prueba social y promesa clara.</p></div>
+            <div class="step"><b>2. Filtrado</b><p>Llamada a la acción: palabra clave, formulario o WhatsApp.</p></div>
+            <div class="step"><b>3. Educación</b><p>NotebookLM resuelve dudas y calienta la intención.</p></div>
+            <div class="step"><b>4. Cierre</b><p>WhatsApp, audio, link de compra o registro con seguimiento.</p></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Mapa rápido por objetivo</h2>
+          <div class="grid-3">
+            <div class="mini">
+              <h3>Para reclutar</h3>
+              <ul>
+                <li>Contenido: libertad, ingresos, duplicación</li>
+                <li>CTA: “Escríbeme NEGOCIO”</li>
+                <li>Destino: notebook de reclutamiento</li>
+              </ul>
+            </div>
+            <div class="mini">
+              <h3>Para vender producto</h3>
+              <ul>
+                <li>Contenido: problema, dolor, solución</li>
+                <li>CTA: “Escríbeme SALUD”</li>
+                <li>Destino: notebook de producto</li>
+              </ul>
+            </div>
+            <div class="mini">
+              <h3>Para posicionarte</h3>
+              <ul>
+                <li>Contenido: educación, mentalidad, liderazgo</li>
+                <li>CTA: “Quiero aprender”</li>
+                <li>Destino: notebook de autoridad</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="prompts" class="page hidden">
+        <div class="section">
+          <h2>Prompts listos para copiar</h2>
+          <p class="section-intro">Aquí tienes comandos operativos para generar contenido, responder prospectos y acelerar cierres.</p>
+          <div class="grid-2">
+            <div class="card">
+              <h3>Prompt de contenido diario</h3>
+              <div class="codebox" id="prompt-content">Actúa como estratega y creador de contenido para redes sociales.
+
+Mi objetivo hoy es: [VISIBILIDAD / ENGAGEMENT / CAPTACIÓN].
+Mi nicho es: [NICHO].
+Mi oferta principal es: [OFERTA].
+
+Genera:
+1. Un hook fuerte
+2. Un guion corto para reel
+3. Un copy para post
+4. Un CTA que lleve a WhatsApp
+5. Una idea de historia para reforzar el mensaje
+
+Hazlo directo, persuasivo y orientado a conversión.</div>
+              <div class="toolbar"><button class="btn" onclick="copyText('prompt-content')">Copiar</button></div>
+            </div>
+            <div class="card">
+              <h3>Prompt de respuesta a objeciones</h3>
+              <div class="codebox" id="prompt-obj">Actúa como cerrador profesional.
+
+Responde la siguiente objeción de forma segura, simple y persuasiva:
+[PEGA AQUÍ LA OBJECIÓN]
+
+La respuesta debe:
+1. Validar la duda
+2. Quitar fricción
+3. Reforzar el valor
+4. Llevar a una acción concreta
+
+Evita sonar necesitado. Suena firme y elegante.</div>
+              <div class="toolbar"><button class="btn" onclick="copyText('prompt-obj')">Copiar</button></div>
+            </div>
+            <div class="card">
+              <h3>Prompt de cierre por WhatsApp</h3>
+              <div class="codebox" id="prompt-close">Actúa como experto en ventas por WhatsApp.
+
+Crea 3 respuestas de cierre para un prospecto que ya mostró interés en [PRODUCTO / NEGOCIO].
+
+Las respuestas deben tener estos tonos:
+1. Cercano y humano
+2. Seguro y directo
+3. Premium y profesional
+
+Cada una debe terminar con una invitación clara a comprar, registrarse o agendar.</div>
+              <div class="toolbar"><button class="btn" onclick="copyText('prompt-close')">Copiar</button></div>
+            </div>
+            <div class="card">
+              <h3>Prompt de seguimiento</h3>
+              <div class="codebox" id="prompt-follow">Actúa como experto en seguimiento comercial.
+
+Escribe 5 mensajes de seguimiento para una persona que pidió información pero no respondió.
+
+Condiciones:
+- No sonar intenso
+- Generar curiosidad
+- Recordar valor
+- Invitar a retomar la conversación
+
+Dame versiones para día 1, día 2, día 4, día 7 y día 10.</div>
+              <div class="toolbar"><button class="btn" onclick="copyText('prompt-follow')">Copiar</button></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="whatsapp" class="page hidden">
+        <div class="section">
+          <h2>Generador de enlaces y mensajes</h2>
+          <p class="section-intro">Configura tu número, crea mensajes listos y abre tus enlaces de cierre con un clic.</p>
+          <div class="grid-2">
+            <div class="card">
+              <div class="field">
+                <label>Número de WhatsApp con código país</label>
+                <input id="wa-number" class="input" placeholder="Ejemplo: 573001112233">
+              </div>
+              <div class="field">
+                <label>Objetivo</label>
+                <select id="wa-type">
+                  <option value="negocio">Reclutamiento</option>
+                  <option value="producto">Producto</option>
+                  <option value="autoridad">Autoridad</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Mensaje editable</label>
+                <textarea id="wa-message" class="textarea">Hola, quiero más información. Vi tu contenido y deseo conocer mejor la propuesta.</textarea>
+              </div>
+              <div class="toolbar">
+                <button class="btn gold" onclick="generateWA()">Generar enlace</button>
+                <button class="btn" onclick="fillSuggestedMessage()">Mensaje sugerido</button>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Resultado</h3>
+              <div class="field">
+                <label>Enlace generado</label>
+                <textarea id="wa-link" class="textarea" style="min-height:130px"></textarea>
+              </div>
+              <div class="toolbar">
+                <button class="btn" onclick="copyValue('wa-link')">Copiar enlace</button>
+                <button class="btn gold" onclick="openWA()">Abrir enlace</button>
+              </div>
+              <div class="footer-note">Usa enlaces distintos según campaña. Eso te ayuda a medir mejor qué contenido trae más conversaciones.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="configuracion" class="page hidden">
+        <div class="section">
+          <h2>Configuración del sistema</h2>
+          <p class="section-intro">Personaliza esta base con tu marca y guarda todo localmente en tu navegador.</p>
+          <div class="grid-2">
+            <div class="card">
+              <div class="field">
+                <label>Nombre de la marca o equipo</label>
+                <input id="brand-name" class="input" placeholder="Ejemplo: Summit Global">
+              </div>
+              <div class="field">
+                <label>Oferta principal</label>
+                <input id="brand-offer" class="input" placeholder="Ejemplo: Sistema de ventas y reclutamiento con IA">
+              </div>
+              <div class="field">
+                <label>Enlace general de WhatsApp o captura</label>
+                <input id="brand-cta" class="input" placeholder="Ejemplo: https://wa.me/573001112233">
+              </div>
+              <div class="toolbar">
+                <button class="btn gold" onclick="saveConfig()">Guardar configuración</button>
+                <button class="btn" onclick="loadConfig()">Recargar</button>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Estado actual</h3>
+              <div class="mini">
+                <p><strong>Marca:</strong> <span id="preview-brand">No definida</span></p>
+                <p><strong>Oferta:</strong> <span id="preview-offer">No definida</span></p>
+                <p><strong>CTA:</strong> <span id="preview-cta">No definido</span></p>
+              </div>
+              <div class="footer-note">Cuando quieras duplicarlo para otro líder, cambia estos campos, guarda y tendrás una nueva versión del sistema en segundos.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const pages = document.querySelectorAll('.page');
+    const navButtons = document.querySelectorAll('.nav button');
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+
+    function goTo(id){
+      pages.forEach(p => p.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+      navButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.target === id));
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    navButtons.forEach(btn => btn.addEventListener('click', () => goTo(btn.dataset.target)));
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabButtons.forEach(b => b.classList.remove('active'));
+        tabPanels.forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    async function copyText(id){
+      const txt = document.getElementById(id).innerText;
+      await navigator.clipboard.writeText(txt);
+      alert('Prompt copiado.');
+    }
+
+    async function copyValue(id){
+      const txt = document.getElementById(id).value;
+      await navigator.clipboard.writeText(txt);
+      alert('Copiado al portapapeles.');
+    }
+
+    function fillSuggestedMessage(){
+      const type = document.getElementById('wa-type').value;
+      const messages = {
+        negocio:'Hola, vi tu contenido y quiero conocer cómo funciona el negocio, qué se necesita para comenzar y si realmente hay oportunidad para mí.',
+        producto:'Hola, vi tu contenido y quiero saber qué producto me recomiendas según mi necesidad y cómo puedo adquirirlo.',
+        autoridad:'Hola, vi tu contenido y me interesa aprender más. Quiero información y orientación sobre lo que estás enseñando.'
+      };
+      document.getElementById('wa-message').value = messages[type];
+    }
+
+    function generateWA(){
+      const number = document.getElementById('wa-number').value.replace(/\D/g,'');
+      const message = encodeURIComponent(document.getElementById('wa-message').value.trim());
+      const link = number ? `https://wa.me/${number}?text=${message}` : '';
+      document.getElementById('wa-link').value = link;
+    }
+
+    function openWA(){
+      const link = document.getElementById('wa-link').value.trim();
+      if(!link){ alert('Primero genera el enlace.'); return; }
+      window.open(link,'_blank');
+    }
+
+    function openNotebook(key){
+      const input = document.querySelector(`.notebook-link[data-link="${key}"]`);
+      const url = input.value.trim();
+      if(!url){ alert('Pega primero el enlace del notebook.'); return; }
+      localStorage.setItem(`notebook_${key}`, url);
+      window.open(url, '_blank');
+    }
+
+    function saveConfig(){
+      const brand = document.getElementById('brand-name').value.trim();
+      const offer = document.getElementById('brand-offer').value.trim();
+      const cta = document.getElementById('brand-cta').value.trim();
+      localStorage.setItem('brand_name', brand);
+      localStorage.setItem('brand_offer', offer);
+      localStorage.setItem('brand_cta', cta);
+      refreshPreview();
+      alert('Configuración guardada localmente.');
+    }
+
+    function loadConfig(){
+      document.getElementById('brand-name').value = localStorage.getItem('brand_name') || '';
+      document.getElementById('brand-offer').value = localStorage.getItem('brand_offer') || '';
+      document.getElementById('brand-cta').value = localStorage.getItem('brand_cta') || '';
+      document.querySelector('.notebook-link[data-link="rec"]').value = localStorage.getItem('notebook_rec') || '';
+      document.querySelector('.notebook-link[data-link="prod"]').value = localStorage.getItem('notebook_prod') || '';
+      document.querySelector('.notebook-link[data-link="auth"]').value = localStorage.getItem('notebook_auth') || '';
+      refreshPreview();
+    }
+
+    function refreshPreview(){
+      document.getElementById('preview-brand').textContent = localStorage.getItem('brand_name') || 'No definida';
+      document.getElementById('preview-offer').textContent = localStorage.getItem('brand_offer') || 'No definida';
+      document.getElementById('preview-cta').textContent = localStorage.getItem('brand_cta') || 'No definido';
+    }
+
+    loadConfig();
+  </script>
+</body>
+</html>

@@ -3,191 +3,209 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>José Lugo | One More — Salud, Producto y Negocio</title>
-  <meta name="description" content="Landing page de alto impacto para producto y oportunidad One More con contador regresivo y cierre directo a WhatsApp." />
+  <title>José Lugo | One More ULTRA PRO</title>
+  <meta name="description" content="Landing ULTRA PRO para producto y negocio One More con auto-scroll opcional, animaciones de cierre, botón flotante dinámico y tracking local de clics." />
   <style>
     :root{
-      --bg:#0b0d10;
-      --bg2:#12161d;
-      --card:rgba(18,22,29,.92);
-      --soft:rgba(255,255,255,.04);
-      --line:rgba(214,173,84,.18);
-      --gold:#d6ad54;
-      --gold2:#f2cf85;
-      --text:#f7f2e8;
-      --muted:#c8bda8;
-      --green:#25D366;
-      --danger:#ff5c5c;
-      --shadow:0 28px 80px rgba(0,0,0,.42);
-      --radius:28px;
+      --bg:#0b0d10; --bg2:#12161d; --card:rgba(18,22,29,.92); --soft:rgba(255,255,255,.04);
+      --line:rgba(214,173,84,.18); --gold:#d6ad54; --gold2:#f2cf85; --text:#f7f2e8; --muted:#c8bda8;
+      --green:#25D366; --danger:#ff6a6a; --shadow:0 28px 80px rgba(0,0,0,.42); --radius:28px;
     }
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{
-      margin:0;
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      color:var(--text);
+      margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--text);
       background:
         radial-gradient(circle at 0% 0%, rgba(214,173,84,.10), transparent 24%),
         radial-gradient(circle at 100% 0%, rgba(37,211,102,.08), transparent 18%),
         linear-gradient(180deg,var(--bg) 0%, var(--bg2) 100%);
+      overflow-x:hidden;
     }
-    .wrap{width:min(1180px,calc(100% - 22px));margin:20px auto 52px}
+    .wrap{width:min(1180px,calc(100% - 22px));margin:20px auto 56px}
     .card{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-      backdrop-filter: blur(8px);
+      background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+      box-shadow:var(--shadow); overflow:hidden; backdrop-filter:blur(8px);
     }
     .hero{
-      display:grid;
-      grid-template-columns:1.05fr .95fr;
-      gap:24px;
-      padding:30px;
-      position:relative;
+      display:grid; grid-template-columns:1.1fr .9fr; gap:24px; padding:30px; position:relative;
+      min-height: min(88svh, 900px);
+      align-items:center;
+    }
+    .hero::before{
+      content:""; position:absolute; inset:auto -80px -90px auto; width:320px; height:320px; border-radius:50%;
+      background:radial-gradient(circle, rgba(214,173,84,.18), transparent 70%); filter:blur(10px); pointer-events:none;
     }
     .badge{
-      display:inline-flex;align-items:center;gap:10px;
-      padding:10px 14px;border-radius:999px;
-      border:1px solid var(--line);
-      color:var(--gold2);background:rgba(214,173,84,.08);
-      font-weight:800;letter-spacing:.02em;font-size:.92rem
+      display:inline-flex; align-items:center; gap:10px; padding:10px 14px; border-radius:999px;
+      border:1px solid var(--line); color:var(--gold2); background:rgba(214,173,84,.08);
+      font-weight:800; letter-spacing:.02em; font-size:.92rem
     }
     h1{
-      margin:16px 0 14px;
-      font-size:clamp(2.3rem,5vw,4.6rem);
-      line-height:.96;letter-spacing:-.05em
+      margin:16px 0 14px; font-size:clamp(2.4rem,5.4vw,5rem); line-height:.95; letter-spacing:-.05em
     }
+    h2{margin:0 0 10px; font-size:2rem; letter-spacing:-.03em}
+    h3{margin:0 0 10px}
     .gold{color:var(--gold2)}
-    .lead{
-      margin:0;color:var(--muted);line-height:1.72;font-size:1.07rem;max-width:730px
-    }
-    .cta-row,.chips{display:flex;flex-wrap:wrap;gap:12px}
+    .lead{margin:0; color:var(--muted); line-height:1.72; font-size:1.08rem; max-width:740px}
+    .cta-row,.chips{display:flex; flex-wrap:wrap; gap:12px}
     .cta-row{margin-top:24px}
     .btn{
-      border:none;text-decoration:none;cursor:pointer;
-      padding:15px 20px;border-radius:18px;font-weight:900;
-      display:inline-flex;align-items:center;justify-content:center;
-      font:inherit;transition:.15s ease
+      border:none; text-decoration:none; cursor:pointer; padding:15px 20px; border-radius:18px; font-weight:900;
+      display:inline-flex; align-items:center; justify-content:center; font:inherit; transition:.18s ease;
+      position:relative;
     }
     .btn:hover{transform:translateY(-1px)}
-    .btn-primary{
-      color:#201606;
-      background:linear-gradient(135deg,var(--gold2),var(--gold));
-      box-shadow:0 16px 36px rgba(214,173,84,.20)
-    }
-    .btn-whatsapp{
-      color:#fff;
-      background:linear-gradient(135deg,#1aa34f,var(--green));
-      box-shadow:0 16px 36px rgba(37,211,102,.18)
-    }
-    .btn-secondary{
-      color:var(--text);background:rgba(255,255,255,.05);
-      border:1px solid var(--line)
-    }
-    .hero-side{display:grid;gap:14px;align-content:start}
+    .btn-primary{color:#201606; background:linear-gradient(135deg,var(--gold2),var(--gold)); box-shadow:0 16px 36px rgba(214,173,84,.20)}
+    .btn-whatsapp{color:#fff; background:linear-gradient(135deg,#1aa34f,var(--green)); box-shadow:0 16px 36px rgba(37,211,102,.18)}
+    .btn-secondary{color:var(--text); background:rgba(255,255,255,.05); border:1px solid var(--line)}
+    .hero-side{display:grid; gap:14px; align-content:start}
     .countdown{
-      padding:22px;border-radius:26px;
-      background:linear-gradient(135deg, rgba(255,92,92,.12), rgba(214,173,84,.10));
-      border:1px solid rgba(255,92,92,.20)
+      padding:22px; border-radius:26px; background:linear-gradient(135deg, rgba(255,106,106,.12), rgba(214,173,84,.10));
+      border:1px solid rgba(255,106,106,.20)
     }
-    .countdown h3{margin:0 0 8px;font-size:1.1rem}
-    .timer{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:16px}
-    .time-box{
-      border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:18px;
-      padding:14px 10px;text-align:center
+    .countdown p,.muted{color:var(--muted)}
+    .timer{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-top:16px}
+    .time-box{border:1px solid var(--line); background:rgba(255,255,255,.04); border-radius:18px; padding:14px 10px; text-align:center}
+    .time-box strong{display:block; font-size:1.55rem}
+    .time-box span{display:block; color:var(--muted); font-size:.88rem; margin-top:4px}
+    .proof-grid,.cards-3,.products{display:grid; gap:14px}
+    .proof-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .cards-3,.products{grid-template-columns:repeat(3,minmax(0,1fr)); margin-top:16px}
+    .mini,.feature,.panel,.product-card,.video-card,.offer-box,.insight-box,.tracker-box{
+      border:1px solid var(--line); background:rgba(255,255,255,.03); border-radius:24px; padding:22px;
     }
-    .time-box strong{display:block;font-size:1.55rem}
-    .time-box span{display:block;color:var(--muted);font-size:.88rem;margin-top:4px}
-    .proof-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-    .mini{
-      border:1px solid var(--line);background:var(--soft);border-radius:22px;padding:18px
+    .mini span{display:block; color:var(--muted); margin-bottom:6px}
+    .mini strong{display:block; line-height:1.35; font-size:1.06rem}
+    .feature p,.panel p,.product-card p,.video-card p,.offer-box p,.insight-box p,.tracker-box p{
+      margin:0; color:var(--muted); line-height:1.7
     }
-    .mini span{display:block;color:var(--muted);margin-bottom:6px}
-    .mini strong{display:block;line-height:1.35;font-size:1.06rem}
-    .section{margin-top:18px;padding:26px}
-    .section h2{margin:0 0 10px;font-size:2rem;letter-spacing:-.03em}
-    .muted{color:var(--muted)}
-    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-    .cards-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}
-    .feature,.panel,.product-card,.video-card,.offer-box,.insight-box{
-      border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:24px;padding:22px
-    }
-    .feature h3,.panel h3,.product-card h3,.video-card h3,.offer-box h3,.insight-box h3{margin:0 0 10px}
-    .feature p,.panel p,.product-card p,.video-card p,.offer-box p,.insight-box p{margin:0;color:var(--muted);line-height:1.7}
+    .section{margin-top:18px; padding:26px}
+    .grid-2{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px}
     .signal{
-      margin-top:14px;padding:14px 16px;border-radius:18px;
-      background:rgba(255,92,92,.10);border:1px solid rgba(255,92,92,.18);
-      color:#ffdada;font-weight:700
+      margin-top:14px; padding:14px 16px; border-radius:18px; background:rgba(255,106,106,.10);
+      border:1px solid rgba(255,106,106,.18); color:#ffdada; font-weight:700
     }
-    .benefits{display:grid;gap:10px;margin-top:14px}
-    .benefit{
-      padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.03)
-    }
-    .products{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:16px}
+    .benefits{display:grid; gap:10px; margin-top:14px}
+    .benefit{padding:12px 14px; border-radius:16px; border:1px solid var(--line); background:rgba(255,255,255,.03)}
     .product-tag{
-      display:inline-flex;padding:8px 12px;border-radius:999px;
-      background:rgba(214,173,84,.10);border:1px solid var(--line);color:var(--gold2);
-      font-size:.86rem;font-weight:800;margin-bottom:10px
+      display:inline-flex; padding:8px 12px; border-radius:999px; background:rgba(214,173,84,.10);
+      border:1px solid var(--line); color:var(--gold2); font-size:.86rem; font-weight:800; margin-bottom:10px
     }
-    .highlight{
-      color:#fff;font-weight:800
-    }
+    .highlight{color:#fff; font-weight:800}
     .offer-box{
-      background:
-        radial-gradient(circle at 100% 0%, rgba(214,173,84,.10), transparent 22%),
-        linear-gradient(135deg, rgba(214,173,84,.08), rgba(255,255,255,.03));
+      background: radial-gradient(circle at 100% 0%, rgba(214,173,84,.10), transparent 22%),
+                  linear-gradient(135deg, rgba(214,173,84,.08), rgba(255,255,255,.03));
     }
-    .yt{
-      position:relative;width:100%;padding-top:56.25%;border-radius:20px;overflow:hidden;
-      border:1px solid var(--line);background:#000;margin-top:14px
-    }
-    .yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+    .yt{position:relative; width:100%; padding-top:56.25%; border-radius:20px; overflow:hidden; border:1px solid var(--line); background:#000; margin-top:14px}
+    .yt iframe{position:absolute; inset:0; width:100%; height:100%; border:0}
     .footer-cta{
-      margin-top:18px;padding:28px;text-align:center;
-      background:
-        radial-gradient(circle at 0% 0%, rgba(214,173,84,.12), transparent 24%),
-        linear-gradient(135deg, rgba(214,173,84,.08), rgba(255,255,255,.02));
+      margin-top:18px; padding:28px; text-align:center;
+      background: radial-gradient(circle at 0% 0%, rgba(214,173,84,.12), transparent 24%),
+                  linear-gradient(135deg, rgba(214,173,84,.08), rgba(255,255,255,.02));
     }
-    .footer-cta h2{margin:0 0 10px;font-size:clamp(1.9rem,4vw,3rem)}
-    .tiny{margin-top:14px;font-size:.93rem;color:var(--muted);line-height:1.7}
+    .footer-cta h2{font-size:clamp(2rem,4vw,3.2rem)}
+    .tiny{margin-top:14px; font-size:.93rem; color:var(--muted); line-height:1.7}
     .sticky-wa{
-      position:fixed;right:16px;bottom:16px;z-index:30
+      position:fixed; right:16px; bottom:16px; z-index:50; display:flex; flex-direction:column; gap:10px; align-items:end;
     }
+    .sticky-wa .hint{
+      max-width:240px; padding:12px 14px; border-radius:16px; background:rgba(18,22,29,.95);
+      border:1px solid rgba(255,255,255,.08); box-shadow:0 16px 36px rgba(0,0,0,.28); color:var(--text);
+      font-size:.92rem; line-height:1.45; opacity:0; transform:translateY(8px); pointer-events:none; transition:.22s ease;
+    }
+    .sticky-wa.show-hint .hint{opacity:1; transform:none}
     .sticky-wa a{
-      display:flex;align-items:center;justify-content:center;width:62px;height:62px;border-radius:50%;
-      background:linear-gradient(135deg,#1aa34f,var(--green));color:#fff;text-decoration:none;
-      box-shadow:0 18px 40px rgba(37,211,102,.28);font-size:1.6rem;border:1px solid rgba(255,255,255,.16)
+      display:flex; align-items:center; justify-content:center; width:66px; height:66px; border-radius:50%;
+      background:linear-gradient(135deg,#1aa34f,var(--green)); color:#fff; text-decoration:none;
+      box-shadow:0 18px 40px rgba(37,211,102,.28); font-size:1.7rem; border:1px solid rgba(255,255,255,.16);
+      animation:pulse 2s infinite;
     }
-    @media (max-width: 980px){
-      .hero,.grid-2,.cards-3,.products,.proof-grid,.timer{grid-template-columns:1fr}
-      .wrap{width:min(100% - 14px,1180px)}
+    .topbar{
+      position:sticky; top:0; z-index:40; margin-bottom:18px;
+      backdrop-filter:blur(8px);
+    }
+    .topbar-inner{
+      width:min(1180px,calc(100% - 22px)); margin:10px auto 0; padding:12px 16px;
+      border-radius:18px; border:1px solid var(--line); background:rgba(10,12,16,.86);
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+      box-shadow:0 16px 30px rgba(0,0,0,.18);
+    }
+    .topbar-left{display:flex; align-items:center; gap:10px; color:var(--gold2); font-weight:800}
+    .topbar-right{display:flex; align-items:center; gap:10px}
+    .toggle{
+      display:flex; align-items:center; gap:8px; color:var(--muted); font-size:.92rem;
+      border:1px solid var(--line); border-radius:999px; padding:8px 12px; background:rgba(255,255,255,.03)
+    }
+    .switch{
+      width:44px; height:24px; border-radius:999px; position:relative; background:rgba(255,255,255,.12); cursor:pointer;
+    }
+    .switch::after{
+      content:""; position:absolute; width:18px; height:18px; border-radius:50%; background:#fff; top:3px; left:3px; transition:.2s ease;
+    }
+    .switch.active{background:rgba(37,211,102,.35)}
+    .switch.active::after{left:23px}
+    .tracker-list{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-top:14px}
+    .metric{
+      border:1px solid var(--line); border-radius:18px; padding:14px; background:rgba(255,255,255,.03)
+    }
+    .metric strong{display:block; font-size:1.5rem}
+    .metric span{display:block; color:var(--muted); margin-top:4px; font-size:.9rem}
+    .fade-up{opacity:0; transform:translateY(28px); transition:opacity .7s ease, transform .7s ease}
+    .fade-up.visible{opacity:1; transform:none}
+    .closing-bar{
+      position:fixed; left:14px; right:14px; bottom:14px; z-index:45;
+      border-radius:18px; background:rgba(10,12,16,.95); border:1px solid var(--line);
+      box-shadow:0 18px 36px rgba(0,0,0,.35); padding:12px 14px; display:none; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .closing-bar.show{display:flex}
+    .closing-bar p{margin:0; color:var(--muted); line-height:1.45}
+    @keyframes pulse{
+      0%{box-shadow:0 18px 40px rgba(37,211,102,.28), 0 0 0 0 rgba(37,211,102,.22)}
+      70%{box-shadow:0 18px 40px rgba(37,211,102,.28), 0 0 0 16px rgba(37,211,102,0)}
+      100%{box-shadow:0 18px 40px rgba(37,211,102,.28), 0 0 0 0 rgba(37,211,102,0)}
+    }
+    @media (max-width:980px){
+      .hero,.grid-2,.cards-3,.products,.proof-grid,.timer,.tracker-list{grid-template-columns:1fr}
+      .wrap,.topbar-inner{width:min(100% - 14px,1180px)}
       .hero,.section,.footer-cta{padding:18px}
+      .topbar-right{flex-wrap:wrap; justify-content:end}
+      .closing-bar{flex-direction:column; align-items:stretch}
     }
   </style>
 </head>
 <body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">⚡ José Lugo · One More ULTRA PRO</div>
+      <div class="topbar-right">
+        <div class="toggle">
+          <span>Auto-scroll</span>
+          <div class="switch" id="autoScrollToggle" title="Activar auto-scroll"></div>
+        </div>
+        <button class="btn btn-secondary" id="copyReportBtn" type="button">Copiar reporte</button>
+      </div>
+    </div>
+  </div>
+
   <div class="wrap">
-    <section class="card hero">
+    <section class="card hero fade-up">
       <div>
-        <div class="badge">🔥 José Lugo · Salud + Producto + Oportunidad One More</div>
-        <h1>Tu próxima gran decisión puede empezar con un <span class="gold">producto que sí se siente</span> y convertirse en una <span class="gold">fuente real de ingresos</span>.</h1>
+        <div class="badge">🔥 Salud, producto y negocio en una sola propuesta</div>
+        <h1>Lo que hoy te preocupa en tu <span class="gold">salud</span> o en tus <span class="gold">ingresos</span> puede convertirse en tu próximo gran paso.</h1>
         <p class="lead">
-          Si buscas bienestar, resultados más claros y una vía moderna para compartir una propuesta con alto atractivo, esta página fue creada para ti. Aquí conocerás una forma distinta de hablar de salud, producto y negocio sin complicaciones.
+          Si estás buscando bienestar, resultados más claros y una forma poderosa de compartir una propuesta con alto atractivo, esta experiencia fue creada para eso. Aquí puedes abrir conversación por salud, mostrar producto con fuerza y cerrar una oportunidad real.
         </p>
-        <div class="signal">Hay personas que llegan aquí por dolor, metabolismo, energía o salud cardiovascular. Otras llegan buscando una manera de ganar dinero. Lo poderoso es que esta propuesta conecta con ambas necesidades.</div>
+        <div class="signal">Hay personas que llegan por dolor, metabolismo, energía o salud cardiovascular. Otras llegan porque necesitan una nueva forma de producir dinero. Esta página conecta con ambas.</div>
         <div class="cta-row">
-          <a class="btn btn-whatsapp" href="https://api.whatsapp.com/send?phone=584220247885&text=Hola%20Jos%C3%A9%20Lugo,%20quiero%20informaci%C3%B3n%20sobre%20producto%20y%20negocio%20One%20More." target="_blank" rel="noopener">Hablar ahora</a>
-          <a class="btn btn-primary" href="#oferta">Quiero ver la propuesta</a>
-          <a class="btn btn-secondary" href="#productos">Ver productos</a>
+          <a class="btn btn-whatsapp track-click" data-label="hero_whatsapp_ve" href="https://api.whatsapp.com/send?phone=584220247885&text=Hola%20Jos%C3%A9%20Lugo,%20quiero%20informaci%C3%B3n%20sobre%20producto%20y%20negocio%20One%20More." target="_blank" rel="noopener">Hablar ahora</a>
+          <a class="btn btn-primary track-click" data-label="hero_oferta" href="#oferta">Quiero ver la propuesta</a>
+          <a class="btn btn-secondary track-click" data-label="hero_productos" href="#productos">Ver productos</a>
         </div>
       </div>
       <div class="hero-side">
         <div class="countdown">
-          <h3>⏳ Espacio activo para atención directa</h3>
-          <p class="muted">Este acceso con respuesta prioritaria está disponible por tiempo limitado para quienes quieran orientación inmediata.</p>
+          <h3>⏳ Atención prioritaria activa</h3>
+          <p class="muted">Este acceso con respuesta rápida está disponible durante esta ventana especial. Si te interesa, entra ahora antes de que termine.</p>
           <div class="timer">
             <div class="time-box"><strong id="days">00</strong><span>Días</span></div>
             <div class="time-box"><strong id="hours">00</strong><span>Horas</span></div>
@@ -198,158 +216,183 @@
         <div class="proof-grid">
           <div class="mini"><span>Experiencia</span><strong>José Lugo · Networker con más de 16 años ayudando a personas a generar ganancias.</strong></div>
           <div class="mini"><span>Resultados</span><strong>Ganador de más de 6 cifras y líder de expansión One More.</strong></div>
-          <div class="mini"><span>Producto</span><strong>Tecnología transdérmica con absorción sostenida y uso práctico.</strong></div>
-          <div class="mini"><span>Propuesta</span><strong>Salud, producto, oportunidad global, plan y sistema.</strong></div>
+          <div class="mini"><span>Diferenciación</span><strong>Tecnología transdérmica con absorción sostenida y conversación comercial potente.</strong></div>
+          <div class="mini"><span>Modelo</span><strong>Producto, oportunidad global, plan y sistema.</strong></div>
         </div>
       </div>
     </section>
 
-    <section class="card section">
-      <h2>¿Por qué esta propuesta despierta tanto interés?</h2>
-      <p class="muted">Porque toca dos motivaciones profundas: sentirse mejor y abrir una nueva ruta económica. No se trata solo de vender un producto, sino de mostrar una experiencia que puede mejorar la vida y al mismo tiempo construir ingresos.</p>
+    <section class="card section fade-up">
+      <h2>¿Por qué esta propuesta se queda en la mente?</h2>
+      <p class="muted">Porque no habla solo de vender. Habla de algo que la gente realmente quiere: sentirse mejor, verse mejor, vivir con más energía y abrir una vía económica con una historia comercial fuerte.</p>
       <div class="cards-3">
         <article class="feature">
-          <h3>Bienestar que conecta</h3>
-          <p>La conversación comienza donde más duele: dolor, inflamación, energía, metabolismo, bienestar y resultados reales.</p>
+          <h3>Bienestar que toca una necesidad real</h3>
+          <p>Dolor, inflamación, metabolismo, energía y salud cardiovascular son conversaciones que ya existen todos los días.</p>
         </article>
         <article class="feature">
-          <h3>Una tecnología distinta</h3>
-          <p>La aplicación transdérmica despierta curiosidad, genera recordación y ofrece una forma más atractiva de explicar valor.</p>
+          <h3>Un formato que despierta curiosidad</h3>
+          <p>La tecnología transdérmica cambia la forma en que se presenta el valor y eleva el interés del prospecto.</p>
         </article>
         <article class="feature">
-          <h3>Negocio con sentido</h3>
-          <p>Cuando una persona ve valor y lo entiende, es mucho más natural que quiera compartirlo y desarrollar una oportunidad.</p>
+          <h3>Un negocio que no nace en frío</h3>
+          <p>Cuando una persona entiende el producto, el paso hacia compartirlo se vuelve mucho más natural.</p>
         </article>
       </div>
     </section>
 
-    <section class="card section">
-      <h2>La realidad que muchas personas ya están viviendo</h2>
+    <section class="card section fade-up">
+      <h2>Lo que mucha gente está viviendo hoy</h2>
       <div class="grid-2">
         <article class="insight-box">
-          <h3>Lo que pasa hoy</h3>
-          <p>Muchas personas viven con cansancio, dolor, inflamación, metabolismo lento o sienten que invierten en productos que no generan la diferencia esperada. Cuando eso se prolonga, también se resiente la productividad, el ánimo y la economía personal.</p>
+          <h3>Una necesidad que no se puede ignorar</h3>
+          <p>Muchas personas viven con dolor, cansancio, metabolismo lento, poco avance o con la sensación de que invierten en productos que no entusiasman ni generan fidelidad.</p>
           <div class="benefits">
-            <div class="benefit">❌ Menos energía para vivir y producir.</div>
-            <div class="benefit">❌ Más frustración por resultados lentos o poco visibles.</div>
-            <div class="benefit">❌ Más gasto en soluciones que no entusiasman ni fidelizan.</div>
+            <div class="benefit">❌ Menos energía para producir y disfrutar.</div>
+            <div class="benefit">❌ Más frustración por resultados poco claros.</div>
+            <div class="benefit">❌ Más gasto y menos emoción con lo que consumen.</div>
           </div>
         </article>
         <article class="insight-box">
-          <h3>Lo que esta página te muestra</h3>
-          <p>Existe una forma más llamativa de presentar bienestar y una oportunidad más simple de compartirla. Cuando el producto tiene historia, diferenciación y conversación, el interés se eleva y el cierre se vuelve más natural.</p>
+          <h3>Una propuesta que cambia la conversación</h3>
+          <p>Cuando presentas una tecnología distinta, beneficios concretos y una oportunidad global, el interés sube. Y cuando el interés sube, el cierre se facilita.</p>
           <div class="benefits">
-            <div class="benefit">✅ Más claridad para explicar.</div>
-            <div class="benefit">✅ Más curiosidad en el prospecto.</div>
-            <div class="benefit">✅ Más opciones para comprar o entrar al negocio.</div>
+            <div class="benefit">✅ Más curiosidad y mejor recordación.</div>
+            <div class="benefit">✅ Más herramientas para vender o reclutar.</div>
+            <div class="benefit">✅ Más razones para tomar acción hoy.</div>
           </div>
         </article>
       </div>
-      <div class="offer-box" style="margin-top:18px;">
-        <h3>Lo que hace atractiva esta solución</h3>
-        <p>One More reúne tecnología transdérmica, una línea de productos con beneficios concretos y una oportunidad global para quienes quieran consumir, recomendar o expandir un equipo. Todo esto te permite hablar de salud con mayor impacto y del negocio con una base más sólida.</p>
-      </div>
     </section>
 
-    <section class="card section" id="productos">
-      <h2>Productos que ayudan a abrir conversación y mover decisiones</h2>
-      <p class="muted">Aquí tienes tres líneas con mucho potencial para atraer atención, generar confianza y llevar a una compra o a una conversación de negocio.</p>
+    <section class="card section fade-up" id="productos">
+      <h2>Productos que ayudan a mover decisiones</h2>
+      <p class="muted">Tres líneas con alto potencial para abrir interés, generar confianza y llevar a la compra o al negocio.</p>
       <div class="products">
         <article class="product-card">
           <div class="product-tag">Painless Night GLU</div>
-          <h3>Para quienes quieren moverse sin dolor</h3>
-          <p>Se presenta como apoyo para aliviar dolor, recuperar movilidad, reducir inflamación y mejorar sensación de bienestar. Es una puerta muy fuerte para conversaciones con personas que ya están cansadas de sentir malestar diario.</p>
+          <h3>Para quienes no quieren seguir limitados por el dolor</h3>
+          <p>Una propuesta muy poderosa para personas cansadas de convivir con malestar, inflamación o movilidad reducida.</p>
           <div class="benefits">
-            <div class="benefit">✅ Apoya alivio del dolor</div>
-            <div class="benefit">✅ Ayuda a recuperar movilidad</div>
-            <div class="benefit">✅ Conecta con una necesidad muy urgente</div>
+            <div class="benefit">✅ Ayuda a hablar de alivio y movilidad</div>
+            <div class="benefit">✅ Conecta con urgencia real</div>
+            <div class="benefit">✅ Tiene alto potencial de cierre</div>
+          </div>
+          <div class="cta-row">
+            <a class="btn btn-secondary track-click" data-label="producto_painless" href="https://api.whatsapp.com/send?phone=584220247885&text=Hola%20Jos%C3%A9%20Lugo,%20quiero%20informaci%C3%B3n%20de%20Painless%20Night." target="_blank">Me interesa</a>
           </div>
         </article>
         <article class="product-card">
           <div class="product-tag">Slimstyle</div>
-          <h3>Para quienes quieren cambiar cuerpo y energía</h3>
-          <p>Ideal para hablar de control de peso, metabolismo, saciedad y mejora progresiva sin entrar en el terreno de lo complicado. Tiene una narrativa comercial muy potente porque conecta con imagen, salud y resultados visibles.</p>
+          <h3>Para quienes quieren ver cambios en cuerpo y energía</h3>
+          <p>Una línea muy comercial para conversaciones sobre control de peso, metabolismo y mejora progresiva.</p>
           <div class="benefits">
-            <div class="benefit">✅ Ayuda a regular el metabolismo</div>
+            <div class="benefit">✅ Ayuda a regular metabolismo</div>
             <div class="benefit">✅ Contribuye a la saciedad</div>
-            <div class="benefit">✅ Tiene alto atractivo comercial</div>
+            <div class="benefit">✅ Genera atracción comercial inmediata</div>
+          </div>
+          <div class="cta-row">
+            <a class="btn btn-secondary track-click" data-label="producto_slimstyle" href="https://api.whatsapp.com/send?phone=584220247885&text=Hola%20Jos%C3%A9%20Lugo,%20quiero%20informaci%C3%B3n%20de%20Slimstyle." target="_blank">Me interesa</a>
           </div>
         </article>
         <article class="product-card">
           <div class="product-tag">Omevia</div>
-          <h3>Para quienes quieren fortalecer el corazón y el bienestar general</h3>
-          <p>Una opción poderosa para hablar de salud cardiovascular, presión arterial, colesterol, cerebro, sistema inmune y vitalidad. Muy útil para públicos adultos que valoran la prevención y la estabilidad.</p>
+          <h3>Para quienes quieren cuidar corazón y bienestar general</h3>
+          <p>Muy útil para públicos adultos que valoran prevención, energía, estabilidad y salud cardiovascular.</p>
           <div class="benefits">
-            <div class="benefit">✅ Apoya salud cardiovascular</div>
-            <div class="benefit">✅ Fortalece percepción de valor</div>
-            <div class="benefit">✅ Facilita conversaciones de largo plazo</div>
+            <div class="benefit">✅ Conversación sólida y madura</div>
+            <div class="benefit">✅ Atractivo para clientes constantes</div>
+            <div class="benefit">✅ Excelente puente al negocio</div>
+          </div>
+          <div class="cta-row">
+            <a class="btn btn-secondary track-click" data-label="producto_omevia" href="https://api.whatsapp.com/send?phone=584220247885&text=Hola%20Jos%C3%A9%20Lugo,%20quiero%20informaci%C3%B3n%20de%20Omevia." target="_blank">Me interesa</a>
           </div>
         </article>
       </div>
     </section>
 
-    <section class="card section">
-      <h2>Lo que muchos no están viendo todavía</h2>
+    <section class="card section fade-up">
+      <h2>Lo que muchos no están aprovechando todavía</h2>
       <div class="grid-2">
         <article class="panel">
-          <h3>Una manera distinta de hablar de absorción</h3>
-          <p>La tecnología transdérmica te permite presentar una historia comercial mucho más interesante: aplicación simple, continuidad, comodidad y una forma diferente de introducir ingredientes activos sin depender solo del tracto digestivo.</p>
+          <h3>Una narrativa comercial diferente</h3>
+          <p>Presentar producto con una vía distinta de aplicación mejora la curiosidad, hace la conversación más memorable y da más argumentos para compartir.</p>
         </article>
         <article class="panel">
-          <h3>Una puerta natural hacia el negocio</h3>
-          <p><span class="highlight">Cuando alguien ve valor en lo que puede usar</span>, entiende mucho más rápido por qué otras personas también podrían comprarlo. Ahí es donde nace la oportunidad.</p>
+          <h3>Una experiencia que puede escalar</h3>
+          <p><span class="highlight">Quien usa y valora</span> entiende mejor por qué otras personas podrían querer lo mismo. Ahí nace el camino hacia ingresos.</p>
         </article>
       </div>
     </section>
 
-    <section class="card section">
-      <h2>Esto no termina en producto. Ahí comienza.</h2>
-      <p class="muted">Quien entra por bienestar puede quedarse por resultados. Quien se queda por resultados puede abrir una nueva forma de generar ingresos. Y quien entra con visión, puede construir una red con apoyo, claridad y expansión.</p>
+    <section class="card section fade-up">
+      <h2>Lo que viene después de entenderlo bien</h2>
+      <p class="muted">La experiencia puede comenzar con salud, seguir con producto y abrir la puerta al negocio. Quien entra con visión encuentra una ruta clara para construir.</p>
       <div class="cards-3">
         <article class="feature">
-          <h3>Primero experiencia</h3>
-          <p>La persona se conecta con algo útil, concreto y fácil de comprender.</p>
+          <h3>Primero se conecta</h3>
+          <p>La persona entiende algo útil, concreto y fácil de imaginar en su vida.</p>
         </article>
         <article class="feature">
-          <h3>Después recomendación</h3>
-          <p>Cuando hay valor percibido, compartirlo deja de sentirse forzado.</p>
+          <h3>Luego se interesa</h3>
+          <p>Al ver valor, la conversación cambia y se vuelve mucho más seria.</p>
         </article>
         <article class="feature">
-          <h3>Luego crecimiento</h3>
-          <p>Con la orientación correcta, esa recomendación puede escalar a una estructura de ganancias.</p>
+          <h3>Después decide</h3>
+          <p>Puede comprar, puede probar, puede compartir o puede construir una estructura.</p>
         </article>
       </div>
       <div class="offer-box" id="oferta" style="margin-top:18px;">
         <h3>Tu siguiente paso ideal</h3>
-        <p>Hoy puedes hacer una de estas dos cosas: <span class="highlight">empezar con producto</span> y ver por ti mismo el valor, o <span class="highlight">evaluar el negocio</span> con José Lugo y descubrir cómo entrar con visión. Lo más inteligente es no salir de esta página sin tomar una acción.</p>
+        <p>Hoy puedes hacer una de estas dos cosas: <span class="highlight">entrar por producto</span> o <span class="highlight">evaluar el negocio</span> con José Lugo. La mejor decisión es no salir sin tomar una acción concreta.</p>
         <div class="cta-row">
-          <a class="btn btn-whatsapp" href="https://api.whatsapp.com/send?phone=584220247885&text=Hola%20Jos%C3%A9%20Lugo,%20quiero%20comprar%20producto%20One%20More." target="_blank" rel="noopener">Quiero producto</a>
-          <a class="btn btn-primary" href="https://api.whatsapp.com/send?phone=573126387467&text=Hola%20Jos%C3%A9%20Lugo,%20quiero%20evaluar%20el%20negocio%20One%20More." target="_blank" rel="noopener">Quiero ver el negocio</a>
+          <a class="btn btn-whatsapp track-click" data-label="oferta_producto" href="https://api.whatsapp.com/send?phone=584220247885&text=Hola%20Jos%C3%A9%20Lugo,%20quiero%20comprar%20producto%20One%20More." target="_blank" rel="noopener">Quiero producto</a>
+          <a class="btn btn-primary track-click" data-label="oferta_negocio" href="https://api.whatsapp.com/send?phone=573126387467&text=Hola%20Jos%C3%A9%20Lugo,%20quiero%20evaluar%20el%20negocio%20One%20More." target="_blank" rel="noopener">Quiero ver el negocio</a>
         </div>
       </div>
     </section>
 
-    <section class="card section video-card">
+    <section class="card section video-card fade-up">
       <h2>Video de referencia</h2>
-      <p class="muted">Una pieza visual para que el prospecto vea mejor la propuesta y llegue más preparado a la conversación contigo.</p>
+      <p class="muted">Úsalo para reforzar visión y aumentar el deseo de avanzar a la conversación directa.</p>
       <div class="yt">
         <iframe src="https://www.youtube.com/embed/Q2qhgyUifiU" title="Video One More" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
       </div>
     </section>
 
-    <section class="card footer-cta">
+    <section class="card section tracker-box fade-up">
+      <h2>Tracking local de clics</h2>
+      <p>Este panel guarda en el navegador un registro local de interacción para que tengas una referencia rápida de qué elementos están recibiendo más interés.</p>
+      <div class="tracker-list">
+        <div class="metric"><strong id="m-total">0</strong><span>Clics totales</span></div>
+        <div class="metric"><strong id="m-wa">0</strong><span>Clics WhatsApp</span></div>
+        <div class="metric"><strong id="m-producto">0</strong><span>Clics producto</span></div>
+        <div class="metric"><strong id="m-negocio">0</strong><span>Clics negocio</span></div>
+      </div>
+      <div class="cta-row">
+        <button class="btn btn-secondary" id="resetTrackingBtn" type="button">Reiniciar tracking</button>
+      </div>
+    </section>
+
+    <section class="card footer-cta fade-up">
       <h2>La persona correcta puede entrar aquí por <span class="gold">salud</span> y terminar construyendo una nueva historia de <span class="gold">ingresos</span>.</h2>
-      <p class="muted">No cierres esta página sin escribirle a José Lugo. Si esto resonó contigo, da el siguiente paso ahora. Y si conoces a alguien que necesita bienestar, producto o una oportunidad más seria, compártesela hoy.</p>
+      <p class="muted">No cierres esta página sin escribirle a José Lugo. Si esto resonó contigo, da el siguiente paso ahora.</p>
       <div class="cta-row" style="justify-content:center;">
-        <a class="btn btn-whatsapp" href="https://api.whatsapp.com/send?phone=584220247885&text=Hola%20Jos%C3%A9%20Lugo,%20quiero%20m%C3%A1s%20informaci%C3%B3n%20ahora." target="_blank" rel="noopener">Escribir al +58 422 024 7885</a>
-        <a class="btn btn-primary" href="https://api.whatsapp.com/send?phone=573126387467&text=Hola%20Jos%C3%A9%20Lugo,%20quiero%20que%20me%20expliques%20todo%20el%20negocio." target="_blank" rel="noopener">Escribir al +57 312 638 7467</a>
+        <a class="btn btn-whatsapp track-click" data-label="footer_ve" href="https://api.whatsapp.com/send?phone=584220247885&text=Hola%20Jos%C3%A9%20Lugo,%20quiero%20m%C3%A1s%20informaci%C3%B3n%20ahora." target="_blank" rel="noopener">Escribir al +58 422 024 7885</a>
+        <a class="btn btn-primary track-click" data-label="footer_co" href="https://api.whatsapp.com/send?phone=573126387467&text=Hola%20Jos%C3%A9%20Lugo,%20quiero%20que%20me%20expliques%20todo%20el%20negocio." target="_blank" rel="noopener">Escribir al +57 312 638 7467</a>
       </div>
       <div class="tiny">José Lugo · Networker con más de 16 años de experiencia ayudando a personas a generar ganancias · Ganador de más de 6 cifras · Líder de expansión One More.</div>
     </section>
   </div>
 
-  <div class="sticky-wa">
-    <a href="https://api.whatsapp.com/send?phone=584220247885&text=Hola%20Jos%C3%A9%20Lugo,%20vi%20la%20landing%20y%20quiero%20informaci%C3%B3n." target="_blank" rel="noopener">✆</a>
+  <div class="sticky-wa" id="stickyWa">
+    <div class="hint">¿Te interesa producto o negocio? Escríbeme ahora y te explico el mejor siguiente paso.</div>
+    <a class="track-click" data-label="sticky_whatsapp" href="https://api.whatsapp.com/send?phone=584220247885&text=Hola%20Jos%C3%A9%20Lugo,%20vi%20la%20landing%20y%20quiero%20informaci%C3%B3n." target="_blank" rel="noopener">✆</a>
+  </div>
+
+  <div class="closing-bar" id="closingBar">
+    <p><strong style="color:#fff">Antes de salir:</strong> si esta propuesta hizo sentido para ti, da el siguiente paso ahora.</p>
+    <a class="btn btn-whatsapp track-click" data-label="closing_bar" href="https://api.whatsapp.com/send?phone=584220247885&text=Hola%20Jos%C3%A9%20Lugo,%20quiero%20informaci%C3%B3n%20antes%20de%20salir." target="_blank" rel="noopener">Quiero información</a>
   </div>
 
   <script>
@@ -359,20 +402,155 @@
     function updateTimer(){
       const now = new Date().getTime();
       const distance = deadline.getTime() - now;
-
       const days = Math.max(0, Math.floor(distance / (1000 * 60 * 60 * 24)));
       const hours = Math.max(0, Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
       const minutes = Math.max(0, Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)));
       const seconds = Math.max(0, Math.floor((distance % (1000 * 60)) / 1000));
-
       document.getElementById("days").textContent = String(days).padStart(2,"0");
       document.getElementById("hours").textContent = String(hours).padStart(2,"0");
       document.getElementById("minutes").textContent = String(minutes).padStart(2,"0");
       document.getElementById("seconds").textContent = String(seconds).padStart(2,"0");
     }
-
     updateTimer();
     setInterval(updateTimer, 1000);
+
+    // reveal on scroll
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      })
+    }, {threshold: .12});
+    document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+
+    // auto scroll
+    let autoScrollOn = false;
+    let autoScrollInterval = null;
+    const toggle = document.getElementById('autoScrollToggle');
+
+    function startAutoScroll(){
+      if(autoScrollInterval) clearInterval(autoScrollInterval);
+      autoScrollInterval = setInterval(()=>{
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const next = window.scrollY + 1.2;
+        if(next >= maxScroll - 2){
+          clearInterval(autoScrollInterval);
+          autoScrollOn = false;
+          toggle.classList.remove('active');
+        } else {
+          window.scrollTo({top: next, behavior: 'auto'});
+        }
+      }, 18);
+    }
+
+    function stopAutoScroll(){
+      if(autoScrollInterval) clearInterval(autoScrollInterval);
+      autoScrollInterval = null;
+    }
+
+    toggle.addEventListener('click', ()=>{
+      autoScrollOn = !autoScrollOn;
+      toggle.classList.toggle('active', autoScrollOn);
+      if(autoScrollOn) startAutoScroll();
+      else stopAutoScroll();
+    });
+
+    ['wheel','touchstart','keydown'].forEach(evt=>{
+      window.addEventListener(evt, ()=>{
+        if(autoScrollOn){
+          autoScrollOn = false;
+          toggle.classList.remove('active');
+          stopAutoScroll();
+        }
+      }, {passive:true});
+    });
+
+    // tracking local
+    const STORE_KEY = 'oneMoreJoseLugoTracking';
+    const baseTracking = { total:0, wa:0, producto:0, negocio:0, events:[] };
+
+    function getTracking(){
+      try{
+        return JSON.parse(localStorage.getItem(STORE_KEY)) || structuredClone(baseTracking);
+      }catch(e){
+        return JSON.parse(JSON.stringify(baseTracking));
+      }
+    }
+
+    function saveTracking(data){
+      localStorage.setItem(STORE_KEY, JSON.stringify(data));
+      renderTracking();
+    }
+
+    function registerClick(label){
+      const t = getTracking();
+      t.total += 1;
+      if(String(label).includes('whatsapp') || String(label).includes('_ve') || String(label).includes('_co') || String(label).includes('sticky')) t.wa += 1;
+      if(String(label).includes('producto') || String(label).includes('painless') || String(label).includes('slimstyle') || String(label).includes('omevia')) t.producto += 1;
+      if(String(label).includes('negocio')) t.negocio += 1;
+      t.events.unshift({ label, at: new Date().toISOString() });
+      t.events = t.events.slice(0, 20);
+      saveTracking(t);
+    }
+
+    function renderTracking(){
+      const t = getTracking();
+      document.getElementById('m-total').textContent = t.total;
+      document.getElementById('m-wa').textContent = t.wa;
+      document.getElementById('m-producto').textContent = t.producto;
+      document.getElementById('m-negocio').textContent = t.negocio;
+    }
+
+    document.querySelectorAll('.track-click').forEach(el=>{
+      el.addEventListener('click', ()=> registerClick(el.dataset.label || 'click'));
+    });
+
+    document.getElementById('resetTrackingBtn').addEventListener('click', ()=>{
+      localStorage.removeItem(STORE_KEY);
+      renderTracking();
+      alert('Tracking reiniciado.');
+    });
+
+    document.getElementById('copyReportBtn').addEventListener('click', ()=>{
+      const t = getTracking();
+      const lines = [
+        'Reporte local de clics',
+        'Clics totales: ' + t.total,
+        'Clics WhatsApp: ' + t.wa,
+        'Clics producto: ' + t.producto,
+        'Clics negocio: ' + t.negocio,
+        '',
+        'Últimos eventos:'
+      ];
+      t.events.forEach(ev => lines.push('- ' + ev.label + ' | ' + ev.at));
+      navigator.clipboard.writeText(lines.join('\n')).then(()=> alert('Reporte copiado.'));
+    });
+
+    renderTracking();
+
+    // floating whatsapp dynamic hint
+    const stickyWa = document.getElementById('stickyWa');
+    setTimeout(()=> stickyWa.classList.add('show-hint'), 2600);
+    setTimeout(()=> stickyWa.classList.remove('show-hint'), 9000);
+
+    // closing bar near page end
+    const closingBar = document.getElementById('closingBar');
+    window.addEventListener('scroll', ()=>{
+      const progress = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
+      if(progress > 0.63) closingBar.classList.add('show');
+      else closingBar.classList.remove('show');
+    });
+
+    // exit intent on desktop
+    let exitShown = false;
+    document.addEventListener('mouseout', (e)=>{
+      if(e.clientY <= 0 && !exitShown){
+        exitShown = true;
+        closingBar.classList.add('show');
+      }
+    });
   </script>
 </body>
 </html>

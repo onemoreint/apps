@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>José Lugo | One More — Salud, Producto y Negocio</title>
+  <meta name="description" content="Landing page de alto impacto para producto y oportunidad One More con contador regresivo y cierre directo a WhatsApp." />
+  <style>
+    :root{
+      --bg:#0b0d10;
+      --bg2:#12161d;
+      --card:rgba(18,22,29,.92);
+      --soft:rgba(255,255,255,.04);
+      --line:rgba(214,173,84,.18);
+      --gold:#d6ad54;
+      --gold2:#f2cf85;
+      --text:#f7f2e8;
+      --muted:#c8bda8;
+      --green:#25D366;
+      --danger:#ff5c5c;
+      --shadow:0 28px 80px rgba(0,0,0,.42);
+      --radius:28px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(214,173,84,.10), transparent 24%),
+        radial-gradient(circle at 100% 0%, rgba(37,211,102,.08), transparent 18%),
+        linear-gradient(180deg,var(--bg) 0%, var(--bg2) 100%);
+    }
+    .wrap{width:min(1180px,calc(100% - 22px));margin:20px auto 52px}
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      backdrop-filter: blur(8px);
+    }
+    .hero{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:24px;
+      padding:30px;
+      position:relative;
+    }
+    .badge{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:10px 14px;border-radius:999px;
+      border:1px solid var(--line);
+      color:var(--gold2);background:rgba(214,173,84,.08);
+      font-weight:800;letter-spacing:.02em;font-size:.92rem
+    }
+    h1{
+      margin:16px 0 14px;
+      font-size:clamp(2.3rem,5vw,4.6rem);
+      line-height:.96;letter-spacing:-.05em
+    }
+    .gold{color:var(--gold2)}
+    .lead{
+      margin:0;color:var(--muted);line-height:1.72;font-size:1.07rem;max-width:730px
+    }
+    .cta-row,.chips{display:flex;flex-wrap:wrap;gap:12px}
+    .cta-row{margin-top:24px}
+    .btn{
+      border:none;text-decoration:none;cursor:pointer;
+      padding:15px 20px;border-radius:18px;font-weight:900;
+      display:inline-flex;align-items:center;justify-content:center;
+      font:inherit;transition:.15s ease
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{
+      color:#201606;
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 16px 36px rgba(214,173,84,.20)
+    }
+    .btn-whatsapp{
+      color:#fff;
+      background:linear-gradient(135deg,#1aa34f,var(--green));
+      box-shadow:0 16px 36px rgba(37,211,102,.18)
+    }
+    .btn-secondary{
+      color:var(--text);background:rgba(255,255,255,.05);
+      border:1px solid var(--line)
+    }
+    .hero-side{display:grid;gap:14px;align-content:start}
+    .countdown{
+      padding:22px;border-radius:26px;
+      background:linear-gradient(135deg, rgba(255,92,92,.12), rgba(214,173,84,.10));
+      border:1px solid rgba(255,92,92,.20)
+    }
+    .countdown h3{margin:0 0 8px;font-size:1.1rem}
+    .timer{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:16px}
+    .time-box{
+      border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:18px;
+      padding:14px 10px;text-align:center
+    }
+    .time-box strong{display:block;font-size:1.55rem}
+    .time-box span{display:block;color:var(--muted);font-size:.88rem;margin-top:4px}
+    .proof-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .mini{
+      border:1px solid var(--line);background:var(--soft);border-radius:22px;padding:18px
+    }
+    .mini span{display:block;color:var(--muted);margin-bottom:6px}
+    .mini strong{display:block;line-height:1.35;font-size:1.06rem}
+    .section{margin-top:18px;padding:26px}
+    .section h2{margin:0 0 10px;font-size:2rem;letter-spacing:-.03em}
+    .muted{color:var(--muted)}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .cards-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}
+    .feature,.panel,.product-card,.video-card,.offer-box,.insight-box{
+      border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:24px;padding:22px
+    }
+    .feature h3,.panel h3,.product-card h3,.video-card h3,.offer-box h3,.insight-box h3{margin:0 0 10px}
+    .feature p,.panel p,.product-card p,.video-card p,.offer-box p,.insight-box p{margin:0;color:var(--muted);line-height:1.7}
+    .signal{
+      margin-top:14px;padding:14px 16px;border-radius:18px;
+      background:rgba(255,92,92,.10);border:1px solid rgba(255,92,92,.18);
+      color:#ffdada;font-weight:700
+    }
+    .benefits{display:grid;gap:10px;margin-top:14px}
+    .benefit{
+      padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.03)
+    }
+    .products{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:16px}
+    .product-tag{
+      display:inline-flex;padding:8px 12px;border-radius:999px;
+      background:rgba(214,173,84,.10);border:1px solid var(--line);color:var(--gold2);
+      font-size:.86rem;font-weight:800;margin-bottom:10px
+    }
+    .highlight{
+      color:#fff;font-weight:800
+    }
+    .offer-box{
+      background:
+        radial-gradient(circle at 100% 0%, rgba(214,173,84,.10), transparent 22%),
+        linear-gradient(135deg, rgba(214,173,84,.08), rgba(255,255,255,.03));
+    }
+    .yt{
+      position:relative;width:100%;padding-top:56.25%;border-radius:20px;overflow:hidden;
+      border:1px solid var(--line);background:#000;margin-top:14px
+    }
+    .yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+    .footer-cta{
+      margin-top:18px;padding:28px;text-align:center;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(214,173,84,.12), transparent 24%),
+        linear-gradient(135deg, rgba(214,173,84,.08), rgba(255,255,255,.02));
+    }
+    .footer-cta h2{margin:0 0 10px;font-size:clamp(1.9rem,4vw,3rem)}
+    .tiny{margin-top:14px;font-size:.93rem;color:var(--muted);line-height:1.7}
+    .sticky-wa{
+      position:fixed;right:16px;bottom:16px;z-index:30
+    }
+    .sticky-wa a{
+      display:flex;align-items:center;justify-content:center;width:62px;height:62px;border-radius:50%;
+      background:linear-gradient(135deg,#1aa34f,var(--green));color:#fff;text-decoration:none;
+      box-shadow:0 18px 40px rgba(37,211,102,.28);font-size:1.6rem;border:1px solid rgba(255,255,255,.16)
+    }
+    @media (max-width: 980px){
+      .hero,.grid-2,.cards-3,.products,.proof-grid,.timer{grid-template-columns:1fr}
+      .wrap{width:min(100% - 14px,1180px)}
+      .hero,.section,.footer-cta{padding:18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="card hero">
+      <div>
+        <div class="badge">🔥 José Lugo · Salud + Producto + Oportunidad One More</div>
+        <h1>Tu próxima gran decisión puede empezar con un <span class="gold">producto que sí se siente</span> y convertirse en una <span class="gold">fuente real de ingresos</span>.</h1>
+        <p class="lead">
+          Si buscas bienestar, resultados más claros y una vía moderna para compartir una propuesta con alto atractivo, esta página fue creada para ti. Aquí conocerás una forma distinta de hablar de salud, producto y negocio sin complicaciones.
+        </p>
+        <div class="signal">Hay personas que llegan aquí por dolor, metabolismo, energía o salud cardiovascular. Otras llegan buscando una manera de ganar dinero. Lo poderoso es que esta propuesta conecta con ambas necesidades.</div>
+        <div class="cta-row">
+          <a class="btn btn-whatsapp" href="https://api.whatsapp.com/send?phone=584220247885&text=Hola%20Jos%C3%A9%20Lugo,%20quiero%20informaci%C3%B3n%20sobre%20producto%20y%20negocio%20One%20More." target="_blank" rel="noopener">Hablar ahora</a>
+          <a class="btn btn-primary" href="#oferta">Quiero ver la propuesta</a>
+          <a class="btn btn-secondary" href="#productos">Ver productos</a>
+        </div>
+      </div>
+      <div class="hero-side">
+        <div class="countdown">
+          <h3>⏳ Espacio activo para atención directa</h3>
+          <p class="muted">Este acceso con respuesta prioritaria está disponible por tiempo limitado para quienes quieran orientación inmediata.</p>
+          <div class="timer">
+            <div class="time-box"><strong id="days">00</strong><span>Días</span></div>
+            <div class="time-box"><strong id="hours">00</strong><span>Horas</span></div>
+            <div class="time-box"><strong id="minutes">00</strong><span>Minutos</span></div>
+            <div class="time-box"><strong id="seconds">00</strong><span>Segundos</span></div>
+          </div>
+        </div>
+        <div class="proof-grid">
+          <div class="mini"><span>Experiencia</span><strong>José Lugo · Networker con más de 16 años ayudando a personas a generar ganancias.</strong></div>
+          <div class="mini"><span>Resultados</span><strong>Ganador de más de 6 cifras y líder de expansión One More.</strong></div>
+          <div class="mini"><span>Producto</span><strong>Tecnología transdérmica con absorción sostenida y uso práctico.</strong></div>
+          <div class="mini"><span>Propuesta</span><strong>Salud, producto, oportunidad global, plan y sistema.</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card section">
+      <h2>¿Por qué esta propuesta despierta tanto interés?</h2>
+      <p class="muted">Porque toca dos motivaciones profundas: sentirse mejor y abrir una nueva ruta económica. No se trata solo de vender un producto, sino de mostrar una experiencia que puede mejorar la vida y al mismo tiempo construir ingresos.</p>
+      <div class="cards-3">
+        <article class="feature">
+          <h3>Bienestar que conecta</h3>
+          <p>La conversación comienza donde más duele: dolor, inflamación, energía, metabolismo, bienestar y resultados reales.</p>
+        </article>
+        <article class="feature">
+          <h3>Una tecnología distinta</h3>
+          <p>La aplicación transdérmica despierta curiosidad, genera recordación y ofrece una forma más atractiva de explicar valor.</p>
+        </article>
+        <article class="feature">
+          <h3>Negocio con sentido</h3>
+          <p>Cuando una persona ve valor y lo entiende, es mucho más natural que quiera compartirlo y desarrollar una oportunidad.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="card section">
+      <h2>La realidad que muchas personas ya están viviendo</h2>
+      <div class="grid-2">
+        <article class="insight-box">
+          <h3>Lo que pasa hoy</h3>
+          <p>Muchas personas viven con cansancio, dolor, inflamación, metabolismo lento o sienten que invierten en productos que no generan la diferencia esperada. Cuando eso se prolonga, también se resiente la productividad, el ánimo y la economía personal.</p>
+          <div class="benefits">
+            <div class="benefit">❌ Menos energía para vivir y producir.</div>
+            <div class="benefit">❌ Más frustración por resultados lentos o poco visibles.</div>
+            <div class="benefit">❌ Más gasto en soluciones que no entusiasman ni fidelizan.</div>
+          </div>
+        </article>
+        <article class="insight-box">
+          <h3>Lo que esta página te muestra</h3>
+          <p>Existe una forma más llamativa de presentar bienestar y una oportunidad más simple de compartirla. Cuando el producto tiene historia, diferenciación y conversación, el interés se eleva y el cierre se vuelve más natural.</p>
+          <div class="benefits">
+            <div class="benefit">✅ Más claridad para explicar.</div>
+            <div class="benefit">✅ Más curiosidad en el prospecto.</div>
+            <div class="benefit">✅ Más opciones para comprar o entrar al negocio.</div>
+          </div>
+        </article>
+      </div>
+      <div class="offer-box" style="margin-top:18px;">
+        <h3>Lo que hace atractiva esta solución</h3>
+        <p>One More reúne tecnología transdérmica, una línea de productos con beneficios concretos y una oportunidad global para quienes quieran consumir, recomendar o expandir un equipo. Todo esto te permite hablar de salud con mayor impacto y del negocio con una base más sólida.</p>
+      </div>
+    </section>
+
+    <section class="card section" id="productos">
+      <h2>Productos que ayudan a abrir conversación y mover decisiones</h2>
+      <p class="muted">Aquí tienes tres líneas con mucho potencial para atraer atención, generar confianza y llevar a una compra o a una conversación de negocio.</p>
+      <div class="products">
+        <article class="product-card">
+          <div class="product-tag">Painless Night GLU</div>
+          <h3>Para quienes quieren moverse sin dolor</h3>
+          <p>Se presenta como apoyo para aliviar dolor, recuperar movilidad, reducir inflamación y mejorar sensación de bienestar. Es una puerta muy fuerte para conversaciones con personas que ya están cansadas de sentir malestar diario.</p>
+          <div class="benefits">
+            <div class="benefit">✅ Apoya alivio del dolor</div>
+            <div class="benefit">✅ Ayuda a recuperar movilidad</div>
+            <div class="benefit">✅ Conecta con una necesidad muy urgente</div>
+          </div>
+        </article>
+        <article class="product-card">
+          <div class="product-tag">Slimstyle</div>
+          <h3>Para quienes quieren cambiar cuerpo y energía</h3>
+          <p>Ideal para hablar de control de peso, metabolismo, saciedad y mejora progresiva sin entrar en el terreno de lo complicado. Tiene una narrativa comercial muy potente porque conecta con imagen, salud y resultados visibles.</p>
+          <div class="benefits">
+            <div class="benefit">✅ Ayuda a regular el metabolismo</div>
+            <div class="benefit">✅ Contribuye a la saciedad</div>
+            <div class="benefit">✅ Tiene alto atractivo comercial</div>
+          </div>
+        </article>
+        <article class="product-card">
+          <div class="product-tag">Omevia</div>
+          <h3>Para quienes quieren fortalecer el corazón y el bienestar general</h3>
+          <p>Una opción poderosa para hablar de salud cardiovascular, presión arterial, colesterol, cerebro, sistema inmune y vitalidad. Muy útil para públicos adultos que valoran la prevención y la estabilidad.</p>
+          <div class="benefits">
+            <div class="benefit">✅ Apoya salud cardiovascular</div>
+            <div class="benefit">✅ Fortalece percepción de valor</div>
+            <div class="benefit">✅ Facilita conversaciones de largo plazo</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="card section">
+      <h2>Lo que muchos no están viendo todavía</h2>
+      <div class="grid-2">
+        <article class="panel">
+          <h3>Una manera distinta de hablar de absorción</h3>
+          <p>La tecnología transdérmica te permite presentar una historia comercial mucho más interesante: aplicación simple, continuidad, comodidad y una forma diferente de introducir ingredientes activos sin depender solo del tracto digestivo.</p>
+        </article>
+        <article class="panel">
+          <h3>Una puerta natural hacia el negocio</h3>
+          <p><span class="highlight">Cuando alguien ve valor en lo que puede usar</span>, entiende mucho más rápido por qué otras personas también podrían comprarlo. Ahí es donde nace la oportunidad.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="card section">
+      <h2>Esto no termina en producto. Ahí comienza.</h2>
+      <p class="muted">Quien entra por bienestar puede quedarse por resultados. Quien se queda por resultados puede abrir una nueva forma de generar ingresos. Y quien entra con visión, puede construir una red con apoyo, claridad y expansión.</p>
+      <div class="cards-3">
+        <article class="feature">
+          <h3>Primero experiencia</h3>
+          <p>La persona se conecta con algo útil, concreto y fácil de comprender.</p>
+        </article>
+        <article class="feature">
+          <h3>Después recomendación</h3>
+          <p>Cuando hay valor percibido, compartirlo deja de sentirse forzado.</p>
+        </article>
+        <article class="feature">
+          <h3>Luego crecimiento</h3>
+          <p>Con la orientación correcta, esa recomendación puede escalar a una estructura de ganancias.</p>
+        </article>
+      </div>
+      <div class="offer-box" id="oferta" style="margin-top:18px;">
+        <h3>Tu siguiente paso ideal</h3>
+        <p>Hoy puedes hacer una de estas dos cosas: <span class="highlight">empezar con producto</span> y ver por ti mismo el valor, o <span class="highlight">evaluar el negocio</span> con José Lugo y descubrir cómo entrar con visión. Lo más inteligente es no salir de esta página sin tomar una acción.</p>
+        <div class="cta-row">
+          <a class="btn btn-whatsapp" href="https://api.whatsapp.com/send?phone=584220247885&text=Hola%20Jos%C3%A9%20Lugo,%20quiero%20comprar%20producto%20One%20More." target="_blank" rel="noopener">Quiero producto</a>
+          <a class="btn btn-primary" href="https://api.whatsapp.com/send?phone=573126387467&text=Hola%20Jos%C3%A9%20Lugo,%20quiero%20evaluar%20el%20negocio%20One%20More." target="_blank" rel="noopener">Quiero ver el negocio</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="card section video-card">
+      <h2>Video de referencia</h2>
+      <p class="muted">Una pieza visual para que el prospecto vea mejor la propuesta y llegue más preparado a la conversación contigo.</p>
+      <div class="yt">
+        <iframe src="https://www.youtube.com/embed/Q2qhgyUifiU" title="Video One More" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
+    </section>
+
+    <section class="card footer-cta">
+      <h2>La persona correcta puede entrar aquí por <span class="gold">salud</span> y terminar construyendo una nueva historia de <span class="gold">ingresos</span>.</h2>
+      <p class="muted">No cierres esta página sin escribirle a José Lugo. Si esto resonó contigo, da el siguiente paso ahora. Y si conoces a alguien que necesita bienestar, producto o una oportunidad más seria, compártesela hoy.</p>
+      <div class="cta-row" style="justify-content:center;">
+        <a class="btn btn-whatsapp" href="https://api.whatsapp.com/send?phone=584220247885&text=Hola%20Jos%C3%A9%20Lugo,%20quiero%20m%C3%A1s%20informaci%C3%B3n%20ahora." target="_blank" rel="noopener">Escribir al +58 422 024 7885</a>
+        <a class="btn btn-primary" href="https://api.whatsapp.com/send?phone=573126387467&text=Hola%20Jos%C3%A9%20Lugo,%20quiero%20que%20me%20expliques%20todo%20el%20negocio." target="_blank" rel="noopener">Escribir al +57 312 638 7467</a>
+      </div>
+      <div class="tiny">José Lugo · Networker con más de 16 años de experiencia ayudando a personas a generar ganancias · Ganador de más de 6 cifras · Líder de expansión One More.</div>
+    </section>
+  </div>
+
+  <div class="sticky-wa">
+    <a href="https://api.whatsapp.com/send?phone=584220247885&text=Hola%20Jos%C3%A9%20Lugo,%20vi%20la%20landing%20y%20quiero%20informaci%C3%B3n." target="_blank" rel="noopener">✆</a>
+  </div>
+
+  <script>
+    const deadline = new Date();
+    deadline.setHours(deadline.getHours() + 47);
+
+    function updateTimer(){
+      const now = new Date().getTime();
+      const distance = deadline.getTime() - now;
+
+      const days = Math.max(0, Math.floor(distance / (1000 * 60 * 60 * 24)));
+      const hours = Math.max(0, Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+      const minutes = Math.max(0, Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)));
+      const seconds = Math.max(0, Math.floor((distance % (1000 * 60)) / 1000));
+
+      document.getElementById("days").textContent = String(days).padStart(2,"0");
+      document.getElementById("hours").textContent = String(hours).padStart(2,"0");
+      document.getElementById("minutes").textContent = String(minutes).padStart(2,"0");
+      document.getElementById("seconds").textContent = String(seconds).padStart(2,"0");
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+  </script>
+</body>
+</html>

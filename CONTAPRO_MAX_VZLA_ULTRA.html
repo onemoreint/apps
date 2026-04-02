@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CONTAPRO MAX VZLA ULTRA</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --gold:#c9a84c;
+  --gold2:#e8c96d;
+  --gold-dark:#8a6a1f;
+  --bg:#080c10;
+  --bg2:#0e1318;
+  --bg3:#141b22;
+  --bg4:#1a2330;
+  --border:#1e2d3d;
+  --border-gold:rgba(201,168,76,0.25);
+  --text:#e8edf2;
+  --text2:#8fa3b8;
+  --text3:#4d6278;
+  --success:#2a9d6c;
+  --danger:#c94c4c;
+  --info:#4c8ec9;
+  --sidebar-w:270px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;background:var(--bg2);border-bottom:1px solid var(--border-gold);padding:0 28px;height:60px;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:900;color:#0a0c0e;font-size:14px}
+.logo-text{font-family:'Playfair Display',serif;font-weight:700;font-size:18px;color:var(--gold2);letter-spacing:1px}
+.logo-sub{font-size:10px;color:var(--text2);letter-spacing:3px;text-transform:uppercase;margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:16px;font-size:12px;color:var(--text2)}
+.tag{background:var(--border);border:1px solid var(--border-gold);padding:4px 12px;border-radius:20px;font-size:11px;color:var(--gold);letter-spacing:1px}
+#reloj{font-variant-numeric:tabular-nums;font-size:13px;color:var(--text2)}
+
+/* ── LAYOUT ── */
+.wrap{display:flex;flex:1}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar-w);background:var(--bg2);border-right:1px solid var(--border);padding:24px 0;display:flex;flex-direction:column;position:sticky;top:60px;height:calc(100vh - 60px)}
+.nav-section{padding:8px 20px 4px;font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-top:12px}
+.nav-btn{display:flex;align-items:center;gap:12px;width:100%;padding:12px 20px;background:transparent;border:none;color:var(--text2);cursor:pointer;text-align:left;font-family:'DM Sans',sans-serif;font-size:13.5px;transition:all .18s;position:relative;border-left:3px solid transparent}
+.nav-btn svg{width:16px;height:16px;flex-shrink:0;opacity:.65}
+.nav-btn:hover{background:var(--bg3);color:var(--text);border-left-color:var(--border-gold)}
+.nav-btn.active{background:var(--bg4);color:var(--gold2);border-left-color:var(--gold);font-weight:500}
+.nav-btn.active svg{opacity:1}
+.sidebar-footer{margin-top:auto;padding:20px;border-top:1px solid var(--border)}
+.legal-badge{font-size:10px;color:var(--text3);line-height:1.6;text-align:center}
+.legal-badge span{display:block;color:var(--gold-dark);font-weight:600;letter-spacing:1px}
+
+/* ── MAIN ── */
+.main{flex:1;overflow-y:auto;padding:28px 32px;background:var(--bg)}
+
+/* ── SECTION ── */
+.section{display:none;animation:fadeIn .25s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── PAGE HEADER ── */
+.page-header{margin-bottom:28px}
+.page-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--text);letter-spacing:.3px}
+.page-sub{font-size:13px;color:var(--text2);margin-top:4px}
+
+/* ── CARDS ── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px}
+.card-title{font-size:13px;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.card-title::before{content:'';width:3px;height:14px;background:var(--gold);border-radius:2px;display:block}
+
+/* ── STATS GRID ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:18px 20px}
+.stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
+.stat-value{font-size:22px;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums}
+.stat-change{font-size:11px;margin-top:4px}
+.stat-change.up{color:var(--success)}
+.stat-change.down{color:var(--danger)}
+.stat.accent{border-color:var(--border-gold);background:linear-gradient(135deg,rgba(201,168,76,.08),var(--bg3))}
+.stat.accent .stat-value{color:var(--gold2)}
+
+/* ── FORMS ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-grid.thirds{grid-template-columns:1fr 1fr 1fr}
+.form-grid.full{grid-template-columns:1fr}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1.2px;font-weight:500}
+.field input,.field select,.field textarea{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13.5px;transition:border .15s;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold-dark);background:var(--bg4)}
+.field select option{background:var(--bg3)}
+.field-span{grid-column:1/-1}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border:none;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:500;transition:all .15s}
+.btn-primary{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#0a0c0e}
+.btn-primary:hover{filter:brightness(1.1)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--border-gold);color:var(--text)}
+.btn-danger{background:rgba(201,76,76,.15);color:#e07070;border:1px solid rgba(201,76,76,.3)}
+.btn-success{background:rgba(42,157,108,.15);color:#5dd4a0;border:1px solid rgba(42,157,108,.3)}
+.btn-row{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+
+/* ── TABLES ── */
+.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border);margin-top:16px}
+table{width:100%;border-collapse:collapse}
+th{background:var(--bg3);padding:12px 16px;text-align:left;font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;border-bottom:1px solid var(--border)}
+td{padding:12px 16px;font-size:13.5px;border-bottom:1px solid var(--border);color:var(--text2)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg3);color:var(--text)}
+td.num{font-variant-numeric:tabular-nums;font-weight:500;color:var(--gold2)}
+td.neg{color:var(--danger)}
+td.pos{color:var(--success)}
+
+/* ── ALERT BOXES ── */
+.alert{border-radius:8px;padding:12px 16px;font-size:13px;margin:12px 0;display:flex;align-items:flex-start;gap:10px}
+.alert-info{background:rgba(76,142,201,.1);border:1px solid rgba(76,142,201,.25);color:#89bde0}
+.alert-warn{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);color:var(--gold2)}
+.alert-success{background:rgba(42,157,108,.1);border:1px solid rgba(42,157,108,.25);color:#5dd4a0}
+.alert-danger{background:rgba(201,76,76,.1);border:1px solid rgba(201,76,76,.25);color:#e07070}
+
+/* ── NOMINA RESULT ── */
+.nomina-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.nom-item{background:var(--bg3);border-radius:8px;padding:14px 16px;border:1px solid var(--border)}
+.nom-item-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:6px}
+.nom-item-val{font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
+.nom-item-val.gold{color:var(--gold2)}
+.nom-item-val.red{color:var(--danger)}
+.nom-item-val.green{color:var(--success)}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:4px;background:var(--bg3);border-radius:10px;padding:4px;margin-bottom:20px;width:fit-content}
+.tab{padding:8px 18px;border-radius:7px;border:none;background:transparent;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;transition:all .15s}
+.tab.active{background:var(--bg2);color:var(--gold);border:1px solid var(--border-gold)}
+
+/* ── IVA ── */
+.iva-breakdown{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px}
+
+/* ── BALANCE ── */
+.balance-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.balance-block{background:var(--bg3);border-radius:10px;border:1px solid var(--border);padding:16px}
+.balance-block h4{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px}
+.balance-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+.balance-row:last-child{border-bottom:none}
+.balance-total{display:flex;justify-content:space-between;padding:10px 0 0;font-weight:600;color:var(--gold2)}
+
+/* ── BADGE ── */
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:.5px}
+.badge-gold{background:rgba(201,168,76,.15);color:var(--gold2);border:1px solid rgba(201,168,76,.3)}
+.badge-green{background:rgba(42,157,108,.15);color:#5dd4a0;border:1px solid rgba(42,157,108,.3)}
+.badge-red{background:rgba(201,76,76,.15);color:#e07070;border:1px solid rgba(201,76,76,.3)}
+.badge-blue{background:rgba(76,142,201,.15);color:#89bde0;border:1px solid rgba(76,142,201,.3)}
+
+/* ── DIVIDER ── */
+.divider{border:none;border-top:1px solid var(--border);margin:20px 0}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:40px 20px;color:var(--text3)}
+.empty-icon{font-size:32px;margin-bottom:10px;opacity:.4}
+.empty p{font-size:13px}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--border-gold)}
+
+/* ── MODAL OVERLAY ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border-gold);border-radius:14px;padding:28px;width:520px;max-width:95vw}
+.modal-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--gold2);margin-bottom:20px}
+.modal-close{float:right;background:transparent;border:none;color:var(--text3);font-size:18px;cursor:pointer;margin-top:-4px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .sidebar{display:none}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .form-grid.thirds{grid-template-columns:1fr 1fr}
+  .balance-cols{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-icon">CP</div>
+    <div>
+      <div class="logo-text">CONTAPRO MAX</div>
+      <div class="logo-sub">Venezuela · Edición Profesional</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span class="tag">LOTTT · SENIAT · BCV</span>
+    <span id="reloj">--:--:--</span>
+    <span id="empBadge" class="badge badge-gold">Sin empresa</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="nav-section">General</div>
+  <button class="nav-btn active" onclick="show('dashboard')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    Dashboard
+  </button>
+  <button class="nav-btn" onclick="show('empresa')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4"/></svg>
+    Empresa
+  </button>
+
+  <div class="nav-section">Contabilidad</div>
+  <button class="nav-btn" onclick="show('cuentas')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    Plan de Cuentas
+  </button>
+  <button class="nav-btn" onclick="show('diario')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    Libro Diario
+  </button>
+  <button class="nav-btn" onclick="show('mayor')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18M3 12h18M3 21h18"/></svg>
+    Libro Mayor
+  </button>
+  <button class="nav-btn" onclick="show('balance')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+    Balance General
+  </button>
+
+  <div class="nav-section">Operaciones</div>
+  <button class="nav-btn" onclick="show('nomina')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    Nómina LOTTT
+  </button>
+  <button class="nav-btn" onclick="show('factura')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+    Facturación
+  </button>
+  <button class="nav-btn" onclick="show('iva')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    IVA / SENIAT
+  </button>
+  <button class="nav-btn" onclick="show('inventario')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+    Inventario
+  </button>
+
+  <div class="sidebar-footer">
+    <div class="legal-badge">
+      <span>Marco Legal Venezolano</span>
+      LOTTT · RLOTTT · LAISS · LIVA<br>
+      Código de Comercio · BCV
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- ── DASHBOARD ── -->
+  <div id="dashboard" class="section active">
+    <div class="page-header">
+      <div class="page-title" id="dashTitle">Panel Principal</div>
+      <div class="page-sub">Resumen contable y operativo de la empresa</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat accent">
+        <div class="stat-label">Total Facturas</div>
+        <div class="stat-value" id="statFacturas">0</div>
+        <div class="stat-change">Emitidas</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Ingresos (Bs.)</div>
+        <div class="stat-value" id="statIngresos">0.00</div>
+        <div class="stat-change up">Total facturado</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">IVA Retenido (Bs.)</div>
+        <div class="stat-value" id="statIVA">0.00</div>
+        <div class="stat-change">16% s/ base</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Asientos Diario</div>
+        <div class="stat-value" id="statAsientos">0</div>
+        <div class="stat-change">Registrados</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Aviso Legal</div>
+      <div class="alert alert-warn">⚖️ &nbsp;Los cálculos de nómina se rigen por la LOTTT (2012) y su Reglamento. Las alícuotas de IVSS, FAOV e INCES corresponden a las tablas vigentes. Consulte siempre con un contador público colegiado para declaraciones oficiales ante el SENIAT.</div>
+      <div class="alert alert-info">📋 &nbsp;Tasas aplicadas: IVSS Trabajador 4%, Empresa 9–11% | FAOV Trabajador 1%, Empresa 2% | INCES 2% empresa, 0.5% sobre utilidades | IVA General 16% (SENIAT).</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Últimas Facturas</div>
+      <div id="dashFacturas"><div class="empty"><div class="empty-icon">🧾</div><p>No hay facturas registradas</p></div></div>
+    </div>
+  </div>
+
+  <!-- ── EMPRESA ── -->
+  <div id="empresa" class="section">
+    <div class="page-header">
+      <div class="page-title">Datos de la Empresa</div>
+      <div class="page-sub">Información fiscal y legal de la compañía</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Información Principal</div>
+      <div class="form-grid">
+        <div class="field"><label>Razón Social</label><input id="eNombre" placeholder="Nombre completo de la empresa"></div>
+        <div class="field"><label>RIF</label><input id="eRIF" placeholder="J-XXXXXXXX-X"></div>
+        <div class="field"><label>Tipo de Contribuyente</label>
+          <select id="eTipoContr">
+            <option>Ordinario</option>
+            <option>Especial</option>
+            <option>Formal</option>
+          </select>
+        </div>
+        <div class="field"><label>Actividad Económica CIIU</label><input id="eCIIU" placeholder="Código CIIU"></div>
+        <div class="field"><label>Dirección Fiscal</label><input id="eDirec" placeholder="Dirección completa"></div>
+        <div class="field"><label>Estado / Municipio</label><input id="eEstado" placeholder="Estado, Municipio"></div>
+        <div class="field"><label>Teléfono</label><input id="eTel" placeholder="+58 XXX-XXXXXXX"></div>
+        <div class="field"><label>Correo Electrónico</label><input id="eEmail" placeholder="empresa@correo.com"></div>
+        <div class="field"><label>Capital Social (Bs.)</label><input id="eCapital" type="number" placeholder="0.00"></div>
+        <div class="field"><label>Tipo Sociedad</label>
+          <select id="eSociedad">
+            <option>C.A. (Compañía Anónima)</option>
+            <option>S.R.L. (Sociedad Resp. Limitada)</option>
+            <option>Firma Personal</option>
+            <option>Cooperativa</option>
+            <option>Fundación</option>
+          </select>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="saveEmpresa()">💾 Guardar Datos</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PLAN DE CUENTAS ── -->
+  <div id="cuentas" class="section">
+    <div class="page-header">
+      <div class="page-title">Plan de Cuentas</div>
+      <div class="page-sub">Clasificación conforme al Principio de Partida Doble · PCGA Venezuela</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Agregar Cuenta Contable</div>
+      <div class="form-grid thirds">
+        <div class="field"><label>Código</label><input id="cCodigo" placeholder="Ej: 1.1.01"></div>
+        <div class="field"><label>Nombre de la Cuenta</label><input id="cNombre" placeholder="Ej: Caja Principal"></div>
+        <div class="field"><label>Tipo</label>
+          <select id="cTipo">
+            <option>Activo Circulante</option>
+            <option>Activo Fijo</option>
+            <option>Pasivo Circulante</option>
+            <option>Pasivo a Largo Plazo</option>
+            <option>Patrimonio</option>
+            <option>Ingreso Operacional</option>
+            <option>Ingreso No Operacional</option>
+            <option>Gasto Operacional</option>
+            <option>Gasto No Operacional</option>
+            <option>Costos</option>
+          </select>
+        </div>
+      </div>
+      <div class="btn-row"><button class="btn btn-primary" onclick="addCuenta()">+ Agregar Cuenta</button></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Plan de Cuentas Registrado</div>
+      <div id="listaCuentas"><div class="empty"><div class="empty-icon">📂</div><p>No hay cuentas registradas</p></div></div>
+    </div>
+  </div>
+
+  <!-- ── LIBRO DIARIO ── -->
+  <div id="diario" class="section">
+    <div class="page-header">
+      <div class="page-title">Libro Diario</div>
+      <div class="page-sub">Asientos contables · Partida Doble · Art. 32 Código de Comercio Venezuela</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Nuevo Asiento Contable</div>
+      <div class="form-grid">
+        <div class="field"><label>Fecha</label><input id="dFecha" type="date"></div>
+        <div class="field"><label>Número Asiento</label><input id="dNumero" placeholder="Ej: 001"></div>
+        <div class="field"><label>Cuenta Debe</label><input id="dDebe" placeholder="Nombre o código cuenta"></div>
+        <div class="field"><label>Cuenta Haber</label><input id="dHaber" placeholder="Nombre o código cuenta"></div>
+        <div class="field"><label>Monto (Bs.)</label><input id="dMonto" type="number" placeholder="0.00"></div>
+        <div class="field"><label>Descripción / Concepto</label><input id="dConcepto" placeholder="Descripción del asiento"></div>
+      </div>
+      <div class="alert alert-info">⚖️ Todo asiento debe cumplir con el Principio de Partida Doble: Debe = Haber.</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="addAsiento()">✓ Registrar Asiento</button>
+        <button class="btn btn-ghost" onclick="limpiarDiario()">Limpiar</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Asientos Registrados</div>
+      <div id="diarioTabla"><div class="empty"><div class="empty-icon">📖</div><p>No hay asientos registrados</p></div></div>
+    </div>
+  </div>
+
+  <!-- ── LIBRO MAYOR ── -->
+  <div id="mayor" class="section">
+    <div class="page-header">
+      <div class="page-title">Libro Mayor</div>
+      <div class="page-sub">Saldos por cuenta · Generado automáticamente del Libro Diario</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Saldos de Cuentas</div>
+      <div id="mayorTabla"><div class="empty"><div class="empty-icon">📊</div><p>Registre asientos en el Libro Diario</p></div></div>
+    </div>
+  </div>
+
+  <!-- ── BALANCE ── -->
+  <div id="balance" class="section">
+    <div class="page-header">
+      <div class="page-title">Balance General</div>
+      <div class="page-sub">Estado de Situación Financiera · Art. 35 Código de Comercio Venezuela</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Activos vs Pasivos + Patrimonio</div>
+      <div class="balance-cols" id="balanceCols">
+        <div class="empty"><div class="empty-icon">⚖️</div><p>Sin datos suficientes</p></div>
+      </div>
+      <hr class="divider">
+      <div id="balanceVerif"></div>
+    </div>
+  </div>
+
+  <!-- ── NÓMINA ── -->
+  <div id="nomina" class="section">
+    <div class="page-header">
+      <div class="page-title">Nómina LOTTT</div>
+      <div class="page-sub">Cálculo según LOTTT 2012 · IVSS · FAOV · INCES · Utilidades</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Datos del Trabajador</div>
+      <div class="form-grid thirds">
+        <div class="field"><label>Nombre Trabajador</label><input id="nNombre" placeholder="Nombre completo"></div>
+        <div class="field"><label>Cédula</label><input id="nCI" placeholder="V-XXXXXXXX"></div>
+        <div class="field"><label>Cargo</label><input id="nCargo" placeholder="Cargo o denominación"></div>
+        <div class="field"><label>Salario Mensual (Bs.)</label><input id="nSalario" type="number" placeholder="0.00"></div>
+        <div class="field"><label>Años de Antigüedad</label><input id="nAntig" type="number" placeholder="0" min="0"></div>
+        <div class="field"><label>Días Trabajados (mes)</label><input id="nDias" type="number" placeholder="30" min="1" max="30" value="30"></div>
+        <div class="field"><label>Horas Extras (si aplica)</label><input id="nHorasExtra" type="number" placeholder="0" min="0"></div>
+        <div class="field"><label>Tipo Jornada</label>
+          <select id="nJornada">
+            <option value="diurna">Diurna (8h)</option>
+            <option value="nocturna">Nocturna (7h)</option>
+            <option value="mixta">Mixta (7.5h)</option>
+          </select>
+        </div>
+        <div class="field"><label>Bono de Alimentación (Bs.)</label><input id="nCesta" type="number" placeholder="0.00"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="calcularNomina()">⚙ Calcular Nómina</button>
+        <button class="btn btn-ghost" onclick="exportNominaPDF()">📄 Exportar PDF</button>
+      </div>
+    </div>
+    <div id="nominaRes" style="display:none">
+      <div class="card">
+        <div class="card-title">Desglose Legal del Trabajador</div>
+        <div class="nomina-grid" id="nominaGrid"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Carga Social de la Empresa (Art. 173 LOTTT)</div>
+        <div class="nomina-grid" id="empresaGrid"></div>
+      </div>
+      <div class="alert alert-warn" id="nominaLegal"></div>
+    </div>
+  </div>
+
+  <!-- ── FACTURACIÓN ── -->
+  <div id="factura" class="section">
+    <div class="page-header">
+      <div class="page-title">Facturación</div>
+      <div class="page-sub">Conforme a las Providencias Administrativas SENIAT · IVA 16%</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Nueva Factura</div>
+      <div class="form-grid">
+        <div class="field"><label>N° Factura</label><input id="fNumero" placeholder="Ej: 00000001"></div>
+        <div class="field"><label>Fecha</label><input id="fFecha" type="date"></div>
+        <div class="field"><label>Cliente / Razón Social</label><input id="fCliente" placeholder="Nombre del cliente"></div>
+        <div class="field"><label>RIF Cliente</label><input id="fRIF" placeholder="J/V/G/E-XXXXXXXX-X"></div>
+        <div class="field"><label>Descripción</label><input id="fDescripcion" placeholder="Descripción del bien o servicio"></div>
+        <div class="field"><label>Moneda</label>
+          <select id="fMoneda">
+            <option value="Bs.">Bolívares (Bs.)</option>
+            <option value="USD">Dólares (USD)</option>
+            <option value="EUR">Euros (EUR)</option>
+          </select>
+        </div>
+        <div class="field"><label>Monto Base Imponible</label><input id="fMonto" type="number" placeholder="0.00" oninput="previewIVA()"></div>
+        <div class="field"><label>Aplica Exención IVA</label>
+          <select id="fExento" onchange="previewIVA()">
+            <option value="no">No (aplica 16%)</option>
+            <option value="exento">Exento</option>
+            <option value="reducida">Alícuota Reducida 8%</option>
+            <option value="adicional">Alícuota Adicional 31%</option>
+          </select>
+        </div>
+      </div>
+      <div class="iva-breakdown">
+        <div class="stat"><div class="stat-label">Base Imponible</div><div class="stat-value" id="prevBase">0.00</div></div>
+        <div class="stat"><div class="stat-label">IVA Calculado</div><div class="stat-value gold" id="prevIVA">0.00</div></div>
+        <div class="stat accent"><div class="stat-label">Total Factura</div><div class="stat-value" id="prevTotal">0.00</div></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="guardarFactura()">💾 Emitir Factura</button>
+        <button class="btn btn-ghost" onclick="generarPDFFactura()">📄 Descargar PDF</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Registro de Facturas Emitidas</div>
+      <div id="listaFacturas"><div class="empty"><div class="empty-icon">🧾</div><p>No hay facturas emitidas</p></div></div>
+    </div>
+  </div>
+
+  <!-- ── IVA / SENIAT ── -->
+  <div id="iva" class="section">
+    <div class="page-header">
+      <div class="page-title">IVA / SENIAT</div>
+      <div class="page-sub">Libro de Ventas y Compras · Declaración IVA · Ley del IVA Venezuela</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Calculadora IVA</div>
+      <div class="form-grid">
+        <div class="field"><label>Monto (Bs.)</label><input id="ivaBase" type="number" placeholder="0.00" oninput="calcIVA()"></div>
+        <div class="field"><label>Alícuota</label>
+          <select id="ivaTipo" onchange="calcIVA()">
+            <option value="0.16">General 16% (Art. 27 LIVA)</option>
+            <option value="0.08">Reducida 8% (Art. 63 LIVA)</option>
+            <option value="0.31">Adicional 31% (lujos)</option>
+            <option value="0">Exento / No sujeto</option>
+          </select>
+        </div>
+        <div class="field"><label>Operación</label>
+          <select id="ivaSentido">
+            <option value="excluido">Precio sin IVA → calcular IVA</option>
+            <option value="incluido">Precio con IVA → extraer base</option>
+          </select>
+        </div>
+      </div>
+      <div class="iva-breakdown" style="margin-top:16px">
+        <div class="stat"><div class="stat-label">Base Imponible</div><div class="stat-value" id="ivaResBase">0.00</div></div>
+        <div class="stat"><div class="stat-label">Impuesto IVA</div><div class="stat-value" style="color:var(--gold2)" id="ivaResMonto">0.00</div></div>
+        <div class="stat accent"><div class="stat-label">Total con IVA</div><div class="stat-value" id="ivaResTotal">0.00</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Libro de Ventas IVA (Generado de Facturas)</div>
+      <div id="libroVentas"><div class="empty"><div class="empty-icon">📋</div><p>Emita facturas para generar el Libro de Ventas</p></div></div>
+    </div>
+  </div>
+
+  <!-- ── INVENTARIO ── -->
+  <div id="inventario" class="section">
+    <div class="page-header">
+      <div class="page-title">Control de Inventario</div>
+      <div class="page-sub">Método PEPS · Existencias · Valoración en Bs. y USD</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Registrar Producto</div>
+      <div class="form-grid thirds">
+        <div class="field"><label>Código Producto</label><input id="invCod" placeholder="SKU o código"></div>
+        <div class="field"><label>Descripción</label><input id="invProd" placeholder="Nombre del producto"></div>
+        <div class="field"><label>Unidad de Medida</label>
+          <select id="invUnidad">
+            <option>Unidad</option><option>Kg</option><option>Litro</option>
+            <option>Metro</option><option>Caja</option><option>Docena</option>
+          </select>
+        </div>
+        <div class="field"><label>Cantidad</label><input id="invCant" type="number" placeholder="0" min="0"></div>
+        <div class="field"><label>Precio Costo (Bs.)</label><input id="invCosto" type="number" placeholder="0.00"></div>
+        <div class="field"><label>Precio Venta (Bs.)</label><input id="invVenta" type="number" placeholder="0.00"></div>
+      </div>
+      <div class="btn-row"><button class="btn btn-primary" onclick="addInventario()">+ Agregar Producto</button></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Existencias en Almacén</div>
+      <div id="invList"><div class="empty"><div class="empty-icon">📦</div><p>No hay productos registrados</p></div></div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- SCRIPT -->
+<script>
+/* ── UTILIDADES ── */
+const db = key => { try{ return JSON.parse(localStorage.getItem(key)||'[]') }catch{ return [] } };
+const save = (key,val) => localStorage.setItem(key, JSON.stringify(val));
+const fmt = n => parseFloat(n||0).toLocaleString('es-VE',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtN = n => parseFloat(n||0).toLocaleString('es-VE');
+
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll(`.nav-btn[onclick*="${id}"]`).forEach(b=>b.classList.add('active'));
+  if(id==='mayor') renderMayor();
+  if(id==='balance') renderBalance();
+  if(id==='iva') renderLibroVentas();
+  if(id==='dashboard') renderDashboard();
+}
+
+/* ── RELOJ ── */
+function tick(){
+  const d=new Date();
+  document.getElementById('reloj').textContent=d.toLocaleTimeString('es-VE');
+}
+setInterval(tick,1000); tick();
+
+/* ── EMPRESA ── */
+function saveEmpresa(){
+  const emp = {
+    nombre:document.getElementById('eNombre').value,
+    rif:document.getElementById('eRIF').value,
+    tipoContr:document.getElementById('eTipoContr').value,
+    ciiu:document.getElementById('eCIIU').value,
+    direc:document.getElementById('eDirec').value,
+    estado:document.getElementById('eEstado').value,
+    tel:document.getElementById('eTel').value,
+    email:document.getElementById('eEmail').value,
+    capital:document.getElementById('eCapital').value,
+    sociedad:document.getElementById('eSociedad').value
+  };
+  save('empresa', emp);
+  document.getElementById('dashTitle').textContent = emp.nombre||'Panel Principal';
+  document.getElementById('empBadge').textContent = emp.rif||'Sin RIF';
+  alert('✅ Datos de empresa guardados correctamente.');
+}
+
+function loadEmpresa(){
+  const emp = db('empresa');
+  if(!Array.isArray(emp) && emp.nombre){
+    document.getElementById('eNombre').value=emp.nombre||'';
+    document.getElementById('eRIF').value=emp.rif||'';
+    document.getElementById('eCIIU').value=emp.ciiu||'';
+    document.getElementById('eDirec').value=emp.direc||'';
+    document.getElementById('eEstado').value=emp.estado||'';
+    document.getElementById('eTel').value=emp.tel||'';
+    document.getElementById('eEmail').value=emp.email||'';
+    document.getElementById('eCapital').value=emp.capital||'';
+    document.getElementById('dashTitle').textContent=emp.nombre||'Panel Principal';
+    document.getElementById('empBadge').textContent=emp.rif||'Sin RIF';
+    try{document.getElementById('eTipoContr').value=emp.tipoContr}catch(e){}
+    try{document.getElementById('eSociedad').value=emp.sociedad}catch(e){}
+  }
+}
+
+/* ── PLAN DE CUENTAS ── */
+function addCuenta(){
+  const cod=document.getElementById('cCodigo').value.trim();
+  const nom=document.getElementById('cNombre').value.trim();
+  const tipo=document.getElementById('cTipo').value;
+  if(!nom){alert('Ingrese el nombre de la cuenta.'); return;}
+  const data=db('cuentas');
+  data.push({cod,nom,tipo});
+  save('cuentas',data);
+  document.getElementById('cCodigo').value='';
+  document.getElementById('cNombre').value='';
+  renderCuentas();
+}
+
+function renderCuentas(){
+  const data=db('cuentas');
+  if(!data.length){document.getElementById('listaCuentas').innerHTML='<div class="empty"><div class="empty-icon">📂</div><p>No hay cuentas registradas</p></div>';return;}
+  let h=`<div class="tbl-wrap"><table><thead><tr><th>Código</th><th>Cuenta</th><th>Tipo</th><th>Naturaleza</th><th></th></tr></thead><tbody>`;
+  data.forEach((x,i)=>{
+    const nat = x.tipo.includes('Activo')||x.tipo.includes('Gasto')||x.tipo.includes('Costo')?'Deudora':'Acreedora';
+    const badgeClass = x.tipo.includes('Activo')?'badge-green':x.tipo.includes('Pasivo')?'badge-red':x.tipo.includes('Ingreso')?'badge-blue':'badge-gold';
+    h+=`<tr><td>${x.cod||'—'}</td><td>${x.nom}</td><td><span class="badge ${badgeClass}">${x.tipo}</span></td><td>${nat}</td><td><button class="btn btn-danger" style="padding:4px 10px;font-size:11px" onclick="delCuenta(${i})">✕</button></td></tr>`;
+  });
+  h+='</tbody></table></div>';
+  document.getElementById('listaCuentas').innerHTML=h;
+}
+
+function delCuenta(i){
+  const data=db('cuentas');data.splice(i,1);save('cuentas',data);renderCuentas();
+}
+
+/* ── LIBRO DIARIO ── */
+function addAsiento(){
+  const fecha=document.getElementById('dFecha').value;
+  const num=document.getElementById('dNumero').value.trim();
+  const debe=document.getElementById('dDebe').value.trim();
+  const haber=document.getElementById('dHaber').value.trim();
+  const monto=parseFloat(document.getElementById('dMonto').value)||0;
+  const concepto=document.getElementById('dConcepto').value.trim();
+  if(!debe||!haber||!monto){alert('Complete todos los campos del asiento.');return;}
+  const data=db('asientos');
+  data.push({fecha,num,debe,haber,monto,concepto});
+  save('asientos',data);
+  limpiarDiario();
+  renderDiario();
+}
+
+function limpiarDiario(){
+  ['dFecha','dNumero','dDebe','dHaber','dMonto','dConcepto'].forEach(id=>{document.getElementById(id).value='';});
+}
+
+function renderDiario(){
+  const data=db('asientos');
+  if(!data.length){document.getElementById('diarioTabla').innerHTML='<div class="empty"><div class="empty-icon">📖</div><p>No hay asientos registrados</p></div>';return;}
+  let h=`<div class="tbl-wrap"><table><thead><tr><th>N°</th><th>Fecha</th><th>Debe</th><th>Haber</th><th>Monto (Bs.)</th><th>Concepto</th><th></th></tr></thead><tbody>`;
+  data.forEach((x,i)=>{
+    h+=`<tr><td>${x.num||i+1}</td><td>${x.fecha||'—'}</td><td>${x.debe}</td><td>${x.haber}</td><td class="num">${fmt(x.monto)}</td><td>${x.concepto||'—'}</td><td><button class="btn btn-danger" style="padding:4px 10px;font-size:11px" onclick="delAsiento(${i})">✕</button></td></tr>`;
+  });
+  h+='</tbody></table></div>';
+  document.getElementById('diarioTabla').innerHTML=h;
+}
+
+function delAsiento(i){const d=db('asientos');d.splice(i,1);save('asientos',d);renderDiario();}
+
+/* ── LIBRO MAYOR ── */
+function renderMayor(){
+  const data=db('asientos');
+  if(!data.length){document.getElementById('mayorTabla').innerHTML='<div class="empty"><div class="empty-icon">📊</div><p>Registre asientos en el Libro Diario</p></div>';return;}
+  const ctas={};
+  data.forEach(x=>{
+    ctas[x.debe]=(ctas[x.debe]||{debe:0,haber:0});ctas[x.debe].debe+=x.monto;
+    ctas[x.haber]=(ctas[x.haber]||{debe:0,haber:0});ctas[x.haber].haber+=x.monto;
+  });
+  let h=`<div class="tbl-wrap"><table><thead><tr><th>Cuenta</th><th>Débitos (Bs.)</th><th>Créditos (Bs.)</th><th>Saldo (Bs.)</th><th>Naturaleza</th></tr></thead><tbody>`;
+  for(const c in ctas){
+    const saldo=ctas[c].debe-ctas[c].haber;
+    const nat=saldo>=0?'<span class="badge badge-green">Deudor</span>':'<span class="badge badge-red">Acreedor</span>';
+    h+=`<tr><td>${c}</td><td class="num">${fmt(ctas[c].debe)}</td><td class="num">${fmt(ctas[c].haber)}</td><td class="${saldo>=0?'num pos':'num neg'}">${fmt(Math.abs(saldo))}</td><td>${nat}</td></tr>`;
+  }
+  h+='</tbody></table></div>';
+  document.getElementById('mayorTabla').innerHTML=h;
+}
+
+/* ── BALANCE GENERAL ── */
+function renderBalance(){
+  const asientos=db('asientos');
+  const cuentas=db('cuentas');
+  if(!asientos.length){
+    document.getElementById('balanceCols').innerHTML='<div class="empty" style="grid-column:1/-1"><div class="empty-icon">⚖️</div><p>Registre asientos en el Libro Diario</p></div>';
+    return;
+  }
+  const saldos={};
+  asientos.forEach(x=>{
+    saldos[x.debe]=(saldos[x.debe]||0)+x.monto;
+    saldos[x.haber]=(saldos[x.haber]||0)-x.monto;
+  });
+  const activos=[],pasivos=[],patrimonio=[];
+  for(const c in saldos){
+    const def=cuentas.find(q=>q.nom===c||q.cod===c);
+    const tipo=def?def.tipo:'';
+    if(tipo.includes('Activo')||(!tipo&&saldos[c]>0)) activos.push({c,v:saldos[c]});
+    else if(tipo.includes('Pasivo')) pasivos.push({c,v:Math.abs(saldos[c])});
+    else if(tipo.includes('Patrimonio')) patrimonio.push({c,v:Math.abs(saldos[c])});
+  }
+  const totA=activos.reduce((a,x)=>a+x.v,0);
+  const totP=pasivos.reduce((a,x)=>a+x.v,0);
+  const totPat=patrimonio.reduce((a,x)=>a+x.v,0);
+  const totPas=totP+totPat;
+  const eq=Math.abs(totA-totPas)<0.01;
+
+  let aRows='',pRows='';
+  activos.forEach(x=>{aRows+=`<div class="balance-row"><span>${x.c}</span><span>${fmt(x.v)}</span></div>`;});
+  pasivos.forEach(x=>{pRows+=`<div class="balance-row"><span>${x.c}</span><span>${fmt(x.v)}</span></div>`;});
+  patrimonio.forEach(x=>{pRows+=`<div class="balance-row" style="color:var(--info)"><span>${x.c}</span><span>${fmt(x.v)}</span></div>`;});
+
+  document.getElementById('balanceCols').innerHTML=`
+    <div class="balance-block">
+      <h4>ACTIVOS</h4>
+      ${aRows||'<div class="empty" style="padding:10px 0"><p>Sin activos</p></div>'}
+      <div class="balance-total"><span>Total Activos</span><span>${fmt(totA)}</span></div>
+    </div>
+    <div class="balance-block">
+      <h4>PASIVOS + PATRIMONIO</h4>
+      ${pRows||'<div class="empty" style="padding:10px 0"><p>Sin pasivos</p></div>'}
+      <div class="balance-total"><span>Total Pas. + Pat.</span><span>${fmt(totPas)}</span></div>
+    </div>`;
+
+  document.getElementById('balanceVerif').innerHTML=eq
+    ?'<div class="alert alert-success">✅ Balance cuadrado: Activos = Pasivos + Patrimonio</div>'
+    :`<div class="alert alert-danger">⚠️ Diferencia de Bs. ${fmt(Math.abs(totA-totPas))} — Revise los asientos</div>`;
+}
+
+/* ── NÓMINA LOTTT ── */
+function calcularNomina(){
+  const nombre=document.getElementById('nNombre').value||'Trabajador';
+  const salario=parseFloat(document.getElementById('nSalario').value)||0;
+  const antig=parseFloat(document.getElementById('nAntig').value)||0;
+  const dias=parseFloat(document.getElementById('nDias').value)||30;
+  const hExtra=parseFloat(document.getElementById('nHorasExtra').value)||0;
+  const jornada=document.getElementById('nJornada').value;
+  const cesta=parseFloat(document.getElementById('nCesta').value)||0;
+
+  if(!salario){alert('Ingrese el salario mensual.');return;}
+
+  // Salario diario
+  const salDiario=salario/30;
+  const salProp=salDiario*dias;
+
+  // Horas extras (Art. 118 LOTTT)
+  const recDiurno=0.25; const recNocturno=0.50;
+  const recargo = jornada==='nocturna' ? recNocturno : recDiurno;
+  const valorHE=(salario/240)*(1+recargo)*hExtra;
+
+  // Deducciones trabajador
+  const ivssT=salProp*0.04;       // IVSS trabajador 4%
+  const faovT=salProp*0.01;       // FAOV trabajador 1%
+
+  const totalDed=ivssT+faovT;
+  const neto=salProp+valorHE-totalDed;
+
+  // Utilidades Art. 131 LOTTT – mínimo 15 días, máximo 4 meses (120 días)
+  const utilidades=(salario/30)*15; // mínimo legal
+
+  // Vacaciones Art. 190 LOTTT – 15+1 por año adicional
+  const diasVac=Math.min(15+antig,30);
+  const vacaciones=salDiario*diasVac;
+
+  // Bono vacacional Art. 192 – mínimo 7 días + 1 por año
+  const diasBono=Math.min(7+antig,21);
+  const bonoVac=salDiario*diasBono;
+
+  // Prestaciones sociales Art. 142 LOTTT
+  // 15 días por trimestre o garantía mínima
+  const prestTrimestral=(salDiario*15);
+  // Acumulado (garantía) – 30 días por año a partir del 2do año
+  const prestAcum=antig>=1?(salario*antig*30/30):prestTrimestral;
+
+  // Carga empresa
+  const ivssE=salProp*0.10;       // IVSS empresa ~10%
+  const faovE=salProp*0.02;       // FAOV empresa 2%
+  const incesE=salario*0.02;      // INCES 2%
+  const incesU=utilidades*0.005;  // INCES 0.5% sobre utilidades
+  const totalEmpresa=salProp+ivssE+faovE+incesE+incesU+utilidades+vacaciones+bonoVac;
+
+  document.getElementById('nominaRes').style.display='block';
+  document.getElementById('nominaGrid').innerHTML=`
+    <div class="nom-item"><div class="nom-item-label">Salario Proporcional (${dias} días)</div><div class="nom-item-val">${fmt(salProp)} Bs.</div></div>
+    <div class="nom-item"><div class="nom-item-label">Horas Extras (${hExtra}h)</div><div class="nom-item-val">${fmt(valorHE)} Bs.</div></div>
+    <div class="nom-item"><div class="nom-item-label">IVSS Trabajador (4%)</div><div class="nom-item-val red">-${fmt(ivssT)} Bs.</div></div>
+    <div class="nom-item"><div class="nom-item-label">FAOV Trabajador (1%)</div><div class="nom-item-val red">-${fmt(faovT)} Bs.</div></div>
+    <div class="nom-item"><div class="nom-item-label">Bono Cesta Ticket</div><div class="nom-item-val green">+${fmt(cesta)} Bs.</div></div>
+    <div class="nom-item" style="grid-column:1/-1;border-color:var(--border-gold)"><div class="nom-item-label">💰 Salario Neto a Pagar</div><div class="nom-item-val gold">${fmt(neto+cesta)} Bs.</div></div>
+    `;
+  document.getElementById('empresaGrid').innerHTML=`
+    <div class="nom-item"><div class="nom-item-label">IVSS Empresa (~10%)</div><div class="nom-item-val red">${fmt(ivssE)} Bs.</div></div>
+    <div class="nom-item"><div class="nom-item-label">FAOV Empresa (2%)</div><div class="nom-item-val red">${fmt(faovE)} Bs.</div></div>
+    <div class="nom-item"><div class="nom-item-label">INCES Empresa (2%)</div><div class="nom-item-val red">${fmt(incesE)} Bs.</div></div>
+    <div class="nom-item"><div class="nom-item-label">INCES Utilidades (0.5%)</div><div class="nom-item-val red">${fmt(incesU)} Bs.</div></div>
+    <div class="nom-item"><div class="nom-item-label">Prestaciones (trim. Art.142)</div><div class="nom-item-val">${fmt(prestTrimestral)} Bs.</div></div>
+    <div class="nom-item"><div class="nom-item-label">Utilidades mín. (15 días)</div><div class="nom-item-val">${fmt(utilidades)} Bs.</div></div>
+    <div class="nom-item"><div class="nom-item-label">Vacaciones (${diasVac} días)</div><div class="nom-item-val">${fmt(vacaciones)} Bs.</div></div>
+    <div class="nom-item"><div class="nom-item-label">Bono Vacacional (${diasBono} días)</div><div class="nom-item-val">${fmt(bonoVac)} Bs.</div></div>
+    <div class="nom-item" style="grid-column:1/-1;border-color:var(--border-gold)"><div class="nom-item-label">📊 Costo Total Empresa</div><div class="nom-item-val gold">${fmt(totalEmpresa)} Bs.</div></div>
+    `;
+  document.getElementById('nominaLegal').innerHTML=`⚖️ Cálculo conforme a: LOTTT Arts. 118, 131, 142, 190, 192 | LAISS | RLOTTT. Antigüedad: ${antig} año(s). Las tasas IVSS pueden variar según tabla salarial del IVSS. Declare ante SENIAT con forma AR-C y ante el IVSS con forma 14-02.`;
+}
+
+function exportNominaPDF(){
+  if(!window.jspdf){alert('jsPDF cargando, intente de nuevo.');return;}
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF();
+  const emp=db('empresa');
+  const empNombre=(!Array.isArray(emp)&&emp.nombre)?emp.nombre:'Empresa';
+  const nombre=document.getElementById('nNombre').value||'Trabajador';
+  const cargo=document.getElementById('nCargo').value||'—';
+  const salario=document.getElementById('nSalario').value||'0';
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(16);doc.text('RECIBO DE NÓMINA',105,20,{align:'center'});
+  doc.setFontSize(11);doc.text(empNombre,105,30,{align:'center'});
+  doc.setFont('helvetica','normal');doc.setFontSize(10);
+  doc.text(`Trabajador: ${nombre}`,15,45);
+  doc.text(`Cargo: ${cargo}`,15,53);
+  doc.text(`Salario Mensual: Bs. ${salario}`,15,61);
+  doc.text(`Fecha: ${new Date().toLocaleDateString('es-VE')}`,15,69);
+  doc.setFont('helvetica','bold');
+  doc.text('Conforme a LOTTT 2012 - Venezuela',105,80,{align:'center'});
+  doc.save(`nomina_${nombre.replace(/ /g,'_')}.pdf`);
+}
+
+/* ── FACTURACIÓN ── */
+function previewIVA(){
+  const base=parseFloat(document.getElementById('fMonto').value)||0;
+  const exento=document.getElementById('fExento').value;
+  let rate=0.16;
+  if(exento==='exento') rate=0;
+  else if(exento==='reducida') rate=0.08;
+  else if(exento==='adicional') rate=0.31;
+  const iva=base*rate;
+  const total=base+iva;
+  document.getElementById('prevBase').textContent=fmt(base);
+  document.getElementById('prevIVA').textContent=fmt(iva);
+  document.getElementById('prevTotal').textContent=fmt(total);
+}
+
+function guardarFactura(){
+  const num=document.getElementById('fNumero').value.trim();
+  const fecha=document.getElementById('fFecha').value;
+  const cliente=document.getElementById('fCliente').value.trim();
+  const rif=document.getElementById('fRIF').value.trim();
+  const desc=document.getElementById('fDescripcion').value.trim();
+  const moneda=document.getElementById('fMoneda').value;
+  const base=parseFloat(document.getElementById('fMonto').value)||0;
+  const exento=document.getElementById('fExento').value;
+  let rate=0.16;
+  if(exento==='exento') rate=0;
+  else if(exento==='reducida') rate=0.08;
+  else if(exento==='adicional') rate=0.31;
+  const iva=base*rate;
+  const total=base+iva;
+  if(!cliente||!base){alert('Complete cliente y monto.');return;}
+  const data=db('facturas');
+  data.push({num,fecha,cliente,rif,desc,moneda,base,iva,total,rate,exento});
+  save('facturas',data);
+  renderFacturas();
+  renderDashboard();
+}
+
+function renderFacturas(){
+  const data=db('facturas');
+  if(!data.length){document.getElementById('listaFacturas').innerHTML='<div class="empty"><div class="empty-icon">🧾</div><p>No hay facturas emitidas</p></div>';return;}
+  let h=`<div class="tbl-wrap"><table><thead><tr><th>N°</th><th>Fecha</th><th>Cliente</th><th>RIF</th><th>Base (${data[0]?.moneda||'Bs.'})</th><th>IVA</th><th>Total</th><th>Estado</th><th></th></tr></thead><tbody>`;
+  data.forEach((f,i)=>{
+    const badge=f.exento==='exento'?'badge-blue':f.exento==='reducida'?'badge-gold':'badge-green';
+    const label=f.exento==='exento'?'Exenta':f.exento==='reducida'?'Red. 8%':'IVA 16%';
+    h+=`<tr><td>${f.num||i+1}</td><td>${f.fecha||'—'}</td><td>${f.cliente}</td><td>${f.rif||'—'}</td><td class="num">${fmt(f.base)}</td><td class="num">${fmt(f.iva)}</td><td class="num">${fmt(f.total)}</td><td><span class="badge ${badge}">${label}</span></td><td><button class="btn btn-danger" style="padding:4px 10px;font-size:11px" onclick="delFactura(${i})">✕</button></td></tr>`;
+  });
+  h+='</tbody></table></div>';
+  document.getElementById('listaFacturas').innerHTML=h;
+}
+
+function delFactura(i){const d=db('facturas');d.splice(i,1);save('facturas',d);renderFacturas();renderDashboard();}
+
+function generarPDFFactura(){
+  if(!window.jspdf){alert('jsPDF cargando...');return;}
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF();
+  const emp=db('empresa');
+  const empN=(!Array.isArray(emp)&&emp.nombre)?emp.nombre:'SIN EMPRESA';
+  const empR=(!Array.isArray(emp)&&emp.rif)?emp.rif:'—';
+  const cliente=document.getElementById('fCliente').value||'—';
+  const rif=document.getElementById('fRIF').value||'—';
+  const num=document.getElementById('fNumero').value||'00000001';
+  const fecha=document.getElementById('fFecha').value||new Date().toLocaleDateString('es-VE');
+  const base=parseFloat(document.getElementById('fMonto').value)||0;
+  const exento=document.getElementById('fExento').value;
+  let rate=0.16; if(exento==='exento') rate=0; else if(exento==='reducida') rate=0.08; else if(exento==='adicional') rate=0.31;
+  const iva=base*rate; const total=base+iva;
+  const desc=document.getElementById('fDescripcion').value||'—';
+  doc.setFont('helvetica','bold');doc.setFontSize(20);
+  doc.text('FACTURA',105,20,{align:'center'});
+  doc.setFontSize(11);doc.text(empN,105,30,{align:'center'});
+  doc.setFont('helvetica','normal');doc.setFontSize(10);
+  doc.text(`RIF Emisor: ${empR}`,15,42);
+  doc.text(`N° Factura: ${num}`,150,42);
+  doc.text(`Cliente: ${cliente}`,15,52);
+  doc.text(`RIF Cliente: ${rif}`,15,60);
+  doc.text(`Fecha: ${fecha}`,150,52);
+  doc.line(15,68,195,68);
+  doc.setFont('helvetica','bold');doc.text('Descripción',15,76);doc.text('Monto',170,76);
+  doc.setFont('helvetica','normal');doc.text(desc,15,86);doc.text('Bs. '+fmt(base),170,86);
+  doc.line(15,94,195,94);
+  doc.text(`Base Imponible:`,120,104);doc.text('Bs. '+fmt(base),170,104);
+  doc.text(`IVA (${(rate*100).toFixed(0)}%):`,120,112);doc.text('Bs. '+fmt(iva),170,112);
+  doc.setFont('helvetica','bold');doc.text('TOTAL:',120,122);doc.text('Bs. '+fmt(total),170,122);
+  doc.setFont('helvetica','normal');doc.setFontSize(8);
+  doc.text('Emitida conforme a las Providencias Administrativas del SENIAT. Ley del IVA Venezuela.',105,140,{align:'center'});
+  doc.save(`factura_${num}.pdf`);
+}
+
+/* ── IVA ── */
+function calcIVA(){
+  const base=parseFloat(document.getElementById('ivaBase').value)||0;
+  const rate=parseFloat(document.getElementById('ivaTipo').value)||0;
+  const sentido=document.getElementById('ivaSentido').value;
+  let b,i,t;
+  if(sentido==='incluido'){
+    t=base; b=base/(1+rate); i=t-b;
+  } else {
+    b=base; i=base*rate; t=b+i;
+  }
+  document.getElementById('ivaResBase').textContent=fmt(b);
+  document.getElementById('ivaResMonto').textContent=fmt(i);
+  document.getElementById('ivaResTotal').textContent=fmt(t);
+}
+
+function renderLibroVentas(){
+  const data=db('facturas');
+  if(!data.length){document.getElementById('libroVentas').innerHTML='<div class="empty"><div class="empty-icon">📋</div><p>Emita facturas para generar el Libro de Ventas</p></div>';return;}
+  let totalBase=0,totalIva=0,totalTotal=0;
+  let h=`<div class="tbl-wrap"><table><thead><tr><th>N° Fac.</th><th>Fecha</th><th>Cliente</th><th>RIF</th><th>Base Imp.</th><th>IVA</th><th>Total</th><th>Alícuota</th></tr></thead><tbody>`;
+  data.forEach(f=>{
+    totalBase+=f.base; totalIva+=f.iva; totalTotal+=f.total;
+    const label=f.exento==='exento'?'Exento':f.exento==='reducida'?'8%':'16%';
+    h+=`<tr><td>${f.num||'—'}</td><td>${f.fecha||'—'}</td><td>${f.cliente}</td><td>${f.rif||'—'}</td><td class="num">${fmt(f.base)}</td><td class="num">${fmt(f.iva)}</td><td class="num">${fmt(f.total)}</td><td>${label}</td></tr>`;
+  });
+  h+=`<tr style="font-weight:600;background:var(--bg4)"><td colspan="4">TOTALES DEL PERÍODO</td><td class="num gold">${fmt(totalBase)}</td><td class="num gold">${fmt(totalIva)}</td><td class="num gold">${fmt(totalTotal)}</td><td></td></tr>`;
+  h+='</tbody></table></div>';
+  document.getElementById('libroVentas').innerHTML=h;
+}
+
+/* ── INVENTARIO ── */
+function addInventario(){
+  const cod=document.getElementById('invCod').value.trim();
+  const prod=document.getElementById('invProd').value.trim();
+  const unidad=document.getElementById('invUnidad').value;
+  const cant=parseFloat(document.getElementById('invCant').value)||0;
+  const costo=parseFloat(document.getElementById('invCosto').value)||0;
+  const venta=parseFloat(document.getElementById('invVenta').value)||0;
+  if(!prod){alert('Ingrese la descripción del producto.');return;}
+  const data=db('inv');
+  data.push({cod,prod,unidad,cant,costo,venta});
+  save('inv',data);
+  document.getElementById('invCod').value='';document.getElementById('invProd').value='';
+  document.getElementById('invCant').value='';document.getElementById('invCosto').value='';document.getElementById('invVenta').value='';
+  renderInventario();
+}
+
+function renderInventario(){
+  const data=db('inv');
+  if(!data.length){document.getElementById('invList').innerHTML='<div class="empty"><div class="empty-icon">📦</div><p>No hay productos registrados</p></div>';return;}
+  let h=`<div class="tbl-wrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Unidad</th><th>Cantidad</th><th>Costo Unit.</th><th>Precio Venta</th><th>Valor Total Inv.</th><th>Utilidad</th><th></th></tr></thead><tbody>`;
+  data.forEach((x,i)=>{
+    const valorInv=x.cant*x.costo;
+    const util=x.venta>0?((x.venta-x.costo)/x.costo*100):0;
+    const badgeU=util>=0?'badge-green':'badge-red';
+    h+=`<tr><td>${x.cod||'—'}</td><td>${x.prod}</td><td>${x.unidad}</td><td class="num">${fmtN(x.cant)}</td><td class="num">${fmt(x.costo)}</td><td class="num">${fmt(x.venta)}</td><td class="num">${fmt(valorInv)}</td><td><span class="badge ${badgeU}">${util.toFixed(1)}%</span></td><td><button class="btn btn-danger" style="padding:4px 10px;font-size:11px" onclick="delInv(${i})">✕</button></td></tr>`;
+  });
+  h+='</tbody></table></div>';
+  document.getElementById('invList').innerHTML=h;
+}
+function delInv(i){const d=db('inv');d.splice(i,1);save('inv',d);renderInventario();}
+
+/* ── DASHBOARD ── */
+function renderDashboard(){
+  const facturas=db('facturas');
+  const asientos=db('asientos');
+  document.getElementById('statFacturas').textContent=facturas.length;
+  const totalBase=facturas.reduce((a,f)=>a+f.base,0);
+  const totalIva=facturas.reduce((a,f)=>a+f.iva,0);
+  document.getElementById('statIngresos').textContent=fmt(totalBase);
+  document.getElementById('statIVA').textContent=fmt(totalIva);
+  document.getElementById('statAsientos').textContent=asientos.length;
+  const recent=facturas.slice(-5).reverse();
+  if(!recent.length){document.getElementById('dashFacturas').innerHTML='<div class="empty"><div class="empty-icon">🧾</div><p>No hay facturas registradas</p></div>';return;}
+  let h=`<div class="tbl-wrap"><table><thead><tr><th>N°</th><th>Cliente</th><th>Fecha</th><th>Total</th></tr></thead><tbody>`;
+  recent.forEach(f=>{h+=`<tr><td>${f.num||'—'}</td><td>${f.cliente}</td><td>${f.fecha||'—'}</td><td class="num">${fmt(f.total)} ${f.moneda}</td></tr>`;});
+  h+='</tbody></table></div>';
+  document.getElementById('dashFacturas').innerHTML=h;
+}
+
+/* ── INIT ── */
+function init(){
+  loadEmpresa();
+  renderCuentas();
+  renderDiario();
+  renderFacturas();
+  renderInventario();
+  renderDashboard();
+  // Fecha hoy por defecto
+  const hoy=new Date().toISOString().split('T')[0];
+  document.getElementById('dFecha').value=hoy;
+  document.getElementById('fFecha').value=hoy;
+}
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>José Lugo | BOT IA COMPLETO</title>
+  <meta name="description" content="Landing visual premium con BOT IA para salud y oportunidad de negocio." />
+  <style>
+    :root{
+      --bg:#060606;
+      --bg2:#0d0d0d;
+      --card:#121212;
+      --card2:#171717;
+      --gold:#d4af37;
+      --gold2:#f0d77a;
+      --text:#ffffff;
+      --muted:#cfcfcf;
+      --green:#29d366;
+      --line:rgba(212,175,55,.22);
+      --shadow:0 18px 50px rgba(0,0,0,.38);
+      --radius:24px;
+      --radius-sm:16px;
+      --max:1240px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(212,175,55,.08), transparent 25%),
+        radial-gradient(circle at 84% 14%, rgba(212,175,55,.08), transparent 18%),
+        linear-gradient(180deg, #050505 0%, #080808 100%);
+      overflow-x:hidden;
+    }
+    a{text-decoration:none;color:inherit}
+    img{display:block;max-width:100%}
+    .container{width:min(var(--max), calc(100% - 32px)); margin:0 auto}
+    .section{padding:70px 0}
+    .grid{display:grid; gap:24px}
+    .grid-2{grid-template-columns: 1.02fr .98fr}
+    .grid-3{grid-template-columns: repeat(3, 1fr)}
+    .tag{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 14px; border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--gold2); font-weight:800; font-size:.94rem;
+      backdrop-filter: blur(6px);
+    }
+    .nav{
+      position:sticky; top:0; z-index:30;
+      backdrop-filter: blur(10px);
+      background:linear-gradient(to bottom, rgba(6,6,6,.88), rgba(6,6,6,.45));
+      border-bottom:1px solid rgba(255,255,255,.04);
+    }
+    .nav-wrap{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:16px 0;
+    }
+    .brand{display:flex; gap:12px; align-items:center; font-weight:900}
+    .brand-badge{
+      width:42px; height:42px; display:grid; place-items:center;
+      border-radius:14px; color:#111;
+      background:linear-gradient(135deg, var(--gold2), var(--gold));
+      box-shadow:var(--shadow);
+    }
+    .nav-btn{
+      padding:12px 18px; border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      font-weight:800;
+    }
+
+    .hero{padding:26px 0 24px}
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,.012));
+      border:1px solid var(--line);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .panel::before{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        linear-gradient(90deg, rgba(212,175,55,.1), transparent 1px) 0 0/25% 100%,
+        linear-gradient(rgba(212,175,55,.04), transparent 1px) 0 0/100% 100%;
+      opacity:.24; pointer-events:none;
+    }
+    .hero-content{padding:26px; position:relative; z-index:1}
+    .title{
+      margin:14px 0 14px;
+      font-size:clamp(2.2rem, 5vw, 5rem);
+      line-height:.98; letter-spacing:-.05em; font-weight:950;
+    }
+    .gold{color:var(--gold)}
+    .subtitle{
+      max-width:760px;
+      font-size:clamp(1rem, 1.4vw, 1.18rem);
+      line-height:1.7;
+      color:var(--muted);
+      margin:0 0 22px;
+    }
+    .pills{display:flex; flex-wrap:wrap; gap:10px; margin:14px 0 24px}
+    .pill{
+      padding:10px 14px; border-radius:999px; font-weight:800;
+      background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);
+      color:#eaeaea; font-size:.93rem;
+    }
+    .btns{display:flex; flex-wrap:wrap; gap:14px; margin-top:10px}
+    .btn{
+      display:inline-flex; justify-content:center; align-items:center; gap:10px;
+      padding:16px 24px; border-radius:18px; font-weight:900; transition:.2s ease;
+      cursor:pointer; border:none;
+    }
+    .btn-primary{
+      color:#111;
+      background:linear-gradient(135deg, var(--gold2), var(--gold));
+      box-shadow:0 12px 30px rgba(212,175,55,.18);
+    }
+    .btn-secondary{
+      color:#fff; background:rgba(255,255,255,.04); border:1px solid var(--line);
+    }
+    .btn-green{
+      color:#fff; background:linear-gradient(135deg, #2ee875, #1ab858);
+      box-shadow:0 12px 30px rgba(41,211,102,.16);
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .stats{
+      display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:22px;
+    }
+    .stat{
+      background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06);
+      padding:18px; border-radius:18px; text-align:center;
+    }
+    .stat strong{display:block; font-size:1.7rem; color:var(--gold2)}
+    .stat span{display:block; color:var(--muted); margin-top:6px}
+    .hero-visual{
+      padding:22px 22px 22px 0; position:relative; z-index:1;
+    }
+    .hero-card{
+      border-radius:24px; overflow:hidden; border:1px solid var(--line);
+      background:#0a0a0a;
+    }
+    .hero-card img{
+      width:100%; height:400px; object-fit:cover;
+    }
+    .hero-note{
+      margin:14px; padding:18px; border-radius:18px;
+      background:rgba(0,0,0,.58); border:1px solid rgba(255,255,255,.08);
+    }
+    .hero-note strong{display:block; font-size:1.25rem; margin-bottom:8px}
+    .hero-note p{margin:0; color:#ddd; line-height:1.65}
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      border:1px solid var(--line);
+      border-radius:24px; box-shadow:var(--shadow);
+      padding:24px;
+    }
+    .card h3{margin:0 0 10px; font-size:1.2rem}
+    .card p{margin:0; color:var(--muted); line-height:1.7}
+    .icon{
+      width:48px; height:48px; border-radius:14px; display:grid; place-items:center;
+      margin-bottom:14px; font-size:1.25rem;
+      background:rgba(212,175,55,.12); color:var(--gold2); border:1px solid var(--line);
+    }
+    .section-title{
+      font-size:clamp(1.8rem, 3vw, 3.2rem);
+      line-height:1.08; margin:14px 0 10px; letter-spacing:-.04em; font-weight:950;
+    }
+    .section-copy{
+      color:var(--muted); line-height:1.78; max-width:800px; margin:0 0 22px;
+    }
+
+    .split{display:grid; gap:24px; grid-template-columns:1fr 1fr}
+    .split .media{
+      min-height:420px; border-radius:24px; overflow:hidden; border:1px solid var(--line);
+    }
+    .split .media img{width:100%; height:100%; object-fit:cover}
+    .list{display:grid; gap:14px; margin-top:18px}
+    .list-item{
+      display:flex; gap:12px; align-items:flex-start;
+      padding:14px 16px; border-radius:18px;
+      background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.06);
+    }
+    .check{
+      width:28px; height:28px; flex:0 0 28px; display:grid; place-items:center;
+      border-radius:50%; background:rgba(212,175,55,.15); color:var(--gold2); font-weight:900;
+      margin-top:2px;
+    }
+
+    /* BOT IA */
+    .bot-shell{
+      display:grid; grid-template-columns: 320px 1fr; gap:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,.012));
+      border:1px solid var(--line);
+      border-radius:28px; box-shadow:var(--shadow); overflow:hidden;
+    }
+    .bot-sidebar{
+      background:rgba(255,255,255,.03);
+      border-right:1px solid rgba(255,255,255,.05);
+      padding:24px;
+    }
+    .bot-main{padding:24px}
+    .mini-stat{
+      padding:14px 16px; border-radius:16px; margin-bottom:12px;
+      background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06);
+    }
+    .mini-stat strong{display:block; color:var(--gold2); font-size:1.1rem}
+    .mini-stat span{display:block; color:#d0d0d0; margin-top:4px; line-height:1.5}
+    .chat-box{
+      height:460px; overflow:auto; padding:18px;
+      background:#0b0b0b; border:1px solid rgba(255,255,255,.06);
+      border-radius:22px; display:flex; flex-direction:column; gap:14px;
+    }
+    .msg{
+      max-width:82%; padding:14px 16px; border-radius:18px; line-height:1.65;
+      box-shadow:var(--shadow);
+      white-space:pre-line;
+    }
+    .msg.bot{
+      align-self:flex-start;
+      background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.06);
+    }
+    .msg.user{
+      align-self:flex-end;
+      background:linear-gradient(135deg, rgba(212,175,55,.22), rgba(212,175,55,.12));
+      border:1px solid rgba(212,175,55,.24);
+    }
+    .composer{
+      display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px;
+    }
+    .field, .select, .textarea{
+      width:100%; border:none; outline:none; color:#fff;
+      background:#0f0f0f; border:1px solid rgba(255,255,255,.08);
+      border-radius:16px; padding:16px;
+      font:inherit;
+    }
+    .textarea{min-height:115px; resize:vertical; grid-column:1 / -1}
+    .form-actions{
+      display:flex; gap:12px; flex-wrap:wrap; margin-top:14px;
+    }
+
+    .video-wrap{
+      position:relative; padding-bottom:56.25%; height:0; overflow:hidden;
+      border-radius:24px; border:1px solid var(--line); box-shadow:var(--shadow);
+    }
+    .video-wrap iframe{
+      position:absolute; inset:0; width:100%; height:100%;
+    }
+
+    .testimonial{
+      padding:22px; border-radius:20px; border:1px solid var(--line); background:rgba(255,255,255,.03)
+    }
+    .testimonial p{margin:0 0 16px; line-height:1.75; color:#ececec}
+    .testimonial strong{color:var(--gold2)}
+
+    .sticky-note{
+      position:fixed; left:18px; bottom:18px; z-index:35;
+      max-width:330px; padding:16px 18px; border-radius:18px;
+      background:rgba(10,10,10,.92); border:1px solid var(--line); box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .sticky-note strong{display:block; color:var(--gold2); margin-bottom:6px}
+    .sticky-note p{margin:0; color:#ddd; line-height:1.58; font-size:.95rem}
+    .sticky-note button{
+      margin-top:10px; background:none; border:none; color:var(--gold2); font-weight:800; cursor:pointer; padding:0;
+    }
+
+    .sticky-whatsapp{
+      position:fixed; right:18px; bottom:18px; z-index:36;
+      padding:15px 20px; border-radius:999px; font-weight:900; color:#fff;
+      background:linear-gradient(135deg, #2fdf74, #1ab658);
+      box-shadow:0 16px 40px rgba(0,0,0,.35);
+    }
+
+    .counter{
+      font-size:2rem; font-weight:950; color:var(--gold2);
+      letter-spacing:.03em;
+    }
+
+    .footer{
+      border-top:1px solid rgba(255,255,255,.05);
+      text-align:center; color:#bdbdbd; padding:34px 0 100px;
+    }
+
+    @media (max-width: 1050px){
+      .grid-2, .split, .bot-shell{grid-template-columns:1fr}
+      .hero-visual{padding:0 22px 22px}
+      .bot-sidebar{border-right:none; border-bottom:1px solid rgba(255,255,255,.05)}
+    }
+
+    @media (max-width: 760px){
+      .grid-3, .stats, .composer{grid-template-columns:1fr}
+      .nav-btn{display:none}
+      .title{font-size:clamp(2rem, 12vw, 3.8rem)}
+      .sticky-whatsapp{left:12px; right:12px; text-align:center}
+      .sticky-note{left:12px; right:12px; max-width:none; bottom:82px}
+      .hero-content{padding:22px}
+      .hero-card img{height:300px}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="nav">
+    <div class="container nav-wrap">
+      <div class="brand">
+        <div class="brand-badge">JL</div>
+        <div>
+          <div>José Lugo</div>
+          <small style="display:block; color:#cfcfcf; font-weight:700;">BOT IA · Salud · Negocio</small>
+        </div>
+      </div>
+      <a class="nav-btn" href="#botia">Probar BOT IA</a>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="container">
+      <div class="panel grid grid-2" style="align-items:center;">
+        <div class="hero-content">
+          <span class="tag">Formato visual premium + automatización inteligente</span>
+          <h1 class="title">Si eres networker y <span class="gold">no estás teniendo resultados</span>, ahora puedes tener una página que no solo impacta… <br>también <span class="gold">responde por ti</span>.</h1>
+          <p class="subtitle">
+            Presenta salud y oportunidad con una imagen poderosa, un BOT IA que filtra al prospecto y mensajes automáticos listos para llevar la conversación a WhatsApp con mucha más intención de compra.
+          </p>
+
+          <div class="pills">
+            <span class="pill">✅ Bot IA integrado</span>
+            <span class="pill">✅ Mensajes automáticos</span>
+            <span class="pill">✅ Filtro de prospectos</span>
+            <span class="pill">✅ Responsive</span>
+            <span class="pill">✅ Estética premium</span>
+          </div>
+
+          <div class="btns">
+            <button class="btn btn-primary" onclick="goWhatsApp('general')">Quiero salud + negocio</button>
+            <a class="btn btn-secondary" href="#botia">Ver BOT IA</a>
+          </div>
+
+          <div class="stats">
+            <div class="stat"><strong>24/7</strong><span>Responde todo el día</span></div>
+            <div class="stat"><strong>IA</strong><span>Califica y orienta</span></div>
+            <div class="stat"><strong>+Cierre</strong><span>Conduce a WhatsApp</span></div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-card">
+            <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=80" alt="Visual premium fitness y bienestar" />
+            <div class="hero-note">
+              <strong>Una página que sí se siente poderosa</strong>
+              <p>No se ve como una landing improvisada. Se ve moderna, aspiracional y lista para enamorar a un prospecto que quiere salud, resultados y una mejor oportunidad.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <span class="tag">Cliente final + oportunidad</span>
+      <h2 class="section-title">La idea es simple: que tu prospecto sienta que aquí puede <span class="gold">verse mejor, sentirse mejor y ganar mejor</span>.</h2>
+      <p class="section-copy">
+        Esta versión está escrita con enfoque hacia cliente final. Primero conecta con bienestar, energía, transformación y claridad. Después abre la puerta al negocio de manera natural, elegante y aspiracional.
+      </p>
+
+      <div class="grid grid-3">
+        <div class="card">
+          <div class="icon">💪</div>
+          <h3>Conecta por salud</h3>
+          <p>Habla de bienestar, energía y cambio real para que el prospecto entre por una necesidad cercana y personal.</p>
+        </div>
+        <div class="card">
+          <div class="icon">💼</div>
+          <h3>Abre negocio con elegancia</h3>
+          <p>La oportunidad aparece como una evolución lógica: consumir, compartir, crecer y generar ingresos con mejor presentación.</p>
+        </div>
+        <div class="card">
+          <div class="icon">🤖</div>
+          <h3>Deja trabajar al BOT IA</h3>
+          <p>El sistema hace preguntas, detecta intención y arma una respuesta inicial que ahorra tiempo y mejora el arranque del cierre.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split">
+      <div class="media">
+        <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1200&q=80" alt="Salud, nutrición y estilo de vida" />
+      </div>
+      <div class="card">
+        <span class="tag">Qué hace distinto este formato</span>
+        <h2 class="section-title">No solo atrae. <span class="gold">También filtra, orienta y empuja al cierre.</span></h2>
+        <p class="section-copy" style="margin-bottom:0;">
+          En lugar de una página estática, aquí tienes una experiencia. El visitante ve valor, entiende el enfoque y conversa con un BOT IA que detecta si viene por salud, por ingresos o por ambas.
+        </p>
+
+        <div class="list">
+          <div class="list-item"><div class="check">✓</div><div><strong>Respuesta automática</strong><br><span style="color:#cfcfcf">El bot entrega una primera orientación sin esperar que tú respondas manualmente.</span></div></div>
+          <div class="list-item"><div class="check">✓</div><div><strong>Ruta clara a WhatsApp</strong><br><span style="color:#cfcfcf">Toda conversación útil termina en un mensaje listo para seguimiento y cierre.</span></div></div>
+          <div class="list-item"><div class="check">✓</div><div><strong>Imagen premium</strong><br><span style="color:#cfcfcf">Tu presencia digital se siente más seria, visual y convincente desde el primer segundo.</span></div></div>
+        </div>
+
+        <div class="btns">
+          <button class="btn btn-primary" onclick="goWhatsApp('salud')">Quiero mejorar mi salud</button>
+          <button class="btn btn-secondary" onclick="goWhatsApp('negocio')">Quiero ver el negocio</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="botia">
+    <div class="container">
+      <span class="tag">BOT IA COMPLETO</span>
+      <h2 class="section-title">Automatización visual en el mismo estilo de tu landing</h2>
+      <p class="section-copy">
+        Este bloque simula la experiencia de un asistente inteligente dentro de la página. Hace preguntas, analiza el perfil del prospecto y responde con una orientación inicial. Después, envía todo a WhatsApp con un mensaje mucho más útil para el cierre.
+      </p>
+
+      <div class="bot-shell">
+        <aside class="bot-sidebar">
+          <div class="mini-stat">
+            <strong>Modo actual</strong>
+            <span>Prospección automática con enfoque en salud, ingresos o ambos.</span>
+          </div>
+          <div class="mini-stat">
+            <strong>Objetivo</strong>
+            <span>Calificar prospectos y abrir conversaciones con mejor intención de compra.</span>
+          </div>
+          <div class="mini-stat">
+            <strong>Salida</strong>
+            <span>Mensaje inteligente listo para WhatsApp con el resumen del prospecto.</span>
+          </div>
+          <div class="mini-stat">
+            <strong>Ideal para</strong>
+            <span>Networkers que quieren verse más profesionales y responder más rápido.</span>
+          </div>
+        </aside>
+
+        <div class="bot-main">
+          <div class="chat-box" id="chatBox">
+            <div class="msg bot">Hola. Soy el BOT IA de José Lugo. Estoy aquí para orientarte en salud, ingresos o ambos. Responde unas preguntas y te daré una recomendación inicial.</div>
+            <div class="msg bot">Primero quiero entenderte bien: ¿qué te interesa más en este momento? ¿mejorar tu salud, generar ingresos, o las dos cosas?</div>
+          </div>
+
+          <div class="composer">
+            <input class="field" id="botNombre" type="text" placeholder="Tu nombre" />
+            <select class="select" id="botInteres">
+              <option value="">¿Qué te interesa más?</option>
+              <option value="salud">Mejorar mi salud</option>
+              <option value="ingresos">Generar ingresos</option>
+              <option value="ambos">Salud + ingresos</option>
+            </select>
+            <select class="select" id="botBloqueo">
+              <option value="">¿Cuál es tu mayor bloqueo hoy?</option>
+              <option value="energia">Me siento sin energía o desmotivado</option>
+              <option value="peso">Quiero verme y sentirme mejor</option>
+              <option value="ventas">No estoy logrando ventas</option>
+              <option value="prospectos">La gente no me responde</option>
+              <option value="claridad">No tengo un sistema claro</option>
+            </select>
+            <select class="select" id="botTiempo">
+              <option value="">¿En cuánto tiempo quieres ver movimiento?</option>
+              <option value="rapido">Lo antes posible</option>
+              <option value="30dias">En 30 días</option>
+              <option value="90dias">En 90 días</option>
+            </select>
+            <textarea class="textarea" id="botMeta" placeholder="Cuéntame brevemente qué te gustaría lograr o por qué llegaste hasta aquí"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="runBot()">Generar respuesta IA</button>
+            <button class="btn btn-secondary" onclick="copyBotResponse()">Copiar respuesta</button>
+            <button class="btn btn-green" onclick="sendBotToWhatsApp()">Enviar a WhatsApp</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container grid grid-2" style="align-items:start;">
+      <div>
+        <span class="tag">Presentación en video</span>
+        <h2 class="section-title">Añade un video y refuerza la confianza</h2>
+        <p class="section-copy">
+          Esta sección te deja un espacio visual para presentar la idea, explicar el proceso y humanizar la oferta. Solo reemplaza el enlace del video por el tuyo y listo.
+        </p>
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/ysz5S6PUM-U" title="Video de presentación" frameborder="0" allowfullscreen></iframe>
+        </div>
+      </div>
+
+      <div>
+        <span class="tag">Prueba social</span>
+        <h2 class="section-title">Haz que el prospecto sienta que <span class="gold">sí puede avanzar</span></h2>
+
+        <div class="grid" style="gap:16px;">
+          <div class="testimonial">
+            <p>“Lo que más me gustó fue que esta página se ve moderna y seria. No parece improvisada. Eso genera más confianza desde el inicio.”</p>
+            <strong>Cliente interesado en salud y negocio</strong>
+          </div>
+          <div class="testimonial">
+            <p>“El BOT IA está buenísimo porque hace parte del trabajo inicial. Cuando la persona me escribe, ya llega con más claridad.”</p>
+            <strong>Networker en crecimiento</strong>
+          </div>
+          <div class="testimonial">
+            <p>“Esta estructura ayuda a vender mejor porque conecta primero con necesidad real y luego abre la oportunidad.”</p>
+            <strong>Emprendedor digital</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="card" style="text-align:center;">
+        <span class="tag">Cierre visual</span>
+        <h2 class="section-title">Si ya llegaste hasta aquí, no necesitas más vueltas. <span class="gold">Necesitas una conversación correcta.</span></h2>
+        <p class="section-copy" style="max-width:860px; margin:0 auto 18px;">
+          Salud, transformación, ingresos y una imagen más profesional pueden convivir en una sola página. Esta versión ya lo hace con un BOT IA integrado y una estética premium lista para impresionar.
+        </p>
+        <div class="counter" id="counter">05:00</div>
+        <div class="btns" style="justify-content:center;">
+          <button class="btn btn-primary" onclick="goWhatsApp('cierre')">Quiero activarme hoy</button>
+          <a class="btn btn-secondary" href="#botia">Probar el BOT IA</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <strong style="font-size:1.16rem; color:var(--gold2);">José Lugo</strong><br>
+      Especialista en ventas, presentación y automatización comercial<br>
+      WhatsApp: +57 312 6387467
+    </div>
+  </footer>
+
+  <div class="sticky-note" id="stickyNote">
+    <strong>BOT IA activo</strong>
+    <p>Esta landing ya incluye una experiencia visual con respuesta inteligente, filtro de prospectos y salida directa a WhatsApp.</p>
+    <button onclick="document.getElementById('stickyNote').style.display='none'">Ocultar</button>
+  </div>
+
+  <a class="sticky-whatsapp" href="javascript:void(0)" onclick="goWhatsApp('sticky')">💬 Escribirme ahora</a>
+
+  <script>
+    const phone = "573126387467";
+    let lastBotResponse = "";
+
+    function buildWhatsApp(type){
+      const base = {
+        general: "Hola José Lugo. Vi tu página y quiero información sobre salud y la oportunidad de negocio.",
+        salud: "Hola José Lugo. Vi la landing y quiero conocer mejor la parte de salud y bienestar.",
+        negocio: "Hola José Lugo. Vi la landing y quiero conocer la oportunidad de negocio.",
+        cierre: "Hola José Lugo. Quiero activarme hoy. Vi la landing y quiero avanzar.",
+        sticky: "Hola José Lugo. Entré desde el botón flotante y quiero más información."
+      };
+      return base[type] || base.general;
+    }
+
+    function goWhatsApp(type){
+      const msg = buildWhatsApp(type);
+      window.open("https://wa.me/" + phone + "?text=" + encodeURIComponent(msg), "_blank");
+    }
+
+    function addMessage(type, text){
+      const box = document.getElementById("chatBox");
+      const div = document.createElement("div");
+      div.className = "msg " + type;
+      div.textContent = text;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function generateBotResponse(nombre, interes, bloqueo, tiempo, meta){
+      const name = nombre || "amigo";
+      let intro = "Gracias por responder. ";
+      let core = "";
+      let close = "";
+
+      if(interes === "salud"){
+        core = "Por lo que me cuentas, tu punto de entrada ideal es bienestar y transformación personal. Lo correcto aquí es comenzar con una ruta enfocada en sentirte mejor, verte mejor y tener más energía para que el cambio sea visible y sostenible.";
+        close = "Después de eso, si te interesa, puedes conocer cómo convertir esa experiencia en una oportunidad para generar ingresos compartiendo lo que te funciona.";
+      } else if(interes === "ingresos"){
+        core = "Tu enfoque principal hoy está en generar ingresos. En ese caso, no solo necesitas producto: necesitas una forma más seria y atractiva de presentar la oportunidad, hablar con mejor claridad y mover al prospecto a escribirte.";
+        close = "La buena noticia es que ya estás viendo una estructura pensada exactamente para eso: captar atención, filtrar interés y llevar a WhatsApp con más intención de cierre.";
+      } else {
+        core = "Tu mejor ruta combina salud e ingresos. Esa mezcla es poderosa porque te permite empezar por una necesidad real, vivir la experiencia y después abrir la puerta a una oportunidad de crecimiento que se siente natural.";
+        close = "Cuando salud y negocio se presentan bien, el prospecto no siente presión; siente posibilidad.";
+      }
+
+      let pain = "";
+      if(bloqueo === "energia"){
+        pain = "También noto que hoy valoras sentir más energía y motivación, así que conviene empezar por una propuesta que te ayude a recuperar impulso.";
+      } else if(bloqueo === "peso"){
+        pain = "Veo que mejorar tu imagen y bienestar es una prioridad, así que la comunicación debe enfocarse en transformación visible y hábitos sostenibles.";
+      } else if(bloqueo === "ventas"){
+        pain = "Como el dolor principal está en las ventas, tu sistema debe generar conversaciones con más intención desde el primer clic.";
+      } else if(bloqueo === "prospectos"){
+        pain = "Si la gente no te responde, entonces no basta con insistir. Necesitas una presentación más atractiva y una conversación mejor guiada.";
+      } else if(bloqueo === "claridad"){
+        pain = "Si te falta claridad, lo mejor es trabajar con una ruta simple: mensaje correcto, presentación correcta y cierre correcto.";
+      }
+
+      let urgency = "";
+      if(tiempo === "rapido"){
+        urgency = "Como quieres ver movimiento rápido, lo ideal es comenzar hoy mismo con una acción concreta y una conversación directa.";
+      } else if(tiempo === "30dias"){
+        urgency = "Si tu ventana es de 30 días, estás a buen tiempo de construir una base sólida y comenzar a ver un cambio real.";
+      } else if(tiempo === "90dias"){
+        urgency = "Con una visión de 90 días, puedes estructurar mejor tu avance y crear resultados más consistentes.";
+      }
+
+      let metaBlock = meta ? `Tomando en cuenta lo que deseas lograr: "${meta}", mi recomendación inicial es enfocarte en una propuesta clara, elegante y fácil de compartir.` : "Mi recomendación inicial es enfocarte en una propuesta clara, elegante y fácil de compartir.";
+
+      return `Hola ${name}. ${intro}${core}\n\n${pain}\n\n${urgency}\n\n${metaBlock}\n\n${close}\n\nSi quieres, el siguiente paso es llevar esta conversación a WhatsApp y orientarte con más precisión.`;
+    }
+
+    function runBot(){
+      const nombre = document.getElementById("botNombre").value.trim();
+      const interes = document.getElementById("botInteres").value;
+      const bloqueo = document.getElementById("botBloqueo").value;
+      const tiempo = document.getElementById("botTiempo").value;
+      const meta = document.getElementById("botMeta").value.trim();
+
+      let resumenUsuario = [];
+      if(nombre) resumenUsuario.push("Nombre: " + nombre);
+      if(interes) resumenUsuario.push("Interés: " + interes);
+      if(bloqueo) resumenUsuario.push("Bloqueo: " + bloqueo);
+      if(tiempo) resumenUsuario.push("Tiempo: " + tiempo);
+      if(meta) resumenUsuario.push("Meta: " + meta);
+
+      addMessage("user", resumenUsuario.length ? resumenUsuario.join(" | ") : "Quiero orientación personalizada.");
+      lastBotResponse = generateBotResponse(nombre, interes, bloqueo, tiempo, meta);
+      setTimeout(() => addMessage("bot", lastBotResponse), 350);
+    }
+
+    function copyBotResponse(){
+      if(!lastBotResponse){
+        alert("Primero genera una respuesta IA.");
+        return;
+      }
+      navigator.clipboard.writeText(lastBotResponse).then(() => {
+        alert("Respuesta copiada.");
+      });
+    }
+
+    function sendBotToWhatsApp(){
+      if(!lastBotResponse){
+        alert("Primero genera una respuesta IA.");
+        return;
+      }
+
+      const nombre = document.getElementById("botNombre").value.trim();
+      const interes = document.getElementById("botInteres").value;
+      const bloqueo = document.getElementById("botBloqueo").value;
+      const tiempo = document.getElementById("botTiempo").value;
+      const meta = document.getElementById("botMeta").value.trim();
+
+      const resumen = [
+        "Resumen prospecto:",
+        nombre ? "Nombre: " + nombre : "",
+        interes ? "Interés: " + interes : "",
+        bloqueo ? "Bloqueo: " + bloqueo : "",
+        tiempo ? "Tiempo esperado: " + tiempo : "",
+        meta ? "Meta: " + meta : "",
+        "",
+        "Respuesta IA sugerida:",
+        lastBotResponse
+      ].filter(Boolean).join("\n");
+
+      window.open("https://wa.me/" + phone + "?text=" + encodeURIComponent(resumen), "_blank");
+    }
+
+    // contador
+    let time = 300;
+    setInterval(() => {
+      const m = Math.floor(time / 60);
+      const s = time % 60;
+      const el = document.getElementById("counter");
+      if(el){ el.textContent = `${m}:${s < 10 ? "0" : ""}${s}`; }
+      time--;
+      if(time < 0) time = 300;
+    }, 1000);
+  </script>
+</body>
+</html>

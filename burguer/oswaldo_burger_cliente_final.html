@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oswaldo Burger | Comida rápida en Santa Rita</title>
+  <meta name="description" content="Hamburguesas, combos, papas y comida rápida en Santa Rita, Aragua. Pide fácil por WhatsApp en Oswaldo Burger." />
+  <meta name="theme-color" content="#111111" />
+  <style>
+    :root{
+      --bg:#0e0e0f;
+      --card:#17181b;
+      --muted:#b9bcc6;
+      --text:#f7f7f8;
+      --gold:#ffcc43;
+      --red:#ff4b2b;
+      --red2:#ff6a00;
+      --green:#25d366;
+      --line:rgba(255,255,255,.08);
+      --shadow:0 12px 35px rgba(0,0,0,.35);
+      --radius:22px;
+      --max:1180px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(255,106,0,.14), transparent 22%),
+        radial-gradient(circle at top left, rgba(255,204,67,.10), transparent 20%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.5;
+    }
+    img{max-width:100%; display:block}
+    a{text-decoration:none; color:inherit}
+    .container{width:min(100% - 28px, var(--max)); margin:auto}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 14px; border:1px solid var(--line); border-radius:999px;
+      background:rgba(255,255,255,.04); color:#fff; font-size:.94rem
+    }
+    .topbar{
+      position:sticky; top:0; z-index:30; backdrop-filter: blur(10px);
+      background:rgba(14,14,15,.72); border-bottom:1px solid var(--line)
+    }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+      min-height:70px;
+    }
+    .brand{display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:.2px}
+    .brand-logo{
+      width:42px; height:42px; display:grid; place-items:center; border-radius:14px;
+      background:linear-gradient(135deg,var(--gold),#ff8c2b); color:#111; font-size:1.2rem;
+      box-shadow:var(--shadow)
+    }
+    .nav-links{display:flex; gap:18px; color:var(--muted); font-size:.95rem}
+    .nav-links a:hover{color:#fff}
+    .cta{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      border:none; cursor:pointer; border-radius:16px; padding:15px 20px;
+      font-weight:800; transition:.22s transform,.22s opacity,.22s box-shadow;
+      box-shadow:var(--shadow)
+    }
+    .cta:hover{transform:translateY(-2px)}
+    .cta-primary{
+      color:#111;
+      background:linear-gradient(135deg,var(--gold),#ff9d2f);
+    }
+    .cta-secondary{
+      color:#fff; border:1px solid var(--line); background:rgba(255,255,255,.04)
+    }
+    .hero{padding:34px 0 22px}
+    .hero-grid{
+      display:grid; grid-template-columns:1.05fr .95fr; gap:28px; align-items:center
+    }
+    .hero-card{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--line); border-radius:30px; padding:28px; box-shadow:var(--shadow)
+    }
+    h1{
+      font-size:clamp(2.15rem, 5vw, 4.4rem);
+      line-height:.98; margin:14px 0 16px; letter-spacing:-.04em
+    }
+    .gradient{
+      background:linear-gradient(135deg,#fff 10%, var(--gold) 56%, #ff7a29 100%);
+      -webkit-background-clip:text; background-clip:text; color:transparent
+    }
+    .lead{font-size:1.08rem; color:var(--muted); max-width:63ch}
+    .hero-ctas{display:flex; flex-wrap:wrap; gap:12px; margin-top:22px}
+    .social-proof{
+      display:flex; flex-wrap:wrap; gap:12px; margin-top:18px; color:#eaeaea
+    }
+    .hero-visual{
+      position:relative; min-height:520px; border-radius:30px; overflow:hidden; border:1px solid var(--line);
+      box-shadow:var(--shadow)
+    }
+    .hero-visual img{
+      width:100%; height:100%; object-fit:cover;
+      filter:saturate(1.05) contrast(1.02)
+    }
+    .hero-badge{
+      position:absolute; left:18px; right:18px; bottom:18px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding:16px; background:rgba(12,12,12,.68); border:1px solid rgba(255,255,255,.12);
+      border-radius:20px; backdrop-filter: blur(8px)
+    }
+    section{padding:24px 0}
+    .section-title{
+      font-size:clamp(1.7rem, 3.2vw, 2.7rem); margin:0 0 10px; letter-spacing:-.03em
+    }
+    .section-sub{color:var(--muted); margin:0 0 18px}
+    .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+    .grid-2{display:grid; grid-template-columns:repeat(2,1fr); gap:18px}
+    .card{
+      background:var(--card); border:1px solid var(--line); border-radius:24px; overflow:hidden; box-shadow:var(--shadow)
+    }
+    .card-body{padding:18px}
+    .feature-icon{
+      width:48px; height:48px; border-radius:14px; display:grid; place-items:center;
+      background:linear-gradient(135deg, rgba(255,204,67,.2), rgba(255,106,0,.22));
+      border:1px solid rgba(255,255,255,.08); font-size:1.25rem; margin-bottom:12px
+    }
+    .menu-card img{height:240px; object-fit:cover}
+    .menu-card h3{margin:6px 0 6px; font-size:1.2rem}
+    .price{
+      display:inline-flex; padding:8px 12px; border-radius:999px;
+      background:rgba(255,204,67,.12); border:1px solid rgba(255,204,67,.18); color:#ffe38d;
+      font-weight:700; font-size:.95rem
+    }
+    .row-between{display:flex; align-items:center; justify-content:space-between; gap:12px}
+    .reviews .card-body{height:100%}
+    .stars{color:#ffcf53; letter-spacing:1.3px}
+    .pas{
+      background:linear-gradient(180deg, rgba(255,106,0,.10), rgba(255,204,67,.05));
+      border:1px solid rgba(255,255,255,.08); border-radius:28px; padding:22px
+    }
+    .pas-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+    .pas-step{background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:22px; padding:18px}
+    .pas-step .num{
+      width:36px;height:36px;border-radius:50%;display:grid;place-items:center;
+      background:linear-gradient(135deg,var(--gold),#ff9c31); color:#111; font-weight:900; margin-bottom:10px
+    }
+    .split{
+      display:grid; grid-template-columns:1fr .95fr; gap:18px; align-items:stretch
+    }
+    .list{display:grid; gap:10px; color:#ececec}
+    .list div{
+      display:flex; gap:10px; align-items:flex-start;
+      padding:12px 14px; background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:16px
+    }
+    .map iframe{width:100%; height:360px; border:0; display:block}
+    .contact-card .detail{
+      display:flex; gap:10px; padding:12px 0; border-bottom:1px solid var(--line)
+    }
+    .contact-card .detail:last-child{border-bottom:none}
+    .order-box{
+      position:relative;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border:1px solid var(--line); border-radius:28px; padding:20px
+    }
+    .form-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    label{display:block; font-size:.92rem; color:#e9e9ea; margin-bottom:6px}
+    input, select, textarea{
+      width:100%; border-radius:16px; border:1px solid var(--line);
+      background:#111216; color:#fff; padding:14px 14px; outline:none
+    }
+    textarea{min-height:108px; resize:vertical}
+    .tiny{color:var(--muted); font-size:.9rem}
+    .footer{
+      padding:36px 0 110px; color:var(--muted)
+    }
+    .footer-box{
+      display:grid; grid-template-columns:1.2fr .8fr; gap:18px;
+      background:rgba(255,255,255,.03); border:1px solid var(--line); border-radius:28px; padding:22px
+    }
+    .floating-wa{
+      position:fixed; right:16px; bottom:92px; z-index:60;
+      width:62px; height:62px; border-radius:50%; display:grid; place-items:center;
+      background:var(--green); color:#fff; font-size:1.7rem; box-shadow:0 14px 30px rgba(37,211,102,.35)
+    }
+    .mobile-bar{
+      position:fixed; left:0; right:0; bottom:0; z-index:50;
+      background:rgba(10,10,11,.94); backdrop-filter: blur(10px);
+      border-top:1px solid var(--line); padding:12px 14px
+    }
+    .mobile-bar .wrap{
+      width:min(100%, var(--max)); margin:auto; display:flex; gap:10px
+    }
+    .mobile-bar .cta{flex:1; padding:15px 16px; border-radius:16px}
+    .tag{
+      display:inline-flex; padding:8px 10px; border-radius:999px; font-size:.84rem;
+      border:1px solid var(--line); background:rgba(255,255,255,.04); color:#ececec
+    }
+    @media (max-width: 980px){
+      .hero-grid,.split,.grid-2,.footer-box{grid-template-columns:1fr}
+      .grid-3,.pas-grid{grid-template-columns:1fr}
+      .hero-visual{min-height:380px}
+    }
+    @media (max-width: 760px){
+      .nav-links{display:none}
+      .hero{padding-top:22px}
+      .hero-card{padding:22px}
+      .menu-card img{height:210px}
+      .form-grid{grid-template-columns:1fr}
+      .mobile-bar .wrap{flex-direction:column}
+      .floating-wa{bottom:126px}
+      h1{font-size:2.25rem}
+      .lead{font-size:1rem}
+      .container{width:min(100% - 20px, var(--max))}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="container nav">
+      <div class="brand">
+        <div class="brand-logo">🍔</div>
+        <div>
+          <div>Oswaldo Burger</div>
+          <div style="font-size:.82rem;color:var(--muted);font-weight:600">Comida rápida en Santa Rita, Aragua</div>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="#menu">Menú</a>
+        <a href="#reviews">Reseñas</a>
+        <a href="#ubicacion">Ubicación</a>
+        <a href="#pedido">Pedir</a>
+      </div>
+      <a class="cta cta-primary" href="https://wa.me/584127310862?text=Hola%20Oswaldo%20Burger,%20quiero%20hacer%20un%20pedido%20%F0%9F%8D%94" target="_blank" rel="noopener">Pedir ahora</a>
+    </div>
+  </div>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-card">
+          <span class="pill">🔥 Sabor que provoca volver</span>
+          <h1><span class="gradient">Comida rápida</span> que te resuelve el antojo en serio.</h1>
+          <p class="lead">
+            Hamburguesas irresistibles, combos con papas, atención cercana y una experiencia pensada para que pedir sea fácil desde Instagram, Google Maps o WhatsApp.
+          </p>
+
+          <div class="social-proof">
+            <span class="tag">⭐ 4,3 de 5</span>
+            <span class="tag">25 reseñas</span>
+            <span class="tag">🍟 Consumo en el lugar</span>
+            <span class="tag">🚗 Pedidos desde el automóvil</span>
+            <span class="tag">📦 Entrega sin contacto</span>
+          </div>
+
+          <div class="hero-ctas">
+            <a class="cta cta-primary" href="#pedido">Quiero pedir</a>
+            <a class="cta cta-secondary" href="#menu">Ver menú rápido</a>
+          </div>
+
+          <div style="margin-top:18px" class="tiny">
+            Abierto. Dirección: Santa Rita 2106, Aragua. WhatsApp: 0412-7310862
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1200&q=80" alt="Hamburguesa gourmet con queso y vegetales" />
+          <div class="hero-badge">
+            <div>
+              <div style="font-weight:800">Pide directo por WhatsApp</div>
+              <div class="tiny">Sin complicaciones. Rápido. Desde el teléfono.</div>
+            </div>
+            <a class="cta cta-primary" style="padding:12px 16px" href="https://wa.me/584127310862?text=Hola,%20quiero%20ver%20los%20combos%20de%20Oswaldo%20Burger%20%F0%9F%8D%94" target="_blank" rel="noopener">Ver combos</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <h2 class="section-title">Todo lo que necesitas para pedir fácil</h2>
+        <p class="section-sub">Encuentra lo más importante en un solo lugar: opciones destacadas, pedido rápido, ubicación y contacto directo.</p>
+
+        <div class="grid-3">
+          <article class="card">
+            <div class="card-body">
+              <div class="feature-icon">🍔</div>
+              <h3>Comida que entra por los ojos</h3>
+              <p class="tiny">Hamburguesas, papas y combos presentados de forma visual para que elijas con más facilidad.</p>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-body">
+              <div class="feature-icon">⚡</div>
+              <h3>Pedido rápido por WhatsApp</h3>
+              <p class="tiny">Escribe, consulta y confirma tu pedido de forma directa desde tu teléfono.</p>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-body">
+              <div class="feature-icon">📱</div>
+              <h3>Fácil desde el celular</h3>
+              <p class="tiny">Navega, mira el menú y pide cómodamente desde cualquier dispositivo.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="menu">
+      <div class="container">
+        <h2 class="section-title">Menú destacado</h2>
+        <p class="section-sub">Opciones visuales para que el cliente vea, desee y pida en pocos segundos.</p>
+
+        <div class="grid-3">
+          <article class="card menu-card">
+            <img src="https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=1200&q=80" alt="Combo de hamburguesa con papas fritas y bebida" />
+            <div class="card-body">
+              <div class="row-between">
+                <h3>Combo Burger</h3>
+                <span class="price">Combo estrella</span>
+              </div>
+              <p class="tiny">Hamburguesa jugosa, papas crujientes y bebida fría para resolver el antojo completo.</p>
+              <div style="margin-top:14px">
+                <a class="cta cta-primary" style="width:100%" href="https://wa.me/584127310862?text=Hola,%20quiero%20pedir%20el%20Combo%20Burger%20de%20Oswaldo%20Burger%20%F0%9F%8D%9F%F0%9F%8D%94" target="_blank" rel="noopener">Pedir este combo</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card menu-card">
+            <img src="https://images.unsplash.com/photo-1561758033-d89a9ad46330?auto=format&fit=crop&w=1200&q=80" alt="Hamburguesa doble con queso derretido" />
+            <div class="card-body">
+              <div class="row-between">
+                <h3>Doble Cheese</h3>
+                <span class="price">Mucho sabor</span>
+              </div>
+              <p class="tiny">Doble carne, queso derretido y ese estilo contundente que provoca repetir.</p>
+              <div style="margin-top:14px">
+                <a class="cta cta-primary" style="width:100%" href="https://wa.me/584127310862?text=Hola,%20quiero%20pedir%20la%20Doble%20Cheese%20de%20Oswaldo%20Burger%20%F0%9F%A7%80" target="_blank" rel="noopener">Pedir la doble</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card menu-card">
+            <img src="https://images.unsplash.com/photo-1576107232684-1279f390859f?auto=format&fit=crop&w=1200&q=80" alt="Papas fritas con salsas y toppings" />
+            <div class="card-body">
+              <div class="row-between">
+                <h3>Papas Full</h3>
+                <span class="price">Acompañante top</span>
+              </div>
+              <p class="tiny">El complemento ideal para compartir, picar o subir el nivel del pedido.</p>
+              <div style="margin-top:14px">
+                <a class="cta cta-primary" style="width:100%" href="https://wa.me/584127310862?text=Hola,%20quiero%20agregar%20unas%20Papas%20Full%20a%20mi%20pedido%20%F0%9F%8D%9F" target="_blank" rel="noopener">Agregar papas</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+
+    <section id="reviews" class="reviews">
+      <div class="container">
+        <h2 class="section-title">Lo que ya dicen los clientes</h2>
+        <p class="section-sub">Prueba social basada en la información compartida.</p>
+
+        <div class="grid-3">
+          <article class="card">
+            <div class="card-body">
+              <div class="stars">★★★★★</div>
+              <p>“Excelente lugar para compartir con la familia. Se los recomiendo.”</p>
+              <div class="tiny">Reseña destacada</div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-body">
+              <div class="stars">★★★★★</div>
+              <p>“Calidad de personal y atención. Resolvieron rapidísimo la cantidad de pedidos.”</p>
+              <div class="tiny">Cliente satisfecho</div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-body">
+              <div class="stars">★★★★☆</div>
+              <p>“Todo bien. Un sitio que la gente visita con frecuencia y que ya tiene movimiento real.”</p>
+              <div class="tiny">Movimiento y demanda</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="pedido">
+      <div class="container split">
+        <div class="order-box">
+          <h2 class="section-title">Haz tu pedido</h2>
+          <p class="section-sub">Completa tus datos y envía tu pedido directo por WhatsApp de forma rápida y sencilla.</p>
+
+          <div class="form-grid">
+            <div>
+              <label for="nombre">Tu nombre</label>
+              <input id="nombre" type="text" placeholder="Ej: José" />
+            </div>
+            <div>
+              <label for="producto">¿Qué quieres pedir?</label>
+              <select id="producto">
+                <option value="Combo Burger">Combo Burger</option>
+                <option value="Doble Cheese">Doble Cheese</option>
+                <option value="Papas Full">Papas Full</option>
+                <option value="Quiero ver el menú completo">Quiero ver el menú completo</option>
+              </select>
+            </div>
+            <div>
+              <label for="cantidad">Cantidad</label>
+              <input id="cantidad" type="number" min="1" value="1" />
+            </div>
+            <div>
+              <label for="entrega">Modalidad</label>
+              <select id="entrega">
+                <option value="Para retirar">Para retirar</option>
+                <option value="Consumo en el lugar">Consumo en el lugar</option>
+                <option value="Entrega sin contacto">Entrega sin contacto</option>
+                <option value="Desde el automóvil">Desde el automóvil</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="margin-top:12px">
+            <label for="nota">Nota adicional</label>
+            <textarea id="nota" placeholder="Ej: sin cebolla, con extra queso, quiero agregar bebida..."></textarea>
+          </div>
+
+          <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:14px">
+            <button class="cta cta-primary" onclick="enviarPedido()">Enviar pedido por WhatsApp</button>
+            <a class="cta cta-secondary" href="tel:+584127310862">Llamar ahora</a>
+          </div>
+
+          <p class="tiny" style="margin-top:12px">Haz tu pedido en segundos y confirma fácilmente los detalles por WhatsApp.</p>
+        </div>
+
+        
+        <div class="card contact-card">
+          <div class="card-body">
+            <h2 class="section-title" style="font-size:2rem">Momentos que provocan volver</h2>
+            <p class="section-sub">Un lugar para compartir, disfrutar y resolver el antojo con buen ambiente y comida que se disfruta de verdad.</p>
+
+            <div class="grid-2" style="margin-top:10px">
+              <div class="card" style="overflow:hidden">
+                <img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1200&q=80" alt="Personas comiendo y compartiendo en restaurante" style="width:100%;height:190px;object-fit:cover">
+              </div>
+              <div class="card" style="overflow:hidden">
+                <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1200&q=80" alt="Grupo de amigos disfrutando comida rápida" style="width:100%;height:190px;object-fit:cover">
+              </div>
+            </div>
+
+            <div class="list" style="margin-top:14px">
+              <div><span>🍔</span><span>Ideal para disfrutar hamburguesas, combos y acompañantes con sabor y buena presentación.</span></div>
+              <div><span>👨‍👩‍👧‍👦</span><span>Perfecto para compartir con familia, amigos o darte un gusto cuando quieres comer bien.</span></div>
+              <div><span>🚗</span><span>Pide fácil para retirar, consumir en el lugar o solicitar una modalidad cómoda para ti.</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="ubicacion">
+      <div class="container split">
+        <div class="card map">
+          <iframe src="https://www.google.com/maps?q=Oswaldo+Burger&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Ubicación Oswaldo Burger"></iframe>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h2 class="section-title" style="font-size:2rem">Ubicación y contacto</h2>
+            <p class="section-sub">Encuentra el local fácilmente y elige la forma más cómoda para disfrutar tu pedido.</p>
+            <div class="list">
+              <div><span>📍</span><span>Dirección: Santa Rita 2106, Aragua</span></div>
+              <div><span>🚗</span><span>Disponible para pedidos desde el automóvil</span></div>
+              <div><span>🍽️</span><span>Consumo en el lugar</span></div>
+              <div><span>📦</span><span>Entrega sin contacto</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:18px">
+              <a class="cta cta-primary" href="https://www.google.com/maps/place/Oswaldo+Burger/@10.1985453,-67.5739528,17z/data=!3m1!4b1!4m6!3m5!1s0x8e803d65f2461e7f:0xe8a392284836309c!8m2!3d10.19854!4d-67.5713779!16s%2Fg%2F11vlj4n_yc?hl=es&entry=ttu&g_ep=EgoyMDI2MDMzMS4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener">Cómo llegar</a>
+              <a class="cta cta-secondary" href="https://wa.me/584127310862?text=Hola,%20quiero%20pedir%20en%20Oswaldo%20Burger%20%F0%9F%8D%94" target="_blank" rel="noopener">Pedir por WhatsApp</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="footer">
+      <div class="container footer-box">
+        <div>
+          <div class="brand" style="margin-bottom:10px">
+            <div class="brand-logo">🍔</div>
+            <div>Oswaldo Burger</div>
+          </div>
+          <div class="tiny">Oswaldo Burger, un espacio pensado para disfrutar buena comida rápida, compartir y pedir fácil por WhatsApp.</div>
+        </div>
+        <div>
+          <div class="tiny">WhatsApp</div>
+          <div style="font-weight:800;color:#fff;margin-bottom:8px">0412-7310862</div>
+          <div class="tiny">Santa Rita 2106, Aragua</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <a class="floating-wa" href="https://wa.me/584127310862?text=Hola,%20quiero%20hacer%20un%20pedido%20en%20Oswaldo%20Burger%20%F0%9F%8D%94" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
+
+  <div class="mobile-bar">
+    <div class="wrap">
+      <a class="cta cta-secondary" href="https://www.google.com/maps/place/Oswaldo+Burger/@10.1985453,-67.5739528,17z/data=!3m1!4b1!4m6!3m5!1s0x8e803d65f2461e7f:0xe8a392284836309c!8m2!3d10.19854!4d-67.5713779!16s%2Fg%2F11vlj4n_yc?hl=es&entry=ttu&g_ep=EgoyMDI2MDMzMS4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener">Ver ubicación</a>
+      <a class="cta cta-primary" href="#pedido">Pedir ahora</a>
+    </div>
+  </div>
+
+  <script>
+    function enviarPedido(){
+      const nombre = document.getElementById('nombre').value.trim() || 'Cliente';
+      const producto = document.getElementById('producto').value;
+      const cantidad = document.getElementById('cantidad').value || '1';
+      const entrega = document.getElementById('entrega').value;
+      const nota = document.getElementById('nota').value.trim();
+
+      let mensaje = `Hola Oswaldo Burger, soy ${nombre}. Quiero pedir:%0A%0A` +
+                    `🍔 Producto: ${producto}%0A` +
+                    `🔢 Cantidad: ${cantidad}%0A` +
+                    `📦 Modalidad: ${entrega}%0A`;
+
+      if(nota){
+        mensaje += `📝 Nota: ${encodeURIComponent(nota)}%0A`;
+      }
+
+      mensaje += `%0AQuedo atento para confirmar mi pedido.`;
+      const url = `https://wa.me/584127310862?text=${mensaje}`;
+      window.open(url, '_blank');
+    }
+  </script>
+</body>
+</html>

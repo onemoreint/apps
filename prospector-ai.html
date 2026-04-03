@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Prospector AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #08090a;
+    --surface: #101114;
+    --surface2: #16181d;
+    --surface3: #1c1f26;
+    --gold: #e8c86a;
+    --gold-dim: #a8904a;
+    --gold-glow: rgba(232,200,106,0.12);
+    --gold-line: rgba(232,200,106,0.2);
+    --text: #f0ede8;
+    --text2: #8a8884;
+    --text3: #4a4845;
+    --success: #3ecf8e;
+    --warn: #f5a623;
+    --danger: #e55353;
+    --info: #5b9cf6;
+    --success-bg: rgba(62,207,142,0.1);
+    --warn-bg: rgba(245,166,35,0.1);
+    --danger-bg: rgba(229,83,83,0.1);
+    --info-bg: rgba(91,156,246,0.1);
+    --border: rgba(255,255,255,0.06);
+    --r: 14px;
+    --r-sm: 8px;
+    --shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 15px; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  button, input, select, textarea { font: inherit; }
+
+  .app {
+    display: grid;
+    grid-template-columns: 248px 1fr;
+    min-height: 100vh;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .brand {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-mark {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--gold);
+    display: grid;
+    place-items: center;
+    color: #08090a;
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: -1px;
+    flex-shrink: 0;
+  }
+
+  .brand-text {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  .brand-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text2);
+    letter-spacing: 0.04em;
+    margin-top: 1px;
+  }
+
+  .nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nav-section {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 12px 10px 6px;
+  }
+
+  .nav-btn {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--text2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .nav-btn:hover {
+    background: var(--surface2);
+    color: var(--text);
+  }
+
+  .nav-btn.active {
+    background: var(--gold-glow);
+    color: var(--gold);
+    border: 1px solid var(--gold-line);
+  }
+
+  .nav-icon {
+    width: 20px;
+    height: 20px;
+    display: grid;
+    place-items: center;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .nav-badge {
+    margin-left: auto;
+    background: var(--danger);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 99px;
+  }
+
+  .sidebar-footer {
+    padding: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 6px var(--success);
+    display: inline-block;
+    margin-right: 7px;
+  }
+
+  .status-line {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text2);
+  }
+
+  /* ── Main ── */
+  .main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .page-title {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .page-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text2);
+    margin-top: 2px;
+  }
+
+  .topbar-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .search-input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 14px;
+    border-radius: var(--r-sm);
+    width: 220px;
+    outline: none;
+    font-size: 13px;
+    transition: border-color 0.2s;
+  }
+
+  .search-input::placeholder { color: var(--text3); }
+  .search-input:focus { border-color: var(--gold-dim); }
+
+  .btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 16px;
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .btn:hover { background: var(--surface3); border-color: rgba(255,255,255,0.1); }
+
+  .btn-gold {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #08090a;
+  }
+
+  .btn-gold:hover { background: #f0d47e; border-color: #f0d47e; }
+
+  /* ── Content area ── */
+  .content {
+    flex: 1;
+    padding: 28px;
+    overflow-y: auto;
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 20px;
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin-bottom: 4px;
+  }
+
+  .card-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text2);
+    margin-bottom: 16px;
+  }
+
+  /* ── Grids ── */
+  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .mb { margin-bottom: 16px; }
+
+  /* ── Stat cards ── */
+  .stat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 20px; }
+
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    opacity: 0.4;
+  }
+
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .stat-val {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 6px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-trend {
+    font-size: 12px;
+    color: var(--text2);
+  }
+
+  /* ── Leads / list items ── */
+  .lead-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 14px;
+    border-radius: var(--r-sm);
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+
+  .lead-row:hover { background: var(--surface2); border-color: var(--border); }
+
+  .ava {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--gold-glow);
+    border: 1px solid var(--gold-line);
+    display: grid;
+    place-items: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold);
+    flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .lead-name { font-size: 14px; font-weight: 600; }
+  .lead-meta { font-size: 12px; color: var(--text2); margin-top: 2px; font-family: 'DM Mono', monospace; }
+
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+
+  .chip {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 3px 9px;
+    border-radius: 99px;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    white-space: nowrap;
+  }
+
+  .chip-s { background: var(--success-bg); border-color: rgba(62,207,142,0.25); color: var(--success); }
+  .chip-w { background: var(--warn-bg); border-color: rgba(245,166,35,0.25); color: var(--warn); }
+  .chip-d { background: var(--danger-bg); border-color: rgba(229,83,83,0.25); color: var(--danger); }
+  .chip-i { background: var(--info-bg); border-color: rgba(91,156,246,0.25); color: var(--info); }
+  .chip-g { background: var(--gold-glow); border-color: var(--gold-line); color: var(--gold); }
+
+  /* ── Table ── */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { font-family: 'DM Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: left; }
+  td { padding: 12px 12px; border-bottom: 1px solid var(--border); color: var(--text); }
+  tr:last-child td { border-bottom: none; }
+
+  /* ── Progress ── */
+  .prog {
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  .prog-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    transition: width 0.8s ease;
+  }
+
+  /* ── Inbox/Chat ── */
+  .chat-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 16px;
+    height: calc(100vh - 140px);
+  }
+
+  .conv-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow-y: auto;
+  }
+
+  .conv-item {
+    padding: 12px 14px;
+    border-radius: var(--r-sm);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .conv-item:hover, .conv-item.active {
+    background: var(--surface2);
+    border-color: var(--border);
+  }
+
+  .conv-item.active { border-color: var(--gold-line); }
+
+  .conv-name { font-size: 13px; font-weight: 600; }
+  .conv-preview { font-size: 11px; color: var(--text2); margin-top: 3px; font-family: 'DM Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .chat-panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .ai-bar {
+    background: var(--gold-glow);
+    border: 1px solid var(--gold-line);
+    border-radius: var(--r-sm);
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    flex-shrink: 0;
+  }
+
+  .ai-bar-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ai-bar-label::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 6px var(--gold);
+    display: block;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  .ai-suggestion-text { font-size: 13px; line-height: 1.6; color: var(--text); font-style: italic; }
+  .ai-chips { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-right: 4px;
+    margin-bottom: 14px;
+  }
+
+  .msg {
+    max-width: 72%;
+    padding: 11px 14px;
+    border-radius: var(--r-sm);
+    font-size: 13px;
+    line-height: 1.6;
+    border: 1px solid var(--border);
+  }
+
+  .msg-them { align-self: flex-start; background: var(--surface2); }
+  .msg-me { align-self: flex-end; background: var(--gold-glow); border-color: var(--gold-line); }
+
+  .composer {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .compose-area {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 14px;
+    border-radius: var(--r-sm);
+    resize: none;
+    min-height: 80px;
+    outline: none;
+    font-size: 13px;
+    line-height: 1.5;
+    transition: border-color 0.2s;
+  }
+
+  .compose-area:focus { border-color: var(--gold-dim); }
+
+  /* ── AI Closer config ── */
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text2); margin-bottom: 8px; letter-spacing: 0.05em; }
+
+  .field select, .field input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 14px;
+    border-radius: var(--r-sm);
+    outline: none;
+    font-size: 13px;
+    appearance: none;
+    transition: border-color 0.2s;
+  }
+
+  .field select:focus, .field input:focus { border-color: var(--gold-dim); }
+
+  /* ── Knowledge ── */
+  .source-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 14px;
+    background: var(--surface2);
+    border-radius: var(--r-sm);
+    border: 1px solid var(--border);
+    margin-bottom: 8px;
+  }
+
+  .source-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    display: grid;
+    place-items: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* ── Metrics ring ── */
+  .ring-wrap { display: flex; flex-direction: column; align-items: center; margin: 12px 0 20px; }
+
+  .ring-val {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--gold);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ring-label { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text2); margin-top: 4px; }
+
+  svg.donut { transform: rotate(-90deg); }
+
+  /* ── Integration cards ── */
+  .int-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+    margin-bottom: 14px;
+  }
+
+  /* ── Activity feed ── */
+  .activity-item {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .activity-item:last-child { border-bottom: none; }
+
+  .act-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+    margin-top: 6px;
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+
+  .act-title { font-size: 13px; font-weight: 600; }
+  .act-detail { font-size: 12px; color: var(--text2); margin-top: 2px; font-family: 'DM Mono', monospace; }
+
+  /* ── Loader ── */
+  .loader {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--gold);
+    padding: 8px 0;
+  }
+
+  .loader.show { display: flex; }
+
+  .loader-dots span {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: bounce 1.2s infinite ease-in-out;
+  }
+
+  .loader-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loader-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes bounce { 0%,80%,100%{transform:scale(0);opacity:0.4} 40%{transform:scale(1);opacity:1} }
+
+  /* ── Pill filters ── */
+  .pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+
+  .pill {
+    padding: 6px 14px;
+    border-radius: 99px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text2);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.15s;
+  }
+
+  .pill.active {
+    background: var(--gold-glow);
+    border-color: var(--gold-line);
+    color: var(--gold);
+  }
+
+  /* ── Empty state ── */
+  .empty {
+    padding: 28px;
+    border: 1px dashed var(--border);
+    border-radius: var(--r);
+    text-align: center;
+    color: var(--text2);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  /* ── Checklist ── */
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+
+  .check-item:last-child { border-bottom: none; }
+
+  .check-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .check-ok { background: var(--success-bg); color: var(--success); }
+  .check-pend { background: var(--warn-bg); color: var(--warn); }
+  .check-detail { font-size: 12px; color: var(--text2); margin-top: 2px; font-family: 'DM Mono', monospace; }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+  /* ── Responsive ── */
+  @media (max-width: 1200px) {
+    .stat-grid, .g4 { grid-template-columns: repeat(2,1fr); }
+    .g3 { grid-template-columns: repeat(2,1fr); }
+  }
+
+  @media (max-width: 900px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { position: relative; height: auto; }
+    .nav { flex-direction: row; flex-wrap: wrap; overflow: visible; }
+    .nav-section { display: none; }
+    .chat-layout { grid-template-columns: 1fr; height: auto; }
+    .g2, .g3, .g4 { grid-template-columns: 1fr; }
+  }
+
+  /* ── Anim ── */
+  .fade-in { animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo-mark">P</div>
+      <div>
+        <div class="brand-text">Prospector AI</div>
+        <div class="brand-sub">Prospección · Cierre · Seguimiento</div>
+      </div>
+    </div>
+
+    <nav class="nav" id="nav">
+      <span class="nav-section">Principal</span>
+      <button class="nav-btn active" data-screen="home" onclick="go('home')">
+        <span class="nav-icon">⌂</span> Inicio
+      </button>
+      <button class="nav-btn" data-screen="leads" onclick="go('leads')">
+        <span class="nav-icon">◉</span> Leads
+        <span class="nav-badge">38</span>
+      </button>
+      <button class="nav-btn" data-screen="inbox" onclick="go('inbox')">
+        <span class="nav-icon">✉</span> Inbox
+        <span class="nav-badge">8</span>
+      </button>
+      <button class="nav-btn" data-screen="campaigns" onclick="go('campaigns')">
+        <span class="nav-icon">⚑</span> Campañas
+      </button>
+      <span class="nav-section">Sistema IA</span>
+      <button class="nav-btn" data-screen="ai_closer" onclick="go('ai_closer')">
+        <span class="nav-icon">✦</span> IA Closer
+      </button>
+      <button class="nav-btn" data-screen="knowledge" onclick="go('knowledge')">
+        <span class="nav-icon">☰</span> Conocimiento
+      </button>
+      <button class="nav-btn" data-screen="automations" onclick="go('automations')">
+        <span class="nav-icon">↻</span> Automatizaciones
+      </button>
+      <span class="nav-section">Análisis</span>
+      <button class="nav-btn" data-screen="metrics" onclick="go('metrics')">
+        <span class="nav-icon">▣</span> Métricas
+      </button>
+      <button class="nav-btn" data-screen="team" onclick="go('team')">
+        <span class="nav-icon">☻</span> Equipo
+      </button>
+      <button class="nav-btn" data-screen="integrations" onclick="go('integrations')">
+        <span class="nav-icon">⌁</span> Integraciones
+      </button>
+      <button class="nav-btn" data-screen="settings" onclick="go('settings')">
+        <span class="nav-icon">⚙</span> Ajustes
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="status-line"><span class="status-dot"></span>IA Closer activa · Base 82%</div>
+    </div>
+  </aside>
+
+  <!-- ── Main ── -->
+  <div class="main">
+
+    <div class="topbar">
+      <div>
+        <div class="page-title" id="pageTitle">Inicio</div>
+        <div class="page-sub" id="pageSub">Tu centro de control para prospectar y cerrar.</div>
+      </div>
+      <div class="topbar-actions">
+        <input class="search-input" type="text" placeholder="Buscar leads, tags..."/>
+        <button class="btn" onclick="go('knowledge')">+ Fuente</button>
+        <button class="btn btn-gold" onclick="go('inbox')">Responder ahora</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ══ HOME ══ -->
+      <section class="screen active fade-in" id="home">
+        <div class="stat-grid">
+          <div class="stat">
+            <div class="stat-label">Leads nuevos hoy</div>
+            <div class="stat-val">38</div>
+            <div class="stat-trend">+22% vs ayer</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Conversaciones activas</div>
+            <div class="stat-val">17</div>
+            <div class="stat-trend">8 con alta intención</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Seguimientos pendientes</div>
+            <div class="stat-val">12</div>
+            <div class="stat-trend">5 vencen hoy a las 6pm</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Cierres del período</div>
+            <div class="stat-val">9</div>
+            <div class="stat-trend">Producto 6 · Negocio 3</div>
+          </div>
+        </div>
+
+        <div class="g2 mb">
+          <div class="card">
+            <div class="card-title">Leads prioritarios</div>
+            <div class="card-sub">TOCAR PRIMERO</div>
+            <div class="lead-row" onclick="go('inbox')">
+              <div class="ava">CM</div>
+              <div>
+                <div class="lead-name">Carlos Mendoza</div>
+                <div class="lead-meta">Instagram · Preguntó precio · 8 min</div>
+              </div>
+              <div class="chips"><span class="chip chip-s">Caliente</span><span class="chip chip-g">Producto</span></div>
+            </div>
+            <div class="lead-row" onclick="go('inbox')">
+              <div class="ava">LG</div>
+              <div>
+                <div class="lead-name">Laura Gómez</div>
+                <div class="lead-meta">Facebook · Quiere info de negocio · 17 min</div>
+              </div>
+              <div class="chips"><span class="chip chip-w">Tibia</span><span class="chip">Negocio</span></div>
+            </div>
+            <div class="lead-row" onclick="go('inbox')">
+              <div class="ava">JS</div>
+              <div>
+                <div class="lead-name">José Salas</div>
+                <div class="lead-meta">TikTok · Enlace bio · 29 min</div>
+              </div>
+              <div class="chips"><span class="chip chip-s">Intención</span><span class="chip chip-g">Producto</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Rendimiento comercial</div>
+            <div class="card-sub">CONVERSIÓN EMBUDO</div>
+            <div class="ring-wrap">
+              <svg class="donut" width="110" height="110" viewBox="0 0 110 110">
+                <circle cx="55" cy="55" r="44" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="10"/>
+                <circle cx="55" cy="55" r="44" fill="none" stroke="#e8c86a" stroke-width="10" stroke-dasharray="175 101" stroke-linecap="round"/>
+              </svg>
+              <div class="ring-val" style="margin-top:-70px;position:relative;z-index:2;">65%</div>
+              <div class="ring-label">TASA DE AVANCE</div>
+            </div>
+            <div style="font-size:12px;color:var(--text2);line-height:1.7;font-family:'DM Mono',monospace;">
+              6.5 de cada 10 conversaciones calificadas avanzan al siguiente microcompromiso. El seguimiento automático eleva la tasa en leads tibios.
+            </div>
+          </div>
+        </div>
+
+        <div class="g2">
+          <div class="card">
+            <div class="card-title">Acciones rápidas</div>
+            <div class="card-sub">ATAJOS</div>
+            <div class="g3" style="gap:8px;margin:0;">
+              <button class="btn" onclick="go('leads')">Ver leads calientes</button>
+              <button class="btn" onclick="go('inbox')">Abrir inbox</button>
+              <button class="btn" onclick="go('ai_closer')">Ajustar IA</button>
+              <button class="btn" onclick="go('knowledge')">Conocimiento</button>
+              <button class="btn" onclick="go('automations')">Automatizaciones</button>
+              <button class="btn" onclick="go('metrics')">Métricas</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Actividad reciente</div>
+            <div class="card-sub">SISTEMA</div>
+            <div class="activity-item">
+              <div class="act-dot"></div>
+              <div>
+                <div class="act-title">IA Closer generó respuesta</div>
+                <div class="act-detail">Objeción de precio resuelta · hace 3 min</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="act-dot"></div>
+              <div>
+                <div class="act-title">Seguimiento programado</div>
+                <div class="act-detail">Lead reagendado mañana 8am · hace 9 min</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="act-dot"></div>
+              <div>
+                <div class="act-title">Fuente sincronizada</div>
+                <div class="act-detail">FAQ producto v3 · 26 fragmentos · hace 22 min</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="act-dot"></div>
+              <div>
+                <div class="act-title">Nuevo lead atribuido</div>
+                <div class="act-detail">TikTok · campaña hígado graso · hace 37 min</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ LEADS ══ -->
+      <section class="screen fade-in" id="leads">
+        <div class="g2">
+          <div class="card">
+            <div class="card-title">Panel de leads</div>
+            <div class="card-sub">CLASIFICACIÓN Y TEMPERATURA</div>
+            <div class="pills">
+              <span class="pill active" onclick="filterPill(this)">Todos</span>
+              <span class="pill" onclick="filterPill(this)">Producto</span>
+              <span class="pill" onclick="filterPill(this)">Negocio</span>
+              <span class="pill" onclick="filterPill(this)">Calientes</span>
+              <span class="pill" onclick="filterPill(this)">Sin responder</span>
+            </div>
+            <div style="overflow:auto;">
+              <table>
+                <thead>
+                  <tr><th>Lead</th><th>Canal</th><th>Objetivo</th><th>Temp.</th><th>Próxima acción</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Carlos Mendoza</td><td>Instagram</td><td>Producto</td><td><span class="chip chip-s">Caliente</span></td><td>Responder con pregunta guía</td></tr>
+                  <tr><td>Laura Gómez</td><td>Facebook</td><td>Negocio</td><td><span class="chip chip-w">Tibia</span></td><td>Invitar a Zoom corto</td></tr>
+                  <tr><td>Jesús Paredes</td><td>TikTok</td><td>Producto</td><td><span class="chip chip-w">Tibia</span></td><td>Enviar testimonio + CTA</td></tr>
+                  <tr><td>Mariela C.</td><td>Instagram</td><td>Negocio</td><td><span class="chip chip-d">Fría</span></td><td>Reactivar en 24h</td></tr>
+                  <tr><td>Ana Ruiz</td><td>Facebook</td><td>Producto</td><td><span class="chip chip-s">Caliente</span></td><td>Cerrar pedido</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Ficha del lead</div>
+            <div class="card-sub">CARLOS MENDOZA</div>
+            <div style="display:flex;gap:12px;align-items:center;padding:12px;background:var(--surface2);border-radius:var(--r-sm);margin-bottom:14px;">
+              <div class="ava" style="width:48px;height:48px;font-size:15px;">CM</div>
+              <div>
+                <div class="lead-name">Carlos Mendoza</div>
+                <div class="lead-meta">Busca bajar de peso · precio y resultados rápidos</div>
+              </div>
+            </div>
+            <div style="background:var(--surface2);border-radius:var(--r-sm);padding:12px;margin-bottom:10px;font-family:'DM Mono',monospace;font-size:12px;color:var(--text2);">
+              <div style="color:var(--text3);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;">ÚLTIMO MENSAJE</div>
+              "¿Cuánto cuesta y cómo se toma?"
+            </div>
+            <div style="background:var(--gold-glow);border:1px solid var(--gold-line);border-radius:var(--r-sm);padding:12px;font-size:13px;line-height:1.6;margin-bottom:14px;font-style:italic;">
+              Antes del precio, quiero orientarte bien. ¿Qué estás buscando mejorar: peso, energía o digestión?
+            </div>
+            <button class="btn btn-gold" onclick="go('inbox')" style="width:100%;">Abrir conversación →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ INBOX (con IA real) ══ -->
+      <section class="screen fade-in" id="inbox">
+        <div class="chat-layout">
+
+          <div class="card conv-list">
+            <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;">CONVERSACIONES</div>
+            <div class="conv-item active" onclick="selectConv(this,'Carlos Mendoza','Instagram')">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div class="ava" style="width:32px;height:32px;font-size:11px;">CM</div>
+                <div><div class="conv-name">Carlos Mendoza</div><div class="conv-preview">¿cuánto cuesta?</div></div>
+              </div>
+            </div>
+            <div class="conv-item" onclick="selectConv(this,'Laura Gómez','Facebook')">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div class="ava" style="width:32px;height:32px;font-size:11px;">LG</div>
+                <div><div class="conv-name">Laura Gómez</div><div class="conv-preview">¿cómo funciona el negocio?</div></div>
+              </div>
+            </div>
+            <div class="conv-item" onclick="selectConv(this,'Ana Ruiz','Instagram')">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div class="ava" style="width:32px;height:32px;font-size:11px;">AR</div>
+                <div><div class="conv-name">Ana Ruiz</div><div class="conv-preview">quiero ordenar</div></div>
+              </div>
+            </div>
+            <div class="conv-item" onclick="selectConv(this,'Jesús Paredes','TikTok')">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div class="ava" style="width:32px;height:32px;font-size:11px;">JP</div>
+                <div><div class="conv-name">Jesús Paredes</div><div class="conv-preview">lead desde bio</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card chat-panel">
+            <div class="ai-bar">
+              <div class="ai-bar-label">IA Closer · Sugerencia en tiempo real</div>
+              <div class="ai-suggestion-text" id="aiSuggestion">Antes del precio, quiero orientarte bien. Cuéntame, ¿qué estás buscando mejorar exactamente: peso, energía o digestión?</div>
+              <div class="ai-chips">
+                <span class="chip chip-g">Producto</span>
+                <span class="chip chip-s">Caliente</span>
+                <span class="chip chip-w">Acción: pregunta guía</span>
+              </div>
+            </div>
+
+            <div class="messages" id="messages">
+              <div class="msg msg-them">Hola, vi tu publicación y me interesa. ¿Cuánto cuesta?</div>
+              <div class="msg msg-me">Gracias por escribir. Antes del precio, quiero orientarte bien. Cuéntame, ¿qué estás buscando mejorar exactamente ahora mismo?</div>
+              <div class="msg msg-them">Principalmente bajar de peso y sentirme con más energía.</div>
+              <div class="msg msg-me">Perfecto. Entonces te puedo explicar la opción más alineada para eso y cómo empezar sin complicarte.</div>
+            </div>
+
+            <div class="loader" id="loader">
+              <div class="loader-dots"><span></span><span></span><span></span></div>
+              IA generando respuesta...
+            </div>
+
+            <div class="chips" style="margin-bottom:10px;">
+              <span class="chip" style="cursor:pointer;" onclick="saveTemplate()">Guardar plantilla</span>
+              <span class="chip" style="cursor:pointer;">Escalar a humano</span>
+              <span class="chip" style="cursor:pointer;" onclick="scheduleFollowup()">Programar seguimiento</span>
+            </div>
+
+            <div class="composer">
+              <textarea class="compose-area" id="replyBox" placeholder="Escribe tu respuesta o usa IA para generar..."></textarea>
+              <button class="btn" onclick="generateAI()">✦ Usar IA</button>
+              <button class="btn btn-gold" onclick="sendMsg()">Enviar →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ CAMPAIGNS ══ -->
+      <section class="screen fade-in" id="campaigns">
+        <div class="g2">
+          <div class="card">
+            <div class="card-title">Campañas activas</div>
+            <div class="card-sub">CAPTACIÓN POR CANAL</div>
+            <div style="margin-bottom:14px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <div><div style="font-size:13px;font-weight:600;">TikTok · Hígado graso</div><div style="font-size:11px;color:var(--text2);font-family:'DM Mono',monospace;">72 leads · Link bio + formulario</div></div>
+                <span class="chip chip-s">Activa</span>
+              </div>
+              <div class="prog"><div class="prog-fill" style="width:72%"></div></div>
+            </div>
+            <div style="margin-bottom:14px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <div><div style="font-size:13px;font-weight:600;">Instagram · Producto detox</div><div style="font-size:11px;color:var(--text2);font-family:'DM Mono',monospace;">43 conversaciones · Click to message</div></div>
+                <span class="chip chip-s">Activa</span>
+              </div>
+              <div class="prog"><div class="prog-fill" style="width:58%"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <div><div style="font-size:13px;font-weight:600;">Facebook · Oportunidad negocio</div><div style="font-size:11px;color:var(--text2);font-family:'DM Mono',monospace;">18 calificados · Zoom privado</div></div>
+                <span class="chip chip-w">Monitoreo</span>
+              </div>
+              <div class="prog"><div class="prog-fill" style="width:81%"></div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Nueva campaña</div>
+            <div class="card-sub">CONFIGURACIÓN RÁPIDA</div>
+            <div class="field"><label>Nombre</label><input value="Campaña Cierre Producto"/></div>
+            <div class="field"><label>Canal</label><select><option>Instagram</option><option>Facebook</option><option>TikTok</option></select></div>
+            <div class="field"><label>Objetivo</label><select><option>Producto</option><option>Negocio</option></select></div>
+            <div class="field"><label>CTA</label><input value="Escríbeme AHORA"/></div>
+            <button class="btn btn-gold" style="width:100%;margin-top:4px;">Crear campaña</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ AI CLOSER ══ -->
+      <section class="screen fade-in" id="ai_closer">
+        <div class="g2">
+          <div class="card">
+            <div class="card-title">Configuración IA Closer</div>
+            <div class="card-sub">MOTOR DE CIERRE</div>
+            <div class="field"><label>Modo principal</label><select id="cfgMode"><option>Producto</option><option>Negocio</option></select></div>
+            <div class="field"><label>Estilo de comunicación</label><select id="cfgStyle"><option>Consultivo</option><option>Directo</option><option>Cierre fuerte</option></select></div>
+            <div class="field"><label>Modo de respuesta</label><select id="cfgResponse"><option>Sugerido</option><option>Manual aprobado</option><option>Automático restringido</option></select></div>
+            <div class="chips" style="margin-top:6px;">
+              <span class="chip chip-s">Guardrails activos</span>
+              <span class="chip">Sin claims médicos</span>
+              <span class="chip">Sin claims de ingresos</span>
+            </div>
+            <button class="btn btn-gold" style="width:100%;margin-top:16px;" onclick="saveConfig()">Guardar configuración</button>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Vista previa de respuestas</div>
+            <div class="card-sub">CASOS REALES</div>
+            <div style="background:var(--surface2);border-radius:var(--r-sm);padding:13px;margin-bottom:10px;">
+              <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;margin-bottom:6px;">Caso: precio de producto</div>
+              <div style="font-size:13px;line-height:1.6;font-style:italic;color:var(--text2);">"Antes del precio, quiero orientarte bien. ¿Qué estás buscando mejorar exactamente ahora mismo?"</div>
+            </div>
+            <div style="background:var(--surface2);border-radius:var(--r-sm);padding:13px;margin-bottom:10px;">
+              <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;margin-bottom:6px;">Caso: interés en negocio</div>
+              <div style="font-size:13px;line-height:1.6;font-style:italic;color:var(--text2);">"Depende de lo que estés buscando. ¿Quieres ingreso extra o construir algo más grande a mediano plazo?"</div>
+            </div>
+            <div style="background:var(--surface2);border-radius:var(--r-sm);padding:13px;">
+              <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;margin-bottom:6px;">Caso: objeción de dinero</div>
+              <div style="font-size:13px;line-height:1.6;font-style:italic;color:var(--text2);">"Te entiendo. Precisamente por eso quiero mostrarte la forma más simple de empezar sin complicarte. ¿Quieres que te lo resuma?"</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ KNOWLEDGE ══ -->
+      <section class="screen fade-in" id="knowledge">
+        <div class="g2">
+          <div class="card">
+            <div class="card-title">Centro de conocimiento</div>
+            <div class="card-sub">FUENTES ACTIVAS</div>
+            <div class="source-item">
+              <div class="source-icon">📄</div>
+              <div style="flex:1;">
+                <div style="font-size:13px;font-weight:600;">Preguntas frecuentes de producto v3.pdf</div>
+                <div style="font-size:11px;color:var(--text2);font-family:'DM Mono',monospace;margin-top:2px;">PDF · 26 fragmentos · 12 min</div>
+              </div>
+              <span class="chip chip-s">Sincronizado</span>
+            </div>
+            <div class="source-item">
+              <div class="source-icon">📝</div>
+              <div style="flex:1;">
+                <div style="font-size:13px;font-weight:600;">Objeciones negocio 2026.docx</div>
+                <div style="font-size:11px;color:var(--text2);font-family:'DM Mono',monospace;margin-top:2px;">Drive · 18 fragmentos · 1 h</div>
+              </div>
+              <span class="chip chip-s">Sincronizado</span>
+            </div>
+            <div class="source-item">
+              <div class="source-icon">📃</div>
+              <div style="flex:1;">
+                <div style="font-size:13px;font-weight:600;">Testimonios cortos para cierre.txt</div>
+                <div style="font-size:11px;color:var(--text2);font-family:'DM Mono',monospace;margin-top:2px;">Manual · 7 fragmentos</div>
+              </div>
+              <span class="chip chip-w">Pendiente</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Subir nueva fuente</div>
+            <div class="card-sub">AGREGAR CONOCIMIENTO</div>
+            <div class="field"><label>Título</label><input value="Guía de cierre producto"/></div>
+            <div class="field"><label>Tipo</label><select><option>PDF</option><option>Google Doc</option><option>Texto</option></select></div>
+            <div class="field"><label>Resumen</label><input value="Preguntas frecuentes, objeciones y secuencias de cierre."/></div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn" style="flex:1;">Seleccionar archivo</button>
+              <button class="btn btn-gold" style="flex:1;">Agregar fuente</button>
+            </div>
+            <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);line-height:1.6;margin-top:14px;">Aquí conectarás Drive/Docs para crear el pipeline RAG: parseo, fragmentación, embeddings y recuperación.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ AUTOMATIONS ══ -->
+      <section class="screen fade-in" id="automations">
+        <div class="card">
+          <div class="card-title">Automatizaciones activas</div>
+          <div class="card-sub">RECETAS DE SEGUIMIENTO</div>
+          <table>
+            <thead><tr><th>Trigger</th><th>Descripción</th><th>Estado</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600;">Nuevo lead producto</td><td style="color:var(--text2);">Clasifica intención, etiquetas y genera primera respuesta sugerida.</td><td><span class="chip chip-s">Activa</span></td></tr>
+              <tr><td style="font-weight:600;">Nuevo lead negocio</td><td style="color:var(--text2);">Determina perfil y propone microcompromiso de llamada o Zoom.</td><td><span class="chip chip-s">Activa</span></td></tr>
+              <tr><td style="font-weight:600;">Objeción de precio</td><td style="color:var(--text2);">Dispara plantilla de valor antes de compartir la cifra.</td><td><span class="chip chip-s">Activa</span></td></tr>
+              <tr><td style="font-weight:600;">Sin respuesta 24h</td><td style="color:var(--text2);">Programa un seguimiento amable con llamada a acción.</td><td><span class="chip chip-w">Programada</span></td></tr>
+              <tr><td style="font-weight:600;">Lead caliente</td><td style="color:var(--text2);">Escala al asesor y notifica prioridad alta.</td><td><span class="chip chip-s">Activa</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ══ METRICS ══ -->
+      <section class="screen fade-in" id="metrics">
+        <div class="stat-grid mb">
+          <div class="stat"><div class="stat-label">Tiempo primera respuesta</div><div class="stat-val">6m</div><div class="stat-trend">Promedio semanal</div></div>
+          <div class="stat"><div class="stat-label">Conversión a llamada</div><div class="stat-val">41%</div><div class="stat-trend">Leads calificados</div></div>
+          <div class="stat"><div class="stat-label">Conversión a venta</div><div class="stat-val">23%</div><div class="stat-trend">Producto</div></div>
+          <div class="stat"><div class="stat-label">Conversión negocio</div><div class="stat-val">11%</div><div class="stat-trend">Equipo y Zoom</div></div>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="card-title">Rendimiento por canal</div>
+            <div class="card-sub">LEADS · RESPUESTA · CIERRE</div>
+            <table>
+              <thead><tr><th>Canal</th><th>Leads</th><th>Respuesta</th><th>Cierre</th></tr></thead>
+              <tbody>
+                <tr><td>Instagram</td><td>124</td><td>67%</td><td>21%</td></tr>
+                <tr><td>Facebook</td><td>82</td><td>59%</td><td>18%</td></tr>
+                <tr><td>TikTok</td><td>95</td><td>48%</td><td>14%</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <div class="card-title">Objeciones más frecuentes</div>
+            <div class="card-sub">ESTA SEMANA</div>
+            <div style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;"><span>"No tengo dinero"</span><span style="color:var(--text2);font-family:'DM Mono',monospace;">31×</span></div>
+              <div class="prog"><div class="prog-fill" style="width:85%"></div></div>
+            </div>
+            <div style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;"><span>"Lo voy a pensar"</span><span style="color:var(--text2);font-family:'DM Mono',monospace;">24×</span></div>
+              <div class="prog"><div class="prog-fill" style="width:65%"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;"><span>"Envíame información"</span><span style="color:var(--text2);font-family:'DM Mono',monospace;">19×</span></div>
+              <div class="prog"><div class="prog-fill" style="width:52%"></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ TEAM ══ -->
+      <section class="screen fade-in" id="team">
+        <div class="g2">
+          <div class="card">
+            <div class="card-title">Equipo comercial</div>
+            <div class="card-sub">ASIGNACIÓN Y RENDIMIENTO</div>
+            <div class="lead-row">
+              <div class="ava">JL</div>
+              <div>
+                <div class="lead-name">José Lugo</div>
+                <div class="lead-meta">Owner · 18 conversaciones activas</div>
+              </div>
+              <div class="chips"><span class="chip chip-g">Top Closer</span></div>
+            </div>
+            <div class="lead-row">
+              <div class="ava">A1</div>
+              <div>
+                <div class="lead-name">Asesor 1</div>
+                <div class="lead-meta">7 conversaciones activas</div>
+              </div>
+              <div class="chips"><span class="chip chip-w">Seguimiento</span></div>
+            </div>
+            <div class="lead-row">
+              <div class="ava">A2</div>
+              <div>
+                <div class="lead-name">Asesor 2</div>
+                <div class="lead-meta">5 conversaciones activas</div>
+              </div>
+              <div class="chips"><span class="chip">Estable</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Asignación rápida</div>
+            <div class="card-sub">PRÓXIMAMENTE</div>
+            <div class="empty">Aquí conectaremos reglas para repartir leads por canal, horario o temperatura. La sección ya está lista y visible.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ INTEGRATIONS ══ -->
+      <section class="screen fade-in" id="integrations">
+        <div class="g4">
+          <div class="card">
+            <div class="int-icon">f</div>
+            <div class="card-title">Facebook</div>
+            <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px;font-family:'DM Mono',monospace;">Conectar página, capturar conversaciones y leads del ecosistema Meta.</div>
+            <div class="chips"><span class="chip chip-s">Conectado</span><span class="chip">Página principal</span></div>
+          </div>
+          <div class="card">
+            <div class="int-icon">◎</div>
+            <div class="card-title">Instagram</div>
+            <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px;font-family:'DM Mono',monospace;">Mensajería de negocio, etiquetas y secuencias IA.</div>
+            <div class="chips"><span class="chip chip-s">Conectado</span><span class="chip">Profesional</span></div>
+          </div>
+          <div class="card">
+            <div class="int-icon">♪</div>
+            <div class="card-title">TikTok</div>
+            <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px;font-family:'DM Mono',monospace;">Login, tracking de enlaces y atribución de leads desde contenido y bio.</div>
+            <div class="chips"><span class="chip chip-w">Tracking activo</span><span class="chip">DM no habilitado</span></div>
+          </div>
+          <div class="card">
+            <div class="int-icon">G</div>
+            <div class="card-title">Google Drive</div>
+            <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px;font-family:'DM Mono',monospace;">Sincroniza docs para alimentar el centro de conocimiento y el RAG.</div>
+            <div class="chips"><span class="chip">Pendiente</span><span class="chip chip-i">Listo para conectar</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ SETTINGS ══ -->
+      <section class="screen fade-in" id="settings">
+        <div class="g2">
+          <div class="card">
+            <div class="card-title">Ajustes generales</div>
+            <div class="card-sub">TONO, HORARIOS Y MARCA</div>
+            <div class="field"><label>Nombre del workspace</label><input value="Prospector Empire"/></div>
+            <div class="field"><label>Tono de IA</label><select><option>Elegante y persuasivo</option><option>Directo</option><option>Consultivo</option></select></div>
+            <div class="field"><label>Horario operativo</label><input value="8:00 am - 8:00 pm"/></div>
+            <div class="field"><label>Modo principal</label><select><option>Producto</option><option>Negocio</option></select></div>
+            <button class="btn btn-gold" style="width:100%;margin-top:4px;">Guardar cambios</button>
+          </div>
+          <div class="card">
+            <div class="card-title">Checklist previo a backend</div>
+            <div class="card-sub">ESTADO DEL PROYECTO</div>
+            <div class="check-item"><div class="check-icon check-ok">✓</div><div><div>Navegación completa</div><div class="check-detail">Todos los menús visibles y funcionales</div></div></div>
+            <div class="check-item"><div class="check-icon check-ok">✓</div><div><div>IA Closer funcional</div><div class="check-detail">Genera respuestas vía Claude API en tiempo real</div></div></div>
+            <div class="check-item"><div class="check-icon check-ok">✓</div><div><div>Mock data presente</div><div class="check-detail">Leads, conversaciones, métricas y automatizaciones</div></div></div>
+            <div class="check-item"><div class="check-icon check-ok">✓</div><div><div>Pantallas sin vacíos</div><div class="check-detail">Estados útiles en cada módulo</div></div></div>
+            <div class="check-item"><div class="check-icon check-pend">⏳</div><div><div>Siguiente fase</div><div class="check-detail">Pasar a app real con backend y RAG</div></div></div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const pageMeta = {
+  home: ['Inicio', 'Tu centro de control para prospectar, responder y cerrar mejor.'],
+  leads: ['Leads', 'Clasifica, filtra y prioriza a quién debes escribir primero.'],
+  inbox: ['Inbox', 'Responde con apoyo de IA Closer en tiempo real.'],
+  campaigns: ['Campañas', 'Gestiona captación, enlaces y atribución comercial.'],
+  ai_closer: ['IA Closer', 'Configura el motor de cierre con dirección comercial clara.'],
+  knowledge: ['Conocimiento', 'Organiza las fuentes que entrenan el sistema de respuestas.'],
+  automations: ['Automatizaciones', 'Recetas de seguimiento, reacción y escalado.'],
+  metrics: ['Métricas', 'Mide respuesta, conversión y objeciones para optimizar.'],
+  team: ['Equipo', 'Visualiza asesores, carga de conversaciones y reparto.'],
+  integrations: ['Integraciones', 'Conecta canales y deja lista la base para automatización real.'],
+  settings: ['Ajustes', 'Controla tono, marca, horarios y configuración general.'],
+};
+
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const sc = document.getElementById(id);
+  if (sc) { sc.classList.remove('fade-in'); void sc.offsetWidth; sc.classList.add('active','fade-in'); }
+  const nb = document.querySelector(`.nav-btn[data-screen="${id}"]`);
+  if (nb) nb.classList.add('active');
+  const [title, sub] = pageMeta[id] || [id, ''];
+  document.getElementById('pageTitle').textContent = title;
+  document.getElementById('pageSub').textContent = sub;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function filterPill(el) {
+  el.closest('.pills').querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function selectConv(el, name, channel) {
+  document.querySelectorAll('.conv-item').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function saveConfig() {
+  const mode = document.getElementById('cfgMode').value;
+  const style = document.getElementById('cfgStyle').value;
+  alert(`Configuración guardada:\nModo: ${mode}\nEstilo: ${style}`);
+}
+
+function saveTemplate() {
+  const txt = document.getElementById('replyBox').value;
+  if (txt.trim()) alert('Plantilla guardada: "' + txt.slice(0, 60) + '..."');
+}
+
+function scheduleFollowup() {
+  alert('Seguimiento programado para mañana a las 8:00 am.');
+}
+
+function sendMsg() {
+  const box = document.getElementById('replyBox');
+  const txt = box.value.trim();
+  if (!txt) return;
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg msg-me';
+  div.textContent = txt;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  box.value = '';
+  setTimeout(() => generateSuggestion(txt), 800);
+}
+
+async function generateAI() {
+  const loader = document.getElementById('loader');
+  const box = document.getElementById('replyBox');
+  const msgs = document.getElementById('messages');
+
+  const lastMsg = msgs.querySelector('.msg-them:last-of-type');
+  const lastText = lastMsg ? lastMsg.textContent : 'Hola, ¿cuánto cuesta?';
+
+  loader.classList.add('show');
+  box.value = '';
+  box.placeholder = 'Generando con IA...';
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `Eres un IA Closer experto en network marketing y ventas directas. Tu objetivo es responder mensajes de leads de forma consultiva, persuasiva y cálida, sin hacer claims médicos ni de ingresos garantizados. Responde siempre en español. Sé conciso (2-4 oraciones), usa preguntas guía para calificar intención, y avanza hacia un microcompromiso. Nunca reveles el precio directamente sin antes conocer la necesidad del lead.`,
+        messages: [
+          { role: 'user', content: `El lead me escribió: "${lastText}"\n\nGenera una respuesta perfecta de closer para WhatsApp/Instagram. Solo da la respuesta, sin explicaciones.` }
+        ]
+      })
+    });
+    const data = await resp.json();
+    const text = data.content?.map(c => c.text || '').join('') || 'Error generando respuesta.';
+    box.value = text;
+    box.placeholder = 'Escribe tu respuesta o usa IA para generar...';
+    document.getElementById('aiSuggestion').textContent = text;
+  } catch (e) {
+    box.value = 'Antes del precio, quiero orientarte bien. ¿Qué estás buscando mejorar exactamente: peso, energía o digestión?';
+    box.placeholder = 'Escribe tu respuesta o usa IA para generar...';
+  } finally {
+    loader.classList.remove('show');
+  }
+}
+
+async function generateSuggestion(lastMsg) {
+  const suggEl = document.getElementById('aiSuggestion');
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: 'Eres un IA Closer experto. Genera una sugerencia corta de siguiente respuesta (1-2 oraciones) basada en el último mensaje enviado. Responde solo con la sugerencia, en español.',
+        messages: [{ role: 'user', content: `Último mensaje enviado al lead: "${lastMsg}"\n¿Cuál sería la mejor siguiente respuesta si el lead no contesta de inmediato?` }]
+      })
+    });
+    const data = await resp.json();
+    const text = data.content?.map(c => c.text || '').join('');
+    if (text) suggEl.textContent = text;
+  } catch (e) {}
+}
+</script>
+</body>
+</html>

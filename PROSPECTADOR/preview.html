@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo Sistema 24/7</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #000;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+}
+
+.title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  color: gold;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.chat {
+  background: #111;
+  border-radius: 10px;
+  padding: 10px;
+  height: 350px;
+  overflow-y: auto;
+}
+
+.message {
+  background: #222;
+  padding: 8px 12px;
+  border-radius: 10px;
+  margin: 5px 0;
+  width: fit-content;
+  max-width: 80%;
+}
+
+.incoming {
+  background: #1f7a1f;
+  align-self: flex-start;
+}
+
+.cta {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.button {
+  background: gold;
+  color: black;
+  padding: 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.counter {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #aaa;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="title">Sistema de Prospectación 24/7</div>
+<div class="subtitle">Esto está ocurriendo ahora mismo…</div>
+
+<div class="chat" id="chat"></div>
+
+<div class="counter" id="counter">Prospectos hoy: 0</div>
+
+<div class="cta">
+<a class="button" href="https://wa.me/573126387467?text=Quiero%20ver%20el%20sistema%2024/7">VER CÓMO FUNCIONA</a>
+</div>
+
+</div>
+
+<script>
+
+const mensajes = [
+"Hola, estoy interesado",
+"¿Cómo funciona esto?",
+"Dame información",
+"Quiero entrar",
+"¿Esto sirve para vender?",
+"¿Cuánto cuesta?",
+"Me interesa el negocio",
+"Quiero más info",
+"¿Cómo empiezo?",
+"Esto se ve bueno"
+];
+
+let contador = 0;
+
+function agregarMensaje() {
+  const chat = document.getElementById("chat");
+  const mensaje = document.createElement("div");
+  mensaje.classList.add("message", "incoming");
+
+  const texto = mensajes[Math.floor(Math.random() * mensajes.length)];
+  mensaje.innerText = texto;
+
+  chat.appendChild(mensaje);
+  chat.scrollTop = chat.scrollHeight;
+
+  contador++;
+  document.getElementById("counter").innerText = "Prospectos hoy: " + contador;
+}
+
+setInterval(agregarMensaje, 2000);
+
+</script>
+
+</body>
+</html>

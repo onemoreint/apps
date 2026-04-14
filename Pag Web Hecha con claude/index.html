@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="One More — Transforma tu cuerpo, recupera tu energía y construye un ingreso desde casa. Tecnología transdérmica + oportunidad de negocio real. Contáctanos ahora por WhatsApp." />
+  <title>One More | Transforma tu Vida — Salud, Energía y Libertad Financiera</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ================================
+       RESET & BASE
+    ================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #E8C97A;
+      --gold-dark: #9A7A2E;
+      --black: #080808;
+      --black-soft: #111111;
+      --black-card: #161616;
+      --black-border: #1E1E1E;
+      --white: #FFFFFF;
+      --white-soft: #F2F2F2;
+      --gray: #888888;
+      --gray-light: #BBBBBB;
+      --wa-green: #25D366;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow-gold: 0 0 40px rgba(201,168,76,0.18);
+      --shadow-card: 0 8px 40px rgba(0,0,0,0.5);
+      --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--black);
+      color: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Cormorant Garamond', serif;
+      line-height: 1.15;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ================================
+       TYPOGRAPHY HELPERS
+    ================================ */
+    .gold { color: var(--gold); }
+    .gold-grad {
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold-light), var(--gold-dark));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .subtitle {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* ================================
+       BUTTONS
+    ================================ */
+    .btn-wa {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
+      color: var(--black);
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 16px 32px;
+      border-radius: 50px;
+      cursor: pointer;
+      border: none;
+      transition: var(--transition);
+      box-shadow: 0 4px 24px rgba(201,168,76,0.35);
+      white-space: nowrap;
+    }
+    .btn-wa:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 8px 36px rgba(201,168,76,0.55);
+    }
+    .btn-wa:active { transform: scale(0.98); }
+
+    .btn-wa svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+    .btn-wa-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      color: var(--gold);
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 14px 28px;
+      border-radius: 50px;
+      border: 1.5px solid var(--gold);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-wa-outline:hover {
+      background: rgba(201,168,76,0.1);
+      transform: translateY(-2px);
+    }
+
+    /* ================================
+       FLOATING WA BUTTON
+    ================================ */
+    .wa-float {
+      position: fixed;
+      bottom: 24px;
+      right: 20px;
+      z-index: 1000;
+      background: var(--wa-green);
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.5);
+      transition: var(--transition);
+      animation: pulse-wa 2.5s ease-in-out infinite;
+    }
+    .wa-float:hover {
+      transform: scale(1.12);
+      box-shadow: 0 8px 32px rgba(37,211,102,0.7);
+    }
+    .wa-float svg { width: 32px; height: 32px; }
+
+    @keyframes pulse-wa {
+      0%, 100% { box-shadow: 0 4px 20px rgba(37,211,102,0.5); }
+      50% { box-shadow: 0 4px 36px rgba(37,211,102,0.85), 0 0 0 8px rgba(37,211,102,0.1); }
+    }
+
+    /* ================================
+       SCROLL ANIMATIONS
+    ================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ================================
+       NAV
+    ================================ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 900;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(8,8,8,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(201,168,76,0.12);
+      transition: var(--transition);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.05em;
+    }
+    .nav-cta {
+      font-size: 0.8rem;
+      padding: 10px 20px;
+    }
+
+    /* ================================
+       HERO
+    ================================ */
+    #hero {
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 100px 20px 60px;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 100% 80%, rgba(201,168,76,0.07) 0%, transparent 60%),
+        linear-gradient(180deg, #080808 0%, #0d0d0d 100%);
+      z-index: 0;
+    }
+
+    .hero-grid-lines {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 50px;
+      padding: 8px 18px;
+      font-size: 0.78rem;
+      color: var(--gold-light);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 32px;
+    }
+    .hero-badge span { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; display: inline-block; animation: blink 1.5s ease-in-out infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    #hero h1 {
+      font-size: clamp(2.6rem, 7vw, 5.2rem);
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.1;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--gray-light);
+      max-width: 580px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 56px;
+    }
+
+    .hero-trust {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--gray);
+    }
+    .trust-item svg { width: 16px; height: 16px; color: var(--gold); }
+
+    .hero-glow {
+      position: absolute;
+      bottom: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 200px;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.15) 0%, transparent 70%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ================================
+       PAIN SECTION
+    ================================ */
+    #pain {
+      padding: 90px 20px;
+      background: linear-gradient(180deg, #0d0d0d 0%, var(--black) 100%);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .section-header h2 {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 700;
+      margin: 12px 0 16px;
+    }
+    .section-header p {
+      color: var(--gray-light);
+      max-width: 540px;
+      margin: 0 auto;
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .pain-card {
+      background: var(--black-card);
+      border: 1px solid var(--black-border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      transition: var(--transition);
+    }
+    .pain-card:hover {
+      border-color: rgba(201,168,76,0.25);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-gold);
+    }
+    .pain-icon {
+      font-size: 1.8rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .pain-card h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .pain-card p { font-size: 0.88rem; color: var(--gray); line-height: 1.6; }
+
+    /* ================================
+       AGITATION
+    ================================ */
+    #agitation {
+      padding: 80px 20px;
+      background: linear-gradient(135deg, #0a0a0a 0%, #111111 50%, #0a0a0a 100%);
+    }
+
+    .agitation-inner {
+      background: var(--black-card);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 24px;
+      padding: clamp(36px, 6vw, 64px);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+    .agitation-inner::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: 50%; transform: translateX(-50%);
+      width: 400px; height: 200px;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .agitation-inner h2 {
+      font-size: clamp(1.8rem, 4.5vw, 3rem);
+      margin-bottom: 20px;
+    }
+    .agitation-inner p {
+      color: var(--gray-light);
+      font-size: 1.05rem;
+      max-width: 620px;
+      margin: 0 auto 32px;
+      line-height: 1.8;
+    }
+
+    .agitation-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 36px;
+    }
+    .agit-tag {
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.2);
+      color: var(--gold-light);
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    /* ================================
+       SOLUTION
+    ================================ */
+    #solution {
+      padding: 90px 20px;
+      background: var(--black);
+    }
+
+    .solution-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .solution-layout { grid-template-columns: 1fr; gap: 40px; }
+    }
+
+    .solution-text h2 { font-size: clamp(2rem, 4.5vw, 3.2rem); margin: 12px 0 20px; }
+    .solution-text p { color: var(--gray-light); font-size: 1.02rem; line-height: 1.8; margin-bottom: 16px; }
+
+    .solution-visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .solution-orb {
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 40%, rgba(201,168,76,0.25), rgba(201,168,76,0.05) 60%, transparent 80%);
+      border: 1px solid rgba(201,168,76,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 80px rgba(201,168,76,0.15), inset 0 0 60px rgba(201,168,76,0.05);
+      animation: float 4s ease-in-out infinite;
+      position: relative;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .solution-orb-inner {
+      text-align: center;
+    }
+    .solution-orb-inner span {
+      display: block;
+      font-size: 3.5rem;
+      margin-bottom: 8px;
+    }
+    .solution-orb-inner p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      color: var(--gold-light);
+      font-style: italic;
+    }
+
+    .solution-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .solution-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(201,168,76,0.07);
+      border: 1px solid rgba(201,168,76,0.18);
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 0.83rem;
+      color: var(--gold-light);
+      font-weight: 500;
+    }
+
+    /* ================================
+       BENEFITS
+    ================================ */
+    #benefits {
+      padding: 90px 20px;
+      background: linear-gradient(180deg, var(--black) 0%, #0d0d0d 100%);
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .benefit-card {
+      background: var(--black-card);
+      border: 1px solid var(--black-border);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      text-align: center;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .benefit-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0;
+      transition: var(--transition);
+    }
+    .benefit-card:hover {
+      border-color: rgba(201,168,76,0.3);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-gold);
+    }
+    .benefit-card:hover::after { opacity: 1; }
+
+    .benefit-icon { font-size: 2.6rem; margin-bottom: 16px; }
+    .benefit-card h3 { font-family: 'Inter', sans-serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
+    .benefit-card p { font-size: 0.875rem; color: var(--gray); line-height: 1.65; }
+
+    /* ================================
+       HOW IT WORKS
+    ================================ */
+    #how {
+      padding: 90px 20px;
+      background: #0a0a0a;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0;
+      position: relative;
+    }
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 44px;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
+    }
+
+    @media (max-width: 640px) {
+      .steps { grid-template-columns: 1fr; gap: 32px; }
+      .steps::before { display: none; }
+    }
+
+    .step {
+      text-align: center;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .step-num {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      color: var(--black);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 0 24px rgba(201,168,76,0.35);
+    }
+    .step h3 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+    .step p { font-size: 0.85rem; color: var(--gray); line-height: 1.6; }
+
+    /* ================================
+       TESTIMONIALS
+    ================================ */
+    #testimonials {
+      padding: 90px 20px;
+      background: var(--black);
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .testimonial-card {
+      background: var(--black-card);
+      border: 1px solid var(--black-border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      transition: var(--transition);
+    }
+    .testimonial-card:hover {
+      border-color: rgba(201,168,76,0.2);
+      box-shadow: var(--shadow-gold);
+    }
+
+    .testi-stars {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 16px;
+    }
+    .testi-stars span { color: var(--gold); font-size: 0.9rem; }
+
+    .testi-text {
+      font-size: 0.93rem;
+      color: var(--gray-light);
+      line-height: 1.75;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+
+    .testi-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .testi-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--black);
+      flex-shrink: 0;
+    }
+    .testi-name { font-weight: 600; font-size: 0.9rem; }
+    .testi-loc { font-size: 0.78rem; color: var(--gray); }
+    .testi-tag {
+      margin-left: auto;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.2);
+      color: var(--gold);
+      font-size: 0.7rem;
+      padding: 4px 10px;
+      border-radius: 50px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+
+    /* ================================
+       OFFER
+    ================================ */
+    #offer {
+      padding: 90px 20px;
+      background: linear-gradient(180deg, var(--black) 0%, #0d0d0d 100%);
+    }
+
+    .offer-box {
+      background: var(--black-card);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 24px;
+      padding: clamp(36px, 6vw, 64px);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-gold);
+    }
+    .offer-box::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .offer-box h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); margin: 12px 0 20px; }
+    .offer-box p { color: var(--gray-light); font-size: 1.02rem; line-height: 1.8; max-width: 580px; margin: 0 auto 36px; }
+
+    .offer-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .offer-item {
+      background: rgba(201,168,76,0.05);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: var(--radius-sm);
+      padding: 24px 16px;
+      text-align: center;
+    }
+    .offer-item-icon { font-size: 2rem; margin-bottom: 10px; }
+    .offer-item h4 { font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--gold-light); margin-bottom: 6px; }
+    .offer-item p { font-size: 0.8rem; color: var(--gray); line-height: 1.5; }
+
+    /* ================================
+       URGENCY
+    ================================ */
+    #urgency {
+      padding: 80px 20px;
+      background: #0a0a0a;
+    }
+
+    .urgency-box {
+      background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, rgba(201,168,76,0.03) 100%);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 24px;
+      padding: clamp(36px, 6vw, 64px);
+      text-align: center;
+    }
+
+    .urgency-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      color: var(--black);
+      font-weight: 700;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      padding: 8px 20px;
+      border-radius: 50px;
+      margin-bottom: 28px;
+    }
+
+    .urgency-box h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); margin-bottom: 20px; }
+    .urgency-box p { color: var(--gray-light); font-size: 1.02rem; max-width: 540px; margin: 0 auto 32px; line-height: 1.8; }
+
+    .urgency-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 36px;
+    }
+    .urg-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: var(--gold-light);
+    }
+    .urg-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* ================================
+       FINAL CTA
+    ================================ */
+    #final-cta {
+      padding: 100px 20px;
+      background: var(--black);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #final-cta::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 300px;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    #final-cta h2 {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      margin-bottom: 20px;
+      position: relative;
+    }
+    #final-cta p {
+      color: var(--gray-light);
+      font-size: 1.1rem;
+      max-width: 520px;
+      margin: 0 auto 40px;
+      line-height: 1.8;
+    }
+
+    .final-cta-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
+
+    .wa-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--gray);
+      font-size: 0.88rem;
+    }
+    .wa-number span { color: var(--gold); font-weight: 600; }
+
+    /* ================================
+       FOOTER
+    ================================ */
+    footer {
+      padding: 32px 20px;
+      border-top: 1px solid var(--black-border);
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    footer p { font-size: 0.78rem; color: var(--gray); line-height: 1.6; }
+
+    /* ================================
+       POPUP URGENCY
+    ================================ */
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(6px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+    .popup-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .popup-box {
+      background: var(--black-card);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 24px;
+      padding: 48px 36px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 0 80px rgba(201,168,76,0.2);
+      transform: scale(0.92) translateY(20px);
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      position: relative;
+    }
+    .popup-overlay.open .popup-box {
+      transform: scale(1) translateY(0);
+    }
+
+    .popup-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: none;
+      color: var(--gray);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: var(--transition);
+    }
+    .popup-close:hover { background: rgba(201,168,76,0.15); color: var(--gold); }
+
+    .popup-emoji { font-size: 3rem; margin-bottom: 16px; }
+    .popup-box h3 { font-size: 1.8rem; margin-bottom: 12px; }
+    .popup-box p { color: var(--gray-light); font-size: 0.9rem; line-height: 1.7; margin-bottom: 28px; }
+    .popup-timer {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .timer-block { text-align: center; }
+    .timer-num {
+      display: block;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--gold);
+      min-width: 56px;
+    }
+    .timer-label { font-size: 0.65rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+
+    .popup-dismiss {
+      display: block;
+      margin-top: 16px;
+      font-size: 0.78rem;
+      color: var(--gray);
+      cursor: pointer;
+      text-decoration: underline;
+      background: none; border: none; color: var(--gray);
+    }
+    .popup-dismiss:hover { color: var(--white-soft); }
+
+    /* ================================
+       SCROLLBAR
+    ================================ */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 4px; }
+
+    /* ================================
+       MOBILE ADJUSTMENTS
+    ================================ */
+    @media (max-width: 480px) {
+      .btn-wa { font-size: 0.9rem; padding: 14px 24px; }
+      .hero-trust { gap: 16px; }
+      .steps::before { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================
+       NAV
+  ======================== -->
+  <nav>
+    <div class="nav-logo">One More</div>
+    <a href="https://wa.me/573126387467?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n" target="_blank" rel="noopener" class="btn-wa nav-cta">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Escribir ahora
+    </a>
+  </nav>
+
+  <!-- ========================
+       HERO
+  ======================== -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid-lines"></div>
+    <div class="hero-glow"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge reveal">
+        <span></span> Nuevo en Colombia &amp; Latinoamérica
+      </div>
+
+      <h1 class="reveal reveal-delay-1">
+        Tu cuerpo merece<br/>
+        <span class="gold-grad">algo mejor.</span><br/>
+        Tu vida también.
+      </h1>
+
+      <p class="hero-sub reveal reveal-delay-2">
+        Descubre la propuesta de bienestar que está transformando miles de vidas —
+        con tecnología real, resultados visibles y una oportunidad de negocio
+        que puedes manejar desde tu celular.
+      </p>
+
+      <div class="hero-ctas reveal reveal-delay-3">
+        <a href="https://wa.me/573126387467?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n" target="_blank" rel="noopener" class="btn-wa">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Quiero más información
+        </a>
+        <a href="https://wa.me/573126387467?text=Hola%2C%20quiero%20saber%20c%C3%B3mo%20funciona%20el%20negocio" target="_blank" rel="noopener" class="btn-wa-outline">
+          Ver la oportunidad de negocio →
+        </a>
+      </div>
+
+      <div class="hero-trust reveal reveal-delay-4">
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Sin contratos
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Asesoría personalizada
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          100% desde el celular
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Acompañamiento real
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================
+       PAIN — IDENTIFICACIÓN
+  ======================== -->
+  <section id="pain">
+    <div class="container">
+      <div class="section-header">
+        <p class="subtitle reveal">¿Te identificas?</p>
+        <h2 class="reveal">Quizás ya lo has<br/><span class="gold-grad">intentado todo.</span></h2>
+        <p class="reveal">No estás solo. Millones de personas viven atrapadas en el mismo ciclo, sin saber que existe una alternativa diferente.</p>
+      </div>
+
+      <div class="pain-grid">
+        <div class="pain-card reveal">
+          <div class="pain-icon">😔</div>
+          <div>
+            <h3>Has probado dietas, pastillas y planes sin resultados duraderos</h3>
+            <p>Bajas, pero vuelves a subir. La frustración se acumula y la motivación se agota.</p>
+          </div>
+        </div>
+        <div class="pain-card reveal reveal-delay-1">
+          <div class="pain-icon">😴</div>
+          <div>
+            <h3>Tu energía es mínima y el día se te va antes de empezar</h3>
+            <p>Amaneces cansado, con niebla mental, y sientes que tu cuerpo no te acompaña.</p>
+          </div>
+        </div>
+        <div class="pain-card reveal reveal-delay-2">
+          <div class="pain-icon">🪞</div>
+          <div>
+            <h3>No te reconoces cuando te miras al espejo</h3>
+            <p>El peso, la inflamación y la falta de tono corporal te quitan confianza y seguridad.</p>
+          </div>
+        </div>
+        <div class="pain-card reveal">
+          <div class="pain-icon">💸</div>
+          <div>
+            <h3>El dinero no te alcanza y buscas una salida real</h3>
+            <p>Necesitas ingresos adicionales pero no quieres un segundo trabajo tradicional.</p>
+          </div>
+        </div>
+        <div class="pain-card reveal reveal-delay-1">
+          <div class="pain-icon">📱</div>
+          <div>
+            <h3>Quieres un negocio propio pero no sabes por dónde comenzar</h3>
+            <p>Ves oportunidades en redes, pero no encuentras algo confiable y con respaldo.</p>
+          </div>
+        </div>
+        <div class="pain-card reveal reveal-delay-2">
+          <div class="pain-icon">⏳</div>
+          <div>
+            <h3>El tiempo pasa y sientes que sigues en el mismo lugar</h3>
+            <p>Un año más, las mismas metas, los mismos resultados. Ya es hora de que algo cambie.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================
+       AGITATION
+  ======================== -->
+  <section id="agitation">
+    <div class="container">
+      <div class="agitation-inner reveal">
+        <p class="subtitle">La pregunta que importa</p>
+        <h2>¿Qué pasa si <span class="gold-grad">no haces nada</span> diferente hoy?</h2>
+        <p>
+          El cuerpo que tienes hoy es el resultado de las decisiones de ayer.
+          El cuerpo que tendrás mañana depende de lo que decidas ahora.
+          Seguir igual no es neutral — es retroceder.
+        </p>
+
+        <div class="agitation-list">
+          <span class="agit-tag">Más peso acumulado</span>
+          <span class="agit-tag">Menos energía día a día</span>
+          <span class="agit-tag">Oportunidades que se cierran</span>
+          <span class="agit-tag">Frustración acumulada</span>
+          <span class="agit-tag">Ingresos que no crecen</span>
+          <span class="agit-tag">Salud que se deteriora</span>
+        </div>
+
+        <p style="font-size: 1.1rem; color: var(--gold-light); font-family: 'Cormorant Garamond', serif; font-style: italic;">
+          "No es falta de fuerza de voluntad. Es falta de la herramienta correcta."
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================
+       SOLUTION
+  ======================== -->
+  <section id="solution">
+    <div class="container">
+      <div class="solution-layout">
+        <div class="solution-text reveal">
+          <p class="subtitle">La alternativa diferente</p>
+          <h2>Conoce <span class="gold-grad">One More</span> — bienestar real con tecnología moderna</h2>
+          <p>
+            One More es una propuesta de bienestar que combina ingredientes activos de alta calidad
+            con tecnología transdérmica de absorción avanzada — una forma diferente de nutrir
+            el cuerpo, desde afuera hacia adentro.
+          </p>
+          <p>
+            No es una pastilla más. No es una dieta más.
+            Es un sistema de bienestar diseñado para apoyar tu cuerpo de manera inteligente,
+            mientras tú construyes el estilo de vida que siempre quisiste.
+          </p>
+          <p>
+            Y si quieres generar ingresos, también existe una oportunidad de negocio
+            100% digital que puedes manejar desde tu celular, a tu ritmo.
+          </p>
+          <div class="solution-pills">
+            <div class="solution-pill">✦ Tecnología transdérmica</div>
+            <div class="solution-pill">✦ Sin dietas restrictivas</div>
+            <div class="solution-pill">✦ Negocio digital real</div>
+            <div class="solution-pill">✦ Comunidad de apoyo</div>
+          </div>
+        </div>
+
+        <div class="solution-visual reveal reveal-delay-2">
+          <div class="solution-orb">
+            <div class="solution-orb-inner">
+              <span>✦</span>
+              <p>Una vida diferente<br/>comienza con<br/>una decisión.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================
+       BENEFITS
+  ======================== -->
+  <section id="benefits">
+    <div class="container">
+      <div class="section-header">
+        <p class="subtitle reveal">Lo que obtienes</p>
+        <h2 class="reveal">Todo lo que <span class="gold-grad">One More</span> puede hacer por ti</h2>
+      </div>
+
+      <div class="benefits-grid">
+        <div class="benefit-card reveal">
+          <div class="benefit-icon">⚡</div>
+          <h3>Más energía desde el primer momento</h3>
+          <p>Siente el impulso que necesitas para tus días. Menos fatiga, más vitalidad natural para disfrutar tu vida.</p>
+        </div>
+        <div class="benefit-card reveal reveal-delay-1">
+          <div class="benefit-icon">⚖️</div>
+          <h3>Apoyo real al control de peso</h3>
+          <p>Un complemento inteligente para quienes buscan mejorar su composición corporal sin sacrificios absurdos.</p>
+        </div>
+        <div class="benefit-card reveal reveal-delay-2">
+          <div class="benefit-icon">🌿</div>
+          <h3>Bienestar profundo, no superficial</h3>
+          <p>No se trata solo de verse bien. Es sentirse mejor por dentro — con digestión, descanso y bienestar general.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="benefit-icon">💰</div>
+          <h3>Posibilidad real de generar ingresos</h3>
+          <p>Comparte algo que te funciona y gana comisiones. Sin inversión absurda, sin dejar lo que ya haces.</p>
+        </div>
+        <div class="benefit-card reveal reveal-delay-1">
+          <div class="benefit-icon">📲</div>
+          <h3>Negocio 100% desde el celular</h3>
+          <p>Todo se maneja por WhatsApp, redes sociales y mensajes. Sin bodega, sin inventario, sin oficina.</p>
+        </div>
+        <div class="benefit-card reveal reveal-delay-2">
+          <div class="benefit-icon">🤝</div>
+          <h3>Comunidad y acompañamiento real</h3>
+          <p>No estás solo. Tendrás guía paso a paso, comunidad activa y soporte de personas que ya recorrieron el camino.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================
+       HOW IT WORKS
+  ======================== -->
+  <section id="how">
+    <div class="container">
+      <div class="section-header">
+        <p class="subtitle reveal">Así de simple</p>
+        <h2 class="reveal">Empezar es más fácil<br/><span class="gold-grad">de lo que imaginas</span></h2>
+      </div>
+
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-num">1</div>
+          <h3>Escribes por WhatsApp</h3>
+          <p>Sin compromisos. Sin presión. Solo una conversación honesta sobre lo que buscas.</p>
+        </div>
+        <div class="step reveal reveal-delay-1">
+          <div class="step-num">2</div>
+          <h3>Recibes asesoría personalizada</h3>
+          <p>Te orientamos según tu objetivo: bajar de peso, ganar energía o construir un ingreso.</p>
+        </div>
+        <div class="step reveal reveal-delay-2">
+          <div class="step-num">3</div>
+          <h3>Eliges tu camino</h3>
+          <p>Producto, negocio o ambos. Tú decides cómo quieres que One More entre en tu vida.</p>
+        </div>
+        <div class="step reveal reveal-delay-3">
+          <div class="step-num">4</div>
+          <h3>Comienza tu transformación</h3>
+          <p>Con acompañamiento real, comunidad y herramientas para que los resultados lleguen y se queden.</p>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 52px;">
+        <a href="https://wa.me/573126387467?text=Hola%2C%20quiero%20empezar%20hoy" target="_blank" rel="noopener" class="btn-wa reveal">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Quiero empezar hoy
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================
+       TESTIMONIALS
+  ======================== -->
+  <section id="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <p class="subtitle reveal">Resultados reales</p>
+        <h2 class="reveal">Personas que ya dieron<br/><span class="gold-grad">el primer paso</span></h2>
+      </div>
+
+      <div class="testimonials-grid">
+        <div class="testimonial-card reveal">
+          <div class="testi-stars">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          </div>
+          <p class="testi-text">
+            "Llevaba 3 años buscando algo que de verdad funcionara.
+            Con One More no solo bajé talla — me siento completamente diferente.
+            Tengo energía para mis hijos, para mi trabajo, para mí misma. Eso no tiene precio."
+          </p>
+          <div class="testi-author">
+            <div class="testi-avatar">L</div>
+            <div>
+              <div class="testi-name">Lorena M.</div>
+              <div class="testi-loc">Medellín, Colombia</div>
+            </div>
+            <div class="testi-tag">Producto</div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal reveal-delay-1">
+          <div class="testi-stars">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          </div>
+          <p class="testi-text">
+            "Empecé solo con los productos y después quise saber más del negocio.
+            Hoy genero un ingreso extra desde casa sin dejar mi trabajo.
+            Fue la mejor decisión que tomé este año, sin duda."
+          </p>
+          <div class="testi-author">
+            <div class="testi-avatar">R</div>
+            <div>
+              <div class="testi-name">Ricardo T.</div>
+              <div class="testi-loc">Bogotá, Colombia</div>
+            </div>
+            <div class="testi-tag">Negocio</div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal reveal-delay-2">
+          <div class="testi-stars">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          </div>
+          <p class="testi-text">
+            "Soy de las que siempre dudaba de estas cosas. Pero el acompañamiento
+            fue tan real y honesto que decidí intentarlo. Dos meses después,
+            mi cuerpo cambió y mi confianza también. Ojalá lo hubiera conocido antes."
+          </p>
+          <div class="testi-author">
+            <div class="testi-avatar">V</div>
+            <div>
+              <div class="testi-name">Valentina G.</div>
+              <div class="testi-loc">Cali, Colombia</div>
+            </div>
+            <div class="testi-tag">Producto</div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal">
+          <div class="testi-stars">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          </div>
+          <p class="testi-text">
+            "Lo que más me sorprendió fue la atención. No me vendieron nada — me orientaron.
+            Me explicaron según mi objetivo y eso hizo que confiara desde el primer mensaje.
+            Ahora soy parte del equipo y ayudo a otros a empezar."
+          </p>
+          <div class="testi-author">
+            <div class="testi-avatar">C</div>
+            <div>
+              <div class="testi-name">Carlos B.</div>
+              <div class="testi-loc">Barranquilla, Colombia</div>
+            </div>
+            <div class="testi-tag">Equipo</div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal reveal-delay-1">
+          <div class="testi-stars">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          </div>
+          <p class="testi-text">
+            "Me gustó que no prometieron milagros. Dijeron la verdad desde el principio
+            y los resultados llegaron con constancia. Mi metabolismo cambió,
+            mi digestión mejoró y finalmente me siento en control."
+          </p>
+          <div class="testi-author">
+            <div class="testi-avatar">A</div>
+            <div>
+              <div class="testi-name">Andrea P.</div>
+              <div class="testi-loc">Bucaramanga, Colombia</div>
+            </div>
+            <div class="testi-tag">Producto</div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal reveal-delay-2">
+          <div class="testi-stars">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          </div>
+          <p class="testi-text">
+            "Trabajaba 10 horas al día y llegaba a casa sin energía para nada.
+            Un mes con One More y la diferencia fue notable.
+            Ahora además genero ingresos recomendándolo. Es una combinación perfecta."
+          </p>
+          <div class="testi-author">
+            <div class="testi-avatar">J</div>
+            <div>
+              <div class="testi-name">Juliana R.</div>
+              <div class="testi-loc">Manizales, Colombia</div>
+            </div>
+            <div class="testi-tag">Negocio</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================
+       OFFER
+  ======================== -->
+  <section id="offer">
+    <div class="container">
+      <div class="offer-box reveal">
+        <p class="subtitle">Al escribir hoy recibes</p>
+        <h2>Todo esto <span class="gold-grad">sin costo</span> ni compromiso</h2>
+        <p>
+          No te pedimos tarjeta de crédito, ni que compres nada antes de decidir.
+          Solo una conversación honesta donde tú decides si esto es para ti.
+        </p>
+
+        <div class="offer-items">
+          <div class="offer-item">
+            <div class="offer-item-icon">🎯</div>
+            <h4>Asesoría personalizada</h4>
+            <p>Analizamos tu situación y te orientamos según tu objetivo específico.</p>
+          </div>
+          <div class="offer-item">
+            <div class="offer-item-icon">📋</div>
+            <h4>Información completa</h4>
+            <p>Te explicamos el producto, el plan y la oportunidad con total transparencia.</p>
+          </div>
+          <div class="offer-item">
+            <div class="offer-item-icon">🚀</div>
+            <h4>Guía para comenzar</h4>
+            <p>Si decides unirte, te acompañamos desde el primer día con pasos claros.</p>
+          </div>
+          <div class="offer-item">
+            <div class="offer-item-icon">🤝</div>
+            <h4>Acompañamiento inicial</h4>
+            <p>No te dejamos solo. El equipo te apoya mientras te adaptas y creces.</p>
+          </div>
+        </div>
+
+        <a href="https://wa.me/573126387467?text=Hola%2C%20quiero%20conocer%20los%20productos" target="_blank" rel="noopener" class="btn-wa" style="font-size: 1.05rem; padding: 18px 40px;">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Quiero conocer los productos
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================
+       URGENCY
+  ======================== -->
+  <section id="urgency">
+    <div class="container">
+      <div class="urgency-box reveal">
+        <div class="urgency-badge">⚠ Atención limitada</div>
+        <h2>Solo atendemos personas<br/><span class="gold-grad">verdaderamente comprometidas</span></h2>
+        <p>
+          Nuestro acompañamiento es personalizado y eso toma tiempo y energía.
+          Por eso solo podemos trabajar con personas que están listas para actuar.
+          Si estás leyendo esto y sientes que es tu momento — lo es.
+        </p>
+
+        <div class="urgency-list">
+          <div class="urg-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Cupos de asesoría limitados por semana
+          </div>
+          <div class="urg-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Atención 100% personalizada, no masiva
+          </div>
+          <div class="urg-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Sin listas de espera si actúas hoy
+          </div>
+          <div class="urg-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Respuesta en menos de 24 horas
+          </div>
+        </div>
+
+        <a href="https://wa.me/573126387467?text=Hola%2C%20quiero%20empezar%20hoy" target="_blank" rel="noopener" class="btn-wa" style="font-size: 1.1rem; padding: 20px 44px;">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Sí, quiero empezar hoy
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================
+       FINAL CTA
+  ======================== -->
+  <section id="final-cta">
+    <div class="container">
+      <h2 class="reveal">
+        Tu próximo capítulo<br/>
+        <span class="gold-grad">comienza aquí.</span>
+      </h2>
+      <p class="reveal">
+        No necesitas tenerlo todo claro. Solo necesitas un primer mensaje.
+        Nosotros te acompañamos desde ahí hasta donde quieras llegar.
+      </p>
+
+      <div class="final-cta-btns reveal">
+        <a href="https://wa.me/573126387467?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n" target="_blank" rel="noopener" class="btn-wa" style="font-size: 1.1rem; padding: 20px 48px;">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Escribir ahora por WhatsApp
+        </a>
+        <a href="https://wa.me/573126387467?text=Hola%2C%20quiero%20saber%20c%C3%B3mo%20funciona%20el%20negocio" target="_blank" rel="noopener" class="btn-wa-outline" style="font-size: 1rem; padding: 18px 32px;">
+          Ver la oportunidad de negocio →
+        </a>
+      </div>
+
+      <div class="wa-number reveal">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;color:var(--wa-green)"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp: <span>+57 312 638 7467</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================
+       FOOTER
+  ======================== -->
+  <footer>
+    <div class="container">
+      <div class="footer-logo">One More</div>
+      <p>© 2025 One More — Todos los derechos reservados.</p>
+      <p style="margin-top:6px">Los resultados pueden variar. Los testimonios son experiencias individuales de personas reales.</p>
+    </div>
+  </footer>
+
+  <!-- ========================
+       FLOATING WA BUTTON
+  ======================== -->
+  <a href="https://wa.me/573126387467?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n" target="_blank" rel="noopener" class="wa-float" aria-label="Escribir por WhatsApp">
+    <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <!-- ========================
+       POPUP URGENCIA
+  ======================== -->
+  <div class="popup-overlay" id="popup">
+    <div class="popup-box">
+      <button class="popup-close" id="popupClose" aria-label="Cerrar">✕</button>
+      <div class="popup-emoji">🔥</div>
+      <h3>¡Espera un momento!</h3>
+      <p>
+        Tenemos cupos limitados de asesoría personalizada esta semana.
+        Si estás listo para cambiar algo hoy, este es el momento.
+      </p>
+      <div class="popup-timer">
+        <div class="timer-block">
+          <span class="timer-num" id="timerH">00</span>
+          <div class="timer-label">Horas</div>
+        </div>
+        <div class="timer-block">
+          <span class="timer-num" id="timerM">23</span>
+          <div class="timer-label">Min</div>
+        </div>
+        <div class="timer-block">
+          <span class="timer-num" id="timerS">59</span>
+          <div class="timer-label">Seg</div>
+        </div>
+      </div>
+      <a href="https://wa.me/573126387467?text=Hola%2C%20quiero%20empezar%20hoy" target="_blank" rel="noopener" class="btn-wa" style="width:100%; justify-content:center;">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Escribir ahora — ¡Aún hay cupos!
+      </a>
+      <button class="popup-dismiss" id="popupDismiss">No, prefiero esperar</button>
+    </div>
+  </div>
+
+  <!-- ========================
+       JAVASCRIPT
+  ======================== -->
+  <script>
+    // ── SCROLL REVEAL ──
+    const reveals = document.querySelectorAll('.reveal');
+    const revealObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => revealObs.observe(el));
+
+    // ── POPUP TIMER ──
+    let seconds = 23 * 60 + 59;
+    const timerH = document.getElementById('timerH');
+    const timerM = document.getElementById('timerM');
+    const timerS = document.getElementById('timerS');
+
+    function updateTimer() {
+      if (seconds <= 0) return;
+      seconds--;
+      const h = Math.floor(seconds / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      const s = seconds % 60;
+      timerH.textContent = String(h).padStart(2,'0');
+      timerM.textContent = String(m).padStart(2,'0');
+      timerS.textContent = String(s).padStart(2,'0');
+    }
+    setInterval(updateTimer, 1000);
+
+    // ── POPUP SHOW / HIDE ──
+    const popup = document.getElementById('popup');
+    const popupClose = document.getElementById('popupClose');
+    const popupDismiss = document.getElementById('popupDismiss');
+
+    // Show popup after 8 seconds
+    setTimeout(() => {
+      popup.classList.add('open');
+    }, 8000);
+
+    function closePopup() { popup.classList.remove('open'); }
+    popupClose.addEventListener('click', closePopup);
+    popupDismiss.addEventListener('click', closePopup);
+    popup.addEventListener('click', (e) => { if (e.target === popup) closePopup(); });
+
+    // ── NAV SCROLL SHADOW ──
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 40) {
+        nav.style.background = 'rgba(8,8,8,0.97)';
+      } else {
+        nav.style.background = 'rgba(8,8,8,0.85)';
+      }
+    }, { passive: true });
+  </script>
+</body>
+</html>

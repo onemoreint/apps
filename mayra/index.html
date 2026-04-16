@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mayra Hernandez | Bienestar, Producto y Oportunidad de Negocio</title>
+  <meta name="description" content="Conoce los productos, descubre la oportunidad de negocio y habla directamente con Mayra Hernandez por WhatsApp." />
+  <style>
+    :root{
+      --bg:#0a0a0f;
+      --bg-soft:#11131a;
+      --card:#121722;
+      --card-2:#171d2b;
+      --gold:#f7c94b;
+      --gold-2:#ffd976;
+      --green:#25D366;
+      --white:#ffffff;
+      --muted:#c9ced8;
+      --line:rgba(255,255,255,.08);
+      --shadow:0 18px 45px rgba(0,0,0,.35);
+      --radius:24px;
+      --radius-sm:16px;
+      --max:1180px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,Segoe UI,Arial,sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(247,201,75,.14), transparent 25%),
+        radial-gradient(circle at 0% 30%, rgba(37,211,102,.10), transparent 18%),
+        var(--bg);
+      color:var(--white);
+      line-height:1.55;
+    }
+    img{max-width:100%;display:block}
+    a{text-decoration:none;color:inherit}
+    .container{width:min(var(--max), calc(100% - 32px)); margin:auto}
+    .section{padding:78px 0}
+    .section-title{
+      font-size:clamp(2rem,4vw,3.2rem);
+      line-height:1.08;
+      margin:0 0 14px;
+      letter-spacing:-.03em;
+    }
+    .section-sub{
+      color:var(--muted);
+      font-size:1.05rem;
+      max-width:760px;
+      margin:0 auto;
+    }
+    .center{text-align:center}
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border:1px solid rgba(247,201,75,.25);
+      color:var(--gold-2);
+      background:rgba(247,201,75,.08);
+      border-radius:999px;
+      font-size:.86rem;
+      font-weight:700;
+      letter-spacing:.02em;
+    }
+    .eyebrow::before{
+      content:"";
+      width:8px;height:8px;border-radius:50%;
+      background:var(--gold);
+      box-shadow:0 0 0 5px rgba(247,201,75,.12);
+    }
+    header{
+      position:sticky; top:0; z-index:40;
+      backdrop-filter: blur(12px);
+      background:rgba(10,10,15,.72);
+      border-bottom:1px solid var(--line);
+    }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 0;
+      gap:18px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      font-weight:800;
+      letter-spacing:.02em;
+    }
+    .brand-badge{
+      width:42px;height:42px;border-radius:14px;
+      background:linear-gradient(135deg, var(--gold), #8d6417);
+      color:#111;
+      display:grid;place-items:center;
+      font-weight:900;
+      box-shadow:var(--shadow);
+    }
+    .nav-links{
+      display:flex; gap:18px; flex-wrap:wrap; align-items:center;
+      color:#dbe2ee;
+      font-size:.95rem;
+    }
+    .nav-links a{opacity:.9}
+    .nav-links a:hover{opacity:1;color:var(--gold-2)}
+    .top-cta{display:flex; gap:10px; flex-wrap:wrap;}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding:15px 20px;
+      border-radius:16px;
+      font-weight:800;
+      border:1px solid transparent;
+      transition:.22s ease;
+      cursor:pointer;
+      box-shadow:var(--shadow);
+    }
+    .btn:hover{transform:translateY(-2px)}
+    .btn-primary{background:linear-gradient(135deg, var(--gold), #d89f1c); color:#17140a;}
+    .btn-secondary{background:rgba(255,255,255,.04); border-color:rgba(255,255,255,.12); color:#fff; box-shadow:none;}
+    .btn-whatsapp{background:linear-gradient(135deg, var(--green), #1daa52); color:#fff;}
+    .btn-outline{border-color:rgba(247,201,75,.35); color:var(--gold-2); background:rgba(247,201,75,.05); box-shadow:none;}
+    .hero{position:relative; padding:56px 0 46px; overflow:hidden;}
+    .hero-grid{display:grid; grid-template-columns:1.08fr .92fr; gap:28px; align-items:center;}
+    .hero-copy h1{font-size:clamp(2.5rem,5.5vw,5rem); line-height:.98; margin:18px 0 18px; letter-spacing:-.045em;}
+    .hero-copy p{font-size:1.1rem; color:#dbe2ee; max-width:720px; margin:0 0 24px;}
+    .hero-actions{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px;}
+    .hero-points{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:22px;}
+    .point{background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:18px; padding:16px;}
+    .point strong{display:block;font-size:1.05rem}
+    .point span{display:block;color:var(--muted);font-size:.92rem;margin-top:6px}
+    .hero-visual{position:relative;}
+    .visual-card{border-radius:30px; overflow:hidden; border:1px solid rgba(255,255,255,.12); background:#111; box-shadow:var(--shadow); position:relative; min-height:600px;}
+    .visual-card img{width:100%; height:100%; object-fit:cover;}
+    .floating-card{
+      position:absolute; right:-14px; bottom:20px; width:min(320px,88%);
+      background:rgba(18,23,34,.92); border:1px solid rgba(255,255,255,.10);
+      border-radius:24px; padding:18px; box-shadow:var(--shadow); backdrop-filter: blur(12px);
+    }
+    .floating-card h3{margin:0 0 8px; font-size:1.15rem}
+    .floating-card p{margin:0;color:var(--muted);font-size:.94rem}
+    .mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+    .mini-stat{background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:14px;padding:12px;text-align:center}
+    .mini-stat strong{display:block;font-size:1.1rem}
+    .mini-stat span{font-size:.8rem;color:var(--muted)}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02)); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow);}
+    .card-media{height:250px; overflow:hidden;}
+    .card-media img{width:100%; height:100%; object-fit:cover; transition:transform .5s ease;}
+    .card:hover .card-media img{transform:scale(1.05)}
+    .card-body{padding:22px}
+    .card h3{margin:0 0 10px;font-size:1.3rem}
+    .card p{margin:0;color:var(--muted)}
+    .card .tag{display:inline-block; margin-top:16px; color:#111; background:var(--gold); border-radius:999px; padding:8px 12px; font-size:.82rem; font-weight:800;}
+    .banner{background:linear-gradient(135deg, rgba(247,201,75,.14), rgba(37,211,102,.08)), var(--bg-soft); border:1px solid var(--line); border-radius:30px; padding:34px; box-shadow:var(--shadow);}
+    .banner-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:24px; align-items:center;}
+    .checklist{display:grid; gap:12px; margin-top:18px}
+    .check{display:flex; gap:12px; align-items:flex-start; background:rgba(255,255,255,.04); border:1px solid var(--line); padding:14px 16px; border-radius:16px;}
+    .check i{width:24px;height:24px;border-radius:50%; display:grid;place-items:center; background:rgba(37,211,102,.15); color:#8bf3b3; font-style:normal; font-weight:900; flex:0 0 auto; margin-top:2px;}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center}
+    .split-image{border-radius:28px; overflow:hidden; border:1px solid var(--line); box-shadow:var(--shadow); min-height:540px;}
+    .split-image img{width:100%;height:100%;object-fit:cover}
+    .testimonials{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:34px}
+    .testimonial{background:rgba(255,255,255,.03); border:1px solid var(--line); border-radius:24px;padding:24px; box-shadow:var(--shadow);}
+    .stars{color:var(--gold); letter-spacing:2px; font-size:1rem}
+    .testimonial p{color:#dce3ef}
+    .testimonial strong{display:block;margin-top:14px}
+    .testimonial span{color:var(--muted);font-size:.9rem}
+    .faq{display:grid; gap:14px; max-width:920px; margin:36px auto 0;}
+    details{background:rgba(255,255,255,.03); border:1px solid var(--line); border-radius:18px; padding:18px 18px;}
+    summary{cursor:pointer; font-weight:800; list-style:none;}
+    summary::-webkit-details-marker{display:none}
+    details p{color:var(--muted); margin:12px 0 0}
+    .contact-box{background:linear-gradient(135deg, rgba(247,201,75,.14), rgba(255,255,255,.02)), var(--bg-soft); border:1px solid var(--line); border-radius:30px; padding:32px; box-shadow:var(--shadow);}
+    .contact-grid{display:grid; grid-template-columns:1.05fr .95fr; gap:28px; align-items:center;}
+    .contact-list{display:grid; gap:14px; margin-top:20px}
+    .contact-item{display:flex; justify-content:space-between; align-items:center; gap:16px; padding:15px 16px; background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:18px;}
+    .contact-item small{display:block;color:var(--muted)}
+    .contact-item strong{font-size:1.05rem}
+    .contact-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+    footer{padding:34px 0 60px; color:#97a2b6; text-align:center;}
+    .floating-whatsapp{position:fixed; right:18px; bottom:18px; z-index:60; display:inline-flex; align-items:center; gap:10px; padding:15px 18px; border-radius:999px; background:linear-gradient(135deg, var(--green), #18a94d); color:#fff; font-weight:900; box-shadow:0 16px 36px rgba(37,211,102,.35); border:1px solid rgba(255,255,255,.15);}
+    @media (max-width: 1050px){
+      .hero-grid,.banner-grid,.split,.contact-grid,.grid-3,.testimonials{grid-template-columns:1fr 1fr;}
+      .hero-points{grid-template-columns:1fr}
+      .visual-card{min-height:520px}
+      .split-image{min-height:460px}
+    }
+    @media (max-width: 760px){
+      .nav{align-items:flex-start}
+      .nav-links{display:none}
+      .top-cta{display:none}
+      .hero-grid,.banner-grid,.split,.contact-grid,.grid-3,.testimonials{grid-template-columns:1fr;}
+      .hero{padding-top:34px}
+      .hero-copy h1{font-size:clamp(2.2rem,13vw,3.9rem)}
+      .visual-card{min-height:420px}
+      .split-image{min-height:320px}
+      .floating-card{position:relative;right:auto;bottom:auto;width:100%;margin-top:14px}
+      .section{padding:64px 0}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="brand-badge">MH</div>
+        <div>
+          <div>Mayra Hernandez</div>
+          <small style="color:#aeb8c8;font-weight:600">Mentor de negocios digitales y salud</small>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#productos">Productos</a>
+        <a href="#negocio">Negocio</a>
+        <a href="#herramientas">Herramientas</a>
+        <a href="#testimonios">Testimonios</a>
+        <a href="#faq">Preguntas</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+
+      <div class="top-cta">
+        <a class="btn btn-secondary" href="https://wa.me/584243415002?text=Hola%20Mayra%2C%20quiero%20informaci%C3%B3n" target="_blank" rel="noopener">Hablar por WhatsApp ahora</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">BIENESTAR + ORIENTACIÓN + ACCESO DIRECTO</span>
+          <h1>Mayra Hernandez te guía para conocer producto, evaluar opciones y dar tu siguiente paso con claridad</h1>
+          <p>
+            Esta página fue ajustada para que puedas conocer la propuesta, resolver dudas y acceder rápidamente a las herramientas clave.
+            Si deseas información directa, solo escribe al WhatsApp de contacto y recibe atención personalizada.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://wa.me/584243415002?text=Hola%20Mayra%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20productos" target="_blank" rel="noopener">Quiero conocer cuál es para mí</a>
+            <a class="btn btn-whatsapp" href="https://wa.me/584243415002?text=Hola%20Mayra%2C%20quiero%20informaci%C3%B3n%20sobre%20la%20oportunidad%20de%20negocio" target="_blank" rel="noopener">Quiero conocer cómo ganar con esto</a>
+            <a class="btn btn-outline" href="https://onemoreint.github.io/apps/MAYRA/PRO1/" target="_blank" rel="noopener">Evalúate ahora</a>
+            <a class="btn btn-secondary" href="https://onemoreint.github.io/apps/MAYRA/PRO2/" target="_blank" rel="noopener">Conoce más aquí</a>
+          </div>
+          <small style="display:block;margin-top:10px;color:#c9ced8;">Resultado inmediato • Sin compromiso • Acceso directo</small>
+
+          <div class="hero-points">
+            <div class="point">
+              <strong>Producto</strong>
+              <span>Conoce una propuesta enfocada en bienestar, energía y transformación.</span>
+            </div>
+            <div class="point">
+              <strong>Negocio</strong>
+              <span>Descubre una forma de iniciar con guía y una visión más clara.</span>
+            </div>
+            <div class="point">
+              <strong>Contacto directo</strong>
+              <span>Escribe a Mayra Hernandez al +58 424 341 5002 y recibe atención directa.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="visual-card">
+            <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1400&q=80" alt="Bienestar, energía y transformación" />
+          </div>
+
+          <div class="floating-card">
+            <h3>Accesos directos para avanzar más rápido</h3>
+            <p>Explora la información principal, entra a las herramientas y contacta a Mayra Hernandez desde un solo lugar.</p>
+            <div class="mini-stats">
+              <div class="mini-stat">
+                <strong>1</strong>
+                <span>Hablar por WhatsApp ahora</span>
+              </div>
+              <div class="mini-stat">
+                <strong>2</strong>
+                <span>Botones clave</span>
+              </div>
+              <div class="mini-stat">
+                <strong>100%</strong>
+                <span>Acceso rápido</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="productos">
+      <div class="container">
+        <div class="center">
+          <span class="eyebrow">PRODUCTOS</span>
+          <h2 class="section-title">Una opción para quienes quieren empezar por su bienestar</h2>
+          <p class="section-sub">
+            Si llevas tiempo buscando algo que te ayude a sentirte mejor, tener más energía o avanzar hacia un cambio físico más visible,
+            aquí puedes conocer una propuesta más clara y mejor acompañada.
+          </p>
+        </div>
+
+        <div class="grid-3" style="margin-top:34px">
+          <article class="card">
+            <div class="card-media">
+              <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1200&q=80" alt="Bienestar y estilo de vida saludable" />
+            </div>
+            <div class="card-body">
+              <h3>Más bienestar en tu rutina</h3>
+              <p>Cuando una persona se siente pesada, sin energía o desconectada de su meta, necesita una opción que le devuelva enfoque y motivación.</p>
+              <span class="tag">Bienestar diario</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-media">
+              <img src="https://images.unsplash.com/photo-1505576399279-565b52d4ac71?auto=format&fit=crop&w=1200&q=80" alt="Hábitos saludables y transformación" />
+            </div>
+            <div class="card-body">
+              <h3>Apoyo para tu proceso</h3>
+              <p>No se trata solo de usar un producto. Se trata de sentir que llevas una dirección, una meta y una guía para avanzar con más seguridad.</p>
+              <span class="tag">Acompañamiento</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-media">
+              <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1200&q=80" alt="Cambio de hábitos y alimentación" />
+            </div>
+            <div class="card-body">
+              <h3>Resultados que sí conectan</h3>
+              <p>Si tu meta es verte mejor, sentirte mejor o retomar el control, aquí puedes conocer una propuesta que conecta con ese objetivo.</p>
+              <span class="tag">Transformación</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="contact-actions" style="justify-content:center">
+          <a class="btn btn-primary" href="https://wa.me/584243415002?text=Hola%20Mayra%2C%20quiero%20m%C3%A1s%20detalle%20sobre%20los%20productos" target="_blank" rel="noopener">Quiero más información ahora</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="negocio">
+      <div class="container">
+        <div class="banner">
+          <div class="banner-grid">
+            <div>
+              <span class="eyebrow">OPORTUNIDAD DE NEGOCIO</span>
+              <h2 class="section-title" style="margin-top:16px">Para quienes no solo quieren un cambio personal, sino también una nueva fuente de ingresos</h2>
+              <p style="color:#d9e2ef;margin:0">
+                Tal vez llegaste buscando un producto. Pero si además estás buscando una forma de emprender, generar ingresos o construir algo con apoyo,
+                aquí puedes conocer una oportunidad que vale la pena evaluar con calma.
+              </p>
+
+              <div class="checklist">
+                <div class="check"><i>✓</i><div><strong>Sin complicarte:</strong> te explico el modelo de forma simple y directa.</div></div>
+                <div class="check"><i>✓</i><div><strong>Con visión clara:</strong> entiendes mejor qué puedes hacer, cómo empezar y qué se necesita.</div></div>
+                <div class="check"><i>✓</i><div><strong>Con acompañamiento:</strong> no es avanzar solo, es entrar con orientación real.</div></div>
+              </div>
+
+              <div class="contact-actions">
+                <a class="btn btn-whatsapp" href="https://wa.me/584243415002?text=Hola%20Mayra%2C%20quiero%20que%20me%20expliques%20el%20negocio" target="_blank" rel="noopener">Explícame cómo empezar</a>
+                <a class="btn btn-secondary" href="#herramientas">Conoce más sobre Mayra</a>
+              </div>
+            </div>
+
+            <div class="card" style="overflow:hidden">
+              <div class="card-media" style="height:100%">
+                <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1400&q=80" alt="Equipo, crecimiento y oportunidad" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="herramientas">
+      <div class="container">
+        <div class="banner">
+          <div class="banner-grid">
+            <div>
+              <span class="eyebrow">ACCESOS ESPECIALES</span>
+              <h2 class="section-title" style="margin-top:16px">Explora las herramientas recomendadas</h2>
+              <p style="color:#d9e2ef;margin:0">
+                Se eliminó la sección de biografía e imagen personal para dejar una página más directa, enfocada en acción,
+                contacto y acceso a recursos útiles.
+              </p>
+
+              <div class="checklist">
+                <div class="check"><i>✓</i><div><strong>Evalúate ahora:</strong> entra a la herramienta desde el botón directo.</div></div>
+                <div class="check"><i>✓</i><div><strong>Conoce más aquí:</strong> amplía la información en la segunda ruta recomendada.</div></div>
+                <div class="check"><i>✓</i><div><strong>Hablar por WhatsApp ahora:</strong> contacta a Mayra Hernandez al +58 424 341 5002.</div></div>
+              </div>
+
+              <div class="contact-actions">
+                <a class="btn btn-primary" href="https://onemoreint.github.io/apps/MAYRA/PRO1/" target="_blank" rel="noopener">Evalúate ahora</a>
+                <a class="btn btn-secondary" href="https://onemoreint.github.io/apps/MAYRA/PRO2/" target="_blank" rel="noopener">Conoce más aquí</a>
+                <a class="btn btn-whatsapp" href="https://wa.me/584243415002?text=Hola%20Mayra%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n" target="_blank" rel="noopener">Hablar con Mayra por WhatsApp</a>
+              </div>
+            </div>
+
+            <div class="card" style="overflow:hidden">
+              <div class="card-media" style="height:100%">
+                <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1400&q=80" alt="Oportunidad, orientación y crecimiento" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="testimonios">
+      <div class="container center">
+        <span class="eyebrow">TESTIMONIOS</span>
+        <h2 class="section-title">Historias y percepciones que transmiten confianza</h2>
+        <p class="section-sub">Personas que llegaron con dudas hoy valoran la claridad, la cercanía y la posibilidad de encontrar aquí una opción real para su bienestar o su crecimiento económico.</p>
+
+        <div class="testimonials">
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <p>“Entré por curiosidad y terminé escribiendo porque sentí que había una opción real tanto para mi bienestar como para generar ingresos.”</p>
+            <strong>Prospecto</strong>
+            <span>Interés en producto y negocio</span>
+          </div>
+
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <p>“La explicación fue directa, sin presión y con bastante claridad. Eso me dio confianza para seguir la conversación.”</p>
+            <strong>Contacto calificado</strong>
+            <span>Proceso de decisión</span>
+          </div>
+
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <p>“La página transmite seriedad y cercanía. No parece publicidad vacía, sino una invitación real a conocer algo útil.”</p>
+            <strong>Visitante</strong>
+            <span>Percepción de marca personal</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="container center">
+        <span class="eyebrow">PREGUNTAS FRECUENTES</span>
+        <h2 class="section-title">Respuestas rápidas antes de escribir</h2>
+
+        <div class="faq">
+          <details open>
+            <summary>¿Aquí puedo pedir información de producto?</summary>
+            <p>Sí. Esta página está pensada para captar personas interesadas en conocer los productos, sus beneficios y cómo iniciar con orientación directa.</p>
+          </details>
+
+          <details>
+            <summary>¿También puedo preguntar por el negocio?</summary>
+            <p>Sí. Si lo que buscas es una oportunidad para generar ingresos, aquí puedes escribir y recibir una explicación más clara y adaptada a tu perfil.</p>
+          </details>
+
+          <details>
+            <summary>¿Debo decidir ya mismo entre producto o negocio?</summary>
+            <p>No. Puedes comenzar preguntando, entender mejor la propuesta y luego decidir qué camino tiene más sentido para ti.</p>
+          </details>
+
+          <details>
+            <summary>¿La atención es directa?</summary>
+            <p>Sí. Los botones están conectados a WhatsApp para que la conversación sea directa, rápida y sin formularios innecesarios.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contacto">
+      <div class="container">
+        <div class="contact-box">
+          <div class="contact-grid">
+            <div>
+              <span class="eyebrow">CONTACTO DIRECTO</span>
+              <h2 class="section-title" style="margin-top:16px">Habla con Mayra Hernandez y recibe la información que necesitas</h2>
+              <p style="color:#dbe2ee;max-width:640px">
+                Si tu interés es comprar, emprender, evaluar una opción o conocer más detalles, aquí tienes acceso directo al número de contacto.
+              </p>
+
+              <div class="contact-list">
+                <div class="contact-item">
+                  <div>
+                    <small>WhatsApp de contacto</small>
+                    <strong>+58 424 341 5002</strong>
+                  </div>
+                  <a class="btn btn-whatsapp" style="padding:12px 16px" href="https://wa.me/584243415002?text=Hola%20Mayra%2C%20quiero%20informaci%C3%B3n" target="_blank" rel="noopener">Escribir</a>
+                </div>
+
+                <div class="contact-item">
+                  <div>
+                    <small>Acceso especial</small>
+                    <strong>Evalúate ahora</strong>
+                  </div>
+                  <a class="btn btn-primary" style="padding:12px 16px" href="https://onemoreint.github.io/apps/MAYRA/PRO1/" target="_blank" rel="noopener">Abrir</a>
+                </div>
+
+                <div class="contact-item">
+                  <div>
+                    <small>Información ampliada</small>
+                    <strong>Conoce más aquí</strong>
+                  </div>
+                  <a class="btn btn-secondary" style="padding:12px 16px" href="https://onemoreint.github.io/apps/MAYRA/PRO2/" target="_blank" rel="noopener">Abrir</a>
+                </div>
+              </div>
+
+              <div class="contact-actions">
+                <a class="btn btn-whatsapp" href="https://wa.me/584243415002?text=Hola%20Mayra%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n" target="_blank" rel="noopener">Hablar con Mayra por WhatsApp</a>
+              </div>
+            </div>
+
+            <div class="banner">
+              <span class="eyebrow">RUTA RÁPIDA</span>
+              <h3 style="font-size:1.8rem;margin:18px 0 10px">Una página más limpia y enfocada en conversión</h3>
+              <p style="color:#dbe2ee;margin:0 0 18px">
+                Ahora el sitio quedó adaptado para Mayra Hernandez, con enlaces directos, sin biografía personal ni imagen de José Lugo,
+                y con el número centralizado para atención inmediata.
+              </p>
+              <div class="contact-actions">
+                <a class="btn btn-outline" href="https://onemoreint.github.io/apps/MAYRA/PRO1/" target="_blank" rel="noopener">Evalúate ahora</a>
+                <a class="btn btn-secondary" href="https://onemoreint.github.io/apps/MAYRA/PRO2/" target="_blank" rel="noopener">Conoce más aquí</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div>Mayra Hernandez · Bienestar, producto y oportunidad</div>
+      <div style="margin-top:8px">Conoce una propuesta pensada para ayudarte a verte mejor, sentirte mejor y descubrir una forma real de avanzar con más ingresos y dirección</div>
+    </div>
+  </footer>
+
+  <a class="floating-whatsapp" href="https://wa.me/584243415002?text=Hola%20Mayra%2C%20quiero%20informaci%C3%B3n" target="_blank" rel="noopener">
+    Hablar por WhatsApp ahora
+  </a>
+</body>
+</html>

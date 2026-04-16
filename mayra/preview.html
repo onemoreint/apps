@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>One More | Expansión Latinoamérica</title>
+  <meta name="description" content="Únete a la expansión de One More en Latinoamérica con José Lugo. Conoce el producto, la oportunidad y conecta directo por WhatsApp." />
+  <style>
+    :root{
+      --bg:#060606;
+      --bg-2:#111111;
+      --card:#141414;
+      --gold:#d4af37;
+      --gold-2:#f3d77a;
+      --text:#f5f5f5;
+      --muted:#c8c8c8;
+      --line:rgba(212,175,55,.22);
+      --ok:#1d1d1d;
+      --shadow:0 18px 55px rgba(0,0,0,.35);
+      --radius:22px;
+      --max:1180px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(212,175,55,.10), transparent 22%),
+        radial-gradient(circle at top left, rgba(212,175,55,.06), transparent 18%),
+        linear-gradient(180deg, #040404, #090909 35%, #050505 100%);
+      color:var(--text);
+    }
+
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
+
+    .wrap{width:min(var(--max), calc(100% - 32px)); margin:auto}
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter: blur(10px);
+      background:rgba(5,5,5,.78);
+      border-bottom:1px solid rgba(255,255,255,.05);
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      padding:14px 0;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:700;
+      letter-spacing:.5px;
+    }
+
+    .brand-badge{
+      width:42px;height:42px;border-radius:50%;
+      display:grid;place-items:center;
+      background:linear-gradient(135deg,var(--gold),#8c6b15);
+      color:#000;font-weight:900;
+      box-shadow:0 0 0 4px rgba(212,175,55,.08);
+    }
+
+    .nav-links{
+      display:flex;
+      gap:18px;
+      color:var(--muted);
+      font-size:14px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:14px 22px;
+      border-radius:999px;
+      font-weight:700;
+      transition:.25s ease;
+      border:1px solid transparent;
+      cursor:pointer;
+    }
+
+    .btn-primary{
+      background:linear-gradient(135deg,var(--gold),var(--gold-2));
+      color:#000;
+      box-shadow:0 10px 25px rgba(212,175,55,.22);
+    }
+
+    .btn-primary:hover{transform:translateY(-2px)}
+
+    .btn-secondary{
+      border-color:var(--line);
+      color:var(--text);
+      background:rgba(255,255,255,.03);
+    }
+
+    .btn-secondary:hover{
+      transform:translateY(-2px);
+      border-color:rgba(212,175,55,.55);
+    }
+
+    .hero{
+      padding:70px 0 40px;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:28px;
+      align-items:center;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      background:rgba(212,175,55,.10);
+      border:1px solid rgba(212,175,55,.20);
+      color:var(--gold-2);
+      border-radius:999px;
+      padding:10px 16px;
+      font-size:13px;
+      margin-bottom:18px;
+    }
+
+    h1{
+      font-size:clamp(2.2rem, 4vw, 4.4rem);
+      line-height:1.03;
+      margin:0 0 16px;
+      letter-spacing:-1.3px;
+    }
+
+    .gold{color:var(--gold-2)}
+
+    .lead{
+      color:var(--muted);
+      font-size:1.05rem;
+      line-height:1.75;
+      max-width:720px;
+      margin:0 0 24px;
+    }
+
+    .hero-actions{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:22px;
+    }
+
+    .hero-stats{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:14px;
+      margin-top:18px;
+    }
+
+    .stat{
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:18px;
+      padding:18px;
+      box-shadow:var(--shadow);
+    }
+
+    .stat strong{
+      display:block;
+      font-size:1.4rem;
+      color:var(--gold-2);
+      margin-bottom:6px;
+    }
+
+    .stat span{
+      color:var(--muted);
+      font-size:.95rem;
+    }
+
+    .hero-card{
+      background:
+        linear-gradient(180deg, rgba(212,175,55,.06), rgba(255,255,255,.02)),
+        var(--card);
+      border:1px solid var(--line);
+      border-radius:28px;
+      padding:24px;
+      box-shadow:var(--shadow);
+    }
+
+    .hero-card h3{
+      margin:0 0 10px;
+      font-size:1.35rem;
+    }
+
+    .hero-card p{
+      color:var(--muted);
+      line-height:1.7;
+    }
+
+    .mini-list{
+      margin:18px 0 0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:12px;
+    }
+
+    .mini-list li{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.05);
+      padding:14px 15px;
+      border-radius:16px;
+      color:#ededed;
+    }
+
+    section{
+      padding:34px 0;
+    }
+
+    .section-title{
+      text-align:center;
+      max-width:780px;
+      margin:0 auto 26px;
+    }
+
+    .section-title h2{
+      margin:0 0 12px;
+      font-size:clamp(1.8rem, 3vw, 3rem);
+    }
+
+    .section-title p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.75;
+    }
+
+    .video-card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:26px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+    }
+
+    .video-wrap{
+      position:relative;
+      width:100%;
+      padding-bottom:56.25%;
+      background:#000;
+    }
+
+    .video-wrap iframe{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+    }
+
+    .video-copy{
+      padding:22px;
+      color:var(--muted);
+      line-height:1.75;
+    }
+
+    .grid-3{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:18px;
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:18px;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:22px;
+      padding:22px;
+      box-shadow:var(--shadow);
+    }
+
+    .card h3{
+      margin:0 0 10px;
+      font-size:1.2rem;
+    }
+
+    .card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.75;
+    }
+
+    .icon{
+      width:52px;height:52px;
+      border-radius:16px;
+      display:grid;place-items:center;
+      margin-bottom:14px;
+      background:rgba(212,175,55,.10);
+      border:1px solid rgba(212,175,55,.18);
+      color:var(--gold-2);
+      font-size:1.4rem;
+    }
+
+    .highlight{
+      border:1px solid rgba(212,175,55,.18);
+      background:
+        linear-gradient(180deg, rgba(212,175,55,.08), rgba(255,255,255,.02)),
+        var(--card);
+    }
+
+    .split{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:22px;
+      align-items:stretch;
+    }
+
+    .quote{
+      font-size:1.05rem;
+      line-height:1.8;
+      color:#ededed;
+    }
+
+    .cta{
+      padding:18px 0 70px;
+    }
+
+    .cta-box{
+      background:
+        radial-gradient(circle at top right, rgba(212,175,55,.12), transparent 30%),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
+        var(--card);
+      border:1px solid var(--line);
+      border-radius:28px;
+      padding:30px;
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+
+    .cta-box p{
+      color:var(--muted);
+      max-width:760px;
+      margin:0 auto 24px;
+      line-height:1.75;
+    }
+
+    .cta-actions{
+      display:flex;
+      gap:14px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+
+    footer{
+      padding:22px 0 34px;
+      color:#9f9f9f;
+      border-top:1px solid rgba(255,255,255,.05);
+    }
+
+    .floating-wa{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      z-index:30;
+      width:62px;height:62px;
+      border-radius:50%;
+      display:grid;place-items:center;
+      background:linear-gradient(135deg,var(--gold),var(--gold-2));
+      color:#000;
+      font-size:28px;
+      box-shadow:0 14px 30px rgba(0,0,0,.34);
+      border:1px solid rgba(255,255,255,.3);
+    }
+
+    @media (max-width: 980px){
+      .hero-grid,.split,.grid-3,.grid-2{
+        grid-template-columns:1fr;
+      }
+      .hero-stats{
+        grid-template-columns:1fr;
+      }
+      .nav{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .nav-links{
+        justify-content:flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="wrap nav">
+      <div class="brand">
+        <div class="brand-badge">OM</div>
+        <div>One More | LATAM</div>
+      </div>
+
+      <div class="nav-links">
+        <a href="#oportunidad">Oportunidad</a>
+        <a href="#producto">Producto</a>
+        <a href="#divisiones">Divisiones</a>
+        <a href="#liderazgo">Liderazgo</a>
+        <a href="#contacto">Contacto</a>
+      </div>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="pill">Expansión Latinoamérica • Liderazgo • Oportunidad global</div>
+        <h1>Construye un negocio con <span class="gold">One More</span> y expándelo en Latinoamérica</h1>
+        <p class="lead">
+          Si estás buscando una oportunidad moderna para crecer con producto, equipo, sistema y visión internacional,
+          esta página te muestra el camino de forma clara. Aquí no vienes a improvisar: vienes a construir.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://wa.me/573126387467?text=Hola%20Jose%2C%20quiero%20informaci%C3%B3n%20sobre%20One%20More%20y%20la%20oportunidad%20de%20negocio." target="_blank" rel="noopener noreferrer">WhatsApp Colombia</a>
+          <a class="btn btn-secondary" href="#video">Ver oportunidad</a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat">
+            <strong>Producto</strong>
+            <span>Bienestar, innovación y consumo con alto potencial de recomendación.</span>
+          </div>
+          <div class="stat">
+            <strong>Sistema</strong>
+            <span>Modelo simple para presentar, conectar, duplicar y acompañar.</span>
+          </div>
+          <div class="stat">
+            <strong>Expansión</strong>
+            <span>Visión enfocada en crecimiento en Colombia, Venezuela y LATAM.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <h3>¿Qué vas a encontrar aquí?</h3>
+        <p>
+          Una presentación clara del producto, la visión de negocio y las áreas clave de crecimiento para personas que quieren vender, construir equipo y posicionarse temprano.
+        </p>
+        <ul class="mini-list">
+          <li>✅ Oportunidad de negocio explicada de forma simple</li>
+          <li>✅ Producto con enfoque comercial y de expansión</li>
+          <li>✅ Divisiones claras para entender cómo crecer</li>
+          <li>✅ Contacto directo contigo para cierre por WhatsApp</li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <section id="video">
+    <div class="wrap">
+      <div class="section-title">
+        <h2>Video de la oportunidad</h2>
+        <p>
+          Mira primero la visión general del negocio. Esto te ayudará a entender mejor el enfoque de expansión, el modelo y por qué tantas personas están mirando este tipo de oportunidad con más atención.
+        </p>
+      </div>
+
+      <div class="video-card">
+        <div class="video-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/Q2qhgyUifiU"
+            title="Oportunidad de negocio One More"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen></iframe>
+        </div>
+        <div class="video-copy">
+          Este video funciona como punto de entrada para prospectos nuevos. Después de verlo, el paso ideal es escribirte por WhatsApp para recibir orientación directa y definir si la oportunidad encaja con su perfil.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="oportunidad">
+    <div class="wrap">
+      <div class="section-title">
+        <h2>La oportunidad de negocio</h2>
+        <p>
+          Esta landing está diseñada para atraer a personas que quieren generar ingresos, desarrollar red, crecer en liderazgo y entrar a una expansión con visión seria.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card highlight">
+          <div class="icon">🚀</div>
+          <h3>Entrada estratégica</h3>
+          <p>
+            Ideal para quien quiere empezar con una guía clara, sin perder tiempo y con acompañamiento directo.
+          </p>
+        </div>
+        <div class="card">
+          <div class="icon">💼</div>
+          <h3>Modelo duplicable</h3>
+          <p>
+            Presentas el producto, conectas con personas interesadas y desarrollas un equipo con enfoque comercial.
+          </p>
+        </div>
+        <div class="card">
+          <div class="icon">🌎</div>
+          <h3>Visión regional</h3>
+          <p>
+            La narrativa está pensada para expansión en Latinoamérica, no para quedarte pequeño ni local.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="producto">
+    <div class="wrap">
+      <div class="section-title">
+        <h2>Producto con enfoque comercial</h2>
+        <p>
+          Aquí puedes mostrar el producto principal de One More que quieras impulsar primero. Esta sección te la dejé lista para que cambies el texto exacto, beneficios y enfoque según el producto que estés empujando.
+        </p>
+      </div>
+
+      <div class="split">
+        <div class="card highlight">
+          <h3>Presentación del producto</h3>
+          <p class="quote">
+            “Tecnología aplicada al bienestar, orientada a personas que buscan una opción innovadora, práctica y fácil de compartir.”
+          </p>
+          <p style="margin-top:16px;color:var(--muted);line-height:1.75;">
+            Puedes reemplazar esta descripción por el nombre real del producto, su línea, su beneficio principal y el tipo de cliente ideal.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Beneficios que puedes comunicar</h3>
+          <p>
+            ✅ Fácil de presentar<br>
+            ✅ Diferenciación frente a productos tradicionales<br>
+            ✅ Alto potencial de recomendación<br>
+            ✅ Atractivo para ventas y seguimiento<br>
+            ✅ Ideal para abrir conversaciones de negocio
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="divisiones">
+    <div class="wrap">
+      <div class="section-title">
+        <h2>Divisiones clave de la landing</h2>
+        <p>
+          Organicé la página en bloques pensados para conversión: captar atención, explicar, despertar interés y llevar al cierre por WhatsApp.
+        </p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="icon">1</div>
+          <h3>Impacto inicial</h3>
+          <p>
+            El hero principal posiciona visión, expansión y liderazgo, para que el visitante entienda de inmediato que está ante una oportunidad seria.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="icon">2</div>
+          <h3>Video de oportunidad</h3>
+          <p>
+            El video resuelve parte de la explicación y reduce fricción. Ahorra tiempo y precalifica mejor al prospecto.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="icon">3</div>
+          <h3>Bloque de producto</h3>
+          <p>
+            Presenta el valor comercial del producto sin complicar demasiado el mensaje. Vende interés, no saturación.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="icon">4</div>
+          <h3>Bloque de oportunidad</h3>
+          <p>
+            Refuerza que aquí no solo hay consumo, sino crecimiento, red, liderazgo y posibilidad de expansión.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="icon">5</div>
+          <h3>Autoridad</h3>
+          <p>
+            Tu nombre, cargo y presencia regional fortalecen la confianza y le dan dirección a la decisión del prospecto.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="icon">6</div>
+          <h3>Cierre directo</h3>
+          <p>
+            Todo desemboca en un botón directo a WhatsApp para que el tráfico no se enfríe ni se disperse.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="liderazgo">
+    <div class="wrap">
+      <div class="section-title">
+        <h2>Liderazgo y acompañamiento</h2>
+        <p>
+          El prospecto necesita sentir que no va a entrar solo. Esta sección te posiciona como la figura de referencia para expansión y seguimiento.
+        </p>
+      </div>
+
+      <div class="card highlight" style="text-align:center;">
+        <h3>José Lugo</h3>
+        <p style="font-size:1.08rem;color:var(--gold-2);margin-bottom:12px;">
+          Director de Operaciones Latinoamérica
+        </p>
+        <p style="max-width:760px;margin:0 auto;color:var(--muted);line-height:1.85;">
+          Liderazgo orientado a crecimiento, expansión regional, desarrollo de equipos, presentación de oportunidad y acompañamiento comercial para personas que buscan resultados reales dentro de One More.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta" id="contacto">
+    <div class="wrap">
+      <div class="cta-box">
+        <div class="section-title" style="margin-bottom:18px;">
+          <h2>Da el siguiente paso</h2>
+          <p>
+            Si quieres información del producto, del negocio o del proceso para integrarte a la expansión, escríbeme directo. La vía más rápida es WhatsApp.
+          </p>
+        </div>
+
+        <div class="cta-actions">
+          <a class="btn btn-primary" href="https://wa.me/573126387467?text=Hola%20Jose%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20One%20More%20y%20quiero%20evaluar%20la%20oportunidad." target="_blank" rel="noopener noreferrer">WhatsApp Colombia</a>
+          <a class="btn btn-secondary" href="https://wa.me/584220247885?text=Hola%20Jose%2C%20quiero%20informaci%C3%B3n%20sobre%20One%20More%20para%20Venezuela." target="_blank" rel="noopener noreferrer">WhatsApp Venezuela</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      © 2026 • Landing adaptada para One More Latinoamérica • José Lugo
+    </div>
+  </footer>
+
+  <a class="floating-wa" href="https://wa.me/573126387467?text=Hola%20Jose%2C%20vengo%20de%20la%20landing%20y%20quiero%20informaci%C3%B3n." target="_blank" rel="noopener noreferrer" aria-label="Escribir por WhatsApp">✆</a>
+
+</body>
+</html>

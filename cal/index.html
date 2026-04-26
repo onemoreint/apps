@@ -3,583 +3,207 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calculadora One More Global | BCV · TRM · LATAM</title>
+  <title>Calculadora One More Global | BCV · TRM · Tratamientos</title>
   <style>
     :root{
-      --bg:#050505;
-      --card:#111111;
-      --card2:#1a1a1a;
-      --gold:#d6b46a;
-      --gold2:#f8dc8b;
-      --text:#f7f7f7;
-      --muted:#b8b8b8;
-      --green:#25D366;
-      --red:#ff5b5b;
+      --card:#111111; --card2:#1a1a1a; --gold:#d6b46a; --gold2:#f8dc8b;
+      --text:#f7f7f7; --muted:#b8b8b8; --green:#25D366; --red:#ff5b5b;
     }
     *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Arial, Helvetica, sans-serif;
-      min-height:100vh;
-      color:var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(214,180,106,.22), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(37,211,102,.10), transparent 28%),
-        linear-gradient(135deg,#020202,#111);
-      padding:16px;
-    }
-    .app{max-width:760px;margin:auto}
-    .hero{text-align:center;padding:24px 10px 18px}
-    .badge{
-      display:inline-block;
-      padding:8px 14px;
-      border-radius:999px;
-      color:var(--gold2);
-      border:1px solid rgba(214,180,106,.4);
-      background:rgba(214,180,106,.08);
-      font-size:13px;
-      font-weight:700;
-      margin-bottom:12px;
-    }
-    h1{margin:0;font-size:31px;line-height:1.08;letter-spacing:-.5px}
-    .sub{max-width:590px;margin:12px auto 0;color:var(--muted);line-height:1.45;font-size:15px}
-    .card{
-      background:linear-gradient(180deg,var(--card),var(--card2));
-      border:1px solid rgba(214,180,106,.25);
-      border-radius:24px;
-      padding:18px;
-      margin-bottom:16px;
-      box-shadow:0 22px 55px rgba(0,0,0,.35);
-    }
-    .rate-top{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      align-items:flex-start;
-      flex-wrap:wrap;
-    }
-    .rate-label{font-size:13px;color:var(--gold2);font-weight:800;margin-bottom:6px}
-    .rate-value{font-size:34px;font-weight:900;letter-spacing:-1px}
-    .rate-meta{color:var(--muted);font-size:13px;line-height:1.4;margin-top:4px}
-    .source-pill{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:8px 10px;
-      border-radius:999px;
-      background:#070707;
-      border:1px solid rgba(255,255,255,.1);
-      color:#fff;
-      font-size:12px;
-      font-weight:800;
-    }
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;min-height:100vh;color:var(--text);
+      background:radial-gradient(circle at top left,rgba(214,180,106,.22),transparent 35%),
+      radial-gradient(circle at bottom right,rgba(37,211,102,.10),transparent 28%),linear-gradient(135deg,#020202,#111);padding:16px}
+    .app{max-width:800px;margin:auto}.hero{text-align:center;padding:24px 10px 18px}
+    .badge{display:inline-block;padding:8px 14px;border-radius:999px;color:var(--gold2);border:1px solid rgba(214,180,106,.4);background:rgba(214,180,106,.08);font-size:13px;font-weight:700;margin-bottom:12px}
+    h1{margin:0;font-size:31px;line-height:1.08;letter-spacing:-.5px}.sub{max-width:640px;margin:12px auto 0;color:var(--muted);line-height:1.45;font-size:15px}
+    .card{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid rgba(214,180,106,.25);border-radius:24px;padding:18px;margin-bottom:16px;box-shadow:0 22px 55px rgba(0,0,0,.35)}
+    .rate-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}.rate-label{font-size:13px;color:var(--gold2);font-weight:800;margin-bottom:6px}
+    .rate-value{font-size:34px;font-weight:900;letter-spacing:-1px}.rate-meta{color:var(--muted);font-size:13px;line-height:1.4;margin-top:4px}
+    .source-pill{display:inline-flex;padding:8px 10px;border-radius:999px;background:#070707;border:1px solid rgba(255,255,255,.1);color:#fff;font-size:12px;font-weight:800}
     label{display:block;color:var(--gold2);font-weight:800;font-size:13px;margin-bottom:7px}
-    select,input{
-      width:100%;
-      border:none;
-      outline:none;
-      border-radius:16px;
-      padding:14px;
-      font-size:16px;
-      background:#070707;
-      color:#fff;
-      border:1px solid rgba(255,255,255,.12);
-    }
+    select,input{width:100%;border:none;outline:none;border-radius:16px;padding:14px;font-size:16px;background:#070707;color:#fff;border:1px solid rgba(255,255,255,.12)}
     select:focus,input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(214,180,106,.12)}
-    .grid{display:grid;gap:13px}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .btn{
-      width:100%;
-      border:none;
-      border-radius:16px;
-      padding:15px 16px;
-      font-size:15px;
-      font-weight:900;
-      cursor:pointer;
-      transition:.2s;
-    }
-    .btn:hover{transform:translateY(-1px)}
-    .btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#101010}
-    .btn-dark{background:#070707;color:#fff;border:1px solid rgba(214,180,106,.35)}
-    .results{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
-    .result{
-      background:#070707;
-      border:1px solid rgba(255,255,255,.1);
-      border-radius:18px;
-      padding:14px;
-      min-height:78px;
-    }
-    .result span{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
-    .result strong{font-size:22px;color:#fff}
-    .full{grid-column:1/-1}
-    .summary-lines{
-      font-size:15px;
-      line-height:1.75;
-      color:#fff;
-    }
-    .summary-lines b{color:var(--gold2)}
-    .error{display:none;color:var(--red);font-size:13px;margin-top:8px;line-height:1.4}
-    .note{color:var(--muted);font-size:12px;line-height:1.45;margin-top:12px}
-    .mini{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:10px;
-      margin-top:12px;
-    }
-    .mini div{
-      background:#070707;
-      border:1px solid rgba(255,255,255,.1);
-      border-radius:15px;
-      padding:10px;
-      font-size:12px;
-      color:var(--muted);
-    }
-    .mini strong{display:block;color:#fff;font-size:14px;margin-top:3px}
-    .shipping-box{
-      margin-top:16px;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:18px;
-      overflow:hidden;
-      background:#111;
-    }
-    .shipping-title{
-      background:linear-gradient(135deg,#0f2b1c,#1c4a2f);
-      padding:12px;
-      text-align:center;
-      font-weight:900;
-      color:#fff;
-    }
-    .shipping-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-    }
-    .ship-item{
-      padding:10px;
-      border-top:1px solid rgba(255,255,255,.08);
-      font-size:12px;
-      color:#ccc;
-    }
-    .ship-item:nth-child(odd){border-right:1px solid rgba(255,255,255,.08)}
-    .ship-item strong{
-      display:block;
-      color:var(--gold2);
-      font-size:14px;
-      margin-top:4px;
-    }
-    .ship-active{
-      background:rgba(214,180,106,.16);
-      outline:1px solid var(--gold);
-    }
-    .brand-btn{
-      width:100%;
-      margin-top:16px;
-      border:0;
-      padding:16px;
-      border-radius:16px;
-      font-weight:900;
-      background:linear-gradient(135deg,var(--gold),var(--gold2));
-      color:#000;
-      letter-spacing:.4px;
-      cursor:default;
-    }
-    .footer{text-align:center;color:#888;font-size:12px;padding:12px}
-    @media(max-width:590px){
-      body{padding:12px}
-      h1{font-size:26px}
-      .row,.results,.mini,.shipping-grid{grid-template-columns:1fr}
-      .full{grid-column:auto}
-      .rate-value{font-size:30px}
-      .ship-item:nth-child(odd){border-right:0}
-    }
+    .grid{display:grid;gap:13px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .btn{width:100%;border:none;border-radius:16px;padding:15px 16px;font-size:15px;font-weight:900;cursor:pointer;transition:.2s}.btn:hover{transform:translateY(-1px)}
+    .btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#101010}.btn-dark{background:#070707;color:#fff;border:1px solid rgba(214,180,106,.35)}
+    .mini{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.mini div{background:#070707;border:1px solid rgba(255,255,255,.1);border-radius:15px;padding:10px;font-size:12px;color:var(--muted)}.mini strong{display:block;color:#fff;font-size:14px;margin-top:3px}
+    .results{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.result{background:#070707;border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:14px;min-height:78px}.result span{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}.result strong{font-size:22px;color:#fff}.full{grid-column:1/-1}
+    .summary-lines{font-size:15px;line-height:1.75;color:#fff}.summary-lines b{color:var(--gold2)}
+    .treatment-card{background:#070707;border:1px solid rgba(214,180,106,.22);border-radius:18px;padding:15px;margin-top:2px}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.chip{background:rgba(214,180,106,.12);border:1px solid rgba(214,180,106,.35);color:var(--gold2);border-radius:999px;padding:7px 10px;font-size:12px;font-weight:800}
+    .shipping-box{margin-top:16px;border:1px solid rgba(255,255,255,.12);border-radius:18px;overflow:hidden;background:#111}.shipping-title{background:linear-gradient(135deg,#0f2b1c,#1c4a2f);padding:12px;text-align:center;font-weight:900;color:#fff}.shipping-grid{display:grid;grid-template-columns:1fr 1fr}.ship-item{padding:10px;border-top:1px solid rgba(255,255,255,.08);font-size:12px;color:#ccc}.ship-item:nth-child(odd){border-right:1px solid rgba(255,255,255,.08)}.ship-item strong{display:block;color:var(--gold2);font-size:14px;margin-top:4px}.ship-active{background:rgba(214,180,106,.16);outline:1px solid var(--gold)}
+    .brand-btn{width:100%;margin-top:16px;border:0;padding:16px;border-radius:16px;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;letter-spacing:.4px;cursor:default}
+    .note,.error{font-size:12px;line-height:1.45;margin-top:12px}.note{color:var(--muted)}.error{display:none;color:var(--red)}.footer{text-align:center;color:#888;font-size:12px;padding:12px}
+    @media(max-width:590px){body{padding:12px}h1{font-size:26px}.row,.results,.mini,.shipping-grid{grid-template-columns:1fr}.full{grid-column:auto}.rate-value{font-size:30px}.ship-item:nth-child(odd){border-right:0}}
   </style>
 </head>
 <body>
-  <main class="app">
-    <section class="hero">
-      <div class="badge">ONE MORE · Calculadora Global V2</div>
-      <h1>Calculadora con BCV, TRM y tasas LATAM</h1>
-      <p class="sub">Selecciona el país, producto, tipo de precio y cantidad. La app calcula el total en USD y moneda local con tasa automática o manual.</p>
-    </section>
+<main class="app">
+  <section class="hero">
+    <div class="badge">ONE MORE · Calculadora Global V3</div>
+    <h1>Calculadora con BCV, TRM, LATAM y tratamientos</h1>
+    <p class="sub">Calcula un producto individual o selecciona una patología para ver la combinación sugerida, QV, envío y precio total estimado.</p>
+  </section>
 
-    <section class="card">
-      <div class="grid">
-        <div>
-          <label>País / Moneda local</label>
-          <select id="country">
-            <option value="VE">Venezuela · BCV · VES</option>
-            <option value="CO">Colombia · TRM · COP</option>
-            <option value="MX">México · MXN</option>
-            <option value="PE">Perú · PEN</option>
-            <option value="CL">Chile · CLP</option>
-            <option value="AR">Argentina · ARS</option>
-            <option value="EC">Ecuador · USD</option>
-            <option value="PA">Panamá · USD</option>
-            <option value="DO">República Dominicana · DOP</option>
-            <option value="CR">Costa Rica · CRC</option>
-          </select>
-        </div>
+  <section class="card">
+    <div class="grid">
+      <div><label>País / Moneda local</label><select id="country">
+        <option value="VE">Venezuela · BCV · VES</option><option value="CO">Colombia · TRM · COP</option><option value="MX">México · MXN</option><option value="PE">Perú · PEN</option><option value="CL">Chile · CLP</option><option value="AR">Argentina · ARS</option><option value="EC">Ecuador · USD</option><option value="PA">Panamá · USD</option><option value="DO">República Dominicana · DOP</option><option value="CR">Costa Rica · CRC</option>
+      </select></div>
+      <div class="rate-top"><div><div class="rate-label">Tasa usada</div><div class="rate-value" id="rateText">Cargando...</div><div class="rate-meta" id="rateMeta">Selecciona país o actualiza tasa.</div><div class="error" id="rateError">No se pudo cargar la tasa automática. Usa la tasa manual.</div></div><div class="source-pill" id="sourcePill">Fuente: automática</div></div>
+      <div class="row"><button class="btn btn-gold" onclick="fetchRate()">Actualizar tasa</button><button class="btn btn-dark" onclick="useManualRate()">Usar tasa manual</button></div>
+      <div class="mini"><div>Venezuela<strong>BCV</strong></div><div>Colombia<strong>TRM del día</strong></div><div>LATAM<strong>Tasa internacional</strong></div></div>
+    </div>
+  </section>
 
-        <div class="rate-top">
-          <div>
-            <div class="rate-label">Tasa usada</div>
-            <div class="rate-value" id="rateText">Cargando...</div>
-            <div class="rate-meta" id="rateMeta">Selecciona país o actualiza tasa.</div>
-            <div class="error" id="rateError">No se pudo cargar la tasa automática. Usa la tasa manual.</div>
-          </div>
-          <div class="source-pill" id="sourcePill">Fuente: automática</div>
-        </div>
+  <section class="card">
+    <div class="grid">
+      <div><label>Modo de cálculo</label><select id="mode">
+        <option value="single">Producto individual</option>
+        <option value="treatment">Tratamiento por patología</option>
+      </select></div>
 
-        <div class="row">
-          <button class="btn btn-gold" onclick="fetchRate()">Actualizar tasa</button>
-          <button class="btn btn-dark" onclick="useManualRate()">Usar tasa manual</button>
-        </div>
+      <div id="singleBox" class="grid">
+        <div><label>Producto</label><select id="product"></select></div>
+        <div class="row"><div><label>Tipo de precio</label><select id="priceType"><option value="distribuidor">Distribuidor</option><option value="publico">Público</option></select></div><div><label>Cantidad</label><input id="qty" type="number" min="1" value="1" /></div></div>
+      </div>
 
-        <div class="mini">
-          <div>Venezuela<strong>BCV</strong></div>
-          <div>Colombia<strong>TRM del día</strong></div>
-          <div>LATAM<strong>Tasa internacional</strong></div>
+      <div id="treatmentBox" class="grid" style="display:none">
+        <div><label>Patología / necesidad</label><select id="condition"></select></div>
+        <div class="row"><div><label>Tipo de precio</label><select id="treatmentPriceType"><option value="distribuidor">Distribuidor</option><option value="publico">Público</option></select></div><div><label>Paquete</label><input value="1 unidad por producto recomendado" readonly /></div></div>
+        <div class="treatment-card">
+          <div class="summary-lines" id="treatmentInfo">Selecciona una patología.</div>
+          <div class="chips" id="treatmentChips"></div>
         </div>
       </div>
-    </section>
 
-    <section class="card">
-      <div class="grid">
-        <div>
-          <label>Producto</label>
-          <select id="product"></select>
-        </div>
+      <div class="row"><div><label>Tasa manual</label><input id="manualRate" type="number" step="0.01" placeholder="Ej: 36.50" /></div><div><label>Precio unitario USD</label><input id="usdPrice" type="text" readonly /></div></div>
+      <button class="btn btn-gold" onclick="calculate()">Calcular</button>
 
-        <div class="row">
-          <div>
-            <label>Tipo de precio</label>
-            <select id="priceType">
-              <option value="distribuidor">Distribuidor</option>
-              <option value="publico">Público</option>
-            </select>
-          </div>
-          <div>
-            <label>Cantidad</label>
-            <input id="qty" type="number" min="1" value="1" />
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <label>Tasa manual</label>
-            <input id="manualRate" type="number" step="0.01" placeholder="Ej: 36.50" />
-          </div>
-          <div>
-            <label>Precio unitario USD</label>
-            <input id="usdPrice" type="text" readonly />
-          </div>
-        </div>
-
-        <button class="btn btn-gold" onclick="calculate()">Calcular</button>
-
-        <div class="results">
-          <div class="result">
-            <span>Total USD</span>
-            <strong id="totalUsd">$0.00</strong>
-          </div>
-          <div class="result">
-            <span>Total moneda local</span>
-            <strong id="totalLocal">0.00</strong>
-          </div>
-          <div class="result full">
-            <span>Resumen del pedido</span>
-            <div class="summary-lines" id="summary">Selecciona un producto.</div>
-          </div>
-        </div>
-
-        <div class="shipping-box">
-          <div class="shipping-title">Envíos según QV del pedido</div>
-          <div class="shipping-grid">
-            <div class="ship-item" id="ship1">De 0 a 99 QV<strong>$12</strong></div>
-            <div class="ship-item" id="ship2">De 100 a 149 QV<strong>$10</strong></div>
-            <div class="ship-item" id="ship3">De 150 a 199 QV<strong>$8</strong></div>
-            <div class="ship-item" id="ship4">De 200 a 299 QV<strong>$6</strong></div>
-            <div class="ship-item" id="ship5">De 300 QV en adelante<strong>GRATIS</strong></div>
-          </div>
-        </div>
-
-        <button class="brand-btn" type="button">ONEMORE</button>
-
-        <p class="note">
-          Envío: 0-99 QV = $12 · 100-149 QV = $10 · 150-199 QV = $8 · 200-299 QV = $6 · 300 QV en adelante = GRATIS.
-        </p>
+      <div class="results">
+        <div class="result"><span>Total USD</span><strong id="totalUsd">$0.00</strong></div>
+        <div class="result"><span>Total moneda local</span><strong id="totalLocal">0.00</strong></div>
+        <div class="result full"><span>Resumen del pedido</span><div class="summary-lines" id="summary">Selecciona un producto o tratamiento.</div></div>
       </div>
-    </section>
 
-    <div class="footer">Herramienta comercial para distribuidores One More · Global V2 + Envío por QV</div>
-  </main>
+      <div class="shipping-box"><div class="shipping-title">Envíos según QV del pedido</div><div class="shipping-grid">
+        <div class="ship-item" id="ship1">De 0 a 99 QV<strong>$12</strong></div><div class="ship-item" id="ship2">De 100 a 149 QV<strong>$10</strong></div><div class="ship-item" id="ship3">De 150 a 199 QV<strong>$8</strong></div><div class="ship-item" id="ship4">De 200 a 299 QV<strong>$6</strong></div><div class="ship-item" id="ship5">De 300 QV en adelante<strong>GRATIS</strong></div>
+      </div></div>
 
-  <script>
-    const countries = {
-      VE: { name:"Venezuela", currency:"VES", symbol:"Bs", source:"BCV", api:"venezuela" },
-      CO: { name:"Colombia", currency:"COP", symbol:"COP", source:"TRM Colombia", api:"colombia" },
-      MX: { name:"México", currency:"MXN", symbol:"MXN", source:"Tasa internacional", api:"global" },
-      PE: { name:"Perú", currency:"PEN", symbol:"S/", source:"Tasa internacional", api:"global" },
-      CL: { name:"Chile", currency:"CLP", symbol:"CLP", source:"Tasa internacional", api:"global" },
-      AR: { name:"Argentina", currency:"ARS", symbol:"ARS", source:"Tasa internacional", api:"global" },
-      EC: { name:"Ecuador", currency:"USD", symbol:"USD", source:"Dolarización", api:"fixed" },
-      PA: { name:"Panamá", currency:"USD", symbol:"USD", source:"Dolarización", api:"fixed" },
-      DO: { name:"República Dominicana", currency:"DOP", symbol:"DOP", source:"Tasa internacional", api:"global" },
-      CR: { name:"Costa Rica", currency:"CRC", symbol:"CRC", source:"Tasa internacional", api:"global" }
-    };
+      <button class="brand-btn" type="button">ONEMORE</button>
+      <p class="note"><b>Aviso:</b> esta herramienta es informativa y comercial. No sustituye diagnóstico, tratamiento ni recomendación médica profesional.</p>
+    </div>
+  </section>
+  <div class="footer">Herramienta comercial para distribuidores One More · Global V3</div>
+</main>
 
-    const products = [
-      { name:"Painless Night Glu", qv:50, distribuidor:64, publico:80 },
-      { name:"Omevia", qv:32, distribuidor:39, publico:50 },
-      { name:"Melatonin", qv:30, distribuidor:35, publico:48 },
-      { name:"B12 Plus", qv:30, distribuidor:35, publico:48 },
-      { name:"Collagen Patch Sornie", qv:45, distribuidor:59, publico:80 },
-      { name:"Slim Style", qv:25, distribuidor:32, publico:44 },
-      { name:"Dekamin", qv:25, distribuidor:32, publico:44 },
-      { name:"Night Ladies", qv:45, distribuidor:59, publico:80 },
-      { name:"Night Gentleman", qv:45, distribuidor:59, publico:80 },
-      { name:"Glutanad", qv:50, distribuidor:67, publico:80 }
-    ];
-
-    let currentRate = null;
-    let lastResult = null;
-
-    const countrySelect = document.getElementById("country");
-    const productSelect = document.getElementById("product");
-    const priceType = document.getElementById("priceType");
-    const qty = document.getElementById("qty");
-    const manualRate = document.getElementById("manualRate");
-    const usdPrice = document.getElementById("usdPrice");
-
-    products.forEach((p, index) => {
-      const option = document.createElement("option");
-      option.value = index;
-      option.textContent = p.name;
-      productSelect.appendChild(option);
-    });
-
-    function getCountry(){
-      return countries[countrySelect.value];
-    }
-
-    function moneyUSD(value){
-      return "$" + Number(value).toLocaleString("es-VE", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
-    }
-
-    function moneyLocal(value){
-      const c = getCountry();
-      if(c.currency === "USD") {
-        return "USD " + Number(value).toLocaleString("es-VE", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        });
-      }
-
-      return c.symbol + " " + Number(value).toLocaleString("es-VE", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
-    }
-
-    function shippingByQV(qv){
-      if(qv >= 300) return 0;
-      if(qv >= 200) return 6;
-      if(qv >= 150) return 8;
-      if(qv >= 100) return 10;
-      return 12;
-    }
-
-    function highlightShipping(qv){
-      ["ship1","ship2","ship3","ship4","ship5"].forEach(id=>{
-        document.getElementById(id)?.classList.remove("ship-active");
-      });
-
-      let id = "ship1";
-      if(qv >= 300) id = "ship5";
-      else if(qv >= 200) id = "ship4";
-      else if(qv >= 150) id = "ship3";
-      else if(qv >= 100) id = "ship2";
-
-      document.getElementById(id)?.classList.add("ship-active");
-    }
-
-    function setRate(rate, sourceText){
-      const c = getCountry();
-      currentRate = Number(rate);
-      manualRate.value = Number(rate).toFixed(2);
-
-      document.getElementById("rateText").textContent =
-        c.currency === "USD" ? "1.00 USD" : `${c.symbol} ${Number(rate).toFixed(2)}`;
-
-      document.getElementById("rateMeta").textContent =
-        `${c.name} · ${sourceText} · Actualizado: ${new Date().toLocaleString("es-VE")}`;
-
-      document.getElementById("sourcePill").textContent = "Fuente: " + sourceText;
-      document.getElementById("rateError").style.display = "none";
-      calculate();
-    }
-
-    async function fetchJson(url){
-      const response = await fetch(url);
-      if(!response.ok) throw new Error("Error consultando API");
-      return await response.json();
-    }
-
-    async function fetchRate(){
-      const c = getCountry();
-      const rateText = document.getElementById("rateText");
-      const rateMeta = document.getElementById("rateMeta");
-      const rateError = document.getElementById("rateError");
-
-      rateError.style.display = "none";
-      rateText.textContent = "Cargando...";
-      rateMeta.textContent = "Consultando tasa automática...";
-
-      try{
-        if(c.api === "fixed"){
-          setRate(1, c.source);
-          return;
-        }
-
-        if(c.api === "venezuela"){
-          try{
-            const data = await fetchJson("https://bcv-api.rafnixg.dev/rates/");
-            const rate = Number(data?.USD?.rate || data?.usd?.rate || data?.dolar?.rate);
-            if(rate && !isNaN(rate)){
-              setRate(rate, "BCV");
-              return;
-            }
-          }catch(e){}
-
-          const backup = await fetchJson("https://ve.dolarapi.com/v1/dolares/oficial");
-          const rate = Number(backup?.promedio || backup?.price || backup?.valor);
-          if(!rate || isNaN(rate)) throw new Error("No se encontró tasa BCV");
-          setRate(rate, "BCV / Oficial");
-          return;
-        }
-
-        if(c.api === "colombia"){
-          try{
-            const data = await fetchJson("https://trm-colombia.vercel.app/?date=today");
-            const rate = Number(data?.data?.value || data?.value || data?.trm);
-            if(rate && !isNaN(rate)){
-              setRate(rate, "TRM Colombia");
-              return;
-            }
-          }catch(e){}
-
-          const backup = await fetchJson("https://open.er-api.com/v6/latest/USD");
-          const rate = Number(backup?.rates?.COP);
-          if(!rate || isNaN(rate)) throw new Error("No se encontró TRM");
-          setRate(rate, "TRM / Referencial");
-          return;
-        }
-
-        const globalData = await fetchJson("https://open.er-api.com/v6/latest/USD");
-        const rate = Number(globalData?.rates?.[c.currency]);
-        if(!rate || isNaN(rate)) throw new Error("No se encontró tasa global");
-        setRate(rate, c.source);
-      }catch(e){
-        currentRate = Number(manualRate.value) || currentRate;
-        rateText.textContent = currentRate ? `${c.symbol} ${Number(currentRate).toFixed(2)}` : "Manual";
-        rateMeta.textContent = "No se pudo cargar tasa automática para " + c.name + ".";
-        rateError.style.display = "block";
-        calculate();
-      }
-    }
-
-    function useManualRate(){
-      const rate = Number(manualRate.value);
-      if(!rate || rate <= 0){
-        alert("Escribe una tasa válida.");
-        return;
-      }
-      setRate(rate, "Manual");
-    }
-
-    function updateUsdPrice(){
-      const p = products[productSelect.value];
-      const type = priceType.value;
-      usdPrice.value = moneyUSD(p[type]);
-      calculate();
-    }
-
-    function calculate(){
-      const p = products[productSelect.value];
-      const type = priceType.value;
-      const amount = Math.max(1, Number(qty.value || 1));
-      const price = Number(p[type]);
-      const rate = Number(manualRate.value || currentRate || 0);
-
-      usdPrice.value = moneyUSD(price);
-
-      const subtotalUsd = price * amount;
-      const totalQV = p.qv * amount;
-      const shippingUsd = shippingByQV(totalQV);
-      const totalUsd = subtotalUsd + shippingUsd;
-      const totalLocal = rate ? totalUsd * rate : 0;
-
-      highlightShipping(totalQV);
-
-      document.getElementById("totalUsd").textContent = moneyUSD(totalUsd);
-      document.getElementById("totalLocal").textContent = rate ? moneyLocal(totalLocal) : "Ingresa tasa";
-
-      document.getElementById("summary").innerHTML = `
-        Producto: <b>${p.name}</b><br>
-        Cantidad: <b>${amount}</b><br>
-        QV: <b>${totalQV}</b><br>
-        Precio ${type}: <b>${moneyUSD(price)}</b><br>
-        Subtotal: <b>${moneyUSD(subtotalUsd)}</b><br>
-        Envío: <b>${shippingUsd === 0 ? "GRATIS" : moneyUSD(shippingUsd)}</b><br>
-        Total USD: <b>${moneyUSD(totalUsd)}</b><br>
-        Total Local: <b>${rate ? moneyLocal(totalLocal) : "Ingresa tasa"}</b>
-      `;
-
-      lastResult = {
-        producto:p.name,
-        tipo:type,
-        cantidad:amount,
-        precioUsd:price,
-        subtotalUsd,
-        totalQV,
-        shippingUsd,
-        totalUsd,
-        totalLocal,
-        tasa:rate,
-        pais:getCountry().name,
-        moneda:getCountry().currency,
-        fuente:document.getElementById("sourcePill").textContent.replace("Fuente: ","")
-      };
-    }
-
-    async function detectCountry(){
-      try{
-        const data = await fetchJson("https://ipapi.co/json/");
-        const code = String(data?.country_code || "").toUpperCase();
-        if(countries[code]){
-          countrySelect.value = code;
-        }
-      }catch(e){}
-      fetchRate();
-    }
-
-    countrySelect.addEventListener("change", () => {
-      currentRate = null;
-      manualRate.value = "";
-      fetchRate();
-    });
-    productSelect.addEventListener("change", updateUsdPrice);
-    priceType.addEventListener("change", updateUsdPrice);
-    qty.addEventListener("input", calculate);
-    manualRate.addEventListener("input", () => {
-      if(Number(manualRate.value) > 0) currentRate = Number(manualRate.value);
-      calculate();
-    });
-
-    updateUsdPrice();
-    detectCountry();
-  </script>
+<script>
+const countries={VE:{name:"Venezuela",currency:"VES",symbol:"Bs",api:"venezuela"},CO:{name:"Colombia",currency:"COP",symbol:"COP",api:"colombia"},MX:{name:"México",currency:"MXN",symbol:"MXN",api:"global"},PE:{name:"Perú",currency:"PEN",symbol:"S/",api:"global"},CL:{name:"Chile",currency:"CLP",symbol:"CLP",api:"global"},AR:{name:"Argentina",currency:"ARS",symbol:"ARS",api:"global"},EC:{name:"Ecuador",currency:"USD",symbol:"USD",api:"fixed"},PA:{name:"Panamá",currency:"USD",symbol:"USD",api:"fixed"},DO:{name:"República Dominicana",currency:"DOP",symbol:"DOP",api:"global"},CR:{name:"Costa Rica",currency:"CRC",symbol:"CRC",api:"global"}};
+const products=[
+{name:"Painless Night Glu",aliases:["PNG","Painless","Indoloro"],qv:50,distribuidor:64,publico:80},
+{name:"Omevia",aliases:["Omevia"],qv:32,distribuidor:39,publico:50},
+{name:"Melatonin",aliases:["Melatonin"],qv:30,distribuidor:35,publico:48},
+{name:"B12 Plus",aliases:["B12","B12 Plus"],qv:30,distribuidor:35,publico:48},
+{name:"Collagen Patch Sornie",aliases:["Colágeno","Colageno","Collagen"],qv:45,distribuidor:59,publico:80},
+{name:"Slim Style",aliases:["Slim","Slim Style"],qv:25,distribuidor:32,publico:44},
+{name:"Dekamin",aliases:["Dekamin","Delamin"],qv:25,distribuidor:32,publico:44},
+{name:"Night Ladies",aliases:["Night Ladies","Ladies"],qv:45,distribuidor:59,publico:80},
+{name:"Night Gentleman",aliases:["Night Gentleman","Night Gentelman","Gentelman","Gentleman"],qv:45,distribuidor:59,publico:80},
+{name:"Glutanad",aliases:["Glutanad"],qv:50,distribuidor:67,publico:80}
+];
+const treatments=[
+{c:"Alopecia",r:["Night Ladies","Melatonin","B12 Plus"],txt:"Night según caso + Melatonin + B12 Plus",com:"No hay curación al 100%. Night según caso: puede cambiar a Gentleman."},
+{c:"Alzheimer",r:["Painless Night Glu","Omevia","B12 Plus"],txt:"PNG + Omevia + B12",com:""},
+{c:"Anemia",r:["B12 Plus","Dekamin"],txt:"B12 + Dekamin",com:"Usar 3 meses y descansar 9 meses."},
+{c:"Ansiedad",r:["B12 Plus","Melatonin","Painless Night Glu","Omevia"],txt:"B12 + Melatonin + PNG + Omevia",com:""},
+{c:"Artritis",r:["Painless Night Glu","Omevia","Melatonin","Collagen Patch Sornie"],txt:"PNG + Omevia + Melatonin + Colágeno",com:""},
+{c:"Asma",r:["Painless Night Glu","B12 Plus","Melatonin"],txt:"PNG + B12 + Melatonin",com:"Usar por 6 meses."},
+{c:"Tiroides autoinmune con nódulos",r:["Painless Night Glu","Omevia","Melatonin"],txt:"PNG + Omevia + Melatonin",com:""},
+{c:"Vejiga",r:["Painless Night Glu","Night Ladies"],txt:"PNG + Night según caso",com:"Poner en zona de la vejiga. Night según caso."},
+{c:"Coágulos de sangre",r:["Omevia","Painless Night Glu"],txt:"Omevia + PNG",com:""},
+{c:"Dolor de huesos",r:["Painless Night Glu","Dekamin","Omevia"],txt:"Indoloro + Dekamin + Omevia",com:""},
+{c:"Neoplasia de mama",r:["Omevia","B12 Plus","Melatonin"],txt:"Omevia + B12 + Melatonin",com:""},
+{c:"Cáncer / Tumores",r:["Melatonin","Painless Night Glu","B12 Plus"],txt:"Melatonin + PNG + B12",com:"Excepto cáncer de mama, ovario y leucemia."},
+{c:"Quimioterapia / Radioterapia",r:["Melatonin"],txt:"Melatonin",com:""},
+{c:"Dolor de espalda crónico",r:["B12 Plus","Painless Night Glu","Melatonin","Collagen Patch Sornie"],txt:"B12 + PNG + Melatonin + Colágeno",com:""},
+{c:"Gonartrosis crónica",r:["Omevia","Dekamin","Painless Night Glu","Collagen Patch Sornie"],txt:"Omevia + Dekamin + PNG + Colágeno",com:"Tratamiento de 6 meses: aplicar 3 meses, descansar 3 semanas y aplicar 3 meses."},
+{c:"Sinusitis crónica",r:["Painless Night Glu"],txt:"PNG",com:"Hacer trozos pequeños y aplicar debajo de los pómulos."},
+{c:"Estreñimiento",r:["Painless Night Glu","Slim Style"],txt:"PNG + Slim",com:"Debajo del ombligo. Beber progresivamente 400 ml a 1 litro de agua tibia."},
+{c:"Cistitis / inflamación de tracto urinario",r:["Night Ladies","Painless Night Glu"],txt:"Night según caso + PNG",com:"Mujeres Ladies, hombres Gentleman en zona umbilical y PNG encima de vejiga."},
+{c:"Desmielinización",r:["B12 Plus","Melatonin","Omevia"],txt:"B12 + Melatonin + Omevia",com:""},
+{c:"Depresión",r:["Painless Night Glu","Melatonin","B12 Plus"],txt:"PNG + Melatonin + B12",com:""},
+{c:"Diabetes",r:["Painless Night Glu","Melatonin","B12 Plus"],txt:"PNG + Melatonin + B12",com:""},
+{c:"Endometriosis",r:["Night Ladies"],txt:"Night Ladies",com:"Tratamiento de 3 meses, aplicar en zona de muslos."},
+{c:"Fertilidad",r:["Painless Night Glu","Night Ladies","B12 Plus","Melatonin"],txt:"PNG + Night + B12 + Melatonin",com:"PNG debajo del ombligo. Night según caso."},
+{c:"Fiebre",r:["Painless Night Glu"],txt:"PNG",com:"En planta del pie."},
+{c:"Hongos en los pies",r:["Painless Night Glu"],txt:"PNG",com:"Aplicar tiras pequeñas sobre la zona."},
+{c:"Sangrado gingival",r:["B12 Plus","Dekamin","Omevia"],txt:"B12 + Dekamin + Omevia",com:""},
+{c:"Gota",r:["Painless Night Glu","Omevia","B12 Plus","Dekamin","Melatonin"],txt:"PNG + Omevia + B12 + Dekamin + Melatonin",com:""},
+{c:"Tiroides de Hashimoto",r:["Melatonin","B12 Plus","Omevia","Painless Night Glu"],txt:"Melatonin + B12 + Omevia + PNG",com:""},
+{c:"Infarto con stent",r:["Omevia","Painless Night Glu","B12 Plus"],txt:"Omevia + PNG + B12",com:""},
+{c:"Hepatitis",r:["Painless Night Glu","B12 Plus","Melatonin","Omevia"],txt:"PNG + B12 + Melatonin + Omevia",com:""},
+{c:"Hernia de disco",r:["Painless Night Glu","Collagen Patch Sornie","Dekamin"],txt:"PNG + Colágeno + Dekamin",com:""},
+{c:"Hipertensión",r:["Painless Night Glu","B12 Plus","Melatonin"],txt:"PNG + B12 + Melatonin",com:"PNG en planta del pie."},
+{c:"Colesterol alto",r:["Omevia","Night Ladies","Painless Night Glu"],txt:"Omevia + Night + PNG",com:"Night según caso."},
+{c:"Dolor de cadera",r:["Painless Night Glu","B12 Plus"],txt:"PNG + B12",com:""},
+{c:"Hipotiroidismo",r:["Painless Night Glu","Dekamin","Slim Style","Omevia"],txt:"PNG + Dekamin + Slim + Omevia",com:""},
+{c:"Impotencia",r:["Night Gentleman","Painless Night Glu","B12 Plus"],txt:"Night Gentleman + PNG + B12",com:""},
+{c:"Triglicéridos altos",r:["Omevia","Painless Night Glu","B12 Plus"],txt:"Omevia + PNG + B12",com:""},
+{c:"Tránsito intestinal",r:["Painless Night Glu","B12 Plus","Omevia","Melatonin"],txt:"PNG + B12 + Omevia + Melatonin",com:"PNG debajo del ombligo."},
+{c:"Intestino irritable",r:["Painless Night Glu","B12 Plus","Omevia","Melatonin"],txt:"PNG + B12 + Omevia + Melatonin",com:""},
+{c:"Inflamaciones articulares / Hidartrosis",r:["Painless Night Glu"],txt:"PNG",com:""},
+{c:"Articulaciones",r:["Painless Night Glu","Omevia","Collagen Patch Sornie"],txt:"PNG + Omevia + Colágeno",com:""},
+{c:"Diálisis de riñón",r:["Painless Night Glu","B12 Plus"],txt:"PNG + B12",com:""},
+{c:"Cirrosis hepática",r:["Melatonin","Omevia","Painless Night Glu","B12 Plus"],txt:"Melatonin + Omevia + PNG + B12",com:""},
+{c:"Dolores lumbares",r:["B12 Plus","Painless Night Glu","Melatonin","Omevia"],txt:"B12 + PNG + Melatonin + Omevia",com:""},
+{c:"Lupus",r:["B12 Plus","Melatonin"],txt:"B12 + Melatonin",com:""},
+{c:"Malaria",r:["Painless Night Glu","B12 Plus"],txt:"PNG + B12",com:""},
+{c:"Dolores menstruales",r:["Night Ladies","Painless Night Glu"],txt:"Ladies + PNG",com:"Ladies al menos un mes."},
+{c:"Migraña",r:["Melatonin","B12 Plus","Painless Night Glu"],txt:"Melatonin + B12 + PNG",com:""},
+{c:"Obesidad",r:["Painless Night Glu","Melatonin","Omevia","Slim Style","Dekamin","B12 Plus","Night Ladies"],txt:"PNG + Melatonin + Omevia + Slim + Dekamin + B12 + Night según caso",com:"Night según caso."},
+{c:"Osteoporosis",r:["Painless Night Glu","Dekamin","Omevia"],txt:"PNG + Dekamin + Omevia",com:""},
+{c:"Cáncer de páncreas",r:["Painless Night Glu","Omevia","Melatonin"],txt:"PNG + Omevia + Melatonin",com:"PNG medio en páncreas y la otra mitad en el omoplato derecho."},
+{c:"Neoplasia pancreática",r:["Painless Night Glu","Omevia","Melatonin"],txt:"PNG + Omevia + Melatonin",com:"PNG medio en páncreas y un entero en el omoplato derecho."},
+{c:"Ataques de pánico",r:["B12 Plus","Melatonin","Painless Night Glu"],txt:"B12 + Melatonin + PNG",com:""},
+{c:"Parkinson",r:["Painless Night Glu","B12 Plus","Melatonin"],txt:"PNG + B12 + Melatonin",com:""},
+{c:"Embarazo",r:["B12 Plus","Dekamin","Melatonin"],txt:"B12 + Dekamin + Melatonin",com:""},
+{c:"Próstata",r:["Night Gentleman","Painless Night Glu"],txt:"Night Gentleman + PNG",com:""},
+{c:"Psoriasis",r:["Painless Night Glu","Omevia","Dekamin","Melatonin"],txt:"PNG + Omevia + Dekamin + Melatonin",com:""},
+{c:"Enfermedades pulmonares",r:["Painless Night Glu","Omevia","Melatonin"],txt:"PNG + Omevia + Melatonin",com:"PNG la mitad sobre cada pulmón."},
+{c:"Infecciones pulmonares",r:["Painless Night Glu","Dekamin","Melatonin"],txt:"PNG + Dekamin + Melatonin",com:""},
+{c:"Recuperación tras esfuerzo intenso",r:["Painless Night Glu","Melatonin"],txt:"PNG + Melatonin",com:""},
+{c:"Reumatismo",r:["Painless Night Glu","Omevia","Melatonin"],txt:"PNG + Omevia + Melatonin",com:""},
+{c:"Herpes",r:["Painless Night Glu","Omevia","B12 Plus"],txt:"PNG + Omevia + B12",com:"Pegar trozos de PNG alrededor de área afectada."},
+{c:"Espondilosis",r:["Painless Night Glu","Omevia","Dekamin","Collagen Patch Sornie"],txt:"PNG + Omevia + Dekamin + Colágeno",com:""},
+{c:"Trazos",r:["Omevia","Melatonin","B12 Plus","Painless Night Glu"],txt:"Omevia + Melatonin + B12",com:"Si es isquemia + PNG."},
+{c:"Hinchazón de piernas",r:["Painless Night Glu"],txt:"PNG",com:"En plantas de pies."},
+{c:"Tiroides",r:["Painless Night Glu","B12 Plus","Omevia"],txt:"PNG + B12 + Omevia",com:""},
+{c:"Tinnitus",r:["Melatonin","B12 Plus","Painless Night Glu"],txt:"Melatonin + B12 + PNG",com:""},
+{c:"Úlcera / ácido gástrico",r:["Melatonin"],txt:"Melatonin",com:""},
+{c:"Venas varicosas",r:["Painless Night Glu","Omevia"],txt:"PNG + Omevia",com:"La mitad al inicio de la zona afectada y la otra mitad al final + ducha de agua fría en las piernas."},
+{c:"Vértigo / mareo",r:["B12 Plus","Melatonin","Painless Night Glu"],txt:"B12 + Melatonin + PNG",com:""},
+{c:"Cuerdas vocales",r:["Painless Night Glu"],txt:"PNG",com:"La mitad en cada lado de la garganta."}
+];
+let currentRate=null;
+const countrySelect=document.getElementById("country"), productSelect=document.getElementById("product"), conditionSelect=document.getElementById("condition");
+products.forEach((p,i)=>{let o=document.createElement("option");o.value=i;o.textContent=p.name;productSelect.appendChild(o)});
+treatments.forEach((t,i)=>{let o=document.createElement("option");o.value=i;o.textContent=t.c;conditionSelect.appendChild(o)});
+function getCountry(){return countries[countrySelect.value]}
+function moneyUSD(v){return "$"+Number(v).toLocaleString("es-VE",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function moneyLocal(v){const c=getCountry();return (c.currency==="USD"?"USD":c.symbol)+" "+Number(v).toLocaleString("es-VE",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function shippingByQV(qv){if(qv>=300)return 0;if(qv>=200)return 6;if(qv>=150)return 8;if(qv>=100)return 10;return 12}
+function highlightShipping(qv){["ship1","ship2","ship3","ship4","ship5"].forEach(id=>document.getElementById(id)?.classList.remove("ship-active"));let id="ship1";if(qv>=300)id="ship5";else if(qv>=200)id="ship4";else if(qv>=150)id="ship3";else if(qv>=100)id="ship2";document.getElementById(id)?.classList.add("ship-active")}
+function setRate(rate,source){const c=getCountry();currentRate=Number(rate);manualRate.value=Number(rate).toFixed(2);rateText.textContent=c.currency==="USD"?"1.00 USD":`${c.symbol} ${Number(rate).toFixed(2)}`;rateMeta.textContent=`${c.name} · ${source} · Actualizado: ${new Date().toLocaleString("es-VE")}`;sourcePill.textContent="Fuente: "+source;rateError.style.display="none";calculate()}
+async function fetchJson(url){const r=await fetch(url);if(!r.ok)throw new Error("Error API");return await r.json()}
+async function fetchRate(){const c=getCountry();rateError.style.display="none";rateText.textContent="Cargando...";rateMeta.textContent="Consultando tasa automática...";try{if(c.api==="fixed"){setRate(1,"Dolarización");return} if(c.api==="venezuela"){try{const d=await fetchJson("https://bcv-api.rafnixg.dev/rates/");const rate=Number(d?.USD?.rate||d?.usd?.rate||d?.dolar?.rate);if(rate&&!isNaN(rate)){setRate(rate,"BCV");return}}catch(e){} const b=await fetchJson("https://ve.dolarapi.com/v1/dolares/oficial");const rate=Number(b?.promedio||b?.price||b?.valor);if(!rate)throw new Error();setRate(rate,"BCV / Oficial");return} if(c.api==="colombia"){try{const d=await fetchJson("https://trm-colombia.vercel.app/?date=today");const rate=Number(d?.data?.value||d?.value||d?.trm);if(rate&&!isNaN(rate)){setRate(rate,"TRM Colombia");return}}catch(e){} const b=await fetchJson("https://open.er-api.com/v6/latest/USD");setRate(Number(b?.rates?.COP),"TRM / Referencial");return} const g=await fetchJson("https://open.er-api.com/v6/latest/USD");setRate(Number(g?.rates?.[c.currency]),"Tasa internacional")}catch(e){currentRate=Number(manualRate.value)||currentRate;rateText.textContent=currentRate?`${c.symbol} ${Number(currentRate).toFixed(2)}`:"Manual";rateMeta.textContent="No se pudo cargar tasa automática para "+c.name+".";rateError.style.display="block";calculate()}}
+function useManualRate(){const r=Number(manualRate.value);if(!r||r<=0){alert("Escribe una tasa válida.");return}setRate(r,"Manual")}
+function updateMode(){const m=mode.value;singleBox.style.display=m==="single"?"grid":"none";treatmentBox.style.display=m==="treatment"?"grid":"none";calculate()}
+function updateTreatmentInfo(){const t=treatments[conditionSelect.value];treatmentInfo.innerHTML=`<b>Combinación recomendada:</b> ${t.txt}<br><b>Comentario:</b> ${t.com||"Sin comentario adicional."}`;treatmentChips.innerHTML=t.r.map(x=>`<span class="chip">${x}</span>`).join("")}
+function calcItems(items,type){let subtotal=0,qv=0;let lines=[];items.forEach(name=>{const p=products.find(pr=>pr.name===name);if(!p)return;subtotal+=p[type];qv+=p.qv;lines.push(`${p.name}: <b>${moneyUSD(p[type])}</b> · QV ${p.qv}`)});return{subtotal,qv,lines}}
+function calculate(){const rate=Number(manualRate.value||currentRate||0);let type,subtotal,totalQV,lines=[],heading="",comment=""; if(mode.value==="single"){const p=products[productSelect.value];type=priceType.value;const amount=Math.max(1,Number(qty.value||1));subtotal=p[type]*amount;totalQV=p.qv*amount;heading=`Producto: <b>${p.name}</b><br>Cantidad: <b>${amount}</b><br>Precio ${type}: <b>${moneyUSD(p[type])}</b>`;usdPrice.value=moneyUSD(p[type])}else{updateTreatmentInfo();const t=treatments[conditionSelect.value];type=treatmentPriceType.value;const c=calcItems(t.r,type);subtotal=c.subtotal;totalQV=c.qv;lines=c.lines;heading=`Patología: <b>${t.c}</b><br>Combinación: <b>${t.txt}</b><br>${lines.join("<br>")}`;comment=t.com?`<br>Comentario: <b>${t.com}</b>`:"";usdPrice.value="Paquete recomendado"} const shipping=shippingByQV(totalQV), totalUsd=subtotal+shipping, totalLocal=rate?totalUsd*rate:0;highlightShipping(totalQV);totalUsdEl=document.getElementById("totalUsd");totalUsdEl.textContent=moneyUSD(totalUsd);totalLocalEl=document.getElementById("totalLocal");totalLocalEl.textContent=rate?moneyLocal(totalLocal):"Ingresa tasa";summary.innerHTML=`${heading}<br>QV total: <b>${totalQV}</b><br>Subtotal: <b>${moneyUSD(subtotal)}</b><br>Envío: <b>${shipping===0?"GRATIS":moneyUSD(shipping)}</b><br>Total USD: <b>${moneyUSD(totalUsd)}</b><br>Total Local: <b>${rate?moneyLocal(totalLocal):"Ingresa tasa"}</b>${comment}`}
+async function detectCountry(){try{const d=await fetchJson("https://ipapi.co/json/");const code=String(d?.country_code||"").toUpperCase();if(countries[code])countrySelect.value=code}catch(e){}fetchRate()}
+countrySelect.addEventListener("change",()=>{currentRate=null;manualRate.value="";fetchRate()});productSelect.addEventListener("change",calculate);priceType.addEventListener("change",calculate);qty.addEventListener("input",calculate);manualRate.addEventListener("input",()=>{if(Number(manualRate.value)>0)currentRate=Number(manualRate.value);calculate()});mode.addEventListener("change",updateMode);conditionSelect.addEventListener("change",calculate);treatmentPriceType.addEventListener("change",calculate);
+updateTreatmentInfo();updateMode();detectCountry();
+</script>
 </body>
 </html>

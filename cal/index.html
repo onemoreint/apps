@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Calculadora One More</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:linear-gradient(135deg,#050505,#151515);
+  color:#fff;
+  min-height:100vh;
+  padding:16px;
+}
+
+.container{
+  width:100%;
+  max-width:480px;
+  margin:auto;
+  background:#111;
+  border-radius:22px;
+  padding:22px;
+  box-shadow:0 0 30px rgba(212,175,55,.22);
+  border:1px solid rgba(212,175,55,.25);
+}
+
+h1{
+  text-align:center;
+  color:#d4af37;
+  font-size:24px;
+  margin:0 0 6px;
+}
+
+.subtitle{
+  text-align:center;
+  color:#bbb;
+  font-size:14px;
+  margin-bottom:18px;
+}
+
+label{
+  display:block;
+  margin-top:14px;
+  font-size:14px;
+  color:#ddd;
+}
+
+select,input{
+  width:100%;
+  margin-top:6px;
+  padding:13px;
+  border-radius:12px;
+  border:1px solid #333;
+  background:#202020;
+  color:#fff;
+  font-size:16px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+button{
+  width:100%;
+  margin-top:16px;
+  padding:14px;
+  border:0;
+  border-radius:14px;
+  background:#d4af37;
+  color:#000;
+  font-weight:bold;
+  font-size:16px;
+  cursor:pointer;
+}
+
+button:hover{
+  filter:brightness(1.05);
+}
+
+.whatsapp{
+  background:#25D366;
+  color:#fff;
+}
+
+.result{
+  margin-top:18px;
+  background:#1b1b1b;
+  border:1px solid rgba(212,175,55,.25);
+  padding:16px;
+  border-radius:16px;
+  line-height:1.7;
+  font-size:15px;
+}
+
+.badge{
+  display:inline-block;
+  background:#2b2410;
+  color:#d4af37;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  margin-top:8px;
+}
+
+.note{
+  font-size:12px;
+  color:#aaa;
+  text-align:center;
+  margin-top:12px;
+  line-height:1.5;
+}
+
+hr{
+  border:0;
+  border-top:1px solid #333;
+  margin:12px 0;
+}
+
+@media(max-width:420px){
+  body{padding:10px}
+  .container{padding:18px;border-radius:18px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:1fr}
+  button{font-size:15px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>Calculadora One More</h1>
+  <div class="subtitle">Precio USD · Moneda local · Envío por QV</div>
+
+  <label>País</label>
+  <select id="pais" onchange="cambiarPais()">
+    <option value="VE">🇻🇪 Venezuela</option>
+    <option value="CO">🇨🇴 Colombia</option>
+    <option value="EC">🇪🇨 Ecuador</option>
+    <option value="BO">🇧🇴 Bolivia</option>
+    <option value="PE">🇵🇪 Perú</option>
+    <option value="DO">🇩🇴 Rep. Dominicana</option>
+    <option value="CL">🇨🇱 Chile</option>
+    <option value="BR">🇧🇷 Brasil</option>
+    <option value="MX">🇲🇽 México</option>
+    <option value="AR">🇦🇷 Argentina</option>
+    <option value="CR">🇨🇷 Costa Rica</option>
+    <option value="PA">🇵🇦 Panamá</option>
+    <option value="GT">🇬🇹 Guatemala</option>
+  </select>
+
+  <div class="grid">
+    <div>
+      <label>Moneda local</label>
+      <input id="moneda" readonly>
+    </div>
+    <div>
+      <label>Tasa local por 1 USD</label>
+      <input type="number" id="tasa" step="0.01" oninput="calcular()">
+    </div>
+  </div>
+
+  <button onclick="actualizarTasa()">Actualizar tasa</button>
+  <div class="badge" id="estadoTasa">Tasa editable manualmente</div>
+
+  <label>Producto</label>
+  <select id="producto" onchange="calcular()">
+    <option value="Painless Night Glu|64|50">Painless Night Glu - $64 / 50 QV</option>
+    <option value="Omevia|39|32">Omevia - $39 / 32 QV</option>
+    <option value="Melatonin|35|30">Melatonin - $35 / 30 QV</option>
+    <option value="B12 Plus|35|30">B12 Plus - $35 / 30 QV</option>
+    <option value="Collagen Patch Sornie|59|45">Collagen Patch Sornie - $59 / 45 QV</option>
+    <option value="Slim Style|32|25">Slim Style - $32 / 25 QV</option>
+    <option value="Dekamin|32|25">Dekamin - $32 / 25 QV</option>
+    <option value="Night Ladies|59|45">Night Ladies - $59 / 45 QV</option>
+    <option value="Night Gentleman|59|45">Night Gentleman - $59 / 45 QV</option>
+    <option value="Glutanad|67|50">Glutanad - $67 / 50 QV</option>
+  </select>
+
+  <label>Cantidad</label>
+  <input type="number" id="cantidad" value="1" min="1" oninput="calcular()">
+
+  <button onclick="calcular()">Calcular pedido</button>
+
+  <div class="result" id="resultado"></div>
+
+  <button class="whatsapp" onclick="enviarWhatsApp()">Enviar pedido por WhatsApp</button>
+
+  <div class="note">
+    Envío por QV: 0-99 = $12 · 100-149 = $10 · 150-199 = $8 · 200-299 = $6 · 300+ = Gratis
+  </div>
+</div>
+
+<script>
+const paises = {
+  VE:{nombre:"Venezuela", moneda:"VES", simbolo:"Bs", tasaManual:36},
+  CO:{nombre:"Colombia", moneda:"COP", simbolo:"COP", tasaManual:4000},
+  EC:{nombre:"Ecuador", moneda:"USD", simbolo:"USD", tasaManual:1},
+  BO:{nombre:"Bolivia", moneda:"BOB", simbolo:"Bs", tasaManual:6.96},
+  PE:{nombre:"Perú", moneda:"PEN", simbolo:"S/", tasaManual:3.75},
+  DO:{nombre:"Rep. Dominicana", moneda:"DOP", simbolo:"RD$", tasaManual:59},
+  CL:{nombre:"Chile", moneda:"CLP", simbolo:"CLP", tasaManual:950},
+  BR:{nombre:"Brasil", moneda:"BRL", simbolo:"R$", tasaManual:5},
+  MX:{nombre:"México", moneda:"MXN", simbolo:"MX$", tasaManual:17},
+  AR:{nombre:"Argentina", moneda:"ARS", simbolo:"ARS", tasaManual:1000},
+  CR:{nombre:"Costa Rica", moneda:"CRC", simbolo:"₡", tasaManual:520},
+  PA:{nombre:"Panamá", moneda:"USD", simbolo:"USD", tasaManual:1},
+  GT:{nombre:"Guatemala", moneda:"GTQ", simbolo:"Q", tasaManual:7.8}
+};
+
+let dataFinal = {};
+
+function cambiarPais(){
+  const pais = paises[document.getElementById("pais").value];
+  document.getElementById("moneda").value = pais.moneda;
+  document.getElementById("tasa").value = pais.tasaManual;
+  document.getElementById("estadoTasa").innerText = "Tasa manual de referencia";
+  calcular();
+}
+
+async function actualizarTasa(){
+  const codigoPais = document.getElementById("pais").value;
+  const pais = paises[codigoPais];
+  const estado = document.getElementById("estadoTasa");
+
+  estado.innerText = "Actualizando tasa...";
+
+  try{
+    if(codigoPais === "VE"){
+      try{
+        const resVE = await fetch("https://ve.dolarapi.com/v1/dolares/oficial");
+        const dataVE = await resVE.json();
+
+        if(dataVE && dataVE.promedio){
+          document.getElementById("tasa").value = Number(dataVE.promedio).toFixed(2);
+          estado.innerText = "Tasa Venezuela actualizada";
+          calcular();
+          return;
+        }
+      }catch(e){}
+    }
+
+    const res = await fetch("https://open.er-api.com/v6/latest/USD");
+    const data = await res.json();
+
+    if(data && data.rates && data.rates[pais.moneda]){
+      document.getElementById("tasa").value = Number(data.rates[pais.moneda]).toFixed(2);
+      estado.innerText = "Tasa actualizada automáticamente";
+    }else{
+      estado.innerText = "No se pudo actualizar. Usa tasa manual.";
+    }
+
+  }catch(error){
+    estado.innerText = "Sin conexión/API. Usa tasa manual.";
+  }
+
+  calcular();
+}
+
+function calcularEnvio(qv){
+  if(qv >= 300) return 0;
+  if(qv >= 200) return 6;
+  if(qv >= 150) return 8;
+  if(qv >= 100) return 10;
+  return 12;
+}
+
+function formato(numero){
+  return Number(numero).toLocaleString("es-VE",{
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  });
+}
+
+function calcular(){
+  const paisCodigo = document.getElementById("pais").value;
+  const pais = paises[paisCodigo];
+
+  const productoData = document.getElementById("producto").value.split("|");
+  const nombreProducto = productoData[0];
+  const precioUSD = Number(productoData[1]);
+  const qvProducto = Number(productoData[2]);
+
+  const cantidad = Number(document.getElementById("cantidad").value || 1);
+  const tasa = Number(document.getElementById("tasa").value || pais.tasaManual);
+
+  const totalQV = qvProducto * cantidad;
+  const subtotalUSD = precioUSD * cantidad;
+  const envioUSD = calcularEnvio(totalQV);
+  const totalUSD = subtotalUSD + envioUSD;
+  const totalLocal = totalUSD * tasa;
+
+  dataFinal = {
+    pais:pais.nombre,
+    moneda:pais.moneda,
+    simbolo:pais.simbolo,
+    nombreProducto,
+    cantidad,
+    totalQV,
+    subtotalUSD,
+    envioUSD,
+    totalUSD,
+    totalLocal,
+    tasa
+  };
+
+  document.getElementById("resultado").innerHTML = `
+    <strong>Producto:</strong> ${nombreProducto}<br>
+    <strong>Cantidad:</strong> ${cantidad}<br>
+    <strong>Total QV:</strong> ${totalQV}<br>
+    <strong>Subtotal:</strong> $${formato(subtotalUSD)} USD<br>
+    <strong>Envío:</strong> ${envioUSD === 0 ? "Gratis" : "$" + formato(envioUSD) + " USD"}<br>
+    <hr>
+    <strong>Total USD:</strong> $${formato(totalUSD)}<br>
+    <strong>Total ${pais.moneda}:</strong> ${pais.simbolo} ${formato(totalLocal)}<br>
+    <strong>Tasa usada:</strong> 1 USD = ${formato(tasa)} ${pais.moneda}
+  `;
+}
+
+function enviarWhatsApp(){
+  calcular();
+
+  const mensaje = `Hola, quiero hacer este pedido One More:
+
+País: ${dataFinal.pais}
+Producto: ${dataFinal.nombreProducto}
+Cantidad: ${dataFinal.cantidad}
+QV total: ${dataFinal.totalQV}
+
+Subtotal USD: $${formato(dataFinal.subtotalUSD)}
+Envío: ${dataFinal.envioUSD === 0 ? "Gratis" : "$" + formato(dataFinal.envioUSD)}
+Total USD: $${formato(dataFinal.totalUSD)}
+Total ${dataFinal.moneda}: ${dataFinal.simbolo} ${formato(dataFinal.totalLocal)}
+
+Tasa usada: 1 USD = ${formato(dataFinal.tasa)} ${dataFinal.moneda}
+
+¿Me confirmas disponibilidad?`;
+
+  window.open("https://wa.me/573126387467?text=" + encodeURIComponent(mensaje), "_blank");
+}
+
+cambiarPais();
+actualizarTasa();
+</script>
+
+</body>
+</html>

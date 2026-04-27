@@ -1,0 +1,2299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Biblioteca Inteligente · ONE MORE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+  /* ═══════════════════════════════════════════
+     VARIABLES — Cambia colores aquí
+  ═══════════════════════════════════════════ */
+  :root {
+    --gold:       #C9A84C;
+    --gold-light: #E8CC80;
+    --gold-dim:   #8A6C2A;
+    --bg:         #0A0A0C;
+    --bg2:        #111115;
+    --bg3:        #18181E;
+    --surface:    #1E1E26;
+    --border:     rgba(201,168,76,0.18);
+    --text:       #F0EDE6;
+    --muted:      #7A7880;
+    --radius:     14px;
+    --shadow:     0 8px 40px rgba(0,0,0,0.6);
+    /* WhatsApp — cambia el número aquí */
+    --wa-number:  "573126387467";
+    /* Drive — cambia el link aquí */
+    --drive-link: "https://drive.google.com/drive/folders/1Wp-sJA50Le6g3mI_rdxj1soE7nu-yw-V";
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── GLOW ORBS ── */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .orb-1 { width: 600px; height: 600px; background: var(--gold); top: -200px; right: -200px; }
+  .orb-2 { width: 400px; height: 400px; background: #2A5F8F; bottom: 0; left: -150px; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1160px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+
+  /* ══════════════════════════════
+     HERO / CABECERA
+  ══════════════════════════════ */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 100px 20px 60px;
+    position: relative;
+  }
+
+  .hero-inner { max-width: 1160px; margin: 0 auto; width: 100%; }
+
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(201,168,76,0.10);
+    border: 1px solid var(--border);
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 36px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .logo-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  h1 em {
+    font-style: normal;
+    color: var(--gold);
+    position: relative;
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 560px;
+    margin-bottom: 44px;
+    font-weight: 300;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  /* ── BOTONES ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 14px 26px;
+    border-radius: 100px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    border: none;
+    letter-spacing: 0.01em;
+  }
+
+  .btn-gold {
+    background: var(--gold);
+    color: #0A0A0C;
+    font-weight: 600;
+  }
+  .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(201,168,76,0.35); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+
+  .btn-wa {
+    background: #1DB954;
+    color: white;
+    font-weight: 600;
+  }
+  .btn-wa:hover { background: #17a34a; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(29,185,84,0.3); }
+
+  .btn-sm {
+    padding: 9px 18px;
+    font-size: 0.8rem;
+  }
+
+  .btn-ghost {
+    background: rgba(255,255,255,0.05);
+    color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .btn-ghost:hover { background: rgba(201,168,76,0.10); color: var(--gold); border-color: var(--border); }
+
+  /* ══════════════════════════════
+     SCROLL ARROW
+  ══════════════════════════════ */
+  .scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    animation: fadeUp 0.6s 0.8s ease both;
+    cursor: pointer;
+  }
+  .scroll-arrow { animation: bounce 1.8s infinite; }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+
+  /* ══════════════════════════════
+     SECCIONES GENERALES
+  ══════════════════════════════ */
+  section { padding: 80px 0; position: relative; z-index: 1; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 40px;
+  }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border), transparent);
+    margin: 0;
+  }
+
+  /* ══════════════════════════════
+     BUSCADOR
+  ══════════════════════════════ */
+  #buscar { background: var(--bg2); }
+
+  .search-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 8px 8px 8px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    transition: border-color 0.2s;
+  }
+  .search-box:focus-within { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.08); }
+
+  .search-icon { color: var(--muted); flex-shrink: 0; font-size: 1.1rem; }
+
+  #searchInput {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    color: var(--text);
+    padding: 8px 0;
+  }
+  #searchInput::placeholder { color: var(--muted); }
+
+  .clear-btn {
+    background: rgba(255,255,255,0.06);
+    border: none;
+    color: var(--muted);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .clear-btn:hover { background: rgba(201,168,76,0.15); color: var(--gold); }
+  .clear-btn.visible { display: flex; }
+
+  /* Filtros */
+  .filters-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .filter-chip {
+    padding: 7px 16px;
+    border-radius: 100px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .filter-chip:hover, .filter-chip.active {
+    background: rgba(201,168,76,0.12);
+    border-color: var(--gold-dim);
+    color: var(--gold-light);
+  }
+
+  .results-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  .results-count strong { color: var(--gold); }
+
+  /* ══════════════════════════════
+     GRID DE TARJETAS
+  ══════════════════════════════ */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: all 0.25s ease;
+    animation: fadeUp 0.4s ease both;
+  }
+  .card:hover {
+    border-color: var(--gold-dim);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.15);
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .card-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .type-pdf     { background: rgba(220,50,50,0.15);  color: #F87171; }
+  .type-video   { background: rgba(99,102,241,0.15); color: #A5B4FC; }
+  .type-ppt     { background: rgba(245,158,11,0.15); color: #FCD34D; }
+  .type-guia    { background: rgba(16,185,129,0.15); color: #6EE7B7; }
+  .type-imagen  { background: rgba(236,72,153,0.15); color: #F9A8D4; }
+  .type-doc     { background: rgba(59,130,246,0.15); color: #93C5FD; }
+  .type-prot    { background: rgba(168,85,247,0.15); color: #D8B4FE; }
+  .type-link    { background: rgba(201,168,76,0.15); color: var(--gold-light); }
+  .type-zip     { background: rgba(148,163,184,0.15); color: #CBD5E1; }
+
+  .card-cat-badge {
+    font-size: 0.72rem;
+    color: var(--muted);
+    background: rgba(255,255,255,0.04);
+    padding: 4px 10px;
+    border-radius: 100px;
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text);
+  }
+
+  .card-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .card-keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .kw {
+    font-size: 0.72rem;
+    background: rgba(201,168,76,0.07);
+    color: var(--gold-dim);
+    padding: 3px 9px;
+    border-radius: 100px;
+    border: 1px solid rgba(201,168,76,0.12);
+  }
+
+  .card-rec {
+    font-size: 0.8rem;
+    color: var(--muted);
+    background: rgba(255,255,255,0.03);
+    border-left: 2px solid var(--gold-dim);
+    padding: 8px 12px;
+    border-radius: 0 6px 6px 0;
+    line-height: 1.5;
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  /* ── Empty State ── */
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 20px;
+  }
+  .empty-icon { font-size: 3rem; margin-bottom: 16px; }
+  .empty-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; margin-bottom: 8px; }
+  .empty-sub { color: var(--muted); font-size: 0.9rem; }
+
+  /* ══════════════════════════════
+     CATEGORÍAS
+  ══════════════════════════════ */
+  #categorias { background: var(--bg); }
+
+  .cats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+  }
+
+  .cat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .cat-card:hover, .cat-card.active {
+    border-color: var(--gold-dim);
+    background: rgba(201,168,76,0.05);
+  }
+  .cat-icon { font-size: 1.6rem; }
+  .cat-name { font-size: 0.88rem; font-weight: 500; }
+  .cat-count { font-size: 0.75rem; color: var(--muted); }
+
+  /* ══════════════════════════════
+     PANEL DIAGNÓSTICO
+  ══════════════════════════════ */
+  #diagnostico { background: var(--bg2); }
+
+  .diag-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+
+  .diag-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 16px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    font-size: 0.88rem;
+    text-align: center;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .diag-btn:hover, .diag-btn.active {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.08);
+    color: var(--gold-light);
+  }
+  .diag-icon { font-size: 1.8rem; }
+
+  .diag-result {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 30px;
+    display: none;
+    animation: fadeUp 0.3s ease;
+  }
+  .diag-result.visible { display: block; }
+  .diag-result-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+    color: var(--gold-light);
+  }
+  .diag-items { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+  .diag-item { display: flex; gap: 10px; font-size: 0.88rem; color: var(--muted); }
+  .diag-item strong { color: var(--text); min-width: 120px; }
+  .diag-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* ══════════════════════════════
+     CARPETA DESTACADA
+  ══════════════════════════════ */
+  .folder-card {
+    background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.04));
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 20px;
+    padding: 36px;
+    display: flex;
+    gap: 28px;
+    align-items: center;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+  }
+
+  .folder-icon-big { font-size: 3.5rem; }
+
+  .folder-info { flex: 1; }
+  .folder-info h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    margin-bottom: 6px;
+  }
+  .folder-info p { color: var(--muted); font-size: 0.9rem; max-width: 480px; }
+
+  /* ══════════════════════════════
+     FOOTER
+  ══════════════════════════════ */
+  footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 40px 20px;
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--muted);
+    position: relative;
+    z-index: 1;
+  }
+  footer a { color: var(--gold); text-decoration: none; }
+
+  /* ══════════════════════════════
+     NAVBAR
+  ══════════════════════════════ */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 16px 20px;
+    background: rgba(10,10,12,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--gold-light);
+    letter-spacing: 0.04em;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .nav-link {
+    padding: 7px 14px;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .nav-link:hover { color: var(--gold); background: rgba(201,168,76,0.07); }
+
+  /* ══════════════════════════════
+     ANIMACIONES
+  ══════════════════════════════ */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ══════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════ */
+  @media (max-width: 640px) {
+    .hero { padding: 90px 20px 50px; }
+    .nav-links { display: none; }
+    .folder-card { flex-direction: column; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .cats-grid  { grid-template-columns: repeat(3, 1fr); }
+    .diag-grid  { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--surface);
+    border: 1px solid var(--gold-dim);
+    color: var(--gold-light);
+    padding: 12px 22px;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    z-index: 9999;
+    transition: transform 0.3s ease;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ── FONDO ── -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- ══════════════════════════════
+     NAVEGACIÓN
+══════════════════════════════ -->
+<nav>
+  <a class="nav-logo" href="#">✦ ONE MORE · Biblioteca</a>
+  <div class="nav-links">
+    <button class="nav-link" onclick="scrollTo('#buscar')">Buscador</button>
+    <button class="nav-link" onclick="scrollTo('#categorias')">Categorías</button>
+    <button class="nav-link" onclick="scrollTo('#diagnostico')">Diagnóstico</button>
+    <button class="nav-link" onclick="scrollTo('#materiales')">Materiales</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════
+     HERO
+══════════════════════════════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="logo-badge">
+      <div class="logo-dot"></div>
+      ONE MORE International · Distribuidor José Lugo
+    </div>
+
+    <h1>Biblioteca<br/><em>Inteligente</em><br/>de Consulta</h1>
+
+    <p class="hero-sub">
+      Consulta rápida de materiales, protocolos, guías y recursos digitales.
+      Encuentra lo que necesitas en segundos y abre cada archivo directamente desde Google Drive.
+    </p>
+
+    <div class="hero-btns">
+      <!-- ▼ Cambia el link de Drive aquí -->
+      <a class="btn btn-gold" href="https://drive.google.com/drive/folders/1Wp-sJA50Le6g3mI_rdxj1soE7nu-yw-V" target="_blank">
+        📁 Abrir carpeta de Drive
+      </a>
+      <!-- ▼ Cambia el número de WhatsApp aquí -->
+      <a class="btn btn-wa" href="https://wa.me/573126387467?text=Hola%20José%2C%20quiero%20consultar%20sobre%20los%20materiales%20de%20ONE%20MORE" target="_blank">
+        💬 Consultar por WhatsApp
+      </a>
+      <button class="btn btn-outline" onclick="scrollTo('#buscar')">🔍 Buscar materiales</button>
+    </div>
+  </div>
+
+  <div class="scroll-hint" onclick="scrollTo('#buscar')">
+    <span>Explorar</span>
+    <span class="scroll-arrow">↓</span>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════
+     BUSCADOR AVANZADO
+══════════════════════════════ -->
+<section id="buscar">
+  <div class="container">
+    <span class="section-label">Búsqueda inteligente</span>
+    <h2 class="section-title">Encuentra tu material</h2>
+
+    <!-- Caja de búsqueda -->
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="Busca por nombre, categoría, palabras clave…"
+        autocomplete="off"
+        oninput="handleSearch()"
+      />
+      <button class="clear-btn" id="clearBtn" onclick="clearSearch()">✕</button>
+    </div>
+
+    <!-- Filtros categoría -->
+    <div class="filters-row" id="catFilters">
+      <button class="filter-chip active" data-cat="todos" onclick="setFilter('cat','todos',this)">Todos</button>
+      <!-- Generado por JS -->
+    </div>
+
+    <!-- Filtros tipo -->
+    <div class="filters-row" id="typeFilters">
+      <button class="filter-chip active" data-type="todos" onclick="setFilter('type','todos',this)">Todos los tipos</button>
+      <button class="filter-chip" data-type="PDF"    onclick="setFilter('type','PDF',this)">📄 PDF</button>
+      <button class="filter-chip" data-type="Video"  onclick="setFilter('type','Video',this)">🎬 Video</button>
+      <button class="filter-chip" data-type="Presentación" onclick="setFilter('type','Presentación',this)">📊 Presentación</button>
+      <button class="filter-chip" data-type="Guía"   onclick="setFilter('type','Guía',this)">📘 Guía</button>
+      <button class="filter-chip" data-type="Protocolo" onclick="setFilter('type','Protocolo',this)">🧾 Protocolo</button>
+      <button class="filter-chip" data-type="Imagen" onclick="setFilter('type','Imagen',this)">🖼 Imagen</button>
+      <button class="filter-chip" data-type="ZIP" onclick="setFilter('type','ZIP',this)">🗜 ZIP</button>
+      <button class="filter-chip" data-type="Documento" onclick="setFilter('type','Documento',this)">📝 Documento</button>
+      <button class="filter-chip" data-type="Enlace" onclick="setFilter('type','Enlace',this)">🔗 Enlace</button>
+    </div>
+
+    <!-- Meta resultados -->
+    <div class="results-meta">
+      <span class="results-count">Mostrando <strong id="resultCount">0</strong> materiales</span>
+    </div>
+
+    <!-- Grid tarjetas -->
+    <div class="cards-grid" id="cardsGrid"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════
+     CATEGORÍAS
+══════════════════════════════ -->
+<section id="categorias">
+  <div class="container">
+    <span class="section-label">Organización</span>
+    <h2 class="section-title">Explorar por categoría</h2>
+
+    <!-- Carpeta principal destacada -->
+    <div class="folder-card">
+      <div class="folder-icon-big">📁</div>
+      <div class="folder-info">
+        <h3>Carpeta Principal · Drive</h3>
+        <p>Accede directamente a todos los archivos sin filtros. Encuentra presentaciones, guías, protocolos, videos y más.</p>
+      </div>
+      <a class="btn btn-gold" href="https://drive.google.com/drive/folders/1Wp-sJA50Le6g3mI_rdxj1soE7nu-yw-V" target="_blank">
+        📂 Abrir en Drive
+      </a>
+    </div>
+
+    <div class="cats-grid" id="catsGrid"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════
+     PANEL DIAGNÓSTICO
+══════════════════════════════ -->
+<section id="diagnostico">
+  <div class="container">
+    <span class="section-label">Consulta rápida</span>
+    <h2 class="section-title">¿Qué necesitas hoy?</h2>
+
+    <div class="diag-grid">
+      <button class="diag-btn" data-need="energia" onclick="showDiag('energia',this)">
+        <span class="diag-icon">⚡</span>Energía
+      </button>
+      <button class="diag-btn" data-need="dolor" onclick="showDiag('dolor',this)">
+        <span class="diag-icon">🩹</span>Dolor / Inflamación
+      </button>
+      <button class="diag-btn" data-need="peso" onclick="showDiag('peso',this)">
+        <span class="diag-icon">⚖️</span>Control de Peso
+      </button>
+      <button class="diag-btn" data-need="sueno" onclick="showDiag('sueno',this)">
+        <span class="diag-icon">🌙</span>Sueño y Descanso
+      </button>
+      <button class="diag-btn" data-need="estres" onclick="showDiag('estres',this)">
+        <span class="diag-icon">🧘</span>Estrés
+      </button>
+      <button class="diag-btn" data-need="negocio" onclick="showDiag('negocio',this)">
+        <span class="diag-icon">💼</span>Negocio
+      </button>
+      <button class="diag-btn" data-need="info" onclick="showDiag('info',this)">
+        <span class="diag-icon">ℹ️</span>Info General
+      </button>
+    </div>
+
+    <div class="diag-result" id="diagResult"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════
+     TODOS LOS MATERIALES
+══════════════════════════════ -->
+<section id="materiales">
+  <div class="container">
+    <span class="section-label">Biblioteca completa</span>
+    <h2 class="section-title">Todos los materiales</h2>
+    <div class="cards-grid" id="allCardsGrid"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>✦ ONE MORE International · Distribuidor <strong style="color:var(--gold)">José Lugo</strong></p>
+  <p style="margin-top:8px">
+    📞 <a href="https://wa.me/573126387467">+57 312 638 7467</a> &nbsp;·&nbsp;
+    📁 <a href="https://drive.google.com/drive/folders/1Wp-sJA50Le6g3mI_rdxj1soE7nu-yw-V" target="_blank">Carpeta Drive</a>
+  </p>
+</footer>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     DATOS — AGREGA NUEVOS MATERIALES AQUÍ ABAJO
+     Copia un bloque {} y pega al final del array, separado por coma.
+     Campos:
+       titulo      → Nombre visible
+       categoria   → Debe coincidir con las categorías de CATEGORIAS[]
+       tipo        → PDF | Video | Presentación | Guía | Protocolo | Imagen | Documento | Enlace
+       descripcion → Texto breve (máx 2 líneas)
+       keywords    → Palabras para el buscador, separadas por espacio
+       recomendacion → Cuándo o a quién enviar este material
+       enlace      → URL completo de Google Drive
+══════════════════════════════════════════════════════════════ -->
+<script>
+"use strict";
+
+// ════════════════════════════════════════
+// MATERIALES — Agrega aquí tus archivos
+// ════════════════════════════════════════
+const MATERIALES = [
+  {
+    "titulo": "English Catalog.pdf",
+    "categoria": "English",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “English”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "English Catalog pdf",
+    "recomendacion": "Material en inglés",
+    "enlace": "https://drive.google.com/file/d/1idPvTfJuu3y2Y091Vy3UPH4VJbisjam9/view",
+    "carpetaDrive": "English",
+    "driveId": "1idPvTfJuu3y2Y091Vy3UPH4VJbisjam9"
+  },
+  {
+    "titulo": "GlutaNAD+ ENG.pdf",
+    "categoria": "English",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “English”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "GlutaNAD+ ENG pdf English",
+    "recomendacion": "Material en inglés",
+    "enlace": "https://drive.google.com/file/d/1KIxekdgeOVtfUoct8jNKyJryEA0JC_XR/view",
+    "carpetaDrive": "English",
+    "driveId": "1KIxekdgeOVtfUoct8jNKyJryEA0JC_XR"
+  },
+  {
+    "titulo": "Products-Ingredients.pdf",
+    "categoria": "English",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “English”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Products Ingredients pdf English",
+    "recomendacion": "Material en inglés",
+    "enlace": "https://drive.google.com/file/d/1a9ZEGciftqzsM7oNyCZYtxKJTd51Ge01/view",
+    "carpetaDrive": "English",
+    "driveId": "1a9ZEGciftqzsM7oNyCZYtxKJTd51Ge01"
+  },
+  {
+    "titulo": "Technical Sheet GlutaNAD+.pdf",
+    "categoria": "English",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “English”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Technical Sheet GlutaNAD+ pdf English",
+    "recomendacion": "Material en inglés",
+    "enlace": "https://drive.google.com/file/d/1RtkIykuauBxU-gABFvom-HiuStn4mjhv/view",
+    "carpetaDrive": "English",
+    "driveId": "1RtkIykuauBxU-gABFvom-HiuStn4mjhv"
+  },
+  {
+    "titulo": "Compensation plan V2.0 (ENG).mp4",
+    "categoria": "English",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “English / English Videos”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Compensation plan V2 ENG mp4 English Videos Video",
+    "recomendacion": "Material en inglés",
+    "enlace": "https://drive.google.com/file/d/1aS_qkOxQvpfNPW3yyoRT9wHyo9kmSzCG/view",
+    "carpetaDrive": "English / English Videos",
+    "driveId": "1aS_qkOxQvpfNPW3yyoRT9wHyo9kmSzCG"
+  },
+  {
+    "titulo": "GlutaNAD Ingles (4K).mp4",
+    "categoria": "English",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “English / English Videos”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "GlutaNAD Ingles 4K mp4 English Videos Video",
+    "recomendacion": "Material en inglés",
+    "enlace": "https://drive.google.com/file/d/1wm47ATS-8qZ7WxPJpaMAyuVpCwU6uu1X/view",
+    "carpetaDrive": "English / English Videos",
+    "driveId": "1wm47ATS-8qZ7WxPJpaMAyuVpCwU6uu1X"
+  },
+  {
+    "titulo": "One More Products (ENG).mp4",
+    "categoria": "English",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “English / English Videos”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "One More Products ENG mp4 English Videos Video",
+    "recomendacion": "Material en inglés",
+    "enlace": "https://drive.google.com/file/d/1r3bAX7XIpYgp0Q5MRQPWEuhZPxj3D2Nx/view",
+    "carpetaDrive": "English / English Videos",
+    "driveId": "1r3bAX7XIpYgp0Q5MRQPWEuhZPxj3D2Nx"
+  },
+  {
+    "titulo": "Overview - OneMore Internacional (HD).mp4",
+    "categoria": "English",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “English / English Videos”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Overview OneMore Internacional HD mp4 English Videos Video",
+    "recomendacion": "Material en inglés",
+    "enlace": "https://drive.google.com/file/d/1KtFOZ0WKzVW-au3Aloe01_RWT4kkaXdf/view",
+    "carpetaDrive": "English / English Videos",
+    "driveId": "1KtFOZ0WKzVW-au3Aloe01_RWT4kkaXdf"
+  },
+  {
+    "titulo": "14.png",
+    "categoria": "GlutaNAD+",
+    "tipo": "Imagen",
+    "descripcion": "Imagen alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "14 png GlutaNAD+ Imagen",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1kx3QVvvbNc6qkIUhv8P-FpiABgY-MijU/view",
+    "carpetaDrive": "GlutaNAD+",
+    "driveId": "1kx3QVvvbNc6qkIUhv8P-FpiABgY-MijU"
+  },
+  {
+    "titulo": "28.png",
+    "categoria": "GlutaNAD+",
+    "tipo": "Imagen",
+    "descripcion": "Imagen alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "28 png GlutaNAD+ Imagen",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1iQFEzD5x2mdqT1WOmKEn7OpxeNtwRJ_x/view",
+    "carpetaDrive": "GlutaNAD+",
+    "driveId": "1iQFEzD5x2mdqT1WOmKEn7OpxeNtwRJ_x"
+  },
+  {
+    "titulo": "29.png",
+    "categoria": "GlutaNAD+",
+    "tipo": "Imagen",
+    "descripcion": "Imagen alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "29 png GlutaNAD+ Imagen",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1e0bheT2wTgudInasE4wP_C6pQ2ng6E7x/view",
+    "carpetaDrive": "GlutaNAD+",
+    "driveId": "1e0bheT2wTgudInasE4wP_C6pQ2ng6E7x"
+  },
+  {
+    "titulo": "32.png",
+    "categoria": "GlutaNAD+",
+    "tipo": "Imagen",
+    "descripcion": "Imagen alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "32 png GlutaNAD+ Imagen",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1sy2BStjP_jqnu7B94h2GNOoN1CuwQBgk/view",
+    "carpetaDrive": "GlutaNAD+",
+    "driveId": "1sy2BStjP_jqnu7B94h2GNOoN1CuwQBgk"
+  },
+  {
+    "titulo": "33.png",
+    "categoria": "GlutaNAD+",
+    "tipo": "Imagen",
+    "descripcion": "Imagen alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "33 png GlutaNAD+ Imagen",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1oMjn3Jo5xxqbKMJr1kj_j09OmFGkRkgm/view",
+    "carpetaDrive": "GlutaNAD+",
+    "driveId": "1oMjn3Jo5xxqbKMJr1kj_j09OmFGkRkgm"
+  },
+  {
+    "titulo": "7.png",
+    "categoria": "GlutaNAD+",
+    "tipo": "Imagen",
+    "descripcion": "Imagen alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "png GlutaNAD+ Imagen",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1-XQ_9ODs9VMel2DLrWzAt13tYDab98nd/view",
+    "carpetaDrive": "GlutaNAD+",
+    "driveId": "1-XQ_9ODs9VMel2DLrWzAt13tYDab98nd"
+  },
+  {
+    "titulo": "8.png",
+    "categoria": "GlutaNAD+",
+    "tipo": "Imagen",
+    "descripcion": "Imagen alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "png GlutaNAD+ Imagen",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1-4BXRFHCWja0TVtY4ZoCEfJ4v9288IvT/view",
+    "carpetaDrive": "GlutaNAD+",
+    "driveId": "1-4BXRFHCWja0TVtY4ZoCEfJ4v9288IvT"
+  },
+  {
+    "titulo": "9.png",
+    "categoria": "GlutaNAD+",
+    "tipo": "Imagen",
+    "descripcion": "Imagen alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "png GlutaNAD+ Imagen",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1oC62BVbqdF94hZMNZkOqdMx24KPPc5-5/view",
+    "carpetaDrive": "GlutaNAD+",
+    "driveId": "1oC62BVbqdF94hZMNZkOqdMx24KPPc5-5"
+  },
+  {
+    "titulo": "Ciencia GlutaNAD+.pdf",
+    "categoria": "GlutaNAD+",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Ciencia GlutaNAD+ pdf",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1jsu2A8TPB2IMfNbyNNbTP5nzQS4XASjB/view",
+    "carpetaDrive": "GlutaNAD+",
+    "driveId": "1jsu2A8TPB2IMfNbyNNbTP5nzQS4XASjB"
+  },
+  {
+    "titulo": "Ficha Tecnica GlutaNAD+.pdf",
+    "categoria": "GlutaNAD+",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Ficha Tecnica GlutaNAD+ pdf",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1a55uAUZJ7DJmFSeqSrOjEhYzcSwttr4G/view",
+    "carpetaDrive": "GlutaNAD+",
+    "driveId": "1a55uAUZJ7DJmFSeqSrOjEhYzcSwttr4G"
+  },
+  {
+    "titulo": "GlutaNAD+ ENG.pdf",
+    "categoria": "GlutaNAD+",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "GlutaNAD+ ENG pdf",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/10h_UfEER7Eez-gnwl5wvH-wxOjqvnjWC/view",
+    "carpetaDrive": "GlutaNAD+",
+    "driveId": "10h_UfEER7Eez-gnwl5wvH-wxOjqvnjWC"
+  },
+  {
+    "titulo": "Technical Sheet GlutaNAD+.pdf",
+    "categoria": "GlutaNAD+",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Technical Sheet GlutaNAD+ pdf",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1gTWg8ANlDdJjI1-v-RiVkA6Sr6_Ul-32/view",
+    "carpetaDrive": "GlutaNAD+",
+    "driveId": "1gTWg8ANlDdJjI1-v-RiVkA6Sr6_Ul-32"
+  },
+  {
+    "titulo": "*Cual es el siguiente paso - Summit Networkers Team.pdf",
+    "categoria": "Negocio",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Cual es el siguiente paso Summit Networkers Team pdf Raíz Negocio",
+    "recomendacion": "Negocio / capacitación",
+    "enlace": "https://drive.google.com/file/d/1jxAYP2av9OM9z7KCKK8uuHwAA-L7ZHym/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1jxAYP2av9OM9z7KCKK8uuHwAA-L7ZHym"
+  },
+  {
+    "titulo": "1 Sistema Terapeutico Transdermico.pdf",
+    "categoria": "Protocolos",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Sistema Terapeutico Transdermico pdf Raíz Protocolos",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1SLqyy8kIN_IeS-4B_Zw3RyZfthotTv-T/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1SLqyy8kIN_IeS-4B_Zw3RyZfthotTv-T"
+  },
+  {
+    "titulo": "10 Sornie Collagen.pdf",
+    "categoria": "Productos",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "10 Sornie Collagen pdf Raíz Productos",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/11b5HB9QeBQueX6NLgU0Yn5_6MrIGgLNf/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "11b5HB9QeBQueX6NLgU0Yn5_6MrIGgLNf"
+  },
+  {
+    "titulo": "11 Sornie Anti - Aging Mask.pdf",
+    "categoria": "Productos",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "11 Sornie Anti Aging Mask pdf Raíz Productos",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1aGclb5qWeA1Ve7ijZSKcMjhYJpkMuNbQ/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1aGclb5qWeA1Ve7ijZSKcMjhYJpkMuNbQ"
+  },
+  {
+    "titulo": "2 Painless Night Glu.pdf",
+    "categoria": "Protocolos",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Painless Night Glu pdf Raíz Protocolos",
+    "recomendacion": "Orientación por necesidad",
+    "enlace": "https://drive.google.com/file/d/1ENAr8_pY11lwhvat8yl1qlaUJD4vgWoA/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1ENAr8_pY11lwhvat8yl1qlaUJD4vgWoA"
+  },
+  {
+    "titulo": "3 Ladies Night.pdf",
+    "categoria": "Productos",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Ladies Night pdf Raíz Productos",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1JMYn98LdeY4FS2PvxHmWWANnLefHNRqV/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1JMYn98LdeY4FS2PvxHmWWANnLefHNRqV"
+  },
+  {
+    "titulo": "4 Gentleman Night.pdf",
+    "categoria": "Productos",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Gentleman Night pdf Raíz Productos",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1RH_zqH24UlM3etN0lO_oDSDtBN11o2gi/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1RH_zqH24UlM3etN0lO_oDSDtBN11o2gi"
+  },
+  {
+    "titulo": "5 Melatonin Plus.pdf",
+    "categoria": "Productos",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Melatonin Plus pdf Raíz Productos",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1oA7t66vAuV6PKKEImEnq7zprVW1sNPzj/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1oA7t66vAuV6PKKEImEnq7zprVW1sNPzj"
+  },
+  {
+    "titulo": "6 Dekamin.pdf",
+    "categoria": "Productos",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Dekamin pdf Raíz Productos",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/19aME9WBv4W2NYv8Yqca2-Mxs5Q2Qw8Wb/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "19aME9WBv4W2NYv8Yqca2-Mxs5Q2Qw8Wb"
+  },
+  {
+    "titulo": "7 B12.pdf",
+    "categoria": "Productos",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "B12 pdf Raíz Productos",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1yn6PK7gF-sO4ECYECHVWZ1yvGpX_k9Pp/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1yn6PK7gF-sO4ECYECHVWZ1yvGpX_k9Pp"
+  },
+  {
+    "titulo": "8 Omevia.pdf",
+    "categoria": "Productos",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Omevia pdf Raíz Productos",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1cCBy4F8m5QQmGKCH85HPvneqOXTckMXF/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1cCBy4F8m5QQmGKCH85HPvneqOXTckMXF"
+  },
+  {
+    "titulo": "9 Slim Style.pdf",
+    "categoria": "Productos",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Slim Style pdf Raíz Productos",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/14kWjPafWgUk1o2jB5_6Qb8kYG3tNtdzR/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "14kWjPafWgUk1o2jB5_6Qb8kYG3tNtdzR"
+  },
+  {
+    "titulo": "Calendario de presentaciones Summit Networkers Nov 2025.jpeg",
+    "categoria": "Imágenes",
+    "tipo": "Imagen",
+    "descripcion": "Imagen alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Calendario de presentaciones Summit Networkers Nov 2025 jpeg Raíz Imágenes Imagen",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1ID4sdvI3P156-hN92dCpaLDesLX2iMWX/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1ID4sdvI3P156-hN92dCpaLDesLX2iMWX"
+  },
+  {
+    "titulo": "Caracteristicas y beneficios de los productos de One More International.pdf",
+    "categoria": "Productos",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Caracteristicas beneficios de los productos One More International pdf Raíz",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1oEoaOQud93PP9huTkg7ZNtUtrwth9hGe/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1oEoaOQud93PP9huTkg7ZNtUtrwth9hGe"
+  },
+  {
+    "titulo": "Catalogo productos OneMore Liviano (para enviar por WS).pdf",
+    "categoria": "Productos",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Catalogo productos OneMore Liviano para enviar por WS pdf Raíz",
+    "recomendacion": "Cliente nuevo",
+    "enlace": "https://drive.google.com/file/d/1mnAGDPYUC3JPsyOOaDY0SGscc7risUdW/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1mnAGDPYUC3JPsyOOaDY0SGscc7risUdW"
+  },
+  {
+    "titulo": "Catalogo productos OneMore.pdf",
+    "categoria": "Productos",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Catalogo productos OneMore pdf Raíz",
+    "recomendacion": "Cliente nuevo",
+    "enlace": "https://drive.google.com/file/d/1DdsobfKKTh5D-hFnXZxlzuNSDRuwD20p/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1DdsobfKKTh5D-hFnXZxlzuNSDRuwD20p"
+  },
+  {
+    "titulo": "Como hacer la solicitud de retiro de comisiones.mp4",
+    "categoria": "Negocio",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Como hacer la solicitud de retiro comisiones mp4 Raíz Negocio Video",
+    "recomendacion": "Negocio / capacitación",
+    "enlace": "https://drive.google.com/file/d/1fZcJFlNrpFV6xpk7XQn8g7sS2nc-9caV/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1fZcJFlNrpFV6xpk7XQn8g7sS2nc-9caV"
+  },
+  {
+    "titulo": "Como hacer una orden de productos.mp4",
+    "categoria": "Negocio",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Como hacer una orden de productos mp4 Raíz Negocio Video",
+    "recomendacion": "Negocio / capacitación",
+    "enlace": "https://drive.google.com/file/d/1PGQoAZIji7IrsHtwdEL_EVwM5veKRfZV/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1PGQoAZIji7IrsHtwdEL_EVwM5veKRfZV"
+  },
+  {
+    "titulo": "Costos de Envio One More America.png",
+    "categoria": "Imágenes",
+    "tipo": "Imagen",
+    "descripcion": "Imagen alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Costos de Envio One More America png Raíz Imágenes Imagen",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1OUqbOzjuUfjojO8Y9p7noZREu676qStn/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1OUqbOzjuUfjojO8Y9p7noZREu676qStn"
+  },
+  {
+    "titulo": "Detalles del Plan de Compensacion - Ideal para seguimiento o capacitacion.pdf",
+    "categoria": "Negocio",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Detalles del Plan de Compensacion Ideal para seguimiento capacitacion pdf Raíz Negocio",
+    "recomendacion": "Negocio / capacitación",
+    "enlace": "https://drive.google.com/file/d/1GHfYtZcwN8CqejWpBptVDLjT7Mi-z1t6/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1GHfYtZcwN8CqejWpBptVDLjT7Mi-z1t6"
+  },
+  {
+    "titulo": "Enlaces importantes",
+    "categoria": "Productos",
+    "tipo": "Documento",
+    "descripcion": "Google Doc alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Enlaces importantes Raíz Productos Google Doc",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://docs.google.com/document/d/19v93cRt8fliaTNMxh4umbd78Nx9tmKjUTSk19l-yLo8/edit",
+    "carpetaDrive": "Raíz",
+    "driveId": "19v93cRt8fliaTNMxh4umbd78Nx9tmKjUTSk19l-yLo8"
+  },
+  {
+    "titulo": "Lista de precios OM 24-04-2026.pdf",
+    "categoria": "Negocio",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Lista de precios OM 24 04 2026 pdf Raíz Negocio",
+    "recomendacion": "Negocio / capacitación",
+    "enlace": "https://drive.google.com/file/d/1x4NLSkGL8KdhGOKZFi9063XXRpZQNcgb/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1x4NLSkGL8KdhGOKZFi9063XXRpZQNcgb"
+  },
+  {
+    "titulo": "Men X.jpeg",
+    "categoria": "Imágenes",
+    "tipo": "Imagen",
+    "descripcion": "Imagen alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Men jpeg Raíz Imágenes Imagen",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1U5EOxlFvCVOlDaZYjIc3N978dE-0UwD7/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1U5EOxlFvCVOlDaZYjIc3N978dE-0UwD7"
+  },
+  {
+    "titulo": "One More Presentacion 2026 (Act24.4).pdf",
+    "categoria": "Negocio",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "One More Presentacion 2026 Act24 pdf Raíz Negocio",
+    "recomendacion": "Negocio / capacitación",
+    "enlace": "https://drive.google.com/file/d/1BUMnjqit4Wc70qtUlM5U8ZQmLgcDdIXb/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1BUMnjqit4Wc70qtUlM5U8ZQmLgcDdIXb"
+  },
+  {
+    "titulo": "Primer compra de un nuevo socio.mp4",
+    "categoria": "Negocio",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Primer compra de un nuevo socio mp4 Raíz Negocio Video",
+    "recomendacion": "Negocio / capacitación",
+    "enlace": "https://drive.google.com/file/d/1jHnc6w6jDbOGn7ZXBL4-PwG0V8IMmZ_E/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1jHnc6w6jDbOGn7ZXBL4-PwG0V8IMmZ_E"
+  },
+  {
+    "titulo": "Proceso de registro de nuevo socio One More International.pdf",
+    "categoria": "Negocio",
+    "tipo": "PDF",
+    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Proceso de registro nuevo socio One More International pdf Raíz Negocio",
+    "recomendacion": "Negocio / capacitación",
+    "enlace": "https://drive.google.com/file/d/1YIGAe0k8KI1YtVyPD6gpgte8V_bSXyHT/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1YIGAe0k8KI1YtVyPD6gpgte8V_bSXyHT"
+  },
+  {
+    "titulo": "Proceso para hacer el registro de un socio.mp4",
+    "categoria": "Negocio",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Proceso para hacer el registro de un socio mp4 Raíz Negocio Video",
+    "recomendacion": "Negocio / capacitación",
+    "enlace": "https://drive.google.com/file/d/1KLGDj1LFoC3SRlgrE9jdajqIaBcb3ro1/view",
+    "carpetaDrive": "Raíz",
+    "driveId": "1KLGDj1LFoC3SRlgrE9jdajqIaBcb3ro1"
+  },
+  {
+    "titulo": "3 razones por las que rejuvenecer con productos naturales es mejor que con tratamientos invasivos.zip",
+    "categoria": "Redes Sociales",
+    "tipo": "ZIP",
+    "descripcion": "ZIP alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "razones por las que rejuvenecer con productos naturales es mejor tratamientos invasivos zip Redes Sociales contenido",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1xMMZ5LJheev66chioOKLWzesCh1hX2ML/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1xMMZ5LJheev66chioOKLWzesCh1hX2ML"
+  },
+  {
+    "titulo": "_REEL 3 RAZONES PARA ELEGIR PARCHES TRANSDERMICOS.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "REEL RAZONES PARA ELEGIR PARCHES TRANSDERMICOS mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1hc2eMYxjsrmfmtPT_q7kCThytwZTEdwx/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1hc2eMYxjsrmfmtPT_q7kCThytwZTEdwx"
+  },
+  {
+    "titulo": "alivio del dolor y tensión post entrenamiento.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "alivio del dolor tensión post entrenamiento mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1ODYb7nDDRmTUxYCtUClNc5ujxn05ifBj/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1ODYb7nDDRmTUxYCtUClNc5ujxn05ifBj"
+  },
+  {
+    "titulo": "bienestar femenino.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "bienestar femenino mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1J-Rm6YLwAF8nAwQ0DJhqdVcyQShB7afU/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1J-Rm6YLwAF8nAwQ0DJhqdVcyQShB7afU"
+  },
+  {
+    "titulo": "Carrusel Beneficio Parche Transdermico.zip",
+    "categoria": "Redes Sociales",
+    "tipo": "ZIP",
+    "descripcion": "ZIP alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Carrusel Beneficio Parche Transdermico zip Redes Sociales contenido",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1OMYNKvIRv6U9s98_yrQkQcDoL_fmif_a/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1OMYNKvIRv6U9s98_yrQkQcDoL_fmif_a"
+  },
+  {
+    "titulo": "carrusel OMEVIA.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "carrusel OMEVIA mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/13RyKhkyW63ibVL_4agbBhZXHP9r9ElZo/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "13RyKhkyW63ibVL_4agbBhZXHP9r9ElZo"
+  },
+  {
+    "titulo": "CARRUSEL PROBLEMA FEMENINO.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "CARRUSEL PROBLEMA FEMENINO mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1cQWWFDsILiwlzzMHqoDhzZnJgGpf9usG/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1cQWWFDsILiwlzzMHqoDhzZnJgGpf9usG"
+  },
+  {
+    "titulo": "Copia de reel pregunta parche.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Copia de reel pregunta parche mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1huQyrExS9L9rWKNftUIymclknj7JfEVX/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1huQyrExS9L9rWKNftUIymclknj7JfEVX"
+  },
+  {
+    "titulo": "himher .mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "himher mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1SUoKpAxUJZM4NWWqEgcuGLrK_dLLIFxz/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1SUoKpAxUJZM4NWWqEgcuGLrK_dLLIFxz"
+  },
+  {
+    "titulo": "melatonin (1).png",
+    "categoria": "Redes Sociales",
+    "tipo": "Imagen",
+    "descripcion": "Imagen alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "melatonin png Redes Sociales contenido Imagen",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1QYOYMcmBQhOjQ3YWAGYXM9_JIGDpS1kS/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1QYOYMcmBQhOjQ3YWAGYXM9_JIGDpS1kS"
+  },
+  {
+    "titulo": "Melatonin.png",
+    "categoria": "Redes Sociales",
+    "tipo": "Imagen",
+    "descripcion": "Imagen alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Melatonin png Redes Sociales contenido Imagen",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/18mfV5ZqIICCgEODZVpNlAc5DcDAqr69D/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "18mfV5ZqIICCgEODZVpNlAc5DcDAqr69D"
+  },
+  {
+    "titulo": "mitos y verdades sobre salud sexual - carrusel.zip",
+    "categoria": "Redes Sociales",
+    "tipo": "ZIP",
+    "descripcion": "ZIP alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "mitos verdades sobre salud sexual carrusel zip Redes Sociales contenido",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/10id29o7LtieZjAv75i-fFHA7YGyle-8u/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "10id29o7LtieZjAv75i-fFHA7YGyle-8u"
+  },
+  {
+    "titulo": "One More Gentlemen.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "One More Gentlemen mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1ZLYdo9eJsTtdDS4w7sGik5rIVxMdQCx5/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1ZLYdo9eJsTtdDS4w7sGik5rIVxMdQCx5"
+  },
+  {
+    "titulo": "osteoporosis.png",
+    "categoria": "Redes Sociales",
+    "tipo": "Imagen",
+    "descripcion": "Imagen alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "osteoporosis png Redes Sociales contenido Imagen",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1IV41qO3ryFNP75HlTzDZJDL1zxFWLsH4/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1IV41qO3ryFNP75HlTzDZJDL1zxFWLsH4"
+  },
+  {
+    "titulo": "Painless Animación.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Painless Animación mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1ds56j5FKNSxYnXvJ-YLtAtAbzvJYaqVG/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1ds56j5FKNSxYnXvJ-YLtAtAbzvJYaqVG"
+  },
+  {
+    "titulo": "Painless Night Glu.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Painless Night Glu mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/15atKQ4V8Zb5qpzR-O_QWU5KSgBTj30YF/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "15atKQ4V8Zb5qpzR-O_QWU5KSgBTj30YF"
+  },
+  {
+    "titulo": "post b12 plus.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "post b12 plus mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1ibb850r3BkE-L19ZdKfUT_p06Kq1QkP8/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1ibb850r3BkE-L19ZdKfUT_p06Kq1QkP8"
+  },
+  {
+    "titulo": "POST dolor de espalda (1).zip",
+    "categoria": "Redes Sociales",
+    "tipo": "ZIP",
+    "descripcion": "ZIP alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "POST dolor de espalda zip Redes Sociales contenido",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1qqzs3WGPFj5s-zMH1ewQrxcDZkQn8Hlr/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1qqzs3WGPFj5s-zMH1ewQrxcDZkQn8Hlr"
+  },
+  {
+    "titulo": "post facebook b12 plus.zip",
+    "categoria": "Redes Sociales",
+    "tipo": "ZIP",
+    "descripcion": "ZIP alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "post facebook b12 plus zip Redes Sociales contenido",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/15VOzmThU7Sds5UdbkaYQ_DULMlzG-fyL/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "15VOzmThU7Sds5UdbkaYQ_DULMlzG-fyL"
+  },
+  {
+    "titulo": "post SLIM STYLE.jpg",
+    "categoria": "Redes Sociales",
+    "tipo": "Imagen",
+    "descripcion": "Imagen alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "post SLIM STYLE jpg Redes Sociales contenido Imagen",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1qt8qIdQ6Tz1lidKJMa-53SP9c65EqgnK/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1qt8qIdQ6Tz1lidKJMa-53SP9c65EqgnK"
+  },
+  {
+    "titulo": "post SONRIE MASK Ig.png",
+    "categoria": "Redes Sociales",
+    "tipo": "Imagen",
+    "descripcion": "Imagen alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "post SONRIE MASK Ig png Redes Sociales contenido Imagen",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1HlovW6j9eYKJ7hUKM7GSVQeP6VMYGI3G/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1HlovW6j9eYKJ7hUKM7GSVQeP6VMYGI3G"
+  },
+  {
+    "titulo": "Reel dekamin.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Reel dekamin mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1SLzP1HlaBPsKwoURWa-lVxUnwpSQPDR7/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1SLzP1HlaBPsKwoURWa-lVxUnwpSQPDR7"
+  },
+  {
+    "titulo": "REEL dormir.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "REEL dormir mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1eRNR2s9soXb9d-GXDNfCmxafcQBTV5Xu/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1eRNR2s9soXb9d-GXDNfCmxafcQBTV5Xu"
+  },
+  {
+    "titulo": "reel productos (efecto cámara).mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "reel productos efecto cámara mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1HPjKPndFSUPAk61mY7iAvayKN6VEJ46f/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1HPjKPndFSUPAk61mY7iAvayKN6VEJ46f"
+  },
+  {
+    "titulo": "reel Sonrie Mask.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "reel Sonrie Mask mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1_1VWQb1d-YoyaDy-P0FYlL9cvH7oxlDf/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1_1VWQb1d-YoyaDy-P0FYlL9cvH7oxlDf"
+  },
+  {
+    "titulo": "video corto Dolor.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "video corto Dolor mp4 Redes Sociales contenido",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1jdfwYPPaSpTidmDK5uQTr8vq0TJmO4_d/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1jdfwYPPaSpTidmDK5uQTr8vq0TJmO4_d"
+  },
+  {
+    "titulo": "vitamina c vitamina d3 vitamina k12.png",
+    "categoria": "Redes Sociales",
+    "tipo": "Imagen",
+    "descripcion": "Imagen alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "vitamina d3 k12 png Redes Sociales contenido Imagen",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1tRGkzhVRGR-Pk8CwtamIWkBtV60jB-Wc/view",
+    "carpetaDrive": "Redes Sociales - contenido",
+    "driveId": "1tRGkzhVRGR-Pk8CwtamIWkBtV60jB-Wc"
+  },
+  {
+    "titulo": "dekamin 125 mcg.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / DEKAMIN”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "dekamin 125 mcg mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1CIUzhba2LseuRZgt5eYSx2Uoy3U1oT7O/view",
+    "carpetaDrive": "Redes Sociales - contenido / DEKAMIN",
+    "driveId": "1CIUzhba2LseuRZgt5eYSx2Uoy3U1oT7O"
+  },
+  {
+    "titulo": "DEKAMIN componentes.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / DEKAMIN”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "DEKAMIN componentes mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1ybTzqmm0D0T4V_ltbaB8CMcD7cRHFKlh/view",
+    "carpetaDrive": "Redes Sociales - contenido / DEKAMIN",
+    "driveId": "1ybTzqmm0D0T4V_ltbaB8CMcD7cRHFKlh"
+  },
+  {
+    "titulo": "Dekamin facebook.png",
+    "categoria": "Redes Sociales",
+    "tipo": "Imagen",
+    "descripcion": "Imagen alojado en Google Drive dentro de “Redes Sociales - contenido / DEKAMIN”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Dekamin facebook png Redes Sociales contenido Imagen",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1YKn8l0bz5aMWEVKfwwsDa2IbT39Y6034/view",
+    "carpetaDrive": "Redes Sociales - contenido / DEKAMIN",
+    "driveId": "1YKn8l0bz5aMWEVKfwwsDa2IbT39Y6034"
+  },
+  {
+    "titulo": "reel DEKAMIN.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / DEKAMIN”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "reel DEKAMIN mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/17mbb8TchAN8OSwJJreobeBgH16SyKPe2/view",
+    "carpetaDrive": "Redes Sociales - contenido / DEKAMIN",
+    "driveId": "17mbb8TchAN8OSwJJreobeBgH16SyKPe2"
+  },
+  {
+    "titulo": "reel omevia.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / DEKAMIN”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "reel omevia mp4 Redes Sociales contenido DEKAMIN Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1uh2I2LmgGMus_WgNGESPLtQeIVHC9DYt/view",
+    "carpetaDrive": "Redes Sociales - contenido / DEKAMIN",
+    "driveId": "1uh2I2LmgGMus_WgNGESPLtQeIVHC9DYt"
+  },
+  {
+    "titulo": "GENTLEMAN.zip",
+    "categoria": "Redes Sociales",
+    "tipo": "ZIP",
+    "descripcion": "ZIP alojado en Google Drive dentro de “Redes Sociales - contenido / GENTLEMEN NIGHT”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "GENTLEMAN zip Redes Sociales contenido GENTLEMEN NIGHT",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1sS7yEWWuvBfS_aqtPsPG7BGMRG2yJIT-/view",
+    "carpetaDrive": "Redes Sociales - contenido / GENTLEMEN NIGHT",
+    "driveId": "1sS7yEWWuvBfS_aqtPsPG7BGMRG2yJIT-"
+  },
+  {
+    "titulo": "REEL testosterona.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / GENTLEMEN NIGHT”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "REEL testosterona mp4 Redes Sociales contenido GENTLEMEN NIGHT Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1E7z_jknqexjqVRI4yQ_j1usSk3lCwx3H/view",
+    "carpetaDrive": "Redes Sociales - contenido / GENTLEMEN NIGHT",
+    "driveId": "1E7z_jknqexjqVRI4yQ_j1usSk3lCwx3H"
+  },
+  {
+    "titulo": "Ladies Night.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / LADIES NIGHT”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Ladies Night mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1uZNS4gF0k1MhWtq_zLVzJkEcHb0EKF7E/view",
+    "carpetaDrive": "Redes Sociales - contenido / LADIES NIGHT",
+    "driveId": "1uZNS4gF0k1MhWtq_zLVzJkEcHb0EKF7E"
+  },
+  {
+    "titulo": "podría ser....mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / LADIES NIGHT”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "podría ser mp4 Redes Sociales contenido LADIES NIGHT Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/10JZxq1kO1xPrrF39NM7uPUfGqwr3RthS/view",
+    "carpetaDrive": "Redes Sociales - contenido / LADIES NIGHT",
+    "driveId": "10JZxq1kO1xPrrF39NM7uPUfGqwr3RthS"
+  },
+  {
+    "titulo": "carrusel melatonin.zip",
+    "categoria": "Redes Sociales",
+    "tipo": "ZIP",
+    "descripcion": "ZIP alojado en Google Drive dentro de “Redes Sociales - contenido / MELATONIN PLUS”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "carrusel melatonin zip Redes Sociales contenido PLUS",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1fA66sD5tnxGIQKrpQy_AnGGKTaB2FBST/view",
+    "carpetaDrive": "Redes Sociales - contenido / MELATONIN PLUS",
+    "driveId": "1fA66sD5tnxGIQKrpQy_AnGGKTaB2FBST"
+  },
+  {
+    "titulo": "REEL dormir.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / MELATONIN PLUS”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "REEL dormir mp4 Redes Sociales contenido MELATONIN PLUS Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1bGUL9UDDFGhQJgzYB6AyYDba9Wn-G6bH/view",
+    "carpetaDrive": "Redes Sociales - contenido / MELATONIN PLUS",
+    "driveId": "1bGUL9UDDFGhQJgzYB6AyYDba9Wn-G6bH"
+  },
+  {
+    "titulo": "reel MELATONIN.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / MELATONIN PLUS”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "reel MELATONIN mp4 Redes Sociales contenido PLUS Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1xuSDhDRGkDRARSkJWclcnGamorZAhJdA/view",
+    "carpetaDrive": "Redes Sociales - contenido / MELATONIN PLUS",
+    "driveId": "1xuSDhDRGkDRARSkJWclcnGamorZAhJdA"
+  },
+  {
+    "titulo": "omevia.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / OMEVIA”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "omevia mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1jk9YsOodOj089eVCTLGdYc1PoCPsYu1G/view",
+    "carpetaDrive": "Redes Sociales - contenido / OMEVIA",
+    "driveId": "1jk9YsOodOj089eVCTLGdYc1PoCPsYu1G"
+  },
+  {
+    "titulo": "PREGNENOLONA.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / OMEVIA”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "PREGNENOLONA mp4 Redes Sociales contenido OMEVIA Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/19Nr6T8vJO4ySlCHn7ZqnRBz3PuKaoXyU/view",
+    "carpetaDrive": "Redes Sociales - contenido / OMEVIA",
+    "driveId": "19Nr6T8vJO4ySlCHn7ZqnRBz3PuKaoXyU"
+  },
+  {
+    "titulo": "reel omevia.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / OMEVIA”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "reel omevia mp4 Redes Sociales contenido Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1JfeFNNyPn0PIbSMkMFGnLhabU0dgeNen/view",
+    "carpetaDrive": "Redes Sociales - contenido / OMEVIA",
+    "driveId": "1JfeFNNyPn0PIbSMkMFGnLhabU0dgeNen"
+  },
+  {
+    "titulo": "alivio del dolor.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / PAINLESS NIGHT”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "alivio del dolor mp4 Redes Sociales contenido PAINLESS NIGHT Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1qxNbxM08CZRR9k5Q3Jl3C7SKU7DGWG5u/view",
+    "carpetaDrive": "Redes Sociales - contenido / PAINLESS NIGHT",
+    "driveId": "1qxNbxM08CZRR9k5Q3Jl3C7SKU7DGWG5u"
+  },
+  {
+    "titulo": "alivio el dolor en 30 min.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / PAINLESS NIGHT”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "alivio el dolor en 30 min mp4 Redes Sociales contenido PAINLESS NIGHT Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1SgfBKYAJMZY83du2wBIUI7WzgD5O9uL1/view",
+    "carpetaDrive": "Redes Sociales - contenido / PAINLESS NIGHT",
+    "driveId": "1SgfBKYAJMZY83du2wBIUI7WzgD5O9uL1"
+  },
+  {
+    "titulo": "Dolor Painless.png",
+    "categoria": "Redes Sociales",
+    "tipo": "Imagen",
+    "descripcion": "Imagen alojado en Google Drive dentro de “Redes Sociales - contenido / PAINLESS NIGHT”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Dolor Painless png Redes Sociales contenido NIGHT Imagen",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/13Zbu1Lr_ysNEftHJfUd9wPnTxrsdqnoa/view",
+    "carpetaDrive": "Redes Sociales - contenido / PAINLESS NIGHT",
+    "driveId": "13Zbu1Lr_ysNEftHJfUd9wPnTxrsdqnoa"
+  },
+  {
+    "titulo": "con 1 al día verás los.mp4",
+    "categoria": "Redes Sociales",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / SLIM STYLE”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "con al día verás los mp4 Redes Sociales contenido SLIM STYLE Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1dZPwX8D4moBCE1f29ijtxyfgVM4PFNLm/view",
+    "carpetaDrive": "Redes Sociales - contenido / SLIM STYLE",
+    "driveId": "1dZPwX8D4moBCE1f29ijtxyfgVM4PFNLm"
+  },
+  {
+    "titulo": "Alivio del Dolor.mp4",
+    "categoria": "Videos",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Videos para Estados”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Alivio del Dolor mp4 Videos para Estados Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1PFgNgtiHI3qVLoNmGn-qJ4geWGomc7jb/view",
+    "carpetaDrive": "Videos para Estados",
+    "driveId": "1PFgNgtiHI3qVLoNmGn-qJ4geWGomc7jb"
+  },
+  {
+    "titulo": "Dolor Cronico y Painless Night.mp4",
+    "categoria": "Videos",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Videos para Estados”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Dolor Cronico Painless Night mp4 Videos para Estados Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/12JMDXAdJDIwTcXN77mUXZDrnHh8s_ndi/view",
+    "carpetaDrive": "Videos para Estados",
+    "driveId": "12JMDXAdJDIwTcXN77mUXZDrnHh8s_ndi"
+  },
+  {
+    "titulo": "Linea de Parches.mp4",
+    "categoria": "Videos",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Videos para Estados”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Linea de Parches mp4 Videos para Estados Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1GP5k200Wu8tnDJjMDfIIw0maRJxUEOCA/view",
+    "carpetaDrive": "Videos para Estados",
+    "driveId": "1GP5k200Wu8tnDJjMDfIIw0maRJxUEOCA"
+  },
+  {
+    "titulo": "Los parches transdermicos en el mundo.mp4",
+    "categoria": "Videos",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Videos para Estados”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Los parches transdermicos en el mundo mp4 Videos para Estados Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1qSq-ILSki28uc3ys8ByGeSAGwealSV4g/view",
+    "carpetaDrive": "Videos para Estados",
+    "driveId": "1qSq-ILSki28uc3ys8ByGeSAGwealSV4g"
+  },
+  {
+    "titulo": "Parches de OneMore Superior.mp4",
+    "categoria": "Videos",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Videos para Estados”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Parches de OneMore Superior mp4 Videos para Estados Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1Dbv4WmIckkj6GKfh3o4mRdPGNk02SvGz/view",
+    "carpetaDrive": "Videos para Estados",
+    "driveId": "1Dbv4WmIckkj6GKfh3o4mRdPGNk02SvGz"
+  },
+  {
+    "titulo": "Parches deportistas.mp4",
+    "categoria": "Videos",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Videos para Estados”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Parches deportistas mp4 Videos para Estados Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/185PCuCopwkYoR9522ugyjTndvYiGfAOo/view",
+    "carpetaDrive": "Videos para Estados",
+    "driveId": "185PCuCopwkYoR9522ugyjTndvYiGfAOo"
+  },
+  {
+    "titulo": "Ventajas Parches.mp4",
+    "categoria": "Videos",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Videos para Estados”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Ventajas Parches mp4 Videos para Estados Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1KfvOAVUzTSGtWYVVsIy6kpqYxhcthRUQ/view",
+    "carpetaDrive": "Videos para Estados",
+    "driveId": "1KfvOAVUzTSGtWYVVsIy6kpqYxhcthRUQ"
+  },
+  {
+    "titulo": "GlutaNAD (whatsapp).mp4",
+    "categoria": "GlutaNAD+",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Videos para prospeccion”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "GlutaNAD whatsapp mp4 Videos para prospeccion GlutaNAD+ Video",
+    "recomendacion": "Consulta de producto",
+    "enlace": "https://drive.google.com/file/d/1qtJ5vl11Chq3RZuStkWsvuoz_7p64Fr4/view",
+    "carpetaDrive": "Videos para prospeccion",
+    "driveId": "1qtJ5vl11Chq3RZuStkWsvuoz_7p64Fr4"
+  },
+  {
+    "titulo": "Productos OneMore.mp4",
+    "categoria": "Videos",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Videos para prospeccion”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Productos OneMore mp4 Videos para prospeccion Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1M4LzsDx59t1cQKImZXCIikAx7wweN9c8/view",
+    "carpetaDrive": "Videos para prospeccion",
+    "driveId": "1M4LzsDx59t1cQKImZXCIikAx7wweN9c8"
+  },
+  {
+    "titulo": "Promo Vision Day.mp4",
+    "categoria": "Videos",
+    "tipo": "Video",
+    "descripcion": "Video alojado en Google Drive dentro de “Videos y Flyers - Promos y anuncios importantes”. Acceso directo al archivo específico para consulta del distribuidor.",
+    "keywords": "Promo Vision Day mp4 Videos Flyers Promos anuncios importantes Video",
+    "recomendacion": "Contenido para redes / prospección",
+    "enlace": "https://drive.google.com/file/d/1_AJIgYit3FbKfM-z8iS7tu-gz39oSW7X/view",
+    "carpetaDrive": "Videos y Flyers - Promos y anuncios importantes",
+    "driveId": "1_AJIgYit3FbKfM-z8iS7tu-gz39oSW7X"
+  }
+];
+// ════════════════════════════════════════
+// FIN MATERIALES — no edites más abajo
+// ════════════════════════════════════════
+
+// Categorías con iconos — Cambia o agrega aquí
+const CATEGORIAS = [
+  { nombre: "Productos",       icono: "💊" },
+  { nombre: "Protocolos",      icono: "🧾" },
+  { nombre: "GlutaNAD+",       icono: "🧬" },
+  { nombre: "Negocio",         icono: "💼" },
+  { nombre: "Videos",          icono: "🎬" },
+  { nombre: "Redes Sociales",  icono: "📲" },
+  { nombre: "Imágenes",        icono: "🖼" },
+  { nombre: "English",         icono: "🇺🇸" },
+  { nombre: "Testimonios",     icono: "⭐" },
+  { nombre: "General",         icono: "📁" },
+];
+
+// Diagnósticos — Cambia sugerencias según necesidad
+const DIAGNOSTICOS = {
+  energia: {
+    label: "⚡ Energía y Vitalidad",
+    categoria: "Productos",
+    keywords: ["energía", "vitalidad", "PNG", "B12"],
+    materiales: ["PNG", "B12 Plus"],
+    mensaje: "Busco materiales sobre energía y vitalidad en ONE MORE"
+  },
+  dolor: {
+    label: "🩹 Dolor e Inflamación",
+    categoria: "Protocolos",
+    keywords: ["dolor", "inflamación", "articulaciones"],
+    materiales: ["Protocolo de dolor"],
+    mensaje: "Busco materiales sobre dolor e inflamación en ONE MORE"
+  },
+  peso: {
+    label: "⚖️ Control de Peso",
+    categoria: "Productos",
+    keywords: ["peso", "Slim", "adelgazar"],
+    materiales: ["Slim Style", "Protocolo de control de peso"],
+    mensaje: "Busco materiales sobre control de peso en ONE MORE"
+  },
+  sueno: {
+    label: "🌙 Sueño y Descanso",
+    categoria: "Productos",
+    keywords: ["sueño", "melatonina", "descanso"],
+    materiales: ["Melatonin Plus"],
+    mensaje: "Busco materiales sobre sueño y descanso en ONE MORE"
+  },
+  estres: {
+    label: "🧘 Estrés",
+    categoria: "Productos",
+    keywords: ["estrés", "relajación", "nervioso"],
+    materiales: ["Melatonin Plus", "GlutaNAD+"],
+    mensaje: "Busco materiales sobre manejo del estrés en ONE MORE"
+  },
+  negocio: {
+    label: "💼 Negocio ONE MORE",
+    categoria: "Negocio",
+    keywords: ["negocio", "compensación", "rangos", "ingresos"],
+    materiales: ["Plan de compensación", "Presentación corporativa"],
+    mensaje: "Quiero saber más sobre la oportunidad de negocio de ONE MORE"
+  },
+  info: {
+    label: "ℹ️ Información General",
+    categoria: "General",
+    keywords: ["información", "empresa", "FDA"],
+    materiales: ["Presentación corporativa ONE MORE"],
+    mensaje: "Quiero información general sobre ONE MORE International"
+  }
+};
+
+// Número de WhatsApp — cambia aquí
+const WA_NUMBER = "573126387467";
+
+// ══════════════════════════════════
+// UTILIDADES
+// ══════════════════════════════════
+let activeFilters = { cat: "todos", type: "todos" };
+let searchTerm = "";
+
+function wa(msg) {
+  return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+}
+
+function typeClass(tipo) {
+  const map = {
+    "PDF": "type-pdf",
+    "Video": "type-video",
+    "Presentación": "type-ppt",
+    "Guía": "type-guia",
+    "Protocolo": "type-prot",
+    "Imagen": "type-imagen",
+    "Documento": "type-doc",
+    "ZIP": "type-zip",
+    "Enlace": "type-link"
+  };
+  return map[tipo] || "type-link";
+}
+
+function typeIcon(tipo) {
+  const icons = {
+    "PDF": "📄", "Video": "🎬", "Presentación": "📊",
+    "Guía": "📘", "Protocolo": "🧾", "Imagen": "🖼",
+    "Documento": "📝", "ZIP": "🗜", "Enlace": "🔗"
+  };
+  return icons[tipo] || "📄";
+}
+
+function copyLink(enlace) {
+  navigator.clipboard.writeText(enlace).then(() => showToast("¡Enlace copiado!"));
+}
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2600);
+}
+
+function scrollTo(sel) {
+  document.querySelector(sel)?.scrollIntoView({ behavior: "smooth" });
+}
+
+// ══════════════════════════════════
+// RENDERIZAR TARJETA
+// ══════════════════════════════════
+function renderCard(m, delay = 0) {
+  const kws = m.keywords.split(" ").slice(0, 5).map(k =>
+    `<span class="kw">${k}</span>`
+  ).join("");
+
+
+  return `
+  <div class="card" style="animation-delay:${delay}ms">
+    <div class="card-top">
+      <span class="card-type-badge ${typeClass(m.tipo)}">${typeIcon(m.tipo)} ${m.tipo}</span>
+      <span class="card-cat-badge">${m.categoria}</span>
+    </div>
+    <div class="card-title">${m.titulo}</div>
+    <div class="card-desc">${m.descripcion}</div>
+    <div class="card-keywords">${kws}</div>
+    <div class="card-rec">📁 ${m.carpetaDrive || m.categoria}<br>💡 ${m.recomendacion}</div>
+    <div class="card-actions">
+      <a class="btn btn-gold btn-sm" href="${m.enlace}" target="_blank">Ver archivo</a>
+      <button class="btn btn-ghost btn-sm" onclick="copyLink('${m.enlace}')">📋 Copiar</button>
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════
+// FILTRAR Y MOSTRAR
+// ══════════════════════════════════
+function filterMateriales() {
+  return MATERIALES.filter(m => {
+    const q = searchTerm.toLowerCase();
+    const matchSearch = !q ||
+      m.titulo.toLowerCase().includes(q) ||
+      m.descripcion.toLowerCase().includes(q) ||
+      m.keywords.toLowerCase().includes(q) ||
+      m.categoria.toLowerCase().includes(q) ||
+      m.recomendacion.toLowerCase().includes(q) ||
+      m.tipo.toLowerCase().includes(q);
+
+    const matchCat  = activeFilters.cat  === "todos" || m.categoria === activeFilters.cat;
+    const matchType = activeFilters.type === "todos" || m.tipo === activeFilters.type;
+
+    return matchSearch && matchCat && matchType;
+  });
+}
+
+function renderGrid(gridId, items) {
+  const grid = document.getElementById(gridId);
+  if (!items.length) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🔎</div>
+        <div class="empty-title">Sin resultados</div>
+        <div class="empty-sub">Intenta con otras palabras o cambia los filtros.</div>
+      </div>`;
+    return;
+  }
+  grid.innerHTML = items.map((m, i) => renderCard(m, i * 40)).join("");
+}
+
+function handleSearch() {
+  const input = document.getElementById("searchInput");
+  searchTerm = input.value.trim();
+  const clearBtn = document.getElementById("clearBtn");
+  clearBtn.classList.toggle("visible", searchTerm.length > 0);
+
+  const filtered = filterMateriales();
+  document.getElementById("resultCount").textContent = filtered.length;
+  renderGrid("cardsGrid", filtered);
+}
+
+function clearSearch() {
+  document.getElementById("searchInput").value = "";
+  searchTerm = "";
+  document.getElementById("clearBtn").classList.remove("visible");
+  handleSearch();
+}
+
+function setFilter(type, value, el) {
+  activeFilters[type] = value;
+  const group = type === "cat" ? "catFilters" : "typeFilters";
+  document.querySelectorAll(`#${group} .filter-chip`).forEach(c => c.classList.remove("active"));
+  el.classList.add("active");
+  handleSearch();
+}
+
+// ══════════════════════════════════
+// CATEGORÍAS
+// ══════════════════════════════════
+function buildCatFilters() {
+  const row = document.getElementById("catFilters");
+  CATEGORIAS.forEach(c => {
+    const count = MATERIALES.filter(m => m.categoria === c.nombre).length;
+    if (count === 0) return;
+    const btn = document.createElement("button");
+    btn.className = "filter-chip";
+    btn.dataset.cat = c.nombre;
+    btn.textContent = `${c.icono} ${c.nombre}`;
+    btn.onclick = () => setFilter("cat", c.nombre, btn);
+    row.appendChild(btn);
+  });
+}
+
+function buildCatsGrid() {
+  const grid = document.getElementById("catsGrid");
+  grid.innerHTML = CATEGORIAS.map(c => {
+    const count = MATERIALES.filter(m => m.categoria === c.nombre).length;
+    return `
+    <div class="cat-card" onclick="filterByCat('${c.nombre}')">
+      <div class="cat-icon">${c.icono}</div>
+      <div class="cat-name">${c.nombre}</div>
+      <div class="cat-count">${count} material${count !== 1 ? "es" : ""}</div>
+    </div>`;
+  }).join("");
+}
+
+function filterByCat(nombre) {
+  scrollTo("#buscar");
+  setTimeout(() => {
+    activeFilters.cat = nombre;
+    document.querySelectorAll("#catFilters .filter-chip").forEach(c => {
+      c.classList.toggle("active", c.dataset.cat === nombre);
+    });
+    handleSearch();
+  }, 400);
+}
+
+// ══════════════════════════════════
+// DIAGNÓSTICO
+// ══════════════════════════════════
+function showDiag(need, el) {
+  document.querySelectorAll(".diag-btn").forEach(b => b.classList.remove("active"));
+  el.classList.add("active");
+
+  const d = DIAGNOSTICOS[need];
+  const items = d.materiales.map(m =>
+    `<div class="diag-item"><strong>📄 Material:</strong> ${m}</div>`
+  ).join("");
+
+  document.getElementById("diagResult").innerHTML = `
+    <div class="diag-result-title">${d.label}</div>
+    <div class="diag-items">
+      <div class="diag-item"><strong>📂 Categoría:</strong> ${d.categoria}</div>
+      <div class="diag-item"><strong>🔍 Buscar:</strong> ${d.keywords.join(", ")}</div>
+      ${items}
+    </div>
+    <div class="diag-actions">
+      <button class="btn btn-gold btn-sm" onclick="filterByCat('${d.categoria}')">Ver categoría</button>
+      <a class="btn btn-wa btn-sm" href="${wa(d.mensaje)}" target="_blank">💬 Consultar por WhatsApp</a>
+    </div>
+  `;
+  document.getElementById("diagResult").classList.add("visible");
+}
+
+// ══════════════════════════════════
+// INIT
+// ══════════════════════════════════
+window.addEventListener("DOMContentLoaded", () => {
+  buildCatFilters();
+  buildCatsGrid();
+
+  const all = filterMateriales();
+  document.getElementById("resultCount").textContent = all.length;
+  renderGrid("cardsGrid", all);
+  renderGrid("allCardsGrid", MATERIALES);
+});
+</script>
+</body>
+</html>

@@ -25,8 +25,6 @@
     --muted:      #7A7880;
     --radius:     14px;
     --shadow:     0 8px 40px rgba(0,0,0,0.6);
-    /* WhatsApp — cambia el número aquí */
-    --wa-number:  "573126387467";
     /* Drive — cambia el link aquí */
     --drive-link: "https://drive.google.com/drive/folders/1Wp-sJA50Le6g3mI_rdxj1soE7nu-yw-V";
   }
@@ -162,12 +160,6 @@
   }
   .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
 
-  .btn-wa {
-    background: #1DB954;
-    color: white;
-    font-weight: 600;
-  }
-  .btn-wa:hover { background: #17a34a; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(29,185,84,0.3); }
 
   .btn-sm {
     padding: 9px 18px;
@@ -652,6 +644,133 @@
     white-space: nowrap;
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ══════════════════════════════
+     MODO IMPERIO UI — Dashboard Premium
+  ══════════════════════════════ */
+  .imperio-panel {
+    position: sticky;
+    top: 74px;
+    z-index: 20;
+    margin: -44px auto 54px;
+    background: rgba(30,30,38,0.82);
+    backdrop-filter: blur(18px);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 18px;
+    box-shadow: var(--shadow);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .imperio-stat {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 18px;
+    padding: 16px;
+  }
+
+  .imperio-stat strong {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.75rem;
+    color: var(--gold-light);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .imperio-stat span {
+    color: var(--muted);
+    font-size: .78rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+
+  .quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: -12px 0 28px;
+  }
+
+  .quick-action {
+    border: 1px solid var(--border);
+    background: rgba(201,168,76,0.07);
+    color: var(--gold-light);
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .82rem;
+    cursor: pointer;
+    transition: all .22s ease;
+  }
+
+  .quick-action:hover {
+    background: rgba(201,168,76,0.16);
+    transform: translateY(-2px);
+  }
+
+  .hero {
+    min-height: 88vh;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(201,168,76,.12), transparent 28%),
+      radial-gradient(circle at 80% 10%, rgba(42,95,143,.22), transparent 30%);
+  }
+
+  .hero-sub {
+    max-width: 680px;
+  }
+
+  .card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,.10), transparent 32%);
+    opacity: 0;
+    transition: opacity .22s ease;
+    pointer-events: none;
+  }
+
+  .card:hover::before {
+    opacity: 1;
+  }
+
+  .btn-gold {
+    box-shadow: 0 10px 30px rgba(201,168,76,.18);
+  }
+
+  .btn-muted {
+    background: rgba(255,255,255,.06);
+    color: var(--text);
+    border: 1px solid rgba(255,255,255,.1);
+  }
+
+  .btn-muted:hover {
+    border-color: var(--gold-dim);
+    color: var(--gold-light);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 780px) {
+    .imperio-panel {
+      position: static;
+      margin: 20px 0 38px;
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 460px) {
+    .imperio-panel {
+      grid-template-columns: 1fr;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -695,10 +814,6 @@
       <a class="btn btn-gold" href="https://drive.google.com/drive/folders/1Wp-sJA50Le6g3mI_rdxj1soE7nu-yw-V" target="_blank">
         📁 Abrir carpeta de Drive
       </a>
-      <!-- ▼ Cambia el número de WhatsApp aquí -->
-      <a class="btn btn-wa" href="https://wa.me/573126387467?text=Hola%20José%2C%20quiero%20consultar%20sobre%20los%20materiales%20de%20ONE%20MORE" target="_blank">
-        💬 Consultar por WhatsApp
-      </a>
       <button class="btn btn-outline" onclick="scrollTo('#buscar')">🔍 Buscar materiales</button>
     </div>
   </div>
@@ -712,12 +827,47 @@
 <div class="divider"></div>
 
 <!-- ══════════════════════════════
+     PANEL IMPERIO UI
+══════════════════════════════ -->
+<section style="padding:0;background:var(--bg2);">
+  <div class="container">
+    <div class="imperio-panel">
+      <div class="imperio-stat">
+        <strong id="imperioTotal">0</strong>
+        <span>Recursos activos</span>
+      </div>
+      <div class="imperio-stat">
+        <strong id="imperioCats">0</strong>
+        <span>Categorías</span>
+      </div>
+      <div class="imperio-stat">
+        <strong id="imperioTipos">0</strong>
+        <span>Tipos de archivo</span>
+      </div>
+      <div class="imperio-stat">
+        <strong>Drive</strong>
+        <span>Acceso directo</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
      BUSCADOR AVANZADO
 ══════════════════════════════ -->
 <section id="buscar">
   <div class="container">
     <span class="section-label">Búsqueda inteligente</span>
     <h2 class="section-title">Encuentra tu material</h2>
+
+    <div class="quick-actions">
+      <button class="quick-action" onclick="filterByCat('Productos')">💊 Productos</button>
+      <button class="quick-action" onclick="filterByCat('Negocio')">💼 Negocio</button>
+      <button class="quick-action" onclick="filterByCat('Videos')">🎬 Videos</button>
+      <button class="quick-action" onclick="filterByCat('Redes Sociales')">📲 Redes sociales</button>
+      <button class="quick-action" onclick="filterByCat('GlutaNAD+')">🧬 GlutaNAD+</button>
+      <button class="quick-action" onclick="limpiarTodo()">✨ Ver todo</button>
+    </div>
 
     <!-- Caja de búsqueda -->
     <div class="search-box">
@@ -841,10 +991,9 @@
 
 <!-- FOOTER -->
 <footer>
-  <p>✦ ONE MORE International · Distribuidor <strong style="color:var(--gold)">José Lugo</strong></p>
+  <p>✦ ONE MORE International · Biblioteca Inteligente de Consulta</p>
   <p style="margin-top:8px">
-    📞 <a href="https://wa.me/573126387467">+57 312 638 7467</a> &nbsp;·&nbsp;
-    📁 <a href="https://drive.google.com/drive/folders/1Wp-sJA50Le6g3mI_rdxj1soE7nu-yw-V" target="_blank">Carpeta Drive</a>
+    📁 <a href="https://drive.google.com/drive/folders/1Wp-sJA50Le6g3mI_rdxj1soE7nu-yw-V" target="_blank">Carpeta principal de Google Drive</a>
   </p>
 </footer>
 
@@ -860,7 +1009,7 @@
        tipo        → PDF | Video | Presentación | Guía | Protocolo | Imagen | Documento | Enlace
        descripcion → Texto breve (máx 2 líneas)
        keywords    → Palabras para el buscador, separadas por espacio
-       recomendacion → Cuándo o a quién enviar este material
+       recomendacion → Uso sugerido del material
        enlace      → URL completo de Google Drive
 ══════════════════════════════════════════════════════════════ -->
 <script>
@@ -2075,8 +2224,26 @@ const DIAGNOSTICOS = {
   }
 };
 
-// Número de WhatsApp — cambia aquí
-const WA_NUMBER = "573126387467";
+
+
+function limpiarTodo() {
+  activeFilters = { cat: "todos", type: "todos" };
+  searchTerm = "";
+  const input = document.getElementById("searchInput");
+  if (input) input.value = "";
+  document.querySelectorAll(".filter-chip").forEach(chip => chip.classList.remove("active"));
+  document.querySelector('#catFilters .filter-chip[data-cat="todos"]')?.classList.add("active");
+  document.querySelector('#typeFilters .filter-chip[data-type="todos"]')?.classList.add("active");
+  handleSearch();
+}
+
+function actualizarImperioStats() {
+  const cats = new Set(MATERIALES.map(m => m.categoria));
+  const tipos = new Set(MATERIALES.map(m => m.tipo));
+  document.getElementById("imperioTotal").textContent = MATERIALES.length;
+  document.getElementById("imperioCats").textContent = cats.size;
+  document.getElementById("imperioTipos").textContent = tipos.size;
+}
 
 // ══════════════════════════════════
 // UTILIDADES
@@ -2084,9 +2251,6 @@ const WA_NUMBER = "573126387467";
 let activeFilters = { cat: "todos", type: "todos" };
 let searchTerm = "";
 
-function wa(msg) {
-  return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
-}
 
 function typeClass(tipo) {
   const map = {
@@ -2276,7 +2440,6 @@ function showDiag(need, el) {
     </div>
     <div class="diag-actions">
       <button class="btn btn-gold btn-sm" onclick="filterByCat('${d.categoria}')">Ver categoría</button>
-      <a class="btn btn-wa btn-sm" href="${wa(d.mensaje)}" target="_blank">💬 Consultar por WhatsApp</a>
     </div>
   `;
   document.getElementById("diagResult").classList.add("visible");
@@ -2286,6 +2449,7 @@ function showDiag(need, el) {
 // INIT
 // ══════════════════════════════════
 window.addEventListener("DOMContentLoaded", () => {
+  actualizarImperioStats();
   buildCatFilters();
   buildCatsGrid();
 

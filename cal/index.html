@@ -93,22 +93,59 @@
 <body>
 <main class="app">
   <section class="hero">
-    <div class="badge">ONE MORE · Calculadora Global V5</div>
-    <h1>Calculadora con carrito, BCV, TRM, LATAM y patologías</h1>
+    <div class="badge">ONE MORE · Calculadora Global V6</div>
+    <h1>Calculadora global con carrito, países y patologías</h1>
     <p class="sub">Agrega productos o selecciona una patología para cargar automáticamente la combinación sugerida y calcular precio, QV y envío.</p>
   </section>
 
   <section class="card">
     <div class="grid">
       <div><label>País / Moneda local</label><select id="country">
-        <option value="VE">Venezuela · BCV · VES</option><option value="CO">Colombia · TRM · COP</option><option value="MX">México · MXN</option><option value="PE">Perú · PEN</option><option value="CL">Chile · CLP</option><option value="AR">Argentina · ARS</option><option value="EC">Ecuador · USD</option><option value="PA">Panamá · USD</option><option value="DO">República Dominicana · DOP</option><option value="CR">Costa Rica · CRC</option>
+
+        <option value="US">Estados Unidos · USD</option>
+        <option value="VE">Venezuela · BCV · VES</option>
+        <option value="MX">México · MXN</option>
+        <option value="CO">Colombia · TRM · COP</option>
+        <option value="PE">Perú · PEN</option>
+        <option value="EC">Ecuador · USD</option>
+        <option value="DO">República Dominicana · DOP</option>
+        <option value="BR">Brasil · BRL</option>
+        <option value="TR">Turquía · TRY</option>
+        <option value="DE">Alemania · EUR</option>
+        <option value="FR">Francia · EUR</option>
+        <option value="IT">Italia · EUR</option>
+        <option value="GB">Inglaterra / Reino Unido · GBP</option>
+        <option value="ES">España · EUR</option>
+        <option value="PT">Portugal · EUR</option>
+        <option value="NL">Países Bajos · EUR</option>
+        <option value="BE">Bélgica · EUR</option>
+        <option value="DK">Dinamarca · DKK</option>
+        <option value="SE">Suecia · SEK</option>
+        <option value="BG">Bulgaria · BGN</option>
+        <option value="MK">Macedonia · MKD</option>
+        <option value="RO">Rumania · RON</option>
+        <option value="AZ">Azerbaiyán · AZN</option>
+        <option value="KZ">Kazajistán · KZT</option>
+        <option value="KG">Kirguistán · KGS</option>
+        <option value="TM">Turkmenistán · TMT</option>
+        <option value="UZ">Uzbekistán · UZS</option>
+        <option value="IN">India · INR</option>
+        <option value="ID">Indonesia · IDR</option>
+        <option value="PK">Pakistán · PKR</option>
+        <option value="MN">Mongolia · MNT</option>
+        <option value="BD">Bangladesh · BDT</option>
+        <option value="GE">Georgia · GEL</option>
+        <option value="JO">Jordania · JOD</option>
+        <option value="NG">Nigeria · NGN</option>
+        <option value="TN">Túnez · TND</option>
+        <option value="MA">Marruecos · MAD</option>
       </select></div>
       <div class="rate-top">
         <div><div class="rate-label">Tasa usada</div><div class="rate-value" id="rateText">Cargando...</div><div class="rate-meta" id="rateMeta">Selecciona país o actualiza tasa.</div><div class="error" id="rateError">No se pudo cargar la tasa automática. Usa la tasa manual.</div></div>
         <div class="source-pill" id="sourcePill">Fuente: automática</div>
       </div>
       <div class="row"><button class="btn btn-gold" onclick="fetchRate()">Actualizar tasa</button><button class="btn btn-dark" onclick="useManualRate()">Usar tasa manual</button></div>
-      <div class="mini"><div>Venezuela<strong>BCV</strong></div><div>Colombia<strong>TRM del día</strong></div><div>LATAM<strong>Tasa internacional</strong></div></div>
+      <div class="mini"><div>Venezuela<strong>BCV</strong></div><div>Colombia<strong>TRM</strong></div><div>Global<strong>Moneda local</strong></div></div>
     </div>
   </section>
 
@@ -158,11 +195,49 @@
       <p class="note"><b>Aviso:</b> esta herramienta es informativa y comercial. No sustituye diagnóstico, tratamiento ni recomendación médica profesional.</p>
     </div>
   </section>
-  <div class="footer">Herramienta comercial para distribuidores One More · Global V5</div>
+  <div class="footer">Herramienta comercial para distribuidores One More · Global V6</div>
 </main>
 
 <script>
-const countries={VE:{name:"Venezuela",currency:"VES",symbol:"Bs",api:"venezuela"},CO:{name:"Colombia",currency:"COP",symbol:"COP",api:"colombia"},MX:{name:"México",currency:"MXN",symbol:"MXN",api:"global"},PE:{name:"Perú",currency:"PEN",symbol:"S/",api:"global"},CL:{name:"Chile",currency:"CLP",symbol:"CLP",api:"global"},AR:{name:"Argentina",currency:"ARS",symbol:"ARS",api:"global"},EC:{name:"Ecuador",currency:"USD",symbol:"USD",api:"fixed"},PA:{name:"Panamá",currency:"USD",symbol:"USD",api:"fixed"},DO:{name:"República Dominicana",currency:"DOP",symbol:"DOP",api:"global"},CR:{name:"Costa Rica",currency:"CRC",symbol:"CRC",api:"global"}};
+const countries={
+US:{name:"Estados Unidos",currency:"USD",symbol:"USD",api:"fixed"},
+VE:{name:"Venezuela",currency:"VES",symbol:"Bs",api:"venezuela"},
+MX:{name:"México",currency:"MXN",symbol:"MXN",api:"global"},
+CO:{name:"Colombia",currency:"COP",symbol:"COP",api:"colombia"},
+PE:{name:"Perú",currency:"PEN",symbol:"S/",api:"global"},
+EC:{name:"Ecuador",currency:"USD",symbol:"USD",api:"fixed"},
+DO:{name:"República Dominicana",currency:"DOP",symbol:"DOP",api:"global"},
+BR:{name:"Brasil",currency:"BRL",symbol:"R$",api:"global"},
+TR:{name:"Turquía",currency:"TRY",symbol:"TRY",api:"global"},
+DE:{name:"Alemania",currency:"EUR",symbol:"EUR",api:"global"},
+FR:{name:"Francia",currency:"EUR",symbol:"EUR",api:"global"},
+IT:{name:"Italia",currency:"EUR",symbol:"EUR",api:"global"},
+GB:{name:"Inglaterra / Reino Unido",currency:"GBP",symbol:"GBP",api:"global"},
+ES:{name:"España",currency:"EUR",symbol:"EUR",api:"global"},
+PT:{name:"Portugal",currency:"EUR",symbol:"EUR",api:"global"},
+NL:{name:"Países Bajos",currency:"EUR",symbol:"EUR",api:"global"},
+BE:{name:"Bélgica",currency:"EUR",symbol:"EUR",api:"global"},
+DK:{name:"Dinamarca",currency:"DKK",symbol:"DKK",api:"global"},
+SE:{name:"Suecia",currency:"SEK",symbol:"SEK",api:"global"},
+BG:{name:"Bulgaria",currency:"BGN",symbol:"BGN",api:"global"},
+MK:{name:"Macedonia",currency:"MKD",symbol:"MKD",api:"global"},
+RO:{name:"Rumania",currency:"RON",symbol:"RON",api:"global"},
+AZ:{name:"Azerbaiyán",currency:"AZN",symbol:"AZN",api:"global"},
+KZ:{name:"Kazajistán",currency:"KZT",symbol:"KZT",api:"global"},
+KG:{name:"Kirguistán",currency:"KGS",symbol:"KGS",api:"global"},
+TM:{name:"Turkmenistán",currency:"TMT",symbol:"TMT",api:"global"},
+UZ:{name:"Uzbekistán",currency:"UZS",symbol:"UZS",api:"global"},
+IN:{name:"India",currency:"INR",symbol:"INR",api:"global"},
+ID:{name:"Indonesia",currency:"IDR",symbol:"IDR",api:"global"},
+PK:{name:"Pakistán",currency:"PKR",symbol:"PKR",api:"global"},
+MN:{name:"Mongolia",currency:"MNT",symbol:"MNT",api:"global"},
+BD:{name:"Bangladesh",currency:"BDT",symbol:"BDT",api:"global"},
+GE:{name:"Georgia",currency:"GEL",symbol:"GEL",api:"global"},
+JO:{name:"Jordania",currency:"JOD",symbol:"JOD",api:"global"},
+NG:{name:"Nigeria",currency:"NGN",symbol:"NGN",api:"global"},
+TN:{name:"Túnez",currency:"TND",symbol:"TND",api:"global"},
+MA:{name:"Marruecos",currency:"MAD",symbol:"MAD",api:"global"}
+};
 const products=[
 {name:"Painless Night Glu",aliases:["PNG","Painless","Indoloro"],qv:50,distribuidor:64,publico:80},
 {name:"Omevia",aliases:["Omevia"],qv:32,distribuidor:39,publico:50},

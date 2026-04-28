@@ -98,13 +98,79 @@
     .ve-rate-card{cursor:pointer;font-family:inherit}
     .ve-rate-card.active{background:linear-gradient(135deg,rgba(214,180,106,.28),rgba(248,216,139,.16));border-color:var(--gold);box-shadow:0 0 0 2px rgba(214,180,106,.18)}
 
+  
+    .btn-share{
+      background:linear-gradient(135deg,#25D366,#7CFF9B);
+      color:#031006;
+      margin-top:14px;
+    }
+
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
+
+
+function shareBudgetWhatsApp(){
+  calculate();
+
+  const rate = Number(manualRate.value || currentRate || 0);
+  if(!rate){
+    alert("Primero carga o escribe la tasa.");
+    return;
+  }
+
+  if(!cart || cart.length === 0){
+    alert("Agrega productos al carrito antes de compartir el presupuesto.");
+    return;
+  }
+
+  const c = getCountry();
+  let subtotal = 0;
+  let totalQV = 0;
+
+  const itemsText = cart.map(item => {
+    const lineTotal = item.unit * item.qty;
+    const lineQV = item.qv * item.qty;
+    subtotal += lineTotal;
+    totalQV += lineQV;
+    return `• ${item.name} x${item.qty} (${item.type}) = ${moneyUSD(lineTotal)} | QV ${lineQV}`;
+  }).join("\n");
+
+  const shipping = shippingByQV(totalQV);
+  const totalUsd = subtotal + shipping;
+  const totalLocal = totalUsd * rate;
+  const source = document.getElementById("sourcePill")?.textContent?.replace("Fuente: ","") || "Tasa seleccionada";
+
+  const msg =
+`PRESUPUESTO ONE MORE
+
+País: ${c.name}
+Moneda: ${c.currency}
+Tasa usada: ${rate.toFixed(2)}
+Referencia: ${source}
+
+PRODUCTOS:
+${itemsText}
+
+QV total: ${totalQV}
+Subtotal: ${moneyUSD(subtotal)}
+Envío: ${shipping === 0 ? "GRATIS" : moneyUSD(shipping)}
+
+TOTAL USD: ${moneyUSD(totalUsd)}
+TOTAL ${c.currency}: ${moneyLocal(totalLocal)}
+
+Presupuesto referencial sujeto a disponibilidad y actualización de tasa.`;
+
+  const url = "https://wa.me/?text=" + encodeURIComponent(msg);
+  window.open(url, "_blank");
+}
+
+</script>
 </head>
 <body>
 <main class="app">
   <section class="hero">
-    <div class="badge">ONE MORE · Calculadora Global V10</div>
-    <h1>Calculadora global con tasas seleccionables</h1>
+    <div class="badge">ONE MORE · Calculadora Global V12</div>
+    <h1>Calculadora One More con presupuesto por WhatsApp</h1>
     <p class="sub">Agrega productos o selecciona una patología para cargar automáticamente la combinación sugerida y calcular precio, QV y envío.</p>
   </section>
 
@@ -220,11 +286,12 @@
       <div class="shipping-box"><div class="shipping-title">Envíos según QV del pedido</div><div class="shipping-grid">
         <div class="ship-item" id="ship1">De 0 a 99 QV<strong>$12</strong></div><div class="ship-item" id="ship2">De 100 a 149 QV<strong>$10</strong></div><div class="ship-item" id="ship3">De 150 a 199 QV<strong>$8</strong></div><div class="ship-item" id="ship4">De 200 a 299 QV<strong>$6</strong></div><div class="ship-item" id="ship5">De 300 QV en adelante<strong>GRATIS</strong></div>
       </div></div>
+      <button class="btn btn-capture" type="button" onclick="shareBudgetWhatsApp()">Compartir presupuesto por WhatsApp</button>
       <button class="brand-btn" type="button">ONEMORE</button>
       <p class="note"><b>Aviso:</b> esta herramienta es informativa y comercial. No sustituye diagnóstico, tratamiento ni recomendación médica profesional.</p>
     </div>
   </section>
-  <div class="footer">Herramienta comercial para distribuidores One More · Global V10</div>
+  <div class="footer">Herramienta comercial para distribuidores One More · Global V12</div>
 </main>
 
 <script>
@@ -436,6 +503,64 @@ productSelect.addEventListener("change",()=>{updateUsdPrice();calculate()});pric
 manualRate.addEventListener("input",()=>{if(Number(manualRate.value)>0)currentRate=Number(manualRate.value);calculate()});
 mode.addEventListener("change",updateMode);conditionSelect.addEventListener("change",calculate);treatmentPriceType.addEventListener("change",calculate);
 renderCart();updateTreatmentInfo();updateMode();updateVenezuelaRateVisibility();markSelectedVenezuelaRate();detectCountry();
+
+
+
+function shareBudgetWhatsApp(){
+  calculate();
+
+  const rate = Number(manualRate.value || currentRate || 0);
+  if(!rate){
+    alert("Primero carga o escribe la tasa.");
+    return;
+  }
+
+  if(!cart || cart.length === 0){
+    alert("Agrega productos al carrito antes de compartir el presupuesto.");
+    return;
+  }
+
+  const c = getCountry();
+  let subtotal = 0;
+  let totalQV = 0;
+
+  const itemsText = cart.map(item => {
+    const lineTotal = item.unit * item.qty;
+    const lineQV = item.qv * item.qty;
+    subtotal += lineTotal;
+    totalQV += lineQV;
+    return `• ${item.name} x${item.qty} (${item.type}) = ${moneyUSD(lineTotal)} | QV ${lineQV}`;
+  }).join("\n");
+
+  const shipping = shippingByQV(totalQV);
+  const totalUsd = subtotal + shipping;
+  const totalLocal = totalUsd * rate;
+  const source = document.getElementById("sourcePill")?.textContent?.replace("Fuente: ","") || "Tasa seleccionada";
+
+  const msg =
+`PRESUPUESTO ONE MORE
+
+País: ${c.name}
+Moneda: ${c.currency}
+Tasa usada: ${rate.toFixed(2)}
+Referencia: ${source}
+
+PRODUCTOS:
+${itemsText}
+
+QV total: ${totalQV}
+Subtotal: ${moneyUSD(subtotal)}
+Envío: ${shipping === 0 ? "GRATIS" : moneyUSD(shipping)}
+
+TOTAL USD: ${moneyUSD(totalUsd)}
+TOTAL ${c.currency}: ${moneyLocal(totalLocal)}
+
+Presupuesto referencial sujeto a disponibilidad y actualización de tasa.`;
+
+  const url = "https://wa.me/?text=" + encodeURIComponent(msg);
+  window.open(url, "_blank");
+}
+
 </script>
 </body>
 </html>

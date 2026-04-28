@@ -88,13 +88,23 @@
       .card{padding:12px}
       .rate-value{font-size:25px}
     }
+  
+    .ve-rate-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+    .ve-rate-card{background:#070707;border:1px solid rgba(214,180,106,.25);border-radius:14px;padding:10px;text-align:center;font-size:11px;color:var(--muted)}
+    .ve-rate-card strong{display:block;color:var(--gold2);font-size:15px;margin-top:4px}
+    @media(max-width:640px){.ve-rate-grid{grid-template-columns:1fr 1fr}}
+
+  
+    .ve-rate-card{cursor:pointer;font-family:inherit}
+    .ve-rate-card.active{background:linear-gradient(135deg,rgba(214,180,106,.28),rgba(248,216,139,.16));border-color:var(--gold);box-shadow:0 0 0 2px rgba(214,180,106,.18)}
+
   </style>
 </head>
 <body>
 <main class="app">
   <section class="hero">
-    <div class="badge">ONE MORE · Calculadora Global V6</div>
-    <h1>Calculadora global con carrito, países y patologías</h1>
+    <div class="badge">ONE MORE · Calculadora Global V10</div>
+    <h1>Calculadora global con tasas seleccionables</h1>
     <p class="sub">Agrega productos o selecciona una patología para cargar automáticamente la combinación sugerida y calcular precio, QV y envío.</p>
   </section>
 
@@ -140,6 +150,25 @@
         <option value="TN">Túnez · TND</option>
         <option value="MA">Marruecos · MAD</option>
       </select></div>
+
+      <div id="venezuelaRateBox" style="display:none">
+        <label>Tipo de tasa Venezuela</label>
+        <select id="venezuelaRateType">
+          <option value="bcv">BCV oficial / TRM diaria</option>
+          <option value="banco">Banco / subasta operativa</option>
+          <option value="kontigo">Kontigo / USDC</option>
+          <option value="usdt">USDT / mercado</option>
+        </select>
+        <p class="note" style="margin-top:8px">
+          Para Venezuela puedes calcular con BCV oficial, mesa bancaria o mercado USDT. Si una fuente externa no carga, usa la tasa manual.
+        </p>
+        <div class="ve-rate-grid" id="venezuelaRateCards">
+          <button type="button" class="ve-rate-card" data-rate-type="bcv" onclick="selectVenezuelaRate('bcv')">BCV<strong>480</strong></button>
+          <button type="button" class="ve-rate-card" data-rate-type="banco" onclick="selectVenezuelaRate('banco')">Banco / Subasta<strong>520</strong></button>
+          <button type="button" class="ve-rate-card" data-rate-type="kontigo" onclick="selectVenezuelaRate('kontigo')">Kontigo<strong>580</strong></button>
+          <button type="button" class="ve-rate-card" data-rate-type="usdt" onclick="selectVenezuelaRate('usdt')">USDT<strong>650</strong></button>
+        </div>
+      </div>
       <div class="rate-top">
         <div><div class="rate-label">Tasa usada</div><div class="rate-value" id="rateText">Cargando...</div><div class="rate-meta" id="rateMeta">Selecciona país o actualiza tasa.</div><div class="error" id="rateError">No se pudo cargar la tasa automática. Usa la tasa manual.</div></div>
         <div class="source-pill" id="sourcePill">Fuente: automática</div>
@@ -195,7 +224,7 @@
       <p class="note"><b>Aviso:</b> esta herramienta es informativa y comercial. No sustituye diagnóstico, tratamiento ni recomendación médica profesional.</p>
     </div>
   </section>
-  <div class="footer">Herramienta comercial para distribuidores One More · Global V6</div>
+  <div class="footer">Herramienta comercial para distribuidores One More · Global V10</div>
 </main>
 
 <script>
@@ -262,10 +291,123 @@ function moneyUSD(v){return "$"+Number(v).toLocaleString("es-VE",{minimumFractio
 function moneyLocal(v){const c=getCountry();return (c.currency==="USD"?"USD":c.symbol)+" "+Number(v).toLocaleString("es-VE",{minimumFractionDigits:2,maximumFractionDigits:2})}
 function shippingByQV(qv){if(qv>=300)return 0;if(qv>=200)return 6;if(qv>=150)return 8;if(qv>=100)return 10;return 12}
 function highlightShipping(qv){["ship1","ship2","ship3","ship4","ship5"].forEach(id=>document.getElementById(id)?.classList.remove("ship-active"));let id="ship1";if(qv>=300)id="ship5";else if(qv>=200)id="ship4";else if(qv>=150)id="ship3";else if(qv>=100)id="ship2";document.getElementById(id)?.classList.add("ship-active")}
-function setRate(rate,source){const c=getCountry();currentRate=Number(rate);manualRate.value=Number(rate).toFixed(2);rateText.textContent=c.currency==="USD"?"1.00 USD":`${c.symbol} ${Number(rate).toFixed(2)}`;rateMeta.textContent=`${c.name} · ${source} · Actualizado: ${new Date().toLocaleString("es-VE")}`;sourcePill.textContent="Fuente: "+source;rateError.style.display="none";calculate()}
+function setRate(rate,source){const c=getCountry();currentRate=Number(rate);manualRate.value=Number(rate).toFixed(2);rateText.textContent=c.currency==="USD"?"1.00 USD":`${c.symbol} ${Number(rate).toFixed(2)}`;rateMeta.textContent=`${c.name} · ${source} · Actualizado: ${new Date().toLocaleString("es-VE")}`;sourcePill.textContent="Fuente: "+source;rateError.style.display="none";calculate();markSelectedVenezuelaRate?.()}
 async function fetchJson(url){const r=await fetch(url);if(!r.ok)throw new Error("Error API");return await r.json()}
-async function fetchRate(){const c=getCountry();rateError.style.display="none";rateText.textContent="Cargando...";rateMeta.textContent="Consultando tasa automática...";try{if(c.api==="fixed"){setRate(1,"Dolarización");return} if(c.api==="venezuela"){try{const d=await fetchJson("https://bcv-api.rafnixg.dev/rates/");const rate=Number(d?.USD?.rate||d?.usd?.rate||d?.dolar?.rate);if(rate&&!isNaN(rate)){setRate(rate,"BCV");return}}catch(e){} const b=await fetchJson("https://ve.dolarapi.com/v1/dolares/oficial");const rate=Number(b?.promedio||b?.price||b?.valor);if(!rate)throw new Error();setRate(rate,"BCV / Oficial");return} if(c.api==="colombia"){try{const d=await fetchJson("https://trm-colombia.vercel.app/?date=today");const rate=Number(d?.data?.value||d?.value||d?.trm);if(rate&&!isNaN(rate)){setRate(rate,"TRM Colombia");return}}catch(e){} const b=await fetchJson("https://open.er-api.com/v6/latest/USD");setRate(Number(b?.rates?.COP),"TRM / Referencial");return} const g=await fetchJson("https://open.er-api.com/v6/latest/USD");setRate(Number(g?.rates?.[c.currency]),"Tasa internacional")}catch(e){currentRate=Number(manualRate.value)||currentRate;rateText.textContent=currentRate?`${c.symbol} ${Number(currentRate).toFixed(2)}`:"Manual";rateMeta.textContent="No se pudo cargar tasa automática para "+c.name+".";rateError.style.display="block";calculate()}}
+async function fetchRate(){
+  const c=getCountry();
+  rateError.style.display="none";
+  rateText.textContent="Cargando...";
+  rateMeta.textContent="Consultando tasa automática...";
+
+  const referenciasVE = {
+    bcv: {valor:480, fuente:"BCV oficial / TRM diaria"},
+    banco: {valor:520, fuente:"Banco / subasta operativa"},
+    kontigo: {valor:580, fuente:"Kontigo / USDC"},
+    usdt: {valor:650, fuente:"USDT / mercado"}
+  };
+
+  try{
+    if(c.api==="fixed"){
+      setRate(1,"Dolarización");
+      return;
+    }
+
+    if(countrySelect.value==="VE"){
+      const rateType = document.getElementById("venezuelaRateType")?.value || "bcv";
+
+      if(rateType==="bcv"){
+        try{
+          const b=await fetchJson("https://ve.dolarapi.com/v1/dolares/oficial");
+          const rate=Number(b?.promedio||b?.price||b?.valor);
+          if(rate && !isNaN(rate)){
+            setRate(rate,"BCV oficial / TRM diaria");
+            return;
+          }
+        }catch(e){}
+        setRate(referenciasVE.bcv.valor, referenciasVE.bcv.fuente + " · referencia editable");
+        return;
+      }
+
+      if(rateType==="usdt"){
+        try{
+          const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent("https://www.monitordedivisavenezuela.com/");
+          const response = await fetch(proxyUrl);
+          const htmlText = await response.text();
+          const plain = htmlText.replace(/<[^>]*>/g," ").replace(/\s+/g," ");
+          const usdtIndex = plain.toLowerCase().indexOf("usdt");
+          const fragment = usdtIndex >= 0 ? plain.slice(usdtIndex, usdtIndex + 800) : plain;
+          const matches = fragment.match(/\d{2,4}[,.]\d{2,6}/g);
+          if(matches && matches.length){
+            const values = matches.map(v => Number(v.replace(".","").replace(",","."))).filter(n => n > 100);
+            if(values.length){
+              setRate(Math.max(...values),"USDT / mercado");
+              return;
+            }
+          }
+        }catch(e){}
+        setRate(referenciasVE.usdt.valor, referenciasVE.usdt.fuente + " · referencia editable");
+        return;
+      }
+
+      if(rateType==="banco"){
+        setRate(referenciasVE.banco.valor, referenciasVE.banco.fuente + " · referencia editable");
+        return;
+      }
+
+      if(rateType==="kontigo"){
+        setRate(referenciasVE.kontigo.valor, referenciasVE.kontigo.fuente + " · referencia editable");
+        return;
+      }
+    }
+
+    if(c.api==="colombia"){
+      try{
+        const url = "https://www.datos.gov.co/resource/32sa-8pi3.json?$select=valor,vigenciadesde,vigenciahasta&$order=vigenciadesde%20DESC&$limit=1";
+        const data = await fetchJson(url);
+        const row = Array.isArray(data) ? data[0] : null;
+        const rate = Number(String(row?.valor || "").replace(",","."));
+        if(rate && !isNaN(rate)){
+          const fecha = row?.vigenciadesde ? " · Vigente desde: " + String(row.vigenciadesde).slice(0,10) : "";
+          setRate(rate,"TRM oficial Colombia" + fecha);
+          return;
+        }
+      }catch(e){}
+      throw new Error("No se pudo consultar la TRM oficial de Colombia");
+    }
+
+    const g=await fetchJson("https://open.er-api.com/v6/latest/USD");
+    const rate=Number(g?.rates?.[c.currency]);
+    if(!rate || isNaN(rate)) throw new Error("No se encontró tasa global");
+    setRate(rate,"Tasa internacional");
+  }catch(e){
+    currentRate=Number(manualRate.value)||currentRate;
+    rateText.textContent=currentRate?`${c.symbol} ${Number(currentRate).toFixed(2)}`:"Manual";
+    rateMeta.textContent="No se pudo cargar la tasa automática para "+c.name+". Usa tasa manual.";
+    rateError.style.display="block";
+    calculate();
+  }
+}
 function useManualRate(){const r=Number(manualRate.value);if(!r||r<=0){alert("Escribe una tasa válida.");return}setRate(r,"Manual")}
+function updateVenezuelaRateVisibility(){
+  const box=document.getElementById("venezuelaRateBox");
+  if(box) box.style.display = countrySelect.value==="VE" ? "block" : "none";
+}
+function markSelectedVenezuelaRate(){
+  const selected = document.getElementById("venezuelaRateType")?.value || "bcv";
+  document.querySelectorAll(".ve-rate-card").forEach(card=>{
+    card.classList.toggle("active", card.dataset.rateType === selected);
+  });
+}
+function selectVenezuelaRate(type){
+  const selector = document.getElementById("venezuelaRateType");
+  if(selector){
+    selector.value = type;
+    markSelectedVenezuelaRate();
+    currentRate = null;
+    manualRate.value = "";
+    fetchRate();
+  }
+}
 function updateMode(){const m=mode.value;cartBox.style.display=m==="cart"?"grid":"none";treatmentBox.style.display=m==="treatment"?"grid":"none";calculate()}
 function updateUsdPrice(){const p=products[Number(productSelect.value)], type=priceType.value;usdPrice.value=moneyUSD(p[type])}
 function addProductToCart(){const p=products[Number(productSelect.value)], type=priceType.value, amount=Math.max(1,Number(qty.value||1));cart.push({name:p.name,qv:p.qv,type,qty:amount,unit:p[type]});renderCart();calculate()}
@@ -288,11 +430,12 @@ function calculate(){
   lastResult={items:[...cart],subtotal,totalQV,shipping,totalUsd,totalLocal,tasa:rate,pais:getCountry().name,moneda:getCountry().currency,fuente:sourcePill.textContent.replace("Fuente: ","")};
 }
 async function detectCountry(){try{const d=await fetchJson("https://ipapi.co/json/");const code=String(d?.country_code||"").toUpperCase();if(countries[code])countrySelect.value=code}catch(e){}fetchRate()}
-countrySelect.addEventListener("change",()=>{currentRate=null;manualRate.value="";fetchRate()});
+countrySelect.addEventListener("change",()=>{currentRate=null;manualRate.value="";updateVenezuelaRateVisibility();fetchRate()});
+document.getElementById("venezuelaRateType")?.addEventListener("change",()=>{currentRate=null;manualRate.value="";markSelectedVenezuelaRate();fetchRate()});
 productSelect.addEventListener("change",()=>{updateUsdPrice();calculate()});priceType.addEventListener("change",()=>{updateUsdPrice();calculate()});qty.addEventListener("input",calculate);
 manualRate.addEventListener("input",()=>{if(Number(manualRate.value)>0)currentRate=Number(manualRate.value);calculate()});
 mode.addEventListener("change",updateMode);conditionSelect.addEventListener("change",calculate);treatmentPriceType.addEventListener("change",calculate);
-renderCart();updateTreatmentInfo();updateMode();detectCountry();
+renderCart();updateTreatmentInfo();updateMode();updateVenezuelaRateVisibility();markSelectedVenezuelaRate();detectCountry();
 </script>
 </body>
 </html>

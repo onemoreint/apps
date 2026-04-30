@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Biblioteca Inteligente · ONE MORE</title>
+<title>One More Hub · Biblioteca Minimal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -771,6 +771,179 @@
     }
   }
 
+
+  /* ══════════════════════════════
+     INTERFAZ MINIMAL FRESH — Compacta
+  ══════════════════════════════ */
+  :root {
+    --gold: #D8B45A;
+    --gold-light: #F1D98A;
+    --gold-dim: #A9893E;
+    --bg: #0C0F14;
+    --bg2: #111722;
+    --bg3: #151C29;
+    --surface: rgba(255,255,255,0.055);
+    --border: rgba(216,180,90,0.14);
+    --text: #F7F3EA;
+    --muted: #9EA7B5;
+    --radius: 18px;
+    --shadow: 0 14px 38px rgba(0,0,0,0.28);
+  }
+
+  body {
+    background:
+      radial-gradient(circle at top left, rgba(216,180,90,.10), transparent 28%),
+      radial-gradient(circle at top right, rgba(54,123,168,.12), transparent 30%),
+      var(--bg);
+  }
+
+  nav { padding: 10px 18px; background: rgba(12,15,20,0.76); }
+  .nav-logo { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: .95rem; }
+  .nav-link { font-size: .74rem; padding: 6px 10px; }
+
+  .hero {
+    min-height: 52vh;
+    padding: 86px 20px 42px;
+    justify-content: flex-end;
+  }
+
+  .logo-badge {
+    font-size: 9px;
+    padding: 7px 12px;
+    margin-bottom: 18px;
+    letter-spacing: 1.4px;
+  }
+
+  h1 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    margin-bottom: 16px;
+  }
+
+  h1 em { color: var(--gold-light); }
+
+  .hero-sub {
+    font-size: .95rem;
+    line-height: 1.55;
+    max-width: 600px;
+    margin-bottom: 24px;
+  }
+
+  .hero-btns { gap: 9px; }
+  .btn { padding: 10px 16px; font-size: .78rem; }
+  .btn-sm { padding: 8px 12px; font-size: .72rem; }
+
+  .btn-notebook,
+  .notebook-link {
+    background: linear-gradient(135deg, rgba(98,92,255,.22), rgba(216,180,90,.16));
+    color: #EDEBFF;
+    border: 1px solid rgba(160,155,255,.32);
+    text-decoration: none;
+  }
+
+  .btn-notebook:hover,
+  .notebook-link:hover {
+    border-color: rgba(216,180,90,.55);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  section { padding: 44px 0; }
+  .section-label { font-size: 9px; margin-bottom: 7px; }
+
+  .section-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(1.35rem, 3vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    margin-bottom: 22px;
+  }
+
+  .imperio-panel {
+    margin: -22px auto 34px;
+    padding: 10px;
+    border-radius: 20px;
+    gap: 8px;
+  }
+
+  .imperio-stat { padding: 12px; border-radius: 15px; }
+  .imperio-stat strong { font-family: 'DM Sans', sans-serif; font-size: 1.25rem; margin-bottom: 4px; }
+  .imperio-stat span { font-size: .65rem; }
+
+  .search-box {
+    padding: 5px 7px 5px 14px;
+    border-radius: 16px;
+    margin-bottom: 14px;
+  }
+
+  #searchInput { font-size: .88rem; padding: 7px 0; }
+  .filters-row { gap: 6px; margin-bottom: 10px; }
+  .filter-chip, .quick-action { font-size: .72rem; padding: 7px 11px; }
+  .precision-row { padding-top: 5px; border-top: 1px solid rgba(255,255,255,.06); }
+  .results-meta { margin-bottom: 16px; font-size: .74rem; }
+
+  .cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 12px;
+  }
+
+  .card {
+    padding: 15px;
+    border-radius: 16px;
+    gap: 9px;
+    background: rgba(255,255,255,0.052);
+  }
+
+  .card-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: .92rem;
+    line-height: 1.28;
+    font-weight: 700;
+  }
+
+  .card-desc { font-size: .74rem; line-height: 1.45; }
+  .card-rec { font-size: .7rem; padding: 7px 9px; }
+  .card-type-badge, .card-cat-badge, .kw { font-size: .62rem; }
+  .kw { padding: 2px 7px; }
+  .card-actions { gap: 6px; }
+
+  .folder-card {
+    padding: 20px;
+    border-radius: 18px;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .folder-icon-big { font-size: 2.4rem; }
+  .folder-info h3 { font-family: 'DM Sans', sans-serif; font-size: 1.1rem; font-weight: 700; }
+  .folder-info p { font-size: .78rem; }
+
+  .cat-card, .diag-btn { padding: 14px 12px; border-radius: 15px; }
+  .cat-icon, .diag-icon { font-size: 1.25rem; }
+  .cat-name, .diag-btn { font-size: .75rem; }
+  .cat-count { font-size: .66rem; }
+  .diag-result { padding: 20px; }
+
+  .diag-result-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  footer { padding: 26px 16px; font-size: .72rem; }
+  .scroll-hint { display: none; }
+
+  @media (max-width: 640px) {
+    .hero { min-height: auto; padding: 86px 18px 34px; }
+    .hero-btns .btn { width: 100%; justify-content: center; }
+    .cats-grid, .diag-grid { grid-template-columns: repeat(2, 1fr); }
+    .cards-grid { grid-template-columns: 1fr; }
+    .imperio-panel { grid-template-columns: repeat(2, 1fr); }
+  }
+
 </style>
 </head>
 <body>
@@ -783,7 +956,7 @@
      NAVEGACIÓN
 ══════════════════════════════ -->
 <nav>
-  <a class="nav-logo" href="#">✦ ONE MORE · Biblioteca</a>
+  <a class="nav-logo" href="#">One More Hub</a>
   <div class="nav-links">
     <button class="nav-link" onclick="scrollTo('#buscar')">Buscador</button>
     <button class="nav-link" onclick="scrollTo('#categorias')">Categorías</button>
@@ -799,22 +972,24 @@
   <div class="hero-inner">
     <div class="logo-badge">
       <div class="logo-dot"></div>
-      ONE MORE International · Distribuidor José Lugo
+      ONE MORE International · Centro de recursos
     </div>
 
-    <h1>Biblioteca<br/><em>Inteligente</em><br/>de Consulta</h1>
+    <h1>Centro<br/><em>Minimal</em><br/>de Consulta</h1>
 
     <p class="hero-sub">
-      Consulta rápida de materiales, protocolos, guías y recursos digitales.
-      Encuentra lo que necesitas en segundos y abre cada archivo directamente desde Google Drive.
+      Busca, filtra y abre materiales específicos de Google Drive con una experiencia más rápida, clara y sencilla.
     </p>
 
     <div class="hero-btns">
       <!-- ▼ Cambia el link de Drive aquí -->
       <a class="btn btn-gold" href="https://drive.google.com/drive/folders/1Wp-sJA50Le6g3mI_rdxj1soE7nu-yw-V" target="_blank">
-        📁 Abrir carpeta de Drive
+        📁 Abrir Drive
       </a>
-      <button class="btn btn-outline" onclick="scrollTo('#buscar')">🔍 Buscar materiales</button>
+      <a class="btn btn-notebook" href="https://notebooklm.google.com/notebook/98c9a091-90a3-43ed-bab0-a0e2789c3954" target="_blank">
+        🧠 Consultar en NotebookLM
+      </a>
+      <button class="btn btn-outline" onclick="scrollTo('#buscar')">🔍 Buscar</button>
     </div>
   </div>
 
@@ -858,15 +1033,17 @@
 <section id="buscar">
   <div class="container">
     <span class="section-label">Búsqueda inteligente</span>
-    <h2 class="section-title">Encuentra tu material</h2>
+    <h2 class="section-title">Buscar recursos</h2>
 
     <div class="quick-actions">
+      <button class="quick-action" onclick="limpiarTodo()">✨ Todo</button>
       <button class="quick-action" onclick="filterByCat('Productos')">💊 Productos</button>
       <button class="quick-action" onclick="filterByCat('Negocio')">💼 Negocio</button>
-      <button class="quick-action" onclick="filterByCat('Videos')">🎬 Videos</button>
-      <button class="quick-action" onclick="filterByCat('Redes Sociales')">📲 Redes sociales</button>
       <button class="quick-action" onclick="filterByCat('GlutaNAD+')">🧬 GlutaNAD+</button>
-      <button class="quick-action" onclick="limpiarTodo()">✨ Ver todo</button>
+      <button class="quick-action" onclick="filterBySocialType('Video')">📲 Redes · Videos</button>
+      <button class="quick-action" onclick="filterBySocialType('Imagen')">📲 Redes · Imágenes</button>
+      <button class="quick-action" onclick="filterByCat('English')">🇺🇸 English</button>
+      <a class="quick-action notebook-link" href="https://notebooklm.google.com/notebook/98c9a091-90a3-43ed-bab0-a0e2789c3954" target="_blank">🧠 Buscar más en NotebookLM</a>
     </div>
 
     <!-- Caja de búsqueda -->
@@ -875,7 +1052,7 @@
       <input
         id="searchInput"
         type="text"
-        placeholder="Busca por nombre, categoría, palabras clave…"
+        placeholder="Buscar: producto, video, imagen, protocolo, negocio, síntoma..."
         autocomplete="off"
         oninput="handleSearch()"
       />
@@ -900,6 +1077,15 @@
       <button class="filter-chip" data-type="ZIP" onclick="setFilter('type','ZIP',this)">🗜 ZIP</button>
       <button class="filter-chip" data-type="Documento" onclick="setFilter('type','Documento',this)">📝 Documento</button>
       <button class="filter-chip" data-type="Enlace" onclick="setFilter('type','Enlace',this)">🔗 Enlace</button>
+    </div>
+
+
+    <div class="filters-row precision-row">
+      <button class="filter-chip" onclick="filterBySocialType('Video')">📲 Solo redes sociales · videos</button>
+      <button class="filter-chip" onclick="filterBySocialType('Imagen')">🖼 Solo redes sociales · imágenes</button>
+      <button class="filter-chip" onclick="filterByCat('Redes Sociales')">📱 Todo material de redes</button>
+      <button class="filter-chip" onclick="filterByCat('Imágenes')">🖼 Imágenes generales</button>
+      <button class="filter-chip" onclick="filterByCat('Videos')">🎬 Videos generales</button>
     </div>
 
     <!-- Meta resultados -->
@@ -931,6 +1117,9 @@
       </div>
       <a class="btn btn-gold" href="https://drive.google.com/drive/folders/1Wp-sJA50Le6g3mI_rdxj1soE7nu-yw-V" target="_blank">
         📂 Abrir en Drive
+      </a>
+      <a class="btn btn-notebook" href="https://notebooklm.google.com/notebook/98c9a091-90a3-43ed-bab0-a0e2789c3954" target="_blank">
+        🧠 Cerebro NotebookLM
       </a>
     </div>
 
@@ -2309,10 +2498,10 @@ function renderCard(m, delay = 0) {
     <div class="card-title">${m.titulo}</div>
     <div class="card-desc">${m.descripcion}</div>
     <div class="card-keywords">${kws}</div>
-    <div class="card-rec">📁 ${m.carpetaDrive || m.categoria}<br>💡 ${m.recomendacion}</div>
+    <div class="card-rec">📁 ${m.carpetaDrive || m.categoria}</div>
     <div class="card-actions">
-      <a class="btn btn-gold btn-sm" href="${m.enlace}" target="_blank">Ver archivo</a>
-      <button class="btn btn-ghost btn-sm" onclick="copyLink('${m.enlace}')">📋 Copiar</button>
+      <a class="btn btn-gold btn-sm" href="${m.enlace}" target="_blank">Abrir</a>
+      <button class="btn btn-ghost btn-sm" onclick="copyLink('${m.enlace}')">Copiar</button>
     </div>
   </div>`;
 }
@@ -2408,6 +2597,27 @@ function buildCatsGrid() {
   }).join("");
 }
 
+
+function filterBySocialType(tipo) {
+  scrollTo("#buscar");
+  setTimeout(() => {
+    activeFilters.cat = "Redes Sociales";
+    activeFilters.type = tipo;
+    searchTerm = "";
+    const input = document.getElementById("searchInput");
+    if (input) input.value = "";
+
+    document.querySelectorAll("#catFilters .filter-chip").forEach(c => {
+      c.classList.toggle("active", c.dataset.cat === "Redes Sociales");
+    });
+    document.querySelectorAll("#typeFilters .filter-chip").forEach(c => {
+      c.classList.toggle("active", c.dataset.type === tipo);
+    });
+
+    handleSearch();
+  }, 250);
+}
+
 function filterByCat(nombre) {
   scrollTo("#buscar");
   setTimeout(() => {
@@ -2440,6 +2650,7 @@ function showDiag(need, el) {
     </div>
     <div class="diag-actions">
       <button class="btn btn-gold btn-sm" onclick="filterByCat('${d.categoria}')">Ver categoría</button>
+      <a class="btn btn-notebook btn-sm" href="https://notebooklm.google.com/notebook/98c9a091-90a3-43ed-bab0-a0e2789c3954" target="_blank">🧠 Ampliar en NotebookLM</a>
     </div>
   `;
   document.getElementById("diagResult").classList.add("visible");

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>One More Hub · Biblioteca Minimal</title>
+<title>One More Hub · Biblioteca Real</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -944,6 +944,739 @@
     .imperio-panel { grid-template-columns: repeat(2, 1fr); }
   }
 
+
+  /* ══════════════════════════════
+     IMPERIO PRO MAX UI — Accesos superiores
+  ══════════════════════════════ */
+  .access-section {
+    padding: 34px 0 46px;
+    background:
+      radial-gradient(circle at 12% 10%, rgba(216,180,90,.08), transparent 30%),
+      linear-gradient(180deg, var(--bg2), var(--bg));
+  }
+
+  .access-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 18px;
+  }
+
+  .access-head .section-title { margin-bottom: 0; }
+  .access-head p {
+    color: var(--muted);
+    font-size: .78rem;
+    max-width: 380px;
+    line-height: 1.5;
+  }
+
+  .access-grid-pro {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .access-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 105px;
+    padding: 14px;
+    border-radius: 18px;
+    text-decoration: none;
+    color: var(--text);
+    background: rgba(255,255,255,.055);
+    border: 1px solid rgba(255,255,255,.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all .22s ease;
+  }
+
+  .access-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: .18;
+    background: radial-gradient(circle at top right, var(--accent), transparent 58%);
+    pointer-events: none;
+  }
+
+  .access-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(216,180,90,.42);
+    box-shadow: 0 18px 35px rgba(0,0,0,.28);
+  }
+
+  .access-icon { font-size: 1.35rem; position: relative; z-index: 1; }
+  .access-content { position: relative; z-index: 1; display: grid; gap: 2px; }
+  .access-content strong { font-size: .76rem; line-height: 1.15; }
+  .access-content small { color: var(--muted); font-size: .62rem; line-height: 1.2; }
+
+  .access-card.office { --accent: #D8B45A; }
+  .access-card.youtube { --accent: #FF0033; }
+  .access-card.facebook { --accent: #1877F2; }
+  .access-card.drive { --accent: #34A853; }
+  .access-card.notebook { --accent: #7C6CFF; }
+  .access-card.telegram { --accent: #2AABEE; }
+  .access-card.whatsapp { --accent: #25D366; }
+
+  .training-hub {
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(216,180,90,.13);
+    border-radius: 20px;
+    padding: 13px;
+    display: grid;
+    gap: 11px;
+  }
+
+  .training-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 3px;
+  }
+
+  .training-title span { font-size: .86rem; font-weight: 800; color: var(--gold-light); }
+  .training-title small { color: var(--muted); font-size: .68rem; }
+
+  .training-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 3px;
+    scrollbar-width: thin;
+  }
+
+  .training-scroll a {
+    flex: 0 0 auto;
+    text-decoration: none;
+    color: var(--text);
+    background: rgba(255,255,255,.055);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-size: .72rem;
+    font-weight: 700;
+    transition: all .2s ease;
+  }
+
+  .training-scroll a:hover {
+    color: var(--gold-light);
+    border-color: rgba(216,180,90,.35);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 1100px) {
+    .access-grid-pro { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  @media (max-width: 720px) {
+    .access-head { display: block; }
+    .access-head p { margin-top: 8px; }
+    .access-grid-pro { grid-template-columns: repeat(2, 1fr); }
+    .training-title { display: grid; }
+  }
+
+  @media (max-width: 420px) {
+    .access-grid-pro { grid-template-columns: 1fr; }
+    .access-card {
+      min-height: 82px;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+    }
+  }
+
+
+  /* ══════════════════════════════
+     BOTONES TIPO BIBLIOTECA DIGITAL
+  ══════════════════════════════ */
+  .library-portal {
+    padding: 30px 0 42px;
+    background:
+      linear-gradient(180deg, rgba(17,23,34,.92), rgba(12,15,20,1)),
+      radial-gradient(circle at 20% 10%, rgba(216,180,90,.10), transparent 35%);
+  }
+
+  .portal-search-card {
+    border: 1px solid rgba(216,180,90,.18);
+    border-radius: 24px;
+    padding: 24px;
+    margin-bottom: 14px;
+    background:
+      linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.035)),
+      radial-gradient(circle at top right, rgba(216,180,90,.12), transparent 38%);
+    box-shadow: 0 18px 45px rgba(0,0,0,.24);
+  }
+
+  .portal-search-card h2 {
+    font-size: clamp(1.45rem, 3.4vw, 2.35rem);
+    line-height: 1.05;
+    letter-spacing: -.05em;
+    margin: 4px 0 8px;
+  }
+
+  .portal-search-card p {
+    color: var(--muted);
+    max-width: 720px;
+    font-size: .86rem;
+    line-height: 1.55;
+    margin-bottom: 18px;
+  }
+
+  .portal-main-actions {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 10px;
+  }
+
+  .portal-main-btn {
+    min-height: 86px;
+    border-radius: 18px;
+    padding: 15px;
+    text-decoration: none;
+    color: var(--text);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "icon title"
+      "icon sub";
+    column-gap: 12px;
+    align-items: center;
+    border: 1px solid rgba(255,255,255,.09);
+    background: rgba(255,255,255,.055);
+    transition: all .22s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .portal-main-btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, var(--portal-accent), transparent 58%);
+    opacity: .18;
+    pointer-events: none;
+  }
+
+  .portal-main-btn span {
+    grid-area: icon;
+    font-size: 1.8rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .portal-main-btn strong {
+    grid-area: title;
+    font-size: .9rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .portal-main-btn small {
+    grid-area: sub;
+    color: var(--muted);
+    font-size: .68rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .portal-main-btn:hover {
+    transform: translateY(-3px);
+    border-color: rgba(216,180,90,.42);
+  }
+
+  .portal-main-btn.primary { --portal-accent: #D8B45A; }
+  .portal-main-btn.notebook { --portal-accent: #7C6CFF; }
+  .portal-main-btn.office { --portal-accent: #34A853; }
+
+  .portal-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 14px 0 14px;
+  }
+
+  .portal-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border-radius: 999px;
+    padding: 9px 13px;
+    font-size: .76rem;
+    font-weight: 800;
+    text-decoration: none;
+    color: var(--text);
+    border: 1px solid rgba(255,255,255,.09);
+    background: rgba(255,255,255,.05);
+    transition: all .2s ease;
+  }
+
+  .portal-tab:hover {
+    transform: translateY(-2px);
+    border-color: rgba(216,180,90,.4);
+  }
+
+  .portal-tab.youtube { color: #ff9aac; }
+  .portal-tab.facebook { color: #93c5fd; }
+  .portal-tab.drive { color: #86efac; }
+  .portal-tab.telegram { color: #7dd3fc; }
+  .portal-tab.whatsapp { color: #86efac; }
+
+  .library-button-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .library-btn {
+    min-height: 78px;
+    border-radius: 18px;
+    padding: 13px;
+    text-decoration: none;
+    color: var(--text);
+    background: rgba(255,255,255,.048);
+    border: 1px solid rgba(216,180,90,.12);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "icon title"
+      "icon subtitle";
+    gap: 0 10px;
+    align-items: center;
+    transition: all .22s ease;
+  }
+
+  .library-btn:hover {
+    background: rgba(216,180,90,.09);
+    border-color: rgba(216,180,90,.38);
+    transform: translateY(-3px);
+  }
+
+  .lb-icon {
+    grid-area: icon;
+    width: 38px;
+    height: 38px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: rgba(216,180,90,.12);
+    border: 1px solid rgba(216,180,90,.16);
+    font-size: 1.15rem;
+  }
+
+  .library-btn strong {
+    grid-area: title;
+    font-size: .8rem;
+    line-height: 1.1;
+  }
+
+  .library-btn small {
+    grid-area: subtitle;
+    color: var(--muted);
+    font-size: .66rem;
+    line-height: 1.2;
+  }
+
+  @media (max-width: 820px) {
+    .portal-main-actions,
+    .library-button-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .portal-search-card {
+      padding: 18px;
+    }
+  }
+
+
+  /* ══════════════════════════════
+     BIBLIOTECA REAL — Sin saturación visual
+  ══════════════════════════════ */
+  .real-library-section {
+    background:
+      radial-gradient(circle at 14% 0%, rgba(216,180,90,.08), transparent 32%),
+      linear-gradient(180deg, var(--bg2), var(--bg));
+  }
+
+  .real-library-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+
+  .real-library-head .section-title {
+    margin-bottom: 0;
+  }
+
+  .real-library-head p {
+    color: var(--muted);
+    max-width: 440px;
+    font-size: .8rem;
+    line-height: 1.55;
+  }
+
+  .library-entry-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .library-entry-card {
+    min-height: 118px;
+    border-radius: 20px;
+    padding: 14px;
+    border: 1px solid rgba(216,180,90,.14);
+    background: rgba(255,255,255,.045);
+    color: var(--text);
+    cursor: pointer;
+    text-decoration: none;
+    display: grid;
+    align-content: center;
+    gap: 6px;
+    text-align: center;
+    transition: all .22s ease;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .library-entry-card:hover,
+  .library-entry-card.active {
+    transform: translateY(-3px);
+    border-color: rgba(216,180,90,.45);
+    background: rgba(216,180,90,.09);
+    box-shadow: 0 16px 34px rgba(0,0,0,.20);
+  }
+
+  .entry-icon {
+    font-size: 2rem;
+  }
+
+  .library-entry-card strong {
+    font-size: .86rem;
+  }
+
+  .library-entry-card small {
+    font-size: .66rem;
+    color: var(--muted);
+  }
+
+  .notebook-entry {
+    background: linear-gradient(135deg, rgba(124,108,255,.14), rgba(216,180,90,.06));
+    border-color: rgba(124,108,255,.25);
+  }
+
+  .library-clean-panel {
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 22px;
+    padding: 14px;
+  }
+
+  .clean-toolbar {
+    display: grid;
+    grid-template-columns: 1fr 220px auto;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .clean-search {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 999px;
+    padding: 8px 13px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .clean-search input,
+  #realLibraryCategory {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: .78rem;
+  }
+
+  #realLibraryCategory {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 999px;
+    padding: 8px 13px;
+  }
+
+  #realLibraryCategory option {
+    color: #111;
+  }
+
+  .clean-reset {
+    border: 1px solid rgba(216,180,90,.18);
+    background: rgba(216,180,90,.08);
+    color: var(--gold-light);
+    border-radius: 999px;
+    padding: 8px 13px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .74rem;
+    font-weight: 700;
+  }
+
+  .clean-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--muted);
+    font-size: .72rem;
+    margin-bottom: 10px;
+  }
+
+  .clean-list {
+    display: grid;
+    gap: 7px;
+    max-height: 620px;
+    overflow: auto;
+    padding-right: 4px;
+  }
+
+  .clean-file-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 11px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.065);
+    border-radius: 15px;
+    padding: 10px 11px;
+    transition: all .18s ease;
+  }
+
+  .clean-file-row:hover {
+    border-color: rgba(216,180,90,.30);
+    background: rgba(216,180,90,.045);
+  }
+
+  .file-icon-clean {
+    width: 38px;
+    height: 38px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: rgba(216,180,90,.08);
+    border: 1px solid rgba(216,180,90,.13);
+    font-size: 1.15rem;
+  }
+
+  .file-info-clean {
+    min-width: 0;
+  }
+
+  .file-info-clean strong {
+    display: block;
+    font-size: .78rem;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .file-info-clean small {
+    display: block;
+    color: var(--muted);
+    font-size: .64rem;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .file-actions-clean {
+    display: flex;
+    gap: 6px;
+  }
+
+  .clean-action-btn {
+    border-radius: 999px;
+    border: 1px solid rgba(216,180,90,.18);
+    background: rgba(255,255,255,.05);
+    color: var(--text);
+    padding: 7px 10px;
+    font-size: .68rem;
+    font-weight: 800;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .clean-action-btn.primary {
+    background: var(--gold);
+    color: #111;
+  }
+
+  .real-detail-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.68);
+    backdrop-filter: blur(10px);
+    z-index: 99999;
+    display: none;
+    place-items: center;
+    padding: 18px;
+  }
+
+  .real-detail-modal.visible {
+    display: grid;
+  }
+
+  .real-detail-card {
+    width: min(620px, 96vw);
+    background: var(--bg2);
+    border: 1px solid rgba(216,180,90,.22);
+    border-radius: 24px;
+    padding: 22px;
+    position: relative;
+    box-shadow: 0 25px 80px rgba(0,0,0,.45);
+  }
+
+  .real-close {
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.1);
+    background: rgba(255,255,255,.06);
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .detail-icon {
+    font-size: 2.4rem;
+    margin-bottom: 10px;
+  }
+
+  .real-detail-card h3 {
+    font-size: 1.1rem;
+    line-height: 1.25;
+    margin-bottom: 8px;
+    padding-right: 32px;
+  }
+
+  .real-detail-card p {
+    color: var(--muted);
+    font-size: .8rem;
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+
+  .detail-meta {
+    display: grid;
+    gap: 6px;
+    background: rgba(255,255,255,.04);
+    border-radius: 16px;
+    padding: 12px;
+    margin-bottom: 14px;
+    color: var(--muted);
+    font-size: .72rem;
+  }
+
+  .detail-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 980px) {
+    .library-entry-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .real-library-head {
+      display: block;
+    }
+
+    .real-library-head p {
+      margin-top: 8px;
+    }
+
+    .library-entry-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .clean-toolbar {
+      grid-template-columns: 1fr;
+    }
+
+    .clean-file-row {
+      grid-template-columns: auto 1fr;
+    }
+
+    .file-actions-clean {
+      grid-column: 1 / -1;
+      justify-content: flex-end;
+    }
+  }
+
+  @media (max-width: 440px) {
+    .library-entry-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+
+  /* ══════════════════════════════
+     LIMPIEZA VISUAL — Sin cuerpo masivo de archivos
+  ══════════════════════════════ */
+  .library-welcome {
+    text-align: center;
+    padding: 46px 20px;
+    border: 1px dashed rgba(216,180,90,.22);
+    border-radius: 18px;
+    background: rgba(255,255,255,.025);
+  }
+
+  .library-welcome-icon {
+    font-size: 3rem;
+    margin-bottom: 10px;
+  }
+
+  .library-welcome h3 {
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+    color: var(--gold-light);
+  }
+
+  .library-welcome p {
+    max-width: 560px;
+    margin: 0 auto;
+    color: var(--muted);
+    font-size: .78rem;
+    line-height: 1.55;
+  }
+
+  .library-clean-panel {
+    margin-top: 14px;
+  }
+
+  #catFilters,
+  #typeFilters,
+  .precision-row,
+  #cardsGrid,
+  #resultCount {
+    display: none !important;
+  }
+
 </style>
 </head>
 <body>
@@ -958,10 +1691,10 @@
 <nav>
   <a class="nav-logo" href="#">One More Hub</a>
   <div class="nav-links">
-    <button class="nav-link" onclick="scrollTo('#buscar')">Buscador</button>
+    <button class="nav-link" onclick="scrollTo('#accesos')">Accesos</button>
+    <button class="nav-link" onclick="scrollTo('#biblioteca-real')">Biblioteca</button>
     <button class="nav-link" onclick="scrollTo('#categorias')">Categorías</button>
     <button class="nav-link" onclick="scrollTo('#diagnostico')">Diagnóstico</button>
-    <button class="nav-link" onclick="scrollTo('#materiales')">Materiales</button>
   </div>
 </nav>
 
@@ -975,10 +1708,10 @@
       ONE MORE International · Centro de recursos
     </div>
 
-    <h1>Centro<br/><em>Minimal</em><br/>de Consulta</h1>
+    <h1>Biblioteca<br/><em>Real</em><br/>One More</h1>
 
     <p class="hero-sub">
-      Busca, filtra y abre materiales específicos de Google Drive con una experiencia más rápida, clara y sencilla.
+      Una biblioteca sencilla, limpia y práctica: primero eliges el tipo de recurso, luego buscas y abres solo lo que necesitas.
     </p>
 
     <div class="hero-btns">
@@ -989,11 +1722,11 @@
       <a class="btn btn-notebook" href="https://notebooklm.google.com/notebook/98c9a091-90a3-43ed-bab0-a0e2789c3954" target="_blank">
         🧠 Consultar en NotebookLM
       </a>
-      <button class="btn btn-outline" onclick="scrollTo('#buscar')">🔍 Buscar</button>
+      <button class="btn btn-outline" onclick="scrollTo('#biblioteca-real')">🔍 Abrir biblioteca</button>
     </div>
   </div>
 
-  <div class="scroll-hint" onclick="scrollTo('#buscar')">
+  <div class="scroll-hint" onclick="scrollTo('#biblioteca-real')">
     <span>Explorar</span>
     <span class="scroll-arrow">↓</span>
   </div>
@@ -1026,6 +1759,183 @@
     </div>
   </div>
 </section>
+
+
+
+<!-- ══════════════════════════════
+     PORTAL DE ACCESOS TIPO BIBLIOTECA
+══════════════════════════════ -->
+<section id="accesos" class="access-section library-portal">
+  <div class="container">
+
+    <div class="portal-search-card">
+      <span class="section-label">Portal de accesos</span>
+      <h2>¿Qué necesitas abrir hoy?</h2>
+      <p>Accede rápidamente a oficina virtual, entrenamientos, comunidades, materiales y consulta ampliada en NotebookLM.</p>
+
+      <div class="portal-main-actions">
+        <a class="portal-main-btn primary" href="#buscar">
+          <span>🔎</span>
+          <strong>Buscar en biblioteca</strong>
+          <small>Materiales, PDFs, videos e imágenes</small>
+        </a>
+        <a class="portal-main-btn notebook" href="https://notebooklm.google.com/notebook/98c9a091-90a3-43ed-bab0-a0e2789c3954" target="_blank">
+          <span>🧠</span>
+          <strong>Cerebro NotebookLM</strong>
+          <small>Consulta avanzada con IA</small>
+        </a>
+        <a class="portal-main-btn office" href="https://onemore.global/office/login" target="_blank">
+          <span>🧭</span>
+          <strong>Back Office</strong>
+          <small>Oficina virtual One More</small>
+        </a>
+      </div>
+    </div>
+
+    <div class="portal-tabs">
+      <a href="https://www.youtube.com/@oportunidadonemore" target="_blank" class="portal-tab youtube">
+        <span>▶️</span> YouTube
+      </a>
+      <a href="https://www.facebook.com/groups/8030657950387631/" target="_blank" class="portal-tab facebook">
+        <span>👥</span> Facebook Team
+      </a>
+      <a href="https://bit.ly/summitnetworkersteam-marketing" target="_blank" class="portal-tab drive">
+        <span>📁</span> Marketing Drive
+      </a>
+      <a href="https://t.me/c/2485498303/46" target="_blank" class="portal-tab telegram">
+        <span>📣</span> Telegram
+      </a>
+      <a href="https://chat.whatsapp.com/IKG5Wp3WgWi0Gasekn2fnE" target="_blank" class="portal-tab whatsapp">
+        <span>💬</span> Testimonios
+      </a>
+    </div>
+
+    <div class="library-button-grid">
+      <a href="https://youtu.be/5cTr53Ce7YM?si=vXkj4l04K9w1_C1d" target="_blank" class="library-btn">
+        <span class="lb-icon">📝</span>
+        <strong>Registrar socio</strong>
+        <small>Guía rápida</small>
+      </a>
+      <a href="https://youtu.be/syv9QnNxLrs?si=iJqwwRNDUFB-p8OY" target="_blank" class="library-btn">
+        <span class="lb-icon">🛒</span>
+        <strong>Primera compra</strong>
+        <small>Nuevo socio</small>
+      </a>
+      <a href="https://youtu.be/TuRycIWz_5I?si=PT0LLFMSoZ1ZsMRt" target="_blank" class="library-btn">
+        <span class="lb-icon">📦</span>
+        <strong>Hacer pedido</strong>
+        <small>Proceso paso a paso</small>
+      </a>
+      <a href="https://www.youtube.com/live/FMsX_XUwmmY?si=MZ48My3djzCIBgeZ" target="_blank" class="library-btn">
+        <span class="lb-icon">🧩</span>
+        <strong>Oficina virtual</strong>
+        <small>Recorrido guiado</small>
+      </a>
+      <a href="https://youtu.be/ZN68nNemaXQ?si=e2VPmg-4q1oYHeC9" target="_blank" class="library-btn">
+        <span class="lb-icon">💸</span>
+        <strong>Retiro billetera</strong>
+        <small>Tutorial comisiones</small>
+      </a>
+      <a href="https://youtu.be/iUaPxywgGYA?si=Qh-D7wWRDyoBuvbc" target="_blank" class="library-btn">
+        <span class="lb-icon">🌍</span>
+        <strong>Qué es One More</strong>
+        <small>Recorrido general</small>
+      </a>
+      <a href="https://youtu.be/XUELkCdpRak?si=tzo2CN9k-YW7tJCy" target="_blank" class="library-btn">
+        <span class="lb-icon">🚀</span>
+        <strong>Primeros pasos</strong>
+        <small>Inicio duplicable</small>
+      </a>
+      <a href="https://youtu.be/GGBDAZsIztc" target="_blank" class="library-btn">
+        <span class="lb-icon">👑</span>
+        <strong>Fundadores</strong>
+        <small>Historia y visión</small>
+      </a>
+      <a href="https://youtu.be/c9pkQPT6mws" target="_blank" class="library-btn">
+        <span class="lb-icon">💰</span>
+        <strong>Ventas PRO</strong>
+        <small>Rafa y Keicy</small>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     BIBLIOTECA REAL — NAVEGACIÓN LIMPIA
+══════════════════════════════ -->
+<section id="biblioteca-real" class="real-library-section">
+  <div class="container">
+    <div class="real-library-head">
+      <div>
+        <span class="section-label">Biblioteca real</span>
+        <h2 class="section-title">Elige una sección para empezar</h2>
+      </div>
+      <p>La biblioteca no muestra todos los archivos al inicio. Primero selecciona PDF, videos, imágenes, redes o una categoría; luego aparecerá una lista limpia.</p>
+    </div>
+
+    <div class="library-entry-grid">
+      <button class="library-entry-card active" data-lib-type="todos" onclick="openLibraryType('todos', this)">
+        <span class="entry-icon">📚</span>
+        <strong>Ver todo</strong>
+        <small id="realCountTodos">0 recursos</small>
+      </button>
+      <button class="library-entry-card" data-lib-type="PDF" onclick="openLibraryType('PDF', this)">
+        <span class="entry-icon">📄</span>
+        <strong>PDF</strong>
+        <small id="realCountPDF">0 documentos</small>
+      </button>
+      <button class="library-entry-card" data-lib-type="Video" onclick="openLibraryType('Video', this)">
+        <span class="entry-icon">🎬</span>
+        <strong>Videos</strong>
+        <small id="realCountVideo">0 videos</small>
+      </button>
+      <button class="library-entry-card" data-lib-type="Imagen" onclick="openLibraryType('Imagen', this)">
+        <span class="entry-icon">🖼</span>
+        <strong>Imágenes</strong>
+        <small id="realCountImagen">0 imágenes</small>
+      </button>
+      <button class="library-entry-card" data-lib-category="Redes Sociales" onclick="openLibraryCategory('Redes Sociales', this)">
+        <span class="entry-icon">📲</span>
+        <strong>Redes</strong>
+        <small>videos e imágenes</small>
+      </button>
+      <a class="library-entry-card notebook-entry" href="https://notebooklm.google.com/notebook/98c9a091-90a3-43ed-bab0-a0e2789c3954" target="_blank">
+        <span class="entry-icon">🧠</span>
+        <strong>NotebookLM</strong>
+        <small>consulta profunda</small>
+      </a>
+    </div>
+
+    <div class="library-clean-panel">
+      <div class="clean-toolbar">
+        <div class="clean-search">
+          <span>🔍</span>
+          <input id="realLibrarySearch" type="text" placeholder="Buscar dentro de la selección..." oninput="renderRealLibrary()" />
+        </div>
+        <select id="realLibraryCategory" onchange="renderRealLibrary()">
+          <option value="todos">Todas las categorías</option>
+        </select>
+        <button class="clean-reset" onclick="resetRealLibrary()">Limpiar</button>
+      </div>
+
+      <div class="clean-meta">
+        <span id="realLibraryTitle">Mostrando biblioteca completa</span>
+        <span id="realLibraryCount">0 resultados</span>
+      </div>
+
+      <div id="realLibraryList" class="clean-list"></div>
+    </div>
+  </div>
+</section>
+
+<!-- MODAL DETALLE SIMPLE -->
+<div id="realDetailModal" class="real-detail-modal" onclick="closeRealDetailModal(event)">
+  <div class="real-detail-card">
+    <button class="real-close" onclick="hideRealDetailModal()">✕</button>
+    <div id="realDetailContent"></div>
+  </div>
+</div>
 
 <!-- ══════════════════════════════
      BUSCADOR AVANZADO
@@ -1165,18 +2075,7 @@
   </div>
 </section>
 
-<div class="divider"></div>
 
-<!-- ══════════════════════════════
-     TODOS LOS MATERIALES
-══════════════════════════════ -->
-<section id="materiales">
-  <div class="container">
-    <span class="section-label">Biblioteca completa</span>
-    <h2 class="section-title">Todos los materiales</h2>
-    <div class="cards-grid" id="allCardsGrid"></div>
-  </div>
-</section>
 
 <!-- FOOTER -->
 <footer>
@@ -2656,6 +3555,213 @@ function showDiag(need, el) {
   document.getElementById("diagResult").classList.add("visible");
 }
 
+
+// ══════════════════════════════════
+// BIBLIOTECA REAL — Navegación limpia
+// ══════════════════════════════════
+let realLibraryType = "inicio";
+let realLibraryCategoryLock = "todos";
+
+function realTypeIcon(tipo) {
+  if (tipo === "PDF") return "📄";
+  if (tipo === "Video") return "🎬";
+  if (tipo === "Imagen") return "🖼";
+  if (tipo === "ZIP") return "🗜";
+  if (tipo === "Documento") return "📝";
+  return "📁";
+}
+
+function setupRealLibrary() {
+  const categorySelect = document.getElementById("realLibraryCategory");
+  if (!categorySelect) return;
+
+  const cats = [...new Set(MATERIALES.map(m => m.categoria))].sort();
+  categorySelect.innerHTML = `<option value="todos">Todas las categorías</option>` + cats.map(c => `<option value="${c}">${c}</option>`).join("");
+
+  const count = tipo => tipo === "todos" ? MATERIALES.length : MATERIALES.filter(m => m.tipo === tipo).length;
+  document.getElementById("realCountTodos").textContent = `${count("todos")} recursos`;
+  document.getElementById("realCountPDF").textContent = `${count("PDF")} documentos`;
+  document.getElementById("realCountVideo").textContent = `${count("Video")} videos`;
+  document.getElementById("realCountImagen").textContent = `${count("Imagen")} imágenes`;
+
+  showLibraryWelcome();
+}
+
+function openLibraryType(tipo, btn) {
+  realLibraryType = tipo;
+  realLibraryCategoryLock = "todos";
+
+  document.querySelectorAll(".library-entry-card").forEach(b => b.classList.remove("active"));
+  if (btn) btn.classList.add("active");
+
+  const select = document.getElementById("realLibraryCategory");
+  if (select) select.value = "todos";
+
+  if (realLibraryType === "inicio") return [];
+  const input = document.getElementById("realLibrarySearch");
+  if (input) input.value = "";
+
+  renderRealLibrary();
+}
+
+function openLibraryCategory(categoria, btn) {
+  realLibraryType = "todos";
+  realLibraryCategoryLock = categoria;
+
+  document.querySelectorAll(".library-entry-card").forEach(b => b.classList.remove("active"));
+  if (btn) btn.classList.add("active");
+
+  const select = document.getElementById("realLibraryCategory");
+  if (select) select.value = categoria;
+
+  const input = document.getElementById("realLibrarySearch");
+  if (input) input.value = "";
+
+  renderRealLibrary();
+}
+
+function resetRealLibrary() {
+  realLibraryType = "inicio";
+  realLibraryCategoryLock = "todos";
+
+  const input = document.getElementById("realLibrarySearch");
+  const select = document.getElementById("realLibraryCategory");
+  if (input) input.value = "";
+  if (select) select.value = "todos";
+
+  document.querySelectorAll(".library-entry-card").forEach(b => b.classList.remove("active"));
+  showLibraryWelcome();
+}
+
+
+function showLibraryWelcome() {
+  const list = document.getElementById("realLibraryList");
+  const title = document.getElementById("realLibraryTitle");
+  const count = document.getElementById("realLibraryCount");
+
+  if (title) title.textContent = "Selecciona una sección para ver recursos";
+  if (count) count.textContent = "Vista limpia";
+
+  if (list) {
+    list.innerHTML = `
+      <div class="library-welcome">
+        <div class="library-welcome-icon">📚</div>
+        <h3>Biblioteca lista para consultar</h3>
+        <p>Escoge un botón superior: PDF, Videos, Imágenes, Redes Sociales o NotebookLM. Así evitamos mostrar demasiados archivos al mismo tiempo.</p>
+      </div>
+    `;
+  }
+}
+
+function getRealLibraryItems() {
+  const input = document.getElementById("realLibrarySearch");
+  const select = document.getElementById("realLibraryCategory");
+
+  const q = (input?.value || "").toLowerCase().trim();
+  const selectedCat = select?.value || "todos";
+  const finalCat = realLibraryCategoryLock !== "todos" ? realLibraryCategoryLock : selectedCat;
+
+  return MATERIALES.filter(m => {
+    const typeOk = realLibraryType === "todos" || m.tipo === realLibraryType;
+    const catOk = finalCat === "todos" || m.categoria === finalCat;
+    const text = `${m.titulo} ${m.tipo} ${m.categoria} ${m.descripcion} ${m.keywords} ${m.carpetaDrive || ""}`.toLowerCase();
+    const qOk = !q || text.includes(q);
+    return typeOk && catOk && qOk;
+  });
+}
+
+function renderRealLibrary() {
+  if (realLibraryType === "inicio") {
+    showLibraryWelcome();
+    return;
+  }
+
+  const list = document.getElementById("realLibraryList");
+  if (!list) return;
+
+  if (realLibraryCategoryLock === "todos") {
+    const select = document.getElementById("realLibraryCategory");
+    if (select) {
+      // keep selected category from dropdown
+    }
+  }
+
+  const items = getRealLibraryItems();
+  const title = document.getElementById("realLibraryTitle");
+  const count = document.getElementById("realLibraryCount");
+
+  const typeLabel = realLibraryType === "todos" ? "todos los recursos" : realLibraryType;
+  const catLabel = realLibraryCategoryLock !== "todos"
+    ? realLibraryCategoryLock
+    : (document.getElementById("realLibraryCategory")?.value || "todos");
+
+  title.textContent = catLabel === "todos" ? `Mostrando ${typeLabel}` : `Mostrando ${typeLabel} · ${catLabel}`;
+  count.textContent = `${items.length} resultado${items.length !== 1 ? "s" : ""}`;
+
+  if (!items.length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🔎</div>
+        <div class="empty-title">No hay resultados</div>
+        <div class="empty-sub">Prueba otra categoría, tipo o palabra clave.</div>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = items.map((m, i) => `
+    <article class="clean-file-row">
+      <div class="file-icon-clean">${realTypeIcon(m.tipo)}</div>
+      <div class="file-info-clean">
+        <strong title="${m.titulo}">${m.titulo}</strong>
+        <small>${m.tipo} · ${m.categoria} · ${m.carpetaDrive || "Google Drive"}</small>
+      </div>
+      <div class="file-actions-clean">
+        <button class="clean-action-btn" onclick="showRealDetail(${i})">Detalle</button>
+        <a class="clean-action-btn primary" href="${m.enlace}" target="_blank">Abrir</a>
+      </div>
+    </article>
+  `).join("");
+
+  window.__realLibraryItems = items;
+}
+
+function showRealDetail(index) {
+  const item = (window.__realLibraryItems || [])[index];
+  if (!item) return;
+
+  const modal = document.getElementById("realDetailModal");
+  const content = document.getElementById("realDetailContent");
+
+  content.innerHTML = `
+    <div class="detail-icon">${realTypeIcon(item.tipo)}</div>
+    <h3>${item.titulo}</h3>
+    <p>${item.descripcion || "Archivo disponible para consulta directa en Google Drive."}</p>
+    <div class="detail-meta">
+      <span><strong>Tipo:</strong> ${item.tipo}</span>
+      <span><strong>Categoría:</strong> ${item.categoria}</span>
+      <span><strong>Carpeta:</strong> ${item.carpetaDrive || "Google Drive"}</span>
+      <span><strong>Uso sugerido:</strong> ${item.recomendacion || "Consulta"}</span>
+    </div>
+    <div class="detail-buttons">
+      <a class="btn btn-gold btn-sm" href="${item.enlace}" target="_blank">Abrir archivo</a>
+      <button class="btn btn-ghost btn-sm" onclick="copyLink('${item.enlace}')">Copiar enlace</button>
+    </div>
+  `;
+
+  modal.classList.add("visible");
+  document.body.style.overflow = "hidden";
+}
+
+function hideRealDetailModal() {
+  const modal = document.getElementById("realDetailModal");
+  if (modal) modal.classList.remove("visible");
+  document.body.style.overflow = "";
+}
+
+function closeRealDetailModal(event) {
+  if (event.target && event.target.id === "realDetailModal") hideRealDetailModal();
+}
+
 // ══════════════════════════════════
 // INIT
 // ══════════════════════════════════
@@ -2663,6 +3769,7 @@ window.addEventListener("DOMContentLoaded", () => {
   actualizarImperioStats();
   buildCatFilters();
   buildCatsGrid();
+  setupRealLibrary();
 
   const all = filterMateriales();
   document.getElementById("resultCount").textContent = all.length;

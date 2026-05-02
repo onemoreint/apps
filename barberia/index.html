@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>Barbería • Reserva tu turno</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ===== VARIABLES DE CONFIGURACIÓN ===== */
+  :root {
+    --color-bg: #F5F3EF;
+    --color-surface: #FFFFFF;
+    --color-surface-2: #F0EDE8;
+    --color-dark: #1A1714;
+    --color-dark-2: #2D2926;
+    --color-gold: #B8960C;
+    --color-gold-light: #D4AF37;
+    --color-gold-dim: #F5EFC8;
+    --color-text: #1A1714;
+    --color-text-muted: #7A7268;
+    --color-border: #E2DDD6;
+    --color-error: #C0392B;
+    --color-success: #27AE60;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+    --shadow-card: 0 2px 20px rgba(26,23,20,0.08);
+    --shadow-strong: 0 8px 40px rgba(26,23,20,0.18);
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'DM Sans', sans-serif;
+    --transition: 0.22s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--color-bg);
+    color: var(--color-text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: var(--color-dark);
+    padding: 28px 20px 24px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-eyebrow {
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--color-gold-light);
+    margin-bottom: 6px;
+  }
+  .header-title {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 700;
+    color: #FFFFFF;
+    letter-spacing: -0.3px;
+  }
+  .header-subtitle {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 5px;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+  }
+  .header-line {
+    width: 36px;
+    height: 2px;
+    background: var(--color-gold-light);
+    margin: 12px auto 0;
+    border-radius: 2px;
+  }
+
+  /* ===== CONTENEDOR PRINCIPAL ===== */
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 16px 120px;
+  }
+
+  /* ===== STEPS INDICATOR ===== */
+  .steps-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 20px 0 4px;
+  }
+  .step-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-border);
+    transition: var(--transition);
+  }
+  .step-dot.active { background: var(--color-gold); width: 24px; border-radius: 4px; }
+  .step-dot.done { background: var(--color-gold-light); opacity: 0.6; }
+
+  /* ===== SECTION LABEL ===== */
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--color-gold);
+    margin-bottom: 12px;
+    margin-top: 28px;
+  }
+
+  /* ===== CARD ===== */
+  .card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--color-border);
+    margin-bottom: 16px;
+  }
+
+  /* ===== DATE PICKER ===== */
+  .date-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .date-nav-title {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--color-text);
+    text-transform: capitalize;
+  }
+  .nav-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    color: var(--color-text);
+    font-size: 16px;
+  }
+  .nav-btn:hover { background: var(--color-dark); color: white; border-color: var(--color-dark); }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+  .weekday-label {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    padding: 4px 0;
+    letter-spacing: 0.5px;
+  }
+
+  .days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+  .day-cell {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    border: 1.5px solid transparent;
+    position: relative;
+  }
+  .day-cell:hover:not(.disabled):not(.empty) {
+    background: var(--color-gold-dim);
+    border-color: var(--color-gold);
+    color: var(--color-dark);
+  }
+  .day-cell.selected {
+    background: var(--color-dark) !important;
+    color: white !important;
+    border-color: var(--color-dark);
+  }
+  .day-cell.today { border-color: var(--color-gold); color: var(--color-gold); font-weight: 700; }
+  .day-cell.disabled { color: var(--color-border); cursor: not-allowed; }
+  .day-cell.empty { cursor: default; }
+  .day-cell.past { color: #CCC; cursor: not-allowed; }
+
+  /* ===== TIME SLOTS ===== */
+  .slots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .slot-btn {
+    padding: 12px 8px;
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--color-border);
+    background: var(--color-surface);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text);
+    cursor: pointer;
+    text-align: center;
+    transition: var(--transition);
+  }
+  .slot-btn:hover { border-color: var(--color-gold); background: var(--color-gold-dim); }
+  .slot-btn.selected { background: var(--color-dark); color: white; border-color: var(--color-dark); }
+  .slot-btn.blocked {
+    background: var(--color-surface-2);
+    color: var(--color-border);
+    cursor: not-allowed;
+    text-decoration: line-through;
+    border-color: var(--color-border);
+  }
+  .no-slots {
+    text-align: center;
+    padding: 24px 0;
+    color: var(--color-text-muted);
+    font-size: 14px;
+  }
+
+  /* ===== FORM ===== */
+  .form-group { margin-bottom: 16px; }
+  .form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--color-text);
+    background: var(--color-surface);
+    outline: none;
+    transition: var(--transition);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--color-gold);
+    box-shadow: 0 0 0 3px rgba(184,150,12,0.1);
+  }
+  .form-textarea { resize: vertical; min-height: 80px; }
+  .form-select-wrap { position: relative; }
+  .form-select-wrap::after {
+    content: '▾';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    pointer-events: none;
+    font-size: 12px;
+  }
+  .input-error { border-color: var(--color-error) !important; }
+  .error-msg {
+    font-size: 12px;
+    color: var(--color-error);
+    margin-top: 5px;
+    display: none;
+  }
+  .error-msg.show { display: block; }
+
+  /* ===== RESUMEN ===== */
+  .summary-card {
+    background: var(--color-dark);
+    border-radius: var(--radius-lg);
+    padding: 24px 20px;
+    color: white;
+    margin-bottom: 20px;
+  }
+  .summary-title {
+    font-family: var(--font-display);
+    font-size: 16px;
+    color: var(--color-gold-light);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    gap: 12px;
+  }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-key {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .summary-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+    text-align: right;
+  }
+
+  /* ===== BOTONES PRINCIPALES ===== */
+  .btn-primary {
+    width: 100%;
+    padding: 18px;
+    background: var(--color-dark);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .btn-primary:hover { background: var(--color-dark-2); transform: translateY(-1px); box-shadow: var(--shadow-strong); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-gold {
+    background: var(--color-gold);
+    color: white;
+  }
+  .btn-gold:hover { background: var(--color-gold-light); }
+  .btn-secondary {
+    width: 100%;
+    padding: 15px;
+    background: transparent;
+    color: var(--color-text-muted);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 10px;
+  }
+  .btn-secondary:hover { border-color: var(--color-text-muted); color: var(--color-text); }
+
+  /* ===== LOADING SPINNER ===== */
+  .spinner {
+    width: 20px;
+    height: 20px;
+    border: 2.5px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ===== ESTADO ÉXITO / ERROR ===== */
+  .state-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 60px 20px 40px;
+    min-height: 70vh;
+    justify-content: center;
+  }
+  .state-screen.active { display: flex; }
+  .state-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    margin-bottom: 24px;
+  }
+  .state-icon.success { background: #EAFAF1; }
+  .state-icon.error { background: #FDECEA; }
+  .state-icon.warning { background: #FFF9E6; }
+  .state-title {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 12px;
+  }
+  .state-desc {
+    font-size: 15px;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    max-width: 300px;
+    margin-bottom: 32px;
+  }
+  .btn-wa {
+    width: 100%;
+    max-width: 320px;
+    padding: 18px;
+    background: #25D366;
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    text-decoration: none;
+  }
+  .btn-wa:hover { background: #20BA5A; transform: translateY(-1px); }
+
+  /* ===== ANIMACIONES ===== */
+  .fade-in {
+    animation: fadeIn 0.35s ease forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== NAVEGACIÓN INFERIOR ===== */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    padding: 16px 20px;
+    max-width: 480px;
+    margin: 0 auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-80px);
+    background: var(--color-dark);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    z-index: 1000;
+    white-space: nowrap;
+    max-width: 90vw;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.error-toast { background: var(--color-error); }
+
+  /* ===== TAGS SELECCIONADOS ===== */
+  .selection-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--color-border);
+  }
+  .tag {
+    background: var(--color-dark);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tag-gold { background: var(--color-gold); }
+
+  /* ===== DIVIDER ===== */
+  .divider {
+    height: 1px;
+    background: var(--color-border);
+    margin: 20px 0;
+  }
+
+  /* ===== NOTICE ===== */
+  .notice {
+    background: var(--color-gold-dim);
+    border: 1px solid rgba(184,150,12,0.25);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #7A6200;
+    line-height: 1.5;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 380px) {
+    .slots-grid { grid-template-columns: repeat(2, 1fr); }
+    .header-title { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ======================================================
+     CONFIGURACIÓN — EDITA SOLO ESTA SECCIÓN
+====================================================== -->
+<script>
+const CONFIG = {
+  // ── Datos de la barbería ──────────────────────────────
+  nombreBarberia: "Dangelo Barber",
+  descripcion:    "Cortes & estilos de calidad",
+
+  // ── WhatsApp del barbero (con código de país, sin + ni espacios) ──
+  telefonoBarbero: "584125050849",   // Venezuela: 58 + número
+
+  // ── URL de tu Google Apps Script Web App ──────────────
+  // Sigue las instrucciones al final de este archivo para obtenerla
+  appsScriptURL: "https://script.google.com/macros/s/TU_ID_AQUI/exec",
+
+  // ── Horario ───────────────────────────────────────────
+  horaInicio:  9,    // 9 = 9:00 AM
+  horaFin:    18,    // 18 = 6:00 PM (la última cita es a las 17:00)
+  duracionTurno: 60, // minutos por turno
+
+  // ── Días laborales (0=Dom, 1=Lun, ..., 6=Sáb) ────────
+  diasLaborales: [1, 2, 3, 4, 5, 6],   // Lun–Sáb
+
+  // ── Días bloqueados (formato YYYY-MM-DD) ──────────────
+  diasBloqueados: [
+    // "2025-12-25",
+    // "2025-01-01",
+  ],
+
+  // ── Horas bloqueadas por fecha ────────────────────────
+  horasBloqueadas: {
+    // "2025-07-15": [10, 11],  // bloquea 10:00 y 11:00 del 15 jul
+    // "2025-07-20": [14],
+  },
+
+  // ── Servicios disponibles ─────────────────────────────
+  servicios: [
+    "Corte clásico",
+    "Corte + barba",
+    "Barba",
+    "Degradado",
+    "Diseño de cejas",
+    "Alisado",
+  ],
+};
+</script>
+<!-- ====================================================== -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-eyebrow">Reserva en línea</div>
+  <div class="header-title" id="hdrNombre"></div>
+  <div class="header-subtitle" id="hdrDesc"></div>
+  <div class="header-line"></div>
+</header>
+
+<!-- PANTALLA PRINCIPAL -->
+<div id="mainScreen">
+  <div class="container">
+
+    <!-- INDICADOR DE PASOS -->
+    <div class="steps-bar" id="stepsBar">
+      <div class="step-dot active" id="dot1"></div>
+      <div class="step-dot" id="dot2"></div>
+      <div class="step-dot" id="dot3"></div>
+    </div>
+
+    <!-- PASO 1: FECHA Y HORA -->
+    <div id="step1" class="fade-in">
+      <div class="section-label">📅 Elige tu fecha</div>
+      <div class="card">
+        <div class="date-nav">
+          <button class="nav-btn" id="prevMonth" onclick="changeMonth(-1)">&#8249;</button>
+          <div class="date-nav-title" id="monthTitle"></div>
+          <button class="nav-btn" id="nextMonth" onclick="changeMonth(1)">&#8250;</button>
+        </div>
+        <div class="weekdays">
+          <div class="weekday-label">D</div><div class="weekday-label">L</div>
+          <div class="weekday-label">M</div><div class="weekday-label">X</div>
+          <div class="weekday-label">J</div><div class="weekday-label">V</div>
+          <div class="weekday-label">S</div>
+        </div>
+        <div class="days-grid" id="daysGrid"></div>
+      </div>
+
+      <!-- HORARIOS -->
+      <div id="slotsSection" style="display:none">
+        <div class="section-label">⏰ Elige tu hora</div>
+        <div class="card">
+          <div class="slots-grid" id="slotsGrid"></div>
+        </div>
+      </div>
+
+      <!-- Tags selección -->
+      <div class="selection-tags" id="selTags" style="display:none">
+        <span class="tag" id="tagFecha"></span>
+        <span class="tag tag-gold" id="tagHora"></span>
+      </div>
+    </div>
+
+    <!-- PASO 2: DATOS DEL CLIENTE -->
+    <div id="step2" style="display:none">
+      <div class="section-label">👤 Tus datos</div>
+      <div class="card fade-in">
+        <div class="form-group">
+          <label class="form-label" for="inpNombre">Nombre completo *</label>
+          <input class="form-input" id="inpNombre" type="text" placeholder="Ej: Carlos Rodríguez" autocomplete="name" />
+          <div class="error-msg" id="errNombre">Ingresa tu nombre completo</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="inpTel">Teléfono con código de país *</label>
+          <input class="form-input" id="inpTel" type="tel" placeholder="Ej: +57 300 123 4567" autocomplete="tel" />
+          <div class="error-msg" id="errTel">Ingresa un número válido</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Servicio *</label>
+          <div class="form-select-wrap">
+            <select class="form-select" id="inpServicio">
+              <option value="">Selecciona un servicio</option>
+            </select>
+          </div>
+          <div class="error-msg" id="errServicio">Selecciona un servicio</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="inpObs">Observaciones</label>
+          <textarea class="form-textarea" id="inpObs" placeholder="Ej: Prefiero degradado bajo, alergias, etc."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 3: RESUMEN Y CONFIRMACIÓN -->
+    <div id="step3" style="display:none">
+      <div class="section-label">✅ Confirmar cita</div>
+      <div class="summary-card fade-in">
+        <div class="summary-title">✂️ Resumen de tu cita</div>
+        <div class="summary-row">
+          <span class="summary-key">Cliente</span>
+          <span class="summary-value" id="sumNombre">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">Teléfono</span>
+          <span class="summary-value" id="sumTel">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">Servicio</span>
+          <span class="summary-value" id="sumServicio">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">Fecha</span>
+          <span class="summary-value" id="sumFecha">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">Hora</span>
+          <span class="summary-value" id="sumHora">—</span>
+        </div>
+        <div class="summary-row" id="sumObsRow" style="display:none">
+          <span class="summary-key">Nota</span>
+          <span class="summary-value" id="sumObs">—</span>
+        </div>
+      </div>
+      <div class="notice">
+        ℹ️ Al confirmar, tu cita quedará registrada en el calendario del barbero y recibirás la confirmación por WhatsApp.
+      </div>
+    </div>
+
+  </div><!-- /container -->
+
+  <!-- NAVEGACIÓN INFERIOR -->
+  <div class="bottom-nav">
+    <div class="container" style="padding:0">
+      <button class="btn-primary" id="btnMain" onclick="nextStep()">
+        <span id="btnLabel">Continuar</span>
+        <div class="spinner" id="spinner" style="display:none"></div>
+      </button>
+      <button class="btn-secondary" id="btnBack" style="display:none" onclick="prevStep()">← Volver</button>
+    </div>
+  </div>
+</div>
+
+<!-- PANTALLA ÉXITO -->
+<div class="state-screen" id="successScreen">
+  <div class="state-icon success">✅</div>
+  <div class="state-title">¡Cita enviada!</div>
+  <div class="state-desc">Tu cita fue registrada correctamente. El barbero te estará esperando.</div>
+  <a class="btn-wa" id="waSuccessBtn" href="#" target="_blank">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.996 2C6.472 2 2 6.477 2 12.003c0 1.77.46 3.432 1.27 4.88L2 22l5.28-1.38A9.927 9.927 0 0011.996 22C17.523 22 22 17.523 22 12c0-5.524-4.477-10-10.004-10zm0 18.168a8.082 8.082 0 01-4.117-1.12l-.295-.175-3.135.82.836-3.055-.193-.313A8.138 8.138 0 013.832 12c0-4.51 3.66-8.168 8.164-8.168 4.504 0 8.168 3.658 8.168 8.168 0 4.508-3.664 8.168-8.168 8.168z"/></svg>
+    Confirmar por WhatsApp
+  </a>
+  <button class="btn-secondary" style="max-width:320px;width:100%" onclick="resetApp()">Hacer otra reserva</button>
+</div>
+
+<!-- PANTALLA ERROR (Calendar falló) -->
+<div class="state-screen" id="errorScreen">
+  <div class="state-icon warning">⚠️</div>
+  <div class="state-title">Calendario no disponible</div>
+  <div class="state-desc">No se pudo guardar en Google Calendar, pero puedes enviar tu cita directamente por WhatsApp al barbero.</div>
+  <a class="btn-wa" id="waErrorBtn" href="#" target="_blank">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.996 2C6.472 2 2 6.477 2 12.003c0 1.77.46 3.432 1.27 4.88L2 22l5.28-1.38A9.927 9.927 0 0011.996 22C17.523 22 22 17.523 22 12c0-5.524-4.477-10-10.004-10zm0 18.168a8.082 8.082 0 01-4.117-1.12l-.295-.175-3.135.82.836-3.055-.193-.313A8.138 8.138 0 013.832 12c0-4.51 3.66-8.168 8.164-8.168 4.504 0 8.168 3.658 8.168 8.168 0 4.508-3.664 8.168-8.168 8.168z"/></svg>
+    Enviar cita por WhatsApp
+  </a>
+  <button class="btn-secondary" style="max-width:320px;width:100%" onclick="resetApp()">Intentar de nuevo</button>
+</div>
+
+<!-- ======================================================
+     LÓGICA JAVASCRIPT
+====================================================== -->
+<script>
+// ── Estado global ──────────────────────────────────────
+let state = {
+  step: 1,
+  viewYear: 0,
+  viewMonth: 0,
+  selectedDate: null,   // "YYYY-MM-DD"
+  selectedHour: null,   // número entero (e.g. 10 = 10:00)
+  nombre: '',
+  telefono: '',
+  servicio: '',
+  observaciones: '',
+};
+let waURL = '';
+
+// ── Init ──────────────────────────────────────────────
+document.getElementById('hdrNombre').textContent = CONFIG.nombreBarberia;
+document.getElementById('hdrDesc').textContent   = CONFIG.descripcion;
+document.title = CONFIG.nombreBarberia + ' · Reserva';
+
+// Poblar servicios
+const selServicio = document.getElementById('inpServicio');
+CONFIG.servicios.forEach(s => {
+  const opt = document.createElement('option');
+  opt.value = s; opt.textContent = s;
+  selServicio.appendChild(opt);
+});
+
+// ── Calendario ────────────────────────────────────────
+const today = new Date();
+state.viewYear  = today.getFullYear();
+state.viewMonth = today.getMonth();
+
+const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+               'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+function changeMonth(delta) {
+  state.viewMonth += delta;
+  if (state.viewMonth > 11) { state.viewMonth = 0; state.viewYear++; }
+  if (state.viewMonth < 0)  { state.viewMonth = 11; state.viewYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  document.getElementById('monthTitle').textContent =
+    MESES[state.viewMonth] + ' ' + state.viewYear;
+
+  const now   = new Date();
+  const first = new Date(state.viewYear, state.viewMonth, 1).getDay();
+  const total = new Date(state.viewYear, state.viewMonth + 1, 0).getDate();
+  const grid  = document.getElementById('daysGrid');
+  grid.innerHTML = '';
+
+  // Deshabilitar botón prev si ya estamos en el mes actual o anterior
+  const prevBtn = document.getElementById('prevMonth');
+  prevBtn.disabled = (state.viewYear === now.getFullYear() && state.viewMonth <= now.getMonth());
+
+  // Celdas vacías
+  for (let i = 0; i < first; i++) {
+    const el = document.createElement('div');
+    el.className = 'day-cell empty';
+    grid.appendChild(el);
+  }
+
+  for (let d = 1; d <= total; d++) {
+    const el   = document.createElement('div');
+    const date = new Date(state.viewYear, state.viewMonth, d);
+    const iso  = toISO(date);
+    el.textContent = d;
+    el.className = 'day-cell';
+
+    const isToday  = (d === now.getDate() && state.viewMonth === now.getMonth() && state.viewYear === now.getFullYear());
+    const isPast   = date < new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const isBlocked = CONFIG.diasBloqueados.includes(iso);
+    const isLaboral = CONFIG.diasLaborales.includes(date.getDay());
+
+    if (isPast || !isLaboral || isBlocked) {
+      el.classList.add(isPast ? 'past' : 'disabled');
+    } else {
+      if (isToday) el.classList.add('today');
+      if (state.selectedDate === iso) el.classList.add('selected');
+      el.addEventListener('click', () => selectDate(iso));
+    }
+
+    grid.appendChild(el);
+  }
+}
+
+function selectDate(iso) {
+  state.selectedDate = iso;
+  state.selectedHour = null;
+  renderCalendar();
+  renderSlots();
+}
+
+function renderSlots() {
+  const section = document.getElementById('slotsSection');
+  const grid    = document.getElementById('slotsGrid');
+  grid.innerHTML = '';
+
+  if (!state.selectedDate) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+
+  const blockedHours = CONFIG.horasBloqueadas[state.selectedDate] || [];
+  let hasSlots = false;
+
+  for (let h = CONFIG.horaInicio; h < CONFIG.horaFin; h++) {
+    const btn = document.createElement('button');
+    const label = formatHour(h);
+    btn.textContent = label;
+    btn.className = 'slot-btn';
+
+    if (blockedHours.includes(h)) {
+      btn.classList.add('blocked');
+      btn.disabled = true;
+    } else {
+      hasSlots = true;
+      if (state.selectedHour === h) btn.classList.add('selected');
+      btn.addEventListener('click', () => selectHour(h));
+    }
+    grid.appendChild(btn);
+  }
+
+  if (!hasSlots) {
+    grid.innerHTML = '<div class="no-slots" style="grid-column:1/-1">Sin horarios disponibles para este día.</div>';
+  }
+
+  updateSelTags();
+}
+
+function selectHour(h) {
+  state.selectedHour = h;
+  renderSlots();
+  updateSelTags();
+}
+
+function updateSelTags() {
+  const tags = document.getElementById('selTags');
+  if (!state.selectedDate) { tags.style.display = 'none'; return; }
+
+  document.getElementById('tagFecha').textContent = '📅 ' + formatDateLabel(state.selectedDate);
+
+  if (state.selectedHour !== null) {
+    document.getElementById('tagHora').textContent = '⏰ ' + formatHour(state.selectedHour);
+    tags.style.display = 'flex';
+  } else {
+    document.getElementById('tagHora').textContent = '';
+    tags.style.display = state.selectedDate ? 'flex' : 'none';
+    document.getElementById('tagHora').style.display = 'none';
+  }
+  document.getElementById('tagHora').style.display = state.selectedHour !== null ? '' : 'none';
+}
+
+// ── Navegación de pasos ────────────────────────────────
+function nextStep() {
+  if (state.step === 1) {
+    if (!state.selectedDate) { showToast('Selecciona una fecha'); return; }
+    if (state.selectedHour === null) { showToast('Selecciona una hora'); return; }
+    goToStep(2);
+  } else if (state.step === 2) {
+    if (!validateForm()) return;
+    state.nombre       = document.getElementById('inpNombre').value.trim();
+    state.telefono     = document.getElementById('inpTel').value.trim();
+    state.servicio     = document.getElementById('inpServicio').value;
+    state.observaciones = document.getElementById('inpObs').value.trim();
+    buildSummary();
+    goToStep(3);
+  } else if (state.step === 3) {
+    confirmarCita();
+  }
+}
+
+function prevStep() {
+  if (state.step > 1) goToStep(state.step - 1);
+}
+
+function goToStep(n) {
+  document.getElementById('step1').style.display = n === 1 ? '' : 'none';
+  document.getElementById('step2').style.display = n === 2 ? '' : 'none';
+  document.getElementById('step3').style.display = n === 3 ? '' : 'none';
+
+  document.getElementById('btnBack').style.display = n > 1 ? '' : 'none';
+  document.getElementById('btnLabel').textContent =
+    n === 1 ? 'Continuar' : n === 2 ? 'Revisar cita' : 'Confirmar cita ✓';
+  document.getElementById('btnMain').className =
+    'btn-primary' + (n === 3 ? ' btn-gold' : '');
+
+  // Steps dots
+  for (let i = 1; i <= 3; i++) {
+    const dot = document.getElementById('dot' + i);
+    dot.className = 'step-dot' + (i === n ? ' active' : i < n ? ' done' : '');
+  }
+
+  state.step = n;
+  window.scrollTo(0, 0);
+
+  // Animación
+  if (n === 2) document.getElementById('step2').classList.add('fade-in');
+  if (n === 3) document.getElementById('step3').classList.add('fade-in');
+}
+
+// ── Validación ────────────────────────────────────────
+function validateForm() {
+  let ok = true;
+  const nombre   = document.getElementById('inpNombre').value.trim();
+  const tel      = document.getElementById('inpTel').value.trim();
+  const servicio = document.getElementById('inpServicio').value;
+
+  toggleErr('inpNombre', 'errNombre', !nombre);
+  toggleErr('inpTel',    'errTel',    !tel || tel.length < 7);
+  toggleErr('inpServicio','errServicio', !servicio);
+
+  if (!nombre || !tel || tel.length < 7 || !servicio) ok = false;
+  return ok;
+}
+
+function toggleErr(inputId, errId, show) {
+  document.getElementById(inputId).classList.toggle('input-error', show);
+  document.getElementById(errId).classList.toggle('show', show);
+}
+
+// ── Resumen ────────────────────────────────────────────
+function buildSummary() {
+  document.getElementById('sumNombre').textContent  = state.nombre;
+  document.getElementById('sumTel').textContent     = state.telefono;
+  document.getElementById('sumServicio').textContent = state.servicio;
+  document.getElementById('sumFecha').textContent   = formatDateLabel(state.selectedDate);
+  document.getElementById('sumHora').textContent    = formatHour(state.selectedHour);
+
+  if (state.observaciones) {
+    document.getElementById('sumObs').textContent  = state.observaciones;
+    document.getElementById('sumObsRow').style.display = '';
+  } else {
+    document.getElementById('sumObsRow').style.display = 'none';
+  }
+}
+
+// ── Confirmar cita ─────────────────────────────────────
+async function confirmarCita() {
+  setLoading(true);
+  waURL = buildWAUrl();
+
+  // Intentar Apps Script
+  const appsScriptOK = await enviarACalendar();
+  setLoading(false);
+
+  if (appsScriptOK) {
+    document.getElementById('mainScreen').style.display  = 'none';
+    document.getElementById('successScreen').classList.add('active');
+    document.getElementById('waSuccessBtn').href = waURL;
+  } else {
+    document.getElementById('mainScreen').style.display  = 'none';
+    document.getElementById('errorScreen').classList.add('active');
+    document.getElementById('waErrorBtn').href = waURL;
+  }
+}
+
+async function enviarACalendar() {
+  // Si no hay URL configurada, omitir silenciosamente
+  if (!CONFIG.appsScriptURL || CONFIG.appsScriptURL.includes('TU_ID_AQUI')) {
+    return false;
+  }
+
+  try {
+    const payload = {
+      nombre:       state.nombre,
+      telefono:     state.telefono,
+      servicio:     state.servicio,
+      observaciones: state.observaciones,
+      fecha:        state.selectedDate,          // "YYYY-MM-DD"
+      hora:         state.selectedHour,          // número entero
+    };
+
+    const res = await fetch(CONFIG.appsScriptURL, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      headers: { 'Content-Type': 'text/plain' }, // evitar preflight CORS
+    });
+    const json = await res.json();
+    return json.success === true;
+  } catch (e) {
+    console.warn('Apps Script error:', e);
+    return false;
+  }
+}
+
+function buildWAUrl() {
+  const fecha = formatDateLabel(state.selectedDate);
+  const hora  = formatHour(state.selectedHour);
+  const msg = `Hola, tienes una nueva cita 🪒\n\n` +
+              `👤 Cliente: ${state.nombre}\n` +
+              `📱 Teléfono: ${state.telefono}\n` +
+              `✂️ Servicio: ${state.servicio}\n` +
+              `📅 Fecha: ${fecha}\n` +
+              `⏰ Hora: ${hora}\n` +
+              (state.observaciones ? `📝 Obs: ${state.observaciones}\n` : '') +
+              `\nRegistrado desde ${CONFIG.nombreBarberia} · Reserva en línea`;
+
+  return `https://wa.me/${CONFIG.telefonoBarbero}?text=${encodeURIComponent(msg)}`;
+}
+
+function setLoading(on) {
+  document.getElementById('btnMain').disabled = on;
+  document.getElementById('spinner').style.display  = on ? '' : 'none';
+  document.getElementById('btnLabel').style.display = on ? 'none' : '';
+  if (on) {
+    const tmp = document.createElement('span');
+    tmp.style.fontSize = '14px';
+    tmp.style.opacity  = '0.8';
+    tmp.id = 'loadingLabel';
+    tmp.textContent = 'Guardando tu cita...';
+    document.getElementById('btnMain').appendChild(tmp);
+  } else {
+    const lbl = document.getElementById('loadingLabel');
+    if (lbl) lbl.remove();
+  }
+}
+
+function resetApp() {
+  state = { ...state, step:1, selectedDate:null, selectedHour:null,
+    nombre:'', telefono:'', servicio:'', observaciones:'' };
+  document.getElementById('successScreen').classList.remove('active');
+  document.getElementById('errorScreen').classList.remove('active');
+  document.getElementById('mainScreen').style.display = '';
+  goToStep(1);
+  renderCalendar();
+  document.getElementById('slotsSection').style.display = 'none';
+  document.getElementById('selTags').style.display = 'none';
+  document.getElementById('inpNombre').value = '';
+  document.getElementById('inpTel').value    = '';
+  document.getElementById('inpServicio').value = '';
+  document.getElementById('inpObs').value    = '';
+}
+
+// ── Utilidades ─────────────────────────────────────────
+function toISO(date) {
+  return date.getFullYear() + '-' +
+    String(date.getMonth()+1).padStart(2,'0') + '-' +
+    String(date.getDate()).padStart(2,'0');
+}
+
+function formatHour(h) {
+  const suffix = h < 12 ? 'AM' : 'PM';
+  const h12    = h % 12 || 12;
+  return `${h12}:00 ${suffix}`;
+}
+
+function formatDateLabel(iso) {
+  if (!iso) return '';
+  const [y,m,d] = iso.split('-').map(Number);
+  const date = new Date(y, m-1, d);
+  const dias = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  return `${dias[date.getDay()]} ${d} de ${MESES[m-1]}`;
+}
+
+function showToast(msg, isErr = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isErr ? ' error-toast' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── Arrancar ──────────────────────────────────────────
+renderCalendar();
+</script>
+
+</body>
+</html>

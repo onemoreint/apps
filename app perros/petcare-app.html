@@ -1,0 +1,2044 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0d0a1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>PetAura — Cuida a quien te acompaña siempre</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ===================================================
+   RESET & BASE
+=================================================== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100%;overflow:hidden}
+body{
+  font-family:'Poppins',sans-serif;
+  background:#0d0a1a;
+  color:#e8e0ff;
+  height:100vh;
+  overflow:hidden;
+  position:relative;
+}
+
+/* ===================================================
+   CSS VARIABLES
+=================================================== */
+:root{
+  --bg-deep:#0d0a1a;
+  --bg-mid:#13102a;
+  --bg-card:#1c1733;
+  --bg-card2:#221e3d;
+  --purple-1:#7c3aed;
+  --purple-2:#6d28d9;
+  --purple-3:#4c1d95;
+  --violet:#8b5cf6;
+  --violet-soft:#a78bfa;
+  --blue-dark:#1e1b4b;
+  --accent:#c084fc;
+  --accent-pink:#f0abfc;
+  --accent-cyan:#67e8f9;
+  --accent-green:#4ade80;
+  --accent-yellow:#fbbf24;
+  --accent-red:#f87171;
+  --text-main:#ede9ff;
+  --text-muted:#9d93c0;
+  --text-dim:#5c537a;
+  --border:#2d2754;
+  --border-glow:rgba(139,92,246,0.35);
+  --radius-sm:10px;
+  --radius-md:16px;
+  --radius-lg:24px;
+  --radius-xl:32px;
+  --shadow-card:0 8px 32px rgba(0,0,0,0.45);
+  --shadow-glow:0 0 24px rgba(124,58,237,0.3);
+  --nav-h:68px;
+  --top-h:64px;
+  --transition:cubic-bezier(.4,0,.2,1);
+}
+
+/* ===================================================
+   SCROLLBAR
+=================================================== */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* ===================================================
+   APP SHELL
+=================================================== */
+#app{
+  width:100%;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  position:relative;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(124,58,237,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 110%, rgba(109,40,217,0.14) 0%, transparent 60%),
+    var(--bg-deep);
+}
+
+/* Top bar */
+#topbar{
+  height:var(--top-h);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px;
+  flex-shrink:0;
+  position:relative;
+  z-index:10;
+  border-bottom:1px solid rgba(45,39,84,0.5);
+  background:rgba(13,10,26,0.85);
+  backdrop-filter:blur(20px);
+}
+#topbar .brand{
+  display:flex;align-items:center;gap:10px;
+}
+#topbar .brand-icon{
+  width:36px;height:36px;
+  background:linear-gradient(135deg,var(--purple-1),var(--accent));
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+  box-shadow:0 4px 15px rgba(124,58,237,0.4);
+}
+#topbar .brand-name{
+  font-size:20px;font-weight:800;
+  background:linear-gradient(90deg,var(--violet-soft),var(--accent-pink));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;letter-spacing:-0.5px;
+}
+#topbar .top-actions{display:flex;gap:10px;align-items:center;}
+.icon-btn{
+  width:38px;height:38px;
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:16px;
+  transition:all .2s var(--transition);
+  position:relative;
+}
+.icon-btn:hover,.icon-btn:active{background:var(--bg-card2);border-color:var(--violet);}
+.badge{
+  position:absolute;top:-4px;right:-4px;
+  width:16px;height:16px;
+  background:var(--accent-pink);
+  border-radius:50%;
+  font-size:9px;font-weight:700;color:#1a0030;
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--bg-deep);
+}
+
+/* Main content area */
+#main{
+  flex:1;
+  overflow:hidden;
+  position:relative;
+}
+
+/* Screens */
+.screen{
+  position:absolute;inset:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:20px 20px calc(var(--nav-h) + 20px);
+  opacity:0;
+  pointer-events:none;
+  transform:translateX(30px);
+  transition:all .35s var(--transition);
+}
+.screen.active{
+  opacity:1;pointer-events:all;transform:translateX(0);
+}
+.screen.slide-left{transform:translateX(-30px);}
+
+/* Bottom nav */
+#bottomnav{
+  height:var(--nav-h);
+  display:flex;
+  align-items:stretch;
+  flex-shrink:0;
+  background:rgba(19,16,42,0.95);
+  backdrop-filter:blur(24px);
+  border-top:1px solid var(--border);
+  position:relative;z-index:10;
+}
+.nav-item{
+  flex:1;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:4px;cursor:pointer;
+  padding:8px 0;
+  transition:all .2s var(--transition);
+  position:relative;
+}
+.nav-item .nav-icon{font-size:20px;transition:transform .2s var(--transition);}
+.nav-item .nav-label{
+  font-size:9.5px;font-weight:500;
+  color:var(--text-dim);letter-spacing:.3px;
+  transition:color .2s;
+}
+.nav-item.active .nav-icon{transform:scale(1.1);}
+.nav-item.active .nav-label{color:var(--violet);}
+.nav-item.active::before{
+  content:'';
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:32px;height:2px;
+  background:linear-gradient(90deg,var(--purple-1),var(--accent));
+  border-radius:0 0 4px 4px;
+}
+.nav-item::after{
+  content:'';position:absolute;
+  inset:4px;border-radius:12px;
+  background:transparent;
+  transition:background .2s;
+}
+.nav-item.active::after{background:rgba(124,58,237,0.08);}
+
+/* ===================================================
+   COMPONENTS
+=================================================== */
+
+/* Section title */
+.section-title{
+  font-size:13px;font-weight:600;
+  text-transform:uppercase;letter-spacing:1.2px;
+  color:var(--text-muted);
+  margin:24px 0 12px;
+}
+.section-title:first-child{margin-top:0;}
+
+/* Cards */
+.card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:16px;
+  box-shadow:var(--shadow-card);
+  margin-bottom:12px;
+  position:relative;overflow:hidden;
+  transition:transform .2s var(--transition),box-shadow .2s;
+}
+.card:active{transform:scale(.985);}
+.card::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(139,92,246,0.4),transparent);
+}
+.card-glow{
+  box-shadow:var(--shadow-card),var(--shadow-glow);
+  border-color:var(--border-glow);
+}
+
+/* Primary button */
+.btn-primary{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:14px 20px;
+  background:linear-gradient(135deg,var(--purple-1),var(--purple-2));
+  border:none;border-radius:var(--radius-md);
+  color:#fff;font-family:'Poppins',sans-serif;
+  font-size:14px;font-weight:600;cursor:pointer;
+  letter-spacing:.3px;
+  box-shadow:0 4px 20px rgba(124,58,237,0.4);
+  transition:all .2s var(--transition);
+}
+.btn-primary:active{transform:scale(.97);box-shadow:0 2px 10px rgba(124,58,237,0.3);}
+.btn-secondary{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:13px 20px;
+  background:transparent;
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  color:var(--text-main);font-family:'Poppins',sans-serif;
+  font-size:14px;font-weight:500;cursor:pointer;
+  transition:all .2s var(--transition);
+}
+.btn-secondary:active{background:var(--bg-card2);}
+
+/* Pill badge */
+.pill{
+  display:inline-flex;align-items:center;
+  padding:4px 10px;border-radius:20px;
+  font-size:11px;font-weight:600;
+}
+.pill-green{background:rgba(74,222,128,.15);color:var(--accent-green);border:1px solid rgba(74,222,128,.3);}
+.pill-yellow{background:rgba(251,191,36,.15);color:var(--accent-yellow);border:1px solid rgba(251,191,36,.3);}
+.pill-red{background:rgba(248,113,113,.15);color:var(--accent-red);border:1px solid rgba(248,113,113,.3);}
+.pill-purple{background:rgba(167,139,250,.15);color:var(--violet-soft);border:1px solid rgba(167,139,250,.3);}
+
+/* Inputs */
+.form-group{margin-bottom:14px;}
+.form-label{
+  display:block;font-size:12px;font-weight:500;
+  color:var(--text-muted);margin-bottom:6px;letter-spacing:.3px;
+}
+.form-input,.form-select,.form-textarea{
+  width:100%;padding:12px 14px;
+  background:var(--bg-mid);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  color:var(--text-main);
+  font-family:'Poppins',sans-serif;font-size:14px;
+  outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.form-input:focus,.form-select:focus,.form-textarea:focus{
+  border-color:var(--violet);
+  box-shadow:0 0 0 3px rgba(139,92,246,0.15);
+}
+.form-select option{background:var(--bg-mid);}
+.form-textarea{resize:vertical;min-height:80px;}
+
+/* Progress bar */
+.progress-wrap{
+  height:8px;background:var(--bg-mid);
+  border-radius:4px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.progress-fill{
+  height:100%;
+  border-radius:4px;
+  transition:width .8s var(--transition);
+  background:linear-gradient(90deg,var(--purple-1),var(--accent));
+}
+
+/* Avatar */
+.pet-avatar{
+  width:52px;height:52px;
+  border-radius:16px;
+  background:linear-gradient(135deg,var(--purple-2),var(--accent));
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;
+  border:2px solid var(--border-glow);
+  flex-shrink:0;
+  position:relative;overflow:hidden;
+  cursor:pointer;
+}
+.pet-avatar img{width:100%;height:100%;object-fit:cover;border-radius:14px;}
+.pet-avatar-lg{
+  width:90px;height:90px;border-radius:28px;font-size:42px;
+}
+
+/* Floating WhatsApp button */
+#wa-btn{
+  position:fixed;
+  bottom:calc(var(--nav-h) + 16px);
+  right:16px;
+  width:52px;height:52px;
+  background:linear-gradient(135deg,#25d366,#128C7E);
+  border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(37,211,102,0.45);
+  cursor:pointer;font-size:24px;z-index:100;
+  transition:transform .2s var(--transition),box-shadow .2s;
+  animation:wa-pulse 3s infinite;
+}
+#wa-btn:active{transform:scale(.9);}
+@keyframes wa-pulse{
+  0%,100%{box-shadow:0 4px 20px rgba(37,211,102,0.45);}
+  50%{box-shadow:0 4px 30px rgba(37,211,102,0.7),0 0 0 6px rgba(37,211,102,0.1);}
+}
+
+/* Quick action buttons */
+.quick-actions{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:10px;margin-top:4px;
+}
+.qa-btn{
+  display:flex;flex-direction:column;
+  align-items:center;gap:6px;
+  padding:14px 8px;
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  cursor:pointer;
+  transition:all .2s var(--transition);
+  text-align:center;
+}
+.qa-btn:active{transform:scale(.93);background:var(--bg-card2);}
+.qa-icon{
+  width:40px;height:40px;
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+}
+.qa-label{font-size:10px;font-weight:500;color:var(--text-muted);}
+
+/* Stats row */
+.stats-row{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:10px;margin-bottom:12px;
+}
+.stat-card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:14px;
+  display:flex;flex-direction:column;gap:4px;
+}
+.stat-card .stat-icon{font-size:22px;margin-bottom:4px;}
+.stat-card .stat-val{
+  font-size:22px;font-weight:700;
+  background:linear-gradient(90deg,var(--violet-soft),var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.stat-card .stat-label{font-size:11px;color:var(--text-muted);}
+
+/* Divider */
+.divider{
+  height:1px;background:var(--border);
+  margin:16px 0;opacity:.5;
+}
+
+/* Toast */
+#toast{
+  position:fixed;
+  bottom:calc(var(--nav-h) + 80px);
+  left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--bg-card2);
+  border:1px solid var(--border-glow);
+  color:var(--text-main);
+  padding:12px 20px;border-radius:12px;
+  font-size:13px;font-weight:500;
+  z-index:1000;
+  opacity:0;transition:all .3s var(--transition);
+  white-space:nowrap;
+  box-shadow:var(--shadow-glow);
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* Modal */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(8px);
+  z-index:200;
+  display:flex;align-items:flex-end;
+  opacity:0;pointer-events:none;
+  transition:opacity .3s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-sheet{
+  width:100%;max-height:90vh;
+  background:var(--bg-mid);
+  border-radius:var(--radius-xl) var(--radius-xl) 0 0;
+  border-top:1px solid var(--border);
+  padding:24px 20px;overflow-y:auto;
+  transform:translateY(100%);
+  transition:transform .4s var(--transition);
+}
+.modal-overlay.open .modal-sheet{transform:translateY(0);}
+.modal-handle{
+  width:40px;height:4px;background:var(--border);
+  border-radius:2px;margin:0 auto 20px;
+}
+.modal-title{
+  font-size:18px;font-weight:700;margin-bottom:20px;
+  background:linear-gradient(90deg,var(--violet-soft),var(--accent-pink));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* Pet selector */
+.pet-selector{
+  display:flex;gap:12px;overflow-x:auto;
+  padding-bottom:8px;scrollbar-width:none;
+}
+.pet-selector::-webkit-scrollbar{display:none;}
+.pet-chip{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  flex-shrink:0;cursor:pointer;
+  transition:transform .2s;
+}
+.pet-chip:active{transform:scale(.92);}
+.pet-chip .chip-ring{
+  width:60px;height:60px;
+  border-radius:20px;
+  border:2px solid var(--border);
+  padding:2px;
+  transition:border-color .2s;
+}
+.pet-chip.selected .chip-ring{border-color:var(--violet);box-shadow:0 0 12px rgba(139,92,246,0.4);}
+.pet-chip .chip-name{font-size:10px;color:var(--text-muted);font-weight:500;text-align:center;max-width:64px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+/* Add pet chip */
+.add-pet-chip{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  flex-shrink:0;cursor:pointer;
+}
+.add-pet-chip .add-ring{
+  width:60px;height:60px;border-radius:20px;
+  border:2px dashed var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;color:var(--text-dim);
+  transition:all .2s;
+}
+.add-pet-chip:active .add-ring{border-color:var(--violet);color:var(--violet);}
+
+/* Vaccine / vet rows */
+.list-item{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 0;border-bottom:1px solid rgba(45,39,84,0.4);
+}
+.list-item:last-child{border-bottom:none;}
+.list-item-icon{
+  width:42px;height:42px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;
+}
+.list-item-body{flex:1;min-width:0;}
+.list-item-title{font-size:14px;font-weight:600;margin-bottom:2px;}
+.list-item-sub{font-size:11px;color:var(--text-muted);}
+
+/* Walk history */
+.walk-item{
+  display:flex;align-items:center;gap:12px;
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:14px;margin-bottom:8px;
+}
+.walk-icon{
+  width:44px;height:44px;border-radius:12px;
+  background:rgba(124,58,237,0.15);
+  display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;
+}
+
+/* IA Chat */
+#ai-screen .ai-messages{
+  min-height:200px;max-height:340px;
+  overflow-y:auto;
+  padding:4px;
+  margin-bottom:16px;
+}
+.ai-bubble{
+  max-width:88%;
+  padding:12px 16px;
+  border-radius:18px;
+  font-size:13px;line-height:1.6;
+  margin-bottom:8px;
+  animation:fadeUp .3s var(--transition);
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.ai-bubble.user{
+  background:linear-gradient(135deg,var(--purple-1),var(--purple-2));
+  color:#fff;
+  margin-left:auto;
+  border-bottom-right-radius:4px;
+}
+.ai-bubble.bot{
+  background:var(--bg-card2);
+  border:1px solid var(--border);
+  color:var(--text-main);
+  margin-right:auto;
+  border-bottom-left-radius:4px;
+}
+.ai-input-row{display:flex;gap:10px;}
+.ai-input-row .form-input{flex:1;}
+.ai-send{
+  width:48px;height:48px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--purple-1),var(--accent));
+  border:none;border-radius:14px;
+  color:#fff;font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .2s;
+}
+.ai-send:active{transform:scale(.9);}
+
+/* Emergency card */
+.emergency-card{
+  background:linear-gradient(135deg,rgba(248,113,113,0.12),rgba(220,38,38,0.06));
+  border:1px solid rgba(248,113,113,0.35);
+  border-radius:var(--radius-md);
+  padding:16px;margin-bottom:12px;
+  display:flex;gap:14px;align-items:center;
+}
+.emergency-icon{font-size:28px;}
+.emergency-body h4{font-size:14px;font-weight:700;color:var(--accent-red);margin-bottom:2px;}
+.emergency-body p{font-size:11px;color:var(--text-muted);line-height:1.5;}
+.emergency-body a{color:var(--accent-red);font-weight:600;text-decoration:none;}
+
+/* Health bar */
+.health-section{
+  display:flex;flex-direction:column;gap:8px;margin:12px 0;
+}
+.health-row{
+  display:flex;align-items:center;gap:10px;
+}
+.health-label{font-size:12px;color:var(--text-muted);width:70px;flex-shrink:0;}
+.health-bar{flex:1;height:6px;background:var(--bg-mid);border-radius:3px;overflow:hidden;border:1px solid var(--border);}
+.health-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--purple-1),var(--accent-green));transition:width 1s var(--transition);}
+.health-val{font-size:11px;font-weight:600;color:var(--violet-soft);width:30px;text-align:right;flex-shrink:0;}
+
+/* Carnet */
+.carnet-card{
+  background:linear-gradient(135deg,var(--bg-card),var(--blue-dark));
+  border:1px solid var(--border-glow);
+  border-radius:var(--radius-lg);
+  padding:20px;
+  position:relative;overflow:hidden;
+}
+.carnet-card::after{
+  content:'🐾';
+  position:absolute;right:-10px;bottom:-10px;
+  font-size:80px;opacity:.05;
+}
+.carnet-header{
+  display:flex;gap:16px;align-items:center;margin-bottom:16px;
+}
+.carnet-table{width:100%;border-collapse:collapse;}
+.carnet-table th{
+  font-size:10px;color:var(--text-dim);
+  text-align:left;padding:6px 8px;
+  text-transform:uppercase;letter-spacing:.6px;
+  border-bottom:1px solid var(--border);
+}
+.carnet-table td{
+  font-size:12px;padding:8px 8px;
+  color:var(--text-main);
+  border-bottom:1px solid rgba(45,39,84,0.3);
+}
+
+/* Day summary */
+.day-summary{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:8px;
+}
+.day-item{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:10px 8px;
+  text-align:center;
+  transition:all .2s;
+}
+.day-item .day-icon{font-size:20px;margin-bottom:4px;}
+.day-item .day-val{font-size:17px;font-weight:700;color:var(--violet-soft);}
+.day-item .day-label{font-size:9px;color:var(--text-dim);letter-spacing:.3px;}
+
+/* Reminder */
+.reminder-item{
+  display:flex;align-items:center;gap:12px;
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:14px;
+  margin-bottom:8px;
+}
+.reminder-dot{
+  width:10px;height:10px;border-radius:50%;flex-shrink:0;
+}
+
+/* Empty state */
+.empty-state{
+  text-align:center;padding:40px 20px;
+  opacity:.6;
+}
+.empty-state .empty-icon{font-size:48px;margin-bottom:12px;}
+.empty-state p{font-size:13px;color:var(--text-muted);line-height:1.6;}
+
+/* Animated dot indicator */
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.dot-live{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--accent-green);
+  display:inline-block;margin-right:6px;
+  animation:blink 2s infinite;
+}
+
+/* Shimmer animation for skeleton */
+@keyframes shimmer{
+  0%{background-position:-200% 0}
+  100%{background-position:200% 0}
+}
+
+/* Welcome animation */
+@keyframes slideDown{
+  from{opacity:0;transform:translateY(-10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.screen.active > *{animation:slideDown .4s var(--transition) both;}
+.screen.active > *:nth-child(2){animation-delay:.05s;}
+.screen.active > *:nth-child(3){animation-delay:.1s;}
+.screen.active > *:nth-child(4){animation-delay:.15s;}
+.screen.active > *:nth-child(5){animation-delay:.2s;}
+.screen.active > *:nth-child(6){animation-delay:.25s;}
+
+/* ===================================================
+   SCREEN: ONBOARDING
+=================================================== */
+#onboarding{
+  position:fixed;inset:0;z-index:500;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,58,237,0.25) 0%, transparent 65%),
+    var(--bg-deep);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:40px 30px;
+  text-align:center;
+}
+.onboarding-logo{
+  font-size:64px;margin-bottom:24px;
+  animation:float 3s ease-in-out infinite;
+}
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
+}
+.onboarding h1{
+  font-size:32px;font-weight:800;
+  background:linear-gradient(135deg,var(--violet-soft),var(--accent-pink));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:12px;letter-spacing:-1px;
+}
+.onboarding p{
+  font-size:14px;color:var(--text-muted);
+  line-height:1.7;margin-bottom:32px;max-width:300px;
+}
+.onboarding-dots{display:flex;gap:6px;margin-bottom:32px;}
+.onboarding-dots span{
+  width:6px;height:6px;border-radius:3px;background:var(--border);
+  transition:all .3s;
+}
+.onboarding-dots span.active{width:20px;background:var(--violet);}
+
+/* ===================================================
+   RESPONSIVE
+=================================================== */
+@media(min-width:500px){
+  #app{max-width:430px;margin:0 auto;}
+  body{background:#080612;}
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== ONBOARDING ===================== -->
+<div id="onboarding">
+  <div class="onboarding-logo">🐾</div>
+  <h1>PetAura</h1>
+  <p>Cuida mejor a quien te acompaña siempre. Tu asistente de bienestar animal, en un solo lugar.</p>
+  <div class="onboarding-dots">
+    <span class="active"></span><span></span><span></span>
+  </div>
+  <button class="btn-primary" onclick="startApp()" style="max-width:300px;">
+    ✨ &nbsp;Comenzar ahora
+  </button>
+</div>
+
+<!-- ===================== MAIN APP ===================== -->
+<div id="app" style="display:none;">
+
+  <!-- TOP BAR -->
+  <div id="topbar">
+    <div class="brand">
+      <div class="brand-icon">🐾</div>
+      <div class="brand-name">PetAura</div>
+    </div>
+    <div class="top-actions">
+      <div class="icon-btn" onclick="openNotifications()">
+        🔔
+        <span class="badge" id="notif-badge" style="display:none">3</span>
+      </div>
+      <div class="icon-btn" onclick="navigateTo('profile')">👤</div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div id="main">
+
+    <!-- ====== DASHBOARD ====== -->
+    <div class="screen active" id="home-screen">
+      <!-- Pet selector -->
+      <div class="section-title">Mis mascotas</div>
+      <div class="pet-selector" id="pet-selector"></div>
+
+      <!-- Emergency card -->
+      <div class="emergency-card" style="margin-top:16px;">
+        <div class="emergency-icon">🚨</div>
+        <div class="emergency-body">
+          <h4>Emergencia veterinaria</h4>
+          <p>Ante cualquier urgencia llama de inmediato:<br>
+            <a href="tel:+573126387467">+57 312 638 7467</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Day summary -->
+      <div class="section-title">Resumen del día</div>
+      <div class="day-summary" id="day-summary">
+        <div class="day-item"><div class="day-icon">🍖</div><div class="day-val" id="ds-food">0</div><div class="day-label">Comidas</div></div>
+        <div class="day-item"><div class="day-icon">🦮</div><div class="day-val" id="ds-walk">0</div><div class="day-label">Paseos</div></div>
+        <div class="day-item"><div class="day-icon">💉</div><div class="day-val" id="ds-vax">0</div><div class="day-label">Vacunas</div></div>
+        <div class="day-item"><div class="day-icon">🛁</div><div class="day-val" id="ds-bath">0</div><div class="day-label">Baños</div></div>
+      </div>
+
+      <!-- Quick actions -->
+      <div class="section-title">Registro rápido</div>
+      <div class="quick-actions">
+        <div class="qa-btn" onclick="quickAction('walk')">
+          <div class="qa-icon" style="background:rgba(99,102,241,.15);">🦮</div>
+          <div class="qa-label">Paseo</div>
+        </div>
+        <div class="qa-btn" onclick="quickAction('food')">
+          <div class="qa-icon" style="background:rgba(251,191,36,.12);">🍖</div>
+          <div class="qa-label">Comida</div>
+        </div>
+        <div class="qa-btn" onclick="quickAction('bath')">
+          <div class="qa-icon" style="background:rgba(103,232,249,.1);">🛁</div>
+          <div class="qa-label">Baño</div>
+        </div>
+        <div class="qa-btn" onclick="quickAction('weight')">
+          <div class="qa-icon" style="background:rgba(74,222,128,.1);">⚖️</div>
+          <div class="qa-label">Peso</div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="section-title">Esta semana</div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon">🦮</div>
+          <div class="stat-val" id="week-walks">0</div>
+          <div class="stat-label">Paseos totales</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🍖</div>
+          <div class="stat-val" id="week-food">0</div>
+          <div class="stat-label">Comidas registradas</div>
+        </div>
+      </div>
+
+      <!-- Recent reminders -->
+      <div class="section-title">Próximos recordatorios</div>
+      <div id="home-reminders">
+        <div class="empty-state" style="padding:20px 0;">
+          <div class="empty-icon" style="font-size:32px;">📅</div>
+          <p>Sin recordatorios pendientes</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== PERFIL ====== -->
+    <div class="screen" id="profile-screen">
+      <div class="section-title">Perfil de mascota</div>
+
+      <!-- Profile card -->
+      <div class="card card-glow" id="profile-card">
+        <div style="display:flex;gap:16px;align-items:flex-start;">
+          <div class="pet-avatar pet-avatar-lg" id="profile-avatar" onclick="changeAvatarEmoji()">🐶</div>
+          <div style="flex:1;">
+            <div style="font-size:22px;font-weight:800;letter-spacing:-.5px;" id="profile-name">Mi mascota</div>
+            <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;" id="profile-breed">— Sin raza definida</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <span class="pill pill-purple" id="profile-sex">♂ Macho</span>
+              <span class="pill pill-green" id="profile-age">0 años</span>
+              <span class="pill pill-yellow" id="profile-weight">0 kg</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;font-weight:600;">ESTADO DE SALUD</div>
+        <div class="health-section" id="health-bars">
+          <div class="health-row">
+            <div class="health-label">General</div>
+            <div class="health-bar"><div class="health-fill" id="hb-general" style="width:75%"></div></div>
+            <div class="health-val">75%</div>
+          </div>
+          <div class="health-row">
+            <div class="health-label">Nutrición</div>
+            <div class="health-bar"><div class="health-fill" id="hb-nutrition" style="width:60%;background:linear-gradient(90deg,var(--purple-1),var(--accent-yellow))"></div></div>
+            <div class="health-val">60%</div>
+          </div>
+          <div class="health-row">
+            <div class="health-label">Actividad</div>
+            <div class="health-bar"><div class="health-fill" id="hb-activity" style="width:80%;background:linear-gradient(90deg,var(--purple-1),var(--accent-cyan))"></div></div>
+            <div class="health-val">80%</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="openModal('editPetModal')" style="margin-bottom:10px;">
+        ✏️ &nbsp;Editar perfil
+      </button>
+      <button class="btn-secondary" onclick="deletePet()">
+        🗑 &nbsp;Eliminar mascota
+      </button>
+    </div>
+
+    <!-- ====== VACUNAS ====== -->
+    <div class="screen" id="vaccines-screen">
+      <div class="section-title">Vacunas</div>
+      <div class="card" id="vaccines-list">
+        <div class="empty-state">
+          <div class="empty-icon">💉</div>
+          <p>No hay vacunas registradas.<br>Agrega la primera vacuna de tu mascota.</p>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="openModal('addVaxModal')">
+        ➕ &nbsp;Agregar vacuna
+      </button>
+
+      <div class="divider"></div>
+      <div class="section-title">Carnet digital</div>
+      <div class="carnet-card" id="carnet-card">
+        <div class="carnet-header">
+          <div class="pet-avatar" id="carnet-avatar">🐶</div>
+          <div>
+            <div style="font-size:16px;font-weight:700;" id="carnet-name">—</div>
+            <div style="font-size:11px;color:var(--text-muted);" id="carnet-breed">—</div>
+            <div style="font-size:10px;color:var(--text-dim);margin-top:2px;"><span class="dot-live"></span>Carnet activo</div>
+          </div>
+        </div>
+        <table class="carnet-table">
+          <thead>
+            <tr><th>Vacuna</th><th>Aplicada</th><th>Próxima</th><th>Estado</th></tr>
+          </thead>
+          <tbody id="carnet-tbody">
+            <tr><td colspan="4" style="color:var(--text-dim);text-align:center;padding:16px 8px;">Sin vacunas registradas</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:16px;">
+          <button class="btn-secondary" onclick="shareCarnet()" style="font-size:12px;padding:10px;">
+            📤 &nbsp;Compartir carnet
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== HISTORIAL ====== -->
+    <div class="screen" id="history-screen">
+      <!-- Vet visits -->
+      <div class="section-title">Visitas al veterinario</div>
+      <div class="card" id="vet-list">
+        <div class="empty-state">
+          <div class="empty-icon">🏥</div>
+          <p>Sin visitas registradas.<br>Cada visita es un paso en el cuidado de tu compañero.</p>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="openModal('addVetModal')" style="margin-bottom:16px;">
+        ➕ &nbsp;Nueva visita veterinaria
+      </button>
+
+      <!-- Walks -->
+      <div class="section-title">Historial de paseos</div>
+      <div id="walk-list">
+        <div class="empty-state">
+          <div class="empty-icon">🦮</div>
+          <p>Sin paseos registrados todavía.<br>No olvides lo importante — cada paseo fortalece su alegría.</p>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="openModal('addWalkModal')">
+        ➕ &nbsp;Registrar paseo
+      </button>
+    </div>
+
+    <!-- ====== IA / RECORDATORIOS ====== -->
+    <div class="screen" id="ai-screen">
+      <!-- Reminders -->
+      <div class="section-title">Recordatorios activos</div>
+      <div id="reminder-list">
+        <div class="empty-state">
+          <div class="empty-icon">⏰</div>
+          <p>Sin recordatorios activos.<br>Programa recordatorios para no olvidar los cuidados esenciales.</p>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="openModal('addReminderModal')" style="margin-bottom:20px;">
+        ➕ &nbsp;Nuevo recordatorio
+      </button>
+
+      <div class="divider"></div>
+
+      <!-- AI Assistant -->
+      <div class="section-title">Asistente IA 🤖</div>
+      <div class="card card-glow">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+          <div style="font-size:24px;">🧠</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;">PetAura IA</div>
+            <div style="font-size:11px;color:var(--text-muted);">Consejos de cuidado personalizado</div>
+          </div>
+          <div style="margin-left:auto;"><span class="dot-live"></span></div>
+        </div>
+        <div class="ai-messages" id="ai-messages">
+          <div class="ai-bubble bot">
+            👋 Hola, soy tu asistente de cuidado animal. Puedes preguntarme cosas como:<br><br>
+            • <em>"mi perro no come"</em><br>
+            • <em>"mi gato está triste"</em><br>
+            • <em>"cuándo vacuno a mi mascota"</em><br>
+            • <em>"síntomas de parvo"</em>
+          </div>
+        </div>
+        <div class="ai-input-row">
+          <input class="form-input" id="ai-input" placeholder="Escribe tu pregunta…" onkeydown="if(event.key==='Enter')sendAI()">
+          <button class="ai-send" onclick="sendAI()">➤</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+
+  <!-- BOTTOM NAV -->
+  <div id="bottomnav">
+    <div class="nav-item active" onclick="navigateTo('home')">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label">Inicio</div>
+    </div>
+    <div class="nav-item" onclick="navigateTo('profile')">
+      <div class="nav-icon">🐾</div>
+      <div class="nav-label">Perfil</div>
+    </div>
+    <div class="nav-item" onclick="navigateTo('vaccines')">
+      <div class="nav-icon">💉</div>
+      <div class="nav-label">Salud</div>
+    </div>
+    <div class="nav-item" onclick="navigateTo('history')">
+      <div class="nav-icon">📋</div>
+      <div class="nav-label">Historial</div>
+    </div>
+    <div class="nav-item" onclick="navigateTo('ai')">
+      <div class="nav-icon">🤖</div>
+      <div class="nav-label">IA</div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- ===================== WA BUTTON ===================== -->
+<div id="wa-btn" onclick="openWhatsApp()" title="Contactar soporte">💬</div>
+
+<!-- ===================== TOAST ===================== -->
+<div id="toast"></div>
+
+<!-- ===================== MODALS ===================== -->
+
+<!-- ADD PET -->
+<div class="modal-overlay" id="addPetModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Nueva mascota 🐾</div>
+    <div class="form-group">
+      <label class="form-label">Emoji avatar</label>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px;">
+        <span style="font-size:28px;cursor:pointer;" onclick="selectEmoji(this,'🐶')" data-e="🐶">🐶</span>
+        <span style="font-size:28px;cursor:pointer;" onclick="selectEmoji(this,'🐱')" data-e="🐱">🐱</span>
+        <span style="font-size:28px;cursor:pointer;" onclick="selectEmoji(this,'🐰')" data-e="🐰">🐰</span>
+        <span style="font-size:28px;cursor:pointer;" onclick="selectEmoji(this,'🐹')" data-e="🐹">🐹</span>
+        <span style="font-size:28px;cursor:pointer;" onclick="selectEmoji(this,'🐦')" data-e="🐦">🐦</span>
+        <span style="font-size:28px;cursor:pointer;" onclick="selectEmoji(this,'🐠')" data-e="🐠">🐠</span>
+        <span style="font-size:28px;cursor:pointer;" onclick="selectEmoji(this,'🐢')" data-e="🐢">🐢</span>
+        <span style="font-size:28px;cursor:pointer;" onclick="selectEmoji(this,'🦜')" data-e="🦜">🦜</span>
+      </div>
+      <div id="selected-emoji" style="font-size:11px;color:var(--text-dim);">Seleccionado: 🐶</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nombre *</label>
+      <input class="form-input" id="new-pet-name" placeholder="Ej: Luna, Max, Coco…">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Raza</label>
+      <input class="form-input" id="new-pet-breed" placeholder="Ej: Labrador, Persa…">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group">
+        <label class="form-label">Edad (años)</label>
+        <input class="form-input" id="new-pet-age" type="number" min="0" placeholder="2">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Peso (kg)</label>
+        <input class="form-input" id="new-pet-weight" type="number" min="0" step="0.1" placeholder="5.5">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Sexo</label>
+      <select class="form-select" id="new-pet-sex">
+        <option value="male">♂ Macho</option>
+        <option value="female">♀ Hembra</option>
+      </select>
+    </div>
+    <button class="btn-primary" onclick="savePet()">✅ &nbsp;Guardar mascota</button>
+    <button class="btn-secondary" onclick="closeModal('addPetModal')" style="margin-top:8px;">Cancelar</button>
+  </div>
+</div>
+
+<!-- EDIT PET -->
+<div class="modal-overlay" id="editPetModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Editar perfil ✏️</div>
+    <div class="form-group">
+      <label class="form-label">Nombre</label>
+      <input class="form-input" id="edit-pet-name">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Raza</label>
+      <input class="form-input" id="edit-pet-breed">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group">
+        <label class="form-label">Edad (años)</label>
+        <input class="form-input" id="edit-pet-age" type="number" min="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Peso (kg)</label>
+        <input class="form-input" id="edit-pet-weight" type="number" min="0" step="0.1">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Sexo</label>
+      <select class="form-select" id="edit-pet-sex">
+        <option value="male">♂ Macho</option>
+        <option value="female">♀ Hembra</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Salud general (%)</label>
+      <input class="form-input" id="edit-pet-health" type="number" min="0" max="100" placeholder="75">
+    </div>
+    <button class="btn-primary" onclick="updatePet()">✅ &nbsp;Guardar cambios</button>
+    <button class="btn-secondary" onclick="closeModal('editPetModal')" style="margin-top:8px;">Cancelar</button>
+  </div>
+</div>
+
+<!-- ADD VAX -->
+<div class="modal-overlay" id="addVaxModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Nueva vacuna 💉</div>
+    <div class="form-group">
+      <label class="form-label">Nombre de la vacuna *</label>
+      <input class="form-input" id="vax-name" placeholder="Ej: Antirrábica, Parvovirus…">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group">
+        <label class="form-label">Fecha aplicada</label>
+        <input class="form-input" id="vax-date" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Próxima dosis</label>
+        <input class="form-input" id="vax-next" type="date">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Veterinario</label>
+      <input class="form-input" id="vax-vet" placeholder="Nombre del veterinario…">
+    </div>
+    <button class="btn-primary" onclick="saveVax()">✅ &nbsp;Guardar vacuna</button>
+    <button class="btn-secondary" onclick="closeModal('addVaxModal')" style="margin-top:8px;">Cancelar</button>
+  </div>
+</div>
+
+<!-- ADD VET VISIT -->
+<div class="modal-overlay" id="addVetModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Nueva visita veterinaria 🏥</div>
+    <div class="form-group">
+      <label class="form-label">Fecha *</label>
+      <input class="form-input" id="vet-date" type="date">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Motivo *</label>
+      <input class="form-input" id="vet-reason" placeholder="Ej: Revisión general, desparasitación…">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notas</label>
+      <textarea class="form-textarea" id="vet-notes" placeholder="Diagnóstico, medicamentos, indicaciones…"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Costo (COP)</label>
+      <input class="form-input" id="vet-cost" type="number" min="0" placeholder="50000">
+    </div>
+    <button class="btn-primary" onclick="saveVetVisit()">✅ &nbsp;Guardar visita</button>
+    <button class="btn-secondary" onclick="closeModal('addVetModal')" style="margin-top:8px;">Cancelar</button>
+  </div>
+</div>
+
+<!-- ADD WALK -->
+<div class="modal-overlay" id="addWalkModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Registrar paseo 🦮</div>
+    <div class="form-group">
+      <label class="form-label">Fecha</label>
+      <input class="form-input" id="walk-date" type="date">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group">
+        <label class="form-label">Duración (min)</label>
+        <input class="form-input" id="walk-duration" type="number" min="1" placeholder="30">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Distancia (km)</label>
+        <input class="form-input" id="walk-distance" type="number" min="0" step="0.1" placeholder="1.5">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notas</label>
+      <input class="form-input" id="walk-notes" placeholder="Estuvo animado, cansado…">
+    </div>
+    <button class="btn-primary" onclick="saveWalk()">✅ &nbsp;Guardar paseo</button>
+    <button class="btn-secondary" onclick="closeModal('addWalkModal')" style="margin-top:8px;">Cancelar</button>
+  </div>
+</div>
+
+<!-- ADD REMINDER -->
+<div class="modal-overlay" id="addReminderModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Nuevo recordatorio ⏰</div>
+    <div class="form-group">
+      <label class="form-label">Tipo</label>
+      <select class="form-select" id="reminder-type">
+        <option value="vacuna">💉 Vacuna</option>
+        <option value="comida">🍖 Comida</option>
+        <option value="paseo">🦮 Paseo</option>
+        <option value="baño">🛁 Baño</option>
+        <option value="medicamento">💊 Medicamento</option>
+        <option value="veterinario">🏥 Veterinario</option>
+        <option value="otro">📌 Otro</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Descripción *</label>
+      <input class="form-input" id="reminder-desc" placeholder="Ej: Vacuna antirrábica anual…">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Fecha y hora</label>
+      <input class="form-input" id="reminder-datetime" type="datetime-local">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Prioridad</label>
+      <select class="form-select" id="reminder-priority">
+        <option value="alta">🔴 Alta</option>
+        <option value="media" selected>🟡 Media</option>
+        <option value="baja">🟢 Baja</option>
+      </select>
+    </div>
+    <button class="btn-primary" onclick="saveReminder()">✅ &nbsp;Guardar recordatorio</button>
+    <button class="btn-secondary" onclick="closeModal('addReminderModal')" style="margin-top:8px;">Cancelar</button>
+  </div>
+</div>
+
+<!-- WEIGHT QUICK -->
+<div class="modal-overlay" id="weightModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Registrar peso ⚖️</div>
+    <div class="form-group">
+      <label class="form-label">Peso actual (kg)</label>
+      <input class="form-input" id="quick-weight" type="number" min="0" step="0.1" placeholder="5.5">
+    </div>
+    <button class="btn-primary" onclick="saveWeight()">✅ &nbsp;Guardar</button>
+    <button class="btn-secondary" onclick="closeModal('weightModal')" style="margin-top:8px;">Cancelar</button>
+  </div>
+</div>
+
+<!-- NOTIFICATIONS -->
+<div class="modal-overlay" id="notifModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Notificaciones 🔔</div>
+    <div id="notif-list">
+      <div class="list-item">
+        <div class="list-item-icon" style="background:rgba(248,113,113,.1);">⚠️</div>
+        <div class="list-item-body">
+          <div class="list-item-title">Vacuna pendiente</div>
+          <div class="list-item-sub">Revisa el estado de salud de tu mascota</div>
+        </div>
+        <span class="pill pill-red">Urgente</span>
+      </div>
+      <div class="list-item">
+        <div class="list-item-icon" style="background:rgba(251,191,36,.1);">🍖</div>
+        <div class="list-item-body">
+          <div class="list-item-title">Hora de la comida</div>
+          <div class="list-item-sub">No olvides lo importante</div>
+        </div>
+        <span class="pill pill-yellow">Hoy</span>
+      </div>
+      <div class="list-item">
+        <div class="list-item-icon" style="background:rgba(74,222,128,.1);">🦮</div>
+        <div class="list-item-body">
+          <div class="list-item-title">Paseo programado</div>
+          <div class="list-item-sub">Cuida mejor a quien te acompaña</div>
+        </div>
+        <span class="pill pill-green">5:00 PM</span>
+      </div>
+    </div>
+    <button class="btn-secondary" onclick="closeModal('notifModal')" style="margin-top:16px;">Cerrar</button>
+  </div>
+</div>
+
+<script>
+/* ===================================================
+   STATE & STORAGE
+=================================================== */
+let state = {
+  pets: [],
+  selectedPetId: null,
+  vaccines: {},
+  vetVisits: {},
+  walks: {},
+  reminders: [],
+  dailyLog: {}
+};
+
+let selectedEmoji = '🐶';
+let currentScreen = 'home';
+
+const SCREENS = {
+  home:'home-screen',
+  profile:'profile-screen',
+  vaccines:'vaccines-screen',
+  history:'history-screen',
+  ai:'ai-screen'
+};
+
+const NAV_IDX = {home:0,profile:1,vaccines:2,history:3,ai:4};
+
+/* ===================================================
+   PERSISTENCE
+=================================================== */
+function saveState(){
+  try{ localStorage.setItem('petaura_state', JSON.stringify(state)); }
+  catch(e){ console.warn('Storage full'); }
+}
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem('petaura_state');
+    if(raw){ state = {...state, ...JSON.parse(raw)}; }
+  }catch(e){}
+}
+
+/* ===================================================
+   ONBOARDING & INIT
+=================================================== */
+function startApp(){
+  document.getElementById('onboarding').style.display='none';
+  document.getElementById('app').style.display='flex';
+  document.getElementById('wa-btn').style.display='flex';
+  init();
+}
+
+function init(){
+  loadState();
+  setDefaultDates();
+  renderPetSelector();
+  updateDaySummary();
+  if(state.selectedPetId) loadPetData();
+  renderReminders();
+  checkOnboardingSkip();
+}
+
+function checkOnboardingSkip(){
+  if(localStorage.getItem('petaura_seen')){
+    document.getElementById('onboarding').style.display='none';
+    document.getElementById('app').style.display='flex';
+    document.getElementById('wa-btn').style.display='flex';
+    init();
+  } else {
+    localStorage.setItem('petaura_seen','1');
+  }
+}
+
+function setDefaultDates(){
+  const today = new Date().toISOString().split('T')[0];
+  const now = new Date().toISOString().slice(0,16);
+  ['vax-date','vax-next','vet-date','walk-date'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.value = today;
+  });
+  const rdt = document.getElementById('reminder-datetime');
+  if(rdt) rdt.value = now;
+}
+
+/* ===================================================
+   NAVIGATION
+=================================================== */
+function navigateTo(screen){
+  if(currentScreen === screen) return;
+
+  // Hide current
+  const cur = document.getElementById(SCREENS[currentScreen]);
+  cur.classList.remove('active');
+  cur.classList.add('slide-left');
+  setTimeout(()=>cur.classList.remove('slide-left'),350);
+
+  // Show target
+  const tgt = document.getElementById(SCREENS[screen]);
+  tgt.classList.add('active');
+
+  // Nav items
+  document.querySelectorAll('.nav-item').forEach((el,i)=>{
+    el.classList.toggle('active', i === NAV_IDX[screen]);
+  });
+
+  currentScreen = screen;
+
+  // Refresh screen data
+  if(screen==='profile') renderProfile();
+  if(screen==='vaccines') renderVaccines();
+  if(screen==='history') renderHistory();
+  if(screen==='home') updateDaySummary();
+}
+
+/* ===================================================
+   PET MANAGEMENT
+=================================================== */
+function renderPetSelector(){
+  const container = document.getElementById('pet-selector');
+  let html = '';
+
+  state.pets.forEach(pet => {
+    const sel = pet.id === state.selectedPetId ? 'selected' : '';
+    html += `
+      <div class="pet-chip ${sel}" onclick="selectPet('${pet.id}')">
+        <div class="chip-ring">
+          <div class="pet-avatar" style="width:100%;height:100%;border:none;border-radius:16px;">${pet.emoji||'🐾'}</div>
+        </div>
+        <div class="chip-name">${pet.name}</div>
+      </div>`;
+  });
+
+  html += `
+    <div class="add-pet-chip" onclick="openModal('addPetModal')">
+      <div class="add-ring">＋</div>
+      <div class="chip-name" style="color:var(--text-dim)">Agregar</div>
+    </div>`;
+
+  container.innerHTML = html;
+
+  if(state.pets.length===0){
+    showToast('¡Agrega tu primera mascota! 🐾');
+  }
+}
+
+function selectPet(id){
+  state.selectedPetId = id;
+  saveState();
+  renderPetSelector();
+  loadPetData();
+  updateDaySummary();
+}
+
+function loadPetData(){
+  const pet = getPet();
+  if(!pet) return;
+  // Update carnet name
+  document.getElementById('carnet-name').textContent = pet.name;
+  document.getElementById('carnet-breed').textContent = pet.breed||'Sin raza';
+  document.getElementById('carnet-avatar').textContent = pet.emoji||'🐾';
+}
+
+function getPet(){
+  return state.pets.find(p=>p.id===state.selectedPetId)||null;
+}
+
+function selectEmoji(el, emoji){
+  selectedEmoji = emoji;
+  document.getElementById('selected-emoji').textContent = `Seleccionado: ${emoji}`;
+  document.querySelectorAll('[data-e]').forEach(e=>{
+    e.style.opacity = e.dataset.e === emoji ? '1' : '0.4';
+  });
+}
+
+function savePet(){
+  const name = document.getElementById('new-pet-name').value.trim();
+  if(!name){ showToast('⚠️ El nombre es obligatorio'); return; }
+
+  const pet = {
+    id: Date.now().toString(),
+    emoji: selectedEmoji,
+    name,
+    breed: document.getElementById('new-pet-breed').value.trim(),
+    age: document.getElementById('new-pet-age').value||'0',
+    weight: document.getElementById('new-pet-weight').value||'0',
+    sex: document.getElementById('new-pet-sex').value,
+    health: 75,
+    nutrition: 60,
+    activity: 80,
+    createdAt: new Date().toISOString()
+  };
+
+  state.pets.push(pet);
+  state.selectedPetId = pet.id;
+  saveState();
+  closeModal('addPetModal');
+  renderPetSelector();
+  loadPetData();
+  showToast(`¡${pet.name} ha sido agregado! 🐾`);
+
+  // Reset form
+  document.getElementById('new-pet-name').value='';
+  document.getElementById('new-pet-breed').value='';
+  document.getElementById('new-pet-age').value='';
+  document.getElementById('new-pet-weight').value='';
+}
+
+function renderProfile(){
+  const pet = getPet();
+  if(!pet){
+    document.getElementById('profile-name').textContent='Sin mascota';
+    document.getElementById('profile-breed').textContent='Agrega una mascota primero';
+    return;
+  }
+  document.getElementById('profile-avatar').textContent = pet.emoji||'🐾';
+  document.getElementById('profile-name').textContent = pet.name;
+  document.getElementById('profile-breed').textContent = pet.breed||'Sin raza definida';
+  document.getElementById('profile-sex').textContent = pet.sex==='female'?'♀ Hembra':'♂ Macho';
+  document.getElementById('profile-age').textContent = pet.age+' años';
+  document.getElementById('profile-weight').textContent = pet.weight+' kg';
+
+  // Health bars
+  const h = pet.health||75;
+  const n = pet.nutrition||60;
+  const a = pet.activity||80;
+  setBar('hb-general', h);
+  setBar('hb-nutrition', n, 'linear-gradient(90deg,var(--purple-1),var(--accent-yellow))');
+  setBar('hb-activity', a, 'linear-gradient(90deg,var(--purple-1),var(--accent-cyan))');
+
+  // Prefill edit form
+  document.getElementById('edit-pet-name').value = pet.name;
+  document.getElementById('edit-pet-breed').value = pet.breed||'';
+  document.getElementById('edit-pet-age').value = pet.age||'';
+  document.getElementById('edit-pet-weight').value = pet.weight||'';
+  document.getElementById('edit-pet-sex').value = pet.sex||'male';
+  document.getElementById('edit-pet-health').value = pet.health||75;
+}
+
+function setBar(id, val, bg){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.style.width = val+'%';
+  if(bg) el.style.background = bg;
+  el.parentElement.parentElement.querySelector('.health-val').textContent = val+'%';
+}
+
+function updatePet(){
+  const pet = getPet();
+  if(!pet) return;
+  pet.name = document.getElementById('edit-pet-name').value.trim()||pet.name;
+  pet.breed = document.getElementById('edit-pet-breed').value.trim();
+  pet.age = document.getElementById('edit-pet-age').value||'0';
+  pet.weight = document.getElementById('edit-pet-weight').value||'0';
+  pet.sex = document.getElementById('edit-pet-sex').value;
+  pet.health = parseInt(document.getElementById('edit-pet-health').value)||75;
+  saveState();
+  closeModal('editPetModal');
+  renderProfile();
+  renderPetSelector();
+  loadPetData();
+  showToast('✅ Perfil actualizado');
+}
+
+function deletePet(){
+  if(!confirm('¿Eliminar esta mascota y todos sus datos?')) return;
+  const id = state.selectedPetId;
+  state.pets = state.pets.filter(p=>p.id!==id);
+  delete state.vaccines[id];
+  delete state.vetVisits[id];
+  delete state.walks[id];
+  state.selectedPetId = state.pets[0]?.id||null;
+  saveState();
+  renderPetSelector();
+  if(state.selectedPetId) loadPetData();
+  showToast('Mascota eliminada');
+  navigateTo('home');
+}
+
+function changeAvatarEmoji(){
+  const emojis=['🐶','🐱','🐰','🐹','🐦','🐠','🐢','🦜','🐓','🦊','🐺','🐻','🐼','🦁','🐯'];
+  const pet = getPet();
+  if(!pet) return;
+  const idx = emojis.indexOf(pet.emoji)||0;
+  pet.emoji = emojis[(idx+1)%emojis.length];
+  saveState();
+  renderProfile();
+  renderPetSelector();
+}
+
+/* ===================================================
+   QUICK ACTIONS
+=================================================== */
+function quickAction(type){
+  const pet = getPet();
+  if(!pet){ showToast('⚠️ Selecciona una mascota primero'); return; }
+
+  const today = new Date().toISOString().split('T')[0];
+  if(!state.dailyLog[pet.id]) state.dailyLog[pet.id]={};
+  if(!state.dailyLog[pet.id][today]) state.dailyLog[pet.id][today]={food:0,walk:0,bath:0};
+
+  if(type==='walk'){
+    state.dailyLog[pet.id][today].walk++;
+    // Auto add walk
+    if(!state.walks[pet.id]) state.walks[pet.id]=[];
+    state.walks[pet.id].unshift({id:Date.now(),date:today,duration:30,distance:1.0,notes:'Paseo rápido'});
+    showToast('🦮 ¡Paseo registrado!');
+  } else if(type==='food'){
+    state.dailyLog[pet.id][today].food++;
+    showToast('🍖 ¡Comida registrada!');
+  } else if(type==='bath'){
+    state.dailyLog[pet.id][today].bath++;
+    showToast('🛁 ¡Baño registrado!');
+  } else if(type==='weight'){
+    openModal('weightModal');
+    return;
+  }
+
+  saveState();
+  updateDaySummary();
+}
+
+function saveWeight(){
+  const w = document.getElementById('quick-weight').value;
+  const pet = getPet();
+  if(!pet||!w){ showToast('⚠️ Ingresa un peso'); return; }
+  pet.weight = w;
+  saveState();
+  closeModal('weightModal');
+  renderProfile();
+  showToast(`⚖️ Peso actualizado: ${w} kg`);
+}
+
+function updateDaySummary(){
+  const pet = getPet();
+  const today = new Date().toISOString().split('T')[0];
+  let food=0,walk=0,bath=0,vax=0;
+
+  if(pet){
+    const log = state.dailyLog[pet.id]?.[today]||{};
+    food = log.food||0;
+    walk = log.walk||0;
+    bath = log.bath||0;
+
+    // Count vaccines added today
+    const vaxList = state.vaccines[pet.id]||[];
+    vax = vaxList.filter(v=>v.date===today).length;
+
+    // Week stats
+    const walks = (state.walks[pet.id]||[]);
+    document.getElementById('week-walks').textContent = walks.length;
+    let wFood=0;
+    const dl = state.dailyLog[pet.id]||{};
+    Object.values(dl).forEach(d=>wFood+=d.food||0);
+    document.getElementById('week-food').textContent = wFood;
+  }
+
+  document.getElementById('ds-food').textContent = food;
+  document.getElementById('ds-walk').textContent = walk;
+  document.getElementById('ds-bath').textContent = bath;
+  document.getElementById('ds-vax').textContent = vax;
+
+  renderHomeReminders();
+}
+
+/* ===================================================
+   VACCINES
+=================================================== */
+function saveVax(){
+  const name = document.getElementById('vax-name').value.trim();
+  if(!name){ showToast('⚠️ Ingresa el nombre de la vacuna'); return; }
+  const pet = getPet();
+  if(!pet){ showToast('⚠️ Selecciona una mascota'); return; }
+
+  if(!state.vaccines[pet.id]) state.vaccines[pet.id]=[];
+  const nextDate = document.getElementById('vax-next').value;
+  const appliedDate = document.getElementById('vax-date').value;
+  const today = new Date().toISOString().split('T')[0];
+  let status = 'al_dia';
+  if(nextDate && nextDate < today) status='pendiente';
+
+  state.vaccines[pet.id].push({
+    id: Date.now(),
+    name,
+    date: appliedDate,
+    next: nextDate,
+    vet: document.getElementById('vax-vet').value.trim(),
+    status
+  });
+
+  saveState();
+  closeModal('addVaxModal');
+  renderVaccines();
+  showToast('💉 Vacuna guardada correctamente');
+}
+
+function renderVaccines(){
+  const pet = getPet();
+  const list = pet ? (state.vaccines[pet.id]||[]) : [];
+  const el = document.getElementById('vaccines-list');
+  const tbody = document.getElementById('carnet-tbody');
+
+  if(list.length===0){
+    el.innerHTML=`<div class="empty-state"><div class="empty-icon">💉</div><p>No hay vacunas registradas.<br>Agrega la primera vacuna de tu mascota.</p></div>`;
+    tbody.innerHTML=`<tr><td colspan="4" style="color:var(--text-dim);text-align:center;padding:16px 8px;">Sin vacunas</td></tr>`;
+    return;
+  }
+
+  el.innerHTML = list.map(v=>`
+    <div class="list-item">
+      <div class="list-item-icon" style="background:rgba(139,92,246,.1);">💉</div>
+      <div class="list-item-body">
+        <div class="list-item-title">${v.name}</div>
+        <div class="list-item-sub">Aplicada: ${formatDate(v.date)} | Próxima: ${formatDate(v.next)||'—'}</div>
+        ${v.vet?`<div class="list-item-sub">Dr. ${v.vet}</div>`:''}
+      </div>
+      <span class="pill ${v.status==='al_dia'?'pill-green':'pill-red'}">${v.status==='al_dia'?'Al día':'Pendiente'}</span>
+    </div>`).join('');
+
+  tbody.innerHTML = list.map(v=>`
+    <tr>
+      <td>${v.name}</td>
+      <td>${formatDate(v.date)||'—'}</td>
+      <td>${formatDate(v.next)||'—'}</td>
+      <td><span class="pill ${v.status==='al_dia'?'pill-green':'pill-red'}" style="font-size:10px;">${v.status==='al_dia'?'✅':'⚠️'}</span></td>
+    </tr>`).join('');
+}
+
+/* ===================================================
+   VET VISITS & WALKS
+=================================================== */
+function saveVetVisit(){
+  const reason = document.getElementById('vet-reason').value.trim();
+  if(!reason){ showToast('⚠️ Ingresa el motivo de la visita'); return; }
+  const pet = getPet();
+  if(!pet){ showToast('⚠️ Selecciona una mascota'); return; }
+
+  if(!state.vetVisits[pet.id]) state.vetVisits[pet.id]=[];
+  state.vetVisits[pet.id].unshift({
+    id: Date.now(),
+    date: document.getElementById('vet-date').value,
+    reason,
+    notes: document.getElementById('vet-notes').value.trim(),
+    cost: document.getElementById('vet-cost').value||'0'
+  });
+  saveState();
+  closeModal('addVetModal');
+  renderHistory();
+  showToast('🏥 Visita registrada');
+}
+
+function saveWalk(){
+  const pet = getPet();
+  if(!pet){ showToast('⚠️ Selecciona una mascota'); return; }
+  if(!state.walks[pet.id]) state.walks[pet.id]=[];
+  state.walks[pet.id].unshift({
+    id: Date.now(),
+    date: document.getElementById('walk-date').value,
+    duration: document.getElementById('walk-duration').value||'30',
+    distance: document.getElementById('walk-distance').value||'1.0',
+    notes: document.getElementById('walk-notes').value.trim()
+  });
+  saveState();
+  closeModal('addWalkModal');
+  renderHistory();
+  updateDaySummary();
+  showToast('🦮 Paseo registrado');
+}
+
+function renderHistory(){
+  const pet = getPet();
+  const visits = pet ? (state.vetVisits[pet.id]||[]) : [];
+  const walks = pet ? (state.walks[pet.id]||[]) : [];
+
+  // Vet
+  const vetEl = document.getElementById('vet-list');
+  if(visits.length===0){
+    vetEl.innerHTML=`<div class="empty-state"><div class="empty-icon">🏥</div><p>Sin visitas registradas.<br>Cada visita es un paso en el cuidado de tu compañero.</p></div>`;
+  } else {
+    vetEl.innerHTML = visits.map(v=>`
+      <div class="list-item">
+        <div class="list-item-icon" style="background:rgba(103,232,249,.1);">🏥</div>
+        <div class="list-item-body">
+          <div class="list-item-title">${v.reason}</div>
+          <div class="list-item-sub">${formatDate(v.date)}</div>
+          ${v.notes?`<div class="list-item-sub">${v.notes}</div>`:''}
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          ${v.cost>0?`<div style="font-size:12px;font-weight:600;color:var(--accent-yellow);">$${Number(v.cost).toLocaleString()}</div>`:''}
+        </div>
+      </div>`).join('');
+  }
+
+  // Walks
+  const walkEl = document.getElementById('walk-list');
+  if(walks.length===0){
+    walkEl.innerHTML=`<div class="empty-state"><div class="empty-icon">🦮</div><p>Sin paseos registrados todavía.<br>No olvides lo importante — cada paseo fortalece su alegría.</p></div>`;
+  } else {
+    walkEl.innerHTML = walks.map(w=>`
+      <div class="walk-item">
+        <div class="walk-icon">🦮</div>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:600;">${formatDate(w.date)}</div>
+          <div style="font-size:12px;color:var(--text-muted);">${w.duration} min · ${w.distance} km</div>
+          ${w.notes?`<div style="font-size:11px;color:var(--text-dim);">${w.notes}</div>`:''}
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:18px;font-weight:700;color:var(--violet-soft);">${w.distance}<span style="font-size:10px;color:var(--text-muted);">km</span></div>
+        </div>
+      </div>`).join('');
+  }
+}
+
+/* ===================================================
+   REMINDERS
+=================================================== */
+function saveReminder(){
+  const desc = document.getElementById('reminder-desc').value.trim();
+  if(!desc){ showToast('⚠️ Ingresa una descripción'); return; }
+
+  const r = {
+    id: Date.now(),
+    type: document.getElementById('reminder-type').value,
+    desc,
+    datetime: document.getElementById('reminder-datetime').value,
+    priority: document.getElementById('reminder-priority').value,
+    done: false
+  };
+
+  state.reminders.unshift(r);
+  saveState();
+  closeModal('addReminderModal');
+  renderReminders();
+  renderHomeReminders();
+  showToast('⏰ Recordatorio guardado');
+
+  // Native notification attempt
+  if('Notification' in window && Notification.permission==='granted'){
+    new Notification('PetAura — Recordatorio', {body: desc, icon:'🐾'});
+  }
+}
+
+const typeEmoji = {vacuna:'💉',comida:'🍖',paseo:'🦮',baño:'🛁',medicamento:'💊',veterinario:'🏥',otro:'📌'};
+const prioColor = {alta:'pill-red',media:'pill-yellow',baja:'pill-green'};
+const prioDot = {alta:'#f87171',media:'#fbbf24',baja:'#4ade80'};
+
+function renderReminders(){
+  const el = document.getElementById('reminder-list');
+  const active = state.reminders.filter(r=>!r.done);
+  if(active.length===0){
+    el.innerHTML=`<div class="empty-state"><div class="empty-icon">⏰</div><p>Sin recordatorios activos.<br>Programa recordatorios para no olvidar los cuidados esenciales.</p></div>`;
+    return;
+  }
+  el.innerHTML = active.map(r=>`
+    <div class="reminder-item">
+      <div class="reminder-dot" style="background:${prioDot[r.priority]||'#fbbf24'};"></div>
+      <div style="font-size:22px;">${typeEmoji[r.type]||'📌'}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:14px;font-weight:600;">${r.desc}</div>
+        <div style="font-size:11px;color:var(--text-muted);">${r.datetime?formatDateTime(r.datetime):''}</div>
+      </div>
+      <span class="pill ${prioColor[r.priority]||'pill-yellow'}">${r.priority}</span>
+      <div onclick="doneReminder('${r.id}')" style="margin-left:8px;cursor:pointer;font-size:20px;" title="Marcar como hecho">✅</div>
+    </div>`).join('');
+}
+
+function renderHomeReminders(){
+  const el = document.getElementById('home-reminders');
+  const active = state.reminders.filter(r=>!r.done).slice(0,3);
+  if(active.length===0){
+    el.innerHTML=`<div class="empty-state" style="padding:20px 0;"><div class="empty-icon" style="font-size:32px;">📅</div><p>Sin recordatorios pendientes</p></div>`;
+    return;
+  }
+  el.innerHTML = active.map(r=>`
+    <div class="reminder-item">
+      <div class="reminder-dot" style="background:${prioDot[r.priority]||'#fbbf24'};"></div>
+      <div style="font-size:20px;">${typeEmoji[r.type]||'📌'}</div>
+      <div style="flex:1;"><div style="font-size:13px;font-weight:600;">${r.desc}</div><div style="font-size:10px;color:var(--text-muted);">${r.datetime?formatDateTime(r.datetime):''}</div></div>
+    </div>`).join('');
+}
+
+function doneReminder(id){
+  const r = state.reminders.find(r=>r.id==id);
+  if(r){ r.done=true; saveState(); renderReminders(); renderHomeReminders(); showToast('✅ ¡Recordatorio completado!'); }
+}
+
+/* ===================================================
+   AI ASSISTANT
+=================================================== */
+const aiResponses = {
+  // Alimentación
+  'no come': '🍽️ Si tu mascota no come, puede deberse a estrés, cambio de alimento, problemas dentales o enfermedades. Si lleva más de 24h sin comer, visita al veterinario. Prueba con alimento húmedo o agregar agua tibia al concentrado.',
+  'no quiere comer': '🍽️ Prueba calentar ligeramente su comida para potenciar el aroma. Asegúrate de que el tazón esté limpio. Si el rechazo persiste más de 2 días, consulta a tu veterinario.',
+  // Tristeza
+  'triste': '💜 La tristeza en mascotas puede ser señal de aburrimiento, falta de ejercicio, o extrañar a alguien. Aumenta el tiempo de juego, los paseos y el contacto físico. Un juguete nuevo puede hacer maravillas.',
+  'deprimido': '💜 Observa si tiene cambios en apetito o sueño. El ejercicio diario es vital para el estado emocional. Si persiste, puede necesitar evaluación veterinaria.',
+  // Vacunas
+  'vacuna': '💉 Las vacunas esenciales para perros incluyen: Moquillo-Hepatitis-Parvo (trivalente anual), Antirrábica (anual) y Bordetella. Para gatos: Panleucopenia, Rinotraqueitis y Calicivirus. Consulta con tu vet el esquema adecuado para la edad de tu mascota.',
+  // Parvo
+  'parvo': '⚠️ El Parvovirus es muy serio: síntomas incluyen vómito, diarrea con sangre, letargo y fiebre. ES UNA EMERGENCIA VETERINARIA. Lleva a tu mascota de inmediato al veterinario. La vacunación es la única prevención eficaz.',
+  // Vómito
+  'vomit': '🤢 Si vomita ocasionalmente después de comer muy rápido, puede ser normal. Si el vómito es frecuente, tiene sangre, o acompañado de letargo: visita al veterinario sin demora.',
+  'vomito': '🤢 Vómito frecuente requiere evaluación médica. Mientras tanto, ofrece agua en pequeñas cantidades y retira la comida por 6-8h. Si hay sangre o letargo: emergencia veterinaria.',
+  // Diarrea
+  'diarrea': '💧 Una diarrea puntual puede ser por cambio de alimento o estrés. Ofrece agua constante para evitar deshidratación. Si dura más de 24h, hay sangre, o tu mascota está decaída: consulta inmediata.',
+  // Pulgas
+  'pulga': '🦟 Para pulgas: usa pipeta o collar antiparasitario indicado para el peso. Lava su ropa y cama. Aspira el hogar frecuentemente. El tratamiento debe hacerse mensualmente en zonas tropicales.',
+  'garrapata': '🦟 Retira garrapatas con pinzas especiales girando suavemente. Desinfecta la zona. Usa antiparasitarios preventivos. Las garrapatas pueden transmitir enfermedades, así que monitorea síntomas.',
+  // Peso
+  'peso': '⚖️ El peso ideal varía por raza. En general, deberías poder sentir las costillas sin verlas. Consulta a tu vet sobre la dieta adecuada si sospechas sobrepeso u obesidad.',
+  // Baño
+  'baño': '🛁 Los perros deben bañarse cada 3-4 semanas. Los gatos generalmente no necesitan baños frecuentes. Usa siempre shampoo especial para mascotas, nunca productos humanos.',
+  // Predeterminado
+  'default': '🤔 Entiendo tu preocupación. Para darte la mejor recomendación, te sugiero describir los síntomas con más detalle. Recuerda: ante cualquier duda, lo más seguro es consultar con un veterinario de confianza. ¡Tu mascota te lo agradecerá! 🐾'
+};
+
+function sendAI(){
+  const input = document.getElementById('ai-input');
+  const msg = input.value.trim();
+  if(!msg) return;
+
+  const container = document.getElementById('ai-messages');
+
+  // User bubble
+  container.innerHTML += `<div class="ai-bubble user">${escapeHtml(msg)}</div>`;
+  input.value='';
+  container.scrollTop = container.scrollHeight;
+
+  // Find response
+  setTimeout(()=>{
+    const lower = msg.toLowerCase();
+    let response = aiResponses.default;
+    for(const [key,val] of Object.entries(aiResponses)){
+      if(key!=='default' && lower.includes(key)){
+        response = val; break;
+      }
+    }
+    container.innerHTML += `<div class="ai-bubble bot">${response}</div>`;
+    container.scrollTop = container.scrollHeight;
+  }, 600);
+}
+
+/* ===================================================
+   MODALS
+=================================================== */
+function openModal(id){
+  const el = document.getElementById(id);
+  el.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(id){
+  const el = document.getElementById(id);
+  el.classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// Close modals clicking overlay
+document.querySelectorAll('.modal-overlay').forEach(overlay=>{
+  overlay.addEventListener('click', e=>{
+    if(e.target===overlay) closeModal(overlay.id);
+  });
+});
+
+function openNotifications(){
+  document.getElementById('notif-badge').style.display='none';
+  openModal('notifModal');
+}
+
+/* ===================================================
+   WHATSAPP
+=================================================== */
+function openWhatsApp(){
+  const number = '573126387467';
+  const msg = encodeURIComponent('Hola, quiero información sobre el sistema inteligente para el cuidado de mascotas');
+  window.open(`https://wa.me/${number}?text=${msg}`, '_blank');
+}
+
+/* ===================================================
+   CARNET
+=================================================== */
+function shareCarnet(){
+  const pet = getPet();
+  if(!pet){ showToast('⚠️ Selecciona una mascota'); return; }
+  const text = `🐾 Carnet Digital - ${pet.name}\nRaza: ${pet.breed||'—'}\nEdad: ${pet.age} años | Peso: ${pet.weight}kg\n\nGenerado con PetAura ❤️`;
+  if(navigator.share){
+    navigator.share({title:`Carnet de ${pet.name}`, text, url:window.location.href});
+  } else {
+    navigator.clipboard.writeText(text).then(()=>showToast('📋 Carnet copiado al portapapeles'));
+  }
+}
+
+/* ===================================================
+   UTILS
+=================================================== */
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+function formatDate(str){
+  if(!str) return '';
+  try{
+    const [y,m,d] = str.split('-');
+    const months=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    return `${d} ${months[parseInt(m)-1]} ${y}`;
+  }catch{return str;}
+}
+
+function formatDateTime(str){
+  if(!str) return '';
+  try{
+    const dt = new Date(str);
+    return dt.toLocaleDateString('es-CO',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+  }catch{return str;}
+}
+
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ===================================================
+   REMINDER CHECKER (every minute)
+=================================================== */
+setInterval(()=>{
+  const now = new Date().toISOString().slice(0,16);
+  state.reminders.forEach(r=>{
+    if(!r.done && r.datetime && r.datetime===now){
+      showToast(`⏰ Recordatorio: ${r.desc}`);
+    }
+  });
+}, 60000);
+
+/* ===================================================
+   NOTIFICATION PERMISSION
+=================================================== */
+if('Notification' in window && Notification.permission==='default'){
+  setTimeout(()=>Notification.requestPermission(), 3000);
+}
+
+/* ===================================================
+   SHOW NOTIF BADGE
+=================================================== */
+setTimeout(()=>{
+  document.getElementById('notif-badge').style.display='flex';
+}, 2000);
+
+/* ===================================================
+   BOOT
+=================================================== */
+// Check if already seen onboarding
+if(localStorage.getItem('petaura_seen')){
+  document.getElementById('onboarding').style.display='none';
+  document.getElementById('app').style.display='flex';
+  document.getElementById('wa-btn').style.display='flex';
+  loadState();
+  setDefaultDates();
+  renderPetSelector();
+  updateDaySummary();
+  if(state.selectedPetId) loadPetData();
+  renderReminders();
+}
+</script>
+</body>
+</html>

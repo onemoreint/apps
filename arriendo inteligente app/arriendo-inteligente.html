@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arriendo Inteligente Colombia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0B1C3D;
+    --blue: #2563EB;
+    --blue-light: #3B82F6;
+    --blue-glow: #60A5FA;
+    --white: #FFFFFF;
+    --gray-50: #F8FAFC;
+    --gray-100: #F1F5F9;
+    --gray-200: #E2E8F0;
+    --gray-400: #94A3B8;
+    --gray-600: #475569;
+    --gray-800: #1E293B;
+    --green: #10B981;
+    --yellow: #F59E0B;
+    --red: #EF4444;
+    --font: 'Sora', sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font);
+    background: var(--navy);
+    color: var(--white);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2rem;
+    background: rgba(11,28,61,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(37,99,235,0.15);
+  }
+  .logo {
+    font-size: 1.05rem; font-weight: 700; letter-spacing: -0.02em;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); display: inline-block; animation: pulse 2s infinite; }
+  .nav-badge {
+    font-size: 0.7rem; font-family: var(--mono); color: var(--blue-glow);
+    border: 1px solid rgba(96,165,250,0.3); border-radius: 999px;
+    padding: 0.2rem 0.7rem; letter-spacing: 0.08em;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 7rem 1.5rem 4rem;
+    position: relative; overflow: hidden;
+    text-align: center;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(37,99,235,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 80% 80%, rgba(37,99,235,0.1) 0%, transparent 60%);
+  }
+  .grid-overlay {
+    position: absolute; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(37,99,235,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(37,99,235,0.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 20%, black 20%, transparent 100%);
+  }
+
+  .hero-tag {
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em;
+    color: var(--blue-glow); border: 1px solid rgba(96,165,250,0.25);
+    padding: 0.35rem 1rem; border-radius: 999px;
+    margin-bottom: 1.8rem; display: inline-block;
+    animation: fadeUp 0.6s ease both;
+    position: relative; z-index: 1;
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    font-weight: 800; line-height: 1.08;
+    letter-spacing: -0.04em;
+    max-width: 780px;
+    margin: 0 auto 1.4rem;
+    position: relative; z-index: 1;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+  h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, #60A5FA 0%, #2563EB 50%, #818CF8 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.18rem); color: var(--gray-400);
+    max-width: 540px; margin: 0 auto 2.8rem;
+    position: relative; z-index: 1;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  /* ── SMART INPUT ── */
+  .input-wrap {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 680px; margin: 0 auto 1rem;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+  .input-box {
+    display: flex; align-items: center;
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(37,99,235,0.35);
+    border-radius: 16px;
+    padding: 0.5rem 0.5rem 0.5rem 1.2rem;
+    gap: 0.5rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .input-box:focus-within {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 4px rgba(37,99,235,0.15), 0 4px 24px rgba(37,99,235,0.2);
+  }
+  .input-icon { font-size: 1.1rem; flex-shrink: 0; }
+  #queryInput {
+    flex: 1; background: transparent; border: none; outline: none;
+    color: var(--white); font-family: var(--font); font-size: 1rem;
+    padding: 0.6rem 0;
+  }
+  #queryInput::placeholder { color: var(--gray-400); }
+  #analyzeBtn {
+    background: var(--blue); color: var(--white);
+    border: none; border-radius: 12px;
+    padding: 0.75rem 1.4rem; font-family: var(--font);
+    font-size: 0.9rem; font-weight: 600; cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  #analyzeBtn:hover { background: var(--blue-light); transform: scale(1.02); }
+
+  .input-examples {
+    position: relative; z-index: 1;
+    display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;
+    margin-bottom: 0.5rem;
+    animation: fadeUp 0.7s 0.4s ease both;
+  }
+  .example-chip {
+    font-size: 0.75rem; font-family: var(--mono);
+    color: var(--gray-400); border: 1px solid rgba(148,163,184,0.2);
+    padding: 0.3rem 0.8rem; border-radius: 999px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .example-chip:hover {
+    color: var(--blue-glow); border-color: rgba(96,165,250,0.4);
+    background: rgba(37,99,235,0.08);
+  }
+
+  /* ── STATS STRIP ── */
+  .stats-strip {
+    position: relative; z-index: 1;
+    display: flex; gap: 2.5rem; justify-content: center; flex-wrap: wrap;
+    padding: 2.5rem 1.5rem 0;
+    animation: fadeUp 0.7s 0.5s ease both;
+  }
+  .stat { text-align: center; }
+  .stat-num { font-size: 1.6rem; font-weight: 800; color: var(--blue-glow); }
+  .stat-label { font-size: 0.72rem; color: var(--gray-400); letter-spacing: 0.05em; }
+
+  /* ── LOADER ── */
+  #loader {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(11,28,61,0.92); backdrop-filter: blur(12px);
+    flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem;
+  }
+  #loader.active { display: flex; }
+  .loader-ring {
+    width: 56px; height: 56px; border-radius: 50%;
+    border: 3px solid rgba(37,99,235,0.2);
+    border-top-color: var(--blue);
+    animation: spin 0.9s linear infinite;
+  }
+  .loader-steps { display: flex; flex-direction: column; gap: 0.5rem; align-items: center; }
+  .loader-step {
+    font-size: 0.85rem; color: var(--gray-400); font-family: var(--mono);
+    opacity: 0; animation: fadeIn 0.4s ease forwards;
+  }
+  .loader-step.s1 { animation-delay: 0.3s; }
+  .loader-step.s2 { animation-delay: 1.0s; }
+  .loader-step.s3 { animation-delay: 1.8s; }
+
+  /* ── RESULTS SECTION ── */
+  #resultsSection {
+    display: none; padding: 3rem 1.5rem 5rem;
+    max-width: 1100px; margin: 0 auto;
+    animation: fadeUp 0.5s ease both;
+  }
+  #resultsSection.visible { display: block; }
+
+  .results-header {
+    margin-bottom: 2rem;
+  }
+  .results-tag {
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em;
+    color: var(--green); border: 1px solid rgba(16,185,129,0.3);
+    padding: 0.25rem 0.8rem; border-radius: 999px; display: inline-block;
+    margin-bottom: 0.8rem;
+  }
+  .results-title { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.03em; }
+  .results-sub { font-size: 0.9rem; color: var(--gray-400); margin-top: 0.3rem; }
+
+  /* ── DIAGNÓSTICO ── */
+  .diag-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem; margin-bottom: 1.5rem;
+  }
+  .diag-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px; padding: 1.4rem;
+    transition: transform 0.2s; position: relative; overflow: hidden;
+  }
+  .diag-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  }
+  .diag-card.rec::before { background: linear-gradient(90deg, var(--blue), var(--blue-glow)); }
+  .diag-card.alert::before { background: linear-gradient(90deg, var(--yellow), #FCD34D); }
+  .diag-card.price::before { background: linear-gradient(90deg, var(--green), #34D399); }
+  .diag-card:hover { transform: translateY(-2px); }
+
+  .diag-icon { font-size: 1.5rem; margin-bottom: 0.7rem; }
+  .diag-label {
+    font-size: 0.68rem; font-family: var(--mono); letter-spacing: 0.1em;
+    color: var(--gray-400); margin-bottom: 0.4rem; text-transform: uppercase;
+  }
+  .diag-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .diag-text { font-size: 0.85rem; color: var(--gray-400); line-height: 1.6; }
+  .diag-zones { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.8rem; }
+  .zone-badge {
+    font-size: 0.72rem; font-family: var(--mono);
+    background: rgba(37,99,235,0.15); border: 1px solid rgba(37,99,235,0.3);
+    color: var(--blue-glow); padding: 0.25rem 0.7rem; border-radius: 999px;
+  }
+
+  /* ── ALERTS ── */
+  .alerts-list { display: flex; flex-direction: column; gap: 0.6rem; }
+  .alert-item {
+    display: flex; align-items: flex-start; gap: 0.7rem;
+    font-size: 0.83rem; color: var(--gray-400);
+  }
+  .alert-dot {
+    width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 6px;
+  }
+  .alert-dot.warn { background: var(--yellow); }
+  .alert-dot.danger { background: var(--red); }
+  .alert-dot.info { background: var(--blue-glow); }
+
+  /* ── PRICE DISPLAY ── */
+  .price-value {
+    font-size: 1.7rem; font-weight: 800; color: var(--green);
+    font-family: var(--mono); margin: 0.4rem 0;
+  }
+  .price-range { font-size: 0.78rem; color: var(--gray-400); }
+
+  /* ── SCORE SECTION ── */
+  .score-section { margin-bottom: 2rem; }
+  .section-label {
+    font-size: 0.7rem; font-family: var(--mono); letter-spacing: 0.12em;
+    color: var(--gray-400); text-transform: uppercase; margin-bottom: 1rem;
+  }
+  .score-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .score-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px; padding: 1.2rem;
+  }
+  .score-name { font-size: 0.8rem; color: var(--gray-400); margin-bottom: 0.8rem; }
+  .score-bar-wrap { height: 6px; background: rgba(255,255,255,0.08); border-radius: 99px; overflow: hidden; margin-bottom: 0.5rem; }
+  .score-bar {
+    height: 100%; border-radius: 99px;
+    transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .score-bar.green { background: linear-gradient(90deg, #10B981, #34D399); }
+  .score-bar.yellow { background: linear-gradient(90deg, #F59E0B, #FCD34D); }
+  .score-bar.red { background: linear-gradient(90deg, #EF4444, #F87171); }
+  .score-num { font-size: 1.1rem; font-weight: 700; font-family: var(--mono); }
+  .score-num.green { color: var(--green); }
+  .score-num.yellow { color: var(--yellow); }
+  .score-num.red { color: var(--red); }
+
+  /* ── PROPERTY CARDS ── */
+  .props-section { margin-bottom: 3rem; }
+  .props-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.2rem;
+  }
+  .prop-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px; overflow: hidden;
+    transition: transform 0.25s, box-shadow 0.25s;
+    cursor: pointer;
+  }
+  .prop-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  }
+  .prop-img {
+    width: 100%; height: 180px; object-fit: cover;
+    display: block; position: relative; overflow: hidden;
+  }
+  .prop-img-inner {
+    width: 100%; height: 180px;
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.5rem; position: relative;
+  }
+  .prop-img-inner::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(11,28,61,0.8) 100%);
+  }
+  .prop-badge {
+    position: absolute; top: 0.8rem; left: 0.8rem; z-index: 2;
+    font-size: 0.68rem; font-family: var(--mono); font-weight: 500;
+    padding: 0.25rem 0.7rem; border-radius: 999px; letter-spacing: 0.06em;
+  }
+  .badge-good { background: rgba(16,185,129,0.2); color: #34D399; border: 1px solid rgba(16,185,129,0.3); }
+  .badge-over { background: rgba(239,68,68,0.15); color: #F87171; border: 1px solid rgba(239,68,68,0.25); }
+  .badge-opp { background: rgba(245,158,11,0.15); color: #FCD34D; border: 1px solid rgba(245,158,11,0.25); }
+  .prop-body { padding: 1.2rem; }
+  .prop-price {
+    font-size: 1.2rem; font-weight: 700; font-family: var(--mono);
+    margin-bottom: 0.3rem;
+  }
+  .prop-zone { font-size: 0.8rem; color: var(--gray-400); margin-bottom: 0.8rem; }
+  .prop-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .prop-tag {
+    font-size: 0.68rem; background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 0.2rem 0.6rem; border-radius: 999px; color: var(--gray-400);
+  }
+  .prop-cta {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 1rem; padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .prop-score-mini { font-size: 0.75rem; color: var(--gray-400); }
+  .prop-score-mini span { font-weight: 600; }
+  .prop-btn {
+    font-size: 0.75rem; background: rgba(37,99,235,0.15);
+    border: 1px solid rgba(37,99,235,0.3); color: var(--blue-glow);
+    padding: 0.3rem 0.8rem; border-radius: 8px; cursor: pointer;
+    font-family: var(--font); transition: all 0.2s;
+  }
+  .prop-btn:hover { background: rgba(37,99,235,0.3); }
+
+  /* ── HOW IT WORKS ── */
+  .how-section {
+    padding: 6rem 1.5rem; max-width: 960px; margin: 0 auto; text-align: center;
+  }
+  .section-title {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 800; letter-spacing: -0.04em; margin-bottom: 0.8rem;
+  }
+  .section-sub { font-size: 1rem; color: var(--gray-400); margin-bottom: 3.5rem; }
+  .steps-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+  .step-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 20px; padding: 2rem 1.5rem;
+    text-align: left; position: relative;
+  }
+  .step-num {
+    font-family: var(--mono); font-size: 0.7rem;
+    color: var(--blue-glow); letter-spacing: 0.1em;
+    margin-bottom: 1rem; display: block;
+  }
+  .step-icon { font-size: 2rem; margin-bottom: 1rem; }
+  .step-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .step-desc { font-size: 0.83rem; color: var(--gray-400); line-height: 1.6; }
+
+  /* ── BENEFITS ── */
+  .benefits-section {
+    padding: 4rem 1.5rem 6rem; max-width: 960px; margin: 0 auto;
+  }
+  .benefits-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem; margin-top: 2.5rem;
+  }
+  .benefit-item {
+    display: flex; gap: 1rem; align-items: flex-start;
+    padding: 1.2rem; border-radius: 14px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .benefit-icon {
+    font-size: 1.4rem; flex-shrink: 0;
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(37,99,235,0.12);
+  }
+  .benefit-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.3rem; }
+  .benefit-desc { font-size: 0.8rem; color: var(--gray-400); line-height: 1.5; }
+
+  /* ── CTA FINAL ── */
+  .cta-section {
+    padding: 6rem 1.5rem;
+    text-align: center;
+    background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(37,99,235,0.12) 0%, transparent 70%);
+    position: relative;
+  }
+  .cta-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -0.04em; margin-bottom: 1rem; }
+  .cta-sub { font-size: 1rem; color: var(--gray-400); margin-bottom: 2rem; max-width: 480px; margin-left: auto; margin-right: auto; }
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: var(--blue); color: var(--white);
+    border: none; border-radius: 14px;
+    padding: 1rem 2rem; font-family: var(--font);
+    font-size: 1rem; font-weight: 600; cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 24px rgba(37,99,235,0.35);
+  }
+  .cta-btn:hover { background: var(--blue-light); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(37,99,235,0.45); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding: 2rem 1.5rem; text-align: center;
+    font-size: 0.78rem; color: var(--gray-600);
+  }
+
+  /* ── FLOATING WA BUTTON ── */
+  .wa-float {
+    position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 150;
+    display: flex; align-items: center; gap: 0.6rem;
+    background: #25D366; color: var(--white);
+    border: none; border-radius: 999px; padding: 0.75rem 1.3rem;
+    font-family: var(--font); font-size: 0.85rem; font-weight: 600;
+    cursor: pointer; box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+    transition: all 0.2s; text-decoration: none;
+  }
+  .wa-float:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(37,211,102,0.5); }
+  .wa-float svg { width: 20px; height: 20px; fill: white; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(37,99,235,0); }
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .fade-up { animation: fadeUp 0.5s ease both; }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px; max-width: 1100px; margin: 0 auto;
+    background: linear-gradient(90deg, transparent, rgba(37,99,235,0.2), transparent);
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 600px) {
+    nav { padding: 0.8rem 1rem; }
+    .stats-strip { gap: 1.5rem; }
+    #analyzeBtn { padding: 0.65rem 1rem; font-size: 0.82rem; }
+    .wa-float span { display: none; }
+    .wa-float { padding: 0.85rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <span class="logo-dot"></span>
+    Arriendo<strong>AI</strong>
+  </div>
+  <div class="nav-badge">COLOMBIA · BETA</div>
+</nav>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-ring"></div>
+  <div class="loader-steps">
+    <div class="loader-step s1">🔍 Analizando tu búsqueda...</div>
+    <div class="loader-step s2">🧠 Procesando zonas y precios...</div>
+    <div class="loader-step s3">✅ Generando diagnóstico inteligente...</div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="grid-overlay"></div>
+
+  <div class="hero-tag">✦ INTELIGENCIA PARA ARRENDAR MEJOR</div>
+
+  <h1>No busques arriendo.<br><em>Entiéndelo.</em></h1>
+
+  <p class="hero-sub">
+    La IA analiza por ti lo que nadie te dice. Menos visitas inútiles. Más decisiones inteligentes.
+  </p>
+
+  <div class="input-wrap">
+    <div class="input-box">
+      <span class="input-icon">🔍</span>
+      <input
+        type="text"
+        id="queryInput"
+        placeholder="Ej: apto en Medellín 2 hab hasta $1.200.000 zona tranquila..."
+        autocomplete="off"
+      />
+      <button id="analyzeBtn" onclick="analyze()">Analizar →</button>
+    </div>
+  </div>
+
+  <div class="input-examples">
+    <span class="example-chip" onclick="fillExample(this)">apto Bogotá 2 hab $2.000.000</span>
+    <span class="example-chip" onclick="fillExample(this)">casa Medellín tranquila $1.500.000</span>
+    <span class="example-chip" onclick="fillExample(this)">estudio Cali céntrico barato</span>
+    <span class="example-chip" onclick="fillExample(this)">apartamento Bucaramanga 3 hab</span>
+  </div>
+
+  <div class="stats-strip">
+    <div class="stat"><div class="stat-num">12.000+</div><div class="stat-label">Propiedades analizadas</div></div>
+    <div class="stat"><div class="stat-num">98%</div><div class="stat-label">Precisión de precio</div></div>
+    <div class="stat"><div class="stat-num">23 ciudades</div><div class="stat-label">Cobertura nacional</div></div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="resultsSection">
+  <div class="results-header">
+    <div class="results-tag">✦ DIAGNÓSTICO COMPLETADO</div>
+    <h2 class="results-title" id="resultsTitle">Tu análisis inteligente</h2>
+    <p class="results-sub" id="resultsSub">Basado en tu búsqueda, esto es lo que encontramos</p>
+  </div>
+
+  <!-- DIAG CARDS -->
+  <div class="diag-grid" id="diagGrid"></div>
+
+  <!-- SCORE -->
+  <div class="score-section">
+    <div class="section-label">▸ Score del inmueble</div>
+    <div class="score-grid" id="scoreGrid"></div>
+  </div>
+
+  <!-- PROPS -->
+  <div class="props-section">
+    <div class="section-label">▸ Propiedades que encajan con tu búsqueda</div>
+    <div class="props-grid" id="propsGrid"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HOW IT WORKS -->
+<section class="how-section reveal">
+  <h2 class="section-title">¿Cómo funciona?</h2>
+  <p class="section-sub">Tres pasos para tomar la mejor decisión de tu vida</p>
+  <div class="steps-grid">
+    <div class="step-card">
+      <span class="step-num">PASO 01</span>
+      <div class="step-icon">💬</div>
+      <div class="step-title">Describe lo que buscas</div>
+      <p class="step-desc">Escribe en lenguaje natural. No llenes formularios. La IA entiende tu texto tal como lo escribes.</p>
+    </div>
+    <div class="step-card">
+      <span class="step-num">PASO 02</span>
+      <div class="step-icon">🧠</div>
+      <div class="step-title">La IA lo analiza todo</div>
+      <p class="step-desc">Cruza más de 12.000 datos: precios históricos, zonas, seguridad, ruido y tendencias de mercado.</p>
+    </div>
+    <div class="step-card">
+      <span class="step-num">PASO 03</span>
+      <div class="step-icon">✅</div>
+      <div class="step-title">Recibe tu diagnóstico</div>
+      <p class="step-desc">Zonas recomendadas, alertas de precio, score del inmueble y propiedades reales que sí valen la pena.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- BENEFITS -->
+<section class="benefits-section reveal">
+  <h2 class="section-title" style="text-align:center">Lo que nadie más te da</h2>
+  <div class="benefits-grid">
+    <div class="benefit-item">
+      <div class="benefit-icon">⚠️</div>
+      <div>
+        <div class="benefit-title">Alertas de precio real</div>
+        <p class="benefit-desc">Detectamos si te están cobrando de más comparado con el mercado actual.</p>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon">🗺️</div>
+      <div>
+        <div class="benefit-title">Zonas realmente tranquilas</div>
+        <p class="benefit-desc">No solo la descripción del arrendador. Datos reales de ruido y seguridad.</p>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon">📊</div>
+      <div>
+        <div class="benefit-title">Score objetivo</div>
+        <p class="benefit-desc">Puntuación de precio justo, ubicación y riesgo. Sin sesgos del vendedor.</p>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon">🚀</div>
+      <div>
+        <div class="benefit-title">Decisiones en segundos</div>
+        <p class="benefit-desc">Lo que antes tomaba semanas de visitas, ahora lo ves en un diagnóstico.</p>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon">🇨🇴</div>
+      <div>
+        <div class="benefit-title">Hecho para Colombia</div>
+        <p class="benefit-desc">Datos de Bogotá, Medellín, Cali, Barranquilla y 19 ciudades más.</p>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon">🔒</div>
+      <div>
+        <div class="benefit-title">Sin registro ni costos</div>
+        <p class="benefit-desc">Analiza gratis. Sin crear cuenta. Sin publicidad. Solo información útil.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section reveal">
+  <h2 class="cta-title">¿Listo para arrendar<br>con inteligencia?</h2>
+  <p class="cta-sub">Escribe lo que buscas arriba y recibe tu diagnóstico en segundos. Es gratis.</p>
+  <button class="cta-btn" onclick="document.getElementById('queryInput').focus(); window.scrollTo({top:0,behavior:'smooth'})">
+    🔍 Iniciar análisis gratuito
+  </button>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Arriendo Inteligente Colombia © 2025 · Herramienta de apoyo a decisiones de arriendo · No somos una inmobiliaria</p>
+</footer>
+
+<!-- FLOATING WA -->
+<a class="wa-float" id="waBtn" href="#" onclick="openWhatsApp(event)">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+  <span>Quiero asesoría personalizada</span>
+</a>
+
+<script>
+// ── DATA ENGINE ──
+const DB = {
+  ciudades: {
+    medellin: {
+      nombre: "Medellín",
+      zonas: {
+        tranquila: ["Laureles", "Envigado", "Sabaneta", "El Poblado"],
+        económica: ["Robledo", "Aranjuez", "Manrique"],
+        premium: ["El Poblado", "Provenza", "Patio Bonito"],
+        segura: ["Laureles", "Belén", "Envigado"],
+        central: ["El Centro", "La Candelaria", "Buenos Aires"]
+      },
+      precioBase: { estudio: 750000, "1hab": 900000, "2hab": 1300000, "3hab": 1800000 },
+      precioZona: { premium: 1.7, tranquila: 1.2, central: 0.9, económica: 0.75 }
+    },
+    bogota: {
+      nombre: "Bogotá",
+      zonas: {
+        tranquila: ["Chapinero Alto", "Cedritos", "Usaquén", "Chicó"],
+        económica: ["Kennedy", "Bosa", "Suba"],
+        premium: ["Chicó Norte", "Rosales", "El Nogal"],
+        segura: ["Chicó", "Usaquén", "Santa Bárbara"],
+        central: ["La Candelaria", "Santa Fe", "Los Mártires"]
+      },
+      precioBase: { estudio: 1100000, "1hab": 1400000, "2hab": 2000000, "3hab": 2800000 },
+      precioZona: { premium: 1.8, tranquila: 1.25, central: 0.95, económica: 0.7 }
+    },
+    cali: {
+      nombre: "Cali",
+      zonas: {
+        tranquila: ["Ciudad Jardín", "El Peñón", "Versalles"],
+        económica: ["Aguablanca", "Siloe", "Terrón Colorado"],
+        premium: ["Ciudad Jardín", "San Fernando"],
+        segura: ["Ciudad Jardín", "El Peñón"],
+        central: ["El Centro", "San Cayetano"]
+      },
+      precioBase: { estudio: 700000, "1hab": 900000, "2hab": 1200000, "3hab": 1600000 },
+      precioZona: { premium: 1.6, tranquila: 1.15, central: 0.9, económica: 0.65 }
+    },
+    barranquilla: {
+      nombre: "Barranquilla",
+      zonas: {
+        tranquila: ["El Golf", "Altos del Prado", "Villa Country"],
+        económica: ["Simón Bolívar", "Rebolo"],
+        premium: ["El Golf", "Altos del Prado"],
+        segura: ["El Golf", "Buenavista"],
+        central: ["El Centro"]
+      },
+      precioBase: { estudio: 800000, "1hab": 1000000, "2hab": 1400000, "3hab": 1900000 },
+      precioZona: { premium: 1.5, tranquila: 1.2, central: 0.9, económica: 0.7 }
+    },
+    bucaramanga: {
+      nombre: "Bucaramanga",
+      zonas: {
+        tranquila: ["Cabecera", "García Rovira", "Provenza"],
+        económica: ["Sur", "Villabel"],
+        premium: ["Cabecera del Llano"],
+        segura: ["Cabecera", "García Rovira"],
+        central: ["El Centro", "Antonia Santos"]
+      },
+      precioBase: { estudio: 650000, "1hab": 850000, "2hab": 1100000, "3hab": 1500000 },
+      precioZona: { premium: 1.4, tranquila: 1.1, central: 0.85, económica: 0.65 }
+    }
+  },
+  emojis: ["🏢","🏡","🏗️","🏠","🌆","🏙️","🌇","🏘️","🌃","🏚️"]
+};
+
+const KEYWORDS = {
+  ciudad: {
+    medellin: ["medellín","medellin","mede","antioquia","paisa"],
+    bogota: ["bogotá","bogota","bogo","capital","cundinamarca"],
+    cali: ["cali","valle","caleño"],
+    barranquilla: ["barranquilla","barranquilla","bquilla","atlántico"],
+    bucaramanga: ["bucaramanga","buca","santander"]
+  },
+  habitaciones: {
+    estudio: ["estudio","monoambiente","1 ambiente"],
+    "1hab": ["1 hab","una hab","1 cuarto","un cuarto","1hab","1hab"],
+    "2hab": ["2 hab","dos hab","2 cuarto","dos cuartos","2hab","2 cuartos"],
+    "3hab": ["3 hab","tres hab","3 cuartos","tres cuartos","3hab"]
+  },
+  intencion: {
+    tranquila: ["tranquil","silencio","paz","quieto","seguro","segura","residencial"],
+    premium: ["lujo","premium","exclusivo","lujoso","alto nivel"],
+    económica: ["barato","económico","economico","bajo presupuesto","módico","asequible","precio"],
+    central: ["central","centro","céntrico","centrico","cerca de todo","bien ubicado"]
+  }
+};
+
+function parseQuery(q) {
+  const text = q.toLowerCase();
+  let result = {
+    ciudad: null,
+    habitaciones: "2hab",
+    intencion: [],
+    presupuesto: null,
+    raw: q
+  };
+
+  // Ciudad
+  for (const [key, kws] of Object.entries(KEYWORDS.ciudad)) {
+    if (kws.some(k => text.includes(k))) { result.ciudad = key; break; }
+  }
+
+  // Habitaciones
+  for (const [key, kws] of Object.entries(KEYWORDS.habitaciones)) {
+    if (kws.some(k => text.includes(k))) { result.habitaciones = key; break; }
+  }
+
+  // Intención
+  for (const [key, kws] of Object.entries(KEYWORDS.intencion)) {
+    if (kws.some(k => text.includes(k))) result.intencion.push(key);
+  }
+
+  // Presupuesto (buscar números con o sin puntos/comas)
+  const budgetMatch = text.match(/\$?\s*(\d[\d.,]*)/g);
+  if (budgetMatch) {
+    const nums = budgetMatch.map(m => parseInt(m.replace(/[\$.,\s]/g,''))).filter(n => n > 100000);
+    if (nums.length) result.presupuesto = Math.max(...nums);
+  }
+
+  if (!result.ciudad) result.ciudad = "medellin";
+  if (!result.intencion.length) result.intencion.push("tranquila");
+
+  return result;
+}
+
+function buildDiagnosis(parsed) {
+  const ciudad = DB.ciudades[parsed.ciudad];
+  const hab = parsed.habitaciones;
+  const intencion = parsed.intencion[0] || "tranquila";
+
+  const zonas = ciudad.zonas[intencion] || ciudad.zonas.tranquila;
+  const basePrice = ciudad.precioBase[hab];
+  const factor = ciudad.precioZona[intencion] || 1;
+  const estimado = Math.round(basePrice * factor / 100000) * 100000;
+
+  const presupuesto = parsed.presupuesto;
+
+  const alerts = [];
+  if (presupuesto && presupuesto < basePrice * 0.8) {
+    alerts.push({ type: 'danger', text: `Tu presupuesto de ${fmt(presupuesto)} está por debajo del mercado real para ${ciudad.nombre}` });
+  }
+  if (intencion === 'premium' && presupuesto && presupuesto < basePrice * 1.4) {
+    alerts.push({ type: 'warn', text: 'Zona premium con ese presupuesto es difícil — considera barrios alternativos similares' });
+  }
+  if (presupuesto && presupuesto > estimado * 1.3) {
+    alerts.push({ type: 'info', text: 'Con ese presupuesto podrías encontrar mejores opciones de las que circulan normalmente' });
+  }
+  alerts.push({ type: 'warn', text: 'Verifica siempre el canon legal y el contrato de arrendamiento antes de firmar' });
+
+  // Scores
+  let scoreUbicacion = intencion === 'premium' ? 92 : intencion === 'tranquila' ? 84 : intencion === 'central' ? 76 : 68;
+  let scorePrecio = presupuesto ? (presupuesto >= estimado * 0.9 && presupuesto <= estimado * 1.15 ? 88 : presupuesto < estimado * 0.85 ? 55 : 72) : 80;
+  let scoreRiesgo = intencion === 'tranquila' || intencion === 'premium' ? 15 : intencion === 'central' ? 40 : 30;
+
+  return { ciudad, hab, zonas, estimado, alerts, scoreUbicacion, scorePrecio, scoreRiesgo, intencion, presupuesto };
+}
+
+function generateProperties(diag) {
+  const { ciudad, hab, zonas, estimado, intencion } = diag;
+  const habNum = { estudio: 0, "1hab": 1, "2hab": 2, "3hab": 3 }[hab];
+  const props = [];
+
+  const badges = [
+    { label: "Buena opción", cls: "badge-good" },
+    { label: "Oportunidad", cls: "badge-opp" },
+    { label: "Sobrevalorado", cls: "badge-over" },
+    { label: "Buena opción", cls: "badge-good" },
+    { label: "Oportunidad", cls: "badge-opp" }
+  ];
+
+  const tipos = ["Apartamento", "Apartamento", "Casa", "Apartamento", "Estudio"];
+  const extras = [
+    ["Parqueadero","Conjunto cerrado","Vigilancia","Balcón"],
+    ["Cocina integral","Remodelado","Cerca al metro","Mascotas OK"],
+    ["Jardín","Zona BBQ","Cuarto servicio","2 baños"],
+    ["Ascensor","Portería 24h","Piscina","Gimnasio"],
+    ["WiFi incluido","Sin depósito","Solo ejecutivos","Amoblado"]
+  ];
+
+  for (let i = 0; i < 4; i++) {
+    const zona = zonas[i % zonas.length];
+    const variation = 0.85 + Math.random() * 0.35;
+    const price = Math.round(estimado * variation / 50000) * 50000;
+    const score = Math.round(65 + Math.random() * 30);
+    props.push({
+      tipo: tipos[i],
+      zona,
+      precio: price,
+      hab: habNum === 0 ? 'Estudio' : `${habNum} hab`,
+      banos: habNum > 1 ? 2 : 1,
+      m2: 35 + habNum * 18 + Math.round(Math.random() * 20),
+      tags: extras[i].slice(0, 3),
+      badge: badges[i],
+      score,
+      emoji: DB.emojis[i % DB.emojis.length]
+    });
+  }
+  return props;
+}
+
+function fmt(n) {
+  return '$' + n.toLocaleString('es-CO');
+}
+
+function scoreColor(n, inverse = false) {
+  if (inverse) return n < 25 ? 'green' : n < 50 ? 'yellow' : 'red';
+  return n >= 75 ? 'green' : n >= 50 ? 'yellow' : 'red';
+}
+
+function renderResults(diag, props) {
+  // Titles
+  document.getElementById('resultsTitle').textContent =
+    `Diagnóstico para ${diag.ciudad.nombre}`;
+  document.getElementById('resultsSub').textContent =
+    `Basado en: "${diag.ciudad.nombre}, ${diag.hab}, ${diag.intencion}"` +
+    (diag.presupuesto ? ` · Presupuesto: ${fmt(diag.presupuesto)}` : '');
+
+  // DIAG CARDS
+  const diagGrid = document.getElementById('diagGrid');
+  diagGrid.innerHTML = `
+    <div class="diag-card rec fade-up" style="animation-delay:.05s">
+      <div class="diag-icon">🧠</div>
+      <div class="diag-label">Recomendación de zonas</div>
+      <div class="diag-title">Zonas ideales para ti en ${diag.ciudad.nombre}</div>
+      <p class="diag-text">Basado en tu búsqueda de zona <strong>${diag.intencion}</strong>, estas son las mejores opciones:</p>
+      <div class="diag-zones">
+        ${diag.zonas.map(z => `<span class="zone-badge">${z}</span>`).join('')}
+      </div>
+    </div>
+
+    <div class="diag-card alert fade-up" style="animation-delay:.1s">
+      <div class="diag-icon">⚠️</div>
+      <div class="diag-label">Alertas del mercado</div>
+      <div class="diag-title">Lo que debes saber</div>
+      <div class="alerts-list">
+        ${diag.alerts.map(a => `
+          <div class="alert-item">
+            <span class="alert-dot ${a.type}"></span>
+            <span>${a.text}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="diag-card price fade-up" style="animation-delay:.15s">
+      <div class="diag-icon">💰</div>
+      <div class="diag-label">Precio estimado correcto</div>
+      <div class="diag-title">Canon justo de mercado</div>
+      <div class="price-value">${fmt(diag.estimado)}</div>
+      <p class="price-range">Rango real: ${fmt(Math.round(diag.estimado * 0.85 / 50000)*50000)} – ${fmt(Math.round(diag.estimado * 1.2 / 50000)*50000)} / mes</p>
+      <p class="diag-text" style="margin-top:.6rem">Para <strong>${diag.hab}</strong> en zona <strong>${diag.intencion}</strong> en ${diag.ciudad.nombre}</p>
+    </div>
+  `;
+
+  // SCORES
+  const scoreGrid = document.getElementById('scoreGrid');
+  const sc = [
+    { name: 'Precio justo', val: diag.scorePrecio, inv: false },
+    { name: 'Calidad de ubicación', val: diag.scoreUbicacion, inv: false },
+    { name: 'Nivel de riesgo', val: diag.scoreRiesgo, inv: true }
+  ];
+  scoreGrid.innerHTML = sc.map(s => {
+    const c = scoreColor(s.val, s.inv);
+    const display = s.inv ? (s.val < 25 ? 'Bajo' : s.val < 50 ? 'Medio' : 'Alto') : s.val + '/100';
+    return `
+      <div class="score-card fade-up">
+        <div class="score-name">${s.name}</div>
+        <div class="score-bar-wrap">
+          <div class="score-bar ${c}" style="width:0%" data-target="${s.inv ? (100-s.val) : s.val}%"></div>
+        </div>
+        <div class="score-num ${c}">${display}</div>
+      </div>
+    `;
+  }).join('');
+
+  // Animate bars
+  setTimeout(() => {
+    document.querySelectorAll('.score-bar').forEach(bar => {
+      bar.style.width = bar.dataset.target;
+    });
+  }, 100);
+
+  // PROPERTIES
+  const propsGrid = document.getElementById('propsGrid');
+  propsGrid.innerHTML = props.map((p, i) => `
+    <div class="prop-card fade-up" style="animation-delay:${0.05 + i * 0.08}s">
+      <div class="prop-img">
+        <div class="prop-img-inner">${p.emoji}</div>
+        <div class="prop-badge ${p.badge.cls}">${p.badge.label}</div>
+      </div>
+      <div class="prop-body">
+        <div class="prop-price">${fmt(p.precio)}<span style="font-size:.75rem;color:#94A3B8;font-weight:400">/mes</span></div>
+        <div class="prop-zone">📍 ${p.zona} · ${p.tipo}</div>
+        <div class="prop-tags">
+          <span class="prop-tag">${p.hab}</span>
+          <span class="prop-tag">${p.banos} baño${p.banos>1?'s':''}</span>
+          <span class="prop-tag">${p.m2} m²</span>
+          ${p.tags.map(t => `<span class="prop-tag">${t}</span>`).join('')}
+        </div>
+        <div class="prop-cta">
+          <div class="prop-score-mini">Score: <span style="color:${p.score>=75?'#10B981':p.score>=55?'#F59E0B':'#EF4444'}">${p.score}/100</span></div>
+          <button class="prop-btn" onclick="askAdvice('${p.zona}', '${fmt(p.precio)}')">Ver detalle →</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function askAdvice(zona, precio) {
+  const msg = encodeURIComponent(`Hola, vi el diagnóstico en Arriendo Inteligente Colombia. Me interesa una propiedad en ${zona} a ${precio}. ¿Pueden asesorarme?`);
+  window.open(`https://wa.me/573126387467?text=${msg}`, '_blank');
+}
+
+function openWhatsApp(e) {
+  e.preventDefault();
+  const msg = encodeURIComponent("Hola, vi mi diagnóstico de arriendo en Arriendo Inteligente Colombia y quiero más información personalizada.");
+  window.open(`https://wa.me/573126387467?text=${msg}`, '_blank');
+}
+
+function fillExample(el) {
+  document.getElementById('queryInput').value = el.textContent.trim();
+  document.getElementById('queryInput').focus();
+}
+
+function showLoader() {
+  document.getElementById('loader').classList.add('active');
+}
+function hideLoader() {
+  document.getElementById('loader').classList.remove('active');
+}
+
+function analyze() {
+  const q = document.getElementById('queryInput').value.trim();
+  if (!q || q.length < 5) {
+    document.getElementById('queryInput').style.borderColor = 'var(--red)';
+    setTimeout(() => document.getElementById('queryInput').style.borderColor = '', 1500);
+    return;
+  }
+
+  showLoader();
+
+  setTimeout(() => {
+    const parsed = parseQuery(q);
+    const diag = buildDiagnosis(parsed);
+    const props = generateProperties(diag);
+
+    hideLoader();
+
+    const section = document.getElementById('resultsSection');
+    section.classList.add('visible');
+    renderResults(diag, props);
+
+    setTimeout(() => {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }, 2600);
+}
+
+// Enter key
+document.getElementById('queryInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') analyze();
+});
+
+// Scroll reveal
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+</script>
+</body>
+</html>

@@ -1,531 +1,271 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ONE MORE AI SYSTEM</title>
 
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
-body{
-font-family:'Inter',sans-serif;
-background:#050505;
-color:#fff;
-overflow:hidden;
-}
-
-:root{
---gold:#d4af37;
---gold2:#8a6a16;
---panel:#111111;
---panel2:#171717;
---border:rgba(212,175,55,.18);
-}
-
-.app{
-display:flex;
-height:100vh;
-}
-
-.sidebar{
-width:260px;
-background:#0b0b0b;
-border-right:1px solid var(--border);
-padding:20px;
-display:flex;
-flex-direction:column;
-gap:20px;
-}
-
-.logo{
-padding-bottom:20px;
-border-bottom:1px solid var(--border);
-}
-
-.logo h1{
-font-size:40px;
-line-height:40px;
-font-weight:900;
-color:var(--gold);
-}
-
-.logo span{
-font-size:11px;
-letter-spacing:4px;
-color:#888;
-}
-
-.menu-title{
-font-size:11px;
-letter-spacing:3px;
-color:#666;
-margin-bottom:10px;
-margin-top:10px;
-}
-
-.menu{
-display:flex;
-flex-direction:column;
-gap:10px;
-}
-
-.menu button{
-background:transparent;
-border:1px solid transparent;
-color:#ccc;
-padding:14px;
-border-radius:14px;
-text-align:left;
-transition:.3s;
-cursor:pointer;
-font-size:14px;
-}
-
-.menu button:hover,
-.menu button.active{
-background:rgba(212,175,55,.08);
-border:1px solid var(--border);
-color:var(--gold);
-}
-
-.webhook-status{
-margin-top:auto;
-padding-top:20px;
-border-top:1px solid var(--border);
-}
-
-.status-dot{
-width:10px;
-height:10px;
-border-radius:50%;
-display:inline-block;
-margin-right:10px;
-background:red;
-}
-
-.main{
-flex:1;
-display:flex;
-flex-direction:column;
-overflow:hidden;
-}
-
-.header{
-height:80px;
-border-bottom:1px solid var(--border);
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 30px;
-background:#090909;
-}
-
-.header h2{
-font-size:28px;
-font-weight:800;
-}
-
-.gold-btn{
-background:linear-gradient(135deg,var(--gold),var(--gold2));
-color:#000;
-font-weight:800;
-padding:14px 22px;
-border:none;
-border-radius:14px;
-cursor:pointer;
-}
-
-.content{
-flex:1;
-overflow:auto;
-padding:30px;
-}
-
-.card{
-background:var(--panel);
-border:1px solid var(--border);
-border-radius:24px;
-padding:25px;
-margin-bottom:20px;
-}
-
-.card h3{
-font-size:24px;
-font-weight:800;
-margin-bottom:10px;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:18px;
-margin-top:20px;
-}
-
-.small-card{
-background:var(--panel2);
-border:1px solid var(--border);
-border-radius:18px;
-padding:18px;
-}
-
-.small-card h4{
-color:var(--gold);
-margin-bottom:10px;
-font-size:18px;
-}
-
-.chat-box{
-height:300px;
-overflow:auto;
-background:#0a0a0a;
-border:1px solid var(--border);
-border-radius:18px;
-padding:20px;
-margin-top:20px;
-}
-
-.message{
-margin-bottom:20px;
-max-width:85%;
-padding:16px;
-border-radius:18px;
-line-height:1.5;
-}
-
-.user{
-background:linear-gradient(135deg,var(--gold),#9c771d);
-color:#000;
-margin-left:auto;
-}
-
-.ai{
-background:#181818;
-border:1px solid var(--border);
-}
-
-.input-area{
-display:flex;
-gap:12px;
-margin-top:20px;
-}
-
-.input-area input{
-flex:1;
-background:#0a0a0a;
-border:1px solid var(--border);
-color:#fff;
-padding:18px;
-border-radius:16px;
-outline:none;
-}
-
-.input-area button{
-width:180px;
-}
-
-.modal{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.8);
-display:none;
-align-items:center;
-justify-content:center;
-z-index:999;
-}
-
-.modal-content{
-width:500px;
-background:#101010;
-border:1px solid var(--border);
-padding:30px;
-border-radius:24px;
-}
-
-.modal-content h3{
-margin-bottom:20px;
-font-size:24px;
-}
-
-.modal-content input{
-width:100%;
-padding:16px;
-background:#0a0a0a;
-border:1px solid var(--border);
-color:#fff;
-border-radius:14px;
-margin-bottom:20px;
-}
-
-.console{
-margin-top:20px;
-background:#0a0a0a;
-border:1px solid var(--border);
-padding:15px;
-border-radius:16px;
-font-size:13px;
-color:#aaa;
-height:100px;
-overflow:auto;
-}
-
-@media(max-width:900px){
-.sidebar{
-display:none;
-}
-
-.content{
-padding:15px;
-}
-
-.input-area{
-flex-direction:column;
-}
-
-.input-area button{
-width:100%;
-}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#050505;color:#fff}
+.app{display:flex;min-height:100vh}
+.sidebar{width:260px;background:#0b0b0b;border-right:1px solid rgba(212,175,55,.25);padding:24px;display:flex;flex-direction:column}
+.logo{color:#d4af37;font-size:38px;font-weight:900;line-height:36px;margin-bottom:10px}
+.sub{letter-spacing:5px;color:#777;font-size:12px;margin-bottom:35px}
+.menu button{width:100%;padding:16px;margin-bottom:10px;border-radius:14px;border:1px solid transparent;background:transparent;color:#ccc;text-align:left;font-size:15px;cursor:pointer}
+.menu button:hover,.menu button.active{background:rgba(212,175,55,.1);border-color:rgba(212,175,55,.3);color:#d4af37}
+.status{margin-top:auto;border-top:1px solid rgba(212,175,55,.25);padding-top:20px;font-size:14px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#00ff88;margin-right:8px}
+.main{flex:1;padding:28px}
+.header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(212,175,55,.25);padding-bottom:22px;margin-bottom:28px}
+.header h1{font-size:34px}
+.header p{color:#888;margin-top:6px}
+.btn{background:linear-gradient(135deg,#d4af37,#9b741b);color:#000;border:0;border-radius:14px;padding:16px 24px;font-weight:800;cursor:pointer}
+.card{background:#111;border:1px solid rgba(212,175,55,.25);border-radius:24px;padding:28px;margin-bottom:20px}
+.card h2{font-size:28px;margin-bottom:10px}
+.muted{color:#999}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:24px 0}
+.mini{background:#181818;border:1px solid rgba(212,175,55,.2);border-radius:18px;padding:20px}
+.mini h3{color:#d4af37;margin-bottom:8px}
+.chat{height:330px;overflow:auto;background:#080808;border:1px solid rgba(212,175,55,.22);border-radius:20px;padding:20px;margin-top:20px}
+.msg{padding:16px 18px;border-radius:16px;margin-bottom:16px;line-height:1.5;max-width:85%}
+.ai{background:#181818;border:1px solid rgba(212,175,55,.2)}
+.user{background:linear-gradient(135deg,#d4af37,#a87c1a);color:#000;margin-left:auto}
+.input{display:flex;gap:12px;margin-top:18px}
+.input input{flex:1;background:#090909;color:#fff;border:1px solid rgba(212,175,55,.25);border-radius:16px;padding:18px;font-size:16px;outline:none}
+.input button{width:170px}
+.console{background:#090909;border:1px solid rgba(212,175,55,.25);border-radius:16px;padding:14px;height:110px;overflow:auto;font-size:13px;color:#aaa;margin-top:18px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;padding:20px}
+.modal-box{background:#111;border:1px solid rgba(212,175,55,.35);border-radius:24px;padding:28px;width:100%;max-width:560px}
+.modal-box h2{margin-bottom:16px}
+.modal-box input{width:100%;padding:16px;border-radius:14px;background:#050505;color:#fff;border:1px solid rgba(212,175,55,.3);margin-bottom:16px}
+.help{color:#999;font-size:13px;margin-bottom:16px;line-height:1.5}
+@media(max-width:800px){
+.app{display:block}
+.sidebar{width:100%;min-height:auto}
+.main{padding:18px}
+.header{display:block}
+.header button{margin-top:18px;width:100%}
+.input{display:block}
+.input button{width:100%;margin-top:10px}
 }
 </style>
 </head>
+
 <body>
 
 <div class="app">
 
-<div class="sidebar">
+<aside class="sidebar">
+  <div class="logo">ONE<br>MORE</div>
+  <div class="sub">AI SYSTEM</div>
 
-<div class="logo">
-<h1>ONE<br>MORE</h1>
-<span>AI SYSTEM</span>
+  <div class="menu">
+    <button class="active">🏠 Dashboard</button>
+    <button>🤖 IA Mentor</button>
+    <button>🔥 Viral Machine</button>
+    <button>💬 Funnel WhatsApp</button>
+    <button>🎓 Training Center</button>
+    <button>📚 Biblioteca</button>
+  </div>
+
+  <div class="status">
+    <p id="status"><span class="dot"></span>Webhook conectado</p>
+    <br>
+    <button class="btn" onclick="openModal()">Configurar Webhook</button>
+  </div>
+</aside>
+
+<main class="main">
+
+  <div class="header">
+    <div>
+      <h1>ONE MORE AI SYSTEM</h1>
+      <p>Hub IA de contenido, negocio y automatización</p>
+    </div>
+    <button class="btn">⚡ ACTIVAR IA</button>
+  </div>
+
+  <section class="card">
+    <h2>🤖 IA Mentor — Expert ONE MORE</h2>
+    <p class="muted">Consultor especializado en producto, negocio, contenido viral, WhatsApp y duplicación.</p>
+
+    <div class="grid">
+      <div class="mini">
+        <h3>📦 Compensación</h3>
+        <p>Bonos, rangos, binario y Bono 2+1.</p>
+      </div>
+      <div class="mini">
+        <h3>🚀 Viral Machine</h3>
+        <p>Hooks, guiones TikTok y storytelling.</p>
+      </div>
+      <div class="mini">
+        <h3>💬 Funnel WA</h3>
+        <p>Secuencia WhatsApp de 7 días.</p>
+      </div>
+    </div>
+
+    <div class="chat" id="chat">
+      <div class="msg ai">
+        Soy tu experto ONE MORE. Pregunta sobre productos, negocio, TikTok, funnels, onboarding o duplicación.
+      </div>
+    </div>
+
+    <div class="input">
+      <input id="prompt" placeholder="Ej: Explícame cómo ganar en One More..." onkeydown="if(event.key==='Enter') askAI()">
+      <button class="btn" onclick="askAI()">Preguntar</button>
+    </div>
+
+    <div class="console" id="console">
+      [ONE MORE AI] Sistema iniciado...
+    </div>
+  </section>
+
+</main>
 </div>
 
-<div>
-<div class="menu-title">PRINCIPAL</div>
-<div class="menu">
-<button class="active">🏠 Dashboard</button>
-<button>🤖 IA Mentor</button>
-<button>🔥 Viral Machine</button>
-<button>💬 Funnel WhatsApp</button>
-<button>🎓 Training Center</button>
-<button>📚 Biblioteca</button>
-</div>
-</div>
-
-<div class="webhook-status">
-<p id="statusText"><span class="status-dot" id="statusDot"></span>Webhook no configurado</p>
-<br>
-<button class="gold-btn" onclick="openWebhookModal()">Configurar Webhook</button>
-</div>
-
-</div>
-
-<div class="main">
-
-<div class="header">
-<div>
-<h2>ONE MORE AI SYSTEM</h2>
-<p style="color:#777">Hub IA de contenido, negocio y automatización</p>
-</div>
-
-<button class="gold-btn">⚡ ACTIVAR IA</button>
-</div>
-
-<div class="content">
-
-<div class="card">
-<h3>🤖 IA Mentor — Expert ONE MORE</h3>
-<p style="color:#888">Consultor especializado en producto, negocio y duplicación.</p>
-
-<div class="grid">
-<div class="small-card">
-<h4>📦 Compensación</h4>
-<p>Bonos, rangos y binario.</p>
-</div>
-
-<div class="small-card">
-<h4>🚀 Viral Machine</h4>
-<p>Hooks y guiones TikTok.</p>
-</div>
-
-<div class="small-card">
-<h4>💬 Funnel WA</h4>
-<p>Secuencia WhatsApp 7 días.</p>
-</div>
-</div>
-
-<div class="chat-box" id="chatBox">
-<div class="message ai">
-Soy tu experto ONE MORE. Pregunta sobre productos, negocio, TikTok, funnels, onboarding o duplicación.
-</div>
-</div>
-
-<div class="input-area">
-<input type="text" id="userPrompt" placeholder="Ej: Explícame el Bono 2+1 o crea un hook viral...">
-<button class="gold-btn" onclick="generateResponse()">Preguntar</button>
-</div>
-
-<div class="console" id="console">
-[ONE MORE AI] Sistema iniciado correctamente...
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="modal" id="webhookModal">
-<div class="modal-content">
-<h3>🔗 Configurar Webhook Make.com</h3>
-
-<input type="text" id="webhookInput" placeholder="https://hook.eu1.make.com/...">
-
-<button class="gold-btn" style="width:100%" onclick="saveWebhook()">
-Guardar configuración
-</button>
-</div>
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h2>Configurar Webhook Make.com</h2>
+    <p class="help">
+      Pega tu webhook en formato correcto:<br>
+      <b>https://hook.eu1.make.com/XXXXXXXX</b><br><br>
+      Si pegas algo como <b>XXXXXXXX@hook.eu1.make.com</b>, el sistema lo corregirá automáticamente.
+    </p>
+    <input id="webhookInput" placeholder="https://hook.eu1.make.com/xxxxx">
+    <button class="btn" style="width:100%" onclick="saveWebhook()">Guardar Webhook</button>
+  </div>
 </div>
 
 <script>
+const DEFAULT_WEBHOOK_RAW = "56ahvep23ervt8lmkupmid7xmh7at8ay@hook.eu1.make.com";
 
-const DEFAULT_WEBHOOK = "https://hook.eu1.make.com/56ahvep23ervt8lmkupmid7xmh7at8ay";
+function normalizeWebhook(url){
+  if(!url) return "";
+  url = url.trim();
 
-let MAKE_WEBHOOK_URL = localStorage.getItem('MAKE_WEBHOOK_URL') || DEFAULT_WEBHOOK;
+  if(url.includes("@hook.eu1.make.com")){
+    const token = url.split("@")[0].trim();
+    return "https://hook.eu1.make.com/" + token;
+  }
 
-const consoleBox = document.getElementById('console');
-const statusText = document.getElementById('statusText');
-const statusDot = document.getElementById('statusDot');
+  if(url.startsWith("hook.eu1.make.com/")){
+    return "https://" + url;
+  }
 
-function logConsole(message){
-consoleBox.innerHTML += `<br>[ONE MORE AI] ${message}`;
-consoleBox.scrollTop = consoleBox.scrollHeight;
+  if(url.startsWith("https://hook.eu1.make.com/")){
+    return url;
+  }
+
+  return url;
 }
 
-function updateStatus(){
-if(MAKE_WEBHOOK_URL){
-statusText.innerHTML = '<span class="status-dot" style="background:#00ff88"></span>Webhook conectado';
-logConsole('Webhook URL cargado correctamente');
-}else{
-statusText.innerHTML = '<span class="status-dot"></span>Webhook no configurado';
-}
+let MAKE_WEBHOOK_URL = normalizeWebhook(
+  localStorage.getItem("MAKE_WEBHOOK_URL") || DEFAULT_WEBHOOK_RAW
+);
+
+localStorage.setItem("MAKE_WEBHOOK_URL", MAKE_WEBHOOK_URL);
+
+const chat = document.getElementById("chat");
+const promptInput = document.getElementById("prompt");
+const consoleBox = document.getElementById("console");
+const modal = document.getElementById("modal");
+const webhookInput = document.getElementById("webhookInput");
+
+function log(msg){
+  consoleBox.innerHTML += "<br>[ONE MORE AI] " + msg;
+  consoleBox.scrollTop = consoleBox.scrollHeight;
 }
 
-updateStatus();
-
-function openWebhookModal(){
-document.getElementById('webhookModal').style.display='flex';
-document.getElementById('webhookInput').value = MAKE_WEBHOOK_URL;
+function openModal(){
+  webhookInput.value = MAKE_WEBHOOK_URL;
+  modal.style.display = "flex";
 }
 
 function saveWebhook(){
-const value = document.getElementById('webhookInput').value;
-
-localStorage.setItem('MAKE_WEBHOOK_URL', value);
-MAKE_WEBHOOK_URL = value;
-
-updateStatus();
-
-logConsole('Webhook actualizado');
-
-document.getElementById('webhookModal').style.display='none';
+  MAKE_WEBHOOK_URL = normalizeWebhook(webhookInput.value);
+  localStorage.setItem("MAKE_WEBHOOK_URL", MAKE_WEBHOOK_URL);
+  modal.style.display = "none";
+  log("Webhook guardado: " + MAKE_WEBHOOK_URL);
 }
 
-window.onclick = function(e){
-if(e.target.id === 'webhookModal'){
-document.getElementById('webhookModal').style.display='none';
-}
-}
-
-async function sendToAI(module,prompt){
-
-if(!MAKE_WEBHOOK_URL){
-return '⚠️ Configura tu webhook primero.';
-}
-
-try{
-
-logConsole('Enviando solicitud a Make.com...');
-
-const response = await fetch(MAKE_WEBHOOK_URL,{
-method:'POST',
-headers:{
-'Content-Type':'application/json'
-},
-body:JSON.stringify({
-module:module,
-prompt:prompt,
-context:'ONE MORE AI SYSTEM',
-source:'github_pages'
-})
+modal.addEventListener("click", function(e){
+  if(e.target === modal) modal.style.display = "none";
 });
 
-if(!response.ok){
-throw new Error(`HTTP ${response.status}`);
+function addMessage(text,type){
+  const div = document.createElement("div");
+  div.className = "msg " + type;
+  div.textContent = text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
 }
 
-const data = await response.json();
+async function askAI(){
+  const prompt = promptInput.value.trim();
+  if(!prompt) return;
 
-logConsole('Respuesta recibida correctamente');
+  addMessage(prompt,"user");
+  promptInput.value = "";
 
-return data.reply || 'La IA no devolvió respuesta.';
+  const loading = addMessage("⏳ Consultando IA desde Make.com...","ai");
 
-}catch(error){
+  try{
+    log("Enviando solicitud a Make.com...");
 
-console.error(error);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 25000);
 
-logConsole('Error de conexión');
+    const response = await fetch(MAKE_WEBHOOK_URL,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        module:"ia_mentor",
+        prompt:prompt,
+        context:"ONE MORE AI SYSTEM",
+        source:"github_pages"
+      }),
+      signal:controller.signal
+    });
 
-return '❌ Error conectando con Make.com o la IA.';
+    clearTimeout(timeout);
+
+    const raw = await response.text();
+
+    if(!response.ok){
+      loading.textContent = "❌ Make respondió con error HTTP " + response.status;
+      log("Error HTTP " + response.status + ": " + raw);
+      return;
+    }
+
+    let data;
+
+    try{
+      data = JSON.parse(raw);
+    }catch(e){
+      loading.textContent = raw || "Respuesta recibida, pero no vino en JSON.";
+      log("Respuesta no JSON recibida.");
+      return;
+    }
+
+    loading.textContent = data.reply || data.message || data.text || "Respuesta recibida, pero falta el campo reply.";
+    log("Respuesta recibida correctamente.");
+
+  }catch(error){
+    if(error.name === "AbortError"){
+      loading.textContent = "⏳ Tiempo agotado. Revisa si Make está en Run once o activado.";
+      log("Timeout: Make no respondió a tiempo.");
+    }else{
+      loading.textContent = "❌ Error de conexión. Revisa el webhook, Run once y Webhook Response.";
+      log("Error de conexión: " + error.message);
+    }
+  }
 }
-}
 
-async function generateResponse(){
-
-const input = document.getElementById('userPrompt');
-const prompt = input.value.trim();
-
-if(!prompt) return;
-
-const chatBox = document.getElementById('chatBox');
-
-chatBox.innerHTML += `
-<div class="message user">
-${prompt}
-</div>
-`;
-
-input.value='';
-
-chatBox.innerHTML += `
-<div class="message ai" id="loadingMessage">
-⏳ Generando respuesta...
-</div>
-`;
-
-chatBox.scrollTop = chatBox.scrollHeight;
-
-const reply = await sendToAI('ia_mentor',prompt);
-
-const loading = document.getElementById('loadingMessage');
-
-loading.innerHTML = reply;
-loading.removeAttribute('id');
-
-chatBox.scrollTop = chatBox.scrollHeight;
-}
-
+log("Webhook activo: " + MAKE_WEBHOOK_URL);
 </script>
 
 </body>

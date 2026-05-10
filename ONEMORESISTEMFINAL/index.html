@@ -1,1285 +1,534 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ONE MORE AI SYSTEM</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
-/* ============================================================
-   ONE MORE AI SYSTEM — Design System
-   Negro/Dorado premium · Make.com Webhook Edition
-   ============================================================ */
-
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-:root {
-  --gold:       #C9A84C;
-  --gold-light: #E8CC6A;
-  --gold-dim:   #8B6520;
-  --dark:       #080604;
-  --dark2:      #0E0B06;
-  --panel:      #13100A;
-  --panel2:     #1A1610;
-  --panel3:     #221D13;
-  --border:     rgba(201,168,76,0.15);
-  --border2:    rgba(201,168,76,0.32);
-  --border3:    rgba(201,168,76,0.55);
-  --text:       #EFE7CE;
-  --text2:      #B0A080;
-  --muted:      #6A6050;
-  --success:    #4ade80;
-  --danger:     #f87171;
-  --warning:    #fbbf24;
-  --active-bg:  rgba(201,168,76,0.10);
-  --radius:     9px;
-  --radius-lg:  13px;
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
 }
 
-html, body { height: 100%; overflow: hidden; }
-
-body {
-  background: var(--dark);
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
+body{
+font-family:'Inter',sans-serif;
+background:#050505;
+color:#fff;
+overflow:hidden;
 }
 
-h1,h2,h3,h4,h5 { font-family: 'Syne', sans-serif; }
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 3px; height: 3px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
-
-/* ---- LAYOUT ---- */
-.app { display: flex; height: 100vh; overflow: hidden; }
-
-/* ---- SIDEBAR ---- */
-.sidebar {
-  width: 230px; min-width: 230px;
-  background: var(--panel);
-  border-right: 1px solid var(--border);
-  display: flex; flex-direction: column;
-}
-.logo {
-  padding: 22px 18px 18px;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-.logo-title {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800; font-size: 19px;
-  color: var(--gold); letter-spacing: 3px;
-}
-.logo-sub {
-  font-size: 9px; color: var(--muted);
-  letter-spacing: 4px; margin-top: 3px;
+:root{
+--gold:#d4af37;
+--gold2:#8a6a16;
+--panel:#111111;
+--panel2:#171717;
+--border:rgba(212,175,55,.18);
 }
 
-.nav { flex: 1; padding: 10px 8px; overflow-y: auto; }
-.nav-section {
-  font-size: 9px; color: var(--muted);
-  letter-spacing: 2.5px; text-transform: uppercase;
-  padding: 10px 12px 4px; opacity: 0.7;
-}
-.nav-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 9px 12px; border-radius: var(--radius);
-  cursor: pointer; font-size: 12px; color: var(--muted);
-  transition: all 0.18s; border: 1px solid transparent;
-  margin-bottom: 1px; user-select: none;
-}
-.nav-item:hover { color: var(--gold); background: var(--active-bg); border-color: var(--border); }
-.nav-item.active { color: var(--gold); background: var(--active-bg); border-color: var(--border2); }
-.nav-item i { font-size: 16px; width: 20px; text-align: center; flex-shrink: 0; }
-.nav-item span { font-weight: 500; letter-spacing: 0.3px; }
-
-.sidebar-footer {
-  padding: 12px 16px;
-  border-top: 1px solid var(--border);
-  flex-shrink: 0;
-}
-.webhook-status {
-  display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
-}
-.status-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--muted); flex-shrink: 0; transition: all 0.3s;
-}
-.status-dot.connected { background: var(--success); box-shadow: 0 0 6px var(--success); }
-.status-dot.error { background: var(--danger); box-shadow: 0 0 6px var(--danger); }
-.status-label { font-size: 11px; color: var(--muted); }
-
-.btn-config {
-  width: 100%; background: var(--panel2);
-  border: 1px solid var(--border); color: var(--text2);
-  border-radius: var(--radius); padding: 7px 12px;
-  font-family: 'DM Sans', sans-serif; font-size: 11px;
-  cursor: pointer; transition: all 0.18s;
-  display: flex; align-items: center; gap: 7px;
-}
-.btn-config:hover { border-color: var(--border2); color: var(--gold); }
-
-/* ---- MAIN ---- */
-.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-
-.topbar {
-  padding: 14px 22px;
-  border-bottom: 1px solid var(--border);
-  background: var(--panel);
-  display: flex; align-items: center; justify-content: space-between;
-  flex-shrink: 0;
-}
-.topbar-info {}
-.topbar-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; }
-.topbar-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
-
-.btn-gold {
-  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
-  color: #0A0805; font-family: 'Syne', sans-serif;
-  font-weight: 700; font-size: 11px; letter-spacing: 1px;
-  padding: 8px 18px; border-radius: var(--radius);
-  border: none; cursor: pointer; transition: opacity 0.2s;
-  display: flex; align-items: center; gap: 7px;
-}
-.btn-gold:hover { opacity: 0.85; }
-
-.content { flex: 1; overflow-y: auto; padding: 18px 22px; }
-
-/* ---- PAGES ---- */
-.page { display: none; }
-.page.active { display: block; }
-
-/* ---- METRIC CARDS ---- */
-.metrics-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 14px; }
-.metric-card {
-  background: var(--panel); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 13px 15px;
-}
-.metric-label { font-size: 9px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 5px; }
-.metric-value { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: var(--gold); }
-.metric-delta { font-size: 10px; color: var(--success); margin-top: 3px; }
-
-/* ---- MODULE GRID ---- */
-.modules-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 14px; }
-.module-card {
-  background: var(--panel); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 15px;
-  cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
-}
-.module-card::after {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  opacity: 0; transition: opacity 0.2s;
-}
-.module-card:hover { border-color: var(--border2); background: var(--panel2); }
-.module-card:hover::after { opacity: 1; }
-.module-card-icon { font-size: 22px; color: var(--gold); margin-bottom: 9px; }
-.module-card-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-.module-card-desc { font-size: 11px; color: var(--muted); line-height: 1.45; }
-.module-badge {
-  position: absolute; top: 10px; right: 10px;
-  font-size: 9px; background: var(--active-bg);
-  border: 1px solid var(--border2); color: var(--gold);
-  padding: 2px 6px; border-radius: 4px; letter-spacing: 0.5px;
-  font-family: 'Syne', sans-serif; font-weight: 700;
+.app{
+display:flex;
+height:100vh;
 }
 
-/* ---- CHAT ---- */
-.chat-section {
-  background: var(--panel); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); overflow: hidden;
-  display: flex; flex-direction: column;
-}
-.chat-header {
-  padding: 10px 14px; border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
-}
-.chat-header-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; }
-.chat-messages {
-  overflow-y: auto; padding: 12px 14px;
-  display: flex; flex-direction: column; gap: 9px;
-  flex: 1;
-}
-.msg { display: flex; flex-direction: column; gap: 2px; max-width: 90%; }
-.msg-ia { align-self: flex-start; }
-.msg-user { align-self: flex-end; align-items: flex-end; }
-.msg-name { font-size: 10px; color: var(--muted); padding: 0 3px; }
-.msg-bubble {
-  padding: 9px 13px; border-radius: var(--radius);
-  font-size: 12px; line-height: 1.55;
-  white-space: pre-wrap;
-}
-.msg-ia .msg-bubble { background: var(--panel2); border: 1px solid var(--border); color: var(--text); }
-.msg-user .msg-bubble { background: linear-gradient(135deg, var(--gold), var(--gold-dim)); color: #080604; font-weight: 500; }
-.msg-error .msg-bubble { background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.3); color: #fca5a5; }
-
-.chat-input-row {
-  padding: 10px 12px; border-top: 1px solid var(--border);
-  display: flex; gap: 8px; flex-shrink: 0;
-}
-.chat-input {
-  flex: 1; background: var(--dark); border: 1px solid var(--border);
-  border-radius: var(--radius); color: var(--text);
-  font-family: 'DM Sans', sans-serif; font-size: 12px;
-  padding: 8px 12px; outline: none; transition: border-color 0.2s;
-  resize: none;
-}
-.chat-input:focus { border-color: var(--border2); }
-.chat-input::placeholder { color: var(--muted); }
-.btn-send {
-  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
-  color: #080604; border: none; border-radius: var(--radius);
-  padding: 8px 15px; cursor: pointer;
-  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 11px;
-  transition: opacity 0.2s; display: flex; align-items: center; gap: 6px;
-  flex-shrink: 0;
-}
-.btn-send:hover:not(:disabled) { opacity: 0.85; }
-.btn-send:disabled { opacity: 0.4; cursor: not-allowed; }
-
-/* Typing animation */
-.typing-indicator { display: flex; align-items: center; gap: 4px; padding: 4px 2px; }
-.typing-indicator span {
-  width: 5px; height: 5px; background: var(--gold); border-radius: 50%;
-  animation: typing-bounce 1.2s infinite ease-in-out;
-}
-.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes typing-bounce {
-  0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
-  30% { transform: translateY(-6px); opacity: 1; }
+.sidebar{
+width:260px;
+background:#0b0b0b;
+border-right:1px solid var(--border);
+padding:20px;
+display:flex;
+flex-direction:column;
+gap:20px;
 }
 
-/* ---- QUICK BUTTONS ---- */
-.quick-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-.quick-btn {
-  background: var(--panel2); border: 1px solid var(--border);
-  color: var(--text2); font-size: 11px; padding: 6px 11px;
-  border-radius: 6px; cursor: pointer; transition: all 0.18s;
-  font-family: 'DM Sans', sans-serif;
-}
-.quick-btn:hover { color: var(--gold); border-color: var(--border2); background: var(--panel3); }
-
-/* ---- MODULE FULL HEADER ---- */
-.module-full {
-  background: var(--panel); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px;
-}
-.module-full-header { display: flex; align-items: center; gap: 12px; margin-bottom: 13px; }
-.module-full-icon { font-size: 24px; color: var(--gold); flex-shrink: 0; }
-.module-full-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; }
-.module-full-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-/* ---- FUNNEL STEPS ---- */
-.funnel-steps { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
-.funnel-step {
-  background: var(--panel2); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 10px 14px;
-  display: flex; align-items: center; gap: 12px;
-  cursor: pointer; transition: border-color 0.18s;
-}
-.funnel-step:hover { border-color: var(--border2); }
-.funnel-step-num {
-  width: 24px; height: 24px; border-radius: 50%;
-  background: var(--active-bg); border: 1px solid var(--border2);
-  color: var(--gold); font-size: 11px; font-weight: 700;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; font-family: 'Syne', sans-serif;
-}
-.funnel-step-text { font-size: 12px; font-weight: 500; }
-.funnel-step-sub { font-size: 10px; color: var(--muted); margin-top: 1px; }
-.funnel-result-box {
-  background: var(--panel2); border: 1px solid var(--border2);
-  border-radius: var(--radius); padding: 13px;
-  font-size: 12px; line-height: 1.65; color: var(--text);
-  display: none; white-space: pre-wrap; margin-top: 8px;
-}
-.funnel-result-header {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 10px;
-}
-.funnel-result-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--gold); }
-.btn-close { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 20px; line-height: 1; padding: 0 2px; }
-.btn-close:hover { color: var(--text); }
-
-/* ---- VIRAL GRID ---- */
-.viral-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-.viral-card {
-  background: var(--panel2); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 12px;
-  cursor: pointer; transition: border-color 0.18s;
-}
-.viral-card:hover { border-color: var(--border2); }
-.viral-card-title { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
-.viral-card-sub { font-size: 10px; color: var(--muted); }
-
-/* ---- BIBLIOTECA ---- */
-.biblioteca-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; margin-bottom: 12px; }
-.bib-card {
-  background: var(--panel2); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 13px;
-  cursor: pointer; transition: border-color 0.18s;
-}
-.bib-card:hover { border-color: var(--border2); }
-.bib-card i { font-size: 20px; color: var(--gold); margin-bottom: 7px; display: block; }
-.bib-card-title { font-size: 12px; font-weight: 500; color: var(--text); }
-.bib-card-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
-
-/* ---- TRAINING ---- */
-.training-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
-.training-item {
-  background: var(--panel2); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 10px 14px;
-  display: flex; justify-content: space-between; align-items: center;
-}
-.training-name { font-size: 12px; color: var(--text); }
-.training-badge {
-  font-size: 10px; background: var(--active-bg);
-  border: 1px solid var(--border); color: var(--gold);
-  padding: 2px 9px; border-radius: 5px; flex-shrink: 0;
-}
-.training-badge.done { background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.3); color: var(--success); }
-
-/* ============================================================
-   MODAL DE CONFIGURACIÓN WEBHOOK
-   ============================================================ */
-.modal-overlay {
-  position: fixed; inset: 0; z-index: 9999;
-  background: rgba(0,0,0,0.85); backdrop-filter: blur(4px);
-  display: none; align-items: center; justify-content: center;
-}
-.modal-overlay.open { display: flex; }
-.modal-box {
-  background: var(--panel); border: 1px solid var(--border2);
-  border-radius: var(--radius-lg); width: 480px; max-width: 95vw;
-  padding: 28px; position: relative;
-}
-.modal-title {
-  font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700;
-  color: var(--gold); margin-bottom: 5px;
-  display: flex; align-items: center; gap: 10px;
-}
-.modal-sub { font-size: 12px; color: var(--muted); margin-bottom: 22px; line-height: 1.6; }
-.modal-label { font-size: 11px; color: var(--text2); margin-bottom: 6px; letter-spacing: 0.5px; }
-.modal-input {
-  width: 100%; background: var(--dark); border: 1px solid var(--border2);
-  border-radius: var(--radius); color: var(--text);
-  font-family: 'DM Sans', sans-serif; font-size: 12px;
-  padding: 10px 13px; outline: none; transition: border-color 0.2s;
-  margin-bottom: 8px;
-}
-.modal-input:focus { border-color: var(--border3); }
-.modal-input::placeholder { color: var(--muted); }
-
-.modal-hint {
-  font-size: 11px; color: var(--muted); margin-bottom: 20px; line-height: 1.65;
-  background: var(--panel2); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 10px 12px;
-}
-.modal-hint code { color: var(--gold-light); font-size: 11px; background: rgba(201,168,76,0.08); padding: 1px 5px; border-radius: 3px; }
-.modal-actions { display: flex; gap: 8px; }
-.btn-modal-save {
-  flex: 1; background: linear-gradient(135deg, var(--gold), var(--gold-dim));
-  color: #080604; border: none; border-radius: var(--radius);
-  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px;
-  padding: 10px; cursor: pointer; transition: opacity 0.2s;
-}
-.btn-modal-save:hover { opacity: 0.85; }
-.btn-modal-cancel {
-  background: var(--panel2); border: 1px solid var(--border);
-  color: var(--text2); border-radius: var(--radius);
-  font-family: 'DM Sans', sans-serif; font-size: 12px;
-  padding: 10px 18px; cursor: pointer; transition: all 0.18s;
-}
-.btn-modal-cancel:hover { border-color: var(--border2); color: var(--text); }
-.btn-modal-clear {
-  background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.2);
-  color: #fca5a5; border-radius: var(--radius);
-  font-family: 'DM Sans', sans-serif; font-size: 12px;
-  padding: 10px 14px; cursor: pointer; transition: all 0.18s;
-}
-.btn-modal-clear:hover { background: rgba(248,113,113,0.15); }
-
-.modal-status {
-  margin-top: 14px; font-size: 12px; min-height: 18px;
-  display: flex; align-items: center; gap: 8px;
+.logo{
+padding-bottom:20px;
+border-bottom:1px solid var(--border);
 }
 
-/* ---- ALERT BANNER ---- */
-.alert-banner {
-  background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.25);
-  border-radius: var(--radius); padding: 10px 14px;
-  font-size: 12px; color: #fde68a; margin-bottom: 12px;
-  display: flex; align-items: center; gap: 10px;
-  cursor: pointer; transition: background 0.18s;
+.logo h1{
+font-size:40px;
+line-height:40px;
+font-weight:900;
+color:var(--gold);
 }
-.alert-banner:hover { background: rgba(251,191,36,0.14); }
-.alert-banner i { font-size: 16px; color: var(--warning); flex-shrink: 0; }
 
-/* ---- DIVIDER ---- */
-.divider { height: 1px; background: var(--border); margin: 14px 0; }
+.logo span{
+font-size:11px;
+letter-spacing:4px;
+color:#888;
+}
 
-/* ---- GOLD TEXT ---- */
-.gold-text { color: var(--gold); }
+.menu-title{
+font-size:11px;
+letter-spacing:3px;
+color:#666;
+margin-bottom:10px;
+margin-top:10px;
+}
+
+.menu{
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.menu button{
+background:transparent;
+border:1px solid transparent;
+color:#ccc;
+padding:14px;
+border-radius:14px;
+text-align:left;
+transition:.3s;
+cursor:pointer;
+font-size:14px;
+}
+
+.menu button:hover,
+.menu button.active{
+background:rgba(212,175,55,.08);
+border:1px solid var(--border);
+color:var(--gold);
+}
+
+.webhook-status{
+margin-top:auto;
+padding-top:20px;
+border-top:1px solid var(--border);
+}
+
+.status-dot{
+width:10px;
+height:10px;
+border-radius:50%;
+display:inline-block;
+margin-right:10px;
+background:red;
+}
+
+.main{
+flex:1;
+display:flex;
+flex-direction:column;
+overflow:hidden;
+}
+
+.header{
+height:80px;
+border-bottom:1px solid var(--border);
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 30px;
+background:#090909;
+}
+
+.header h2{
+font-size:28px;
+font-weight:800;
+}
+
+.gold-btn{
+background:linear-gradient(135deg,var(--gold),var(--gold2));
+color:#000;
+font-weight:800;
+padding:14px 22px;
+border:none;
+border-radius:14px;
+cursor:pointer;
+}
+
+.content{
+flex:1;
+overflow:auto;
+padding:30px;
+}
+
+.card{
+background:var(--panel);
+border:1px solid var(--border);
+border-radius:24px;
+padding:25px;
+margin-bottom:20px;
+}
+
+.card h3{
+font-size:24px;
+font-weight:800;
+margin-bottom:10px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:18px;
+margin-top:20px;
+}
+
+.small-card{
+background:var(--panel2);
+border:1px solid var(--border);
+border-radius:18px;
+padding:18px;
+}
+
+.small-card h4{
+color:var(--gold);
+margin-bottom:10px;
+font-size:18px;
+}
+
+.chat-box{
+height:300px;
+overflow:auto;
+background:#0a0a0a;
+border:1px solid var(--border);
+border-radius:18px;
+padding:20px;
+margin-top:20px;
+}
+
+.message{
+margin-bottom:20px;
+max-width:85%;
+padding:16px;
+border-radius:18px;
+line-height:1.5;
+}
+
+.user{
+background:linear-gradient(135deg,var(--gold),#9c771d);
+color:#000;
+margin-left:auto;
+}
+
+.ai{
+background:#181818;
+border:1px solid var(--border);
+}
+
+.input-area{
+display:flex;
+gap:12px;
+margin-top:20px;
+}
+
+.input-area input{
+flex:1;
+background:#0a0a0a;
+border:1px solid var(--border);
+color:#fff;
+padding:18px;
+border-radius:16px;
+outline:none;
+}
+
+.input-area button{
+width:180px;
+}
+
+.modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.8);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:999;
+}
+
+.modal-content{
+width:500px;
+background:#101010;
+border:1px solid var(--border);
+padding:30px;
+border-radius:24px;
+}
+
+.modal-content h3{
+margin-bottom:20px;
+font-size:24px;
+}
+
+.modal-content input{
+width:100%;
+padding:16px;
+background:#0a0a0a;
+border:1px solid var(--border);
+color:#fff;
+border-radius:14px;
+margin-bottom:20px;
+}
+
+.console{
+margin-top:20px;
+background:#0a0a0a;
+border:1px solid var(--border);
+padding:15px;
+border-radius:16px;
+font-size:13px;
+color:#aaa;
+height:100px;
+overflow:auto;
+}
+
+@media(max-width:900px){
+.sidebar{
+display:none;
+}
+
+.content{
+padding:15px;
+}
+
+.input-area{
+flex-direction:column;
+}
+
+.input-area button{
+width:100%;
+}
+}
 </style>
 </head>
 <body>
 
-<!-- ============================================================
-     CONFIGURACIÓN GLOBAL — pega tu URL de Make.com aquí
-     o usa el panel de configuración dentro de la app.
-     ============================================================ -->
-<script>
-  var MAKE_WEBHOOK_URL = "PEGAR_AQUI_WEBHOOK";
-</script>
-
-<!-- ============================================================
-     MODAL DE CONFIGURACIÓN
-     ============================================================ -->
-<div class="modal-overlay" id="modal-config">
-  <div class="modal-box">
-    <div class="modal-title">
-      <i class="ti ti-settings" style="font-size:20px" aria-hidden="true"></i>
-      Configurar Webhook de Make.com
-    </div>
-    <p class="modal-sub">
-      Pega la URL de tu webhook de Make.com para activar la IA del sistema.
-      Sin esto, el sistema no puede procesar consultas.
-    </p>
-
-    <div class="modal-label">URL del Webhook</div>
-    <input
-      class="modal-input"
-      id="webhook-input"
-      type="url"
-      placeholder="https://hook.us1.make.com/abc123xyz..."
-      autocomplete="off"
-      spellcheck="false"
-    />
-
-    <div class="modal-hint">
-      <strong style="color:var(--text2)">Formato esperado del POST que recibirá tu webhook:</strong><br><br>
-      <code>{ "module": "viral_machine", "prompt": "texto del usuario", "context": "ONE MORE AI SYSTEM", "source": "github_pages" }</code><br><br>
-      <strong style="color:var(--text2)">Formato esperado de respuesta JSON:</strong><br><br>
-      <code>{ "reply": "respuesta generada por la IA" }</code>
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn-modal-save" id="btn-save-webhook">
-        <i class="ti ti-check" aria-hidden="true"></i> Guardar y Activar
-      </button>
-      <button class="btn-modal-cancel" id="btn-cancel-modal">Cancelar</button>
-      <button class="btn-modal-clear" id="btn-clear-webhook">
-        <i class="ti ti-trash" aria-hidden="true"></i>
-      </button>
-    </div>
-
-    <div class="modal-status" id="modal-status"></div>
-  </div>
-</div>
-
-<!-- ============================================================
-     APP
-     ============================================================ -->
 <div class="app">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="logo">
-      <div class="logo-title">ONE MORE</div>
-      <div class="logo-sub">AI SYSTEM</div>
-    </div>
+<div class="sidebar">
 
-    <nav class="nav" role="navigation" aria-label="Módulos del sistema">
-      <div class="nav-section">Principal</div>
-      <div class="nav-item active" data-page="dashboard" role="button" tabindex="0">
-        <i class="ti ti-layout-dashboard" aria-hidden="true"></i>
-        <span>Dashboard</span>
-      </div>
-      <div class="nav-item" data-page="mentor" role="button" tabindex="0">
-        <i class="ti ti-robot" aria-hidden="true"></i>
-        <span>IA Mentor</span>
-      </div>
+<div class="logo">
+<h1>ONE<br>MORE</h1>
+<span>AI SYSTEM</span>
+</div>
 
-      <div class="nav-section">Contenido</div>
-      <div class="nav-item" data-page="viral" role="button" tabindex="0">
-        <i class="ti ti-flame" aria-hidden="true"></i>
-        <span>Viral Machine</span>
-      </div>
-      <div class="nav-item" data-page="funnel" role="button" tabindex="0">
-        <i class="ti ti-message-chatbot" aria-hidden="true"></i>
-        <span>Funnel WhatsApp</span>
-      </div>
+<div>
+<div class="menu-title">PRINCIPAL</div>
+<div class="menu">
+<button class="active">🏠 Dashboard</button>
+<button>🤖 IA Mentor</button>
+<button>🔥 Viral Machine</button>
+<button>💬 Funnel WhatsApp</button>
+<button>🎓 Training Center</button>
+<button>📚 Biblioteca</button>
+</div>
+</div>
 
-      <div class="nav-section">Equipo</div>
-      <div class="nav-item" data-page="training" role="button" tabindex="0">
-        <i class="ti ti-school" aria-hidden="true"></i>
-        <span>Training Center</span>
-      </div>
-      <div class="nav-item" data-page="biblioteca" role="button" tabindex="0">
-        <i class="ti ti-books" aria-hidden="true"></i>
-        <span>Biblioteca</span>
-      </div>
-    </nav>
+<div class="webhook-status">
+<p id="statusText"><span class="status-dot" id="statusDot"></span>Webhook no configurado</p>
+<br>
+<button class="gold-btn" onclick="openWebhookModal()">Configurar Webhook</button>
+</div>
 
-    <div class="sidebar-footer">
-      <div class="webhook-status">
-        <div class="status-dot" id="status-dot"></div>
-        <span class="status-label" id="status-label">Webhook no configurado</span>
-      </div>
-      <button class="btn-config" id="btn-open-config" aria-label="Configurar webhook">
-        <i class="ti ti-settings" aria-hidden="true"></i>
-        Configurar Webhook
-      </button>
-    </div>
-  </aside>
+</div>
 
-  <!-- MAIN -->
-  <div class="main" role="main">
+<div class="main">
 
-    <!-- TOPBAR -->
-    <header class="topbar">
-      <div class="topbar-info">
-        <div class="topbar-title" id="topbar-title">Hub Central IA</div>
-        <div class="topbar-sub" id="topbar-sub">Dashboard operativo ONE MORE</div>
-      </div>
-      <button class="btn-gold" id="btn-activate" aria-label="Activar IA">
-        <i class="ti ti-bolt" aria-hidden="true"></i>
-        ACTIVAR IA
-      </button>
-    </header>
+<div class="header">
+<div>
+<h2>ONE MORE AI SYSTEM</h2>
+<p style="color:#777">Hub IA de contenido, negocio y automatización</p>
+</div>
 
-    <!-- CONTENT -->
-    <div class="content" id="main-content">
+<button class="gold-btn">⚡ ACTIVAR IA</button>
+</div>
 
-      <!-- ==================== DASHBOARD ==================== -->
-      <div class="page active" id="page-dashboard">
+<div class="content">
 
-        <div id="dashboard-alert" class="alert-banner" style="display:none" role="alert">
-          <i class="ti ti-alert-triangle" aria-hidden="true"></i>
-          <span>Webhook no configurado. La IA no puede responder hasta que pegues tu URL de Make.com.</span>
-          <strong style="margin-left:auto;color:var(--gold-light);font-size:11px">Configurar →</strong>
-        </div>
+<div class="card">
+<h3>🤖 IA Mentor — Expert ONE MORE</h3>
+<p style="color:#888">Consultor especializado en producto, negocio y duplicación.</p>
 
-        <div class="metrics-row">
-          <div class="metric-card">
-            <div class="metric-label">Tu Rango</div>
-            <div class="metric-value">Gold</div>
-            <div class="metric-delta">▲ Próximo: Platinum</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label">QV Activo</div>
-            <div class="metric-value">320</div>
-            <div class="metric-delta">▲ +80 esta semana</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label">Red Activa</div>
-            <div class="metric-value">12</div>
-            <div class="metric-delta">▲ 3 nuevos socios</div>
-          </div>
-        </div>
+<div class="grid">
+<div class="small-card">
+<h4>📦 Compensación</h4>
+<p>Bonos, rangos y binario.</p>
+</div>
 
-        <div class="modules-grid">
-          <div class="module-card" data-nav="mentor">
-            <div class="module-badge">IA</div>
-            <div class="module-card-icon"><i class="ti ti-robot" aria-hidden="true"></i></div>
-            <div class="module-card-title">IA Mentor</div>
-            <div class="module-card-desc">Consulta el ecosistema One More con IA en tiempo real.</div>
-          </div>
-          <div class="module-card" data-nav="viral">
-            <div class="module-badge">HOT</div>
-            <div class="module-card-icon"><i class="ti ti-flame" aria-hidden="true"></i></div>
-            <div class="module-card-title">Viral Machine</div>
-            <div class="module-card-desc">Hooks, guiones TikTok, Reels y storytelling.</div>
-          </div>
-          <div class="module-card" data-nav="funnel">
-            <div class="module-card-icon"><i class="ti ti-message-chatbot" aria-hidden="true"></i></div>
-            <div class="module-card-title">Funnel WhatsApp</div>
-            <div class="module-card-desc">Secuencia 7 días para convertir prospectos.</div>
-          </div>
-          <div class="module-card" data-nav="training">
-            <div class="module-card-icon"><i class="ti ti-school" aria-hidden="true"></i></div>
-            <div class="module-card-title">Training Center</div>
-            <div class="module-card-desc">Onboarding y capacitación para nuevos socios.</div>
-          </div>
-          <div class="module-card" data-nav="biblioteca">
-            <div class="module-card-icon"><i class="ti ti-books" aria-hidden="true"></i></div>
-            <div class="module-card-title">Biblioteca Wellness</div>
-            <div class="module-card-desc">Vademécum, protocolos y productos.</div>
-          </div>
-          <div class="module-card">
-            <div class="module-badge">PRONTO</div>
-            <div class="module-card-icon"><i class="ti ti-settings-automation" aria-hidden="true"></i></div>
-            <div class="module-card-title">Automatización</div>
-            <div class="module-card-desc">Make.com, Telegram y flujos automáticos.</div>
-          </div>
-        </div>
+<div class="small-card">
+<h4>🚀 Viral Machine</h4>
+<p>Hooks y guiones TikTok.</p>
+</div>
 
-        <div class="chat-section">
-          <div class="chat-header">
-            <i class="ti ti-sparkles" style="color:var(--gold);font-size:16px" aria-hidden="true"></i>
-            <span class="chat-header-title">Consulta Rápida al Sistema</span>
-          </div>
-          <div class="chat-messages" id="msgs-dashboard" style="height:140px" aria-live="polite" aria-label="Chat del dashboard"></div>
-          <div class="chat-input-row">
-            <input class="chat-input" id="inp-dashboard"
-              placeholder="Ej: dame un guion para explicar el Bono 2+1..."
-              aria-label="Escribe tu consulta"
-            />
-            <button class="btn-send" id="btn-dashboard" aria-label="Enviar mensaje">
-              <i class="ti ti-send" aria-hidden="true"></i> Enviar
-            </button>
-          </div>
-        </div>
-      </div>
+<div class="small-card">
+<h4>💬 Funnel WA</h4>
+<p>Secuencia WhatsApp 7 días.</p>
+</div>
+</div>
 
-      <!-- ==================== IA MENTOR ==================== -->
-      <div class="page" id="page-mentor">
-        <div class="module-full">
-          <div class="module-full-header">
-            <i class="ti ti-robot module-full-icon" aria-hidden="true"></i>
-            <div>
-              <div class="module-full-title">IA Mentor — Experto ONE MORE</div>
-              <div class="module-full-desc">Consultor especializado en producto, negocio y duplicación</div>
-            </div>
-          </div>
-          <div class="quick-btns">
-            <button class="quick-btn" onclick="quickSend('mentor','Explícame el sistema de compensación One More: rangos, bonos y cómo generar ingresos')">💰 Compensación</button>
-            <button class="quick-btn" onclick="quickSend('mentor','¿Cómo funciona el parche transdérmico One More? Explica la tecnología')">🩹 Producto</button>
-            <button class="quick-btn" onclick="quickSend('mentor','¿Cómo hacer el Bono 2+1 paso a paso? Dame ejemplos concretos')">🎯 Bono 2+1</button>
-            <button class="quick-btn" onclick="quickSend('mentor','Estrategia concreta para pasar de Gold a Platinum en 60 días')">⬆️ Subir rango</button>
-            <button class="quick-btn" onclick="quickSend('mentor','Dame un script efectivo para invitar a una presentación de negocio One More por WhatsApp')">📲 Script invitación</button>
-            <button class="quick-btn" onclick="quickSend('mentor','¿Cuál es la diferencia entre patrocinar y reclutar en One More?')">🤝 Duplicación</button>
-          </div>
-        </div>
-        <div class="chat-section" style="height:330px">
-          <div class="chat-header">
-            <i class="ti ti-robot" style="color:var(--gold);font-size:15px" aria-hidden="true"></i>
-            <span class="chat-header-title">IA Mentor</span>
-          </div>
-          <div class="chat-messages" id="msgs-mentor" aria-live="polite"></div>
-          <div class="chat-input-row">
-            <input class="chat-input" id="inp-mentor" placeholder="Consulta sobre producto, negocio o estrategia..." />
-            <button class="btn-send" id="btn-mentor">
-              <i class="ti ti-send" aria-hidden="true"></i> Preguntar
-            </button>
-          </div>
-        </div>
-      </div>
+<div class="chat-box" id="chatBox">
+<div class="message ai">
+Soy tu experto ONE MORE. Pregunta sobre productos, negocio, TikTok, funnels, onboarding o duplicación.
+</div>
+</div>
 
-      <!-- ==================== VIRAL MACHINE ==================== -->
-      <div class="page" id="page-viral">
-        <div class="module-full">
-          <div class="module-full-header">
-            <i class="ti ti-flame module-full-icon" aria-hidden="true"></i>
-            <div>
-              <div class="module-full-title">Viral Machine — Contenido que Convierte</div>
-              <div class="module-full-desc">Genera hooks, guiones y storytelling para redes sociales</div>
-            </div>
-          </div>
-          <div class="viral-grid">
-            <div class="viral-card" role="button" tabindex="0" onclick="quickSend('viral','Crea 5 hooks virales para TikTok sobre los parches One More. Cada hook máximo 2 líneas.')">
-              <div class="viral-card-title"><i class="ti ti-brand-tiktok" style="color:var(--gold)" aria-hidden="true"></i> Hooks TikTok</div>
-              <div class="viral-card-sub">5 aperturas que detienen el scroll</div>
-            </div>
-            <div class="viral-card" role="button" tabindex="0" onclick="quickSend('viral','Escribe un guion completo de 60 segundos para Reel de Instagram sobre libertad financiera con One More. Con hook, desarrollo y CTA.')">
-              <div class="viral-card-title"><i class="ti ti-brand-instagram" style="color:var(--gold)" aria-hidden="true"></i> Guion Reel 60s</div>
-              <div class="viral-card-sub">Alto impacto, listo para grabar</div>
-            </div>
-            <div class="viral-card" role="button" tabindex="0" onclick="quickSend('viral','Crea una historia de transformación real para WhatsApp Status sobre bienestar y One More. Máx 200 palabras.')">
-              <div class="viral-card-title"><i class="ti ti-brand-whatsapp" style="color:var(--gold)" aria-hidden="true"></i> Story WhatsApp</div>
-              <div class="viral-card-sub">Narrativa de transformación</div>
-            </div>
-            <div class="viral-card" role="button" tabindex="0" onclick="quickSend('viral','Escribe un caption viral para Facebook sobre el estilo de vida One More. Con emojis, storytelling y llamada a la acción.')">
-              <div class="viral-card-title"><i class="ti ti-brand-facebook" style="color:var(--gold)" aria-hidden="true"></i> Caption Facebook</div>
-              <div class="viral-card-sub">Post de alto alcance orgánico</div>
-            </div>
-          </div>
-        </div>
-        <div class="chat-section" style="height:280px">
-          <div class="chat-header">
-            <i class="ti ti-flame" style="color:var(--gold);font-size:15px" aria-hidden="true"></i>
-            <span class="chat-header-title">Viral Machine</span>
-          </div>
-          <div class="chat-messages" id="msgs-viral" aria-live="polite"></div>
-          <div class="chat-input-row">
-            <input class="chat-input" id="inp-viral" placeholder="Ej: hook para explicar qué es un parche transdérmico..." />
-            <button class="btn-send" id="btn-viral">
-              <i class="ti ti-send" aria-hidden="true"></i> Generar
-            </button>
-          </div>
-        </div>
-      </div>
+<div class="input-area">
+<input type="text" id="userPrompt" placeholder="Ej: Explícame el Bono 2+1 o crea un hook viral...">
+<button class="gold-btn" onclick="generateResponse()">Preguntar</button>
+</div>
 
-      <!-- ==================== FUNNEL WHATSAPP ==================== -->
-      <div class="page" id="page-funnel">
-        <div class="module-full">
-          <div class="module-full-header">
-            <i class="ti ti-message-chatbot module-full-icon" aria-hidden="true"></i>
-            <div>
-              <div class="module-full-title">Funnel WhatsApp — 7 Días de Conversión</div>
-              <div class="module-full-desc">Clic en cada día para generar el mensaje listo para enviar</div>
-            </div>
-          </div>
-          <div class="funnel-steps">
-            <div class="funnel-step" onclick="generateFunnelDay(1)" role="button" tabindex="0">
-              <div class="funnel-step-num">1</div>
-              <div><div class="funnel-step-text">Primer contacto — Generación de curiosidad</div><div class="funnel-step-sub">Mensaje de apertura sin vender</div></div>
-            </div>
-            <div class="funnel-step" onclick="generateFunnelDay(2)" role="button" tabindex="0">
-              <div class="funnel-step-num">2</div>
-              <div><div class="funnel-step-text">Seguimiento — Historia de resultado</div><div class="funnel-step-sub">Testimonial y prueba social</div></div>
-            </div>
-            <div class="funnel-step" onclick="generateFunnelDay(3)" role="button" tabindex="0">
-              <div class="funnel-step-num">3</div>
-              <div><div class="funnel-step-text">Educación — Valor del parche transdérmico</div><div class="funnel-step-sub">Info sin abrumar al prospecto</div></div>
-            </div>
-            <div class="funnel-step" onclick="generateFunnelDay(4)" role="button" tabindex="0">
-              <div class="funnel-step-num">4</div>
-              <div><div class="funnel-step-text">Oportunidad — Presentar el negocio</div><div class="funnel-step-sub">Invitación a Zoom o video</div></div>
-            </div>
-            <div class="funnel-step" onclick="generateFunnelDay(5)" role="button" tabindex="0">
-              <div class="funnel-step-num">5</div>
-              <div><div class="funnel-step-text">Objeciones — Manejo de dudas frecuentes</div><div class="funnel-step-sub">"Es muy caro", "no tengo tiempo", "es pirámide"</div></div>
-            </div>
-            <div class="funnel-step" onclick="generateFunnelDay(6)" role="button" tabindex="0">
-              <div class="funnel-step-num">6</div>
-              <div><div class="funnel-step-text">Urgencia — Cierre suave con beneficio</div><div class="funnel-step-sub">Escasez ética y llamada a la acción</div></div>
-            </div>
-            <div class="funnel-step" onclick="generateFunnelDay(7)" role="button" tabindex="0">
-              <div class="funnel-step-num">7</div>
-              <div><div class="funnel-step-text">Cierre — Inscripción y onboarding</div><div class="funnel-step-sub">Bienvenida y primeros pasos</div></div>
-            </div>
-          </div>
-          <div class="funnel-result-box" id="funnel-result" aria-live="polite">
-            <div class="funnel-result-header">
-              <span class="funnel-result-title" id="funnel-day-title">Mensaje Día 1</span>
-              <button class="btn-close" onclick="document.getElementById('funnel-result').style.display='none'" aria-label="Cerrar">×</button>
-            </div>
-            <div id="funnel-day-content"></div>
-          </div>
-        </div>
-      </div>
+<div class="console" id="console">
+[ONE MORE AI] Sistema iniciado correctamente...
+</div>
 
-      <!-- ==================== TRAINING CENTER ==================== -->
-      <div class="page" id="page-training">
-        <div class="module-full">
-          <div class="module-full-header">
-            <i class="ti ti-school module-full-icon" aria-hidden="true"></i>
-            <div>
-              <div class="module-full-title">Training Center — Onboarding y Duplicación</div>
-              <div class="module-full-desc">Genera material de capacitación para tu equipo con IA</div>
-            </div>
-          </div>
-          <div class="training-list">
-            <div class="training-item"><div class="training-name">Módulo 1 — Bienvenida y mentalidad ONE MORE</div><span class="training-badge done">✓ Listo</span></div>
-            <div class="training-item"><div class="training-name">Módulo 2 — Conociendo el producto transdérmico</div><span class="training-badge done">✓ Listo</span></div>
-            <div class="training-item"><div class="training-name">Módulo 3 — Cómo compartir el negocio</div><span class="training-badge">En progreso</span></div>
-            <div class="training-item"><div class="training-name">Módulo 4 — Plan de compensación</div><span class="training-badge">Pendiente</span></div>
-            <div class="training-item"><div class="training-name">Módulo 5 — Redes sociales para el negocio</div><span class="training-badge">Pendiente</span></div>
-          </div>
-          <div class="quick-btns">
-            <button class="quick-btn" onclick="quickSend('training','Crea el contenido completo del Módulo 1: Bienvenida y mentalidad ONE MORE para un nuevo socio. Incluye objetivos, puntos clave y ejercicios prácticos.')">📝 Generar Módulo 1</button>
-            <button class="quick-btn" onclick="quickSend('training','Crea el contenido del Módulo 3: Cómo compartir el negocio One More de forma natural y sin presión. Con ejemplos de conversación.')">📝 Generar Módulo 3</button>
-            <button class="quick-btn" onclick="quickSend('training','Diseña un plan de 30 días para que un nuevo socio One More llegue a su primer ingreso. Tareas diarias y metas semanales.')">📅 Plan 30 días</button>
-            <button class="quick-btn" onclick="quickSend('training','Dame 10 técnicas para manejar el NO y superar el miedo al rechazo en network marketing.')">💪 Manejo del NO</button>
-          </div>
-        </div>
-        <div class="chat-section" style="height:240px">
-          <div class="chat-header">
-            <i class="ti ti-school" style="color:var(--gold);font-size:15px" aria-hidden="true"></i>
-            <span class="chat-header-title">Training Center</span>
-          </div>
-          <div class="chat-messages" id="msgs-training" aria-live="polite"></div>
-          <div class="chat-input-row">
-            <input class="chat-input" id="inp-training" placeholder="Ej: cómo capacitar a un socio nuevo en la primera semana..." />
-            <button class="btn-send" id="btn-training">
-              <i class="ti ti-send" aria-hidden="true"></i> Crear
-            </button>
-          </div>
-        </div>
-      </div>
+</div>
 
-      <!-- ==================== BIBLIOTECA ==================== -->
-      <div class="page" id="page-biblioteca">
-        <div class="module-full">
-          <div class="module-full-header">
-            <i class="ti ti-books module-full-icon" aria-hidden="true"></i>
-            <div>
-              <div class="module-full-title">Biblioteca Wellness ONE MORE</div>
-              <div class="module-full-desc">Vademécum, protocolos, productos y certificaciones</div>
-            </div>
-          </div>
-          <div class="biblioteca-grid">
-            <div class="bib-card" role="button" tabindex="0" onclick="quickSend('biblioteca','Explícame con detalle cómo funciona el sistema de entrega transdérmica de ONE MORE y por qué es superior a las pastillas.')">
-              <i class="ti ti-bandage" aria-hidden="true"></i>
-              <div class="bib-card-title">Tecnología Transdérmica</div>
-              <div class="bib-card-sub">Cómo funciona y por qué es superior</div>
-            </div>
-            <div class="bib-card" role="button" tabindex="0" onclick="quickSend('biblioteca','Lista todos los productos ONE MORE con sus beneficios principales, ingredientes clave y a quién va dirigido cada uno.')">
-              <i class="ti ti-package" aria-hidden="true"></i>
-              <div class="bib-card-title">Catálogo de Productos</div>
-              <div class="bib-card-sub">Beneficios, ingredientes y usos</div>
-            </div>
-            <div class="bib-card" role="button" tabindex="0" onclick="quickSend('biblioteca','Explica el protocolo completo de uso de los productos One More para bienestar general. ¿Cómo y cuándo aplicarlos?')">
-              <i class="ti ti-clipboard-list" aria-hidden="true"></i>
-              <div class="bib-card-title">Protocolos de Uso</div>
-              <div class="bib-card-sub">Guías para distribuidores</div>
-            </div>
-            <div class="bib-card" role="button" tabindex="0" onclick="quickSend('biblioteca','Explica los rangos de ONE MORE: Gold, Platinum, Diamond y Royal Diamond. Requisitos, ganancias y beneficios de cada uno.')">
-              <i class="ti ti-trophy" aria-hidden="true"></i>
-              <div class="bib-card-title">Rangos y Reconocimientos</div>
-              <div class="bib-card-sub">Gold hasta Royal Diamond</div>
-            </div>
-          </div>
-          <div class="quick-btns">
-            <button class="quick-btn" onclick="quickSend('biblioteca','¿Cómo responder las objeciones más comunes sobre los productos One More? Dame respuestas específicas.')">❓ Objeciones</button>
-            <button class="quick-btn" onclick="quickSend('biblioteca','Diferencias entre One More y otras marcas de wellness en el mercado LATAM. ¿Por qué elegir One More?')">⚖️ Comparativa</button>
-            <button class="quick-btn" onclick="quickSend('biblioteca','¿Cuánto puede ganar un distribuidor activo de One More? Muéstrame ejemplos reales por rango.')">💵 Proyección de ingresos</button>
-          </div>
-        </div>
-        <div class="chat-section" style="height:230px">
-          <div class="chat-header">
-            <i class="ti ti-books" style="color:var(--gold);font-size:15px" aria-hidden="true"></i>
-            <span class="chat-header-title">Biblioteca Wellness</span>
-          </div>
-          <div class="chat-messages" id="msgs-biblioteca" aria-live="polite"></div>
-          <div class="chat-input-row">
-            <input class="chat-input" id="inp-biblioteca" placeholder="Ej: ¿qué ingredientes tiene el parche energético?..." />
-            <button class="btn-send" id="btn-biblioteca">
-              <i class="ti ti-send" aria-hidden="true"></i> Consultar
-            </button>
-          </div>
-        </div>
-      </div>
+</div>
 
-    </div><!-- /content -->
-  </div><!-- /main -->
-</div><!-- /app -->
+</div>
 
-<!-- ============================================================
-     JAVASCRIPT — LÓGICA COMPLETA
-     ============================================================ -->
+</div>
+
+<div class="modal" id="webhookModal">
+<div class="modal-content">
+<h3>🔗 Configurar Webhook Make.com</h3>
+
+<input type="text" id="webhookInput" placeholder="https://hook.eu1.make.com/...">
+
+<button class="gold-btn" style="width:100%" onclick="saveWebhook()">
+Guardar configuración
+</button>
+</div>
+</div>
+
 <script>
-/* ---- CONSTANTES ---- */
-const LS_KEY   = 'onemore_webhook_url';
-const TIMEOUT  = 15000; // 15 segundos
 
-const PAGE_META = {
-  dashboard: { title: 'Hub Central IA',          sub: 'Dashboard operativo ONE MORE' },
-  mentor:    { title: 'IA Mentor',               sub: 'Consultor experto en producto y negocio' },
-  viral:     { title: 'Viral Machine',           sub: 'Generador de contenido que convierte' },
-  funnel:    { title: 'Funnel WhatsApp',         sub: 'Secuencia de 7 días de conversión' },
-  training:  { title: 'Training Center',         sub: 'Onboarding y duplicación de equipo' },
-  biblioteca:{ title: 'Biblioteca Wellness',     sub: 'Vademécum y protocolos ONE MORE' },
-};
+const DEFAULT_WEBHOOK = "https://hook.eu1.make.com/56ahvep23ervt8lmkupmid7xmh7at8ay";
 
-const MODULE_MAP = {
-  dashboard:  'dashboard',
-  mentor:     'ia_mentor',
-  viral:      'viral_machine',
-  funnel:     'funnel_whatsapp',
-  training:   'training_center',
-  biblioteca: 'biblioteca_wellness',
-};
+let MAKE_WEBHOOK_URL = localStorage.getItem('MAKE_WEBHOOK_URL') || DEFAULT_WEBHOOK;
 
-const FUNNEL_PROMPTS = {
-  1: { title: 'Mensaje Día 1 — Primer Contacto', prompt: 'Escribe el mensaje de WhatsApp del Día 1 del funnel ONE MORE: primer contacto que genere curiosidad sin vender directamente. Tono amigable y natural. Máximo 130 palabras.' },
-  2: { title: 'Mensaje Día 2 — Historia de Resultado', prompt: 'Escribe el mensaje de WhatsApp del Día 2: compartir una historia de transformación con One More. Testimonial creíble. Máximo 140 palabras.' },
-  3: { title: 'Mensaje Día 3 — Educación del Producto', prompt: 'Escribe el mensaje de WhatsApp del Día 3: educar sobre la tecnología transdérmica de One More de forma simple. Sin tecnicismos. Máximo 130 palabras.' },
-  4: { title: 'Mensaje Día 4 — Presentar la Oportunidad', prompt: 'Escribe el mensaje de WhatsApp del Día 4: presentar la oportunidad de negocio One More e invitar a Zoom. Enfocado en libertad financiera. Máximo 130 palabras.' },
-  5: { title: 'Mensaje Día 5 — Manejo de Objeciones', prompt: 'Escribe el mensaje de WhatsApp del Día 5: manejar objeciones (caro, no tengo tiempo, pirámide). Respuestas empáticas y claras. Máximo 150 palabras.' },
-  6: { title: 'Mensaje Día 6 — Urgencia y Escasez', prompt: 'Escribe el mensaje de WhatsApp del Día 6: crear urgencia ética y cierre suave. Escasez real, beneficio claro, CTA. Máximo 130 palabras.' },
-  7: { title: 'Mensaje Día 7 — Cierre y Onboarding', prompt: 'Escribe el mensaje de WhatsApp del Día 7: cierre final, inscripción y bienvenida al equipo One More. Celebración y próximos pasos. Máximo 140 palabras.' },
-};
+const consoleBox = document.getElementById('console');
+const statusText = document.getElementById('statusText');
+const statusDot = document.getElementById('statusDot');
 
-/* ---- ESTADO WEBHOOK ---- */
-let webhookUrl = '';
-
-function loadWebhook() {
-  const stored = localStorage.getItem(LS_KEY);
-  if (stored && stored.startsWith('http')) {
-    webhookUrl = stored;
-  } else if (
-    typeof MAKE_WEBHOOK_URL !== 'undefined' &&
-    MAKE_WEBHOOK_URL !== 'PEGAR_AQUI_WEBHOOK' &&
-    MAKE_WEBHOOK_URL.startsWith('http')
-  ) {
-    webhookUrl = MAKE_WEBHOOK_URL;
-    localStorage.setItem(LS_KEY, webhookUrl);
-  }
-  updateWebhookStatus();
+function logConsole(message){
+consoleBox.innerHTML += `<br>[ONE MORE AI] ${message}`;
+consoleBox.scrollTop = consoleBox.scrollHeight;
 }
 
-function updateWebhookStatus() {
-  const dot   = document.getElementById('status-dot');
-  const label = document.getElementById('status-label');
-  const alert = document.getElementById('dashboard-alert');
-
-  if (webhookUrl) {
-    dot.className   = 'status-dot connected';
-    label.textContent = 'Webhook activo';
-    if (alert) alert.style.display = 'none';
-  } else {
-    dot.className   = 'status-dot error';
-    label.textContent = 'Webhook no configurado';
-    if (alert) alert.style.display = 'flex';
-  }
+function updateStatus(){
+if(MAKE_WEBHOOK_URL){
+statusText.innerHTML = '<span class="status-dot" style="background:#00ff88"></span>Webhook conectado';
+logConsole('Webhook URL cargado correctamente');
+}else{
+statusText.innerHTML = '<span class="status-dot"></span>Webhook no configurado';
+}
 }
 
-/* ---- LLAMADA AL WEBHOOK ---- */
-async function callWebhook(module, prompt) {
-  if (!webhookUrl) {
-    return '__NO_WEBHOOK__';
-  }
+updateStatus();
 
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), TIMEOUT);
-
-  try {
-    const res = await fetch(webhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        module:  module,
-        prompt:  prompt,
-        context: 'ONE MORE AI SYSTEM',
-        source:  'github_pages',
-      }),
-      signal: controller.signal,
-    });
-    clearTimeout(timer);
-
-    if (!res.ok) {
-      return `__ERROR_HTTP__${res.status}`;
-    }
-
-    let data;
-    try {
-      data = await res.json();
-    } catch {
-      return '__ERROR_JSON__';
-    }
-
-    if (data && typeof data.reply === 'string' && data.reply.trim() !== '') {
-      return data.reply.trim();
-    }
-
-    // Algunos webhooks devuelven array
-    if (Array.isArray(data) && data[0] && data[0].reply) {
-      return data[0].reply.trim();
-    }
-
-    return '__ERROR_EMPTY__';
-
-  } catch (err) {
-    clearTimeout(timer);
-    if (err.name === 'AbortError') return '__ERROR_TIMEOUT__';
-    return '__ERROR_NETWORK__';
-  }
+function openWebhookModal(){
+document.getElementById('webhookModal').style.display='flex';
+document.getElementById('webhookInput').value = MAKE_WEBHOOK_URL;
 }
 
-function humanizeError(code) {
-  if (code === '__NO_WEBHOOK__')
-    return '⚙️ Configura tu webhook en el panel de credenciales para activar la IA.';
-  if (code.startsWith('__ERROR_HTTP__')) {
-    const status = code.replace('__ERROR_HTTP__', '');
-    return `🔴 El servidor respondió con error HTTP ${status}. Verifica que tu escenario de Make.com esté activo y el webhook sea correcto.`;
-  }
-  if (code === '__ERROR_JSON__')
-    return '🔴 La respuesta del webhook no es JSON válido. Revisa que tu escenario de Make.com devuelva exactamente { "reply": "..." }.';
-  if (code === '__ERROR_EMPTY__')
-    return '⚠️ El webhook respondió pero el campo "reply" está vacío. Revisa la salida de tu escenario en Make.com.';
-  if (code === '__ERROR_TIMEOUT__')
-    return '⏱️ El webhook tardó más de 15 segundos en responder. Verifica que tu escenario de Make.com esté activo y sin errores.';
-  if (code === '__ERROR_NETWORK__')
-    return '🔌 No se pudo conectar con el webhook. Verifica tu conexión a internet y que la URL de Make.com sea correcta.';
-  return '❌ Error desconocido. Verifica la configuración de tu webhook.';
+function saveWebhook(){
+const value = document.getElementById('webhookInput').value;
+
+localStorage.setItem('MAKE_WEBHOOK_URL', value);
+MAKE_WEBHOOK_URL = value;
+
+updateStatus();
+
+logConsole('Webhook actualizado');
+
+document.getElementById('webhookModal').style.display='none';
 }
 
-function isErrorCode(str) {
-  return str && (
-    str === '__NO_WEBHOOK__' ||
-    str.startsWith('__ERROR_')
-  );
+window.onclick = function(e){
+if(e.target.id === 'webhookModal'){
+document.getElementById('webhookModal').style.display='none';
+}
 }
 
-/* ---- MENSAJES EN CHAT ---- */
-function initChat(containerId, welcomeText) {
-  const c = document.getElementById(containerId);
-  if (!c || c.children.length > 0) return;
-  appendMsg(containerId, 'ia', welcomeText);
+async function sendToAI(module,prompt){
+
+if(!MAKE_WEBHOOK_URL){
+return '⚠️ Configura tu webhook primero.';
 }
 
-function appendMsg(containerId, role, text) {
-  const c = document.getElementById(containerId);
-  if (!c) return;
+try{
 
-  const wrapper = document.createElement('div');
-  const isError = role === 'error';
-  wrapper.className = 'msg ' + (isError ? 'msg-ia msg-error' : 'msg-' + role);
+logConsole('Enviando solicitud a Make.com...');
 
-  const nameEl = document.createElement('span');
-  nameEl.className = 'msg-name';
-  nameEl.textContent = (role === 'ia' || isError) ? 'ONE MORE IA' : 'Tú';
-
-  const bubble = document.createElement('div');
-  bubble.className = 'msg-bubble';
-  bubble.textContent = text;
-
-  wrapper.appendChild(nameEl);
-  wrapper.appendChild(bubble);
-  c.appendChild(wrapper);
-  c.scrollTop = c.scrollHeight;
-}
-
-function appendTyping(containerId) {
-  const c = document.getElementById(containerId);
-  if (!c) return null;
-
-  const wrapper = document.createElement('div');
-  wrapper.className = 'msg msg-ia';
-  wrapper.id = 'typing-' + containerId;
-
-  const nameEl = document.createElement('span');
-  nameEl.className = 'msg-name';
-  nameEl.textContent = 'ONE MORE IA';
-
-  const bubble = document.createElement('div');
-  bubble.className = 'msg-bubble';
-  const ind = document.createElement('div');
-  ind.className = 'typing-indicator';
-  ind.innerHTML = '<span></span><span></span><span></span>';
-  bubble.appendChild(ind);
-
-  wrapper.appendChild(nameEl);
-  wrapper.appendChild(bubble);
-  c.appendChild(wrapper);
-  c.scrollTop = c.scrollHeight;
-  return wrapper;
-}
-
-function removeTyping(containerId) {
-  const el = document.getElementById('typing-' + containerId);
-  if (el) el.remove();
-}
-
-/* ---- ENVIAR MENSAJE GENÉRICO ---- */
-async function sendMessage(pageKey, inputId, btnId, msgsId) {
-  const input = document.getElementById(inputId);
-  const btn   = document.getElementById(btnId);
-  if (!input || !btn) return;
-
-  const text = input.value.trim();
-  if (!text) return;
-
-  input.value = '';
-  btn.disabled = true;
-
-  appendMsg(msgsId, 'user', text);
-  appendTyping(msgsId);
-
-  const module   = MODULE_MAP[pageKey] || pageKey;
-  const reply    = await callWebhook(module, text);
-
-  removeTyping(msgsId);
-  btn.disabled = false;
-
-  if (isErrorCode(reply)) {
-    appendMsg(msgsId, 'error', humanizeError(reply));
-  } else {
-    appendMsg(msgsId, 'ia', reply);
-  }
-}
-
-/* ---- QUICK SEND (botones de acceso rápido) ---- */
-async function quickSend(pageKey, prompt) {
-  navigateTo(pageKey);
-  const msgsId = 'msgs-' + pageKey;
-  const btnId  = 'btn-' + pageKey;
-
-  // pequeño delay para que el DOM se actualice al navegar
-  await new Promise(r => setTimeout(r, 80));
-
-  const btn = document.getElementById(btnId);
-  if (btn) btn.disabled = true;
-
-  appendMsg(msgsId, 'user', prompt.length > 80 ? prompt.substring(0,77) + '...' : prompt);
-  appendTyping(msgsId);
-
-  const module = MODULE_MAP[pageKey] || pageKey;
-  const reply  = await callWebhook(module, prompt);
-
-  removeTyping(msgsId);
-  if (btn) btn.disabled = false;
-
-  if (isErrorCode(reply)) {
-    appendMsg(msgsId, 'error', humanizeError(reply));
-  } else {
-    appendMsg(msgsId, 'ia', reply);
-  }
-}
-
-/* ---- FUNNEL: GENERAR DÍA ---- */
-async function generateFunnelDay(day) {
-  const { title, prompt } = FUNNEL_PROMPTS[day];
-  const resultBox     = document.getElementById('funnel-result');
-  const titleEl       = document.getElementById('funnel-day-title');
-  const contentEl     = document.getElementById('funnel-day-content');
-
-  titleEl.textContent   = title;
-  contentEl.textContent = '⏳ Generando mensaje...';
-  resultBox.style.display = 'block';
-  resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-  const reply = await callWebhook('funnel_whatsapp', prompt);
-
-  if (isErrorCode(reply)) {
-    contentEl.textContent = humanizeError(reply);
-    resultBox.style.border = '1px solid rgba(248,113,113,0.35)';
-  } else {
-    contentEl.textContent = reply;
-    resultBox.style.border = '1px solid var(--border2)';
-  }
-}
-
-/* ---- NAVEGACIÓN ---- */
-function navigateTo(pageKey) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item[data-page]').forEach(n => n.classList.remove('active'));
-
-  const page = document.getElementById('page-' + pageKey);
-  const navItem = document.querySelector('.nav-item[data-page="' + pageKey + '"]');
-
-  if (page) page.classList.add('active');
-  if (navItem) navItem.classList.add('active');
-
-  const meta = PAGE_META[pageKey] || { title: 'ONE MORE', sub: '' };
-  document.getElementById('topbar-title').textContent = meta.title;
-  document.getElementById('topbar-sub').textContent   = meta.sub;
-
-  // Inicializar chat del módulo si está vacío
-  const chatWelcomes = {
-    dashboard:  'Hola José, soy tu asistente ONE MORE. Pregúntame sobre producto, negocio, contenido o duplicación. ¿En qué te ayudo hoy?',
-    mentor:     'Soy tu experto ONE MORE. Tengo conocimiento profundo de productos transdérmicos, plan de compensación y estrategias de duplicación. ¿Qué necesitas?',
-    viral:      'Selecciona un formato arriba o descríbeme qué contenido necesitas. Genero guiones, hooks y copys listos para publicar. 🎬',
-    training:   'Selecciona un módulo o pídeme material de capacitación personalizado para tu equipo. Puedo crear cursos, guías y planes de acción. 🎓',
-    biblioteca: 'Selecciona una categoría o haz tu consulta específica sobre el ecosistema ONE MORE. Tengo acceso al vademécum completo. 📚',
-  };
-  if (chatWelcomes[pageKey]) {
-    initChat('msgs-' + pageKey, chatWelcomes[pageKey]);
-  }
-}
-
-/* ---- BINDINGS INPUTS Y BOTONES ---- */
-function bindChat(pageKey) {
-  const inputId = 'inp-' + pageKey;
-  const btnId   = 'btn-' + pageKey;
-  const msgsId  = 'msgs-' + pageKey;
-
-  const btn   = document.getElementById(btnId);
-  const input = document.getElementById(inputId);
-  if (!btn || !input) return;
-
-  btn.addEventListener('click', () => sendMessage(pageKey, inputId, btnId, msgsId));
-  input.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage(pageKey, inputId, btnId, msgsId);
-    }
-  });
-}
-
-/* ---- MODAL CONFIGURACIÓN ---- */
-function openModal() {
-  document.getElementById('webhook-input').value = webhookUrl || '';
-  document.getElementById('modal-status').textContent = '';
-  document.getElementById('modal-config').classList.add('open');
-  document.getElementById('webhook-input').focus();
-}
-
-function closeModal() {
-  document.getElementById('modal-config').classList.remove('open');
-}
-
-document.getElementById('btn-open-config').addEventListener('click', openModal);
-document.getElementById('btn-activate').addEventListener('click', openModal);
-document.getElementById('btn-cancel-modal').addEventListener('click', closeModal);
-
-document.getElementById('modal-config').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
+const response = await fetch(MAKE_WEBHOOK_URL,{
+method:'POST',
+headers:{
+'Content-Type':'application/json'
+},
+body:JSON.stringify({
+module:module,
+prompt:prompt,
+context:'ONE MORE AI SYSTEM',
+source:'github_pages'
+})
 });
 
-document.getElementById('btn-save-webhook').addEventListener('click', function() {
-  const val = document.getElementById('webhook-input').value.trim();
-  const status = document.getElementById('modal-status');
+if(!response.ok){
+throw new Error(`HTTP ${response.status}`);
+}
 
-  if (!val) {
-    status.innerHTML = '<span style="color:var(--danger)"><i class="ti ti-x" style="font-size:14px"></i> Pega la URL de tu webhook antes de guardar.</span>';
-    return;
-  }
-  if (!val.startsWith('http')) {
-    status.innerHTML = '<span style="color:var(--danger)"><i class="ti ti-x" style="font-size:14px"></i> La URL debe comenzar con https://...</span>';
-    return;
-  }
+const data = await response.json();
 
-  webhookUrl = val;
-  localStorage.setItem(LS_KEY, webhookUrl);
-  updateWebhookStatus();
+logConsole('Respuesta recibida correctamente');
 
-  status.innerHTML = '<span style="color:var(--success)"><i class="ti ti-check" style="font-size:14px"></i> Webhook guardado correctamente. ¡La IA está activa!</span>';
-  setTimeout(closeModal, 1400);
-});
+return data.reply || 'La IA no devolvió respuesta.';
 
-document.getElementById('btn-clear-webhook').addEventListener('click', function() {
-  webhookUrl = '';
-  localStorage.removeItem(LS_KEY);
-  document.getElementById('webhook-input').value = '';
-  updateWebhookStatus();
-  document.getElementById('modal-status').innerHTML = '<span style="color:var(--warning)"><i class="ti ti-alert-triangle" style="font-size:14px"></i> Webhook eliminado. El sistema IA está desactivado.</span>';
-});
+}catch(error){
 
-/* ---- ALERT BANNER → ABRIR MODAL ---- */
-const alertBanner = document.getElementById('dashboard-alert');
-if (alertBanner) alertBanner.addEventListener('click', openModal);
+console.error(error);
 
-/* ---- NAV ITEMS ---- */
-document.querySelectorAll('.nav-item[data-page]').forEach(item => {
-  item.addEventListener('click', () => navigateTo(item.dataset.page));
-  item.addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === ' ') navigateTo(item.dataset.page);
-  });
-});
+logConsole('Error de conexión');
 
-/* ---- MODULE CARDS → NAVEGACIÓN ---- */
-document.querySelectorAll('.module-card[data-nav]').forEach(card => {
-  card.addEventListener('click', () => navigateTo(card.dataset.nav));
-});
+return '❌ Error conectando con Make.com o la IA.';
+}
+}
 
-/* ---- INIT ---- */
-(function init() {
-  loadWebhook();
+async function generateResponse(){
 
-  // Inicializar chats visibles
-  ['dashboard'].forEach(p => {
-    const welcome = {
-      dashboard: 'Hola José, soy tu asistente ONE MORE. Pregúntame sobre producto, negocio, contenido o duplicación. ¿En qué te ayudo hoy?',
-    };
-    initChat('msgs-' + p, welcome[p]);
-  });
+const input = document.getElementById('userPrompt');
+const prompt = input.value.trim();
 
-  // Bind todos los chats
-  ['dashboard','mentor','viral','training','biblioteca'].forEach(bindChat);
+if(!prompt) return;
 
-  // Mostrar estado del webhook en consola (diagnóstico)
-  console.log('[ONE MORE AI] Webhook URL:', webhookUrl || 'No configurado');
-})();
+const chatBox = document.getElementById('chatBox');
+
+chatBox.innerHTML += `
+<div class="message user">
+${prompt}
+</div>
+`;
+
+input.value='';
+
+chatBox.innerHTML += `
+<div class="message ai" id="loadingMessage">
+⏳ Generando respuesta...
+</div>
+`;
+
+chatBox.scrollTop = chatBox.scrollHeight;
+
+const reply = await sendToAI('ia_mentor',prompt);
+
+const loading = document.getElementById('loadingMessage');
+
+loading.innerHTML = reply;
+loading.removeAttribute('id');
+
+chatBox.scrollTop = chatBox.scrollHeight;
+}
+
 </script>
 
 </body>
 </html>
+```

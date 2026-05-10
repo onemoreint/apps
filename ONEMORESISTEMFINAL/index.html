@@ -3,259 +3,51 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>ONE MORE AI SYSTEM</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap" rel="stylesheet">
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
-:root{
---gold:#D4AF37;
---black:#050505;
---panel:#101010;
---panel2:#171717;
---border:rgba(212,175,55,.2);
---text:#ffffff;
---muted:#888;
-}
-
-body{
-background:#000;
-color:#fff;
-font-family:'Montserrat',sans-serif;
-height:100vh;
-overflow:hidden;
-}
-
-.app{
-display:flex;
-height:100vh;
-}
-
-.sidebar{
-width:240px;
-background:#070707;
-border-right:1px solid var(--border);
-padding:20px;
-display:flex;
-flex-direction:column;
-}
-
-.logo{
-font-size:28px;
-font-weight:800;
-line-height:1;
-color:var(--gold);
-margin-bottom:10px;
-}
-
-.logo small{
-display:block;
-font-size:11px;
-letter-spacing:5px;
-color:#777;
-margin-top:10px;
-}
-
-.menu{
-margin-top:30px;
-display:flex;
-flex-direction:column;
-gap:10px;
-}
-
-.menu button{
-background:transparent;
-border:none;
-color:#ccc;
-padding:14px;
-border-radius:14px;
-text-align:left;
-cursor:pointer;
-font-size:16px;
-transition:.3s;
-}
-
-.menu button:hover,
-.menu button.active{
-background:rgba(212,175,55,.12);
-color:var(--gold);
-}
-
-.status{
-margin-top:auto;
-padding-top:20px;
-border-top:1px solid var(--border);
-font-size:14px;
-color:#aaa;
-}
-
-.dot{
-width:10px;
-height:10px;
-background:#00ff88;
-border-radius:50%;
-display:inline-block;
-margin-right:8px;
-}
-
-.main{
-flex:1;
-padding:30px;
-overflow:auto;
-}
-
-.header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:25px;
-}
-
-.header h1{
-font-size:28px;
-font-weight:800;
-}
-
-.header p{
-color:#777;
-margin-top:8px;
-}
-
-.activate{
-background:var(--gold);
-border:none;
-padding:14px 22px;
-border-radius:14px;
-font-weight:700;
-cursor:pointer;
-}
-
-.card{
-background:#050505;
-border:1px solid var(--border);
-border-radius:24px;
-padding:24px;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:16px;
-margin-top:20px;
-margin-bottom:20px;
-}
-
-.mini{
-background:#111;
-border:1px solid var(--border);
-padding:24px;
-border-radius:18px;
-}
-
-.mini h3{
-color:var(--gold);
-margin-bottom:12px;
-}
-
-.chat{
-margin-top:20px;
-}
-
-.ai{
-background:#151515;
-padding:20px;
-border-radius:18px;
-margin-bottom:15px;
-border:1px solid #222;
-}
-
-.user{
-background:var(--gold);
-color:#000;
-padding:20px;
-border-radius:18px;
-margin-bottom:15px;
-margin-left:15%;
-font-weight:600;
-}
-
-.error{
-background:#181818;
-border:1px solid rgba(255,0,0,.25);
-padding:20px;
-border-radius:18px;
-color:#fff;
-}
-
-.input-area{
-display:flex;
-gap:15px;
-margin-top:20px;
-}
-
-.input-area input{
-flex:1;
-height:60px;
-background:#050505;
-border:1px solid var(--border);
-border-radius:18px;
-padding:0 20px;
-color:#fff;
-font-size:16px;
-outline:none;
-}
-
-.input-area button{
-width:160px;
-border:none;
-border-radius:18px;
-background:var(--gold);
-font-weight:800;
-cursor:pointer;
-font-size:16px;
-}
-
-.console{
-margin-top:18px;
-background:#050505;
-border:1px solid var(--border);
-border-radius:18px;
-padding:18px;
-height:100px;
-overflow:auto;
-font-size:14px;
-color:#aaa;
-}
-
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:'Montserrat',sans-serif;height:100vh;overflow:hidden}
+.app{display:flex;height:100vh}
+.sidebar{width:240px;background:#050505;border-right:1px solid rgba(212,175,55,.22);padding:24px;display:flex;flex-direction:column}
+.logo{font-size:30px;font-weight:800;line-height:1;color:#d4af37}
+.logo small{display:block;font-size:11px;letter-spacing:5px;color:#777;margin-top:12px}
+.menu{margin-top:38px;display:flex;flex-direction:column;gap:12px}
+.menu button{background:transparent;border:0;color:#ddd;padding:15px;border-radius:14px;text-align:left;font-size:15px;cursor:pointer}
+.menu button.active,.menu button:hover{background:rgba(212,175,55,.13);color:#d4af37}
+.status{margin-top:auto;border-top:1px solid rgba(212,175,55,.22);padding-top:20px;color:#aaa;font-size:14px}
+.dot{width:10px;height:10px;background:#00ff88;border-radius:50%;display:inline-block;margin-right:8px}
+.main{flex:1;padding:32px;overflow:auto}
+.header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(212,175,55,.22);padding-bottom:24px;margin-bottom:28px}
+.header h1{font-size:30px;font-weight:800}
+.header p{color:#888;margin-top:8px}
+.btn{background:#d4af37;color:#000;border:0;border-radius:14px;padding:15px 24px;font-weight:800;cursor:pointer}
+.card{background:#090909;border:1px solid rgba(212,175,55,.22);border-radius:24px;padding:26px}
+.card h2{font-size:26px;margin-bottom:10px}
+.muted{color:#999}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0}
+.mini{background:#151515;border:1px solid rgba(212,175,55,.22);border-radius:18px;padding:22px}
+.mini h3{color:#d4af37;margin-bottom:10px}
+.chat{height:330px;overflow:auto;background:#050505;border:1px solid rgba(212,175,55,.22);border-radius:22px;padding:20px;margin-top:20px}
+.msg{padding:18px;border-radius:16px;margin-bottom:16px;line-height:1.5;max-width:82%}
+.ai{background:#181818;border:1px solid rgba(212,175,55,.18)}
+.user{background:#d4af37;color:#000;margin-left:auto;font-weight:700}
+.error{background:#181818;border:1px solid rgba(255,0,0,.35)}
+.input-area{display:flex;gap:14px;margin-top:18px}
+.input-area input{flex:1;background:#050505;border:1px solid rgba(212,175,55,.25);border-radius:16px;color:#fff;padding:18px;font-size:15px;outline:none}
+.input-area button{width:170px}
+.console{margin-top:16px;background:#050505;border:1px solid rgba(212,175,55,.22);border-radius:16px;padding:14px;height:105px;overflow:auto;font-size:13px;color:#aaa}
 @media(max-width:900px){
-
-.sidebar{
-display:none;
-}
-
-.grid{
-grid-template-columns:1fr;
-}
-
-.user{
-margin-left:0;
-}
-
-.input-area{
-flex-direction:column;
-}
-
-.input-area button{
-width:100%;
-height:60px;
-}
+.sidebar{display:none}
+.grid{grid-template-columns:1fr}
+.main{padding:18px}
+.header{display:block}
+.header button{margin-top:16px;width:100%}
+.input-area{flex-direction:column}
+.input-area button{width:100%}
+.msg{max-width:100%}
 }
 </style>
 </head>
@@ -264,178 +56,151 @@ height:60px;
 
 <div class="app">
 
-<div class="sidebar">
+<aside class="sidebar">
+  <div class="logo">
+    ONE<br>MORE
+    <small>AI SYSTEM</small>
+  </div>
 
-<div class="logo">
-ONE<br>MORE
-<small>AI SYSTEM</small>
-</div>
+  <div class="menu">
+    <button class="active">🏠 Dashboard</button>
+    <button>🤖 IA Mentor</button>
+    <button>🔥 Viral Machine</button>
+    <button>💬 Funnel WhatsApp</button>
+    <button>🎓 Training Center</button>
+    <button>📚 Biblioteca</button>
+  </div>
 
-<div class="menu">
-<button class="active">🏠 Dashboard</button>
-<button>🤖 IA Mentor</button>
-<button>🔥 Viral Machine</button>
-<button>💬 Funnel WhatsApp</button>
-<button>🎓 Training Center</button>
-<button>📚 Biblioteca</button>
-</div>
+  <div class="status">
+    <span class="dot"></span>Webhook conectado
+  </div>
+</aside>
 
-<div class="status">
-<span class="dot"></span>
-Webhook conectado
-</div>
+<main class="main">
 
-</div>
+  <div class="header">
+    <div>
+      <h1>ONE MORE AI SYSTEM</h1>
+      <p>Hub IA de contenido, negocio y automatización</p>
+    </div>
+    <button class="btn">⚡ ACTIVAR IA</button>
+  </div>
 
-<div class="main">
+  <section class="card">
+    <h2>🤖 IA Mentor — Expert ONE MORE</h2>
+    <p class="muted">Consultor especializado en producto, negocio, contenido viral, WhatsApp y duplicación.</p>
 
-<div class="header">
-<div>
-<h1>ONE MORE AI SYSTEM</h1>
-<p>Hub IA de contenido, negocio y automatización</p>
-</div>
+    <div class="grid">
+      <div class="mini">
+        <h3>📦 Compensación</h3>
+        <p>Bonos, rangos, binario y Bono 2+1.</p>
+      </div>
 
-<button class="activate">
-⚡ ACTIVAR IA
-</button>
-</div>
+      <div class="mini">
+        <h3>🚀 Viral Machine</h3>
+        <p>Hooks, guiones TikTok y storytelling.</p>
+      </div>
 
-<div class="card">
+      <div class="mini">
+        <h3>💬 Funnel WA</h3>
+        <p>Secuencia WhatsApp de 7 días.</p>
+      </div>
+    </div>
 
-<h2 style="font-size:22px;margin-bottom:10px;">
-🤖 IA Mentor — Expert ONE MORE
-</h2>
+    <div class="chat" id="chat">
+      <div class="msg ai">
+        Soy tu experto ONE MORE. Pregunta sobre productos, negocio, TikTok, funnels, onboarding o duplicación.
+      </div>
+    </div>
 
-<p style="color:#777;">
-Consultor especializado en producto, negocio, contenido viral, WhatsApp y duplicación.
-</p>
+    <div class="input-area">
+      <input id="prompt" placeholder="Ej: Explícame cómo ganar en One More..." onkeydown="if(event.key==='Enter')sendPrompt()">
+      <button class="btn" onclick="sendPrompt()">Preguntar</button>
+    </div>
 
-<div class="grid">
+    <div class="console" id="console">
+      [ONE MORE AI] Sistema iniciado...
+    </div>
+  </section>
 
-<div class="mini">
-<h3>📦 Compensación</h3>
-<p>Bonos, rangos, binario y Bono 2+1.</p>
-</div>
-
-<div class="mini">
-<h3>🚀 Viral Machine</h3>
-<p>Hooks, guiones TikTok y storytelling.</p>
-</div>
-
-<div class="mini">
-<h3>💬 Funnel WA</h3>
-<p>Secuencia WhatsApp de 7 días.</p>
-</div>
-
-</div>
-
-<div class="chat" id="chat">
-
-<div class="ai">
-Soy tu experto ONE MORE. Pregunta sobre productos, negocio, TikTok, funnels, onboarding o duplicación.
-</div>
-
-</div>
-
-<div class="input-area">
-
-<input
-type="text"
-id="prompt"
-placeholder="Ej: Explícame cómo ganar en One More..."
->
-
-<button onclick="sendPrompt()">
-Preguntar
-</button>
-
-</div>
-
-<div class="console" id="console">
-[ONE MORE AI] Sistema iniciado...
-</div>
-
-</div>
-
-</div>
+</main>
 
 </div>
 
 <script>
+const webhookUrl = "https://hook.eu1.make.com/uz1on72f9jcg72uudoy47e1oyv7dt1ny";
 
-const webhookUrl = "https://hook.eu1.make.com/56ahvep23ervt8lmkupmid7xmh7at8ay";
+const chat = document.getElementById("chat");
+const input = document.getElementById("prompt");
+const consoleBox = document.getElementById("console");
 
-function log(message){
+function log(msg){
+  consoleBox.innerHTML += "<br>[ONE MORE AI] " + msg;
+  consoleBox.scrollTop = consoleBox.scrollHeight;
+}
 
-const consoleBox=document.getElementById("console");
+function addMessage(text,type){
+  const div = document.createElement("div");
+  div.className = "msg " + type;
+  div.textContent = text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
+}
 
-consoleBox.innerHTML += "<br>[ONE MORE AI] " + message;
+async function sendPrompt(){
+  const prompt = input.value.trim();
+  if(!prompt) return;
 
-consoleBox.scrollTop = consoleBox.scrollHeight;
+  addMessage(prompt,"user");
+  input.value = "";
+
+  const loading = addMessage("⏳ Consultando Make.com...","ai");
+  log("Enviando solicitud a Make.com...");
+
+  try{
+    const response = await fetch(webhookUrl,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/x-www-form-urlencoded"
+      },
+      body:new URLSearchParams({
+        module:"ia_mentor",
+        prompt:prompt,
+        context:"ONE MORE AI SYSTEM",
+        source:"github_pages"
+      })
+    });
+
+    const raw = await response.text();
+
+    if(!response.ok){
+      loading.className = "msg error";
+      loading.textContent = "❌ Make respondió con error HTTP " + response.status;
+      log("Error HTTP " + response.status);
+      return;
+    }
+
+    let finalText = raw;
+
+    try{
+      const data = JSON.parse(raw);
+      finalText = data.reply || data.text || data.message || raw;
+      log("Respuesta JSON recibida.");
+    }catch(e){
+      log("Respuesta de texto recibida.");
+    }
+
+    loading.textContent = finalText || "Sin respuesta desde Make.";
+
+  }catch(error){
+    loading.className = "msg error";
+    loading.textContent = "❌ Error de conexión. Revisa Run Once, webhook y Webhook Response.";
+    log("Error de conexión: " + error.message);
+  }
 }
 
 log("Webhook activo: " + webhookUrl);
-
-async function sendPrompt(){
-
-const input=document.getElementById("prompt");
-
-const prompt=input.value.trim();
-
-if(!prompt) return;
-
-const chat=document.getElementById("chat");
-
-chat.innerHTML += `
-<div class="user">
-${prompt}
-</div>
-`;
-
-input.value="";
-
-log("Enviando solicitud a Make.com...");
-
-try{
-
-const response = await fetch(webhookUrl,{
-method:"POST",
-headers:{
-"Content-Type":"application/x-www-form-urlencoded"
-},
-body:new URLSearchParams({
-module:"ia_mentor",
-prompt:prompt,
-context:"ONE MORE AI SYSTEM",
-source:"github_pages"
-})
-});
-
-const data = await response.json();
-
-chat.innerHTML += `
-<div class="ai">
-${data.reply || "Sin respuesta"}
-</div>
-`;
-
-log("Respuesta recibida correctamente");
-
-}catch(error){
-
-chat.innerHTML += `
-<div class="error">
-❌ Error de conexión. Revisa Run Once y Webhook Response.
-</div>
-`;
-
-log("Error de conexión: " + error.message);
-
-}
-
-chat.scrollTop = chat.scrollHeight;
-}
-
 </script>
 
 </body>

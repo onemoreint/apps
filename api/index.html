@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OneMore AI Hub v2 - FreeLLMAPI Ready</title>
+  <style>
+    :root{
+      --bg:#020617;
+      --panel:#0f172a;
+      --card:#111827;
+      --card2:#1e293b;
+      --text:#f8fafc;
+      --muted:#94a3b8;
+      --border:#334155;
+      --accent:#22c55e;
+      --accent2:#06b6d4;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      --input:#020617;
+      --ok:#86efac;
+      --shadow:0 24px 70px rgba(0,0,0,.35);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34,197,94,.18), transparent 34%),
+        radial-gradient(circle at top right, rgba(6,182,212,.18), transparent 28%),
+        var(--bg);
+      color:var(--text);
+    }
+
+    header{
+      padding:32px 18px 24px;
+      text-align:center;
+      border-bottom:1px solid var(--border);
+      background:rgba(2,6,23,.7);
+      position:sticky;
+      top:0;
+      z-index:5;
+      backdrop-filter:blur(14px);
+    }
+
+    h1{margin:0;font-size:clamp(1.8rem,4vw,3rem)}
+    header p{max-width:920px;margin:10px auto 0;color:var(--muted);line-height:1.5}
+
+    .badge{
+      display:inline-block;
+      margin-top:12px;
+      border:1px solid rgba(34,197,94,.45);
+      color:#bbf7d0;
+      background:rgba(34,197,94,.12);
+      padding:8px 12px;
+      border-radius:999px;
+      font-weight:700;
+      font-size:.9rem;
+    }
+
+    .app{
+      max-width:1400px;
+      margin:auto;
+      padding:22px;
+      display:grid;
+      grid-template-columns:300px 1fr;
+      gap:18px;
+    }
+
+    .sidebar,.panel,.card,.mini{
+      background:rgba(15,23,42,.88);
+      border:1px solid var(--border);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+    }
+
+    .sidebar{padding:16px;height:max-content;position:sticky;top:130px}
+    .sidebar button{
+      width:100%;
+      margin:7px 0;
+      padding:13px 14px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(30,41,59,.75);
+      color:var(--text);
+      text-align:left;
+      cursor:pointer;
+      font-weight:800;
+    }
+    .sidebar button:hover,.sidebar button.active{
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#022c22;
+      border-color:transparent;
+    }
+
+    .panel{padding:22px;min-height:650px}
+    .section{animation:fade .18s ease}
+    @keyframes fade{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+    h2{margin:0 0 14px;font-size:1.55rem}
+    h3{margin:0 0 10px}
+    .sub{color:var(--muted);line-height:1.5;margin-top:-4px}
+
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .mini-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
+
+    label{display:block;color:var(--muted);margin:14px 0 6px;font-size:.92rem;font-weight:700}
+    input,select,textarea{
+      width:100%;
+      border:1px solid var(--border);
+      background:rgba(2,6,23,.9);
+      color:var(--text);
+      padding:12px;
+      border-radius:14px;
+      outline:none;
+      font-size:1rem;
+    }
+    textarea{min-height:125px;resize:vertical;line-height:1.5}
+
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .btn{
+      border:none;
+      border-radius:14px;
+      padding:12px 16px;
+      font-weight:900;
+      cursor:pointer;
+      color:#022c22;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+    }
+    .btn.secondary{background:rgba(30,41,59,.9);color:var(--text);border:1px solid var(--border)}
+    .btn.warn{background:var(--warn);color:#111827}
+    .btn.danger{background:var(--danger);color:#fff}
+
+    .output{
+      margin-top:18px;
+      border:1px solid var(--border);
+      background:rgba(2,6,23,.9);
+      border-radius:18px;
+      padding:16px;
+      white-space:pre-wrap;
+      line-height:1.58;
+      min-height:180px;
+    }
+
+    .notice,.warning{
+      border-radius:16px;
+      padding:13px;
+      margin:10px 0 16px;
+      line-height:1.45;
+    }
+    .notice{border:1px solid rgba(34,197,94,.38);background:rgba(34,197,94,.1);color:#bbf7d0}
+    .warning{border:1px solid rgba(245,158,11,.42);background:rgba(245,158,11,.12);color:#fde68a}
+
+    .mini{padding:14px}
+    .mini strong{font-size:1.15rem}
+    .mini span{display:block;color:var(--muted);font-size:.86rem;margin-top:4px}
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 10px;
+      border-radius:999px;
+      background:rgba(30,41,59,.9);
+      border:1px solid var(--border);
+      color:#cbd5e1;
+      font-size:.85rem;
+      margin:3px;
+    }
+    .pill.ok{color:#bbf7d0;border-color:rgba(34,197,94,.35)}
+    .pill.bad{color:#fecaca;border-color:rgba(239,68,68,.35)}
+    .pill.warn{color:#fde68a;border-color:rgba(245,158,11,.35)}
+
+    .prospect,.bulk-item{
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:13px;
+      background:rgba(30,41,59,.72);
+      margin-top:10px;
+    }
+    .prospect strong{color:#bbf7d0}
+
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .small{font-size:.86rem;color:var(--muted)}
+    .hidden{display:none}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9rem}
+
+    footer{text-align:center;color:var(--muted);padding:28px;border-top:1px solid var(--border);margin-top:12px}
+
+    @media(max-width:980px){
+      .app{grid-template-columns:1fr}
+      .sidebar{position:static}
+      .grid,.grid3,.two-col,.mini-grid{grid-template-columns:1fr}
+      header{position:static}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>🚀 OneMore AI Hub v2</h1>
+  <p>Panel HTML avanzado para networkers: FreeLLMAPI-ready, multiagentes, fallback de modelos, generación masiva, CRM y seguimiento inteligente.</p>
+  <div class="badge">Compatible con endpoints tipo OpenAI: /v1/chat/completions</div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <button class="active" onclick="showSection('dashboard', this)">📊 Dashboard IA</button>
+    <button onclick="showSection('generator', this)">🤖 Generador IA</button>
+    <button onclick="showSection('agents', this)">🧠 Multiagentes</button>
+    <button onclick="showSection('bulk', this)">⚡ Generación masiva</button>
+    <button onclick="showSection('crm', this)">📋 CRM Prospectos</button>
+    <button onclick="showSection('objections', this)">🛡️ Objeciones</button>
+    <button onclick="showSection('settings', this)">⚙️ FreeLLMAPI</button>
+    <button onclick="showSection('manual', this)">📘 Manual</button>
+  </aside>
+
+  <main class="panel">
+
+    <section id="dashboard" class="section">
+      <h2>📊 Dashboard IA</h2>
+      <p class="sub">Aquí ves cómo se está usando el “cerebro IA”. Este HTML está diseñado para conectarse a FreeLLMAPI o a cualquier servidor compatible con OpenAI.</p>
+
+      <div class="mini-grid">
+        <div class="mini"><strong id="statProvider">No conectado</strong><span>Proveedor / endpoint activo</span></div>
+        <div class="mini"><strong id="statModel">Sin modelo</strong><span>Modelo seleccionado</span></div>
+        <div class="mini"><strong id="statCalls">0</strong><span>Solicitudes IA realizadas</span></div>
+        <div class="mini"><strong id="statFallbacks">0</strong><span>Fallbacks usados</span></div>
+      </div>
+
+      <div class="notice">
+        Aprovechamiento real de FreeLLMAPI: puedes configurar un endpoint único, usar perfiles de modelos, intentar fallback automático entre modelos y ejecutar agentes especializados desde una sola interfaz.
+      </div>
+
+      <h3>Estado de perfiles IA</h3>
+      <div id="profileStatus"></div>
+
+      <div class="actions">
+        <button class="btn" onclick="testConnection()">Probar conexión IA</button>
+        <button class="btn secondary" onclick="refreshDashboard()">Actualizar dashboard</button>
+      </div>
+
+      <div id="dashboardOutput" class="output">Sin pruebas todavía.</div>
+    </section>
+
+    <section id="generator" class="section hidden">
+      <h2>🤖 Generador IA inteligente</h2>
+      <p class="sub">Genera mensajes usando modo automático, calidad, velocidad, creatividad o copywriting.</p>
+
+      <div class="grid3">
+        <div>
+          <label>Modo IA</label>
+          <select id="aiMode">
+            <option value="auto">Automático FreeLLMAPI</option>
+            <option value="copy">Copywriting / Ventas</option>
+            <option value="fast">Ultra rápido</option>
+            <option value="quality">Mejor calidad</option>
+            <option value="creative">Creatividad</option>
+            <option value="analysis">Análisis</option>
+          </select>
+        </div>
+        <div>
+          <label>Tipo de contenido</label>
+          <select id="contentType">
+            <option>Mensaje inicial para WhatsApp</option>
+            <option>Mensaje de seguimiento</option>
+            <option>Invitación al producto</option>
+            <option>Invitación al negocio</option>
+            <option>Post para Facebook</option>
+            <option>Post para grupo de Facebook</option>
+            <option>Historia de Instagram</option>
+            <option>Guion de Reel</option>
+            <option>Cierre suave</option>
+          </select>
+        </div>
+        <div>
+          <label>Tono</label>
+          <select id="tone">
+            <option>Curioso</option>
+            <option>Profesional</option>
+            <option>Amigable</option>
+            <option>Directo</option>
+            <option>Inspirador</option>
+            <option>Educativo</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Tema</label>
+      <input id="topic" placeholder="Ej: tecnología transdérmica, bienestar, oportunidad One More..." />
+
+      <label>Contexto del prospecto o audiencia</label>
+      <textarea id="context" placeholder="Ej: persona ocupada, madre, emprendedor, vive en Colombia, tiene curiosidad pero no responde..."></textarea>
+
+      <div class="actions">
+        <button class="btn" onclick="generateAI()">Generar con FreeLLMAPI</button>
+        <button class="btn secondary" onclick="generateTemplate()">Generar sin API</button>
+        <button class="btn secondary" onclick="copyById('mainOutput')">Copiar</button>
+        <button class="btn danger" onclick="clearById('mainOutput')">Limpiar</button>
+      </div>
+
+      <div id="mainOutput" class="output">Aquí aparecerá tu contenido.</div>
+    </section>
+
+    <section id="agents" class="section hidden">
+      <h2>🧠 Multiagentes para One More</h2>
+      <p class="sub">Un flujo multiagente hace varias llamadas IA: estrategia, copy, cumplimiento y versión final.</p>
+
+      <label>Objetivo de campaña</label>
+      <input id="agentGoal" placeholder="Ej: calentar grupos de Facebook para producto One More" />
+
+      <label>Audiencia</label>
+      <input id="agentAudience" placeholder="Ej: personas cansadas del café, emprendedores, madres, latinos en USA..." />
+
+      <label>Oferta o mensaje central</label>
+      <textarea id="agentOffer" placeholder="Describe lo que quieres comunicar sin promesas médicas ni ingresos garantizados."></textarea>
+
+      <div class="actions">
+        <button class="btn" onclick="runAgents()">Ejecutar multiagentes</button>
+        <button class="btn secondary" onclick="copyById('agentsOutput')">Copiar resultado</button>
+      </div>
+
+      <div id="agentsOutput" class="output">Aquí aparecerá el resultado multiagente.</div>
+    </section>
+
+    <section id="bulk" class="section hidden">
+      <h2>⚡ Generación masiva</h2>
+      <p class="sub">Crea muchos textos para grupos, historias, reels o WhatsApp usando un mismo tema.</p>
+
+      <div class="grid">
+        <div>
+          <label>Cantidad</label>
+          <select id="bulkCount">
+            <option>5</option>
+            <option>10</option>
+            <option>15</option>
+            <option>20</option>
+          </select>
+        </div>
+        <div>
+          <label>Formato</label>
+          <select id="bulkFormat">
+            <option>Posts cortos para Facebook</option>
+            <option>Estados de WhatsApp</option>
+            <option>Hooks para Reels</option>
+            <option>Mensajes para prospectos</option>
+            <option>Preguntas de curiosidad</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Tema base</label>
+      <input id="bulkTopic" placeholder="Ej: la gente está cambiando café por esto..." />
+
+      <div class="actions">
+        <button class="btn" onclick="generateBulk()">Generar lote</button>
+        <button class="btn secondary" onclick="copyById('bulkOutput')">Copiar lote</button>
+      </div>
+
+      <div id="bulkOutput" class="output">Aquí aparecerán tus piezas masivas.</div>
+    </section>
+
+    <section id="crm" class="section hidden">
+      <h2>📋 CRM de prospectos</h2>
+      <p class="sub">Guarda prospectos en el navegador y genera seguimiento inteligente según su estado.</p>
+
+      <div class="grid">
+        <div>
+          <label>Nombre</label>
+          <input id="pName" placeholder="Nombre del prospecto" />
+        </div>
+        <div>
+          <label>País</label>
+          <input id="pCountry" placeholder="País" />
+        </div>
+        <div>
+          <label>Interés</label>
+          <select id="pInterest">
+            <option>Producto</option>
+            <option>Negocio</option>
+            <option>Producto y negocio</option>
+            <option>Contenido educativo</option>
+          </select>
+        </div>
+        <div>
+          <label>Estado</label>
+          <select id="pStatus">
+            <option>Nuevo</option>
+            <option>Contactado</option>
+            <option>Interesado</option>
+            <option>Seguimiento</option>
+            <option>Presentación enviada</option>
+            <option>Cerrado</option>
+            <option>No respondió</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Notas</label>
+      <textarea id="pNotes" placeholder="Qué dijo, qué necesita, objeciones, fecha de próximo contacto..."></textarea>
+
+      <div class="actions">
+        <button class="btn" onclick="saveProspect()">Guardar prospecto</button>
+        <button class="btn secondary" onclick="loadProspects()">Actualizar</button>
+        <button class="btn danger" onclick="clearProspects()">Borrar todos</button>
+      </div>
+
+      <div id="prospectsList"></div>
+    </section>
+
+    <section id="objections" class="section hidden">
+      <h2>🛡️ Objeciones inteligentes</h2>
+
+      <div class="grid">
+        <div>
+          <label>Objeción</label>
+          <select id="objectionSelect">
+            <option>No tengo dinero</option>
+            <option>No tengo tiempo</option>
+            <option>Eso parece pirámide</option>
+            <option>Tengo que pensarlo</option>
+            <option>No creo en redes de mercadeo</option>
+            <option>No me interesa</option>
+            <option>¿Eso cura enfermedades?</option>
+          </select>
+        </div>
+        <div>
+          <label>Tono de respuesta</label>
+          <select id="objectionTone">
+            <option>Empático</option>
+            <option>Profesional</option>
+            <option>Directo</option>
+            <option>Educativo</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" onclick="answerObjection()">Respuesta rápida</button>
+        <button class="btn secondary" onclick="answerObjectionAI()">Respuesta con IA</button>
+        <button class="btn secondary" onclick="copyById('objectionOutput')">Copiar</button>
+      </div>
+
+      <div id="objectionOutput" class="output">Aquí aparecerá la respuesta.</div>
+    </section>
+
+    <section id="settings" class="section hidden">
+      <h2>⚙️ Configuración FreeLLMAPI</h2>
+
+      <div class="warning">
+        Este HTML es 100% frontend. Si colocas una API key aquí y lo subes público, puede exponerse. Lo más seguro es usar un endpoint FreeLLMAPI/Worker sin exponer claves en el navegador.
+      </div>
+
+      <div class="grid">
+        <div>
+          <label>URL endpoint principal</label>
+          <input id="apiUrl" placeholder="https://tu-dominio.com/v1/chat/completions" />
+        </div>
+        <div>
+          <label>API Key / Token opcional</label>
+          <input id="apiKey" type="password" placeholder="Bearer token si tu endpoint lo requiere" />
+        </div>
+      </div>
+
+      <h3 style="margin-top:20px;">Perfiles de modelos</h3>
+      <p class="small">Coloca los nombres de modelos que tu FreeLLMAPI tenga disponibles. Si un modo falla, el sistema intenta el modelo fallback.</p>
+
+      <div class="grid">
+        <div><label>Automático</label><input id="model_auto" placeholder="auto" /></div>
+        <div><label>Copywriting</label><input id="model_copy" placeholder="gpt-4o-mini / llama / gemini..." /></div>
+        <div><label>Rápido</label><input id="model_fast" placeholder="groq/llama rápido..." /></div>
+        <div><label>Calidad</label><input id="model_quality" placeholder="modelo de mayor calidad..." /></div>
+        <div><label>Creativo</label><input id="model_creative" placeholder="modelo creativo..." /></div>
+        <div><label>Análisis</label><input id="model_analysis" placeholder="modelo para análisis..." /></div>
+      </div>
+
+      <label>Modelos fallback separados por coma</label>
+      <input id="fallbackModels" placeholder="auto,gpt-4o-mini,llama-3.1,gemini,groq" />
+
+      <div class="actions">
+        <button class="btn" onclick="saveSettings()">Guardar configuración</button>
+        <button class="btn secondary" onclick="loadSettings()">Cargar</button>
+        <button class="btn secondary" onclick="fillExampleSettings()">Ejemplo</button>
+        <button class="btn danger" onclick="clearSettings()">Borrar</button>
+      </div>
+    </section>
+
+    <section id="manual" class="section hidden">
+      <h2>📘 Manual de uso</h2>
+
+      <div class="card" style="padding:16px;margin-bottom:14px;">
+        <h3>Dónde se aprovecha FreeLLMAPI</h3>
+        <p>Este HTML usa una sola URL compatible con OpenAI. Si esa URL apunta a FreeLLMAPI, el panel puede enviar solicitudes a múltiples proveedores desde un solo lugar.</p>
+        <p>Además, incluye perfiles de modelos, fallback, multiagentes, generación masiva y CRM con mensajes inteligentes.</p>
+      </div>
+
+      <div class="card" style="padding:16px;margin-bottom:14px;">
+        <h3>Cómo conectarlo</h3>
+        <p>1. Monta FreeLLMAPI en un servidor, VPS, Render, Railway, Replit, Cloudflare o similar.</p>
+        <p>2. Copia el endpoint <span class="mono">/v1/chat/completions</span>.</p>
+        <p>3. Pégalo en Configuración FreeLLMAPI.</p>
+        <p>4. Coloca los modelos disponibles o usa <span class="mono">auto</span>.</p>
+      </div>
+
+      <div class="card" style="padding:16px;">
+        <h3>Reglas de seguridad comercial</h3>
+        <p>No prometas curas, resultados médicos ni ingresos garantizados. Usa lenguaje de bienestar, educación, curiosidad y oportunidad responsable.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  OneMore AI Hub v2 · FreeLLMAPI-ready · HTML único para GitHub Pages
+</footer>
+
+<script>
+  const STORE = {
+    settings:'om_v2_settings',
+    prospects:'om_v2_prospects',
+    metrics:'om_v2_metrics'
+  };
+
+  function showSection(id, btn){
+    document.querySelectorAll('.section').forEach(s=>s.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+    document.querySelectorAll('.sidebar button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    refreshDashboard();
+  }
+
+  function getMetrics(){
+    return JSON.parse(localStorage.getItem(STORE.metrics) || '{"calls":0,"fallbacks":0}');
+  }
+  function setMetrics(m){ localStorage.setItem(STORE.metrics, JSON.stringify(m)); }
+
+  function getSettings(){
+    return JSON.parse(localStorage.getItem(STORE.settings) || '{}');
+  }
+
+  function saveSettings(){
+    const s = {
+      apiUrl: val('apiUrl'),
+      apiKey: val('apiKey'),
+      models: {
+        auto: val('model_auto') || 'auto',
+        copy: val('model_copy') || val('model_auto') || 'auto',
+        fast: val('model_fast') || val('model_auto') || 'auto',
+        quality: val('model_quality') || val('model_auto') || 'auto',
+        creative: val('model_creative') || val('model_auto') || 'auto',
+        analysis: val('model_analysis') || val('model_auto') || 'auto'
+      },
+      fallbackModels: val('fallbackModels') || 'auto'
+    };
+    localStorage.setItem(STORE.settings, JSON.stringify(s));
+    alert('Configuración guardada.');
+    refreshDashboard();
+  }
+
+  function loadSettings(){
+    const s = getSettings();
+    setVal('apiUrl', s.apiUrl || '');
+    setVal('apiKey', s.apiKey || '');
+    setVal('model_auto', s.models?.auto || 'auto');
+    setVal('model_copy', s.models?.copy || '');
+    setVal('model_fast', s.models?.fast || '');
+    setVal('model_quality', s.models?.quality || '');
+    setVal('model_creative', s.models?.creative || '');
+    setVal('model_analysis', s.models?.analysis || '');
+    setVal('fallbackModels', s.fallbackModels || 'auto,gpt-4o-mini,llama-3.1,gemini,groq');
+    refreshDashboard();
+  }
+
+  function fillExampleSettings(){
+    setVal('apiUrl','https://TU-FREELLMAPI.com/v1/chat/completions');
+    setVal('apiKey','');
+    setVal('model_auto','auto');
+    setVal('model_copy','auto');
+    setVal('model_fast','auto');
+    setVal('model_quality','auto');
+    setVal('model_creative','auto');
+    setVal('model_analysis','auto');
+    setVal('fallbackModels','auto,gpt-4o-mini,llama-3.1,gemini,groq,mistral');
+  }
+
+  function clearSettings(){
+    localStorage.removeItem(STORE.settings);
+    loadSettings();
+    alert('Configuración borrada.');
+  }
+
+  function val(id){ return document.getElementById(id).value.trim(); }
+  function setVal(id,v){ document.getElementById(id).value = v; }
+  function clearById(id){ document.getElementById(id).textContent = ''; }
+  function copyById(id){
+    navigator.clipboard.writeText(document.getElementById(id).textContent || '');
+    alert('Copiado.');
+  }
+
+  function modelForMode(mode){
+    const s = getSettings();
+    return s.models?.[mode] || s.models?.auto || 'auto';
+  }
+
+  async function callLLM({mode='auto', prompt='', system='Eres un asistente útil.', temperature=.75, outputId=null}){
+    const s = getSettings();
+    if(!s.apiUrl) throw new Error('Falta configurar la URL FreeLLMAPI en Configuración.');
+
+    const primary = modelForMode(mode);
+    const fallbacks = (s.fallbackModels || '').split(',').map(x=>x.trim()).filter(Boolean);
+    const candidates = [...new Set([primary, ...fallbacks])];
+
+    let lastError = null;
+
+    for(let i=0;i<candidates.length;i++){
+      const model = candidates[i];
+      try{
+        const res = await fetch(s.apiUrl,{
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+            ...(s.apiKey ? {'Authorization':'Bearer '+s.apiKey} : {})
+          },
+          body:JSON.stringify({
+            model,
+            messages:[
+              {role:'system', content:system},
+              {role:'user', content:prompt}
+            ],
+            temperature
+          })
+        });
+
+        const data = await res.json();
+        if(!res.ok) throw new Error(data.error?.message || JSON.stringify(data).slice(0,300));
+
+        const content = data.choices?.[0]?.message?.content || data.choices?.[0]?.text;
+        if(!content) throw new Error('Respuesta sin contenido útil.');
+
+        const m = getMetrics();
+        m.calls += 1;
+        if(i>0) m.fallbacks += 1;
+        setMetrics(m);
+
+        window.lastActiveModel = model;
+        window.lastProvider = new URL(s.apiUrl).hostname || 'endpoint configurado';
+        refreshDashboard();
+        return content;
+      }catch(e){
+        lastError = e;
+        if(outputId){
+          document.getElementById(outputId).textContent += `\n\n⚠️ Falló modelo ${model}. Probando siguiente...`;
+        }
+      }
+    }
+    throw lastError || new Error('No se pudo conectar con ningún modelo.');
+  }
+
+  async function generateAI(){
+    const output = document.getElementById('mainOutput');
+    output.textContent = 'Generando con FreeLLMAPI...';
+
+    const mode = val('aiMode');
+    const prompt = `
+Crea el siguiente contenido para un networker de One More International.
+
+Tipo: ${val('contentType')}
+Tono: ${val('tone')}
+Tema: ${val('topic')}
+Contexto: ${val('context')}
+
+Reglas:
+- No prometas curas.
+- No digas que cura enfermedades.
+- No prometas ingresos garantizados.
+- Evita lenguaje exagerado.
+- Usa curiosidad, educación y llamada a la acción suave.
+- Máximo 180 palabras.
+- En español claro y humano.
+`;
+    try{
+      const text = await callLLM({
+        mode,
+        prompt,
+        system:'Eres experto en copywriting ético, wellness, redes sociales y network marketing profesional.',
+        temperature:.82,
+        outputId:'mainOutput'
+      });
+      output.textContent = text;
+    }catch(e){
+      output.textContent = 'Error: '+e.message;
+    }
+  }
+
+  function generateTemplate(){
+    const topic = val('topic') || 'esta tecnología de bienestar';
+    const context = val('context') || 'personas que quieren mejorar su rutina';
+    document.getElementById('mainOutput').textContent =
+`Hola 👋
+
+Vi algo que puede interesarte. Estoy compartiendo información sobre ${topic}.
+
+No es medicina, no es una promesa mágica y tampoco quiero presionarte. La idea es que lo revises con calma y veas si hace sentido para ti.
+
+Por el contexto: ${context}, creo que puede llamarte la atención.
+
+¿Quieres que te envíe una explicación corta?`;
+  }
+
+  async function runAgents(){
+    const out = document.getElementById('agentsOutput');
+    out.textContent = 'Ejecutando agente 1: Estrategia...';
+
+    const goal = val('agentGoal');
+    const audience = val('agentAudience');
+    const offer = val('agentOffer');
+
+    try{
+      const strategy = await callLLM({
+        mode:'analysis',
+        prompt:`Diseña una estrategia breve para esta campaña:
+Objetivo: ${goal}
+Audiencia: ${audience}
+Oferta/mensaje: ${offer}
+Entrega 5 ángulos de comunicación seguros y éticos.`,
+        system:'Eres estratega senior de marketing ético para networkers.',
+        temperature:.65,
+        outputId:'agentsOutput'
+      });
+
+      out.textContent += '\n\nEjecutando agente 2: Copywriting...';
+
+      const copy = await callLLM({
+        mode:'copy',
+        prompt:`Usa esta estrategia:\n${strategy}\n\nCrea 5 piezas listas para publicar. Tema: ${offer}. Audiencia: ${audience}.`,
+        system:'Eres copywriter experto en contenido de curiosidad, ventas conversacionales y redes sociales.',
+        temperature:.82,
+        outputId:'agentsOutput'
+      });
+
+      out.textContent += '\n\nEjecutando agente 3: Cumplimiento...';
+
+      const compliance = await callLLM({
+        mode:'analysis',
+        prompt:`Revisa este copy y ajusta cualquier frase riesgosa. No promesas médicas, no curas, no ingresos garantizados:\n${copy}`,
+        system:'Eres auditor de cumplimiento para wellness y marketing responsable.',
+        temperature:.35,
+        outputId:'agentsOutput'
+      });
+
+      out.textContent =
+`✅ RESULTADO MULTIAGENTE
+
+## 1. Estrategia
+${strategy}
+
+## 2. Copy inicial
+${copy}
+
+## 3. Versión revisada y segura
+${compliance}`;
+    }catch(e){
+      out.textContent += '\n\nError: '+e.message;
+    }
+  }
+
+  async function generateBulk(){
+    const out = document.getElementById('bulkOutput');
+    out.textContent = 'Generando lote...';
+
+    const prompt = `
+Genera ${val('bulkCount')} piezas de contenido.
+Formato: ${val('bulkFormat')}
+Tema base: ${val('bulkTopic')}
+
+Reglas:
+- Cada pieza debe estar numerada.
+- Estilo humano, curioso y directo.
+- Sin promesas médicas.
+- Sin ingresos garantizados.
+- Incluye CTA suave.
+`;
+    try{
+      out.textContent = await callLLM({
+        mode:'fast',
+        prompt,
+        system:'Eres creador de contenido rápido para Facebook, WhatsApp, Reels y network marketing ético.',
+        temperature:.9,
+        outputId:'bulkOutput'
+      });
+    }catch(e){
+      out.textContent = 'Error: '+e.message;
+    }
+  }
+
+  function answerObjection(){
+    const objection = val('objectionSelect');
+    const tone = val('objectionTone');
+    const map = {
+      'No tengo dinero':`Te entiendo totalmente. No quiero presionarte. Primero revisa la información y mira si tiene sentido para ti. A veces una buena decisión empieza solo por entender mejor la oportunidad.`,
+      'No tengo tiempo':`Te entiendo. Precisamente por eso la información inicial es corta. No necesitas cambiar tu vida de golpe; solo revisar si esto encaja contigo.`,
+      'Eso parece pirámide':`Comprendo la duda. La diferencia importante es que aquí hablamos de productos reales, consumo y distribución. Te puedo mostrar la información de forma clara para que tú mismo evalúes.`,
+      'Tengo que pensarlo':`Claro, pensarlo es válido. Solo te propongo que lo pienses con información completa, no con dudas sueltas. Te puedo enviar un resumen breve.`,
+      'No creo en redes de mercadeo':`Lo respeto. Muchas personas han visto malas prácticas. Yo lo trabajo desde producto, educación, relaciones y seguimiento profesional.`,
+      'No me interesa':`Gracias por decírmelo con sinceridad. No hay problema. Si más adelante te da curiosidad o conoces a alguien a quien pueda servirle, aquí estoy.`,
+      '¿Eso cura enfermedades?':`No. No lo presento como medicina ni como cura. Lo correcto es hablar de bienestar y hábitos saludables. Para temas médicos, siempre se debe consultar a un profesional.`
+    };
+    document.getElementById('objectionOutput').textContent = `Tono: ${tone}\n\n${map[objection]}`;
+  }
+
+  async function answerObjectionAI(){
+    const out = document.getElementById('objectionOutput');
+    out.textContent = 'Generando respuesta con IA...';
+    try{
+      out.textContent = await callLLM({
+        mode:'copy',
+        prompt:`Responde esta objeción de forma ${val('objectionTone')}, breve, ética y profesional: "${val('objectionSelect')}". Contexto: One More, bienestar, producto y/o oportunidad. No prometer curas ni ingresos.`,
+        system:'Eres experto en ventas conversacionales éticas.',
+        temperature:.7,
+        outputId:'objectionOutput'
+      });
+    }catch(e){
+      out.textContent = 'Error: '+e.message;
+    }
+  }
+
+  function saveProspect(){
+    const p = {
+      name:val('pName'),
+      country:val('pCountry'),
+      interest:val('pInterest'),
+      status:val('pStatus'),
+      notes:val('pNotes'),
+      date:new Date().toLocaleString()
+    };
+    if(!p.name){alert('Coloca el nombre.');return;}
+    const arr = JSON.parse(localStorage.getItem(STORE.prospects)||'[]');
+    arr.push(p);
+    localStorage.setItem(STORE.prospects, JSON.stringify(arr));
+    setVal('pName',''); setVal('pCountry',''); setVal('pNotes','');
+    loadProspects();
+  }
+
+  function loadProspects(){
+    const arr = JSON.parse(localStorage.getItem(STORE.prospects)||'[]');
+    const box = document.getElementById('prospectsList');
+    if(!arr.length){ box.innerHTML='<p class="small">No hay prospectos guardados.</p>'; return; }
+    box.innerHTML = arr.map((p,i)=>`
+      <div class="prospect">
+        <strong>${escapeHTML(p.name)}</strong> · ${escapeHTML(p.country || 'Sin país')}<br>
+        Interés: ${escapeHTML(p.interest)} · Estado: ${escapeHTML(p.status)}<br>
+        Notas: ${escapeHTML(p.notes || 'Sin notas')}<br>
+        Fecha: ${escapeHTML(p.date)}
+        <div class="actions">
+          <button class="btn secondary" onclick="followUpTemplate(${i})">Seguimiento rápido</button>
+          <button class="btn" onclick="followUpAI(${i})">Seguimiento IA</button>
+          <button class="btn danger" onclick="deleteProspect(${i})">Eliminar</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function followUpTemplate(i){
+    const p = JSON.parse(localStorage.getItem(STORE.prospects)||'[]')[i];
+    const msg = `Hola ${p.name}, ¿cómo estás?\n\nQuería hacerte seguimiento con calma sobre lo que hablamos de ${p.interest.toLowerCase()}.\n\nNo quiero presionarte. Solo me gustaría enviarte una explicación corta para que veas si hace sentido para ti.\n\n¿Te la comparto?`;
+    document.getElementById('mainOutput').textContent = msg;
+    showSection('generator', document.querySelectorAll('.sidebar button')[1]);
+  }
+
+  async function followUpAI(i){
+    const p = JSON.parse(localStorage.getItem(STORE.prospects)||'[]')[i];
+    document.getElementById('mainOutput').textContent = 'Generando seguimiento IA...';
+    showSection('generator', document.querySelectorAll('.sidebar button')[1]);
+    try{
+      document.getElementById('mainOutput').textContent = await callLLM({
+        mode:'copy',
+        prompt:`Crea un mensaje de seguimiento para WhatsApp:
+Nombre: ${p.name}
+País: ${p.country}
+Interés: ${p.interest}
+Estado: ${p.status}
+Notas: ${p.notes}
+
+Debe ser breve, humano, sin presión, con CTA suave.`,
+        system:'Eres experto en seguimiento conversacional para network marketing ético.',
+        temperature:.75,
+        outputId:'mainOutput'
+      });
+    }catch(e){
+      document.getElementById('mainOutput').textContent = 'Error: '+e.message;
+    }
+  }
+
+  function deleteProspect(i){
+    const arr = JSON.parse(localStorage.getItem(STORE.prospects)||'[]');
+    arr.splice(i,1);
+    localStorage.setItem(STORE.prospects, JSON.stringify(arr));
+    loadProspects();
+  }
+
+  function clearProspects(){
+    if(confirm('¿Borrar todos los prospectos?')){
+      localStorage.removeItem(STORE.prospects);
+      loadProspects();
+    }
+  }
+
+  async function testConnection(){
+    const out = document.getElementById('dashboardOutput');
+    out.textContent = 'Probando conexión...';
+    try{
+      const text = await callLLM({
+        mode:'auto',
+        prompt:'Responde solo: Conexión IA operativa.',
+        system:'Responde breve.',
+        temperature:.1,
+        outputId:'dashboardOutput'
+      });
+      out.textContent = '✅ '+text;
+    }catch(e){
+      out.textContent = '❌ Error de conexión: '+e.message;
+    }
+  }
+
+  function refreshDashboard(){
+    const s = getSettings();
+    const m = getMetrics();
+    document.getElementById('statProvider').textContent = window.lastProvider || (s.apiUrl ? safeHost(s.apiUrl) : 'No conectado');
+    document.getElementById('statModel').textContent = window.lastActiveModel || s.models?.auto || 'Sin modelo';
+    document.getElementById('statCalls').textContent = m.calls || 0;
+    document.getElementById('statFallbacks').textContent = m.fallbacks || 0;
+
+    const models = s.models || {};
+    const html = ['auto','copy','fast','quality','creative','analysis'].map(k=>{
+      const v = models[k] || 'sin configurar';
+      const cls = v === 'sin configurar' ? 'warn' : 'ok';
+      return `<span class="pill ${cls}">${k}: ${escapeHTML(v)}</span>`;
+    }).join('');
+    document.getElementById('profileStatus').innerHTML = html || '<span class="pill warn">Sin configuración</span>';
+  }
+
+  function safeHost(url){
+    try{return new URL(url).hostname}catch(e){return 'endpoint configurado'}
+  }
+
+  function escapeHTML(str){
+    return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  }
+
+  window.onload = function(){
+    loadSettings();
+    loadProspects();
+    refreshDashboard();
+  };
+</script>
+</body>
+</html>

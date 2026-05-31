@@ -3,901 +3,598 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Auditoría Digital Local para Negocios</title>
+  <title>Auditoría Digital Local Pro</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/3.0.3/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
   <style>
-    :root {
-      --bg: #0f172a;
-      --panel: #111827;
-      --panel-2: #1f2937;
-      --card: #ffffff;
-      --muted: #64748b;
-      --text: #0f172a;
-      --white: #ffffff;
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --green: #16a34a;
-      --red: #dc2626;
-      --yellow: #d97706;
-      --border: #e5e7eb;
-      --shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+    :root{
+      --bg:#f1f5f9;--dark:#0f172a;--muted:#64748b;--border:#e2e8f0;
+      --primary:#2563eb;--green:#16a34a;--red:#dc2626;--yellow:#d97706;--shadow:0 18px 45px rgba(15,23,42,.14)
     }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f1f5f9;
-      color: var(--text);
-    }
-
-    header {
-      background: linear-gradient(135deg, #0f172a, #1d4ed8);
-      color: white;
-      padding: 28px 18px;
-    }
-
-    .wrap {
-      width: min(1260px, 94vw);
-      margin: 0 auto;
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 1.35fr 0.65fr;
-      gap: 22px;
-      align-items: center;
-    }
-
-    h1 {
-      font-size: clamp(28px, 4vw, 46px);
-      line-height: 1.05;
-      margin: 0 0 10px;
-    }
-
-    .subtitle {
-      font-size: 17px;
-      opacity: 0.92;
-      max-width: 850px;
-      line-height: 1.55;
-    }
-
-    .hero-card {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.24);
-      border-radius: 22px;
-      padding: 18px;
-      backdrop-filter: blur(6px);
-    }
-
-    .hero-card strong {
-      font-size: 34px;
-      display: block;
-    }
-
-    main {
-      padding: 24px 0 50px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 20px;
-      align-items: start;
-    }
-
-    .card {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      box-shadow: var(--shadow);
-      padding: 18px;
-      margin-bottom: 18px;
-    }
-
-    .card h2, .card h3 {
-      margin: 0 0 14px;
-    }
-
-    label {
-      display: block;
-      font-size: 13px;
-      font-weight: 700;
-      color: #334155;
-      margin-bottom: 6px;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      border: 1px solid #cbd5e1;
-      border-radius: 12px;
-      padding: 11px 12px;
-      font-size: 14px;
-      outline: none;
-      background: #fff;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-    }
-
-    textarea {
-      min-height: 130px;
-      resize: vertical;
-    }
-
-    .row {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .row-3 {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    button {
-      border: 0;
-      border-radius: 12px;
-      padding: 11px 14px;
-      font-weight: 700;
-      cursor: pointer;
-      background: var(--primary);
-      color: white;
-      transition: 0.2s ease;
-    }
-
-    button:hover { background: var(--primary-dark); transform: translateY(-1px); }
-    button.secondary { background: #334155; }
-    button.success { background: var(--green); }
-    button.warning { background: var(--yellow); }
-    button.danger { background: var(--red); }
-    button.light { background: #e2e8f0; color: #0f172a; }
-
-    .map-box {
-      overflow: hidden;
-      border-radius: 18px;
-      border: 1px solid #cbd5e1;
-      height: 410px;
-      background: #e2e8f0;
-    }
-
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
-
-    .small {
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.45;
-    }
-
-    .score-box {
-      display: grid;
-      grid-template-columns: 140px 1fr;
-      gap: 16px;
-      align-items: center;
-    }
-
-    .score-circle {
-      width: 130px;
-      height: 130px;
-      border-radius: 50%;
-      background: conic-gradient(var(--primary) 0deg, #e5e7eb 0deg);
-      display: grid;
-      place-items: center;
-      position: relative;
-    }
-
-    .score-circle::before {
-      content: "";
-      width: 96px;
-      height: 96px;
-      border-radius: 50%;
-      background: white;
-      position: absolute;
-    }
-
-    .score-value {
-      position: relative;
-      font-size: 34px;
-      font-weight: 900;
-    }
-
-    .score-label {
-      font-size: 13px;
-      color: #475569;
-    }
-
-    .category-score {
-      margin: 8px 0;
-    }
-
-    .bar {
-      background: #e5e7eb;
-      border-radius: 999px;
-      height: 10px;
-      overflow: hidden;
-      margin-top: 5px;
-    }
-
-    .bar > span {
-      display: block;
-      height: 100%;
-      width: 0%;
-      background: var(--primary);
-      transition: 0.2s ease;
-    }
-
-    .check-category {
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      margin-bottom: 14px;
-      overflow: hidden;
-    }
-
-    .check-title {
-      background: #f8fafc;
-      padding: 12px 14px;
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      font-weight: 900;
-    }
-
-    .check-item {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      padding: 12px 14px;
-      border-top: 1px solid #e2e8f0;
-      align-items: center;
-    }
-
-    .impact {
-      font-size: 11px;
-      border-radius: 999px;
-      padding: 4px 8px;
-      font-weight: 900;
-      margin-left: 6px;
-    }
-
-    .critical { background: #fee2e2; color: #991b1b; }
-    .medium { background: #fef3c7; color: #92400e; }
-    .low { background: #dcfce7; color: #166534; }
-
-    .status-buttons {
-      display: flex;
-      gap: 6px;
-    }
-
-    .status-buttons button {
-      padding: 8px 10px;
-      border-radius: 10px;
-      background: #e2e8f0;
-      color: #0f172a;
-    }
-
-    .status-buttons button.active.ok { background: #16a34a; color: white; }
-    .status-buttons button.active.fail { background: #dc2626; color: white; }
-    .status-buttons button.active.partial { background: #d97706; color: white; }
-
-    .prompt-card {
-      border: 1px solid #e2e8f0;
-      border-radius: 14px;
-      padding: 12px;
-      margin-bottom: 10px;
-      background: #f8fafc;
-    }
-
-    .prompt-card h4 { margin: 0 0 8px; }
-
-    .prompt-card pre {
-      white-space: pre-wrap;
-      background: #0f172a;
-      color: #e5e7eb;
-      padding: 12px;
-      border-radius: 12px;
-      max-height: 180px;
-      overflow: auto;
-      font-size: 12px;
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #e0f2fe;
-      color: #075985;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .alert {
-      padding: 12px;
-      border-radius: 14px;
-      background: #fff7ed;
-      border: 1px solid #fed7aa;
-      color: #9a3412;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .hidden { display: none; }
-
-    .history-item {
-      padding: 10px;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      margin-bottom: 8px;
-      background: #f8fafc;
-    }
-
-    .footer-note {
-      text-align: center;
-      color: #64748b;
-      font-size: 12px;
-      margin-top: 20px;
-    }
-
-    @media (max-width: 900px) {
-      .hero, .grid, .score-box, .row, .row-3 {
-        grid-template-columns: 1fr;
-      }
-      .map-box { height: 330px; }
-    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--dark)}
+    header{background:linear-gradient(135deg,#0f172a,#1d4ed8);color:#fff;padding:28px 18px}
+    .wrap{width:min(1280px,94vw);margin:auto}
+    .hero{display:grid;grid-template-columns:1.25fr .75fr;gap:22px;align-items:center}
+    h1{font-size:clamp(28px,4vw,46px);line-height:1.05;margin:0 0 10px}
+    .subtitle{font-size:17px;opacity:.93;line-height:1.55;max-width:900px}
+    .hero-card{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:22px;padding:18px}
+    .hero-card strong{font-size:38px;display:block}
+    .pill{display:inline-flex;background:#e0f2fe;color:#075985;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800;margin:3px}
+    main{padding:24px 0 50px}
+    .grid{display:grid;grid-template-columns:1.08fr .92fr;gap:20px;align-items:start}
+    .card{background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:18px;margin-bottom:18px}
+    .card h2,.card h3{margin:0 0 14px}
+    label{display:block;font-size:13px;font-weight:800;color:#334155;margin-bottom:6px}
+    input,select,textarea{width:100%;border:1px solid #cbd5e1;border-radius:12px;padding:11px 12px;font-size:14px;outline:0;background:#fff}
+    textarea{min-height:135px;resize:vertical}
+    input:focus,textarea:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.13)}
+    .row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .row-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    button{border:0;border-radius:12px;padding:11px 14px;font-weight:800;cursor:pointer;background:var(--primary);color:#fff;transition:.2s}
+    button:hover{transform:translateY(-1px);filter:brightness(.95)}
+    button.secondary{background:#334155}button.success{background:var(--green)}button.warning{background:var(--yellow)}button.danger{background:var(--red)}button.light{background:#e2e8f0;color:#0f172a}
+    .small{font-size:12px;color:var(--muted);line-height:1.45}
+    .alert{padding:12px;border-radius:14px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:13px;line-height:1.5}
+    #map{height:430px;border-radius:18px;border:1px solid #cbd5e1;background:#e2e8f0;overflow:hidden}
+    .photo-strip{display:flex;gap:8px;overflow:auto;margin-top:10px}
+    .photo-strip img{width:105px;height:78px;object-fit:cover;border-radius:12px;border:1px solid var(--border)}
+    .score-box{display:grid;grid-template-columns:140px 1fr;gap:16px;align-items:center}
+    .score-circle{width:130px;height:130px;border-radius:50%;background:conic-gradient(var(--primary) 0deg,#e5e7eb 0deg);display:grid;place-items:center;position:relative}
+    .score-circle:before{content:"";width:96px;height:96px;border-radius:50%;background:#fff;position:absolute}
+    .score-value{position:relative;font-size:34px;font-weight:900}
+    .bar{background:#e5e7eb;border-radius:999px;height:10px;overflow:hidden;margin-top:5px}.bar span{display:block;height:100%;width:0;background:var(--primary)}
+    .check-category{border:1px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden}
+    .check-title{background:#f8fafc;padding:12px 14px;display:flex;justify-content:space-between;font-weight:900}
+    .check-item{display:grid;grid-template-columns:1fr auto;gap:12px;padding:12px 14px;border-top:1px solid var(--border);align-items:center}
+    .impact{font-size:11px;border-radius:999px;padding:4px 8px;font-weight:900;margin-left:6px}
+    .critical{background:#fee2e2;color:#991b1b}.medium{background:#fef3c7;color:#92400e}.low{background:#dcfce7;color:#166534}
+    .status-buttons{display:flex;gap:6px}.status-buttons button{padding:8px 10px;border-radius:10px;background:#e2e8f0;color:#0f172a}
+    .status-buttons button.active.ok{background:var(--green);color:#fff}.status-buttons button.active.fail{background:var(--red);color:#fff}.status-buttons button.active.partial{background:var(--yellow);color:#fff}
+    .prompt-card,.client-item{border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:10px;background:#f8fafc}
+    .prompt-card pre{white-space:pre-wrap;background:#0f172a;color:#e5e7eb;padding:12px;border-radius:12px;max-height:170px;overflow:auto;font-size:12px}
+    .proposal-preview{background:#fff;border:1px solid var(--border);border-radius:18px;padding:22px;line-height:1.55}.proposal-preview h2{color:#1d4ed8}
+    .proposal-metric{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:12px}.metric strong{font-size:24px;display:block}
+    .footer-note{text-align:center;color:#64748b;font-size:12px;margin-top:20px}
+    @media(max-width:950px){.hero,.grid,.score-box,.row,.row-3,.proposal-metric{grid-template-columns:1fr}#map{height:340px}}
   </style>
 </head>
 <body>
-  <header>
-    <div class="wrap hero">
-      <div>
-        <h1>Auditoría Digital Local para Negocios</h1>
-        <p class="subtitle">Busca un negocio por nombre o dirección, revisa su presencia digital, calcula un score comercial en tiempo real y genera una propuesta completa con Claude o prompts listos para ChatGPT.</p>
-        <div class="actions">
-          <span class="pill">Google Maps</span>
-          <span class="pill">Checklist 24 puntos</span>
-          <span class="pill">Claude API</span>
-          <span class="pill">Exportación TXT</span>
-        </div>
-      </div>
-      <div class="hero-card">
-        <strong id="heroScore">0%</strong>
-        <span>Score actual de la auditoría</span>
-        <p class="small">Completa el checklist y genera una propuesta comercial en minutos.</p>
-      </div>
+<header>
+  <div class="wrap hero">
+    <div>
+      <h1>Auditoría Digital Local Pro</h1>
+      <p class="subtitle">Busca negocios reales con Google Places, trae rating, reseñas, fotos y dirección; completa checklist, genera propuesta, exporta PDF, envía por WhatsApp y guarda auditorías por cliente.</p>
+      <span class="pill">Google Places API</span><span class="pill">PDF comercial</span><span class="pill">WhatsApp</span><span class="pill">Clientes</span><span class="pill">Claude API</span>
     </div>
-  </header>
+    <div class="hero-card"><strong id="heroScore">0%</strong><span>Score actual</span><p class="small">Más bajo el score, mayor oportunidad de venta consultiva.</p></div>
+  </div>
+</header>
 
-  <main class="wrap">
-    <div class="grid">
-      <section>
-        <div class="card">
-          <h2>1. Buscar negocio o dirección</h2>
-          <label for="searchInput">Nombre del negocio, dirección o ciudad</label>
-          <input id="searchInput" placeholder="Ej: restaurante italiano Laureles Medellín" />
-          <div class="actions">
-            <button onclick="searchMap()">Buscar en Google Maps</button>
-            <button class="secondary" onclick="useMyLocation()">Usar mi ubicación</button>
-            <button class="light" onclick="loadDemo()">Cargar demo</button>
-          </div>
-          <p class="small" id="cityHint">Detecta ciudades colombianas como Medellín, Bogotá, Cali, Barranquilla, Cartagena, Bucaramanga, Pereira, Manizales, Cúcuta y Armenia.</p>
-          <div class="map-box" style="margin-top:14px;">
-            <iframe id="mapFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Medell%C3%ADn%20Colombia&output=embed"></iframe>
-          </div>
+<main class="wrap">
+  <div class="grid">
+    <section>
+      <div class="card">
+        <h2>1. Conectar Google Places API</h2>
+        <div class="alert">Necesitas una API Key de Google Maps Platform con Maps JavaScript API y Places API habilitadas. Restringe la clave por dominio para protegerla.</div>
+        <div class="row" style="margin-top:12px">
+          <div><label>Google Maps API Key</label><input id="googleKey" type="password" placeholder="AIza..." /></div>
+          <div><label>País de búsqueda</label><select id="countryBias"><option value="co">Colombia</option><option value="ve">Venezuela</option><option value="do">República Dominicana</option><option value="us">Estados Unidos</option><option value="mx">México</option><option value="">Global</option></select></div>
         </div>
+        <div class="actions"><button onclick="loadGoogleMaps()">Activar Places</button><button class="light" onclick="loadDemo()">Cargar demo</button><button class="secondary" onclick="runTests()">Probar app</button></div>
+      </div>
 
-        <div class="card">
-          <h2>2. Datos del negocio</h2>
-          <div class="row">
-            <div>
-              <label>Nombre</label>
-              <input id="businessName" placeholder="Nombre comercial" oninput="refreshAll()" />
-            </div>
-            <div>
-              <label>Categoría</label>
-              <input id="category" placeholder="Restaurante, clínica, tienda, barbería..." oninput="refreshAll()" />
-            </div>
-            <div>
-              <label>Ciudad</label>
-              <input id="city" placeholder="Ciudad" oninput="refreshAll()" />
-            </div>
-            <div>
-              <label>Teléfono / WhatsApp</label>
-              <input id="phone" placeholder="+57..." oninput="refreshAll()" />
-            </div>
-            <div>
-              <label>Sitio web</label>
-              <input id="website" placeholder="https://..." oninput="refreshAll()" />
-            </div>
-            <div>
-              <label>Estado Google Business Profile</label>
-              <select id="gmbStatus" onchange="refreshAll()">
-                <option value="No verificado">No verificado</option>
-                <option value="Verificado pero incompleto">Verificado pero incompleto</option>
-                <option value="Verificado y optimizado">Verificado y optimizado</option>
-                <option value="No encontrado">No encontrado</option>
-              </select>
-            </div>
-          </div>
+      <div class="card">
+        <h2>2. Buscar negocio real</h2>
+        <label>Nombre, categoría o dirección</label>
+        <input id="searchInput" placeholder="Ej: restaurante italiano Laureles Medellín" />
+        <div class="actions"><button onclick="textSearchPlace()">Buscar negocio</button><button class="secondary" onclick="useMyLocation()">Usar mi ubicación</button><button class="light" onclick="manualMapSearch()">Mapa simple</button></div>
+        <p class="small" id="placesStatus">Sin conectar. Puedes usar el mapa simple o pegar una API key para búsqueda real.</p>
+        <div id="map" style="margin-top:14px"></div>
+        <div id="photos" class="photo-strip"></div>
+      </div>
 
-          <div class="row-3" style="margin-top:12px;">
-            <div>
-              <label>Rating</label>
-              <input id="rating" type="number" min="0" max="5" step="0.1" placeholder="4.2" oninput="refreshAll()" />
-            </div>
-            <div>
-              <label>Número de reseñas</label>
-              <input id="reviews" type="number" min="0" placeholder="128" oninput="refreshAll()" />
-            </div>
-            <div>
-              <label>Redes activas</label>
-              <input id="socials" placeholder="Instagram, Facebook, TikTok" oninput="refreshAll()" />
-            </div>
-          </div>
+      <div class="card">
+        <h2>3. Datos del negocio</h2>
+        <div class="row">
+          <div><label>Cliente / dueño</label><input id="clientName" placeholder="Nombre del dueño o contacto" oninput="refreshAll()" /></div>
+          <div><label>Nombre del negocio</label><input id="businessName" oninput="refreshAll()" /></div>
+          <div><label>Categoría</label><input id="category" oninput="refreshAll()" /></div>
+          <div><label>Dirección real</label><input id="address" oninput="refreshAll()" /></div>
+          <div><label>Ciudad</label><input id="city" oninput="refreshAll()" /></div>
+          <div><label>Teléfono / WhatsApp</label><input id="phone" oninput="refreshAll()" /></div>
+          <div><label>Sitio web</label><input id="website" oninput="refreshAll()" /></div>
+          <div><label>Google Maps URL</label><input id="mapsUrl" oninput="refreshAll()" /></div>
         </div>
-
-        <div class="card">
-          <h2>3. Checklist de auditoría</h2>
-          <div id="checklist"></div>
+        <div class="row-3" style="margin-top:12px">
+          <div><label>Rating</label><input id="rating" type="number" min="0" max="5" step="0.1" oninput="refreshAll()" /></div>
+          <div><label>Número de reseñas</label><input id="reviews" type="number" min="0" oninput="refreshAll()" /></div>
+          <div><label>Estado GMB</label><select id="gmbStatus" onchange="refreshAll()"><option>No verificado</option><option>Verificado pero incompleto</option><option>Verificado y optimizado</option><option>No encontrado</option></select></div>
         </div>
-      </section>
+        <div style="margin-top:12px"><label>Redes activas / observaciones</label><input id="socials" placeholder="Instagram, Facebook, TikTok, comentarios visibles..." oninput="refreshAll()" /></div>
+      </div>
 
-      <aside>
-        <div class="card">
-          <h2>Score en tiempo real</h2>
-          <div class="score-box">
-            <div class="score-circle" id="scoreCircle"><span class="score-value" id="scoreValue">0%</span></div>
-            <div>
-              <div class="score-label" id="diagnosis">Completa la auditoría para ver el diagnóstico.</div>
-              <div id="categoryScores"></div>
-            </div>
-          </div>
-          <div class="actions">
-            <button class="success" onclick="exportTXT()">Exportar TXT</button>
-            <button class="warning" onclick="saveAudit()">Guardar auditoría</button>
-            <button class="danger" onclick="resetAudit()">Reiniciar</button>
-          </div>
-        </div>
+      <div class="card"><h2>4. Checklist de auditoría</h2><div id="checklist"></div></div>
+    </section>
 
-        <div class="card">
-          <h2>4. Claude API: generar propuesta automática</h2>
-          <div class="alert">
-            Recomendado: usa un endpoint proxy/serverless propio para proteger tu API key. Si llamas directo desde navegador, tu clave puede quedar expuesta y algunos navegadores pueden bloquear la petición por CORS.
-          </div>
-          <div style="margin-top:12px;">
-            <label>API Key de Anthropic Claude</label>
-            <input id="claudeKey" type="password" placeholder="sk-ant-..." />
-          </div>
-          <div style="margin-top:12px;">
-            <label>Modelo</label>
-            <input id="claudeModel" value="claude-sonnet-4-5" />
-          </div>
-          <div style="margin-top:12px;">
-            <label>Endpoint proxy opcional</label>
-            <input id="proxyEndpoint" placeholder="https://tu-dominio.com/api/claude-propuesta" />
-            <p class="small">Si colocas un proxy, el HTML enviará la auditoría a ese endpoint. Si lo dejas vacío, intentará llamar a Anthropic directamente.</p>
-          </div>
-          <div class="actions">
-            <button onclick="generateWithClaude()">Generar propuesta con Claude</button>
-            <button class="light" onclick="copyClaudePayload()">Copiar payload</button>
-          </div>
-          <label style="margin-top:12px;">Propuesta generada</label>
-          <textarea id="claudeOutput" placeholder="Aquí aparecerá la propuesta comercial generada por Claude..."></textarea>
-        </div>
+    <aside>
+      <div class="card">
+        <h2>Score y acciones</h2>
+        <div class="score-box"><div class="score-circle" id="scoreCircle"><span class="score-value" id="scoreValue">0%</span></div><div><div class="small" id="diagnosis">Completa la auditoría.</div><div id="categoryScores"></div></div></div>
+        <div class="actions"><button class="success" onclick="exportTXT()">TXT</button><button class="success" onclick="exportPDF()">PDF comercial</button><button class="warning" onclick="sendWhatsApp()">Enviar por WhatsApp</button><button class="secondary" onclick="saveClientAudit()">Guardar cliente</button></div>
+      </div>
 
-        <div class="card">
-          <h2>5. Prompts listos para ChatGPT y Claude</h2>
-          <div id="prompts"></div>
-        </div>
+      <div class="card"><h2>Clientes guardados</h2><label>Buscar cliente guardado</label><input id="clientSearch" placeholder="Nombre, ciudad o negocio" oninput="renderClients()" /><div id="clients"></div></div>
 
-        <div class="card">
-          <h2>Historial local</h2>
-          <div id="history"></div>
-        </div>
-      </aside>
-    </div>
-    <p class="footer-note">Herramienta local de auditoría. Para datos reales automáticos, integra Google Places API y un backend seguro para IA.</p>
-  </main>
+      <div class="card">
+        <h2>Claude: propuesta automática</h2>
+        <div class="alert">Para producción usa un proxy/serverless. Si llamas directo desde navegador, puede fallar por CORS y además expones la API key.</div>
+        <div style="margin-top:12px"><label>Claude API Key</label><input id="claudeKey" type="password" placeholder="sk-ant-..." /></div>
+        <div style="margin-top:12px"><label>Modelo</label><input id="claudeModel" value="claude-sonnet-4-5" /></div>
+        <div style="margin-top:12px"><label>Endpoint proxy opcional</label><input id="proxyEndpoint" placeholder="https://tu-dominio.com/api/claude-propuesta" /></div>
+        <div class="actions"><button onclick="generateWithClaude()">Generar propuesta</button><button class="light" onclick="copyClaudePayload()">Copiar payload</button></div>
+        <label style="margin-top:12px">Propuesta generada</label><textarea id="claudeOutput" placeholder="Aquí aparecerá la propuesta..."></textarea>
+      </div>
 
-  <script>
-    const cities = ["medellín", "medellin", "bogotá", "bogota", "cali", "barranquilla", "cartagena", "bucaramanga", "pereira", "manizales", "cúcuta", "cucuta", "armenia", "santa marta", "ibagué", "ibague"];
+      <div class="card"><h2>Vista previa para PDF</h2><div id="proposalPreview" class="proposal-preview"></div></div>
+      <div class="card"><h2>Prompts para ChatGPT/Claude</h2><div id="prompts"></div></div>
+    </aside>
+  </div>
+  <p class="footer-note">Versión HTML local. Para venderlo como SaaS: backend, login, base de datos y proxy seguro para Google/Claude.</p>
+</main>
 
-    const auditItems = [
-      { cat: "Google My Business", item: "Perfil existe y aparece en Google Maps", impact: "CRÍTICO" },
-      { cat: "Google My Business", item: "Perfil verificado por el dueño", impact: "CRÍTICO" },
-      { cat: "Google My Business", item: "Categoría principal correcta", impact: "CRÍTICO" },
-      { cat: "Google My Business", item: "Horario actualizado", impact: "MEDIO" },
-      { cat: "Google My Business", item: "Fotos recientes y profesionales", impact: "MEDIO" },
-      { cat: "Google My Business", item: "Descripción optimizada con palabras clave locales", impact: "MEDIO" },
+<script>
+'use strict';
 
-      { cat: "Reputación y Reseñas", item: "Rating mínimo de 4.3", impact: "CRÍTICO" },
-      { cat: "Reputación y Reseñas", item: "Más de 50 reseñas", impact: "MEDIO" },
-      { cat: "Reputación y Reseñas", item: "Responde reseñas positivas", impact: "MEDIO" },
-      { cat: "Reputación y Reseñas", item: "Responde reseñas negativas con estrategia", impact: "CRÍTICO" },
-      { cat: "Reputación y Reseñas", item: "Tiene sistema para pedir reseñas", impact: "CRÍTICO" },
-      { cat: "Reputación y Reseñas", item: "Reseñas mencionan productos/servicios clave", impact: "BAJO" },
+var map = null;
+var placesService = null;
+var autocompleteService = null;
+var marker = null;
+var userLocation = null;
 
-      { cat: "Sitio Web y SEO Local", item: "Tiene sitio web funcional", impact: "CRÍTICO" },
-      { cat: "Sitio Web y SEO Local", item: "Carga rápido en celular", impact: "CRÍTICO" },
-      { cat: "Sitio Web y SEO Local", item: "Tiene botón visible de WhatsApp o llamada", impact: "CRÍTICO" },
-      { cat: "Sitio Web y SEO Local", item: "Título y metadescripción optimizados", impact: "MEDIO" },
-      { cat: "Sitio Web y SEO Local", item: "Página de servicios clara", impact: "MEDIO" },
-      { cat: "Sitio Web y SEO Local", item: "Dirección, teléfono y ciudad consistentes", impact: "MEDIO" },
+var cities = ['medellín','medellin','bogotá','bogota','cali','barranquilla','cartagena','bucaramanga','pereira','manizales','cúcuta','cucuta','armenia','santa marta','ibagué','ibague'];
 
-      { cat: "Redes Sociales", item: "Instagram o Facebook activos", impact: "MEDIO" },
-      { cat: "Redes Sociales", item: "Publica contenido mínimo semanal", impact: "MEDIO" },
-      { cat: "Redes Sociales", item: "Tiene contenido de prueba social", impact: "CRÍTICO" },
-      { cat: "Redes Sociales", item: "Tiene oferta clara o promoción vigente", impact: "CRÍTICO" },
-      { cat: "Redes Sociales", item: "Link directo a WhatsApp o reservas", impact: "CRÍTICO" },
-      { cat: "Redes Sociales", item: "Identidad visual coherente", impact: "BAJO" }
-    ];
+var auditItems = [
+  {cat:'Google My Business',item:'Perfil existe y aparece en Google Maps',impact:'CRÍTICO'},
+  {cat:'Google My Business',item:'Perfil verificado por el dueño',impact:'CRÍTICO'},
+  {cat:'Google My Business',item:'Categoría principal correcta',impact:'CRÍTICO'},
+  {cat:'Google My Business',item:'Horario actualizado',impact:'MEDIO'},
+  {cat:'Google My Business',item:'Fotos recientes y profesionales',impact:'MEDIO'},
+  {cat:'Google My Business',item:'Descripción optimizada con palabras clave locales',impact:'MEDIO'},
+  {cat:'Reputación y Reseñas',item:'Rating mínimo de 4.3',impact:'CRÍTICO'},
+  {cat:'Reputación y Reseñas',item:'Más de 50 reseñas',impact:'MEDIO'},
+  {cat:'Reputación y Reseñas',item:'Responde reseñas positivas',impact:'MEDIO'},
+  {cat:'Reputación y Reseñas',item:'Responde reseñas negativas con estrategia',impact:'CRÍTICO'},
+  {cat:'Reputación y Reseñas',item:'Tiene sistema para pedir reseñas',impact:'CRÍTICO'},
+  {cat:'Reputación y Reseñas',item:'Reseñas mencionan productos/servicios clave',impact:'BAJO'},
+  {cat:'Sitio Web y SEO Local',item:'Tiene sitio web funcional',impact:'CRÍTICO'},
+  {cat:'Sitio Web y SEO Local',item:'Carga rápido en celular',impact:'CRÍTICO'},
+  {cat:'Sitio Web y SEO Local',item:'Tiene botón visible de WhatsApp o llamada',impact:'CRÍTICO'},
+  {cat:'Sitio Web y SEO Local',item:'Título y metadescripción optimizados',impact:'MEDIO'},
+  {cat:'Sitio Web y SEO Local',item:'Página de servicios clara',impact:'MEDIO'},
+  {cat:'Sitio Web y SEO Local',item:'Dirección, teléfono y ciudad consistentes',impact:'MEDIO'},
+  {cat:'Redes Sociales',item:'Instagram o Facebook activos',impact:'MEDIO'},
+  {cat:'Redes Sociales',item:'Publica contenido mínimo semanal',impact:'MEDIO'},
+  {cat:'Redes Sociales',item:'Tiene contenido de prueba social',impact:'CRÍTICO'},
+  {cat:'Redes Sociales',item:'Tiene oferta clara o promoción vigente',impact:'CRÍTICO'},
+  {cat:'Redes Sociales',item:'Link directo a WhatsApp o reservas',impact:'CRÍTICO'},
+  {cat:'Redes Sociales',item:'Identidad visual coherente',impact:'BAJO'}
+];
 
-    const state = {
-      statuses: auditItems.map(() => "partial")
-    };
+var state = { statuses: auditItems.map(function(){ return 'partial'; }) };
 
-    function normalizeCity(text) {
-      const t = (text || "").toLowerCase();
-      const found = cities.find(c => t.includes(c));
-      if (!found) return "";
-      const map = { "medellin": "Medellín", "medellín": "Medellín", "bogota": "Bogotá", "bogotá": "Bogotá", "cucuta": "Cúcuta", "cúcuta": "Cúcuta", "ibague": "Ibagué", "ibagué": "Ibagué" };
-      return map[found] || found.charAt(0).toUpperCase() + found.slice(1);
+function el(id){ return document.getElementById(id); }
+function hasGoogleMaps(){ return Boolean(window.google && window.google.maps); }
+function hasGooglePlaces(){ return Boolean(window.google && window.google.maps && window.google.maps.places); }
+
+function initBasicMap(){
+  el('map').innerHTML = '<iframe style="width:100%;height:100%;border:0" src="https://www.google.com/maps?q=Medell%C3%ADn%20Colombia&output=embed"></iframe>';
+}
+
+function loadGoogleMaps(){
+  var key = el('googleKey').value.trim();
+  if(!key){ alert('Pega tu API Key de Google Maps.'); return; }
+  if(hasGoogleMaps() && hasGooglePlaces()){ initMap(); return; }
+  window.initMap = initMap;
+  var s = document.createElement('script');
+  s.src = 'https://maps.googleapis.com/maps/api/js?key=' + encodeURIComponent(key) + '&libraries=places&callback=initMap';
+  s.async = true;
+  s.defer = true;
+  s.onerror = function(){ alert('No se pudo cargar Google Maps. Revisa la API key y APIs habilitadas.'); };
+  document.head.appendChild(s);
+}
+
+function initMap(){
+  if(!hasGooglePlaces()){
+    alert('Google Maps/Places no está disponible. Revisa la API key y que Places API esté habilitada.');
+    return;
+  }
+  map = new google.maps.Map(el('map'), { center:{lat:6.2442,lng:-75.5812}, zoom:13 });
+  placesService = new google.maps.places.PlacesService(map);
+  autocompleteService = new google.maps.places.AutocompleteService();
+  marker = new google.maps.Marker({ map: map });
+  el('placesStatus').textContent = 'Places activo. Busca un negocio real por nombre, categoría o dirección.';
+}
+
+function textSearchPlace(){
+  var q = el('searchInput').value.trim();
+  if(!q){ alert('Escribe el nombre, categoría o dirección.'); return; }
+  if(!placesService){
+    manualMapSearch();
+    alert('Para datos reales activa Google Places con tu API key. Mientras tanto cargué el mapa simple.');
+    return;
+  }
+  var country = el('countryBias').value;
+  var request = { query:q, fields:['place_id','name','formatted_address','geometry','rating','user_ratings_total','formatted_phone_number','international_phone_number','website','url','photos','types','business_status'] };
+  if(userLocation){ request.location = userLocation; }
+  if(country){ request.region = country; }
+  placesService.textSearch(request, function(results, status){
+    if(status !== google.maps.places.PlacesServiceStatus.OK || !results || !results.length){
+      alert('No se encontró el negocio. Prueba con nombre + ciudad.');
+      return;
     }
+    getPlaceDetails(results[0].place_id);
+  });
+}
 
-    function searchMap() {
-      const query = document.getElementById("searchInput").value.trim();
-      if (!query) return alert("Escribe el nombre del negocio, dirección o ciudad.");
-      const city = normalizeCity(query);
-      if (city && !document.getElementById("city").value) document.getElementById("city").value = city;
-      document.getElementById("cityHint").textContent = city ? `Ciudad detectada: ${city}` : "No se detectó ciudad. Puedes escribirla manualmente en los datos del negocio.";
-      document.getElementById("mapFrame").src = `https://www.google.com/maps?q=${encodeURIComponent(query)}&output=embed`;
-      refreshAll();
+function getPlaceDetails(placeId){
+  placesService.getDetails({
+    placeId: placeId,
+    fields:['name','formatted_address','address_components','geometry','rating','user_ratings_total','formatted_phone_number','international_phone_number','website','url','photos','types','business_status','opening_hours','reviews']
+  }, function(p, status){
+    if(status !== google.maps.places.PlacesServiceStatus.OK){ alert('No se pudieron traer detalles del lugar.'); return; }
+    fillFromPlace(p);
+  });
+}
+
+function fillFromPlace(p){
+  el('businessName').value = p.name || '';
+  el('address').value = p.formatted_address || '';
+  el('rating').value = p.rating || '';
+  el('reviews').value = p.user_ratings_total || '';
+  el('phone').value = p.international_phone_number || p.formatted_phone_number || '';
+  el('website').value = p.website || '';
+  el('mapsUrl').value = p.url || '';
+  el('category').value = (p.types || []).slice(0,3).map(cleanType).join(', ');
+  el('city').value = extractCity(p.address_components || []) || normalizeCity(p.formatted_address || '');
+  el('gmbStatus').value = 'Verificado pero incompleto';
+  if(p.geometry && p.geometry.location && map && marker){
+    map.setCenter(p.geometry.location);
+    map.setZoom(16);
+    marker.setPosition(p.geometry.location);
+  }
+  renderPhotos(p.photos || []);
+  autoEvaluateFromPlace(p);
+  refreshAll();
+}
+
+function cleanType(t){ return String(t || '').replace(/_/g,' ').replace(/\b\w/g,function(c){ return c.toUpperCase(); }); }
+
+function extractCity(components){
+  for(var i=0;i<components.length;i++){
+    var types = components[i].types || [];
+    if(types.indexOf('locality') !== -1 || types.indexOf('administrative_area_level_2') !== -1){ return components[i].long_name || ''; }
+  }
+  return '';
+}
+
+function renderPhotos(photos){
+  el('photos').innerHTML = photos.slice(0,6).map(function(ph){
+    return '<img src="' + ph.getUrl({maxWidth:260,maxHeight:180}) + '" alt="Foto del negocio">';
+  }).join('');
+}
+
+function autoEvaluateFromPlace(p){
+  state.statuses[0] = 'ok';
+  state.statuses[2] = (p.types && p.types.length) ? 'ok' : 'partial';
+  state.statuses[4] = (p.photos && p.photos.length >= 3) ? 'ok' : ((p.photos && p.photos.length) ? 'partial' : 'fail');
+  state.statuses[6] = (Number(p.rating || 0) >= 4.3) ? 'ok' : (Number(p.rating || 0) >= 4 ? 'partial' : 'fail');
+  state.statuses[7] = (Number(p.user_ratings_total || 0) >= 50) ? 'ok' : (Number(p.user_ratings_total || 0) >= 15 ? 'partial' : 'fail');
+  state.statuses[12] = p.website ? 'ok' : 'fail';
+  state.statuses[17] = (p.formatted_address && el('phone').value) ? 'ok' : 'partial';
+  renderChecklist();
+}
+
+function manualMapSearch(){
+  var q = el('searchInput').value.trim() || 'Medellín Colombia';
+  el('map').innerHTML = '<iframe style="width:100%;height:100%;border:0" src="https://www.google.com/maps?q=' + encodeURIComponent(q) + '&output=embed"></iframe>';
+  var city = normalizeCity(q);
+  if(city && !el('city').value){ el('city').value = city; }
+  refreshAll();
+}
+
+function useMyLocation(){
+  if(!navigator.geolocation){ alert('Tu navegador no permite geolocalización.'); return; }
+  navigator.geolocation.getCurrentPosition(function(pos){
+    var lat = pos.coords.latitude;
+    var lng = pos.coords.longitude;
+    if(hasGoogleMaps()){
+      userLocation = new google.maps.LatLng(lat, lng);
+      if(map){ map.setCenter(userLocation); map.setZoom(15); }
+      if(marker){ marker.setPosition(userLocation); }
+    } else {
+      userLocation = { lat: lat, lng: lng };
+      el('map').innerHTML = '<iframe style="width:100%;height:100%;border:0" src="https://www.google.com/maps?q=' + lat + ',' + lng + '&output=embed"></iframe>';
     }
+  }, function(){ alert('No se pudo obtener ubicación. Revisa permisos.'); });
+}
 
-    function useMyLocation() {
-      if (!navigator.geolocation) return alert("Tu navegador no permite geolocalización.");
-      navigator.geolocation.getCurrentPosition(pos => {
-        const { latitude, longitude } = pos.coords;
-        const query = `${latitude},${longitude}`;
-        document.getElementById("searchInput").value = query;
-        document.getElementById("mapFrame").src = `https://www.google.com/maps?q=${query}&output=embed`;
-      }, () => alert("No se pudo obtener tu ubicación. Revisa permisos del navegador."));
+function normalizeCity(text){
+  var t = String(text || '').toLowerCase();
+  var found = '';
+  for(var i=0;i<cities.length;i++){ if(t.indexOf(cities[i]) !== -1){ found = cities[i]; break; } }
+  if(!found){ return ''; }
+  var m = { medellin:'Medellín','medellín':'Medellín',bogota:'Bogotá','bogotá':'Bogotá',cucuta:'Cúcuta','cúcuta':'Cúcuta',ibague:'Ibagué','ibagué':'Ibagué' };
+  return m[found] || found.charAt(0).toUpperCase() + found.slice(1);
+}
+
+function loadDemo(){
+  el('searchInput').value = 'Restaurante demo Laureles Medellín';
+  el('clientName').value = 'Dueño demo';
+  el('businessName').value = 'Restaurante Sabor Paisa Demo';
+  el('category').value = 'Restaurante familiar';
+  el('address').value = 'Laureles, Medellín, Antioquia';
+  el('city').value = 'Medellín';
+  el('phone').value = '+57 300 000 0000';
+  el('website').value = 'https://restaurantedemo.com';
+  el('mapsUrl').value = 'https://maps.google.com';
+  el('rating').value = '4.1';
+  el('reviews').value = '36';
+  el('gmbStatus').value = 'Verificado pero incompleto';
+  el('socials').value = 'Instagram y Facebook activos, TikTok inactivo';
+  state.statuses = ['ok','ok','partial','ok','fail','partial','fail','partial','fail','fail','fail','partial','ok','partial','ok','fail','partial','partial','ok','partial','fail','partial','ok','partial'];
+  manualMapSearch();
+  renderChecklist();
+  refreshAll();
+}
+
+function impactClass(i){ return i === 'CRÍTICO' ? 'critical' : (i === 'MEDIO' ? 'medium' : 'low'); }
+function slug(s){ return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-'); }
+
+function renderChecklist(){
+  var grouped = {};
+  auditItems.forEach(function(x,i){ if(!grouped[x.cat]){ grouped[x.cat] = []; } grouped[x.cat].push({ cat:x.cat, item:x.item, impact:x.impact, idx:i }); });
+  el('checklist').innerHTML = Object.keys(grouped).map(function(cat){
+    var items = grouped[cat].map(function(obj){
+      return '<div class="check-item"><div>' + obj.item + '<span class="impact ' + impactClass(obj.impact) + '">' + obj.impact + '</span></div><div class="status-buttons">' +
+        '<button class="' + (state.statuses[obj.idx] === 'ok' ? 'active ok' : '') + '" onclick="setStatus(' + obj.idx + ',\'ok\')">✓</button>' +
+        '<button class="' + (state.statuses[obj.idx] === 'fail' ? 'active fail' : '') + '" onclick="setStatus(' + obj.idx + ',\'fail\')">✗</button>' +
+        '<button class="' + (state.statuses[obj.idx] === 'partial' ? 'active partial' : '') + '" onclick="setStatus(' + obj.idx + ',\'partial\')">!</button>' +
+        '</div></div>';
+    }).join('');
+    return '<div class="check-category"><div class="check-title"><span>' + cat + '</span><span id="cat-mini-' + slug(cat) + '">0%</span></div>' + items + '</div>';
+  }).join('');
+}
+
+function setStatus(i,s){ state.statuses[i] = s; renderChecklist(); refreshAll(); }
+function maxPoints(i){ return i === 'CRÍTICO' ? 5 : (i === 'MEDIO' ? 3 : 1); }
+function earned(s,i){ var m = maxPoints(i); return s === 'ok' ? m : (s === 'partial' ? m * 0.45 : 0); }
+
+function calculateScore(){
+  var e = 0, m = 0, c = {};
+  auditItems.forEach(function(it,i){
+    var mx = maxPoints(it.impact), en = earned(state.statuses[i], it.impact);
+    e += en; m += mx;
+    if(!c[it.cat]){ c[it.cat] = {earned:0,max:0,score:0}; }
+    c[it.cat].earned += en; c[it.cat].max += mx;
+  });
+  Object.keys(c).forEach(function(k){ c[k].score = Math.round((c[k].earned / c[k].max) * 100); });
+  return { total: Math.round((e / m) * 100), categories: c };
+}
+
+function scoreColor(s){ return s >= 75 ? '#16a34a' : (s >= 45 ? '#d97706' : '#dc2626'); }
+function diagnosis(s){
+  if(s >= 80){ return 'Buen posicionamiento. Oferta ideal: crecimiento, campañas, automatización y reputación avanzada.'; }
+  if(s >= 60){ return 'Tiene base digital, pero hay oportunidades para aumentar llamadas, visitas y reseñas.'; }
+  if(s >= 35){ return 'Presencia débil. Hay fallas visibles que pueden estar costando clientes.'; }
+  return 'Alta oportunidad comercial. Necesita optimización urgente para aparecer, convertir y generar confianza.';
+}
+
+function getAuditData(){
+  var ids = ['clientName','businessName','category','address','city','phone','website','mapsUrl','rating','reviews','gmbStatus','socials'];
+  var d = {};
+  ids.forEach(function(id){ d[id] = el(id).value.trim(); });
+  var sc = calculateScore();
+  d.score = sc.total; d.categories = sc.categories;
+  d.items = auditItems.map(function(x,i){ return { cat:x.cat, item:x.item, impact:x.impact, status:state.statuses[i] }; });
+  d.failures = d.items.filter(function(x){ return x.status === 'fail'; });
+  d.partials = d.items.filter(function(x){ return x.status === 'partial'; });
+  return d;
+}
+
+function refreshAll(){
+  var r = calculateScore();
+  el('scoreValue').textContent = r.total + '%';
+  el('heroScore').textContent = r.total + '%';
+  el('scoreCircle').style.background = 'conic-gradient(' + scoreColor(r.total) + ' ' + (r.total * 3.6) + 'deg,#e5e7eb 0deg)';
+  el('diagnosis').textContent = diagnosis(r.total);
+  el('categoryScores').innerHTML = Object.keys(r.categories).map(function(k){
+    var o = r.categories[k];
+    return '<div style="margin:8px 0"><strong>' + k + '</strong> <span class="small">' + o.score + '%</span><div class="bar"><span style="width:' + o.score + '%;background:' + scoreColor(o.score) + '"></span></div></div>';
+  }).join('');
+  Object.keys(r.categories).forEach(function(k){ var mini = el('cat-mini-' + slug(k)); if(mini){ mini.textContent = r.categories[k].score + '%'; } });
+  renderPrompts(); renderPreview(); renderClients();
+}
+
+function buildContext(){
+  var d = getAuditData();
+  return 'NEGOCIO AUDITADO\n' +
+    'Cliente: ' + (d.clientName || 'No indicado') + '\n' +
+    'Negocio: ' + (d.businessName || 'No indicado') + '\n' +
+    'Categoría: ' + (d.category || 'No indicada') + '\n' +
+    'Dirección: ' + (d.address || 'No indicada') + '\n' +
+    'Ciudad: ' + (d.city || 'No indicada') + '\n' +
+    'Teléfono: ' + (d.phone || 'No indicado') + '\n' +
+    'Web: ' + (d.website || 'No indicada') + '\n' +
+    'Google Maps: ' + (d.mapsUrl || 'No indicado') + '\n' +
+    'Rating: ' + (d.rating || 'No indicado') + '\n' +
+    'Reseñas: ' + (d.reviews || 'No indicado') + '\n' +
+    'Estado GMB: ' + (d.gmbStatus || 'No indicado') + '\n' +
+    'Redes: ' + (d.socials || 'No indicado') + '\n' +
+    'Score general: ' + d.score + '%\n\n' +
+    'SCORES POR CATEGORÍA\n' + Object.keys(d.categories).map(function(c){ return '- ' + c + ': ' + d.categories[c].score + '%'; }).join('\n') + '\n\n' +
+    'FALLAS\n' + (d.failures.map(function(x){ return '- [' + x.impact + '] ' + x.cat + ': ' + x.item; }).join('\n') || 'Sin fallas marcadas.') + '\n\n' +
+    'PARCIALES\n' + (d.partials.map(function(x){ return '- [' + x.impact + '] ' + x.cat + ': ' + x.item; }).join('\n') || 'Sin puntos parciales.');
+}
+
+function buildProposalPrompt(){
+  return buildContext() + '\n\nGenera una propuesta comercial completa para el dueño del negocio. Incluye título vendedor, resumen ejecutivo, diagnóstico, problemas detectados, impacto en ventas, plan de 30 días, entregables, paquetes Básico/Pro/Dominio Local y CTA para agendar llamada. Español latino, profesional y persuasivo. No inventes datos.';
+}
+
+function renderPreview(){
+  var d = getAuditData();
+  var priorities = d.failures.slice(0,6).map(function(x){ return '<li><strong>' + x.cat + ':</strong> ' + x.item + '</li>'; }).join('') || '<li>Optimizar crecimiento y automatización.</li>';
+  el('proposalPreview').innerHTML = '<h2>Propuesta de Optimización Digital Local</h2>' +
+    '<p><strong>Negocio:</strong> ' + (d.businessName || 'Pendiente') + '<br><strong>Cliente:</strong> ' + (d.clientName || 'Pendiente') + '<br><strong>Ciudad:</strong> ' + (d.city || 'Pendiente') + '</p>' +
+    '<div class="proposal-metric"><div class="metric"><strong>' + d.score + '%</strong>Score</div><div class="metric"><strong>' + (d.rating || '-') + '</strong>Rating</div><div class="metric"><strong>' + (d.reviews || '-') + '</strong>Reseñas</div><div class="metric"><strong>' + d.failures.length + '</strong>Fallas</div></div>' +
+    '<h3>Diagnóstico</h3><p>' + diagnosis(d.score) + '</p><h3>Prioridades</h3><ol>' + priorities + '</ol>' +
+    '<h3>Plan sugerido de 30 días</h3><p>Semana 1: corrección de perfil, datos y conversión. Semana 2: reputación y reseñas. Semana 3: contenido y SEO local. Semana 4: seguimiento, medición y propuesta de mantenimiento.</p>';
+}
+
+function promptTemplates(){
+  var c = buildContext();
+  return [
+    {title:'Reporte completo', text:c + '\n\nGenera un reporte profesional de auditoría digital.'},
+    {title:'Propuesta comercial', text:buildProposalPrompt()},
+    {title:'WhatsApp inicial', text:c + '\n\nEscribe un WhatsApp corto para mostrarle al dueño 2 oportunidades y agendar una llamada.'},
+    {title:'Estrategia de reseñas', text:c + '\n\nDiseña una estrategia de 30 días para aumentar reseñas reales en Google.'}
+  ];
+}
+
+function escapeHTML(s){ return String(s).replace(/[&<>'"]/g,function(t){ return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[t]; }); }
+function renderPrompts(){
+  el('prompts').innerHTML = promptTemplates().map(function(p,i){
+    return '<div class="prompt-card"><h4>' + p.title + '</h4><pre>' + escapeHTML(p.text) + '</pre><button class="light" onclick="copyPrompt(' + i + ')">Copiar</button></div>';
+  }).join('');
+}
+function copyPrompt(i){ navigator.clipboard.writeText(promptTemplates()[i].text); alert('Prompt copiado.'); }
+
+async function generateWithClaude(){
+  var key = el('claudeKey').value.trim();
+  var model = el('claudeModel').value.trim() || 'claude-sonnet-4-5';
+  var proxy = el('proxyEndpoint').value.trim();
+  el('claudeOutput').value = 'Generando propuesta...';
+  try{
+    var res;
+    if(proxy){
+      res = await fetch(proxy,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({model:model,prompt:buildProposalPrompt(),audit:getAuditData()}) });
+    }else{
+      if(!key){ throw new Error('Coloca una API key o endpoint proxy.'); }
+      res = await fetch('https://api.anthropic.com/v1/messages',{ method:'POST', headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01'}, body:JSON.stringify({model:model,max_tokens:3000,messages:[{role:'user',content:buildProposalPrompt()}]}) });
     }
+    if(!res.ok){ throw new Error('HTTP ' + res.status + '. Puede ser CORS, clave inválida o falta de proxy.'); }
+    var data = await res.json();
+    var contentText = '';
+    if(data.proposal){ contentText = data.proposal; }
+    else if(data.output){ contentText = data.output; }
+    else if(data.content && Array.isArray(data.content)){ contentText = data.content.map(function(c){ return c.text || ''; }).join('\n'); }
+    else { contentText = JSON.stringify(data,null,2); }
+    el('claudeOutput').value = contentText;
+  }catch(e){
+    el('claudeOutput').value = 'No se pudo generar automáticamente: ' + e.message + '\n\nUsa un proxy serverless para producción o copia el payload/prompt.';
+  }
+}
 
-    function loadDemo() {
-      document.getElementById("searchInput").value = "Restaurante demo Laureles Medellín";
-      document.getElementById("businessName").value = "Restaurante Sabor Paisa Demo";
-      document.getElementById("category").value = "Restaurante familiar";
-      document.getElementById("city").value = "Medellín";
-      document.getElementById("phone").value = "+57 300 000 0000";
-      document.getElementById("website").value = "https://restaurantedemo.com";
-      document.getElementById("rating").value = "4.1";
-      document.getElementById("reviews").value = "36";
-      document.getElementById("gmbStatus").value = "Verificado pero incompleto";
-      document.getElementById("socials").value = "Instagram y Facebook activos, TikTok inactivo";
-      state.statuses = ["ok","ok","partial","ok","fail","partial","fail","partial","fail","fail","fail","partial","ok","partial","ok","fail","partial","partial","ok","partial","fail","partial","ok","partial"];
-      searchMap();
-      renderChecklist();
-      refreshAll();
-    }
+function copyClaudePayload(){
+  navigator.clipboard.writeText(JSON.stringify({model:el('claudeModel').value.trim() || 'claude-sonnet-4-5',max_tokens:3000,messages:[{role:'user',content:buildProposalPrompt()}]},null,2));
+  alert('Payload copiado.');
+}
 
-    function impactClass(impact) {
-      if (impact === "CRÍTICO") return "critical";
-      if (impact === "MEDIO") return "medium";
-      return "low";
-    }
+function safeFileName(name){ return String(name || 'negocio').replace(/[^a-z0-9]+/gi,'-').replace(/^-+|-+$/g,'') || 'negocio'; }
+function exportTXT(){
+  var d = getAuditData();
+  var blob = new Blob(['AUDITORÍA DIGITAL LOCAL\n\n' + buildContext() + '\n\nDIAGNÓSTICO\n' + diagnosis(d.score) + '\n\nFecha: ' + new Date().toLocaleString()], {type:'text/plain;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'auditoria-' + safeFileName(d.businessName) + '.txt'; a.click(); URL.revokeObjectURL(url);
+}
 
-    function renderChecklist() {
-      const grouped = auditItems.reduce((acc, item, idx) => {
-        if (!acc[item.cat]) acc[item.cat] = [];
-        acc[item.cat].push({ ...item, idx });
-        return acc;
-      }, {});
+async function exportPDF(){
+  renderPreview();
+  var d = getAuditData();
+  if(!window.jspdf || !window.jspdf.jsPDF || !window.html2canvas){ alert('No se cargaron las librerías de PDF. Revisa la conexión a internet.'); return; }
+  var jsPDF = window.jspdf.jsPDF;
+  var pdf = new jsPDF('p','mm','a4');
+  var canvas = await html2canvas(el('proposalPreview'), {scale:2,useCORS:true});
+  var img = canvas.toDataURL('image/png');
+  var w = 210, h = canvas.height * w / canvas.width;
+  var y = 0, pageH = 297;
+  pdf.addImage(img,'PNG',0,y,w,h);
+  var left = h - pageH;
+  while(left > 0){ pdf.addPage(); y -= pageH; pdf.addImage(img,'PNG',0,y,w,h); left -= pageH; }
+  pdf.save('propuesta-' + safeFileName(d.businessName) + '.pdf');
+}
 
-      document.getElementById("checklist").innerHTML = Object.entries(grouped).map(([cat, items]) => `
-        <div class="check-category">
-          <div class="check-title"><span>${cat}</span><span id="cat-mini-${slug(cat)}">0%</span></div>
-          ${items.map(({ item, impact, idx }) => `
-            <div class="check-item">
-              <div>${item}<span class="impact ${impactClass(impact)}">${impact}</span></div>
-              <div class="status-buttons">
-                <button class="${state.statuses[idx] === 'ok' ? 'active ok' : ''}" onclick="setStatus(${idx}, 'ok')">✓</button>
-                <button class="${state.statuses[idx] === 'fail' ? 'active fail' : ''}" onclick="setStatus(${idx}, 'fail')">✗</button>
-                <button class="${state.statuses[idx] === 'partial' ? 'active partial' : ''}" onclick="setStatus(${idx}, 'partial')">!</button>
-              </div>
-            </div>
-          `).join("")}
-        </div>
-      `).join("");
-    }
+function sendWhatsApp(){
+  var d = getAuditData();
+  var phone = String(d.phone || '').replace(/\D/g,'');
+  var msg = 'Hola ' + (d.clientName || '') + ', revisé la presencia digital de ' + (d.businessName || 'tu negocio') + ' y encontré un score aproximado de ' + d.score + '%. Hay oportunidades para mejorar Google Maps, reseñas y conversión a WhatsApp. ¿Te puedo enviar la auditoría y una propuesta de 30 días?';
+  window.open('https://wa.me/' + phone + '?text=' + encodeURIComponent(msg), '_blank');
+}
 
-    function setStatus(idx, status) {
-      state.statuses[idx] = status;
-      renderChecklist();
-      refreshAll();
-    }
+function saveClientAudit(){
+  var audits = JSON.parse(localStorage.getItem('clientAudits') || '[]');
+  audits.unshift({id:Date.now(),date:new Date().toISOString(),data:getAuditData(),statuses:state.statuses.slice()});
+  localStorage.setItem('clientAudits', JSON.stringify(audits));
+  renderClients(); alert('Cliente/auditoría guardado en este navegador.');
+}
 
-    function slug(str) {
-      return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-");
-    }
+function renderClients(){
+  var searchInput = el('clientSearch');
+  var q = searchInput ? searchInput.value.toLowerCase() : '';
+  var audits = JSON.parse(localStorage.getItem('clientAudits') || '[]').filter(function(a){ return JSON.stringify(a.data).toLowerCase().indexOf(q) !== -1; });
+  el('clients').innerHTML = audits.slice(0,12).map(function(a){
+    return '<div class="client-item"><strong>' + (a.data.businessName || 'Negocio sin nombre') + '</strong><br><span class="small">' + (a.data.clientName || 'Sin cliente') + ' · ' + (a.data.city || 'Sin ciudad') + ' · ' + new Date(a.date).toLocaleString() + ' · Score ' + a.data.score + '%</span><div class="actions"><button class="light" onclick="loadClientAudit(' + a.id + ')">Cargar</button><button class="danger" onclick="deleteClientAudit(' + a.id + ')">Eliminar</button></div></div>';
+  }).join('') || '<p class="small">Sin clientes guardados.</p>';
+}
 
-    function points(status, impact) {
-      const max = impact === "CRÍTICO" ? 5 : impact === "MEDIO" ? 3 : 1;
-      if (status === "ok") return max;
-      if (status === "partial") return max * 0.45;
-      return 0;
-    }
+function loadClientAudit(id){
+  var audits = JSON.parse(localStorage.getItem('clientAudits') || '[]');
+  var a = audits.find(function(x){ return x.id === id; });
+  if(!a){ return; }
+  Object.keys(a.data).forEach(function(key){ var node = el(key); if(node){ node.value = a.data[key] || ''; } });
+  state.statuses = a.statuses || state.statuses;
+  renderChecklist(); refreshAll();
+}
+function deleteClientAudit(id){
+  var audits = JSON.parse(localStorage.getItem('clientAudits') || '[]').filter(function(a){ return a.id !== id; });
+  localStorage.setItem('clientAudits', JSON.stringify(audits)); renderClients();
+}
 
-    function getAuditData() {
-      const fields = ["businessName", "category", "city", "phone", "website", "rating", "reviews", "gmbStatus", "socials"];
-      const data = {};
-      fields.forEach(id => data[id] = document.getElementById(id).value.trim());
-      data.score = calculateScore().total;
-      data.categories = calculateScore().categories;
-      data.items = auditItems.map((x, i) => ({ ...x, status: state.statuses[i] }));
-      data.failures = data.items.filter(x => x.status === "fail");
-      data.partials = data.items.filter(x => x.status === "partial");
-      data.ok = data.items.filter(x => x.status === "ok");
-      return data;
-    }
+function assertTest(name, condition){
+  if(!condition){ throw new Error('Falló prueba: ' + name); }
+  console.log('✓ ' + name);
+}
+function runTests(){
+  console.group('Pruebas Auditoría Digital Local Pro');
+  try{
+    assertTest('normalizeCity detecta Medellín', normalizeCity('negocio en medellin colombia') === 'Medellín');
+    assertTest('impactClass crítico', impactClass('CRÍTICO') === 'critical');
+    var score = calculateScore();
+    assertTest('score general está entre 0 y 100', score.total >= 0 && score.total <= 100);
+    assertTest('hay 24 ítems de auditoría', auditItems.length === 24);
+    assertTest('getAuditData retorna categorías', Object.keys(getAuditData().categories).length === 4);
+    var before = localStorage.getItem('clientAudits');
+    var testAudit = [{id:999,date:new Date().toISOString(),data:{businessName:'Prueba Test',clientName:'QA',city:'Medellín',score:50},statuses:state.statuses.slice()}];
+    localStorage.setItem('clientAudits', JSON.stringify(testAudit));
+    assertTest('localStorage guarda auditoría', JSON.parse(localStorage.getItem('clientAudits')).length === 1);
+    if(before === null){ localStorage.removeItem('clientAudits'); } else { localStorage.setItem('clientAudits', before); }
+    renderClients();
+    alert('Pruebas completadas correctamente. Revisa la consola para detalles.');
+  }catch(err){
+    console.error(err);
+    alert(err.message);
+  }finally{
+    console.groupEnd();
+  }
+}
 
-    function calculateScore() {
-      let earned = 0, max = 0;
-      const categories = {};
-      auditItems.forEach((item, i) => {
-        const itemMax = item.impact === "CRÍTICO" ? 5 : item.impact === "MEDIO" ? 3 : 1;
-        const itemEarned = points(state.statuses[i], item.impact);
-        earned += itemEarned;
-        max += itemMax;
-        if (!categories[item.cat]) categories[item.cat] = { earned: 0, max: 0, score: 0 };
-        categories[item.cat].earned += itemEarned;
-        categories[item.cat].max += itemMax;
-      });
-      Object.keys(categories).forEach(cat => categories[cat].score = Math.round((categories[cat].earned / categories[cat].max) * 100));
-      return { total: Math.round((earned / max) * 100), categories };
-    }
-
-    function refreshAll() {
-      const result = calculateScore();
-      document.getElementById("scoreValue").textContent = `${result.total}%`;
-      document.getElementById("heroScore").textContent = `${result.total}%`;
-      document.getElementById("scoreCircle").style.background = `conic-gradient(${scoreColor(result.total)} ${result.total * 3.6}deg, #e5e7eb 0deg)`;
-      document.getElementById("diagnosis").textContent = diagnosis(result.total);
-
-      document.getElementById("categoryScores").innerHTML = Object.entries(result.categories).map(([cat, obj]) => `
-        <div class="category-score">
-          <strong>${cat}</strong> <span class="small">${obj.score}%</span>
-          <div class="bar"><span style="width:${obj.score}%; background:${scoreColor(obj.score)}"></span></div>
-        </div>
-      `).join("");
-
-      Object.entries(result.categories).forEach(([cat, obj]) => {
-        const el = document.getElementById(`cat-mini-${slug(cat)}`);
-        if (el) el.textContent = `${obj.score}%`;
-      });
-
-      renderPrompts();
-      renderHistory();
-    }
-
-    function scoreColor(score) {
-      if (score >= 75) return "#16a34a";
-      if (score >= 45) return "#d97706";
-      return "#dc2626";
-    }
-
-    function diagnosis(score) {
-      if (score >= 80) return "Negocio bien posicionado. La propuesta debe enfocarse en crecimiento, campañas y automatización.";
-      if (score >= 60) return "Tiene base digital, pero hay oportunidades claras para aumentar llamadas, visitas y reseñas.";
-      if (score >= 35) return "Presencia digital débil. Hay fallas visibles que pueden estar costando clientes todos los días.";
-      return "Alta oportunidad comercial. El negocio necesita optimización urgente para aparecer, convertir y generar confianza.";
-    }
-
-    function buildContext() {
-      const d = getAuditData();
-      return `
-NEGOCIO AUDITADO
-Nombre: ${d.businessName || "No indicado"}
-Categoría: ${d.category || "No indicada"}
-Ciudad: ${d.city || "No indicada"}
-Teléfono: ${d.phone || "No indicado"}
-Web: ${d.website || "No indicada"}
-Rating: ${d.rating || "No indicado"}
-Reseñas: ${d.reviews || "No indicado"}
-Google Business Profile: ${d.gmbStatus || "No indicado"}
-Redes activas: ${d.socials || "No indicado"}
-Score general: ${d.score}%
-
-SCORES POR CATEGORÍA
-${Object.entries(d.categories).map(([cat, obj]) => `- ${cat}: ${obj.score}%`).join("\n")}
-
-FALLAS CRÍTICAS Y OPORTUNIDADES
-${d.failures.map(x => `- [${x.impact}] ${x.cat}: ${x.item}`).join("\n") || "Sin fallas marcadas."}
-
-PUNTOS PARCIALES
-${d.partials.map(x => `- [${x.impact}] ${x.cat}: ${x.item}`).join("\n") || "Sin puntos parciales."}
-      `.trim();
-    }
-
-    function promptTemplates() {
-      const context = buildContext();
-      return [
-        {
-          title: "Reporte completo de auditoría",
-          text: `${context}\n\nActúa como consultor de marketing local. Genera un reporte profesional de auditoría digital para el dueño del negocio. Usa tono claro, directo y comercial. Incluye diagnóstico, problemas encontrados, impacto en ventas, prioridades y plan de acción de 30 días.`
-        },
-        {
-          title: "Propuesta comercial",
-          text: `${context}\n\nCrea una propuesta comercial para vender un servicio de optimización digital local. Incluye: problema, oportunidad, solución, entregables, cronograma de 30 días, garantía ética, inversión sugerida en 3 paquetes y llamada a la acción.`
-        },
-        {
-          title: "Optimización descripción Google Business Profile",
-          text: `${context}\n\nRedacta 3 versiones de descripción para Google Business Profile con SEO local. Máximo 750 caracteres cada una. Incluye palabras clave por categoría y ciudad sin sonar robótico.`
-        },
-        {
-          title: "Email de primer contacto",
-          text: `${context}\n\nEscribe un email corto para contactar al dueño del negocio. Debe mencionar 2 oportunidades visibles, no sonar agresivo y proponer una revisión gratuita de 10 minutos.`
-        },
-        {
-          title: "WhatsApp de seguimiento",
-          text: `${context}\n\nEscribe 3 mensajes de WhatsApp para seguimiento comercial: primer contacto, recordatorio y cierre amable. Que sean breves, humanos y orientados a agendar llamada.`
-        },
-        {
-          title: "Estrategia de reseñas",
-          text: `${context}\n\nDiseña una estrategia para aumentar reseñas reales en Google durante 30 días. Incluye guion para pedir reseñas, QR, incentivo permitido sin manipular opiniones, seguimiento y métricas.`
-        }
-      ];
-    }
-
-    function renderPrompts() {
-      document.getElementById("prompts").innerHTML = promptTemplates().map((p, i) => `
-        <div class="prompt-card">
-          <h4>${p.title}</h4>
-          <pre id="prompt-${i}">${escapeHTML(p.text)}</pre>
-          <button class="light" onclick="copyPrompt(${i})">Copiar prompt</button>
-        </div>
-      `).join("");
-    }
-
-    function escapeHTML(str) {
-      return str.replace(/[&<>'"]/g, tag => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[tag]));
-    }
-
-    function copyPrompt(i) {
-      navigator.clipboard.writeText(promptTemplates()[i].text);
-      alert("Prompt copiado.");
-    }
-
-    function buildProposalPrompt() {
-      return `${buildContext()}\n\nGenera una propuesta comercial completa para el dueño del negocio. Debe incluir:\n1. Título vendedor.\n2. Resumen ejecutivo.\n3. Diagnóstico según el score.\n4. Problemas detectados y cómo afectan ventas.\n5. Plan de acción de 30 días.\n6. Entregables concretos.\n7. Paquetes sugeridos: Básico, Pro y Dominio Local.\n8. Mensaje final para agendar llamada.\n\nUsa español latino, tono profesional, directo y persuasivo. No inventes datos no suministrados.`;
-    }
-
-    async function generateWithClaude() {
-      const apiKey = document.getElementById("claudeKey").value.trim();
-      const model = document.getElementById("claudeModel").value.trim() || "claude-sonnet-4-5";
-      const proxy = document.getElementById("proxyEndpoint").value.trim();
-      const output = document.getElementById("claudeOutput");
-      output.value = "Generando propuesta...";
-
-      const prompt = buildProposalPrompt();
-
-      try {
-        let res;
-        if (proxy) {
-          res = await fetch(proxy, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ model, prompt, audit: getAuditData() })
-          });
-        } else {
-          if (!apiKey) throw new Error("Debes colocar una API key o un endpoint proxy.");
-          res = await fetch("https://api.anthropic.com/v1/messages", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-api-key": apiKey,
-              "anthropic-version": "2023-06-01"
-            },
-            body: JSON.stringify({
-              model,
-              max_tokens: 2500,
-              messages: [{ role: "user", content: prompt }]
-            })
-          });
-        }
-
-        if (!res.ok) throw new Error(`Error HTTP ${res.status}. Si estás llamando directo desde navegador, puede ser CORS o clave inválida.`);
-        const data = await res.json();
-        const text = data.proposal || data.output || data.content?.map(c => c.text).join("\n") || JSON.stringify(data, null, 2);
-        output.value = text;
-      } catch (err) {
-        output.value = `No se pudo generar automáticamente: ${err.message}\n\nSolución recomendada: crea un pequeño endpoint proxy/serverless que reciba { model, prompt, audit } y desde el servidor llame a Claude. Mientras tanto, usa el botón "Copiar payload" o los prompts listos.`;
-      }
-    }
-
-    function copyClaudePayload() {
-      const payload = {
-        model: document.getElementById("claudeModel").value.trim() || "claude-sonnet-4-5",
-        max_tokens: 2500,
-        messages: [{ role: "user", content: buildProposalPrompt() }]
-      };
-      navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
-      alert("Payload copiado.");
-    }
-
-    function exportTXT() {
-      const d = getAuditData();
-      const txt = `AUDITORÍA DIGITAL LOCAL\n\n${buildContext()}\n\nDIAGNÓSTICO\n${diagnosis(d.score)}\n\nRECOMENDACIÓN COMERCIAL\nPrioriza primero las fallas críticas, luego los elementos parciales de conversión y finalmente identidad visual/contenido.\n\nFecha: ${new Date().toLocaleString()}`;
-      const blob = new Blob([txt], { type: "text/plain;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `auditoria-${(d.businessName || 'negocio').replace(/[^a-z0-9]+/gi, '-')}.txt`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function saveAudit() {
-      const audits = JSON.parse(localStorage.getItem("audits") || "[]");
-      audits.unshift({ date: new Date().toISOString(), data: getAuditData(), statuses: state.statuses });
-      localStorage.setItem("audits", JSON.stringify(audits.slice(0, 20)));
-      renderHistory();
-      alert("Auditoría guardada en este navegador.");
-    }
-
-    function renderHistory() {
-      const audits = JSON.parse(localStorage.getItem("audits") || "[]");
-      document.getElementById("history").innerHTML = audits.length ? audits.slice(0, 6).map((a, i) => `
-        <div class="history-item">
-          <strong>${a.data.businessName || "Negocio sin nombre"}</strong><br>
-          <span class="small">${new Date(a.date).toLocaleString()} · Score ${a.data.score}%</span><br>
-          <button class="light" onclick="loadAudit(${i})">Cargar</button>
-        </div>
-      `).join("") : `<p class="small">Aún no tienes auditorías guardadas.</p>`;
-    }
-
-    function loadAudit(index) {
-      const audits = JSON.parse(localStorage.getItem("audits") || "[]");
-      const a = audits[index];
-      if (!a) return;
-      const d = a.data;
-      Object.entries({ businessName: d.businessName, category: d.category, city: d.city, phone: d.phone, website: d.website, rating: d.rating, reviews: d.reviews, gmbStatus: d.gmbStatus, socials: d.socials }).forEach(([id, val]) => {
-        if (document.getElementById(id)) document.getElementById(id).value = val || "";
-      });
-      state.statuses = a.statuses || state.statuses;
-      renderChecklist();
-      refreshAll();
-    }
-
-    function resetAudit() {
-      if (!confirm("¿Reiniciar la auditoría actual?")) return;
-      document.querySelectorAll("input, textarea").forEach(el => {
-        if (!["claudeModel"].includes(el.id)) el.value = "";
-      });
-      document.getElementById("claudeModel").value = "claude-sonnet-4-5";
-      document.getElementById("gmbStatus").value = "No verificado";
-      state.statuses = auditItems.map(() => "partial");
-      renderChecklist();
-      refreshAll();
-    }
-
-    renderChecklist();
-    refreshAll();
-  </script>
+initBasicMap();
+renderChecklist();
+refreshAll();
+</script>
 </body>
 </html>

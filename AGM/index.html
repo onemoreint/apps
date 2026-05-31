@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auditoría Digital Local para Negocios</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel-2: #1f2937;
+      --card: #ffffff;
+      --muted: #64748b;
+      --text: #0f172a;
+      --white: #ffffff;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --green: #16a34a;
+      --red: #dc2626;
+      --yellow: #d97706;
+      --border: #e5e7eb;
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f1f5f9;
+      color: var(--text);
+    }
+
+    header {
+      background: linear-gradient(135deg, #0f172a, #1d4ed8);
+      color: white;
+      padding: 28px 18px;
+    }
+
+    .wrap {
+      width: min(1260px, 94vw);
+      margin: 0 auto;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.35fr 0.65fr;
+      gap: 22px;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: clamp(28px, 4vw, 46px);
+      line-height: 1.05;
+      margin: 0 0 10px;
+    }
+
+    .subtitle {
+      font-size: 17px;
+      opacity: 0.92;
+      max-width: 850px;
+      line-height: 1.55;
+    }
+
+    .hero-card {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.24);
+      border-radius: 22px;
+      padding: 18px;
+      backdrop-filter: blur(6px);
+    }
+
+    .hero-card strong {
+      font-size: 34px;
+      display: block;
+    }
+
+    main {
+      padding: 24px 0 50px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    .card h2, .card h3 {
+      margin: 0 0 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 11px 12px;
+      font-size: 14px;
+      outline: none;
+      background: #fff;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .row-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--primary);
+      color: white;
+      transition: 0.2s ease;
+    }
+
+    button:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    button.secondary { background: #334155; }
+    button.success { background: var(--green); }
+    button.warning { background: var(--yellow); }
+    button.danger { background: var(--red); }
+    button.light { background: #e2e8f0; color: #0f172a; }
+
+    .map-box {
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid #cbd5e1;
+      height: 410px;
+      background: #e2e8f0;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .small {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .score-box {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .score-circle {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: conic-gradient(var(--primary) 0deg, #e5e7eb 0deg);
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .score-circle::before {
+      content: "";
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: white;
+      position: absolute;
+    }
+
+    .score-value {
+      position: relative;
+      font-size: 34px;
+      font-weight: 900;
+    }
+
+    .score-label {
+      font-size: 13px;
+      color: #475569;
+    }
+
+    .category-score {
+      margin: 8px 0;
+    }
+
+    .bar {
+      background: #e5e7eb;
+      border-radius: 999px;
+      height: 10px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+
+    .bar > span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      transition: 0.2s ease;
+    }
+
+    .check-category {
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .check-title {
+      background: #f8fafc;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 900;
+    }
+
+    .check-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 12px 14px;
+      border-top: 1px solid #e2e8f0;
+      align-items: center;
+    }
+
+    .impact {
+      font-size: 11px;
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-weight: 900;
+      margin-left: 6px;
+    }
+
+    .critical { background: #fee2e2; color: #991b1b; }
+    .medium { background: #fef3c7; color: #92400e; }
+    .low { background: #dcfce7; color: #166534; }
+
+    .status-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .status-buttons button {
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .status-buttons button.active.ok { background: #16a34a; color: white; }
+    .status-buttons button.active.fail { background: #dc2626; color: white; }
+    .status-buttons button.active.partial { background: #d97706; color: white; }
+
+    .prompt-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+      background: #f8fafc;
+    }
+
+    .prompt-card h4 { margin: 0 0 8px; }
+
+    .prompt-card pre {
+      white-space: pre-wrap;
+      background: #0f172a;
+      color: #e5e7eb;
+      padding: 12px;
+      border-radius: 12px;
+      max-height: 180px;
+      overflow: auto;
+      font-size: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #e0f2fe;
+      color: #075985;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .alert {
+      padding: 12px;
+      border-radius: 14px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .hidden { display: none; }
+
+    .history-item {
+      padding: 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      background: #f8fafc;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: #64748b;
+      font-size: 12px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .hero, .grid, .score-box, .row, .row-3 {
+        grid-template-columns: 1fr;
+      }
+      .map-box { height: 330px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap hero">
+      <div>
+        <h1>Auditoría Digital Local para Negocios</h1>
+        <p class="subtitle">Busca un negocio por nombre o dirección, revisa su presencia digital, calcula un score comercial en tiempo real y genera una propuesta completa con Claude o prompts listos para ChatGPT.</p>
+        <div class="actions">
+          <span class="pill">Google Maps</span>
+          <span class="pill">Checklist 24 puntos</span>
+          <span class="pill">Claude API</span>
+          <span class="pill">Exportación TXT</span>
+        </div>
+      </div>
+      <div class="hero-card">
+        <strong id="heroScore">0%</strong>
+        <span>Score actual de la auditoría</span>
+        <p class="small">Completa el checklist y genera una propuesta comercial en minutos.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="grid">
+      <section>
+        <div class="card">
+          <h2>1. Buscar negocio o dirección</h2>
+          <label for="searchInput">Nombre del negocio, dirección o ciudad</label>
+          <input id="searchInput" placeholder="Ej: restaurante italiano Laureles Medellín" />
+          <div class="actions">
+            <button onclick="searchMap()">Buscar en Google Maps</button>
+            <button class="secondary" onclick="useMyLocation()">Usar mi ubicación</button>
+            <button class="light" onclick="loadDemo()">Cargar demo</button>
+          </div>
+          <p class="small" id="cityHint">Detecta ciudades colombianas como Medellín, Bogotá, Cali, Barranquilla, Cartagena, Bucaramanga, Pereira, Manizales, Cúcuta y Armenia.</p>
+          <div class="map-box" style="margin-top:14px;">
+            <iframe id="mapFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Medell%C3%ADn%20Colombia&output=embed"></iframe>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>2. Datos del negocio</h2>
+          <div class="row">
+            <div>
+              <label>Nombre</label>
+              <input id="businessName" placeholder="Nombre comercial" oninput="refreshAll()" />
+            </div>
+            <div>
+              <label>Categoría</label>
+              <input id="category" placeholder="Restaurante, clínica, tienda, barbería..." oninput="refreshAll()" />
+            </div>
+            <div>
+              <label>Ciudad</label>
+              <input id="city" placeholder="Ciudad" oninput="refreshAll()" />
+            </div>
+            <div>
+              <label>Teléfono / WhatsApp</label>
+              <input id="phone" placeholder="+57..." oninput="refreshAll()" />
+            </div>
+            <div>
+              <label>Sitio web</label>
+              <input id="website" placeholder="https://..." oninput="refreshAll()" />
+            </div>
+            <div>
+              <label>Estado Google Business Profile</label>
+              <select id="gmbStatus" onchange="refreshAll()">
+                <option value="No verificado">No verificado</option>
+                <option value="Verificado pero incompleto">Verificado pero incompleto</option>
+                <option value="Verificado y optimizado">Verificado y optimizado</option>
+                <option value="No encontrado">No encontrado</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row-3" style="margin-top:12px;">
+            <div>
+              <label>Rating</label>
+              <input id="rating" type="number" min="0" max="5" step="0.1" placeholder="4.2" oninput="refreshAll()" />
+            </div>
+            <div>
+              <label>Número de reseñas</label>
+              <input id="reviews" type="number" min="0" placeholder="128" oninput="refreshAll()" />
+            </div>
+            <div>
+              <label>Redes activas</label>
+              <input id="socials" placeholder="Instagram, Facebook, TikTok" oninput="refreshAll()" />
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>3. Checklist de auditoría</h2>
+          <div id="checklist"></div>
+        </div>
+      </section>
+
+      <aside>
+        <div class="card">
+          <h2>Score en tiempo real</h2>
+          <div class="score-box">
+            <div class="score-circle" id="scoreCircle"><span class="score-value" id="scoreValue">0%</span></div>
+            <div>
+              <div class="score-label" id="diagnosis">Completa la auditoría para ver el diagnóstico.</div>
+              <div id="categoryScores"></div>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="success" onclick="exportTXT()">Exportar TXT</button>
+            <button class="warning" onclick="saveAudit()">Guardar auditoría</button>
+            <button class="danger" onclick="resetAudit()">Reiniciar</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>4. Claude API: generar propuesta automática</h2>
+          <div class="alert">
+            Recomendado: usa un endpoint proxy/serverless propio para proteger tu API key. Si llamas directo desde navegador, tu clave puede quedar expuesta y algunos navegadores pueden bloquear la petición por CORS.
+          </div>
+          <div style="margin-top:12px;">
+            <label>API Key de Anthropic Claude</label>
+            <input id="claudeKey" type="password" placeholder="sk-ant-..." />
+          </div>
+          <div style="margin-top:12px;">
+            <label>Modelo</label>
+            <input id="claudeModel" value="claude-sonnet-4-5" />
+          </div>
+          <div style="margin-top:12px;">
+            <label>Endpoint proxy opcional</label>
+            <input id="proxyEndpoint" placeholder="https://tu-dominio.com/api/claude-propuesta" />
+            <p class="small">Si colocas un proxy, el HTML enviará la auditoría a ese endpoint. Si lo dejas vacío, intentará llamar a Anthropic directamente.</p>
+          </div>
+          <div class="actions">
+            <button onclick="generateWithClaude()">Generar propuesta con Claude</button>
+            <button class="light" onclick="copyClaudePayload()">Copiar payload</button>
+          </div>
+          <label style="margin-top:12px;">Propuesta generada</label>
+          <textarea id="claudeOutput" placeholder="Aquí aparecerá la propuesta comercial generada por Claude..."></textarea>
+        </div>
+
+        <div class="card">
+          <h2>5. Prompts listos para ChatGPT y Claude</h2>
+          <div id="prompts"></div>
+        </div>
+
+        <div class="card">
+          <h2>Historial local</h2>
+          <div id="history"></div>
+        </div>
+      </aside>
+    </div>
+    <p class="footer-note">Herramienta local de auditoría. Para datos reales automáticos, integra Google Places API y un backend seguro para IA.</p>
+  </main>
+
+  <script>
+    const cities = ["medellín", "medellin", "bogotá", "bogota", "cali", "barranquilla", "cartagena", "bucaramanga", "pereira", "manizales", "cúcuta", "cucuta", "armenia", "santa marta", "ibagué", "ibague"];
+
+    const auditItems = [
+      { cat: "Google My Business", item: "Perfil existe y aparece en Google Maps", impact: "CRÍTICO" },
+      { cat: "Google My Business", item: "Perfil verificado por el dueño", impact: "CRÍTICO" },
+      { cat: "Google My Business", item: "Categoría principal correcta", impact: "CRÍTICO" },
+      { cat: "Google My Business", item: "Horario actualizado", impact: "MEDIO" },
+      { cat: "Google My Business", item: "Fotos recientes y profesionales", impact: "MEDIO" },
+      { cat: "Google My Business", item: "Descripción optimizada con palabras clave locales", impact: "MEDIO" },
+
+      { cat: "Reputación y Reseñas", item: "Rating mínimo de 4.3", impact: "CRÍTICO" },
+      { cat: "Reputación y Reseñas", item: "Más de 50 reseñas", impact: "MEDIO" },
+      { cat: "Reputación y Reseñas", item: "Responde reseñas positivas", impact: "MEDIO" },
+      { cat: "Reputación y Reseñas", item: "Responde reseñas negativas con estrategia", impact: "CRÍTICO" },
+      { cat: "Reputación y Reseñas", item: "Tiene sistema para pedir reseñas", impact: "CRÍTICO" },
+      { cat: "Reputación y Reseñas", item: "Reseñas mencionan productos/servicios clave", impact: "BAJO" },
+
+      { cat: "Sitio Web y SEO Local", item: "Tiene sitio web funcional", impact: "CRÍTICO" },
+      { cat: "Sitio Web y SEO Local", item: "Carga rápido en celular", impact: "CRÍTICO" },
+      { cat: "Sitio Web y SEO Local", item: "Tiene botón visible de WhatsApp o llamada", impact: "CRÍTICO" },
+      { cat: "Sitio Web y SEO Local", item: "Título y metadescripción optimizados", impact: "MEDIO" },
+      { cat: "Sitio Web y SEO Local", item: "Página de servicios clara", impact: "MEDIO" },
+      { cat: "Sitio Web y SEO Local", item: "Dirección, teléfono y ciudad consistentes", impact: "MEDIO" },
+
+      { cat: "Redes Sociales", item: "Instagram o Facebook activos", impact: "MEDIO" },
+      { cat: "Redes Sociales", item: "Publica contenido mínimo semanal", impact: "MEDIO" },
+      { cat: "Redes Sociales", item: "Tiene contenido de prueba social", impact: "CRÍTICO" },
+      { cat: "Redes Sociales", item: "Tiene oferta clara o promoción vigente", impact: "CRÍTICO" },
+      { cat: "Redes Sociales", item: "Link directo a WhatsApp o reservas", impact: "CRÍTICO" },
+      { cat: "Redes Sociales", item: "Identidad visual coherente", impact: "BAJO" }
+    ];
+
+    const state = {
+      statuses: auditItems.map(() => "partial")
+    };
+
+    function normalizeCity(text) {
+      const t = (text || "").toLowerCase();
+      const found = cities.find(c => t.includes(c));
+      if (!found) return "";
+      const map = { "medellin": "Medellín", "medellín": "Medellín", "bogota": "Bogotá", "bogotá": "Bogotá", "cucuta": "Cúcuta", "cúcuta": "Cúcuta", "ibague": "Ibagué", "ibagué": "Ibagué" };
+      return map[found] || found.charAt(0).toUpperCase() + found.slice(1);
+    }
+
+    function searchMap() {
+      const query = document.getElementById("searchInput").value.trim();
+      if (!query) return alert("Escribe el nombre del negocio, dirección o ciudad.");
+      const city = normalizeCity(query);
+      if (city && !document.getElementById("city").value) document.getElementById("city").value = city;
+      document.getElementById("cityHint").textContent = city ? `Ciudad detectada: ${city}` : "No se detectó ciudad. Puedes escribirla manualmente en los datos del negocio.";
+      document.getElementById("mapFrame").src = `https://www.google.com/maps?q=${encodeURIComponent(query)}&output=embed`;
+      refreshAll();
+    }
+
+    function useMyLocation() {
+      if (!navigator.geolocation) return alert("Tu navegador no permite geolocalización.");
+      navigator.geolocation.getCurrentPosition(pos => {
+        const { latitude, longitude } = pos.coords;
+        const query = `${latitude},${longitude}`;
+        document.getElementById("searchInput").value = query;
+        document.getElementById("mapFrame").src = `https://www.google.com/maps?q=${query}&output=embed`;
+      }, () => alert("No se pudo obtener tu ubicación. Revisa permisos del navegador."));
+    }
+
+    function loadDemo() {
+      document.getElementById("searchInput").value = "Restaurante demo Laureles Medellín";
+      document.getElementById("businessName").value = "Restaurante Sabor Paisa Demo";
+      document.getElementById("category").value = "Restaurante familiar";
+      document.getElementById("city").value = "Medellín";
+      document.getElementById("phone").value = "+57 300 000 0000";
+      document.getElementById("website").value = "https://restaurantedemo.com";
+      document.getElementById("rating").value = "4.1";
+      document.getElementById("reviews").value = "36";
+      document.getElementById("gmbStatus").value = "Verificado pero incompleto";
+      document.getElementById("socials").value = "Instagram y Facebook activos, TikTok inactivo";
+      state.statuses = ["ok","ok","partial","ok","fail","partial","fail","partial","fail","fail","fail","partial","ok","partial","ok","fail","partial","partial","ok","partial","fail","partial","ok","partial"];
+      searchMap();
+      renderChecklist();
+      refreshAll();
+    }
+
+    function impactClass(impact) {
+      if (impact === "CRÍTICO") return "critical";
+      if (impact === "MEDIO") return "medium";
+      return "low";
+    }
+
+    function renderChecklist() {
+      const grouped = auditItems.reduce((acc, item, idx) => {
+        if (!acc[item.cat]) acc[item.cat] = [];
+        acc[item.cat].push({ ...item, idx });
+        return acc;
+      }, {});
+
+      document.getElementById("checklist").innerHTML = Object.entries(grouped).map(([cat, items]) => `
+        <div class="check-category">
+          <div class="check-title"><span>${cat}</span><span id="cat-mini-${slug(cat)}">0%</span></div>
+          ${items.map(({ item, impact, idx }) => `
+            <div class="check-item">
+              <div>${item}<span class="impact ${impactClass(impact)}">${impact}</span></div>
+              <div class="status-buttons">
+                <button class="${state.statuses[idx] === 'ok' ? 'active ok' : ''}" onclick="setStatus(${idx}, 'ok')">✓</button>
+                <button class="${state.statuses[idx] === 'fail' ? 'active fail' : ''}" onclick="setStatus(${idx}, 'fail')">✗</button>
+                <button class="${state.statuses[idx] === 'partial' ? 'active partial' : ''}" onclick="setStatus(${idx}, 'partial')">!</button>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `).join("");
+    }
+
+    function setStatus(idx, status) {
+      state.statuses[idx] = status;
+      renderChecklist();
+      refreshAll();
+    }
+
+    function slug(str) {
+      return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-");
+    }
+
+    function points(status, impact) {
+      const max = impact === "CRÍTICO" ? 5 : impact === "MEDIO" ? 3 : 1;
+      if (status === "ok") return max;
+      if (status === "partial") return max * 0.45;
+      return 0;
+    }
+
+    function getAuditData() {
+      const fields = ["businessName", "category", "city", "phone", "website", "rating", "reviews", "gmbStatus", "socials"];
+      const data = {};
+      fields.forEach(id => data[id] = document.getElementById(id).value.trim());
+      data.score = calculateScore().total;
+      data.categories = calculateScore().categories;
+      data.items = auditItems.map((x, i) => ({ ...x, status: state.statuses[i] }));
+      data.failures = data.items.filter(x => x.status === "fail");
+      data.partials = data.items.filter(x => x.status === "partial");
+      data.ok = data.items.filter(x => x.status === "ok");
+      return data;
+    }
+
+    function calculateScore() {
+      let earned = 0, max = 0;
+      const categories = {};
+      auditItems.forEach((item, i) => {
+        const itemMax = item.impact === "CRÍTICO" ? 5 : item.impact === "MEDIO" ? 3 : 1;
+        const itemEarned = points(state.statuses[i], item.impact);
+        earned += itemEarned;
+        max += itemMax;
+        if (!categories[item.cat]) categories[item.cat] = { earned: 0, max: 0, score: 0 };
+        categories[item.cat].earned += itemEarned;
+        categories[item.cat].max += itemMax;
+      });
+      Object.keys(categories).forEach(cat => categories[cat].score = Math.round((categories[cat].earned / categories[cat].max) * 100));
+      return { total: Math.round((earned / max) * 100), categories };
+    }
+
+    function refreshAll() {
+      const result = calculateScore();
+      document.getElementById("scoreValue").textContent = `${result.total}%`;
+      document.getElementById("heroScore").textContent = `${result.total}%`;
+      document.getElementById("scoreCircle").style.background = `conic-gradient(${scoreColor(result.total)} ${result.total * 3.6}deg, #e5e7eb 0deg)`;
+      document.getElementById("diagnosis").textContent = diagnosis(result.total);
+
+      document.getElementById("categoryScores").innerHTML = Object.entries(result.categories).map(([cat, obj]) => `
+        <div class="category-score">
+          <strong>${cat}</strong> <span class="small">${obj.score}%</span>
+          <div class="bar"><span style="width:${obj.score}%; background:${scoreColor(obj.score)}"></span></div>
+        </div>
+      `).join("");
+
+      Object.entries(result.categories).forEach(([cat, obj]) => {
+        const el = document.getElementById(`cat-mini-${slug(cat)}`);
+        if (el) el.textContent = `${obj.score}%`;
+      });
+
+      renderPrompts();
+      renderHistory();
+    }
+
+    function scoreColor(score) {
+      if (score >= 75) return "#16a34a";
+      if (score >= 45) return "#d97706";
+      return "#dc2626";
+    }
+
+    function diagnosis(score) {
+      if (score >= 80) return "Negocio bien posicionado. La propuesta debe enfocarse en crecimiento, campañas y automatización.";
+      if (score >= 60) return "Tiene base digital, pero hay oportunidades claras para aumentar llamadas, visitas y reseñas.";
+      if (score >= 35) return "Presencia digital débil. Hay fallas visibles que pueden estar costando clientes todos los días.";
+      return "Alta oportunidad comercial. El negocio necesita optimización urgente para aparecer, convertir y generar confianza.";
+    }
+
+    function buildContext() {
+      const d = getAuditData();
+      return `
+NEGOCIO AUDITADO
+Nombre: ${d.businessName || "No indicado"}
+Categoría: ${d.category || "No indicada"}
+Ciudad: ${d.city || "No indicada"}
+Teléfono: ${d.phone || "No indicado"}
+Web: ${d.website || "No indicada"}
+Rating: ${d.rating || "No indicado"}
+Reseñas: ${d.reviews || "No indicado"}
+Google Business Profile: ${d.gmbStatus || "No indicado"}
+Redes activas: ${d.socials || "No indicado"}
+Score general: ${d.score}%
+
+SCORES POR CATEGORÍA
+${Object.entries(d.categories).map(([cat, obj]) => `- ${cat}: ${obj.score}%`).join("\n")}
+
+FALLAS CRÍTICAS Y OPORTUNIDADES
+${d.failures.map(x => `- [${x.impact}] ${x.cat}: ${x.item}`).join("\n") || "Sin fallas marcadas."}
+
+PUNTOS PARCIALES
+${d.partials.map(x => `- [${x.impact}] ${x.cat}: ${x.item}`).join("\n") || "Sin puntos parciales."}
+      `.trim();
+    }
+
+    function promptTemplates() {
+      const context = buildContext();
+      return [
+        {
+          title: "Reporte completo de auditoría",
+          text: `${context}\n\nActúa como consultor de marketing local. Genera un reporte profesional de auditoría digital para el dueño del negocio. Usa tono claro, directo y comercial. Incluye diagnóstico, problemas encontrados, impacto en ventas, prioridades y plan de acción de 30 días.`
+        },
+        {
+          title: "Propuesta comercial",
+          text: `${context}\n\nCrea una propuesta comercial para vender un servicio de optimización digital local. Incluye: problema, oportunidad, solución, entregables, cronograma de 30 días, garantía ética, inversión sugerida en 3 paquetes y llamada a la acción.`
+        },
+        {
+          title: "Optimización descripción Google Business Profile",
+          text: `${context}\n\nRedacta 3 versiones de descripción para Google Business Profile con SEO local. Máximo 750 caracteres cada una. Incluye palabras clave por categoría y ciudad sin sonar robótico.`
+        },
+        {
+          title: "Email de primer contacto",
+          text: `${context}\n\nEscribe un email corto para contactar al dueño del negocio. Debe mencionar 2 oportunidades visibles, no sonar agresivo y proponer una revisión gratuita de 10 minutos.`
+        },
+        {
+          title: "WhatsApp de seguimiento",
+          text: `${context}\n\nEscribe 3 mensajes de WhatsApp para seguimiento comercial: primer contacto, recordatorio y cierre amable. Que sean breves, humanos y orientados a agendar llamada.`
+        },
+        {
+          title: "Estrategia de reseñas",
+          text: `${context}\n\nDiseña una estrategia para aumentar reseñas reales en Google durante 30 días. Incluye guion para pedir reseñas, QR, incentivo permitido sin manipular opiniones, seguimiento y métricas.`
+        }
+      ];
+    }
+
+    function renderPrompts() {
+      document.getElementById("prompts").innerHTML = promptTemplates().map((p, i) => `
+        <div class="prompt-card">
+          <h4>${p.title}</h4>
+          <pre id="prompt-${i}">${escapeHTML(p.text)}</pre>
+          <button class="light" onclick="copyPrompt(${i})">Copiar prompt</button>
+        </div>
+      `).join("");
+    }
+
+    function escapeHTML(str) {
+      return str.replace(/[&<>'"]/g, tag => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[tag]));
+    }
+
+    function copyPrompt(i) {
+      navigator.clipboard.writeText(promptTemplates()[i].text);
+      alert("Prompt copiado.");
+    }
+
+    function buildProposalPrompt() {
+      return `${buildContext()}\n\nGenera una propuesta comercial completa para el dueño del negocio. Debe incluir:\n1. Título vendedor.\n2. Resumen ejecutivo.\n3. Diagnóstico según el score.\n4. Problemas detectados y cómo afectan ventas.\n5. Plan de acción de 30 días.\n6. Entregables concretos.\n7. Paquetes sugeridos: Básico, Pro y Dominio Local.\n8. Mensaje final para agendar llamada.\n\nUsa español latino, tono profesional, directo y persuasivo. No inventes datos no suministrados.`;
+    }
+
+    async function generateWithClaude() {
+      const apiKey = document.getElementById("claudeKey").value.trim();
+      const model = document.getElementById("claudeModel").value.trim() || "claude-sonnet-4-5";
+      const proxy = document.getElementById("proxyEndpoint").value.trim();
+      const output = document.getElementById("claudeOutput");
+      output.value = "Generando propuesta...";
+
+      const prompt = buildProposalPrompt();
+
+      try {
+        let res;
+        if (proxy) {
+          res = await fetch(proxy, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ model, prompt, audit: getAuditData() })
+          });
+        } else {
+          if (!apiKey) throw new Error("Debes colocar una API key o un endpoint proxy.");
+          res = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": apiKey,
+              "anthropic-version": "2023-06-01"
+            },
+            body: JSON.stringify({
+              model,
+              max_tokens: 2500,
+              messages: [{ role: "user", content: prompt }]
+            })
+          });
+        }
+
+        if (!res.ok) throw new Error(`Error HTTP ${res.status}. Si estás llamando directo desde navegador, puede ser CORS o clave inválida.`);
+        const data = await res.json();
+        const text = data.proposal || data.output || data.content?.map(c => c.text).join("\n") || JSON.stringify(data, null, 2);
+        output.value = text;
+      } catch (err) {
+        output.value = `No se pudo generar automáticamente: ${err.message}\n\nSolución recomendada: crea un pequeño endpoint proxy/serverless que reciba { model, prompt, audit } y desde el servidor llame a Claude. Mientras tanto, usa el botón "Copiar payload" o los prompts listos.`;
+      }
+    }
+
+    function copyClaudePayload() {
+      const payload = {
+        model: document.getElementById("claudeModel").value.trim() || "claude-sonnet-4-5",
+        max_tokens: 2500,
+        messages: [{ role: "user", content: buildProposalPrompt() }]
+      };
+      navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
+      alert("Payload copiado.");
+    }
+
+    function exportTXT() {
+      const d = getAuditData();
+      const txt = `AUDITORÍA DIGITAL LOCAL\n\n${buildContext()}\n\nDIAGNÓSTICO\n${diagnosis(d.score)}\n\nRECOMENDACIÓN COMERCIAL\nPrioriza primero las fallas críticas, luego los elementos parciales de conversión y finalmente identidad visual/contenido.\n\nFecha: ${new Date().toLocaleString()}`;
+      const blob = new Blob([txt], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `auditoria-${(d.businessName || 'negocio').replace(/[^a-z0-9]+/gi, '-')}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function saveAudit() {
+      const audits = JSON.parse(localStorage.getItem("audits") || "[]");
+      audits.unshift({ date: new Date().toISOString(), data: getAuditData(), statuses: state.statuses });
+      localStorage.setItem("audits", JSON.stringify(audits.slice(0, 20)));
+      renderHistory();
+      alert("Auditoría guardada en este navegador.");
+    }
+
+    function renderHistory() {
+      const audits = JSON.parse(localStorage.getItem("audits") || "[]");
+      document.getElementById("history").innerHTML = audits.length ? audits.slice(0, 6).map((a, i) => `
+        <div class="history-item">
+          <strong>${a.data.businessName || "Negocio sin nombre"}</strong><br>
+          <span class="small">${new Date(a.date).toLocaleString()} · Score ${a.data.score}%</span><br>
+          <button class="light" onclick="loadAudit(${i})">Cargar</button>
+        </div>
+      `).join("") : `<p class="small">Aún no tienes auditorías guardadas.</p>`;
+    }
+
+    function loadAudit(index) {
+      const audits = JSON.parse(localStorage.getItem("audits") || "[]");
+      const a = audits[index];
+      if (!a) return;
+      const d = a.data;
+      Object.entries({ businessName: d.businessName, category: d.category, city: d.city, phone: d.phone, website: d.website, rating: d.rating, reviews: d.reviews, gmbStatus: d.gmbStatus, socials: d.socials }).forEach(([id, val]) => {
+        if (document.getElementById(id)) document.getElementById(id).value = val || "";
+      });
+      state.statuses = a.statuses || state.statuses;
+      renderChecklist();
+      refreshAll();
+    }
+
+    function resetAudit() {
+      if (!confirm("¿Reiniciar la auditoría actual?")) return;
+      document.querySelectorAll("input, textarea").forEach(el => {
+        if (!["claudeModel"].includes(el.id)) el.value = "";
+      });
+      document.getElementById("claudeModel").value = "claude-sonnet-4-5";
+      document.getElementById("gmbStatus").value = "No verificado";
+      state.statuses = auditItems.map(() => "partial");
+      renderChecklist();
+      refreshAll();
+    }
+
+    renderChecklist();
+    refreshAll();
+  </script>
+</body>
+</html>

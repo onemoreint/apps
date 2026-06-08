@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07111f">
+<title>Cotizador José Lugo | One More #1098867</title>
+<style>
+:root{
+  --bg:#06101f; --card:#0f172a; --line:#243044; --text:#f8fafc;
+  --muted:#94a3b8; --gold:#f7c948; --blue:#38bdf8; --green:#22c55e;
+  --red:#ef4444; --paper:#ffffff; --ink:#0f172a;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top left,#1d4ed8 0,#06101f 34%,#020617 100%);color:var(--text)}
+.app{max-width:1260px;margin:auto;padding:18px}
+.hero{display:flex;justify-content:space-between;gap:16px;align-items:center;background:linear-gradient(135deg,rgba(15,23,42,.96),rgba(2,6,23,.86));border:1px solid var(--line);border-radius:26px;padding:22px;margin-bottom:16px;box-shadow:0 22px 70px rgba(0,0,0,.35)}
+.logoBox{width:76px;height:76px;border-radius:22px;background:linear-gradient(135deg,var(--gold),#fff1a8);display:grid;place-items:center;color:#111827;font-weight:1000;font-size:22px;flex:none}
+.heroTitle{display:flex;gap:14px;align-items:center}
+h1{margin:0;font-size:28px;line-height:1.1}
+.subtitle{margin:7px 0 0;color:var(--gold);font-weight:800}
+.code{display:inline-block;border:1px solid rgba(247,201,72,.45);background:rgba(247,201,72,.13);color:var(--gold);border-radius:999px;padding:9px 13px;font-weight:900;margin-top:8px}
+.quick{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+button{border:0;border-radius:14px;padding:12px 14px;font-weight:900;cursor:pointer;background:var(--gold);color:#07111f}
+.secondary{background:#334155;color:var(--text)} .blue{background:var(--blue);color:#042f3f}.green{background:var(--green);color:#052e16}.red{background:var(--red);color:white}.small{padding:8px 10px;border-radius:10px;font-size:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:rgba(15,23,42,.94);border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:0 14px 42px rgba(0,0,0,.24)}
+.card h2{margin:0 0 14px;color:var(--gold);font-size:18px}
+label{display:block;color:var(--muted);font-size:12px;margin:10px 0 6px}
+input,select,textarea{width:100%;border:1px solid var(--line);background:#020617;color:var(--text);border-radius:13px;padding:12px;outline:none}
+textarea{min-height:78px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.row3{display:grid;grid-template-columns:1.5fr .55fr .8fr;gap:12px}
+.buttons{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:16px 0}
+.stat{background:#020617;border:1px solid var(--line);border-radius:18px;padding:14px}
+.stat span{display:block;color:var(--muted);font-size:12px}.stat strong{display:block;color:var(--gold);font-size:19px;margin-top:5px}
+.tableWrap{overflow:auto;border:1px solid var(--line);border-radius:16px}
+table{width:100%;border-collapse:collapse;min-width:900px} th,td{padding:10px;border-bottom:1px solid var(--line);font-size:14px;text-align:left}
+th{color:var(--gold);background:#020617}.empty{text-align:center;color:var(--muted);padding:18px}
+.noteBox{background:#020617;border:1px solid var(--line);border-radius:16px;padding:12px;color:var(--muted);font-size:13px;line-height:1.45}
+.preview{background:var(--paper);color:var(--ink);border-radius:24px;padding:28px;box-shadow:0 20px 65px rgba(0,0,0,.24)}
+.previewTop{display:flex;justify-content:space-between;gap:14px;border-bottom:3px solid #e5e7eb;padding-bottom:16px;margin-bottom:16px}
+.seller{font-size:26px;font-weight:1000}.dist{font-weight:900;color:#334155}.distCode{color:#b45309;font-weight:1000;margin-top:4px}
+.preview h2{margin:0;color:#0f172a}.preview table{min-width:100%}
+.preview th{background:#f8fafc;color:#0f172a}.preview td,.preview th{border-bottom:1px solid #e5e7eb;color:#0f172a}
+.paperGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.totalbox{margin-left:auto;max-width:420px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:18px;padding:14px;margin-top:16px}
+.totalbox div{display:flex;justify-content:space-between;margin:8px 0}.grand{font-size:20px;font-weight:1000}
+.notice{font-size:12px;color:#64748b;line-height:1.45;margin-top:16px}.hidden{display:none}
+.histItem{display:flex;justify-content:space-between;gap:12px;background:#020617;border:1px solid var(--line);border-radius:15px;padding:11px;margin:8px 0}.histItem small{color:var(--muted)}
+.footer{text-align:center;color:var(--muted);font-size:12px;margin:20px 0}.badge{display:inline-block;background:#e0f2fe;color:#075985;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:900}
+@media(max-width:1000px){.grid,.row,.row3,.paperGrid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.hero{display:block}.quick{justify-content:flex-start;margin-top:12px}.app{padding:12px}h1{font-size:23px}.previewTop{display:block}}
+@media print{body{background:white}.app>*:not(#printArea){display:none!important}#printArea{display:block!important}.preview{box-shadow:none;border-radius:0}.noPrint{display:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <section class="hero">
+    <div class="heroTitle">
+      <div class="logoBox">JL</div>
+      <div>
+        <h1>José Lugo</h1>
+        <div class="subtitle">Distribuidor Independiente One More</div>
+        <div class="code">Código de Distribuidor: #1098867</div>
+      </div>
+    </div>
+    <div class="quick">
+      <button onclick="generarVista()">Vista</button>
+      <button class="green" onclick="enviarWhatsApp()">WhatsApp</button>
+      <button class="secondary" onclick="window.print()">PDF / Imprimir</button>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h2>Datos y tasa del país</h2>
+      <div class="row">
+        <div><label>Cliente</label><input id="cliente" placeholder="Nombre y apellido"></div>
+        <div><label>WhatsApp cliente</label><input id="telefono" placeholder="+57 300 000 0000"></div>
+      </div>
+      <div class="row">
+        <div><label>País / moneda</label><select id="pais"></select></div>
+        <div><label>Tipo de precio</label><select id="tipoPrecio"><option value="publico">Precio público</option><option value="distribuidor">Precio distribuidor</option></select></div>
+      </div>
+      <div class="row">
+        <div><label>Tasa USD a moneda local</label><input id="tasa" type="number" min="0" step="0.0001"></div>
+        <div><label>BCV Venezuela</label><input id="bcv" type="number" min="0" step="0.0001" value="567.6828"></div>
+      </div>
+      <div class="row">
+        <div><label>Validez</label><select id="validez"><option>7 días</option><option selected>15 días</option><option>30 días</option></select></div>
+        <div><label>Número</label><input id="numero" readonly></div>
+      </div>
+      <div class="row">
+        <div><label>WhatsApp José Lugo</label><input id="waVendedor" value="+573126387467"></div>
+        <div><label>Fecha de tasa</label><input id="fechaTasa" readonly></div>
+      </div>
+      <div class="noteBox" id="rateNote"></div>
+      <label>Notas comerciales</label>
+      <textarea id="notas">Cotización sujeta a disponibilidad, país, inventario, tasa de cambio, envío y confirmación de pago.</textarea>
+    </div>
+
+    <div class="card">
+      <h2>Agregar producto</h2>
+      <div class="row3">
+        <div><label>Producto</label><select id="producto"></select></div>
+        <div><label>Cantidad</label><input id="cantidad" type="number" min="1" value="1"></div>
+        <div><label>Envío manual USD</label><input id="envioManual" type="number" min="0" step="0.01" placeholder="Automático por QV"></div>
+      </div>
+      <div class="buttons">
+        <button onclick="agregarProducto()">Agregar</button>
+        <button class="secondary" onclick="vaciarCarrito()">Vaciar</button>
+      </div>
+
+      <h2 style="margin-top:22px">Paquetes sugeridos</h2>
+      <div class="row">
+        <div><label>Necesidad</label><select id="tratamiento"></select></div>
+        <div><label>Paquete</label><select id="paquete"><option value="basico">Básico</option><option value="completo">Completo</option></select></div>
+      </div>
+      <div class="buttons"><button class="blue" onclick="cargarTratamiento()">Cargar sugerencia</button></div>
+      <div class="noteBox" style="margin-top:14px">
+        Envíos según la imagen: 0-99 QV = $12 · 100-149 QV = $10 · 150-199 QV = $8 · 200-299 QV = $6 · 300+ QV = gratis.
+      </div>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat"><span>Productos</span><strong id="mItems">0</strong></div>
+    <div class="stat"><span>Total USD</span><strong id="mTotal">$0.00</strong></div>
+    <div class="stat"><span>Total QV</span><strong id="mQV">0</strong></div>
+    <div class="stat"><span>Total CV</span><strong id="mCV">0</strong></div>
+    <div class="stat"><span>Envío</span><strong id="mEnvio">$0.00</strong></div>
+    <div class="stat"><span>Bono equipo</span><strong id="mBono">0%</strong></div>
+  </section>
+
+  <section class="card">
+    <h2>Productos cotizados</h2>
+    <div class="tableWrap">
+      <table>
+        <thead><tr><th>Producto</th><th>Cant.</th><th>QV</th><th>CV</th><th>PZ</th><th>Precio USD</th><th>Precio local</th><th>Subtotal USD</th><th>Acción</th></tr></thead>
+        <tbody id="carritoBody"><tr><td colspan="9" class="empty">Agrega productos para iniciar.</td></tr></tbody>
+      </table>
+    </div>
+    <div class="buttons">
+      <button class="green" onclick="generarVista()">Generar cotización</button>
+      <button class="blue" onclick="enviarWhatsApp()">Enviar por WhatsApp</button>
+      <button class="secondary" onclick="guardarCotizacion()">Guardar</button>
+      <button class="secondary" onclick="window.print()">PDF / Imprimir</button>
+    </div>
+  </section>
+
+  <section id="printArea" class="hidden" style="margin-top:16px">
+    <div class="preview">
+      <div class="previewTop">
+        <div>
+          <div class="seller">José Lugo</div>
+          <div class="dist">Distribuidor Independiente One More</div>
+          <div class="distCode">Código de Distribuidor: #1098867</div>
+          <div style="margin-top:8px"><span class="badge">Cotización comercial</span></div>
+        </div>
+        <div style="text-align:right">
+          <h2 id="pNumero"></h2>
+          <div id="pFecha"></div>
+          <div id="pValidez"></div>
+        </div>
+      </div>
+      <div class="paperGrid">
+        <div>
+          <strong>Cliente:</strong> <span id="pCliente"></span><br>
+          <strong>WhatsApp:</strong> <span id="pTelefono"></span><br>
+          <strong>País:</strong> <span id="pPais"></span>
+        </div>
+        <div>
+          <strong>Precio:</strong> <span id="pTipo"></span><br>
+          <strong>Tasa usada:</strong> <span id="pTasa"></span><br>
+          <strong>Asesor:</strong> José Lugo · #1098867
+        </div>
+      </div>
+      <table style="margin-top:18px">
+        <thead><tr><th>Producto</th><th>Cant.</th><th>QV</th><th>CV</th><th>PZ</th><th>Precio USD</th><th>Subtotal USD</th></tr></thead>
+        <tbody id="pBody"></tbody>
+      </table>
+      <div class="totalbox">
+        <div><span>Subtotal USD</span><strong id="pSubtotal">$0.00</strong></div>
+        <div><span>Envío USD</span><strong id="pEnvio">$0.00</strong></div>
+        <div><span>QV / CV / PZ</span><strong id="pVolumen">0 / 0 / 0</strong></div>
+        <div><span>Nivel de bono</span><strong id="pBono">0%</strong></div>
+        <div class="grand"><span>Total USD</span><strong id="pTotal">$0.00</strong></div>
+        <div class="grand"><span>Total local</span><strong id="pLocal">0.00</strong></div>
+      </div>
+      <p><strong>Notas:</strong> <span id="pNotas"></span></p>
+      <p class="notice">Aviso: esta herramienta es informativa y comercial. No sustituye diagnóstico, tratamiento ni recomendación médica profesional. Los precios pueden variar por políticas oficiales, país, inventario, promociones, impuestos, envío y tasa de cambio.</p>
+    </div>
+  </section>
+
+  <section class="card noPrint" style="margin-top:16px">
+    <h2>Historial</h2>
+    <div id="historial"></div>
+    <div class="buttons"><button class="red" onclick="borrarHistorial()">Borrar historial</button></div>
+  </section>
+
+  <div class="footer">José Lugo · Distribuidor Independiente One More · Código #1098867</div>
+</div>
+
+<script>
+const hoy = new Date().toLocaleDateString("es-ES");
+const paises=[
+  {nombre:"Colombia",moneda:"COP",tasa:3588.09,nota:"TRM referencial del día."},
+  {nombre:"Venezuela",moneda:"VES",tasa:667.6828,nota:"Venezuela usa BCV + 100 Bs. Puedes editar el BCV y se recalcula."},
+  {nombre:"Estados Unidos",moneda:"USD",tasa:1,nota:"Precios base en dólares."},
+  {nombre:"México",moneda:"MXN",tasa:17.46,nota:"Tipo de cambio referencial USD/MXN."},
+  {nombre:"Perú",moneda:"PEN",tasa:3.75,nota:"Tipo de cambio referencial USD/PEN editable."},
+  {nombre:"Ecuador",moneda:"USD",tasa:1,nota:"Ecuador usa USD."},
+  {nombre:"República Dominicana",moneda:"DOP",tasa:58.20,nota:"Tipo de cambio referencial USD/DOP."},
+  {nombre:"España",moneda:"EUR",tasa:0.92,nota:"Tipo de cambio referencial USD/EUR editable."},
+  {nombre:"Italia",moneda:"EUR",tasa:0.92,nota:"Tipo de cambio referencial USD/EUR editable."},
+  {nombre:"Chile",moneda:"CLP",tasa:930,nota:"Tipo de cambio referencial USD/CLP editable."}
+];
+
+const productos=[
+  {nombre:"Painless Night Glu",qv:50,cv:25,pz:25,distribuidor:64,publico:80},
+  {nombre:"Omevia",qv:32,cv:17,pz:27,distribuidor:39,publico:50},
+  {nombre:"Melatonin",qv:30,cv:14,pz:24,distribuidor:35,publico:48},
+  {nombre:"B12 Plus",qv:30,cv:14,pz:32,distribuidor:35,publico:48},
+  {nombre:"Collagen Patch Sornie",qv:45,cv:23,pz:27,distribuidor:59,publico:80},
+  {nombre:"Slim Style",qv:25,cv:13,pz:30,distribuidor:32,publico:44},
+  {nombre:"Dekamin",qv:25,cv:13,pz:24,distribuidor:32,publico:44},
+  {nombre:"Night Ladies",qv:45,cv:23,pz:27,distribuidor:59,publico:80},
+  {nombre:"Night Gentleman",qv:45,cv:23,pz:27,distribuidor:59,publico:80},
+  {nombre:"Glutanad",qv:50,cv:25,pz:30,distribuidor:67,publico:80}
+];
+
+const tratamientos={
+  "Control de peso":{basico:["Slim Style","Dekamin"],completo:["Slim Style","Dekamin","Omevia"]},
+  "Sueño y descanso":{basico:["Melatonin"],completo:["Melatonin","Painless Night Glu"]},
+  "Energía y vitaminas":{basico:["B12 Plus"],completo:["B12 Plus","Omevia","Dekamin"]},
+  "Bienestar general":{basico:["Omevia","Dekamin"],completo:["Omevia","B12 Plus","Collagen Patch Sornie"]},
+  "Cuidado femenino":{basico:["Night Ladies"],completo:["Night Ladies","Collagen Patch Sornie","Omevia"]},
+  "Cuidado masculino":{basico:["Night Gentleman"],completo:["Night Gentleman","B12 Plus","Omevia"]},
+  "Piel y antioxidantes":{basico:["Glutanad"],completo:["Glutanad","Collagen Patch Sornie","Omevia"]}
+};
+
+let carrito=[];
+function $(id){return document.getElementById(id)}
+function money(n){return "$"+Number(n||0).toFixed(2)}
+function localFmt(n,moneda){return Number(n||0).toLocaleString("es-CO",{maximumFractionDigits:2})+" "+moneda}
+function init(){
+  $("numero").value="COT-"+String(Date.now()).slice(-6);
+  $("fechaTasa").value=hoy;
+  paises.forEach((p,i)=>{let op=document.createElement("option");op.value=i;op.textContent=`${p.nombre} · ${p.moneda}`;$("pais").appendChild(op)});
+  productos.forEach((p,i)=>{let op=document.createElement("option");op.value=i;op.textContent=`${p.nombre} · QV ${p.qv}`;$("producto").appendChild(op)});
+  Object.keys(tratamientos).forEach(k=>{let op=document.createElement("option");op.value=k;op.textContent=k;$("tratamiento").appendChild(op)});
+  $("pais").value=0; $("tasa").value=paises[0].tasa;
+  ["pais","tipoPrecio","tasa","envioManual","bcv"].forEach(id=>$(id).addEventListener("input",()=>{if(id==="pais")actualizarTasaPais(); if(id==="bcv" && paises[$("pais").value].nombre==="Venezuela")$("tasa").value=(Number($("bcv").value||0)+100).toFixed(4); render()}));
+  cargarHistorial(); actualizarNota(); render();
+}
+function actualizarTasaPais(){
+  const p=paises[$("pais").value];
+  if(p.nombre==="Venezuela") $("tasa").value=(Number($("bcv").value||0)+100).toFixed(4);
+  else $("tasa").value=p.tasa;
+  actualizarNota();
+}
+function actualizarNota(){
+  const p=paises[$("pais").value];
+  const extra = p.nombre==="Venezuela" ? ` Tasa aplicada: ${$("tasa").value} VES/USD.` : ` Tasa aplicada: ${$("tasa").value} ${p.moneda}/USD.`;
+  $("rateNote").textContent = p.nota + extra + " Todas las tasas son editables antes de cotizar.";
+}
+function agregarProducto(){let p=productos[$("producto").value],c=Math.max(1,parseInt($("cantidad").value||1));let ex=carrito.find(x=>x.nombre===p.nombre);ex?ex.cantidad+=c:carrito.push({...p,cantidad:c});render()}
+function vaciarCarrito(){carrito=[];render()}
+function quitar(i){carrito.splice(i,1);render()}
+function cargarTratamiento(){tratamientos[$("tratamiento").value][$("paquete").value].forEach(n=>{let p=productos.find(x=>x.nombre===n);let ex=carrito.find(x=>x.nombre===n);ex?ex.cantidad++:carrito.push({...p,cantidad:1})});render()}
+function envioPorQV(qv){if($("envioManual").value!=="")return Number($("envioManual").value||0);if(!carrito.length)return 0;if(qv>=300)return 0;if(qv>=200)return 6;if(qv>=150)return 8;if(qv>=100)return 10;return 12}
+function nivelBono(qv){if(qv>=1000)return "Diamante · 19% aprox."; if(qv>=700)return "17%"; if(qv>=500)return "15%"; if(qv>=300)return "13%"; if(qv>=100)return "11%"; return "0%"}
+function totals(){let tipo=$("tipoPrecio").value,subtotal=0,qv=0,cv=0,pz=0,items=0;carrito.forEach(x=>{subtotal+=x[tipo]*x.cantidad;qv+=x.qv*x.cantidad;cv+=x.cv*x.cantidad;pz+=x.pz*x.cantidad;items+=x.cantidad});let envio=envioPorQV(qv),total=subtotal+envio,p=paises[$("pais").value],local=total*Number($("tasa").value||1);return{subtotal,qv,cv,pz,items,envio,total,pais:p.nombre,moneda:p.moneda,local,bono:nivelBono(qv),tasa:Number($("tasa").value||1)}}
+function render(){actualizarNota();let body=$("carritoBody"),tipo=$("tipoPrecio").value,t=totals();body.innerHTML="";if(!carrito.length)body.innerHTML='<tr><td colspan="9" class="empty">Agrega productos para iniciar.</td></tr>';carrito.forEach((x,i)=>{let precio=x[tipo],local=precio*t.tasa;let tr=document.createElement("tr");tr.innerHTML=`<td>${x.nombre}</td><td>${x.cantidad}</td><td>${x.qv*x.cantidad}</td><td>${x.cv*x.cantidad}</td><td>${x.pz*x.cantidad}</td><td>${money(precio)}</td><td>${localFmt(local,t.moneda)}</td><td>${money(precio*x.cantidad)}</td><td><button class="small red" onclick="quitar(${i})">Quitar</button></td>`;body.appendChild(tr)});
+  $("mItems").textContent=t.items; $("mTotal").textContent=money(t.total); $("mQV").textContent=t.qv; $("mCV").textContent=t.cv; $("mEnvio").textContent=money(t.envio); $("mBono").textContent=t.bono;
+}
+function generarVista(){let t=totals(),tipo=$("tipoPrecio").value;$("printArea").classList.remove("hidden");$("pNumero").textContent=$("numero").value;$("pFecha").textContent=new Date().toLocaleDateString("es-ES");$("pValidez").textContent="Validez: "+$("validez").value;$("pCliente").textContent=$("cliente").value||"Cliente";$("pTelefono").textContent=$("telefono").value||"-";$("pPais").textContent=t.pais+" · "+t.moneda;$("pTipo").textContent=tipo==="publico"?"Precio público":"Precio distribuidor";$("pTasa").textContent=t.tasa+" "+t.moneda+"/USD";$("pNotas").textContent=$("notas").value;$("pBody").innerHTML="";carrito.forEach(x=>{let tr=document.createElement("tr");tr.innerHTML=`<td>${x.nombre}</td><td>${x.cantidad}</td><td>${x.qv*x.cantidad}</td><td>${x.cv*x.cantidad}</td><td>${x.pz*x.cantidad}</td><td>${money(x[tipo])}</td><td>${money(x[tipo]*x.cantidad)}</td>`;$("pBody").appendChild(tr)});$("pSubtotal").textContent=money(t.subtotal);$("pEnvio").textContent=money(t.envio);$("pVolumen").textContent=`${t.qv} / ${t.cv} / ${t.pz}`;$("pBono").textContent=t.bono;$("pTotal").textContent=money(t.total);$("pLocal").textContent=localFmt(t.local,t.moneda);window.scrollTo({top:$("printArea").offsetTop-10,behavior:"smooth"})}
+function enviarWhatsApp(){let t=totals(),tipo=$("tipoPrecio").value;let msg=`Hola, soy José Lugo, Distribuidor One More código #1098867.%0A%0ATe comparto tu cotización:%0A`;carrito.forEach(x=>msg+=`- ${x.nombre} x${x.cantidad}: ${money(x[tipo]*x.cantidad)} | QV ${x.qv*x.cantidad}%0A`);msg+=`%0ASubtotal: ${money(t.subtotal)}%0AEnvío: ${money(t.envio)}%0ATotal USD: ${money(t.total)}%0ATotal ${t.moneda}: ${t.local.toLocaleString("es-CO",{maximumFractionDigits:2})}%0AQV: ${t.qv} | Bono: ${t.bono}%0A%0ATasa usada: ${t.tasa} ${t.moneda}/USD%0AValidez: ${$("validez").value}%0A${encodeURIComponent($("notas").value)}`;let tel=($("telefono").value||$("waVendedor").value||"").replace(/\D/g,"");window.open(`https://wa.me/${tel}?text=${msg}`,"_blank")}
+function guardarCotizacion(){let t=totals();let item={id:$("numero").value,fecha:new Date().toISOString(),cliente:$("cliente").value||"Cliente",total:t.total,local:t.local,moneda:t.moneda,qv:t.qv,carrito};let data=JSON.parse(localStorage.getItem("cotizacionesJL1098867v3")||"[]");data.unshift(item);localStorage.setItem("cotizacionesJL1098867v3",JSON.stringify(data.slice(0,40)));cargarHistorial();alert("Cotización guardada")}
+function cargarHistorial(){let data=JSON.parse(localStorage.getItem("cotizacionesJL1098867v3")||"[]"),cont=$("historial");if(!data.length){cont.innerHTML='<p style="color:#94a3b8">Todavía no hay cotizaciones guardadas.</p>';return}cont.innerHTML="";data.forEach(x=>{let d=document.createElement("div");d.className="histItem";d.innerHTML=`<div><strong>${x.cliente}</strong><br><small>${x.id} · ${new Date(x.fecha).toLocaleDateString("es-ES")} · QV ${x.qv}</small></div><div><strong>${money(x.total)}</strong><br><small>${x.local.toLocaleString("es-CO",{maximumFractionDigits:2})} ${x.moneda}</small></div>`;cont.appendChild(d)})}
+function borrarHistorial(){if(confirm("¿Borrar historial?")){localStorage.removeItem("cotizacionesJL1098867v3");cargarHistorial()}}
+init();
+</script>
+</body>
+</html>

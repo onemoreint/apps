@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard Mundial 2026 | Análisis Deportivo</title>
+<style>
+:root{
+  --bg:#07101f;--panel:#101b31;--panel2:#14243f;--text:#f5f7fb;--muted:#9fb1d1;
+  --gold:#f5c84b;--cyan:#00d9ff;--green:#35e58c;--red:#ff6b6b;--border:#263a5f;
+}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,Arial,sans-serif;background:radial-gradient(circle at top,#17376a 0,#07101f 45%,#030712 100%);color:var(--text)}
+header{padding:34px 18px;text-align:center;border-bottom:1px solid var(--border)}
+h1{font-size:clamp(28px,5vw,54px);margin:0;background:linear-gradient(90deg,var(--gold),#fff,var(--cyan));-webkit-background-clip:text;color:transparent}
+.subtitle{max-width:880px;margin:14px auto 0;color:var(--muted);line-height:1.6}.wrap{max-width:1200px;margin:0 auto;padding:24px}
+.notice{background:#1b2438;border:1px solid var(--border);border-radius:18px;padding:16px;color:#dce8ff;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.card{background:linear-gradient(180deg,var(--panel),#0b1529);border:1px solid var(--border);border-radius:22px;padding:20px;box-shadow:0 20px 50px #0007}
+label{display:block;color:var(--muted);font-size:14px;margin-bottom:6px}select,input{width:100%;background:#081326;color:var(--text);border:1px solid var(--border);border-radius:14px;padding:13px;font-size:15px;margin-bottom:12px}
+button{width:100%;padding:14px;border:0;border-radius:15px;background:linear-gradient(90deg,var(--gold),var(--cyan));font-weight:800;cursor:pointer;color:#06101f;font-size:16px}
+.teams{display:grid;grid-template-columns:1fr 80px 1fr;gap:12px;align-items:center;text-align:center}.teamBox{background:var(--panel2);border-radius:18px;padding:16px;border:1px solid var(--border)}
+.teamName{font-size:22px;font-weight:800}.vs{font-size:26px;color:var(--gold);font-weight:900}.score{font-size:46px;font-weight:900;color:var(--cyan)}
+.meter{height:13px;background:#253754;border-radius:99px;overflow:hidden;margin:8px 0 14px}.fill{height:100%;width:50%;background:linear-gradient(90deg,var(--green),var(--cyan));transition:.4s}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}.kpi{background:#0a1529;border:1px solid var(--border);border-radius:16px;padding:14px;text-align:center}.kpi b{font-size:24px;color:var(--gold)}
+.matchList{display:grid;gap:10px}.match{padding:13px;border:1px solid var(--border);border-radius:15px;background:#0b162b;cursor:pointer}.match:hover{border-color:var(--cyan)}.tag{display:inline-block;font-size:12px;color:#06101f;background:var(--gold);border-radius:99px;padding:3px 9px;margin-bottom:6px;font-weight:700}
+.analysis{line-height:1.7;color:#dbe7ff}.safe{color:#9fb1d1;font-size:13px;margin-top:16px}.links a{color:var(--cyan);display:block;margin:8px 0;text-decoration:none}.small{font-size:13px;color:var(--muted)}
+@media(max-width:850px){.grid{grid-template-columns:1fr}.teams{grid-template-columns:1fr}.vs{font-size:20px}.kpis{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Dashboard Mundial 2026</h1>
+  <p class="subtitle">Herramienta interactiva de análisis deportivo: compara selecciones por ranking FIFA, forma reciente, goles, defensa, localía y jugadores clave. No usa cuotas ni recomienda apuestas.</p>
+</header>
+<div class="wrap">
+  <div class="notice">⚠️ Uso educativo y de análisis futbolístico. Los resultados reales dependen de lesiones, decisiones tácticas, clima, arbitraje, estado emocional y eventos impredecibles del partido.</div>
+  <div class="grid">
+    <section class="card">
+      <h2>Analizador de Partido</h2>
+      <label>Selecciona partido del calendario</label>
+      <select id="fixture" onchange="loadFixture()"></select>
+      <div class="teams">
+        <div class="teamBox"><div class="teamName" id="nameA">Equipo A</div><div class="score" id="indexA">0</div><div class="small">Índice de rendimiento</div></div>
+        <div class="vs">VS</div>
+        <div class="teamBox"><div class="teamName" id="nameB">Equipo B</div><div class="score" id="indexB">0</div><div class="small">Índice de rendimiento</div></div>
+      </div>
+      <h3>Fuerza comparativa</h3>
+      <div id="labelA" class="small">Equipo A</div><div class="meter"><div class="fill" id="barA"></div></div>
+      <div id="labelB" class="small">Equipo B</div><div class="meter"><div class="fill" id="barB"></div></div>
+      <div class="kpis">
+        <div class="kpi"><span>Favoritismo</span><br><b id="fav">—</b></div>
+        <div class="kpi"><span>Equilibrio</span><br><b id="balance">—</b></div>
+        <div class="kpi"><span>Ritmo esperado</span><br><b id="pace">—</b></div>
+      </div>
+      <p class="analysis" id="analysis"></p>
+    </section>
+    <aside class="card">
+      <h2>Partidos cargados</h2>
+      <div class="matchList" id="matchList"></div>
+      <hr style="border-color:#263a5f;margin:18px 0">
+      <h3>Fuentes recomendadas</h3>
+      <div class="links">
+        <a href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/scores-fixtures" target="_blank">FIFA: calendario, resultados y partidos</a>
+        <a href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/standings" target="_blank">FIFA: posiciones del Mundial</a>
+        <a href="https://inside.fifa.com/fifa-world-ranking/men" target="_blank">FIFA/Coca-Cola Ranking masculino</a>
+      </div>
+      <p class="safe">Para actualizarlo en tiempo real, conecta una API deportiva autorizada o actualiza manualmente el bloque de datos <code>fixtures</code> y <code>teams</code>.</p>
+    </aside>
+  </div>
+</div>
+<script>
+const teams = {
+  "Corea del Sur":{rank:23,form:7,attack:74,defense:72,stars:"Son, velocidad por bandas, transición rápida"},
+  "Chequia":{rank:39,form:6,attack:69,defense:71,stars:"bloque físico, juego aéreo, orden defensivo"},
+  "Canadá":{rank:30,form:6.5,attack:72,defense:68,stars:"Davies, David, presión alta"},
+  "Bosnia y Herzegovina":{rank:70,form:5,attack:65,defense:62,stars:"experiencia, balón detenido"},
+  "Estados Unidos":{rank:16,form:7,attack:76,defense:73,stars:"Pulisic, Reyna, ritmo e intensidad"},
+  "Paraguay":{rank:56,form:5.5,attack:64,defense:70,stars:"duelos, presión, defensa fuerte"},
+  "Australia":{rank:24,form:6.5,attack:68,defense:72,stars:"físico, orden táctico, balón parado"},
+  "Turquía":{rank:26,form:7,attack:75,defense:68,stars:"talento joven, ritmo ofensivo"},
+  "Francia":{rank:3,form:8,attack:90,defense:85,stars:"Mbappé, profundidad, elite individual"},
+  "Senegal":{rank:15,form:7.5,attack:78,defense:79,stars:"potencia física, presión, transiciones"},
+  "Irak":{rank:58,form:6,attack:65,defense:66,stars:"intensidad, disciplina, contraataque"},
+  "Noruega":{rank:32,form:7,attack:82,defense:69,stars:"Haaland, Ødegaard, ataque directo"},
+  "Ghana":{rank:61,form:5.5,attack:70,defense:64,stars:"velocidad, potencia, experiencia africana"},
+  "Panamá":{rank:44,form:6.5,attack:66,defense:67,stars:"orden, intensidad, bloque compacto"},
+  "Uzbekistán":{rank:57,form:6.5,attack:67,defense:68,stars:"crecimiento competitivo, disciplina"},
+  "Colombia":{rank:13,form:8,attack:80,defense:77,stars:"Luis Díaz, James, creatividad y control"}
+};
+const fixtures = [
+  ["Corea del Sur","Chequia","Grupo A"],["Canadá","Bosnia y Herzegovina","Grupo B"],["Estados Unidos","Paraguay","Grupo D"],["Australia","Turquía","Grupo E"],["Francia","Senegal","Grupo F"],["Irak","Noruega","Grupo G"],["Ghana","Panamá","Grupo I"],["Uzbekistán","Colombia","Grupo K"]
+];
+function teamIndex(t){const x=teams[t]; const rankScore=Math.max(0,100-(x.rank*1.05)); return Math.round((rankScore*.35)+(x.form*10*.25)+(x.attack*.22)+(x.defense*.18));}
+function classify(diff){if(Math.abs(diff)<=4)return "Parejo"; if(Math.abs(diff)<=10)return "Ventaja ligera"; if(Math.abs(diff)<=18)return "Ventaja clara"; return "Ventaja muy alta";}
+function pace(a,b){let avg=(teams[a].attack+teams[b].attack+teams[a].form*10+teams[b].form*10)/4; return avg>78?"Alto":avg>69?"Medio":"Controlado";}
+function renderFixtures(){const sel=document.getElementById('fixture'),list=document.getElementById('matchList'); sel.innerHTML=''; list.innerHTML=''; fixtures.forEach((m,i)=>{sel.innerHTML+=`<option value="${i}">${m[0]} vs ${m[1]} — ${m[2]}</option>`; list.innerHTML+=`<div class="match" onclick="document.getElementById('fixture').value=${i};loadFixture();"><span class="tag">${m[2]}</span><br>${m[0]} vs ${m[1]}</div>`}); loadFixture();}
+function loadFixture(){const [a,b,g]=fixtures[document.getElementById('fixture').value||0]; const ia=teamIndex(a), ib=teamIndex(b), total=ia+ib, pa=Math.round(ia/total*100), pb=100-pa, diff=ia-ib; document.getElementById('nameA').textContent=a;document.getElementById('nameB').textContent=b;document.getElementById('indexA').textContent=ia;document.getElementById('indexB').textContent=ib;document.getElementById('barA').style.width=pa+'%';document.getElementById('barB').style.width=pb+'%';document.getElementById('labelA').textContent=a+' — '+pa+'% de fuerza comparativa';document.getElementById('labelB').textContent=b+' — '+pb+'% de fuerza comparativa';document.getElementById('fav').textContent= diff===0?'Ninguno':(diff>0?a:b);document.getElementById('balance').textContent=classify(diff);document.getElementById('pace').textContent=pace(a,b);document.getElementById('analysis').innerHTML=`<b>${g}.</b> ${Math.abs(diff)<=4?'Partido muy equilibrado: el empate deportivo es un escenario lógico por cercanía de fuerzas.':(diff>0?`${a} llega con mejor índice global, pero ${b} puede competir si reduce espacios y aprovecha transiciones.`:`${b} llega con mejor índice global, pero ${a} puede equilibrar si controla el ritmo y evita pérdidas.`)}<br><br><b>${a}:</b> ${teams[a].stars}.<br><b>${b}:</b> ${teams[b].stars}.`;}
+renderFixtures();
+</script>
+</body>
+</html>

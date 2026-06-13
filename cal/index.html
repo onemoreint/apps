@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Calculadora One More Global | Mobile Pro</title>
+  <title>Calculadora One More Global | Venezuela Rates Pro</title>
   <style>
     :root{
       --card:#111111; --card2:#1a1a1a; --gold:#d6b46a; --gold2:#f8dc8b;
@@ -108,7 +108,7 @@
 <body>
 <main class="app">
   <section class="hero">
-    <div class="badge">ONE MORE · Calculadora Global V13</div>
+    <div class="badge">ONE MORE · Calculadora Global V14</div>
     <h1>Calculadora One More con listas oficiales por país</h1>
     <p class="sub">Agrega productos o selecciona una patología para cargar automáticamente la combinación sugerida y calcular precio, QV y envío.</p>
   </section>
@@ -118,7 +118,7 @@
       <div><label>País / Moneda local</label><select id="country">
 
         <option value="US">Estados Unidos · USD</option>
-        <option value="VE">Venezuela · BCV · VES</option>
+        <option value="VE">Venezuela · VES</option>
         <option value="MX">México · MXN</option>
         <option value="CO">Colombia · TRM · COP</option>
         <option value="PE">Perú · PEN</option>
@@ -176,19 +176,19 @@
       <div id="venezuelaRateBox" style="display:none">
         <label>Tipo de tasa Venezuela</label>
         <select id="venezuelaRateType">
-          <option value="bcv">BCV oficial / TRM diaria</option>
+          <option value="bcv">BCV oficial</option>
           <option value="banco">Banco / subasta operativa</option>
-          <option value="kontigo">Kontigo / USDC</option>
-          <option value="usdt">USDT / mercado</option>
+          <option value="kontigo">Kontigo / USDC referencial</option>
+          <option value="usdt">USDT / mercado P2P</option>
         </select>
         <p class="note" style="margin-top:8px">
-          Para Venezuela puedes calcular con BCV oficial, mesa bancaria o mercado USDT. Si una fuente externa no carga, usa la tasa manual.
+          Para Venezuela puedes calcular con BCV oficial, referencia bancaria/subasta, Kontigo/USDC o USDT. Las tasas cripto y Kontigo son referenciales: si tu app o banco muestra otra tasa, usa la tasa manual.
         </p>
         <div class="ve-rate-grid" id="venezuelaRateCards">
-          <button type="button" class="ve-rate-card" data-rate-type="bcv" onclick="selectVenezuelaRate('bcv')">BCV<strong>480</strong></button>
-          <button type="button" class="ve-rate-card" data-rate-type="banco" onclick="selectVenezuelaRate('banco')">Banco / Subasta<strong>520</strong></button>
-          <button type="button" class="ve-rate-card" data-rate-type="kontigo" onclick="selectVenezuelaRate('kontigo')">Kontigo<strong>580</strong></button>
-          <button type="button" class="ve-rate-card" data-rate-type="usdt" onclick="selectVenezuelaRate('usdt')">USDT<strong>650</strong></button>
+          <button type="button" class="ve-rate-card" data-rate-type="bcv" onclick="selectVenezuelaRate('bcv')">BCV<strong>Actual</strong></button>
+          <button type="button" class="ve-rate-card" data-rate-type="banco" onclick="selectVenezuelaRate('banco')">Banco / Subasta<strong>BCV</strong></button>
+          <button type="button" class="ve-rate-card" data-rate-type="kontigo" onclick="selectVenezuelaRate('kontigo')">Kontigo / USDC<strong>Referencial</strong></button>
+          <button type="button" class="ve-rate-card" data-rate-type="usdt" onclick="selectVenezuelaRate('usdt')">USDT P2P<strong>Actual</strong></button>
         </div>
       </div>
       <div class="rate-top">
@@ -320,7 +320,7 @@ const officialCountryPrices={"BG":{"name":"Bulgaria","currency":"EUR","symbol":"
 const products=[{"name":"Painless Night Glu","aliases":["PNG","Painless","Indoloro"],"qv":50,"distribuidor":64,"publico":80,"officialKey":"ONEMORE PAINLESS NIGHT GLU 25 PCS"},{"name":"Omevia","aliases":["Omevia"],"qv":32,"distribuidor":39,"publico":50,"officialKey":"ONEMORE OMEVIA"},{"name":"Melatonin","aliases":["Melatonin"],"qv":30,"distribuidor":35,"publico":48,"officialKey":"ONEMORE MELATONIN PLUS"},{"name":"B12 Plus","aliases":["B12","B12 Plus"],"qv":30,"distribuidor":35,"publico":48,"officialKey":"ONEMORE B12 PLUS"},{"name":"Collagen Patch Sornie","aliases":["Colágeno","Colageno","Collagen"],"qv":45,"distribuidor":59,"publico":80,"officialKey":"SORNIE COLLAGEN PATCH"},{"name":"Slim Style","aliases":["Slim","Slim Style"],"qv":25,"distribuidor":32,"publico":44,"officialKey":"ONEMORE SLIM STYLE"},{"name":"Dekamin","aliases":["Dekamin","Delamin"],"qv":25,"distribuidor":32,"publico":44,"officialKey":"ONEMORE DEKAMIN"},{"name":"Night Ladies","aliases":["Night Ladies","Ladies","Night"],"qv":45,"distribuidor":59,"publico":80,"officialKey":"ONEMORE NIGHT LADIES"},{"name":"Night Gentleman","aliases":["Night Gentleman","Night Gentelman","Gentelman","Gentleman","Night"],"qv":45,"distribuidor":59,"publico":80,"officialKey":"ONEMORE NIGHT GENTLEMEN"},{"name":"Glutanad / Glutamore","aliases":["Glutanad","Glutamore"],"qv":50,"distribuidor":67,"publico":80,"officialKey":"GLUTAMORE"},{"name":"Omiprodent","aliases":["Omiprodent"],"qv":0,"distribuidor":34.04,"publico":34.04,"officialKey":"OMIPRODENT"},{"name":"Face Lifting by Lumiere","aliases":["Face Lifting","Lumiere"],"qv":0,"distribuidor":103.19,"publico":103.19,"officialKey":"FACE LIFTING BY LUMIERE"},{"name":"Sornie Anti-Aging Mask","aliases":["Sornie Mask","Anti-Aging"],"qv":0,"distribuidor":75.53,"publico":75.53,"officialKey":"SORNIE ANTI-AGING MASK"},{"name":"Pawsy Pet Care Towel","aliases":["Pawsy Towel"],"qv":0,"distribuidor":19.15,"publico":19.15,"officialKey":"PAWSY BY ONE MORE PET CARE TOWEL"},{"name":"Pawsy Pet Care Wipes","aliases":["Pawsy Wipes"],"qv":0,"distribuidor":19.15,"publico":19.15,"officialKey":"PAWSY BY ONE MORE PET CARE WIPES"},{"name":"Pawsy Pet Care Nano Spray","aliases":["Pawsy Nano Spray"],"qv":0,"distribuidor":22.34,"publico":22.34,"officialKey":"PAWSY BY ONE MORE PET CARE NANO SPRAY"},{"name":"Omicoff Classic","aliases":["Omicoff Classic"],"qv":0,"distribuidor":38.3,"publico":38.3,"officialKey":"OMICOFF CLASSIC"},{"name":"Omicoff Latte","aliases":["Omicoff Latte"],"qv":0,"distribuidor":38.3,"publico":38.3,"officialKey":"OMICOFF LATTE"},{"name":"Omicoff Mocha","aliases":["Omicoff Mocha"],"qv":0,"distribuidor":38.3,"publico":38.3,"officialKey":"OMICOFF MOCHA"}];
 const treatments=[{"c":"Alopecia","r":["Night Ladies","Melatonin","B12 Plus"],"txt":"Night según caso + Melatonin + B12 Plus","com":"No hay curación al 100%. Night según caso."},{"c":"Alzheimer","r":["Painless Night Glu","Omevia","B12 Plus"],"txt":"PNG + Omevia + B12","com":""},{"c":"Anemia","r":["B12 Plus","Dekamin"],"txt":"B12 + Dekamin","com":"Usar 3 meses y descansar 9 meses."},{"c":"Ansiedad","r":["B12 Plus","Melatonin","Painless Night Glu","Omevia"],"txt":"B12 + Melatonin + PNG + Omevia","com":""},{"c":"Articulaciones","r":["Painless Night Glu","Omevia","Collagen Patch Sornie"],"txt":"PNG + Omevia + Colágeno","com":""},{"c":"Artritis","r":["Painless Night Glu","Omevia","Melatonin","Collagen Patch Sornie"],"txt":"PNG + Omevia + Melatonin + Colágeno","com":""},{"c":"Asma","r":["Painless Night Glu","B12 Plus","Melatonin"],"txt":"PNG + B12 + Melatonin","com":"Usar por 6 meses."},{"c":"Ataques de pánico","r":["B12 Plus","Melatonin","Painless Night Glu"],"txt":"B12 + Melatonin + PNG","com":""},{"c":"Cirrosis hepática","r":["Melatonin","Omevia","Painless Night Glu","B12 Plus"],"txt":"Melatonin + Omevia + PNG + B12","com":""},{"c":"Cistitis / inflamación de tracto urinario","r":["Night Ladies","Painless Night Glu"],"txt":"Night según caso + PNG","com":"Mujeres Ladies, hombres Gentleman en zona umbilical y PNG encima de vejiga."},{"c":"Colesterol alto","r":["Omevia","Night Ladies","Painless Night Glu"],"txt":"Omevia + Night + PNG","com":"Night según caso."},{"c":"Coágulos de sangre","r":["Omevia","Painless Night Glu"],"txt":"Omevia + PNG","com":""},{"c":"Cuerdas vocales","r":["Painless Night Glu"],"txt":"PNG","com":"La mitad en cada lado de la garganta."},{"c":"Cáncer / Tumores","r":["Melatonin","Painless Night Glu","B12 Plus"],"txt":"Melatonin + PNG + B12","com":"Excepto cáncer de mama, ovario y leucemia."},{"c":"Cáncer de páncreas","r":["Painless Night Glu","Omevia","Melatonin"],"txt":"PNG + Omevia + Melatonin","com":"PNG medio en páncreas y la otra mitad en el omoplato derecho."},{"c":"Depresión","r":["Painless Night Glu","Melatonin","B12 Plus"],"txt":"PNG + Melatonin + B12","com":""},{"c":"Desmielinización","r":["B12 Plus","Melatonin","Omevia"],"txt":"B12 + Melatonin + Omevia","com":""},{"c":"Diabetes","r":["Painless Night Glu","Melatonin","B12 Plus"],"txt":"PNG + Melatonin + B12","com":""},{"c":"Diálisis de riñón","r":["Painless Night Glu","B12 Plus"],"txt":"PNG + B12","com":""},{"c":"Dolor de cadera","r":["Painless Night Glu","B12 Plus"],"txt":"PNG + B12","com":""},{"c":"Dolor de espalda crónico","r":["B12 Plus","Painless Night Glu","Melatonin","Collagen Patch Sornie"],"txt":"B12 + PNG + Melatonin + Colágeno","com":""},{"c":"Dolor de huesos","r":["Painless Night Glu","Dekamin","Omevia"],"txt":"Indoloro + Delamin/Dekamin + Omevia","com":""},{"c":"Dolores lumbares","r":["B12 Plus","Painless Night Glu","Melatonin","Omevia"],"txt":"B12 + PNG + Melatonin + Omevia","com":""},{"c":"Dolores menstruales","r":["Night Ladies","Painless Night Glu"],"txt":"Ladies + PNG","com":"Ladies al menos un mes."},{"c":"Embarazo","r":["B12 Plus","Dekamin","Melatonin"],"txt":"B12 + Dekamin + Melatonin","com":""},{"c":"Endometriosis","r":["Night Ladies"],"txt":"Night Ladies","com":"Tratamiento de 3 meses, aplicar en zona de muslos."},{"c":"Enfermedades pulmonares","r":["Painless Night Glu","Omevia","Melatonin"],"txt":"PNG + Omevia + Melatonin","com":"PNG la mitad sobre cada pulmón."},{"c":"Espondilosis","r":["Painless Night Glu","Omevia","Dekamin","Collagen Patch Sornie"],"txt":"PNG + Omevia + Dekamin + Colágeno","com":""},{"c":"Estreñimiento","r":["Painless Night Glu","Slim Style"],"txt":"PNG + Slim","com":"Debajo del ombligo. Beber progresivamente 400 ml a 1 litro de agua tibia."},{"c":"Fertilidad","r":["Painless Night Glu","Night Ladies","B12 Plus","Melatonin"],"txt":"PNG + Night + B12 + Melatonin","com":"PNG debajo del ombligo. Night según caso."},{"c":"Fiebre","r":["Painless Night Glu"],"txt":"PNG","com":"En planta del pie."},{"c":"Gonartrosis crónica","r":["Omevia","Dekamin","Painless Night Glu","Collagen Patch Sornie"],"txt":"Omevia + Dekamin + PNG + Colágeno","com":"Tratamiento de 6 meses: aplicar 3 meses + 3 semanas de descanso + aplicar 3 meses."},{"c":"Gota","r":["Painless Night Glu","Omevia","B12 Plus","Dekamin","Melatonin"],"txt":"PNG + Omevia + B12 + Dekamin + Melatonin","com":""},{"c":"Hepatitis","r":["Painless Night Glu","B12 Plus","Melatonin","Omevia"],"txt":"PNG + B12 + Melatonin + Omevia","com":""},{"c":"Hernia de disco","r":["Painless Night Glu","Collagen Patch Sornie","Dekamin"],"txt":"PNG + Colágeno + Dekamin","com":""},{"c":"Herpes","r":["Painless Night Glu","Omevia","B12 Plus"],"txt":"PNG + Omevia + B12","com":"Pegar trozos de PNG alrededor de área afectada."},{"c":"Hinchazón de piernas","r":["Painless Night Glu"],"txt":"PNG","com":"En plantas de pies."},{"c":"Hipertensión","r":["Painless Night Glu","B12 Plus","Melatonin"],"txt":"PNG + B12 + Melatonin","com":"PNG en planta del pie."},{"c":"Hipotiroidismo","r":["Painless Night Glu","Dekamin","Slim Style","Omevia"],"txt":"PNG + Dekamin + Slim + Omevia","com":""},{"c":"Hongos en los pies","r":["Painless Night Glu"],"txt":"PNG","com":"Aplicar tiras pequeñas sobre la zona."},{"c":"Impotencia","r":["Night Gentleman","Painless Night Glu","B12 Plus"],"txt":"Night Gentleman + PNG + B12","com":""},{"c":"Infarto con stent","r":["Omevia","Painless Night Glu","B12 Plus"],"txt":"Omevia + PNG + B12","com":""},{"c":"Infecciones pulmonares","r":["Painless Night Glu","Dekamin","Melatonin"],"txt":"PNG + Dekamin + Melatonin","com":""},{"c":"Inflamaciones articulares / Hidartrosis","r":["Painless Night Glu"],"txt":"PNG","com":""},{"c":"Intestino irritable","r":["Painless Night Glu","B12 Plus","Omevia","Melatonin"],"txt":"PNG + B12 + Omevia + Melatonin","com":""},{"c":"Lupus","r":["B12 Plus","Melatonin"],"txt":"B12 + Melatonin","com":""},{"c":"Malaria","r":["Painless Night Glu","B12 Plus"],"txt":"PNG + B12","com":""},{"c":"Migraña","r":["Melatonin","B12 Plus","Painless Night Glu"],"txt":"Melatonin + B12 + PNG","com":""},{"c":"Neoplasia de mama","r":["Omevia","B12 Plus","Melatonin"],"txt":"Omevia + B12 + Melatonin","com":""},{"c":"Neoplasia pancreática","r":["Painless Night Glu","Omevia","Melatonin"],"txt":"PNG + Omevia + Melatonin","com":"PNG medio en páncreas y un entero en el omoplato derecho."},{"c":"Obesidad","r":["Painless Night Glu","Melatonin","Omevia","Slim Style","Dekamin","B12 Plus","Night Ladies"],"txt":"PNG + Melatonin + Omevia + Slim + Dekamin + B12 + Night según caso","com":"Night según caso."},{"c":"Osteoporosis","r":["Painless Night Glu","Dekamin","Omevia"],"txt":"PNG + Dekamin + Omevia","com":""},{"c":"Parkinson","r":["Painless Night Glu","B12 Plus","Melatonin"],"txt":"PNG + B12 + Melatonin","com":""},{"c":"Próstata","r":["Night Gentleman","Painless Night Glu"],"txt":"Night Gentleman + PNG","com":""},{"c":"Psoriasis","r":["Painless Night Glu","Omevia","Dekamin","Melatonin"],"txt":"PNG + Omevia + Dekamin + Melatonin","com":""},{"c":"Quimioterapia / Radioterapia","r":["Melatonin"],"txt":"Melatonin","com":""},{"c":"Recuperación tras esfuerzo intenso","r":["Painless Night Glu","Melatonin"],"txt":"PNG + Melatonin","com":""},{"c":"Reumatismo","r":["Painless Night Glu","Omevia","Melatonin"],"txt":"PNG + Omevia + Melatonin","com":""},{"c":"Sangrado gingival","r":["B12 Plus","Dekamin","Omevia"],"txt":"B12 + Dekamin + Omevia","com":""},{"c":"Sinusitis crónica","r":["Painless Night Glu"],"txt":"PNG","com":"Hacer trozos pequeños y aplicar debajo de los pómulos."},{"c":"Tinnitus","r":["Melatonin","B12 Plus","Painless Night Glu"],"txt":"Melatonin + B12 + PNG","com":""},{"c":"Tiroides","r":["Painless Night Glu","B12 Plus","Omevia"],"txt":"PNG + B12 + Omevia","com":""},{"c":"Tiroides autoinmune con nódulos","r":["Painless Night Glu","Omevia","Melatonin"],"txt":"PNG + Omevia + Melatonin","com":""},{"c":"Tiroides de Hashimoto","r":["Melatonin","B12 Plus","Omevia","Painless Night Glu"],"txt":"Melatonin + B12 + Omevia + PNG","com":""},{"c":"Trazos","r":["Omevia","Melatonin","B12 Plus","Painless Night Glu"],"txt":"Omevia + Melatonin + B12","com":"Si es isquemia + PNG."},{"c":"Triglicéridos altos","r":["Omevia","Painless Night Glu","B12 Plus"],"txt":"Omevia + PNG + B12","com":""},{"c":"Tránsito intestinal","r":["Painless Night Glu","B12 Plus","Omevia","Melatonin"],"txt":"PNG + B12 + Omevia + Melatonin","com":"PNG debajo del ombligo."},{"c":"Vejiga","r":["Painless Night Glu","Night Ladies"],"txt":"PNG + Night según caso","com":"Poner en zona de la vejiga."},{"c":"Venas varicosas","r":["Painless Night Glu","Omevia"],"txt":"PNG + Omevia","com":"La mitad al inicio de la zona afectada y la otra mitad al final + ducha de agua fría en las piernas."},{"c":"Vértigo / mareo","r":["B12 Plus","Melatonin","Painless Night Glu"],"txt":"B12 + Melatonin + PNG","com":""},{"c":"Úlcera / ácido gástrico","r":["Melatonin"],"txt":"Melatonin","com":""}];
 
-let currentRate=null, cart=[], lastResult=null;
+let currentRate=null, cart=[], lastResult=null, veCardsLastUpdate=0;
 const countrySelect=document.getElementById("country"), productSelect=document.getElementById("product"), conditionSelect=document.getElementById("condition");
 products.forEach((p,i)=>{const o=document.createElement("option");o.value=i;o.textContent=p.name;productSelect.appendChild(o)});
 treatments.forEach((t,i)=>{const o=document.createElement("option");o.value=i;o.textContent=t.c;conditionSelect.appendChild(o)});
@@ -332,18 +332,138 @@ function shippingByQV(qv){if(qv>=300)return 0;if(qv>=200)return 6;if(qv>=150)ret
 function highlightShipping(qv){["ship1","ship2","ship3","ship4","ship5"].forEach(id=>document.getElementById(id)?.classList.remove("ship-active"));let id="ship1";if(qv>=300)id="ship5";else if(qv>=200)id="ship4";else if(qv>=150)id="ship3";else if(qv>=100)id="ship2";document.getElementById(id)?.classList.add("ship-active")}
 function setRate(rate,source){const c=getCountry();currentRate=Number(rate);manualRate.value=Number(rate).toFixed(2);rateText.textContent=c.currency==="USD"?"1.00 USD":`${c.symbol} ${Number(rate).toFixed(2)}`;rateMeta.textContent=`${c.name} · ${source} · Actualizado: ${new Date().toLocaleString("es-VE")}`;sourcePill.textContent="Fuente: "+source;rateError.style.display="none";calculate();markSelectedVenezuelaRate?.()}
 async function fetchJson(url){const r=await fetch(url);if(!r.ok)throw new Error("Error API");return await r.json()}
+const VE_RATE_FALLBACKS={
+  bcv:{valor:587.4059,fuente:"BCV oficial · respaldo local",fecha:"2026-06-15"},
+  banco:{valor:587.4059,fuente:"Banco/subasta · referencia BCV",fecha:"2026-06-15"},
+  kontigo:{valor:794.26,fuente:"Kontigo/USDC · referencia mercado USDT",fecha:"2026-06-13"},
+  usdt:{valor:794.26,fuente:"USDT/VES · referencia mercado",fecha:"2026-06-13"}
+};
+
+function parseVenezuelaNumber(value){
+  if(value===null || value===undefined) return null;
+  if(typeof value==="number") return value;
+  const clean=String(value)
+    .replace(/[^\d,.-]/g,"")
+    .replace(/\.(?=\d{3}(\D|$))/g,"")
+    .replace(",",".");
+  const n=Number(clean);
+  return Number.isFinite(n) && n>0 ? n : null;
+}
+
+function compactRate(value){
+  if(!value) return "Manual";
+  return Number(value).toLocaleString("es-VE",{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function updateVenezuelaRateCard(type,value,label){
+  const strong=document.querySelector(`.ve-rate-card[data-rate-type="${type}"] strong`);
+  if(strong) strong.textContent=value ? compactRate(value) : (label || "Manual");
+}
+
+function formatSourceDate(dateText){
+  if(!dateText) return "";
+  const d=new Date(dateText);
+  if(Number.isNaN(d.getTime())) return ` · Fecha: ${dateText}`;
+  return ` · Fecha: ${d.toLocaleDateString("es-VE")}`;
+}
+
+function parseMonitorDivisasRate(htmlText,rateType){
+  const plain=String(htmlText||"").replace(/<[^>]*>/g," ").replace(/\s+/g," ");
+  const patterns={
+    bcv:/Tasa\s+BCV[\s\S]{0,120}?(\d{2,5}[,.]\d{2,6})\s*Bs\s*\/\s*USD/i,
+    banco:/Tasa\s+BCV[\s\S]{0,120}?(\d{2,5}[,.]\d{2,6})\s*Bs\s*\/\s*USD/i,
+    usdt:/Tasa\s+USDT\s*\/\s*VES[\s\S]{0,180}?(\d{2,5}[,.]\d{2,6})\s*Bs\s*\/\s*USDT/i,
+    kontigo:/Tasa\s+USDT\s*\/\s*VES[\s\S]{0,180}?(\d{2,5}[,.]\d{2,6})\s*Bs\s*\/\s*USDT/i
+  };
+  const match=plain.match(patterns[rateType]);
+  return match ? parseVenezuelaNumber(match[1]) : null;
+}
+
+async function fetchMonitorDivisasRate(rateType){
+  const url="https://api.allorigins.win/raw?url="+encodeURIComponent("https://www.monitordedivisavenezuela.com/");
+  const htmlText=await (await fetch(url,{cache:"no-store"})).text();
+  const rate=parseMonitorDivisasRate(htmlText,rateType);
+  if(!rate) throw new Error("Monitor Divisas no devolvió una tasa válida");
+  const source=rateType==="usdt" ? "USDT/VES · Monitor Divisas" :
+    rateType==="kontigo" ? "Kontigo/USDC · referencial mercado USDT" :
+    rateType==="banco" ? "Banco/subasta · referencia BCV" :
+    "BCV oficial · Monitor Divisas";
+  return {rate,source,date:"actualización web"};
+}
+
+async function fetchDolarApiRate(kind){
+  const url=kind==="paralelo"
+    ? "https://ve.dolarapi.com/v1/dolares/paralelo"
+    : "https://ve.dolarapi.com/v1/dolares/oficial";
+  const data=await fetchJson(url);
+  const rate=parseVenezuelaNumber(data?.promedio ?? data?.venta ?? data?.valor ?? data?.price);
+  if(!rate) throw new Error("DolarApi no devolvió una tasa válida");
+  return {rate,source:kind==="paralelo" ? "Dólar paralelo · DolarApi" : "BCV oficial · DolarApi",date:data?.fechaActualizacion};
+}
+
+async function getVenezuelaRate(rateType){
+  // BCV y banco/subasta: la referencia bancaria pública más estable es la tasa oficial BCV.
+  // USDT y Kontigo/USDC: no son tasa legal BCV; se manejan como referencia comercial o manual.
+  const fallback=VE_RATE_FALLBACKS[rateType] || VE_RATE_FALLBACKS.bcv;
+
+  try{
+    if(rateType==="bcv") return await fetchMonitorDivisasRate("bcv");
+    if(rateType==="banco") return await fetchMonitorDivisasRate("banco");
+    if(rateType==="usdt") return await fetchMonitorDivisasRate("usdt");
+    if(rateType==="kontigo") return await fetchMonitorDivisasRate("kontigo");
+  }catch(e){}
+
+  try{
+    if(rateType==="bcv") return await fetchDolarApiRate("oficial");
+    if(rateType==="banco"){
+      const bcv=await fetchDolarApiRate("oficial");
+      return {...bcv,source:"Banco/subasta · referencia BCV/DolarApi"};
+    }
+    if(rateType==="usdt"){
+      const paralelo=await fetchDolarApiRate("paralelo");
+      return {...paralelo,source:"USDT/VES · referencia paralelo DolarApi"};
+    }
+    if(rateType==="kontigo"){
+      const paralelo=await fetchDolarApiRate("paralelo");
+      return {...paralelo,source:"Kontigo/USDC · referencial paralelo DolarApi"};
+    }
+  }catch(e){}
+
+  return {rate:fallback.valor,source:fallback.fuente+" · respaldo editable",date:fallback.fecha};
+}
+
+async function refreshVenezuelaRateCards(force=false){
+  if(countrySelect.value!=="VE") return;
+  if(!force && Date.now()-veCardsLastUpdate<10*60*1000) return;
+  veCardsLastUpdate=Date.now();
+
+  const cards={bcv:null,banco:null,kontigo:null,usdt:null};
+  Object.keys(cards).forEach(type=>updateVenezuelaRateCard(type,null,"..."));
+
+  try{
+    const bcv=await getVenezuelaRate("bcv");
+    updateVenezuelaRateCard("bcv",bcv.rate);
+    updateVenezuelaRateCard("banco",bcv.rate);
+  }catch(e){
+    updateVenezuelaRateCard("bcv",VE_RATE_FALLBACKS.bcv.valor);
+    updateVenezuelaRateCard("banco",VE_RATE_FALLBACKS.banco.valor);
+  }
+
+  try{
+    const usdt=await getVenezuelaRate("usdt");
+    updateVenezuelaRateCard("usdt",usdt.rate);
+    updateVenezuelaRateCard("kontigo",usdt.rate);
+  }catch(e){
+    updateVenezuelaRateCard("usdt",VE_RATE_FALLBACKS.usdt.valor);
+    updateVenezuelaRateCard("kontigo",VE_RATE_FALLBACKS.kontigo.valor);
+  }
+}
+
 async function fetchRate(){
   const c=getCountry();
   rateError.style.display="none";
   rateText.textContent="Cargando...";
   rateMeta.textContent="Consultando tasa automática...";
-
-  const referenciasVE = {
-    bcv: {valor:480, fuente:"BCV oficial / TRM diaria"},
-    banco: {valor:520, fuente:"Banco / subasta operativa"},
-    kontigo: {valor:580, fuente:"Kontigo / USDC"},
-    usdt: {valor:650, fuente:"USDT / mercado"}
-  };
 
   try{
     if(c.api==="fixed"){
@@ -352,51 +472,18 @@ async function fetchRate(){
     }
 
     if(countrySelect.value==="VE"){
-      const rateType = document.getElementById("venezuelaRateType")?.value || "bcv";
-
-      if(rateType==="bcv"){
-        try{
-          const b=await fetchJson("https://ve.dolarapi.com/v1/dolares/oficial");
-          const rate=Number(b?.promedio||b?.price||b?.valor);
-          if(rate && !isNaN(rate)){
-            setRate(rate,"BCV oficial / TRM diaria");
-            return;
-          }
-        }catch(e){}
-        setRate(referenciasVE.bcv.valor, referenciasVE.bcv.fuente + " · referencia editable");
-        return;
-      }
-
-      if(rateType==="usdt"){
-        try{
-          const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent("https://www.monitordedivisavenezuela.com/");
-          const response = await fetch(proxyUrl);
-          const htmlText = await response.text();
-          const plain = htmlText.replace(/<[^>]*>/g," ").replace(/\s+/g," ");
-          const usdtIndex = plain.toLowerCase().indexOf("usdt");
-          const fragment = usdtIndex >= 0 ? plain.slice(usdtIndex, usdtIndex + 800) : plain;
-          const matches = fragment.match(/\d{2,4}[,.]\d{2,6}/g);
-          if(matches && matches.length){
-            const values = matches.map(v => Number(v.replace(".","").replace(",","."))).filter(n => n > 100);
-            if(values.length){
-              setRate(Math.max(...values),"USDT / mercado");
-              return;
-            }
-          }
-        }catch(e){}
-        setRate(referenciasVE.usdt.valor, referenciasVE.usdt.fuente + " · referencia editable");
-        return;
-      }
-
-      if(rateType==="banco"){
-        setRate(referenciasVE.banco.valor, referenciasVE.banco.fuente + " · referencia editable");
-        return;
-      }
-
-      if(rateType==="kontigo"){
-        setRate(referenciasVE.kontigo.valor, referenciasVE.kontigo.fuente + " · referencia editable");
-        return;
-      }
+      const rateType=document.getElementById("venezuelaRateType")?.value || "bcv";
+      const result=await getVenezuelaRate(rateType);
+      const labels={
+        bcv:"BCV oficial",
+        banco:"Banco/subasta",
+        kontigo:"Kontigo/USDC referencial",
+        usdt:"USDT/VES mercado"
+      };
+      setRate(result.rate,`${labels[rateType]} · ${result.source}${formatSourceDate(result.date)}`);
+      updateVenezuelaRateCard(rateType,result.rate);
+      refreshVenezuelaRateCards(false);
+      return;
     }
 
     if(c.api==="colombia"){
@@ -421,15 +508,18 @@ async function fetchRate(){
   }catch(e){
     currentRate=Number(manualRate.value)||currentRate;
     rateText.textContent=currentRate?`${c.symbol} ${Number(currentRate).toFixed(2)}`:"Manual";
-    rateMeta.textContent="No se pudo cargar la tasa automática para "+c.name+". Usa tasa manual.";
+    rateMeta.textContent="No se pudo cargar la tasa automática para "+c.name+". Usa la tasa manual.";
     rateError.style.display="block";
     calculate();
   }
 }
 function useManualRate(){const r=Number(manualRate.value);if(!r||r<=0){alert("Escribe una tasa válida.");return}setRate(r,"Manual")}
+
 function updateVenezuelaRateVisibility(){
   const box=document.getElementById("venezuelaRateBox");
-  if(box) box.style.display = countrySelect.value==="VE" ? "block" : "none";
+  const isVE=countrySelect.value==="VE";
+  if(box) box.style.display = isVE ? "block" : "none";
+  if(isVE) refreshVenezuelaRateCards(false);
 }
 function markSelectedVenezuelaRate(){
   const selected = document.getElementById("venezuelaRateType")?.value || "bcv";

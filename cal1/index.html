@@ -348,11 +348,11 @@
       <section class="brand">
         <div class="eyebrow">Lista de precios</div>
         <h1>Calculadora One More</h1>
-        <p class="subtitle">Calcula pedidos al detal para Venezuela. Los productos están en USD. Si el cliente paga en bolívares, el cobro se convierte a Bs usando tasa Kontigo o USDT. Si paga en divisas, USDT u otra moneda distinta a Bs, se aplica 15% menos al valor de los productos.</p>
+        <p class="subtitle">Calcula pedidos al detal para Venezuela. Los productos están en USD. Si el cliente paga en bolívares, el cobro se convierte a Bs usando tasa Kontigo o USDT. Si paga en divisas, USDT u otra moneda distinta a Bs, se aplica 30% menos al valor de los productos.</p>
       </section>
       <aside class="badgeBox">
         <div class="badge">Venezuela · One More</div>
-        <div class="badge light">Bs con Kontigo/USDT · Divisas -15%</div>
+        <div class="badge light">Bs con Kontigo/USDT · Divisas -30%</div>
       </aside>
     </header>
 
@@ -398,12 +398,12 @@
           </div>
           <div>
             <label for="discount">Descuento si no paga en Bs</label>
-            <input id="discount" type="number" min="0" max="100" step="0.01" value="15" />
+            <input id="discount" type="number" min="0" max="100" step="0.01" value="30" />
           </div>
         </div>
 
         <div class="logicNote" id="logicNote">
-          En pago en Bs: precio lista en USD × tasa Kontigo/USDT + envío. En divisas: productos con 15% menos + envío convertido a divisa.
+          En pago en Bs: precio lista en USD × tasa Kontigo/USDT + envío. En divisas: productos con 30% menos + envío convertido a divisa.
         </div>
 
         <p class="note noPrint">Actualiza las tasas manualmente según la referencia del día. La tasa BCV queda solo como referencia; el cobro en Bs se calcula con Kontigo o USDT.</p>
@@ -486,7 +486,7 @@
           <button class="secondary" id="copyBtn">Copiar resumen</button>
           <button class="whatsapp" id="waBtn">Enviar por WhatsApp</button>
         </div>
-        <p class="note noPrint">Regla aplicada: pago en Bs se calcula con tasa Kontigo o USDT. Pago en divisas, USDT u otra moneda distinta a Bs recibe 15% menos en productos.</p>
+        <p class="note noPrint">Regla aplicada: pago en Bs se calcula con tasa Kontigo o USDT. Pago en divisas, USDT u otra moneda distinta a Bs recibe 30% menos en productos.</p>
       </section>
     </main>
   </div>
@@ -660,7 +660,7 @@
         els.mainTotalLabel.textContent = "Total a cobrar en divisas";
         els.mainTotal.textContent = moneyUsd(t.totalUsdToPay);
         els.mainTotalHelp.textContent = `Productos con ${Number(els.discount.value || 0)}% menos. Envío convertido desde ${moneyBs(t.shippingBs)} usando tasa ${t.rateName}.`;
-        els.logicNote.textContent = "Modo divisas: el cliente ve el total principal en USD/USDT/otra moneda. Se aplica 15% menos en productos y el envío se convierte usando Kontigo o USDT.";
+        els.logicNote.textContent = "Modo divisas: el cliente ve el total principal en USD/USDT/otra moneda. Se aplica 30% menos en productos y el envío se convierte usando Kontigo o USDT.";
       } else {
         els.mainTotalLabel.textContent = "Total a cobrar en bolívares";
         els.mainTotal.textContent = moneyBs(t.totalBsToPay);

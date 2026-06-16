@@ -74,13 +74,13 @@
       margin: 12px 0 0;
       color: var(--muted);
       font-size: 15px;
-      max-width: 680px;
+      max-width: 720px;
     }
 
     .badgeBox {
       display: grid;
       gap: 10px;
-      min-width: 240px;
+      min-width: 250px;
     }
 
     .badge {
@@ -88,7 +88,7 @@
       color: white;
       padding: 14px 16px;
       border-radius: var(--radius);
-      font-weight: 800;
+      font-weight: 900;
       text-align: center;
       box-shadow: var(--shadow);
     }
@@ -108,7 +108,7 @@
     }
 
     .card {
-      background: rgba(255,255,255,.92);
+      background: rgba(255,255,255,.94);
       border: 1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
@@ -162,7 +162,7 @@
       margin-top: 12px;
     }
 
-    .shipRow {
+    .configRow {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
@@ -188,21 +188,9 @@
 
     button:active { transform: scale(.98); }
 
-    .primary {
-      background: var(--primary);
-      color: white;
-    }
-
-    .secondary {
-      background: #f2f4f7;
-      color: var(--primary);
-      border: 1px solid var(--line);
-    }
-
-    .whatsapp {
-      background: #128c7e;
-      color: white;
-    }
+    .primary { background: var(--primary); color: white; }
+    .secondary { background: #f2f4f7; color: var(--primary); border: 1px solid var(--line); }
+    .whatsapp { background: #128c7e; color: white; }
 
     table {
       width: 100%;
@@ -261,8 +249,14 @@
     }
 
     .totalBox.main {
+      grid-column: 1 / -1;
       border-color: #c7d7fe;
       background: linear-gradient(180deg, #f8faff, #fff);
+    }
+
+    .totalBox.discount {
+      border-color: #c4e8d4;
+      background: #f6fef9;
     }
 
     .totalBox small {
@@ -276,9 +270,18 @@
     }
 
     .totalBox strong {
+      display: block;
       font-size: clamp(20px, 3vw, 28px);
       color: var(--primary);
       letter-spacing: -0.04em;
+    }
+
+    .totalBox span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
     }
 
     .note {
@@ -288,16 +291,23 @@
       line-height: 1.45;
     }
 
-    .priceList {
-      margin-top: 18px;
+    .logicNote {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      background: #fff8e6;
+      border: 1px solid #f6d68d;
+      color: #6f4e00;
+      font-size: 13px;
+      line-height: 1.45;
     }
+
+    .priceList { margin-top: 18px; }
 
     .priceList table td:nth-child(2),
     .priceList table td:nth-child(3),
     .priceList table th:nth-child(2),
-    .priceList table th:nth-child(3) {
-      text-align: center;
-    }
+    .priceList table th:nth-child(3) { text-align: center; }
 
     .toast {
       position: fixed;
@@ -317,7 +327,8 @@
     @media (max-width: 860px) {
       header, .grid { grid-template-columns: 1fr; display: grid; }
       .badgeBox { min-width: 0; }
-      .rates, .row, .shipRow, .btns, .totals { grid-template-columns: 1fr; }
+      .rates, .row, .configRow, .btns, .totals { grid-template-columns: 1fr; }
+      .totalBox.main { grid-column: auto; }
       .card { padding: 15px; }
       th, td { padding: 10px 8px; }
       .hideMobile { display: none; }
@@ -337,46 +348,65 @@
       <section class="brand">
         <div class="eyebrow">Lista de precios</div>
         <h1>Calculadora One More</h1>
-        <p class="subtitle">Calcula productos en USD y convierte a bolívares usando tasa BCV, Kontigo o referencia USDT. El envío fijo está configurado en 350 Bs.</p>
+        <p class="subtitle">Calcula pedidos al detal para Venezuela. Los productos están en USD. Si el cliente paga en bolívares, el cobro se convierte a Bs usando tasa Kontigo o USDT. Si paga en divisas, USDT u otra moneda distinta a Bs, se aplica 15% menos al valor de los productos.</p>
       </section>
       <aside class="badgeBox">
-        <div class="badge">Venezuela · VES</div>
-        <div class="badge light">BCV · Kontigo · USDT</div>
+        <div class="badge">Venezuela · One More</div>
+        <div class="badge light">Bs con Kontigo/USDT · Divisas -15%</div>
       </aside>
     </header>
 
     <main class="grid">
       <section class="card">
-        <h2>1. Tasas de referencia</h2>
+        <h2>1. Configuración de pago</h2>
         <div class="rates">
           <div>
-            <label for="bcv">BCV</label>
+            <label for="bcv">Tasa BCV</label>
             <input id="bcv" type="number" min="0" step="0.01" value="480" />
           </div>
           <div>
-            <label for="kontigo">Kontigo</label>
+            <label for="kontigo">Tasa Kontigo</label>
             <input id="kontigo" type="number" min="0" step="0.01" value="580" />
           </div>
           <div>
-            <label for="usdt">USDT</label>
+            <label for="usdt">Tasa USDT</label>
             <input id="usdt" type="number" min="0" step="0.01" value="650" />
           </div>
         </div>
-        <div class="shipRow">
+
+        <div class="configRow">
           <div>
-            <label for="shipping">Envío fijo Bs</label>
-            <input id="shipping" type="number" min="0" step="0.01" value="350" />
+            <label for="paymentMode">Forma de pago</label>
+            <select id="paymentMode">
+              <option value="bs">Bolívares Bs</option>
+              <option value="divisa">Divisas / USD / USDT / otra moneda</option>
+            </select>
           </div>
           <div>
-            <label for="rateType">Tasa para resumen</label>
+            <label for="rateType">Tasa de cobro</label>
             <select id="rateType">
-              <option value="bcv">BCV</option>
               <option value="kontigo">Kontigo</option>
               <option value="usdt">USDT</option>
             </select>
           </div>
         </div>
-        <p class="note noPrint">Actualiza las tasas manualmente según la referencia del día antes de enviar el presupuesto.</p>
+
+        <div class="configRow">
+          <div>
+            <label for="shipping">Envío fijo Bs</label>
+            <input id="shipping" type="number" min="0" step="0.01" value="350" />
+          </div>
+          <div>
+            <label for="discount">Descuento si no paga en Bs</label>
+            <input id="discount" type="number" min="0" max="100" step="0.01" value="15" />
+          </div>
+        </div>
+
+        <div class="logicNote" id="logicNote">
+          En pago en Bs: precio lista en USD × tasa Kontigo/USDT + envío. En divisas: productos con 15% menos + envío convertido a divisa.
+        </div>
+
+        <p class="note noPrint">Actualiza las tasas manualmente según la referencia del día. La tasa BCV queda solo como referencia; el cobro en Bs se calcula con Kontigo o USDT.</p>
 
         <h2 style="margin-top:22px">2. Agregar producto</h2>
         <div class="row">
@@ -422,28 +452,33 @@
 
         <div class="totals">
           <div class="totalBox main">
-            <small>Total USD</small>
-            <strong id="totalUsd">$0.00</strong>
-          </div>
-          <div class="totalBox main">
-            <small>Total resumen Bs</small>
-            <strong id="totalSelectedBs">Bs 0,00</strong>
+            <small id="mainTotalLabel">Total a cobrar</small>
+            <strong id="mainTotal">Bs 0,00</strong>
+            <span id="mainTotalHelp">Selecciona productos y forma de pago.</span>
           </div>
           <div class="totalBox">
-            <small>BCV + envío</small>
-            <strong id="totalBcv">Bs 0,00</strong>
+            <small>Subtotal lista USD</small>
+            <strong id="baseUsd">$0.00</strong>
+          </div>
+          <div class="totalBox discount">
+            <small>Descuento divisa</small>
+            <strong id="discountUsd">$0.00</strong>
           </div>
           <div class="totalBox">
-            <small>Kontigo + envío</small>
-            <strong id="totalKontigo">Bs 0,00</strong>
+            <small>Productos a cobrar</small>
+            <strong id="productsToPay">$0.00</strong>
           </div>
           <div class="totalBox">
-            <small>USDT + envío</small>
-            <strong id="totalUsdt">Bs 0,00</strong>
+            <small>Envío</small>
+            <strong id="shippingLabel">Bs 350,00</strong>
           </div>
           <div class="totalBox">
-            <small>Envío fijo</small>
-            <strong id="shipLabel">Bs 350,00</strong>
+            <small>Tasa usada</small>
+            <strong id="rateLabel">BCV</strong>
+          </div>
+          <div class="totalBox">
+            <small>Comparativo Bs</small>
+            <strong id="bsReference">Bs 0,00</strong>
           </div>
         </div>
 
@@ -451,7 +486,7 @@
           <button class="secondary" id="copyBtn">Copiar resumen</button>
           <button class="whatsapp" id="waBtn">Enviar por WhatsApp</button>
         </div>
-        <p class="note noPrint">Los precios están tomados de la lista de la imagen adjunta. Esta calculadora es informativa y comercial.</p>
+        <p class="note noPrint">Regla aplicada: pago en Bs se calcula con tasa Kontigo o USDT. Pago en divisas, USDT u otra moneda distinta a Bs recibe 15% menos en productos.</p>
       </section>
     </main>
   </div>
@@ -480,20 +515,26 @@
       bcv: document.getElementById("bcv"),
       kontigo: document.getElementById("kontigo"),
       usdt: document.getElementById("usdt"),
-      shipping: document.getElementById("shipping"),
+      paymentMode: document.getElementById("paymentMode"),
       rateType: document.getElementById("rateType"),
+      shipping: document.getElementById("shipping"),
+      discount: document.getElementById("discount"),
       addBtn: document.getElementById("addBtn"),
       clearBtn: document.getElementById("clearBtn"),
       copyBtn: document.getElementById("copyBtn"),
       waBtn: document.getElementById("waBtn"),
       cartBox: document.getElementById("cartBox"),
-      totalUsd: document.getElementById("totalUsd"),
-      totalSelectedBs: document.getElementById("totalSelectedBs"),
-      totalBcv: document.getElementById("totalBcv"),
-      totalKontigo: document.getElementById("totalKontigo"),
-      totalUsdt: document.getElementById("totalUsdt"),
-      shipLabel: document.getElementById("shipLabel"),
+      mainTotalLabel: document.getElementById("mainTotalLabel"),
+      mainTotal: document.getElementById("mainTotal"),
+      mainTotalHelp: document.getElementById("mainTotalHelp"),
+      baseUsd: document.getElementById("baseUsd"),
+      discountUsd: document.getElementById("discountUsd"),
+      productsToPay: document.getElementById("productsToPay"),
+      shippingLabel: document.getElementById("shippingLabel"),
+      rateLabel: document.getElementById("rateLabel"),
+      bsReference: document.getElementById("bsReference"),
       priceList: document.getElementById("priceList"),
+      logicNote: document.getElementById("logicNote"),
       toast: document.getElementById("toast")
     };
 
@@ -502,6 +543,10 @@
 
     function moneyBs(value) {
       return "Bs " + bsFmt.format(Number(value || 0));
+    }
+
+    function moneyUsd(value) {
+      return usdFmt.format(Number(value || 0));
     }
 
     function priceFor(product, presentation) {
@@ -526,7 +571,10 @@
     function bindEvents() {
       els.addBtn.addEventListener("click", addItem);
       els.clearBtn.addEventListener("click", () => { state.cart = []; render(); });
-      [els.bcv, els.kontigo, els.usdt, els.shipping, els.rateType].forEach(el => el.addEventListener("input", render));
+      [els.bcv, els.kontigo, els.usdt, els.paymentMode, els.rateType, els.shipping, els.discount].forEach(el => {
+        el.addEventListener("input", render);
+        el.addEventListener("change", render);
+      });
       els.copyBtn.addEventListener("click", copySummary);
       els.waBtn.addEventListener("click", sendWhatsApp);
     }
@@ -558,30 +606,67 @@
         bcv: Number(els.bcv.value || 0),
         kontigo: Number(els.kontigo.value || 0),
         usdt: Number(els.usdt.value || 0),
-        shipping: Number(els.shipping.value || 0)
+        shipping: Number(els.shipping.value || 0),
+        discount: Number(els.discount.value || 0) / 100
       };
     }
 
+    function selectedRateName() {
+      return els.rateType.options[els.rateType.selectedIndex].text;
+    }
+
     function totals() {
-      const totalUsd = state.cart.reduce((acc, item) => acc + item.subtotal, 0);
+      const baseUsd = state.cart.reduce((acc, item) => acc + item.subtotal, 0);
       const r = getRates();
+      const mode = els.paymentMode.value;
+      const rate = r[els.rateType.value] || 0;
+      const discountUsd = mode === "divisa" ? baseUsd * r.discount : 0;
+      const productUsdToPay = Math.max(baseUsd - discountUsd, 0);
+      const shippingBs = r.shipping;
+      const shippingUsd = mode === "divisa" && rate > 0 ? shippingBs / rate : 0;
+      const totalUsdToPay = productUsdToPay + shippingUsd;
+      const totalBsToPay = mode === "bs" ? (baseUsd * rate) + shippingBs : totalUsdToPay * rate;
+      const totalBsKontigo = mode === "bs" ? (baseUsd * r.kontigo) + shippingBs : totalUsdToPay * r.kontigo;
+      const totalBsUsdt = mode === "bs" ? (baseUsd * r.usdt) + shippingBs : totalUsdToPay * r.usdt;
+
       return {
-        totalUsd,
-        bcv: totalUsd * r.bcv + r.shipping,
-        kontigo: totalUsd * r.kontigo + r.shipping,
-        usdt: totalUsd * r.usdt + r.shipping,
-        shipping: r.shipping
+        mode,
+        rate,
+        rateName: selectedRateName(),
+        baseUsd,
+        discountUsd,
+        productUsdToPay,
+        shippingBs,
+        shippingUsd,
+        totalUsdToPay,
+        totalBsToPay,
+        totalBsKontigo,
+        totalBsUsdt
       };
     }
 
     function render() {
       const t = totals();
-      els.totalUsd.textContent = usdFmt.format(t.totalUsd);
-      els.totalBcv.textContent = moneyBs(t.bcv);
-      els.totalKontigo.textContent = moneyBs(t.kontigo);
-      els.totalUsdt.textContent = moneyBs(t.usdt);
-      els.shipLabel.textContent = moneyBs(t.shipping);
-      els.totalSelectedBs.textContent = moneyBs(t[els.rateType.value]);
+      const isDivisa = t.mode === "divisa";
+
+      els.baseUsd.textContent = moneyUsd(t.baseUsd);
+      els.discountUsd.textContent = isDivisa ? "-" + moneyUsd(t.discountUsd) : "No aplica";
+      els.productsToPay.textContent = moneyUsd(t.productUsdToPay);
+      els.shippingLabel.textContent = isDivisa ? `${moneyUsd(t.shippingUsd)} · ${moneyBs(t.shippingBs)}` : moneyBs(t.shippingBs);
+      els.rateLabel.textContent = `${t.rateName} · ${bsFmt.format(t.rate)}`;
+      els.bsReference.textContent = `Kontigo: ${moneyBs(t.totalBsKontigo)} · USDT: ${moneyBs(t.totalBsUsdt)}`;
+
+      if (isDivisa) {
+        els.mainTotalLabel.textContent = "Total a cobrar en divisas";
+        els.mainTotal.textContent = moneyUsd(t.totalUsdToPay);
+        els.mainTotalHelp.textContent = `Productos con ${Number(els.discount.value || 0)}% menos. Envío convertido desde ${moneyBs(t.shippingBs)} usando tasa ${t.rateName}.`;
+        els.logicNote.textContent = "Modo divisas: el cliente ve el total principal en USD/USDT/otra moneda. Se aplica 15% menos en productos y el envío se convierte usando Kontigo o USDT.";
+      } else {
+        els.mainTotalLabel.textContent = "Total a cobrar en bolívares";
+        els.mainTotal.textContent = moneyBs(t.totalBsToPay);
+        els.mainTotalHelp.textContent = `Precio lista ${moneyUsd(t.baseUsd)} × tasa ${t.rateName} + envío ${moneyBs(t.shippingBs)}.`;
+        els.logicNote.textContent = "Modo Bs: el monto está en dólares, pero el pago se cobra en bolívares usando tasa Kontigo o USDT, más envío fijo de 350 Bs. No aplica descuento de divisas.";
+      }
 
       if (!state.cart.length) {
         els.cartBox.className = "empty";
@@ -595,9 +680,9 @@
           <thead>
             <tr>
               <th>Producto</th>
-              <th class="hideMobile">Precio</th>
+              <th class="hideMobile">Precio lista</th>
               <th>Cant.</th>
-              <th>Total</th>
+              <th>Total lista</th>
               <th></th>
             </tr>
           </thead>
@@ -605,9 +690,9 @@
             ${state.cart.map((item, index) => `
               <tr>
                 <td><strong>${item.name}</strong><br><span style="color:var(--muted);font-size:12px">${item.presentation} unidades</span></td>
-                <td class="hideMobile">${usdFmt.format(item.unitPrice)}</td>
+                <td class="hideMobile">${moneyUsd(item.unitPrice)}</td>
                 <td>${item.qty}</td>
-                <td>${usdFmt.format(item.subtotal)}</td>
+                <td>${moneyUsd(item.subtotal)}</td>
                 <td><button class="miniBtn" onclick="removeItem(${index})">Quitar</button></td>
               </tr>
             `).join("")}
@@ -617,20 +702,32 @@
 
     function summaryText() {
       const t = totals();
-      const rateName = els.rateType.options[els.rateType.selectedIndex].text;
-      const rates = getRates();
-      const selected = t[els.rateType.value];
+      const isDivisa = t.mode === "divisa";
       const lines = [
         "*Presupuesto One More Venezuela*",
         "",
-        ...state.cart.map(item => `• ${item.name} · ${item.presentation} unidades · Cant: ${item.qty} · ${usdFmt.format(item.subtotal)}`),
+        ...state.cart.map(item => `• ${item.name} · ${item.presentation} unidades · Cant: ${item.qty} · Lista: ${moneyUsd(item.subtotal)}`),
         "",
-        `Total USD: ${usdFmt.format(t.totalUsd)}`,
-        `Tasa usada: ${rateName}`,
-        `BCV: ${rates.bcv} · Kontigo: ${rates.kontigo} · USDT: ${rates.usdt}`,
-        `Envío fijo: ${moneyBs(t.shipping)}`,
-        `Total Bs: ${moneyBs(selected)}`
+        `Forma de pago: ${isDivisa ? "Divisas / USD / USDT / otra moneda" : "Bolívares Bs"}`,
+        `Tasa de cobro: ${t.rateName} · ${bsFmt.format(t.rate)}`,
+        `Subtotal lista: ${moneyUsd(t.baseUsd)}`
       ];
+
+      if (isDivisa) {
+        lines.push(`Descuento por pago en divisas: -${moneyUsd(t.discountUsd)} (${Number(els.discount.value || 0)}%)`);
+        lines.push(`Productos a cobrar: ${moneyUsd(t.productUsdToPay)}`);
+        lines.push(`Envío: ${moneyUsd(t.shippingUsd)} (${moneyBs(t.shippingBs)})`);
+        lines.push(`Total a pagar en divisas: ${moneyUsd(t.totalUsdToPay)}`);
+        lines.push(`Referencia Bs Kontigo: ${moneyBs(t.totalBsKontigo)}`);
+        lines.push(`Referencia Bs USDT: ${moneyBs(t.totalBsUsdt)}`);
+      } else {
+        lines.push(`Envío fijo: ${moneyBs(t.shippingBs)}`);
+        lines.push(`Total a pagar en Bs: ${moneyBs(t.totalBsToPay)} (${t.rateName})`);
+        lines.push(`Comparativo Bs Kontigo: ${moneyBs(t.totalBsKontigo)}`);
+        lines.push(`Comparativo Bs USDT: ${moneyBs(t.totalBsUsdt)}`);
+        lines.push(`Referencia USD lista: ${moneyUsd(t.baseUsd)}`);
+      }
+
       return lines.join("\n");
     }
 

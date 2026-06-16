@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora One More Venezuela</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #101828;
+      --muted: #667085;
+      --line: #e4e7ec;
+      --primary: #101a3d;
+      --primary-soft: #eef2ff;
+      --accent: #f2b84b;
+      --danger: #b42318;
+      --success: #067647;
+      --radius: 18px;
+      --shadow: 0 18px 45px rgba(16, 24, 40, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #ffffff 0, var(--bg) 46%, #eef0f6 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 24px 0 34px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      flex: 1;
+    }
+
+    .eyebrow {
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(30px, 5vw, 50px);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      color: var(--primary);
+    }
+
+    .subtitle {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 680px;
+    }
+
+    .badgeBox {
+      display: grid;
+      gap: 10px;
+      min-width: 240px;
+    }
+
+    .badge {
+      background: var(--primary);
+      color: white;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      font-weight: 800;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .badge.light {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border: 1px solid #d9defe;
+      font-size: 13px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .card {
+      background: rgba(255,255,255,.92);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .card h2 {
+      margin: 0 0 14px;
+      font-size: 18px;
+      color: var(--primary);
+      letter-spacing: -0.02em;
+    }
+
+    .rates {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 6px;
+    }
+
+    input, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 13px 12px;
+      background: #fff;
+      color: var(--text);
+      font-size: 15px;
+      outline: none;
+      transition: border .2s, box-shadow .2s;
+    }
+
+    input:focus, select:focus {
+      border-color: #9aa7ff;
+      box-shadow: 0 0 0 4px rgba(67, 76, 231, 0.10);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1.3fr .9fr .65fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .shipRow {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .btns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 13px 16px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform .15s ease, opacity .15s ease;
+    }
+
+    button:active { transform: scale(.98); }
+
+    .primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .secondary {
+      background: #f2f4f7;
+      color: var(--primary);
+      border: 1px solid var(--line);
+    }
+
+    .whatsapp {
+      background: #128c7e;
+      color: white;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 14px;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      background: #f9fafb;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    td:last-child, th:last-child { text-align: right; }
+
+    .miniBtn {
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: #fee4e2;
+      color: var(--danger);
+      font-size: 12px;
+    }
+
+    .empty {
+      padding: 22px;
+      border: 1px dashed #cfd4dc;
+      border-radius: 14px;
+      text-align: center;
+      color: var(--muted);
+      background: #fcfcfd;
+    }
+
+    .totals {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .totalBox {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+      padding: 15px;
+    }
+
+    .totalBox.main {
+      border-color: #c7d7fe;
+      background: linear-gradient(180deg, #f8faff, #fff);
+    }
+
+    .totalBox small {
+      display: block;
+      color: var(--muted);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      font-size: 11px;
+      margin-bottom: 6px;
+    }
+
+    .totalBox strong {
+      font-size: clamp(20px, 3vw, 28px);
+      color: var(--primary);
+      letter-spacing: -0.04em;
+    }
+
+    .note {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .priceList {
+      margin-top: 18px;
+    }
+
+    .priceList table td:nth-child(2),
+    .priceList table td:nth-child(3),
+    .priceList table th:nth-child(2),
+    .priceList table th:nth-child(3) {
+      text-align: center;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: #101828;
+      color: white;
+      padding: 12px 16px;
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      font-size: 14px;
+      display: none;
+      z-index: 5;
+    }
+
+    @media (max-width: 860px) {
+      header, .grid { grid-template-columns: 1fr; display: grid; }
+      .badgeBox { min-width: 0; }
+      .rates, .row, .shipRow, .btns, .totals { grid-template-columns: 1fr; }
+      .card { padding: 15px; }
+      th, td { padding: 10px 8px; }
+      .hideMobile { display: none; }
+    }
+
+    @media print {
+      body { background: white; }
+      .btns, .miniBtn, .note.noPrint { display: none !important; }
+      .wrap { width: 100%; padding: 0; }
+      .card, .brand, .badge { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <section class="brand">
+        <div class="eyebrow">Lista de precios</div>
+        <h1>Calculadora One More</h1>
+        <p class="subtitle">Calcula productos en USD y convierte a bolívares usando tasa BCV, Kontigo o referencia USDT. El envío fijo está configurado en 350 Bs.</p>
+      </section>
+      <aside class="badgeBox">
+        <div class="badge">Venezuela · VES</div>
+        <div class="badge light">BCV · Kontigo · USDT</div>
+      </aside>
+    </header>
+
+    <main class="grid">
+      <section class="card">
+        <h2>1. Tasas de referencia</h2>
+        <div class="rates">
+          <div>
+            <label for="bcv">BCV</label>
+            <input id="bcv" type="number" min="0" step="0.01" value="480" />
+          </div>
+          <div>
+            <label for="kontigo">Kontigo</label>
+            <input id="kontigo" type="number" min="0" step="0.01" value="580" />
+          </div>
+          <div>
+            <label for="usdt">USDT</label>
+            <input id="usdt" type="number" min="0" step="0.01" value="650" />
+          </div>
+        </div>
+        <div class="shipRow">
+          <div>
+            <label for="shipping">Envío fijo Bs</label>
+            <input id="shipping" type="number" min="0" step="0.01" value="350" />
+          </div>
+          <div>
+            <label for="rateType">Tasa para resumen</label>
+            <select id="rateType">
+              <option value="bcv">BCV</option>
+              <option value="kontigo">Kontigo</option>
+              <option value="usdt">USDT</option>
+            </select>
+          </div>
+        </div>
+        <p class="note noPrint">Actualiza las tasas manualmente según la referencia del día antes de enviar el presupuesto.</p>
+
+        <h2 style="margin-top:22px">2. Agregar producto</h2>
+        <div class="row">
+          <div>
+            <label for="product">Producto</label>
+            <select id="product"></select>
+          </div>
+          <div>
+            <label for="presentation">Presentación</label>
+            <select id="presentation">
+              <option value="8">8 unidades</option>
+              <option value="4">4 unidades</option>
+            </select>
+          </div>
+          <div>
+            <label for="qty">Cantidad</label>
+            <input id="qty" type="number" min="1" step="1" value="1" />
+          </div>
+        </div>
+        <div class="btns">
+          <button class="primary" id="addBtn">Agregar</button>
+          <button class="secondary" id="clearBtn">Vaciar</button>
+        </div>
+
+        <section class="priceList">
+          <h2>Lista base</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>8 unid.</th>
+                <th>4 unid.</th>
+              </tr>
+            </thead>
+            <tbody id="priceList"></tbody>
+          </table>
+        </section>
+      </section>
+
+      <section class="card">
+        <h2>3. Resumen del pedido</h2>
+        <div id="cartBox" class="empty">Agrega productos para ver el total.</div>
+
+        <div class="totals">
+          <div class="totalBox main">
+            <small>Total USD</small>
+            <strong id="totalUsd">$0.00</strong>
+          </div>
+          <div class="totalBox main">
+            <small>Total resumen Bs</small>
+            <strong id="totalSelectedBs">Bs 0,00</strong>
+          </div>
+          <div class="totalBox">
+            <small>BCV + envío</small>
+            <strong id="totalBcv">Bs 0,00</strong>
+          </div>
+          <div class="totalBox">
+            <small>Kontigo + envío</small>
+            <strong id="totalKontigo">Bs 0,00</strong>
+          </div>
+          <div class="totalBox">
+            <small>USDT + envío</small>
+            <strong id="totalUsdt">Bs 0,00</strong>
+          </div>
+          <div class="totalBox">
+            <small>Envío fijo</small>
+            <strong id="shipLabel">Bs 350,00</strong>
+          </div>
+        </div>
+
+        <div class="btns">
+          <button class="secondary" id="copyBtn">Copiar resumen</button>
+          <button class="whatsapp" id="waBtn">Enviar por WhatsApp</button>
+        </div>
+        <p class="note noPrint">Los precios están tomados de la lista de la imagen adjunta. Esta calculadora es informativa y comercial.</p>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast">Resumen copiado</div>
+
+  <script>
+    const products = [
+      { name: "Slim Style", p8: 25, p4: 15 },
+      { name: "Dekamin", p8: 25, p4: 15 },
+      { name: "Melatonin Plus", p8: 25, p4: 15 },
+      { name: "B12 Plus", p8: 25, p4: 15 },
+      { name: "Omevia", p8: 25, p4: 15 },
+      { name: "Sornie Collagen Patch", p8: 48, p4: 25 },
+      { name: "Night Ladies", p8: 48, p4: 25 },
+      { name: "Night Gentleman", p8: 48, p4: 25 },
+      { name: "Glutanad", p8: 48, p4: 25 },
+      { name: "Painless Night Glue", p8: 48, p4: 25 }
+    ];
+
+    const state = { cart: [] };
+    const els = {
+      product: document.getElementById("product"),
+      presentation: document.getElementById("presentation"),
+      qty: document.getElementById("qty"),
+      bcv: document.getElementById("bcv"),
+      kontigo: document.getElementById("kontigo"),
+      usdt: document.getElementById("usdt"),
+      shipping: document.getElementById("shipping"),
+      rateType: document.getElementById("rateType"),
+      addBtn: document.getElementById("addBtn"),
+      clearBtn: document.getElementById("clearBtn"),
+      copyBtn: document.getElementById("copyBtn"),
+      waBtn: document.getElementById("waBtn"),
+      cartBox: document.getElementById("cartBox"),
+      totalUsd: document.getElementById("totalUsd"),
+      totalSelectedBs: document.getElementById("totalSelectedBs"),
+      totalBcv: document.getElementById("totalBcv"),
+      totalKontigo: document.getElementById("totalKontigo"),
+      totalUsdt: document.getElementById("totalUsdt"),
+      shipLabel: document.getElementById("shipLabel"),
+      priceList: document.getElementById("priceList"),
+      toast: document.getElementById("toast")
+    };
+
+    const usdFmt = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
+    const bsFmt = new Intl.NumberFormat("es-VE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    function moneyBs(value) {
+      return "Bs " + bsFmt.format(Number(value || 0));
+    }
+
+    function priceFor(product, presentation) {
+      return presentation === "8" ? product.p8 : product.p4;
+    }
+
+    function init() {
+      products.forEach((item, index) => {
+        const option = document.createElement("option");
+        option.value = index;
+        option.textContent = item.name;
+        els.product.appendChild(option);
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${item.name}</td><td>$${item.p8}</td><td>$${item.p4}</td>`;
+        els.priceList.appendChild(tr);
+      });
+      bindEvents();
+      render();
+    }
+
+    function bindEvents() {
+      els.addBtn.addEventListener("click", addItem);
+      els.clearBtn.addEventListener("click", () => { state.cart = []; render(); });
+      [els.bcv, els.kontigo, els.usdt, els.shipping, els.rateType].forEach(el => el.addEventListener("input", render));
+      els.copyBtn.addEventListener("click", copySummary);
+      els.waBtn.addEventListener("click", sendWhatsApp);
+    }
+
+    function addItem() {
+      const product = products[Number(els.product.value)];
+      const presentation = els.presentation.value;
+      const qty = Math.max(1, parseInt(els.qty.value || "1", 10));
+      const unitPrice = priceFor(product, presentation);
+
+      state.cart.push({
+        name: product.name,
+        presentation,
+        qty,
+        unitPrice,
+        subtotal: qty * unitPrice
+      });
+      els.qty.value = 1;
+      render();
+    }
+
+    function removeItem(index) {
+      state.cart.splice(index, 1);
+      render();
+    }
+
+    function getRates() {
+      return {
+        bcv: Number(els.bcv.value || 0),
+        kontigo: Number(els.kontigo.value || 0),
+        usdt: Number(els.usdt.value || 0),
+        shipping: Number(els.shipping.value || 0)
+      };
+    }
+
+    function totals() {
+      const totalUsd = state.cart.reduce((acc, item) => acc + item.subtotal, 0);
+      const r = getRates();
+      return {
+        totalUsd,
+        bcv: totalUsd * r.bcv + r.shipping,
+        kontigo: totalUsd * r.kontigo + r.shipping,
+        usdt: totalUsd * r.usdt + r.shipping,
+        shipping: r.shipping
+      };
+    }
+
+    function render() {
+      const t = totals();
+      els.totalUsd.textContent = usdFmt.format(t.totalUsd);
+      els.totalBcv.textContent = moneyBs(t.bcv);
+      els.totalKontigo.textContent = moneyBs(t.kontigo);
+      els.totalUsdt.textContent = moneyBs(t.usdt);
+      els.shipLabel.textContent = moneyBs(t.shipping);
+      els.totalSelectedBs.textContent = moneyBs(t[els.rateType.value]);
+
+      if (!state.cart.length) {
+        els.cartBox.className = "empty";
+        els.cartBox.textContent = "Agrega productos para ver el total.";
+        return;
+      }
+
+      els.cartBox.className = "";
+      els.cartBox.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th class="hideMobile">Precio</th>
+              <th>Cant.</th>
+              <th>Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${state.cart.map((item, index) => `
+              <tr>
+                <td><strong>${item.name}</strong><br><span style="color:var(--muted);font-size:12px">${item.presentation} unidades</span></td>
+                <td class="hideMobile">${usdFmt.format(item.unitPrice)}</td>
+                <td>${item.qty}</td>
+                <td>${usdFmt.format(item.subtotal)}</td>
+                <td><button class="miniBtn" onclick="removeItem(${index})">Quitar</button></td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>`;
+    }
+
+    function summaryText() {
+      const t = totals();
+      const rateName = els.rateType.options[els.rateType.selectedIndex].text;
+      const rates = getRates();
+      const selected = t[els.rateType.value];
+      const lines = [
+        "*Presupuesto One More Venezuela*",
+        "",
+        ...state.cart.map(item => `• ${item.name} · ${item.presentation} unidades · Cant: ${item.qty} · ${usdFmt.format(item.subtotal)}`),
+        "",
+        `Total USD: ${usdFmt.format(t.totalUsd)}`,
+        `Tasa usada: ${rateName}`,
+        `BCV: ${rates.bcv} · Kontigo: ${rates.kontigo} · USDT: ${rates.usdt}`,
+        `Envío fijo: ${moneyBs(t.shipping)}`,
+        `Total Bs: ${moneyBs(selected)}`
+      ];
+      return lines.join("\n");
+    }
+
+    async function copySummary() {
+      if (!state.cart.length) return showToast("Agrega productos primero");
+      try {
+        await navigator.clipboard.writeText(summaryText());
+        showToast("Resumen copiado");
+      } catch (error) {
+        showToast("No se pudo copiar");
+      }
+    }
+
+    function sendWhatsApp() {
+      if (!state.cart.length) return showToast("Agrega productos primero");
+      const text = encodeURIComponent(summaryText());
+      window.open(`https://wa.me/?text=${text}`, "_blank");
+    }
+
+    function showToast(message) {
+      els.toast.textContent = message;
+      els.toast.style.display = "block";
+      setTimeout(() => els.toast.style.display = "none", 1800);
+    }
+
+    window.removeItem = removeItem;
+    init();
+  </script>
+</body>
+</html>

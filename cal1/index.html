@@ -14,8 +14,8 @@
       --primary: #101a3d;
       --primary-soft: #eef2ff;
       --accent: #f2b84b;
-      --danger: #b42318;
       --success: #067647;
+      --danger: #b42318;
       --radius: 18px;
       --shadow: 0 18px 45px rgba(16, 24, 40, 0.08);
     }
@@ -37,160 +37,173 @@
     }
 
     header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+      display: grid;
+      grid-template-columns: 1fr auto;
       gap: 18px;
+      align-items: stretch;
       margin-bottom: 18px;
     }
 
-    .brand {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
+    .brand, .badgeBox, .card {
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(228,231,236,0.9);
       box-shadow: var(--shadow);
-      padding: 22px;
-      flex: 1;
+      border-radius: var(--radius);
     }
+
+    .brand { padding: 24px; }
 
     .eyebrow {
       letter-spacing: 0.22em;
       text-transform: uppercase;
       color: var(--muted);
-      font-size: 12px;
       font-weight: 800;
-      margin-bottom: 8px;
+      font-size: 12px;
     }
 
+    h1, h2, h3, p { margin-top: 0; }
+
     h1 {
-      margin: 0;
-      font-size: clamp(30px, 5vw, 50px);
-      line-height: 0.95;
-      letter-spacing: -0.05em;
+      margin: 8px 0 10px;
+      font-size: clamp(30px, 5vw, 52px);
+      line-height: 0.96;
       color: var(--primary);
+      letter-spacing: -0.045em;
+    }
+
+    h2 {
+      font-size: 16px;
+      margin-bottom: 14px;
+      color: var(--primary);
+      letter-spacing: -0.02em;
     }
 
     .subtitle {
-      margin: 12px 0 0;
+      margin: 0;
       color: var(--muted);
+      max-width: 760px;
       font-size: 15px;
-      max-width: 720px;
+      line-height: 1.55;
     }
 
     .badgeBox {
-      display: grid;
+      min-width: 230px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
       gap: 10px;
-      min-width: 250px;
+      justify-content: center;
     }
 
     .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 9px 12px;
       background: var(--primary);
-      color: white;
-      padding: 14px 16px;
-      border-radius: var(--radius);
-      font-weight: 900;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
       text-align: center;
-      box-shadow: var(--shadow);
     }
 
     .badge.light {
       background: var(--primary-soft);
       color: var(--primary);
-      border: 1px solid #d9defe;
-      font-size: 13px;
+      border: 1px solid #d9ddff;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: 1fr 1.1fr;
+      grid-template-columns: 1.05fr 0.95fr;
       gap: 18px;
       align-items: start;
     }
 
-    .card {
-      background: rgba(255,255,255,.94);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 18px;
-    }
-
-    .card h2 {
-      margin: 0 0 14px;
-      font-size: 18px;
-      color: var(--primary);
-      letter-spacing: -0.02em;
-    }
-
-    .rates {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
+    .card { padding: 20px; }
 
     label {
       display: block;
       color: var(--muted);
       font-size: 12px;
       font-weight: 800;
+      margin-bottom: 7px;
       text-transform: uppercase;
-      letter-spacing: .05em;
-      margin-bottom: 6px;
+      letter-spacing: .06em;
     }
 
     input, select {
       width: 100%;
       border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 13px 12px;
       background: #fff;
+      border-radius: 13px;
+      padding: 13px 12px;
       color: var(--text);
-      font-size: 15px;
       outline: none;
-      transition: border .2s, box-shadow .2s;
+      font-size: 15px;
+      transition: border .15s, box-shadow .15s;
     }
 
     input:focus, select:focus {
-      border-color: #9aa7ff;
-      box-shadow: 0 0 0 4px rgba(67, 76, 231, 0.10);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(16, 26, 61, .08);
     }
 
-    .row {
+    .rates, .row, .configRow {
       display: grid;
-      grid-template-columns: 1.3fr .9fr .65fr;
-      gap: 10px;
-      margin-top: 12px;
+      gap: 12px;
+      margin-bottom: 14px;
     }
 
-    .configRow {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-top: 12px;
+    .rates { grid-template-columns: repeat(3, 1fr); }
+    .row { grid-template-columns: 1.7fr 1fr .8fr; }
+    .configRow { grid-template-columns: 1fr 1fr; }
+
+    .logicNote {
+      margin: 12px 0 16px;
+      border: 1px solid #d9ddff;
+      background: var(--primary-soft);
+      color: var(--primary);
+      padding: 13px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      margin: 8px 0 0;
     }
 
     .btns {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-top: 12px;
+      margin: 14px 0 0;
     }
 
     button {
       border: 0;
       border-radius: 14px;
-      padding: 13px 16px;
-      font-size: 15px;
+      padding: 13px 14px;
       font-weight: 900;
       cursor: pointer;
-      transition: transform .15s ease, opacity .15s ease;
+      font-size: 14px;
+      transition: transform .12s, opacity .12s;
     }
 
-    button:active { transform: scale(.98); }
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); opacity: .85; }
 
-    .primary { background: var(--primary); color: white; }
+    .primary { background: var(--primary); color: #fff; }
     .secondary { background: #f2f4f7; color: var(--primary); border: 1px solid var(--line); }
-    .whatsapp { background: #128c7e; color: white; }
+    .whatsapp { background: #128c7e; color: #fff; }
+
+    .priceList { margin-top: 22px; }
 
     table {
       width: 100%;
@@ -200,63 +213,53 @@
       font-size: 14px;
     }
 
-    th, td {
-      padding: 12px 10px;
-      border-bottom: 1px solid var(--line);
-      text-align: left;
-      vertical-align: top;
-    }
-
     th {
+      text-align: left;
       color: var(--muted);
-      background: #f9fafb;
+      background: #f8fafc;
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: .05em;
     }
 
-    td:last-child, th:last-child { text-align: right; }
-
-    .miniBtn {
-      padding: 8px 10px;
-      border-radius: 10px;
-      background: #fee4e2;
-      color: var(--danger);
-      font-size: 12px;
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 11px 10px;
+      vertical-align: middle;
     }
 
+    tbody tr:last-child td { border-bottom: 0; }
+
     .empty {
-      padding: 22px;
       border: 1px dashed #cfd4dc;
-      border-radius: 14px;
-      text-align: center;
       color: var(--muted);
-      background: #fcfcfd;
+      padding: 24px;
+      border-radius: 16px;
+      text-align: center;
+      background: #f8fafc;
     }
 
     .totals {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
       margin-top: 14px;
     }
 
     .totalBox {
+      background: #f8fafc;
       border: 1px solid var(--line);
       border-radius: 16px;
-      background: #fff;
-      padding: 15px;
+      padding: 13px;
+      min-height: 88px;
     }
 
     .totalBox.main {
       grid-column: 1 / -1;
-      border-color: #c7d7fe;
-      background: linear-gradient(180deg, #f8faff, #fff);
-    }
-
-    .totalBox.discount {
-      border-color: #c4e8d4;
-      background: #f6fef9;
+      background: var(--primary);
+      color: #fff;
+      border: 0;
+      padding: 18px;
     }
 
     .totalBox small {
@@ -264,16 +267,24 @@
       color: var(--muted);
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: .05em;
+      letter-spacing: .06em;
       font-size: 11px;
       margin-bottom: 6px;
     }
 
+    .totalBox.main small { color: rgba(255,255,255,.72); }
+
     .totalBox strong {
       display: block;
-      font-size: clamp(20px, 3vw, 28px);
+      font-size: 20px;
       color: var(--primary);
-      letter-spacing: -0.04em;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+    }
+
+    .totalBox.main strong {
+      color: #fff;
+      font-size: clamp(30px, 6vw, 48px);
     }
 
     .totalBox span {
@@ -284,52 +295,50 @@
       line-height: 1.35;
     }
 
-    .note {
-      margin: 12px 0 0;
-      color: var(--muted);
+    .totalBox.main span { color: rgba(255,255,255,.8); }
+
+    .totalBox.success {
+      border-color: rgba(6,118,71,.22);
+      background: #ecfdf3;
+    }
+
+    .totalBox.success strong { color: var(--success); }
+
+    .miniBtn {
+      padding: 7px 10px;
+      border-radius: 10px;
+      background: #fff1f3;
+      color: var(--danger);
+      border: 1px solid #ffd7de;
       font-size: 12px;
-      line-height: 1.45;
     }
-
-    .logicNote {
-      margin-top: 12px;
-      padding: 12px;
-      border-radius: 14px;
-      background: #fff8e6;
-      border: 1px solid #f6d68d;
-      color: #6f4e00;
-      font-size: 13px;
-      line-height: 1.45;
-    }
-
-    .priceList { margin-top: 18px; }
-
-    .priceList table td:nth-child(2),
-    .priceList table td:nth-child(3),
-    .priceList table th:nth-child(2),
-    .priceList table th:nth-child(3) { text-align: center; }
 
     .toast {
       position: fixed;
       left: 50%;
-      bottom: 18px;
+      bottom: 20px;
       transform: translateX(-50%);
       background: #101828;
-      color: white;
-      padding: 12px 16px;
+      color: #fff;
       border-radius: 999px;
+      padding: 11px 16px;
+      font-size: 13px;
+      font-weight: 800;
       box-shadow: var(--shadow);
-      font-size: 14px;
       display: none;
-      z-index: 5;
+      z-index: 10;
     }
 
     @media (max-width: 860px) {
-      header, .grid { grid-template-columns: 1fr; display: grid; }
+      header, .grid { grid-template-columns: 1fr; }
       .badgeBox { min-width: 0; }
+    }
+
+    @media (max-width: 620px) {
+      .wrap { width: min(100% - 18px, 1120px); padding-top: 10px; }
+      .brand, .card { padding: 16px; }
       .rates, .row, .configRow, .btns, .totals { grid-template-columns: 1fr; }
       .totalBox.main { grid-column: auto; }
-      .card { padding: 15px; }
       th, td { padding: 10px 8px; }
       .hideMobile { display: none; }
     }
@@ -338,7 +347,7 @@
       body { background: white; }
       .btns, .miniBtn, .note.noPrint { display: none !important; }
       .wrap { width: 100%; padding: 0; }
-      .card, .brand, .badge { box-shadow: none; }
+      .card, .brand, .badgeBox { box-shadow: none; }
     }
   </style>
 </head>
@@ -348,11 +357,11 @@
       <section class="brand">
         <div class="eyebrow">Lista de precios</div>
         <h1>Calculadora One More</h1>
-        <p class="subtitle">Calcula pedidos al detal para Venezuela. Los productos están en USD. Si el cliente paga en bolívares, el cobro se convierte a Bs usando tasa Kontigo o USDT. Si paga en divisas, USDT u otra moneda distinta a Bs, se aplica 30% menos al valor de los productos.</p>
+        <p class="subtitle">Calcula pedidos al detal para Venezuela sin confundir al cliente. El precio público se arma primero en bolívares a tasa BCV. Si el cliente paga en divisas, se toma ese monto en Bs y se divide entre la tasa Kontigo o USDT para mostrar cuánto debe pagar en USD.</p>
       </section>
       <aside class="badgeBox">
         <div class="badge">Venezuela · One More</div>
-        <div class="badge light">Bs con Kontigo/USDT · Divisas -30%</div>
+        <div class="badge light">Bs con BCV · Divisas con diferencial</div>
       </aside>
     </header>
 
@@ -383,7 +392,7 @@
             </select>
           </div>
           <div>
-            <label for="rateType">Tasa de cobro</label>
+            <label for="rateType">Tasa para divisas</label>
             <select id="rateType">
               <option value="kontigo">Kontigo</option>
               <option value="usdt">USDT</option>
@@ -397,16 +406,16 @@
             <input id="shipping" type="number" min="0" step="0.01" value="350" />
           </div>
           <div>
-            <label for="discount">Descuento si no paga en Bs</label>
-            <input id="discount" type="number" min="0" max="100" step="0.01" value="30" />
+            <label>Diferencia estimada</label>
+            <input id="rateGap" type="text" value="Se calcula automáticamente" readonly />
           </div>
         </div>
 
         <div class="logicNote" id="logicNote">
-          En pago en Bs: precio lista en USD × tasa Kontigo/USDT + envío. En divisas: productos con 30% menos + envío convertido a divisa.
+          Regla: primero se calcula el precio público en Bs con BCV. Si paga en divisas, ese mismo monto en Bs se divide entre Kontigo o USDT. No se aplica un descuento fijo manual; el menor precio nace del diferencial de tasas.
         </div>
 
-        <p class="note noPrint">Actualiza las tasas manualmente según la referencia del día. La tasa BCV queda solo como referencia; el cobro en Bs se calcula con Kontigo o USDT.</p>
+        <p class="note noPrint">Usa BCV para construir el precio en bolívares. Usa Kontigo o USDT solo cuando el cliente pregunta cuánto paga en divisas.</p>
 
         <h2 style="margin-top:22px">2. Agregar producto</h2>
         <div class="row">
@@ -457,12 +466,16 @@
             <span id="mainTotalHelp">Selecciona productos y forma de pago.</span>
           </div>
           <div class="totalBox">
-            <small>Subtotal lista USD</small>
+            <small>Lista pública USD</small>
             <strong id="baseUsd">$0.00</strong>
           </div>
-          <div class="totalBox discount">
-            <small>Descuento divisa</small>
-            <strong id="discountUsd">$0.00</strong>
+          <div class="totalBox">
+            <small>Base calculada BCV</small>
+            <strong id="baseBsBcv">Bs 0,00</strong>
+          </div>
+          <div class="totalBox success">
+            <small>Diferencial divisa</small>
+            <strong id="savingUsd">$0.00</strong>
           </div>
           <div class="totalBox">
             <small>Productos a cobrar</small>
@@ -477,8 +490,8 @@
             <strong id="rateLabel">BCV</strong>
           </div>
           <div class="totalBox">
-            <small>Comparativo Bs</small>
-            <strong id="bsReference">Bs 0,00</strong>
+            <small>Comparativo</small>
+            <strong id="comparison">Bs 0,00</strong>
           </div>
         </div>
 
@@ -486,7 +499,7 @@
           <button class="secondary" id="copyBtn">Copiar resumen</button>
           <button class="whatsapp" id="waBtn">Enviar por WhatsApp</button>
         </div>
-        <p class="note noPrint">Regla aplicada: pago en Bs se calcula con tasa Kontigo o USDT. Pago en divisas, USDT u otra moneda distinta a Bs recibe 30% menos en productos.</p>
+        <p class="note noPrint">Regla aplicada: en Bs se cobra el precio público a BCV. En divisas se divide el monto ya calculado en Bs entre Kontigo o USDT.</p>
       </section>
     </main>
   </div>
@@ -504,7 +517,7 @@
       { name: "Night Ladies", p8: 48, p4: 25 },
       { name: "Night Gentleman", p8: 48, p4: 25 },
       { name: "Glutanad", p8: 48, p4: 25 },
-      { name: "Painless Night Glue", p8: 48, p4: 25 }
+      { name: "Painless Night GLU", p8: 48, p4: 25 }
     ];
 
     const state = { cart: [] };
@@ -518,7 +531,7 @@
       paymentMode: document.getElementById("paymentMode"),
       rateType: document.getElementById("rateType"),
       shipping: document.getElementById("shipping"),
-      discount: document.getElementById("discount"),
+      rateGap: document.getElementById("rateGap"),
       addBtn: document.getElementById("addBtn"),
       clearBtn: document.getElementById("clearBtn"),
       copyBtn: document.getElementById("copyBtn"),
@@ -528,11 +541,12 @@
       mainTotal: document.getElementById("mainTotal"),
       mainTotalHelp: document.getElementById("mainTotalHelp"),
       baseUsd: document.getElementById("baseUsd"),
-      discountUsd: document.getElementById("discountUsd"),
+      baseBsBcv: document.getElementById("baseBsBcv"),
+      savingUsd: document.getElementById("savingUsd"),
       productsToPay: document.getElementById("productsToPay"),
       shippingLabel: document.getElementById("shippingLabel"),
       rateLabel: document.getElementById("rateLabel"),
-      bsReference: document.getElementById("bsReference"),
+      comparison: document.getElementById("comparison"),
       priceList: document.getElementById("priceList"),
       logicNote: document.getElementById("logicNote"),
       toast: document.getElementById("toast")
@@ -547,6 +561,10 @@
 
     function moneyUsd(value) {
       return usdFmt.format(Number(value || 0));
+    }
+
+    function pct(value) {
+      return bsFmt.format(Number(value || 0)) + "%";
     }
 
     function priceFor(product, presentation) {
@@ -571,7 +589,7 @@
     function bindEvents() {
       els.addBtn.addEventListener("click", addItem);
       els.clearBtn.addEventListener("click", () => { state.cart = []; render(); });
-      [els.bcv, els.kontigo, els.usdt, els.paymentMode, els.rateType, els.shipping, els.discount].forEach(el => {
+      [els.bcv, els.kontigo, els.usdt, els.paymentMode, els.rateType, els.shipping].forEach(el => {
         el.addEventListener("input", render);
         el.addEventListener("change", render);
       });
@@ -606,8 +624,7 @@
         bcv: Number(els.bcv.value || 0),
         kontigo: Number(els.kontigo.value || 0),
         usdt: Number(els.usdt.value || 0),
-        shipping: Number(els.shipping.value || 0),
-        discount: Number(els.discount.value || 0) / 100
+        shipping: Number(els.shipping.value || 0)
       };
     }
 
@@ -619,29 +636,43 @@
       const baseUsd = state.cart.reduce((acc, item) => acc + item.subtotal, 0);
       const r = getRates();
       const mode = els.paymentMode.value;
-      const rate = r[els.rateType.value] || 0;
-      const discountUsd = mode === "divisa" ? baseUsd * r.discount : 0;
-      const productUsdToPay = Math.max(baseUsd - discountUsd, 0);
+      const divisaRate = r[els.rateType.value] || 0;
+      const bcvRate = r.bcv || 0;
       const shippingBs = r.shipping;
-      const shippingUsd = mode === "divisa" && rate > 0 ? shippingBs / rate : 0;
-      const totalUsdToPay = productUsdToPay + shippingUsd;
-      const totalBsToPay = mode === "bs" ? (baseUsd * rate) + shippingBs : totalUsdToPay * rate;
-      const totalBsKontigo = mode === "bs" ? (baseUsd * r.kontigo) + shippingBs : totalUsdToPay * r.kontigo;
-      const totalBsUsdt = mode === "bs" ? (baseUsd * r.usdt) + shippingBs : totalUsdToPay * r.usdt;
+
+      const productBsBcv = baseUsd * bcvRate;
+      const totalBsBcv = productBsBcv + shippingBs;
+
+      const productUsdFromBcv = divisaRate > 0 ? productBsBcv / divisaRate : 0;
+      const shippingUsd = divisaRate > 0 ? shippingBs / divisaRate : 0;
+      const totalUsdFromBcv = divisaRate > 0 ? totalBsBcv / divisaRate : 0;
+
+      const gapPct = divisaRate > 0 && bcvRate > 0 ? Math.max(0, (1 - (bcvRate / divisaRate)) * 100) : 0;
+      const savingUsd = Math.max(0, baseUsd - productUsdFromBcv);
+
+      const kontigoProductsUsd = r.kontigo > 0 ? productBsBcv / r.kontigo : 0;
+      const usdtProductsUsd = r.usdt > 0 ? productBsBcv / r.usdt : 0;
+      const kontigoTotalUsd = r.kontigo > 0 ? totalBsBcv / r.kontigo : 0;
+      const usdtTotalUsd = r.usdt > 0 ? totalBsBcv / r.usdt : 0;
 
       return {
         mode,
-        rate,
+        bcvRate,
+        divisaRate,
         rateName: selectedRateName(),
         baseUsd,
-        discountUsd,
-        productUsdToPay,
+        productBsBcv,
+        totalBsBcv,
+        productUsdFromBcv,
         shippingBs,
         shippingUsd,
-        totalUsdToPay,
-        totalBsToPay,
-        totalBsKontigo,
-        totalBsUsdt
+        totalUsdFromBcv,
+        gapPct,
+        savingUsd,
+        kontigoProductsUsd,
+        usdtProductsUsd,
+        kontigoTotalUsd,
+        usdtTotalUsd
       };
     }
 
@@ -649,23 +680,28 @@
       const t = totals();
       const isDivisa = t.mode === "divisa";
 
+      els.rateGap.value = t.divisaRate > 0 ? `${pct(t.gapPct)} menos aprox. por diferencial BCV/${t.rateName}` : "Coloca la tasa de divisas";
       els.baseUsd.textContent = moneyUsd(t.baseUsd);
-      els.discountUsd.textContent = isDivisa ? "-" + moneyUsd(t.discountUsd) : "No aplica";
-      els.productsToPay.textContent = moneyUsd(t.productUsdToPay);
-      els.shippingLabel.textContent = isDivisa ? `${moneyUsd(t.shippingUsd)} · ${moneyBs(t.shippingBs)}` : moneyBs(t.shippingBs);
-      els.rateLabel.textContent = `${t.rateName} · ${bsFmt.format(t.rate)}`;
-      els.bsReference.textContent = `Kontigo: ${moneyBs(t.totalBsKontigo)} · USDT: ${moneyBs(t.totalBsUsdt)}`;
+      els.baseBsBcv.textContent = moneyBs(t.productBsBcv);
+      els.savingUsd.textContent = isDivisa ? `-${moneyUsd(t.savingUsd)}` : "No aplica";
+      els.rateLabel.textContent = isDivisa ? `BCV ${bsFmt.format(t.bcvRate)} → ${t.rateName} ${bsFmt.format(t.divisaRate)}` : `BCV · ${bsFmt.format(t.bcvRate)}`;
 
       if (isDivisa) {
+        els.productsToPay.textContent = moneyUsd(t.productUsdFromBcv);
+        els.shippingLabel.textContent = `${moneyUsd(t.shippingUsd)} · ${moneyBs(t.shippingBs)}`;
+        els.comparison.textContent = `Kontigo: ${moneyUsd(t.kontigoTotalUsd)} · USDT: ${moneyUsd(t.usdtTotalUsd)}`;
         els.mainTotalLabel.textContent = "Total a cobrar en divisas";
-        els.mainTotal.textContent = moneyUsd(t.totalUsdToPay);
-        els.mainTotalHelp.textContent = `Productos con ${Number(els.discount.value || 0)}% menos. Envío convertido desde ${moneyBs(t.shippingBs)} usando tasa ${t.rateName}.`;
-        els.logicNote.textContent = "Modo divisas: el cliente ve el total principal en USD/USDT/otra moneda. Se aplica 30% menos en productos y el envío se convierte usando Kontigo o USDT.";
+        els.mainTotal.textContent = moneyUsd(t.totalUsdFromBcv);
+        els.mainTotalHelp.textContent = `Primero: ${moneyUsd(t.baseUsd)} × BCV = ${moneyBs(t.productBsBcv)}. Luego se divide entre ${t.rateName}. Diferencia aprox: ${pct(t.gapPct)}.`;
+        els.logicNote.textContent = "Modo divisas: el sistema no aplica un descuento fijo manual. Toma el monto calculado en Bs a tasa BCV y lo divide entre Kontigo o USDT. Así el cliente ve un monto en divisas menor por diferencial de tasa.";
       } else {
+        els.productsToPay.textContent = moneyBs(t.productBsBcv);
+        els.shippingLabel.textContent = moneyBs(t.shippingBs);
+        els.comparison.textContent = `Divisa Kontigo: ${moneyUsd(t.kontigoTotalUsd)} · Divisa USDT: ${moneyUsd(t.usdtTotalUsd)}`;
         els.mainTotalLabel.textContent = "Total a cobrar en bolívares";
-        els.mainTotal.textContent = moneyBs(t.totalBsToPay);
-        els.mainTotalHelp.textContent = `Precio lista ${moneyUsd(t.baseUsd)} × tasa ${t.rateName} + envío ${moneyBs(t.shippingBs)}.`;
-        els.logicNote.textContent = "Modo Bs: el monto está en dólares, pero el pago se cobra en bolívares usando tasa Kontigo o USDT, más envío fijo de 350 Bs. No aplica descuento de divisas.";
+        els.mainTotal.textContent = moneyBs(t.totalBsBcv);
+        els.mainTotalHelp.textContent = `Precio público ${moneyUsd(t.baseUsd)} × BCV ${bsFmt.format(t.bcvRate)} + envío ${moneyBs(t.shippingBs)}.`;
+        els.logicNote.textContent = "Modo Bs: se cobra el precio público en bolívares usando tasa BCV y se suma el envío. Kontigo y USDT quedan como referencia para quien pregunte por pago en divisas.";
       }
 
       if (!state.cart.length) {
@@ -709,23 +745,24 @@
         ...state.cart.map(item => `• ${item.name} · ${item.presentation} unidades · Cant: ${item.qty} · Lista: ${moneyUsd(item.subtotal)}`),
         "",
         `Forma de pago: ${isDivisa ? "Divisas / USD / USDT / otra moneda" : "Bolívares Bs"}`,
-        `Tasa de cobro: ${t.rateName} · ${bsFmt.format(t.rate)}`,
-        `Subtotal lista: ${moneyUsd(t.baseUsd)}`
+        `Subtotal lista pública: ${moneyUsd(t.baseUsd)}`,
+        `Base calculada a BCV: ${moneyBs(t.productBsBcv)}`,
+        `Envío fijo: ${moneyBs(t.shippingBs)}`
       ];
 
       if (isDivisa) {
-        lines.push(`Descuento por pago en divisas: -${moneyUsd(t.discountUsd)} (${Number(els.discount.value || 0)}%)`);
-        lines.push(`Productos a cobrar: ${moneyUsd(t.productUsdToPay)}`);
-        lines.push(`Envío: ${moneyUsd(t.shippingUsd)} (${moneyBs(t.shippingBs)})`);
-        lines.push(`Total a pagar en divisas: ${moneyUsd(t.totalUsdToPay)}`);
-        lines.push(`Referencia Bs Kontigo: ${moneyBs(t.totalBsKontigo)}`);
-        lines.push(`Referencia Bs USDT: ${moneyBs(t.totalBsUsdt)}`);
+        lines.push(`Tasa para divisas: ${t.rateName} · ${bsFmt.format(t.divisaRate)}`);
+        lines.push(`Diferencia estimada: ${pct(t.gapPct)} menos aprox.`);
+        lines.push(`Productos a cobrar en divisas: ${moneyUsd(t.productUsdFromBcv)}`);
+        lines.push(`Envío convertido: ${moneyUsd(t.shippingUsd)}`);
+        lines.push(`Total a pagar en divisas: ${moneyUsd(t.totalUsdFromBcv)}`);
+        lines.push(`Comparativo Kontigo: ${moneyUsd(t.kontigoTotalUsd)}`);
+        lines.push(`Comparativo USDT: ${moneyUsd(t.usdtTotalUsd)}`);
       } else {
-        lines.push(`Envío fijo: ${moneyBs(t.shippingBs)}`);
-        lines.push(`Total a pagar en Bs: ${moneyBs(t.totalBsToPay)} (${t.rateName})`);
-        lines.push(`Comparativo Bs Kontigo: ${moneyBs(t.totalBsKontigo)}`);
-        lines.push(`Comparativo Bs USDT: ${moneyBs(t.totalBsUsdt)}`);
-        lines.push(`Referencia USD lista: ${moneyUsd(t.baseUsd)}`);
+        lines.push(`Tasa BCV: ${bsFmt.format(t.bcvRate)}`);
+        lines.push(`Total a pagar en Bs: ${moneyBs(t.totalBsBcv)}`);
+        lines.push(`Referencia si paga divisa por Kontigo: ${moneyUsd(t.kontigoTotalUsd)}`);
+        lines.push(`Referencia si paga divisa por USDT: ${moneyUsd(t.usdtTotalUsd)}`);
       }
 
       return lines.join("\n");

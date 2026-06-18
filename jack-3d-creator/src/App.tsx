@@ -555,7 +555,7 @@ function ProjectCard({
           {
             '--card-offset': `${index * 28}px`,
             scale,
-          } as CSSProperties
+          } as unknown as CSSProperties
         }
       >
         <div className="mb-6 flex flex-col gap-5 text-[#D7E2EA] lg:mb-8 lg:flex-row lg:items-end lg:justify-between">

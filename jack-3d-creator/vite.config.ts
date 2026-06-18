@@ -3,5 +3,5 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/apps/WEB%20IA/jack-3d-creator/',
+  base: '/apps/jack-3d-creator/',
 });

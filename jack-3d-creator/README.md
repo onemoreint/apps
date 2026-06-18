@@ -15,7 +15,9 @@ Landing page React/Vite basada en la estructura 3D original, transformada para O
 
 ## Imágenes usadas
 
-Las imágenes se cargan desde miniaturas públicas de Google Drive usando archivos de producto One More del folder compartido. No se usaron carpetas de Monau, listas de precios, presentaciones generales ni testimonios.
+Las imágenes se cargan desde URLs públicas encontradas en `parchesonemore.com`, usando únicamente productos visibles en la tienda: B12 Plus, Dekamin, Face Lifting Mask by Lumiere, GlutaNAD+ Boost, Melatonin Plus, Night Gentlemen, Night Ladies, Omevia, Painless Night GLU, Slim Style y Sonrie Collagen Patch.
+
+No se usaron listas de precios ni testimonios dentro de la landing.
 
 ## Ejecutar localmente
 

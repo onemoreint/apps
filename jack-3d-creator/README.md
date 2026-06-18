@@ -1,37 +1,35 @@
-# Jack -- 3D Creator Portfolio
+# One More -- José Lugo Landing
 
-Landing page built with React, TypeScript, Tailwind CSS, Framer Motion, Lucide React, and the Kanit Google Font.
+Landing page React/Vite basada en la estructura 3D original, transformada para One More International.
 
-## Run locally
+## Incluye
+
+- Hero premium oscuro.
+- Marquee con productos One More.
+- Sección de sistema y acompañamiento.
+- Tarjetas sticky con productos.
+- CTA directo a WhatsApp: +573126387467.
+- Sin listas de precios.
+- Sin testimonios.
+- Lenguaje responsable, sin promesas médicas.
+
+## Imágenes usadas
+
+Las imágenes se cargan desde miniaturas públicas de Google Drive usando archivos de producto One More del folder compartido. No se usaron carpetas de Monau, listas de precios, presentaciones generales ni testimonios.
+
+## Ejecutar localmente
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Production build
+## Publicar
 
-```bash
-npm run build
-npm run preview
-```
-
-## Structure
+Sube estos archivos al repositorio en:
 
 ```txt
-jack-3d-creator/
-  index.html
-  package.json
-  tailwind.config.js
-  postcss.config.js
-  vite.config.ts
-  tsconfig.json
-  src/
-    App.tsx
-    index.css
-    main.tsx
+apps / jack-3d-creator
 ```
 
-## Notes
-
-The page uses external image and GIF URLs, so the final visual preview requires internet access in the browser.
+No subas `node_modules` ni `dist`.

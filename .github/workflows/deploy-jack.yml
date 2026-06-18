@@ -34,9 +34,11 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
-        working-directory: "jack-3d-creator"
-        run: npm ci || npm install
+    - name: Install dependencies
+  working-directory: "jack-3d-creator"
+  run: |
+    rm -f package-lock.json
+    npm install
 
       - name: Build project
         working-directory: "jack-3d-creator"

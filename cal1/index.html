@@ -78,10 +78,10 @@ td{font-size:13px}
 <section class="brand">
 <div class="eyebrow">Herramienta para distribuidores</div>
 <h1>Calculadora One More</h1>
-<p class="subtitle">Selecciona un producto, indica la cantidad y obtén automáticamente precios. Calcula tratamientos y cotizaciones adaptadas a Venezuela (BCV) o Colombia (TRM).</p>
+<p class="subtitle">Selecciona un producto, indica la cantidad y obtén automáticamente precios. Calcula tratamientos y cotizaciones adaptadas a Venezuela (BCV), Colombia (TRM) y Europa (EUR).</p>
 </section>
 <aside class="badgebox">
-<div class="badge" id="badgeCountry">🇻🇪 Venezuela / 🇨🇴 Colombia</div>
+<div class="badge" id="badgeCountry">🇻🇪 VE / 🇨🇴 CO / 🇪🇺 EU</div>
 <div class="badge">Análisis de Tratamiento Diario</div>
 <div class="badge">QV + precios + envío</div>
 </aside>
@@ -93,10 +93,11 @@ td{font-size:13px}
 <h2>⚙️ Configuración de País y Tasa</h2>
 <div class="rate-main">
 <div>
-<label for="country">País de Operación</label>
+<label for="country">Región / Moneda</label>
 <select id="country">
 <option value="VE">🇻🇪 Venezuela (Bs)</option>
 <option value="CO">🇨🇴 Colombia (COP)</option>
+<option value="EU">🇪🇺 Europa (EUR)</option>
 </select>
 </div>
 </div>
@@ -116,7 +117,7 @@ td{font-size:13px}
 <h2>1. Selecciona el producto</h2>
 <div class="product-grid">
 <div>
-<label for="product">Producto</label>
+<label for="product">Producto / Paquete</label>
 <select id="product"></select>
 </div>
 <div>
@@ -131,13 +132,13 @@ td{font-size:13px}
 <div class="selected" id="selectedBox">
 <div class="selected-title" id="selectedName">-</div>
 <div class="price-lines">
-<div class="price-line"><span>Piezas por paquete</span><strong id="selectedPz">0</strong></div>
-<div class="price-line"><span>Precio por parche (Costo)</span><strong id="selectedPatchCost">$0</strong></div>
 <div class="price-line"><span>Precio distribuidor</span><strong id="selectedDist">$0</strong></div>
 <div class="price-line"><span>Precio público</span><strong class="public" id="selectedPublic">$0</strong></div>
+<div class="price-line patch-only"><span>Piezas por paquete</span><strong id="selectedPz">0</strong></div>
+<div class="price-line patch-only"><span>Precio por parche (Costo)</span><strong id="selectedPatchCost">$0</strong></div>
 </div>
 
-<div class="treatment-section">
+<div class="treatment-section" id="treatmentSection">
 <strong>Cálculo de Tratamiento (1 Semana)</strong>
 <div class="treatment-grid">
 <div><label>Días de efecto por parche:</label>
@@ -199,18 +200,33 @@ td{font-size:13px}
 <div class="toast" id="toast">Listo</div>
 
 <script>
-// Valores actualizados según la imagen provista (Precios y Pz)
+// El parámetro 'isPack: true' oculta el despiece de parches para ese item
 const products=[
-{name:"Painless Night Glu",qv:50,dist:64,public:79,pz:25,defaultDays:2},
-{name:"Omevia",qv:32,dist:39,public:49,pz:27,defaultDays:1},
-{name:"Melatonin (plus)",qv:30,dist:35,public:47,pz:24,defaultDays:1},
-{name:"B12 Plus",qv:30,dist:35,public:47,pz:32,defaultDays:1},
-{name:"Collagen Patch Sornie",qv:45,dist:59,public:79,pz:27,defaultDays:1},
-{name:"Slim Style",qv:25,dist:32,public:43,pz:30,defaultDays:1},
-{name:"Dekamin",qv:25,dist:32,public:43,pz:24,defaultDays:1},
-{name:"Night Ladies",qv:45,dist:59,public:79,pz:27,defaultDays:1},
-{name:"Night Gentleman",qv:45,dist:59,public:79,pz:27,defaultDays:1},
-{name:"Glutanad",qv:50,dist:67,public:79,pz:30,defaultDays:1}
+{name:"Painless Night Glu",qv:50,dist:64,public:79,pz:25,defaultDays:2,isPack:false},
+{name:"Omevia",qv:32,dist:39,public:49,pz:27,defaultDays:1,isPack:false},
+{name:"Melatonin (plus)",qv:30,dist:35,public:47,pz:24,defaultDays:1,isPack:false},
+{name:"B12 Plus",qv:30,dist:35,public:47,pz:32,defaultDays:1,isPack:false},
+{name:"Collagen Patch Sornie",qv:45,dist:59,public:79,pz:27,defaultDays:1,isPack:false},
+{name:"Slim Style",qv:25,dist:32,public:43,pz:30,defaultDays:1,isPack:false},
+{name:"Dekamin",qv:25,dist:32,public:43,pz:24,defaultDays:1,isPack:false},
+{name:"Night Ladies",qv:45,dist:59,public:79,pz:27,defaultDays:1,isPack:false},
+{name:"Night Gentleman",qv:45,dist:59,public:79,pz:27,defaultDays:1,isPack:false},
+{name:"Glutanad",qv:50,dist:67,public:79,pz:30,defaultDays:1,isPack:false},
+
+// Paquetes y Nuevos Productos (se venden enteros)
+{name:"PNG Express Pack EU",qv:150,dist:150,public:300,isPack:true},
+{name:"Diamond Express Pack EU",qv:2500,dist:997,public:1994,isPack:true},
+{name:"King Pack",qv:150,dist:150,public:300,isPack:true},
+{name:"Influencer Pack",qv:250,dist:177,public:354,isPack:true},
+{name:"Sornie Anti-Aging Mask",qv:55,dist:75,public:150,isPack:true},
+{name:"Sornie Face-Lifting Mask",qv:60,dist:87,public:174,isPack:true},
+{name:"OmiCoff Latte",qv:30,dist:35,public:70,isPack:true},
+{name:"OmiCoff Mocha",qv:30,dist:35,public:70,isPack:true},
+{name:"OmiCoff Classic",qv:30,dist:35,public:70,isPack:true},
+{name:"Fit&More Vanilla",qv:18,dist:25,public:50,isPack:true},
+{name:"Fit&More Chocolate",qv:18,dist:25,public:50,isPack:true},
+{name:"Glutamore 50 ML",qv:50,dist:60,public:120,isPack:true},
+{name:"Pawsy Pet Care Nano Spray",qv:18,dist:20,public:40,isPack:true}
 ];
 
 const state={cart:[]};
@@ -218,23 +234,26 @@ const $=id=>document.getElementById(id);
 const usd=new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"});
 const bs=new Intl.NumberFormat("es-VE",{minimumFractionDigits:2,maximumFractionDigits:2});
 const cop=new Intl.NumberFormat("es-CO",{minimumFractionDigits:0,maximumFractionDigits:0});
+const eur=new Intl.NumberFormat("es-ES",{style:"currency",currency:"EUR"});
 
 const moneyUsd=v=>usd.format(Number(v||0));
 const moneyLoc=v=>{
-  const isCo = $("country").value === "CO";
-  return isCo ? "COP $ " + cop.format(Number(v||0)) : "Bs " + bs.format(Number(v||0));
+  const region = $("country").value;
+  if(region === "CO") return "COP $ " + cop.format(Number(v||0));
+  if(region === "EU") return eur.format(Number(v||0));
+  return "Bs " + bs.format(Number(v||0));
 };
 
 function init(){
   products.forEach((p,i)=>{
     const o=document.createElement("option");
-    o.value=i;o.textContent=`${p.name} · ${p.qv} QV · $${p.public}`;
+    o.value=i;o.textContent=`${p.name} · ${p.qv} QV`;
     $("product").appendChild(o);
   });
   $("country").addEventListener("change", updateCountry);
   $("product").addEventListener("change", ()=>{
     const p = products[Number($("product").value)||0];
-    $("patchDays").value = p.defaultDays; 
+    $("patchDays").value = p.defaultDays || 1; 
     updateSelected();
   });
   $("qty").addEventListener("input",updateSelected);
@@ -250,13 +269,19 @@ function init(){
 }
 
 function updateCountry(){
-  const isCo = $("country").value === "CO";
-  if(isCo){
+  const region = $("country").value;
+  if(region === "CO"){
     $("rateLabel").textContent = "TRM (COP/USD)";
     $("rate").value = 4000; 
     $("extraBox").style.display = "none";
     $("extra").value = 0;
     $("shipLabel").textContent = "Envío (COP)";
+  } else if(region === "EU"){
+    $("rateLabel").textContent = "Tasa (EUR/USD)";
+    $("rate").value = 0.92; // Tasa base ejemplo
+    $("extraBox").style.display = "none";
+    $("extra").value = 0;
+    $("shipLabel").textContent = "Envío (EUR)";
   } else {
     $("rateLabel").textContent = "Tasa BCV (Bs/USD)";
     $("rate").value = 36.5; 
@@ -269,26 +294,34 @@ function updateCountry(){
 
 function updateSelected(){
   const p=products[Number($("product").value)||0];
-  const isCo = $("country").value === "CO";
   const exRate = Number($("rate").value||0) + Number($("extra").value||0);
   
   $("selectedName").textContent=p.name;
-  $("selectedPz").textContent=p.pz;
   $("selectedDist").textContent=moneyUsd(p.dist);
   $("selectedPublic").textContent=moneyUsd(p.public);
   
-  // Tratamiento
-  const patchCostUsd = p.dist / p.pz;
-  $("selectedPatchCost").textContent = moneyUsd(patchCostUsd);
-  
-  const daysPerPatch = Math.max(1, Number($("patchDays").value||1));
-  const patchesPerWeek = Math.ceil(7 / daysPerPatch);
-  const costPerWeekUsd = patchCostUsd * patchesPerWeek;
-  const sellPerWeekUsd = costPerWeekUsd * 2; // 100% Ganancia
-  
-  $("calcPatches").textContent = patchesPerWeek;
-  $("calcCost").textContent = moneyLoc(costPerWeekUsd * exRate) + ` (${moneyUsd(costPerWeekUsd)})`;
-  $("calcSell").textContent = moneyLoc(sellPerWeekUsd * exRate) + ` (${moneyUsd(sellPerWeekUsd)})`;
+  // Ocultar sección de parches para paquetes
+  const patchEls = document.querySelectorAll('.patch-only');
+  if(p.isPack){
+    patchEls.forEach(el => el.style.display = 'none');
+    $("treatmentSection").style.display = 'none';
+  } else {
+    patchEls.forEach(el => el.style.display = 'block');
+    $("treatmentSection").style.display = 'block';
+    
+    $("selectedPz").textContent=p.pz;
+    const patchCostUsd = p.dist / p.pz;
+    $("selectedPatchCost").textContent = moneyUsd(patchCostUsd);
+    
+    const daysPerPatch = Math.max(1, Number($("patchDays").value||1));
+    const patchesPerWeek = Math.ceil(7 / daysPerPatch);
+    const costPerWeekUsd = patchCostUsd * patchesPerWeek;
+    const sellPerWeekUsd = costPerWeekUsd * 2; // 100% Ganancia
+    
+    $("calcPatches").textContent = patchesPerWeek;
+    $("calcCost").textContent = moneyLoc(costPerWeekUsd * exRate) + ` (${moneyUsd(costPerWeekUsd)})`;
+    $("calcSell").textContent = moneyLoc(sellPerWeekUsd * exRate) + ` (${moneyUsd(sellPerWeekUsd)})`;
+  }
 }
 
 function shippingUsdRule(qv){
@@ -315,13 +348,13 @@ function totals(){
   const pub=state.cart.reduce((a,x)=>a+x.public*x.qty,0);
   
   const shipRule = shippingUsdRule(qv);
-  const isCo = $("country").value === "CO";
+  const region = $("country").value;
   
   const rate=Number($("rate").value||0);
-  const extra=isCo ? 0 : Number($("extra").value||0);
+  const extra= (region === "VE") ? Number($("extra").value||0) : 0;
   const saleRate=rate+extra;
   
-  const shipLoc = shipRule.usd * saleRate; // Envío convertido
+  const shipLoc = shipRule.usd * saleRate; 
   const finalUsd=pub+shipRule.usd;
   const finalLoc=finalUsd*saleRate;
   
@@ -329,7 +362,7 @@ function totals(){
   const marginUsd=pub-dist;
   const marginLoc= marginUsd * saleRate;
   
-  return {qv,units,dist,pub,shipRule,shipLoc,rate,extra,saleRate,finalUsd,finalLoc,distLoc,marginUsd,marginLoc,isCo};
+  return {qv,units,dist,pub,shipRule,shipLoc,rate,extra,saleRate,finalUsd,finalLoc,distLoc,marginUsd,marginLoc,region};
 }
 
 function render(){
@@ -368,7 +401,8 @@ function render(){
 
 function quoteText(){
   const t=totals();
-  const cName = t.isCo ? "COLOMBIA" : "VENEZUELA";
+  const regionNames = { VE: "VENEZUELA", CO: "COLOMBIA", EU: "EUROPA" };
+  const cName = regionNames[t.region];
   const lines=[`*COTIZACIÓN ONE MORE ${cName}*`,""];
   state.cart.forEach(x=>lines.push(`• ${x.name} · ${x.qty} und · ${x.qv*x.qty} QV · Público ${moneyUsd(x.public*x.qty)}`));
   lines.push("",`QV totales: ${t.qv} QV`,`Subtotal público: ${moneyUsd(t.pub)}`,`Envío: ${t.shipRule.usd===0?"GRATIS":moneyLoc(t.shipLoc)}`,`Tasa Aplicada: ${t.saleRate}`,`*TOTAL CLIENTE: ${moneyLoc(t.finalLoc)}*`,`Referencia USD: ${moneyUsd(t.finalUsd)}`);

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora de Precios · One More Venezuela</title>
+<title>Calculadora de Precios · One More</title>
 <style>
 :root{
   --navy:#10264d;--navy2:#173867;--gold:#c8a15a;--green:#238b52;
@@ -11,7 +11,7 @@
   --line:#e4e7ec;--soft:#f8fafc;--danger:#b42318;--shadow:0 16px 42px rgba(16,24,40,.09);
 }
 *{box-sizing:border-box}
-body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(circle at top,#fff 0,#f4f6f9 55%,#edf0f5 100%);color:var(--text)}
+body{margin:0;font-family:Inter,system-ui,-apple-system,sans-serif;background:radial-gradient(circle at top,#fff 0,#f4f6f9 55%,#edf0f5 100%);color:var(--text)}
 .wrap{width:min(1180px,calc(100% - 24px));margin:auto;padding:18px 0 36px}
 header{display:grid;grid-template-columns:1fr auto;gap:16px;margin-bottom:16px}
 .brand,.card,.rate-card{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
@@ -27,11 +27,10 @@ h2{font-size:16px;color:var(--navy);margin:0 0 13px}
 label{display:block;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:7px}
 input,select{width:100%;padding:13px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:15px;color:var(--text);outline:none}
 input:focus,select:focus{border-color:var(--navy);box-shadow:0 0 0 4px rgba(16,38,77,.08)}
-.rate-grid,.product-grid,.summary-grid{display:grid;gap:10px}
-.rate-grid{grid-template-columns:1fr 1fr 1fr}
+.rate-grid,.product-grid{display:grid;gap:10px}
 .product-grid{grid-template-columns:1.8fr .8fr .7fr}
 .rate-card{padding:15px;margin-bottom:15px}
-.rate-main{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rate-main{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .rate-result{margin-top:10px;padding:12px;border-radius:13px;background:#eef8f2;border:1px solid #cdebd8;color:#17663c;font-weight:900}
 .small{font-size:12px;color:var(--muted);line-height:1.45}
 .buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
@@ -40,10 +39,9 @@ button:hover{transform:translateY(-1px)}
 .primary{background:var(--navy);color:#fff}.secondary{background:#f1f3f6;color:var(--navy);border:1px solid var(--line)}
 .gold{background:var(--gold);color:#fff}.whatsapp{background:#128c7e;color:#fff}
 .logic{margin:14px 0;padding:13px;border-radius:13px;background:#f7f4ec;border:1px solid #eadfc9;color:#5c4a28;font-size:12px;line-height:1.45}
-.table-wrap{overflow:auto;margin-top:14px}
 table{width:100%;border-collapse:collapse;min-width:620px}
 th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left}
-th{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:var(--soft)}
+th{font-size:10px;text-transform:uppercase;color:var(--muted);background:var(--soft)}
 td{font-size:13px}
 .money{font-weight:900;color:var(--navy)}
 .public{color:var(--green)}
@@ -66,9 +64,11 @@ td{font-size:13px}
 .ship strong{color:#73571f}
 .notice{padding:11px 13px;border-radius:12px;background:#eef2ff;color:var(--navy);font-size:12px;font-weight:800;margin:12px 0}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);display:none;background:#101828;color:#fff;padding:11px 16px;border-radius:999px;font-size:13px;font-weight:800;z-index:10}
-footer{margin-top:15px;text-align:center;color:var(--muted);font-size:11px}
-@media(max-width:900px){header,.grid{grid-template-columns:1fr}.badgebox{min-width:0}.rate-grid{grid-template-columns:1fr}}
-@media(max-width:600px){.wrap{width:min(100% - 14px,1180px)}.brand,.card{padding:15px}.product-grid,.buttons,.cards,.price-lines{grid-template-columns:1fr}.hide-mobile{display:none}.rate-main{grid-template-columns:1fr}}
+.treatment-section{margin-top:15px;padding-top:15px;border-top:1px dashed var(--line)}
+.treatment-section strong{color:var(--navy);font-size:14px}
+.treatment-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+@media(max-width:900px){header,.grid{grid-template-columns:1fr}.badgebox{min-width:0}}
+@media(max-width:600px){.wrap{width:min(100% - 14px,1180px)}.brand,.card{padding:15px}.product-grid,.buttons,.cards,.price-lines{grid-template-columns:1fr}.rate-main{grid-template-columns:1fr}}
 @media print{body{background:#fff}.buttons,.no-print{display:none!important}.brand,.card,.rate-card{box-shadow:none}}
 </style>
 </head>
@@ -78,31 +78,39 @@ footer{margin-top:15px;text-align:center;color:var(--muted);font-size:11px}
 <section class="brand">
 <div class="eyebrow">Herramienta para distribuidores</div>
 <h1>Calculadora One More</h1>
-<p class="subtitle">Selecciona un producto, indica la cantidad y obtén automáticamente precio de distribuidor, precio público, QV, envío y total para el cliente. Diseñada para trabajar en Venezuela con BCV + diferencial de Bs 200.</p>
+<p class="subtitle">Selecciona un producto, indica la cantidad y obtén automáticamente precios. Calcula tratamientos y cotizaciones adaptadas a Venezuela (BCV) o Colombia (TRM).</p>
 </section>
 <aside class="badgebox">
-<div class="badge">🇻🇪 Venezuela · One More</div>
+<div class="badge" id="badgeCountry">🇻🇪 Venezuela / 🇨🇴 Colombia</div>
+<div class="badge">Análisis de Tratamiento Diario</div>
 <div class="badge">QV + precios + envío</div>
-<div class="badge">BCV + Bs 200 para cobrar</div>
 </aside>
 </header>
 
 <div class="grid">
 <section class="card">
 <div class="rate-card">
-<h2>⚙️ Tasa de cálculo</h2>
+<h2>⚙️ Configuración de País y Tasa</h2>
 <div class="rate-main">
 <div>
-<label for="bcv">Tasa BCV (Bs/USD)</label>
-<input id="bcv" type="number" min="0" step="0.0001" value="772.5441">
+<label for="country">País de Operación</label>
+<select id="country">
+<option value="VE">🇻🇪 Venezuela (Bs)</option>
+<option value="CO">🇨🇴 Colombia (COP)</option>
+</select>
 </div>
+</div>
+<div class="rate-main">
 <div>
-<label for="extra">Diferencial distribuidor</label>
+<label id="rateLabel" for="rate">Tasa BCV (Bs/USD)</label>
+<input id="rate" type="number" min="0" step="0.01" value="36.5">
+</div>
+<div id="extraBox">
+<label for="extra">Diferencial (Bs)</label>
 <input id="extra" type="number" min="0" step="1" value="200">
 </div>
 </div>
-<div class="rate-result">Tasa para cobrar: <span id="saleRate">Bs 972,5441</span> por USD</div>
-<p class="small" style="margin:8px 0 0">La calculadora parte de la tasa BCV introducida y suma automáticamente Bs 200. Puedes actualizar la tasa diariamente.</p>
+<div class="rate-result">Tasa para cobrar: <span id="saleRate">0</span> por USD</div>
 </div>
 
 <h2>1. Selecciona el producto</h2>
@@ -121,25 +129,27 @@ footer{margin-top:15px;text-align:center;color:var(--muted);font-size:11px}
 </div>
 
 <div class="selected" id="selectedBox">
-<div class="selected-title" id="selectedName">Selecciona un producto</div>
+<div class="selected-title" id="selectedName">-</div>
 <div class="price-lines">
+<div class="price-line"><span>Piezas por paquete</span><strong id="selectedPz">0</strong></div>
+<div class="price-line"><span>Precio por parche (Costo)</span><strong id="selectedPatchCost">$0</strong></div>
 <div class="price-line"><span>Precio distribuidor</span><strong id="selectedDist">$0</strong></div>
-<div class="price-line"><span>Precio público cliente</span><strong class="public" id="selectedPublic">$0</strong></div>
-<div class="price-line"><span>QV por unidad</span><strong id="selectedQv">0 QV</strong></div>
-<div class="price-line"><span>Margen bruto USD</span><strong id="selectedMargin">$0</strong></div>
-</div>
+<div class="price-line"><span>Precio público</span><strong class="public" id="selectedPublic">$0</strong></div>
 </div>
 
-<div class="logic">
-<strong>Envío automático por QV:</strong> 0–99 QV = Bs 12 · 100–149 QV = Bs 10 · 150–199 QV = Bs 8 · 200–299 QV = Bs 6 · 300 QV o más = GRATIS.
+<div class="treatment-section">
+<strong>Cálculo de Tratamiento (1 Semana)</strong>
+<div class="treatment-grid">
+<div><label>Días de efecto por parche:</label>
+<input type="number" id="patchDays" min="1" step="1" value="1" style="padding:8px"></div>
+<div><label>Parches por semana:</label>
+<strong id="calcPatches" style="font-size:18px; margin-top:5px; display:block">7</strong></div>
+<div><label>Costo de 1 semana:</label>
+<strong id="calcCost" style="font-size:18px; margin-top:5px; display:block">$0</strong></div>
+<div><label>Precio Venta Cliente (100% ganancia):</label>
+<strong id="calcSell" class="public" style="font-size:18px; margin-top:5px; display:block">$0</strong></div>
 </div>
-
-<h2 style="margin-top:18px">Lista rápida de productos</h2>
-<div class="table-wrap">
-<table>
-<thead><tr><th>Producto</th><th>QV</th><th>Distribuidor</th><th>Público</th><th>Margen</th></tr></thead>
-<tbody id="priceList"></tbody>
-</table>
+</div>
 </div>
 </section>
 
@@ -149,28 +159,28 @@ footer{margin-top:15px;text-align:center;color:var(--muted);font-size:11px}
 
 <div class="cards">
 <div class="kpi"><small>QV acumulados</small><strong id="totalQv">0 QV</strong></div>
-<div class="kpi"><small>Productos / unidades</small><strong id="totalUnits">0</strong></div>
-<div class="kpi"><small>Subtotal distribuidor</small><strong id="distUsd">$0,00</strong></div>
-<div class="kpi green"><small>Subtotal público</small><strong id="publicUsd">$0,00</strong></div>
-<div class="kpi"><small>Envío</small><strong id="shippingBs">Bs 0,00</strong></div>
-<div class="kpi green"><small>Margen bruto</small><strong id="marginUsd">$0,00</strong></div>
+<div class="kpi"><small>Unidades</small><strong id="totalUnits">0</strong></div>
+<div class="kpi"><small>Subtotal dist. (USD)</small><strong id="distUsd">$0,00</strong></div>
+<div class="kpi green"><small>Subtotal público (USD)</small><strong id="publicUsd">$0,00</strong></div>
+<div class="kpi"><small id="shipLabel">Envío</small><strong id="shippingLoc">0,00</strong></div>
+<div class="kpi green"><small>Margen bruto (USD)</small><strong id="marginUsd">$0,00</strong></div>
 </div>
 
 <div class="ship">
 <strong id="shippingRule">Envío pendiente</strong>
-<div class="small" id="shippingHelp">El envío se determina por los QV totales del pedido.</div>
+<div class="small" id="shippingHelp">El envío se determina por los QV.</div>
 </div>
 
 <div class="total">
 <small>Total final para cobrar al cliente</small>
-<strong id="finalBs">Bs 0,00</strong>
-<div id="finalHelp">Precio público + envío, convertido a la tasa BCV + Bs 200.</div>
+<strong id="finalLoc">0,00</strong>
+<div id="finalHelp">Precio público + envío, convertido a la moneda local.</div>
 </div>
 
 <div class="cards">
 <div class="kpi"><small>Total público USD</small><strong id="finalUsd">$0,00</strong></div>
-<div class="kpi"><small>Costo distribuidor Bs</small><strong id="distBs">Bs 0,00</strong></div>
-<div class="kpi green"><small>Margen estimado Bs</small><strong id="marginBs">Bs 0,00</strong></div>
+<div class="kpi"><small>Costo distribuidor local</small><strong id="distLoc">0,00</strong></div>
+<div class="kpi green"><small>Margen estimado local</small><strong id="marginLoc">0,00</strong></div>
 <div class="kpi"><small>Tasa aplicada</small><strong id="rateUsed">0</strong></div>
 </div>
 
@@ -184,62 +194,111 @@ footer{margin-top:15px;text-align:center;color:var(--muted);font-size:11px}
 </div>
 </section>
 </div>
-<footer>La tasa BCV es editable. Verifica la tasa oficial vigente antes de cerrar cada operación.</footer>
+<footer>Verifica la tasa oficial vigente antes de cerrar cada operación.</footer>
 </div>
 <div class="toast" id="toast">Listo</div>
 
 <script>
+// Valores actualizados según la imagen provista (Precios y Pz)
 const products=[
-{name:"Painless Night GLU",qv:50,dist:64,public:80},
-{name:"Omevia",qv:32,dist:39,public:50},
-{name:"Melatonin",qv:30,dist:35,public:48},
-{name:"B12 Plus",qv:30,dist:35,public:48},
-{name:"Collagen Patch Sornie",qv:45,dist:59,public:80},
-{name:"Slim Style",qv:25,dist:32,public:44},
-{name:"Dekamin",qv:25,dist:32,public:44},
-{name:"Night Ladies",qv:45,dist:59,public:80},
-{name:"Night Gentleman",qv:45,dist:59,public:80},
-{name:"Glutanad",qv:50,dist:67,public:80}
+{name:"Painless Night Glu",qv:50,dist:64,public:79,pz:25,defaultDays:2},
+{name:"Omevia",qv:32,dist:39,public:49,pz:27,defaultDays:1},
+{name:"Melatonin (plus)",qv:30,dist:35,public:47,pz:24,defaultDays:1},
+{name:"B12 Plus",qv:30,dist:35,public:47,pz:32,defaultDays:1},
+{name:"Collagen Patch Sornie",qv:45,dist:59,public:79,pz:27,defaultDays:1},
+{name:"Slim Style",qv:25,dist:32,public:43,pz:30,defaultDays:1},
+{name:"Dekamin",qv:25,dist:32,public:43,pz:24,defaultDays:1},
+{name:"Night Ladies",qv:45,dist:59,public:79,pz:27,defaultDays:1},
+{name:"Night Gentleman",qv:45,dist:59,public:79,pz:27,defaultDays:1},
+{name:"Glutanad",qv:50,dist:67,public:79,pz:30,defaultDays:1}
 ];
 
 const state={cart:[]};
 const $=id=>document.getElementById(id);
 const usd=new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"});
 const bs=new Intl.NumberFormat("es-VE",{minimumFractionDigits:2,maximumFractionDigits:2});
-const moneyBs=v=>"Bs "+bs.format(Number(v||0));
+const cop=new Intl.NumberFormat("es-CO",{minimumFractionDigits:0,maximumFractionDigits:0});
+
 const moneyUsd=v=>usd.format(Number(v||0));
+const moneyLoc=v=>{
+  const isCo = $("country").value === "CO";
+  return isCo ? "COP $ " + cop.format(Number(v||0)) : "Bs " + bs.format(Number(v||0));
+};
 
 function init(){
   products.forEach((p,i)=>{
     const o=document.createElement("option");
-    o.value=i;o.textContent=`${p.name} · ${p.qv} QV · $${p.public} público`;
+    o.value=i;o.textContent=`${p.name} · ${p.qv} QV · $${p.public}`;
     $("product").appendChild(o);
   });
-  $("product").addEventListener("change",updateSelected);
+  $("country").addEventListener("change", updateCountry);
+  $("product").addEventListener("change", ()=>{
+    const p = products[Number($("product").value)||0];
+    $("patchDays").value = p.defaultDays; 
+    updateSelected();
+  });
   $("qty").addEventListener("input",updateSelected);
-  $("bcv").addEventListener("input",render);
+  $("patchDays").addEventListener("input",updateSelected);
+  $("rate").addEventListener("input",render);
   $("extra").addEventListener("input",render);
   $("addBtn").addEventListener("click",addItem);
   $("clearBtn").addEventListener("click",()=>{state.cart=[];render()});
   $("copyBtn").addEventListener("click",copyQuote);
   $("waBtn").addEventListener("click",sendWhatsApp);
+  
+  updateCountry();
+}
+
+function updateCountry(){
+  const isCo = $("country").value === "CO";
+  if(isCo){
+    $("rateLabel").textContent = "TRM (COP/USD)";
+    $("rate").value = 4000; 
+    $("extraBox").style.display = "none";
+    $("extra").value = 0;
+    $("shipLabel").textContent = "Envío (COP)";
+  } else {
+    $("rateLabel").textContent = "Tasa BCV (Bs/USD)";
+    $("rate").value = 36.5; 
+    $("extraBox").style.display = "block";
+    $("extra").value = 200;
+    $("shipLabel").textContent = "Envío (Bs)";
+  }
   render();
 }
+
 function updateSelected(){
   const p=products[Number($("product").value)||0];
+  const isCo = $("country").value === "CO";
+  const exRate = Number($("rate").value||0) + Number($("extra").value||0);
+  
   $("selectedName").textContent=p.name;
+  $("selectedPz").textContent=p.pz;
   $("selectedDist").textContent=moneyUsd(p.dist);
   $("selectedPublic").textContent=moneyUsd(p.public);
-  $("selectedQv").textContent=p.qv+" QV";
-  $("selectedMargin").textContent=moneyUsd(p.public-p.dist);
+  
+  // Tratamiento
+  const patchCostUsd = p.dist / p.pz;
+  $("selectedPatchCost").textContent = moneyUsd(patchCostUsd);
+  
+  const daysPerPatch = Math.max(1, Number($("patchDays").value||1));
+  const patchesPerWeek = Math.ceil(7 / daysPerPatch);
+  const costPerWeekUsd = patchCostUsd * patchesPerWeek;
+  const sellPerWeekUsd = costPerWeekUsd * 2; // 100% Ganancia
+  
+  $("calcPatches").textContent = patchesPerWeek;
+  $("calcCost").textContent = moneyLoc(costPerWeekUsd * exRate) + ` (${moneyUsd(costPerWeekUsd)})`;
+  $("calcSell").textContent = moneyLoc(sellPerWeekUsd * exRate) + ` (${moneyUsd(sellPerWeekUsd)})`;
 }
-function shippingFor(qv){
-  if(qv>=300)return {bs:0,label:"ENVÍO GRATIS",detail:"300 QV o más"};
-  if(qv>=200)return {bs:6,label:"Envío Bs 6",detail:"200–299 QV"};
-  if(qv>=150)return {bs:8,label:"Envío Bs 8",detail:"150–199 QV"};
-  if(qv>=100)return {bs:10,label:"Envío Bs 10",detail:"100–149 QV"};
-  return {bs:12,label:"Envío Bs 12",detail:"0–99 QV"};
+
+function shippingUsdRule(qv){
+  if(qv>=300)return {usd:0,label:"ENVÍO GRATIS",detail:"300 QV o más"};
+  if(qv>=200)return {usd:6,label:"Envío $6",detail:"200–299 QV"};
+  if(qv>=150)return {usd:8,label:"Envío $8",detail:"150–199 QV"};
+  if(qv>=100)return {usd:10,label:"Envío $10",detail:"100–149 QV"};
+  return {usd:12,label:"Envío $12",detail:"0–99 QV"};
 }
+
 function addItem(){
   const p=products[Number($("product").value)];
   const qty=Math.max(1,parseInt($("qty").value||1,10));
@@ -254,56 +313,65 @@ function totals(){
   const units=state.cart.reduce((a,x)=>a+x.qty,0);
   const dist=state.cart.reduce((a,x)=>a+x.dist*x.qty,0);
   const pub=state.cart.reduce((a,x)=>a+x.public*x.qty,0);
-  const ship=shippingFor(qv);
-  const bcv=Number($("bcv").value||0);
-  const extra=Number($("extra").value||0);
-  const saleRate=bcv+extra;
-  const shippingUsd=saleRate>0?ship.bs/saleRate:0;
-  const finalUsd=pub+shippingUsd;
-  const finalBs=finalUsd*saleRate;
-  const distBs=dist*bcv+ship.bs;
+  
+  const shipRule = shippingUsdRule(qv);
+  const isCo = $("country").value === "CO";
+  
+  const rate=Number($("rate").value||0);
+  const extra=isCo ? 0 : Number($("extra").value||0);
+  const saleRate=rate+extra;
+  
+  const shipLoc = shipRule.usd * saleRate; // Envío convertido
+  const finalUsd=pub+shipRule.usd;
+  const finalLoc=finalUsd*saleRate;
+  
+  const distLoc= (dist * rate) + shipLoc;
   const marginUsd=pub-dist;
-  const marginBs=marginUsd*bcv + (shippingBsCoveredByCustomer(pub,ship,saleRate));
-  return {qv,units,dist,pub,ship,bcv,extra,saleRate,shippingUsd,finalUsd,finalBs,distBs,marginUsd,marginBs};
+  const marginLoc= marginUsd * saleRate;
+  
+  return {qv,units,dist,pub,shipRule,shipLoc,rate,extra,saleRate,finalUsd,finalLoc,distLoc,marginUsd,marginLoc,isCo};
 }
-function shippingBsCoveredByCustomer(pub,ship,saleRate){
-  // Shipping is charged to the customer at the same sale rate, so it is not treated as product margin.
-  return 0;
-}
+
 function render(){
   updateSelected();
   const t=totals();
-  $("saleRate").textContent=moneyBs(t.saleRate)+" / USD";
+  
+  $("saleRate").textContent=moneyLoc(t.saleRate);
   $("totalQv").textContent=t.qv+" QV";
   $("totalUnits").textContent=t.units;
   $("distUsd").textContent=moneyUsd(t.dist);
   $("publicUsd").textContent=moneyUsd(t.pub);
-  $("shippingBs").textContent=t.ship.bs===0?"GRATIS":moneyBs(t.ship.bs);
+  $("shippingLoc").textContent=t.shipRule.usd===0?"GRATIS":moneyLoc(t.shipLoc);
   $("marginUsd").textContent=moneyUsd(t.marginUsd);
-  $("shippingRule").textContent=t.ship.label;
-  $("shippingHelp").textContent=t.qv?`${t.ship.detail}. Se suma al precio público y se convierte a la tasa de cobro.`:"El envío se determina por los QV totales del pedido.";
-  $("finalBs").textContent=moneyBs(t.finalBs);
+  
+  $("shippingRule").textContent=t.shipRule.label;
+  $("shippingHelp").textContent=t.qv?`${t.shipRule.detail}. Se convierte a la moneda local.`:"El envío se determina por los QV totales del pedido.";
+  
+  $("finalLoc").textContent=moneyLoc(t.finalLoc);
   $("finalUsd").textContent=moneyUsd(t.finalUsd);
-  $("distBs").textContent=moneyBs(t.dist*t.bcv+t.ship.bs);
-  $("marginBs").textContent=moneyBs(t.marginUsd*t.bcv);
-  $("rateUsed").textContent=moneyBs(t.saleRate);
+  $("distLoc").textContent=moneyLoc(t.distLoc);
+  $("marginLoc").textContent=moneyLoc(t.marginLoc);
+  $("rateUsed").textContent=moneyLoc(t.saleRate);
+  
   if(!state.cart.length){
     $("cartBox").innerHTML="Agrega uno o varios productos para construir el pedido.";
   }else{
     $("cartBox").innerHTML=`<div style="overflow:auto"><table style="min-width:540px">
-    <thead><tr><th>Producto</th><th>Cant.</th><th>QV</th><th>Dist.</th><th>Público</th><th></th></tr></thead>
+    <thead><tr><th>Producto</th><th>Cant.</th><th>QV</th><th>Público</th><th></th></tr></thead>
     <tbody>${state.cart.map((x,i)=>`<tr>
       <td><strong>${x.name}</strong></td><td>${x.qty}</td><td>${x.qv*x.qty}</td>
-      <td>${moneyUsd(x.dist*x.qty)}</td><td class="money">${moneyUsd(x.public*x.qty)}</td>
+      <td class="money">${moneyUsd(x.public*x.qty)}</td>
       <td><button class="secondary" style="padding:6px 9px;color:#b42318" onclick="removeItem(${i})">Quitar</button></td>
     </tr>`).join("")}</tbody></table></div>`;
   }
 }
+
 function quoteText(){
   const t=totals();
-  const lines=["*COTIZACIÓN ONE MORE VENEZUELA*",""];
+  const cName = t.isCo ? "COLOMBIA" : "VENEZUELA";
+  const lines=[`*COTIZACIÓN ONE MORE ${cName}*`,""];
   state.cart.forEach(x=>lines.push(`• ${x.name} · ${x.qty} und · ${x.qv*x.qty} QV · Público ${moneyUsd(x.public*x.qty)}`));
-  lines.push("",`QV totales: ${t.qv} QV`,`Subtotal público: ${moneyUsd(t.pub)}`,`Envío: ${t.ship.bs===0?"GRATIS":moneyBs(t.ship.bs)}`,`Tasa BCV: ${t.bcv}`,`Tasa de cobro: ${t.saleRate}`,`*TOTAL CLIENTE: ${moneyBs(t.finalBs)}*`,`Referencia USD: ${moneyUsd(t.finalUsd)}`);
+  lines.push("",`QV totales: ${t.qv} QV`,`Subtotal público: ${moneyUsd(t.pub)}`,`Envío: ${t.shipRule.usd===0?"GRATIS":moneyLoc(t.shipLoc)}`,`Tasa Aplicada: ${t.saleRate}`,`*TOTAL CLIENTE: ${moneyLoc(t.finalLoc)}*`,`Referencia USD: ${moneyUsd(t.finalUsd)}`);
   return lines.join("\n");
 }
 async function copyQuote(){
@@ -318,4 +386,5 @@ function toast(msg){$("toast").textContent=msg;$("toast").style.display="block";
 init();
 </script>
 </body>
+</html>
 </html>

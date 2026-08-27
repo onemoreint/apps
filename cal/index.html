@@ -1,1611 +1,896 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Calculadora One More Global | Venezuela Rates Pro</title>
-  <style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora ONE MORE - Premium</title>
+    <style>
+        /* ===== RESET Y BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-:root{
-  --bg:#0a0a0f;
-  --bg-card:#12121a;
-  --bg-elevated:#1a1a26;
-  --bg-hover:#222233;
-  --border:rgba(214,180,106,0.18);
-  --border-hover:rgba(214,180,106,0.35);
-  --gold:#d6b46a;
-  --gold-light:#f8dc8b;
-  --gold-dim:rgba(214,180,106,0.12);
-  --text:#f0f0f5;
-  --text-secondary:#8b8b9e;
-  --text-muted:#5a5a6e;
-  --green:#25D366;
-  --green-dim:rgba(37,211,102,0.12);
-  --red:#ff5b5b;
-  --red-dim:rgba(255,91,91,0.12);
-  --shadow:0 8px 32px rgba(0,0,0,0.4);
-  --shadow-lg:0 16px 48px rgba(0,0,0,0.5);
-  --radius-sm:10px;
-  --radius:16px;
-  --radius-lg:20px;
-  --radius-xl:24px;
-}
+        /* ===== CONTENEDOR PRINCIPAL ===== */
+        .calculator {
+            max-width: 900px;
+            width: 100%;
+            background: #111111;
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid #1a1a1a;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
 
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  font-family:'Inter',system-ui,-apple-system,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-  line-height:1.5;
-  padding:20px;
-  padding-bottom:calc(24px + env(safe-area-inset-bottom));
-}
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #1a1a1a;
+        }
 
-@keyframes fadeInUp{
-  from{opacity:0;transform:translateY(24px)}
-  to{opacity:1;transform:translateY(0)}
-}
-@keyframes fadeIn{
-  from{opacity:0}
-  to{opacity:1}
-}
-@keyframes slideInRight{
-  from{opacity:0;transform:translateX(20px)}
-  to{opacity:1;transform:translateX(0)}
-}
-@keyframes pulse{
-  0%,100%{opacity:1}
-  50%{opacity:0.5}
-}
-@keyframes toastIn{
-  from{opacity:0;transform:translateX(-50%) translateY(20px)}
-  to{opacity:1;transform:translateX(-50%) translateY(0)}
-}
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-.animate-in{animation:fadeInUp 0.5s ease-out forwards;opacity:0}
-.delay-1{animation-delay:0.1s}
-.delay-2{animation-delay:0.2s}
-.delay-3{animation-delay:0.3s}
-.delay-4{animation-delay:0.4s}
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #d4a843, #b8922f);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            color: #0a0a0a;
+        }
 
-.app{width:100%;max-width:1200px;margin:0 auto}
+        .logo-text {
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
 
-.hero{
-  text-align:center;
-  padding:28px 12px 24px;
-  animation:fadeInUp 0.6s ease-out;
-}
-.badge{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:8px 18px;
-  border-radius:999px;
-  color:var(--gold-light);
-  border:1px solid var(--border);
-  background:linear-gradient(135deg,rgba(214,180,106,0.08),rgba(214,180,106,0.03));
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:0.08em;
-  text-transform:uppercase;
-  margin-bottom:16px;
-}
-.badge::before{
-  content:'';
-  width:6px;
-  height:6px;
-  background:var(--gold);
-  border-radius:50%;
-  box-shadow:0 0 8px var(--gold);
-}
-h1{
-  margin:0;
-  font-size:clamp(26px,4.5vw,40px);
-  font-weight:900;
-  line-height:1.1;
-  letter-spacing:-0.03em;
-  background:linear-gradient(135deg,#fff 0%,var(--gold-light) 100%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-.sub{
-  max-width:640px;
-  margin:12px auto 0;
-  color:var(--text-secondary);
-  line-height:1.6;
-  font-size:15px;
-}
+        .logo-text span {
+            color: #d4a843;
+        }
 
-.main-grid{
-  display:grid;
-  grid-template-columns:1fr 1.3fr;
-  gap:20px;
-  align-items:start;
-}
+        .badge {
+            background: #1a1a1a;
+            color: #d4a843;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid #2a2a2a;
+        }
 
-.card{
-  background:linear-gradient(180deg,var(--bg-card),var(--bg-elevated));
-  border:1px solid var(--border);
-  border-radius:var(--radius-xl);
-  padding:24px;
-  margin-bottom:20px;
-  box-shadow:var(--shadow);
-  transition:all 0.3s ease;
-  position:relative;
-  overflow:hidden;
-}
-.card::before{
-  content:'';
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  height:3px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
-  opacity:0.6;
-}
-.card:hover{
-  border-color:var(--border-hover);
-  box-shadow:var(--shadow-lg);
-}
+        /* ===== CONFIGURACIÓN ===== */
+        .config-section {
+            background: #0d0d0d;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 28px;
+            border: 1px solid #1a1a1a;
+        }
 
-.card-header{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-bottom:20px;
-}
-.card-icon{
-  width:36px;
-  height:36px;
-  border-radius:var(--radius-sm);
-  background:linear-gradient(135deg,var(--gold-dim),rgba(214,180,106,0.05));
-  border:1px solid var(--border);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:18px;
-  flex-shrink:0;
-}
-.card-title{
-  font-size:16px;
-  font-weight:800;
-  color:var(--text);
-  letter-spacing:-0.01em;
-}
+        .config-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
 
-.form-group{margin-bottom:16px}
-label{
-  display:block;
-  color:var(--gold-light);
-  font-weight:700;
-  font-size:12px;
-  text-transform:uppercase;
-  letter-spacing:0.06em;
-  margin-bottom:6px;
-}
-select,input{
-  width:100%;
-  border:none;
-  outline:none;
-  border-radius:var(--radius);
-  padding:14px 16px;
-  font-size:15px;
-  font-weight:500;
-  background:var(--bg-elevated);
-  color:var(--text);
-  border:1px solid rgba(255,255,255,0.08);
-  min-height:50px;
-  font-family:inherit;
-  transition:all 0.2s ease;
-}
-select:hover,input:hover{border-color:rgba(255,255,255,0.15)}
-select:focus,input:focus{
-  border-color:var(--gold);
-  box-shadow:0 0 0 3px rgba(214,180,106,0.1);
-}
-select{
-  cursor:pointer;
-  appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238b8b9e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat:no-repeat;
-  background-position:right 14px center;
-  padding-right:44px;
-}
-input[readonly]{opacity:0.7;cursor:not-allowed}
+        .config-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
 
-.rate-display{
-  background:linear-gradient(135deg,var(--bg-elevated),var(--bg-hover));
-  border:1px solid var(--border);
-  border-radius:var(--radius-lg);
-  padding:20px;
-  margin-bottom:16px;
-  position:relative;
-}
-.rate-label{
-  font-size:12px;
-  color:var(--gold-light);
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:0.08em;
-  margin-bottom:6px;
-}
-.rate-value{
-  font-size:32px;
-  font-weight:900;
-  letter-spacing:-1px;
-  word-break:break-word;
-  line-height:1.1;
-  color:var(--text);
-}
-.rate-value.loading{
-  color:var(--text-muted);
-  animation:pulse 1.5s ease-in-out infinite;
-}
-.rate-meta{
-  color:var(--text-secondary);
-  font-size:13px;
-  line-height:1.5;
-  margin-top:6px;
-}
-.source-pill{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:6px 12px;
-  border-radius:999px;
-  background:var(--bg);
-  border:1px solid rgba(255,255,255,0.1);
-  color:var(--text-secondary);
-  font-size:11px;
-  font-weight:700;
-  margin-top:10px;
-}
-.source-pill::before{
-  content:'';
-  width:6px;
-  height:6px;
-  background:var(--green);
-  border-radius:50%;
-  box-shadow:0 0 6px var(--green);
-}
-.error-msg{
-  display:none;
-  margin-top:10px;
-  padding:12px 16px;
-  border-radius:var(--radius-sm);
-  background:var(--red-dim);
-  border:1px solid rgba(255,91,91,0.25);
-  color:var(--red);
-  font-size:13px;
-  font-weight:600;
-}
-.error-msg.show{display:block;animation:fadeIn 0.3s ease}
+        .config-item label {
+            color: #888;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
 
-.ve-rate-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-  margin-top:12px;
-}
-.ve-rate-card{
-  background:var(--bg-elevated);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:var(--radius-sm);
-  padding:14px 10px;
-  text-align:center;
-  font-size:11px;
-  color:var(--text-secondary);
-  cursor:pointer;
-  font-family:inherit;
-  transition:all 0.2s ease;
-  font-weight:600;
-}
-.ve-rate-card:hover{
-  border-color:var(--border);
-  background:var(--bg-hover);
-  transform:translateY(-2px);
-}
-.ve-rate-card.active{
-  background:linear-gradient(135deg,rgba(214,180,106,0.2),rgba(248,216,139,0.08));
-  border-color:var(--gold);
-  box-shadow:0 0 0 2px rgba(214,180,106,0.15),0 4px 12px rgba(214,180,106,0.1);
-}
-.ve-rate-card strong{
-  display:block;
-  color:var(--gold-light);
-  font-size:15px;
-  font-weight:900;
-  margin-top:6px;
-}
+        .config-item select,
+        .config-item input {
+            background: #1a1a1a;
+            color: #ffffff;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
 
-.btn-row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-.btn{
-  width:100%;
-  border:none;
-  border-radius:var(--radius);
-  padding:14px 16px;
-  font-size:14px;
-  font-weight:800;
-  cursor:pointer;
-  transition:all 0.2s ease;
-  min-height:50px;
-  font-family:inherit;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-}
-.btn:hover{transform:translateY(-2px)}
-.btn:active{transform:translateY(0)}
+        .config-item select:focus,
+        .config-item input:focus {
+            outline: none;
+            border-color: #d4a843;
+            box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.1);
+        }
 
-.btn-gold{
-  background:linear-gradient(135deg,var(--gold),var(--gold-light));
-  color:#0a0a0f;
-  box-shadow:0 4px 16px rgba(214,180,106,0.25);
-}
-.btn-gold:hover{
-  box-shadow:0 6px 24px rgba(214,180,106,0.35);
-  filter:brightness(1.05);
-}
-.btn-dark{
-  background:var(--bg-elevated);
-  color:var(--text);
-  border:1px solid rgba(255,255,255,0.12);
-}
-.btn-dark:hover{
-  background:var(--bg-hover);
-  border-color:rgba(255,255,255,0.2);
-}
-.btn-red{
-  background:var(--red-dim);
-  color:var(--red);
-  border:1px solid rgba(255,91,91,0.25);
-}
-.btn-red:hover{
-  background:rgba(255,91,91,0.2);
-}
-.btn-whatsapp{
-  background:linear-gradient(135deg,var(--green),#128c7e);
-  color:#fff;
-  box-shadow:0 4px 16px rgba(37,211,102,0.2);
-  margin-top:12px;
-}
-.btn-whatsapp:hover{
-  box-shadow:0 6px 24px rgba(37,211,102,0.3);
-}
-.btn-share{
-  background:linear-gradient(135deg,var(--green),#7CFF9B);
-  color:#031006;
-  margin-top:14px;
-}
+        .config-item select option {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
 
-.product-grid{
-  display:grid;
-  grid-template-columns:1.6fr 1fr 0.8fr;
-  gap:12px;
-  align-items:end;
-}
+        .tasa-display {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 10px 14px;
+            border: 1px solid #2a2a2a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.search-box{
-  position:relative;
-  margin-bottom:12px;
-}
-.search-box input{
-  padding-left:44px;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%235a5a6e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E");
-  background-repeat:no-repeat;
-  background-position:14px center;
-}
+        .tasa-display .valor {
+            color: #d4a843;
+            font-weight: 700;
+            font-size: 16px;
+        }
 
-.cart-empty{
-  text-align:center;
-  padding:32px 16px;
-  color:var(--text-secondary);
-  font-weight:600;
-  font-size:14px;
-}
-.cart-empty-icon{
-  font-size:40px;
-  margin-bottom:8px;
-  opacity:0.4;
-}
-.cart-item{
-  background:var(--bg-elevated);
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:var(--radius);
-  padding:14px;
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:12px;
-  align-items:center;
-  margin-bottom:8px;
-  transition:all 0.2s ease;
-  animation:slideInRight 0.3s ease;
-}
-.cart-item:hover{
-  border-color:rgba(255,255,255,0.12);
-  background:var(--bg-hover);
-}
-.cart-item-title{
-  font-weight:800;
-  color:var(--text);
-  font-size:14px;
-}
-.cart-item-meta{
-  font-size:12px;
-  color:var(--text-secondary);
-  line-height:1.5;
-  margin-top:3px;
-}
-.cart-item .remove{
-  border:1px solid rgba(255,91,91,0.3);
-  background:var(--red-dim);
-  color:var(--red);
-  border-radius:var(--radius-sm);
-  padding:8px 14px;
-  cursor:pointer;
-  font-weight:800;
-  font-size:12px;
-  transition:all 0.2s ease;
-  font-family:inherit;
-}
-.cart-item .remove:hover{
-  background:var(--red);
-  color:#fff;
-}
+        .tasa-display .info {
+            color: #666;
+            font-size: 11px;
+        }
 
-.treatment-card{
-  background:var(--bg-elevated);
-  border:1px solid var(--border);
-  border-radius:var(--radius-lg);
-  padding:18px;
-  margin-top:4px;
-}
-.treatment-card strong{color:var(--gold-light)}
-.chips{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:12px;
-}
-.chip{
-  background:var(--gold-dim);
-  border:1px solid var(--border);
-  color:var(--gold-light);
-  border-radius:999px;
-  padding:6px 12px;
-  font-size:12px;
-  font-weight:700;
-}
+        .btn-tasa {
+            background: #1a1a1a;
+            color: #d4a843;
+            border: 1px solid #2a2a2a;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-.kpi-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin:16px 0;
-}
-.kpi{
-  background:var(--bg-elevated);
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:var(--radius-lg);
-  padding:18px 16px;
-  transition:all 0.3s ease;
-  position:relative;
-  overflow:hidden;
-}
-.kpi::before{
-  content:'';
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  height:3px;
-  background:var(--gold);
-  opacity:0.4;
-}
-.kpi:hover{
-  transform:translateY(-2px);
-  border-color:rgba(255,255,255,0.12);
-}
-.kpi.green::before{background:var(--green);opacity:0.6}
-.kpi.gold::before{background:var(--gold);opacity:0.8}
-.kpi span{
-  display:block;
-  color:var(--text-secondary);
-  font-size:11px;
-  font-weight:700;
-  text-transform:uppercase;
-  letter-spacing:0.06em;
-  margin-bottom:6px;
-}
-.kpi strong{
-  display:block;
-  font-size:22px;
-  font-weight:900;
-  color:var(--text);
-  letter-spacing:-0.02em;
-}
-.kpi.green strong{color:var(--green)}
-.kpi.gold strong{color:var(--gold-light)}
+        .btn-tasa:hover {
+            background: #2a2a2a;
+            border-color: #d4a843;
+        }
 
-.shipping-section{margin-top:16px}
-.shipping-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:12px;
-}
-.shipping-title{
-  font-size:14px;
-  font-weight:800;
-  color:var(--text);
-}
-.shipping-progress{
-  height:6px;
-  background:var(--bg-elevated);
-  border-radius:999px;
-  overflow:hidden;
-  margin-bottom:12px;
-  border:1px solid rgba(255,255,255,0.06);
-}
-.shipping-progress-bar{
-  height:100%;
-  background:linear-gradient(90deg,var(--gold),var(--gold-light));
-  border-radius:999px;
-  transition:width 0.6s cubic-bezier(0.4,0,0.2,1);
-  min-width:4px;
-}
-.shipping-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-}
-.ship-item{
-  background:var(--bg-elevated);
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:var(--radius-sm);
-  padding:12px;
-  font-size:12px;
-  color:var(--text-secondary);
-  transition:all 0.3s ease;
-}
-.ship-item strong{
-  display:block;
-  color:var(--gold-light);
-  font-size:14px;
-  font-weight:800;
-  margin-top:4px;
-}
-.ship-item.active{
-  background:linear-gradient(135deg,rgba(214,180,106,0.15),rgba(248,216,139,0.05));
-  border-color:var(--gold);
-  box-shadow:0 0 0 1px rgba(214,180,106,0.2);
-}
-.ship-item.free.active strong{color:var(--green)}
+        /* ===== RESULTADOS ===== */
+        .results-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
 
-.summary-box{
-  background:var(--bg-elevated);
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:var(--radius-lg);
-  padding:18px;
-  margin-top:12px;
-  font-size:14px;
-  line-height:1.8;
-  color:var(--text-secondary);
-}
-.summary-box b{
-  color:var(--text);
-  font-weight:700;
-}
-.summary-box .highlight{
-  color:var(--gold-light);
-  font-weight:800;
-}
+        .result-card {
+            background: #0d0d0d;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #1a1a1a;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
 
-.total-box{
-  margin:16px 0;
-  padding:24px;
-  border-radius:var(--radius-xl);
-  background:linear-gradient(135deg,#0f0f1a 0%,#1a1a2e 50%,#12121a 100%);
-  border:1px solid var(--border);
-  position:relative;
-  overflow:hidden;
-  text-align:center;
-}
-.total-box::before{
-  content:'';
-  position:absolute;
-  top:-50%;
-  left:50%;
-  transform:translateX(-50%);
-  width:300px;
-  height:300px;
-  background:radial-gradient(circle,rgba(214,180,106,0.1) 0%,transparent 70%);
-  pointer-events:none;
-}
-.total-box span{
-  display:block;
-  color:var(--text-secondary);
-  font-size:11px;
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:0.1em;
-  margin-bottom:6px;
-}
-.total-box strong{
-  display:block;
-  font-size:clamp(28px,5vw,42px);
-  font-weight:900;
-  letter-spacing:-0.03em;
-  color:var(--text);
-  line-height:1.1;
-}
-.total-box .detail{
-  font-size:13px;
-  color:var(--text-secondary);
-  margin-top:6px;
-  font-weight:500;
-}
+        .result-card:hover {
+            border-color: #2a2a2a;
+        }
 
-.official-badge{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  margin-top:8px;
-  padding:8px 12px;
-  border-radius:999px;
-  background:var(--green-dim);
-  border:1px solid rgba(37,211,102,0.25);
-  color:#9dffb6;
-  font-size:12px;
-  font-weight:800;
-}
-.official-badge::before{
-  content:'';
-  width:6px;
-  height:6px;
-  background:var(--green);
-  border-radius:50%;
-  box-shadow:0 0 6px var(--green);
-}
+        .result-card .label {
+            color: #888;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
 
-.mini-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  margin-top:12px;
-}
-.mini-item{
-  background:var(--bg-elevated);
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:var(--radius-sm);
-  padding:12px;
-  font-size:12px;
-  color:var(--text-secondary);
-  text-align:center;
-  transition:all 0.2s ease;
-}
-.mini-item:hover{border-color:var(--border)}
-.mini-item strong{
-  display:block;
-  color:var(--text);
-  font-size:13px;
-  font-weight:800;
-  margin-top:4px;
-}
+        .result-card .value {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
 
-.brand-btn{
-  width:100%;
-  margin-top:16px;
-  border:0;
-  padding:16px;
-  border-radius:var(--radius);
-  font-weight:900;
-  background:linear-gradient(135deg,var(--gold),var(--gold-light));
-  color:#0a0a0f;
-  letter-spacing:0.5px;
-  cursor:default;
-  font-size:14px;
-  text-transform:uppercase;
-}
+        .result-card .value.usd {
+            color: #ffffff;
+        }
 
-.note{
-  font-size:12px;
-  line-height:1.6;
-  margin-top:14px;
-  color:var(--text-secondary);
-}
-.note b{color:var(--text)}
-.footer{
-  text-align:center;
-  color:var(--text-muted);
-  font-size:12px;
-  padding:20px;
-  margin-top:8px;
-}
+        .result-card .value.local {
+            color: #d4a843;
+        }
 
-.toast{
-  position:fixed;
-  left:50%;
-  bottom:28px;
-  transform:translateX(-50%) translateY(100px);
-  background:var(--bg-card);
-  color:var(--text);
-  padding:14px 24px;
-  border-radius:999px;
-  font-size:14px;
-  font-weight:700;
-  z-index:1000;
-  box-shadow:var(--shadow-lg);
-  border:1px solid var(--border);
-  opacity:0;
-  transition:all 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
-  display:flex;
-  align-items:center;
-  gap:10px;
-  pointer-events:none;
-}
-.toast.show{
-  opacity:1;
-  transform:translateX(-50%) translateY(0);
-}
-.toast-icon{
-  width:22px;
-  height:22px;
-  background:var(--green);
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:12px;
-  color:#fff;
-  flex-shrink:0;
-}
+        .result-card .sub {
+            color: #666;
+            font-size: 12px;
+            margin-top: 4px;
+        }
 
-@media(max-width:1024px){
-  .main-grid{grid-template-columns:1fr}
-  .ve-rate-grid{grid-template-columns:repeat(2,1fr)}
-  .product-grid{grid-template-columns:1fr}
-}
-@media(max-width:640px){
-  body{padding:12px;padding-bottom:calc(18px + env(safe-area-inset-bottom))}
-  .card{padding:18px;border-radius:var(--radius-lg)}
-  .kpi-grid{grid-template-columns:1fr}
-  .shipping-grid{grid-template-columns:1fr}
-  .mini-grid{grid-template-columns:1fr}
-  .btn-row{grid-template-columns:1fr}
-  h1{font-size:24px}
-  .rate-value{font-size:26px}
-  .cart-item{grid-template-columns:1fr}
-  .cart-item .remove{width:100%}
-}
-@media(max-width:380px){
-  .card{padding:14px}
-  .rate-value{font-size:22px}
-}
+        /* ===== LISTA DE PRODUCTOS ===== */
+        .products-section {
+            margin-bottom: 28px;
+        }
 
-@media print{
-  body{background:#fff;color:#000;padding:16px}
-  .card{background:#fff;border:1px solid #ddd;box-shadow:none}
-  .total-box{background:#f5f5f5!important;border:1px solid #ddd}
-  .no-print{display:none!important}
-}
+        .products-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
 
-.hidden{display:none!important}
-.text-gold{color:var(--gold-light)}
+        .products-header h3 {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+        }
 
-  </style>
-<base target="_blank">
+        .products-header .count {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .product-list {
+            background: #0d0d0d;
+            border-radius: 16px;
+            border: 1px solid #1a1a1a;
+            padding: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            border-bottom: 1px solid #151515;
+            transition: all 0.3s ease;
+        }
+
+        .product-item:last-child {
+            border-bottom: none;
+        }
+
+        .product-item:hover {
+            background: #111;
+        }
+
+        .product-item .name {
+            color: #ddd;
+            font-size: 13px;
+        }
+
+        .product-item .price {
+            color: #d4a843;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .product-item .qv {
+            color: #666;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+
+        .product-item .remove {
+            background: none;
+            border: none;
+            color: #444;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            padding: 0 4px;
+        }
+
+        .product-item .remove:hover {
+            color: #ff4444;
+        }
+
+        /* ===== BOTONES DE PRODUCTOS ===== */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .product-btn {
+            background: #0d0d0d;
+            border: 1px solid #1a1a1a;
+            border-radius: 10px;
+            padding: 10px 12px;
+            color: #ddd;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .product-btn:hover {
+            background: #1a1a1a;
+            border-color: #d4a843;
+            transform: translateY(-1px);
+        }
+
+        .product-btn .p-name {
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .product-btn .p-detail {
+            color: #666;
+            font-size: 10px;
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* ===== ACCIONES ===== */
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #d4a843, #b8922f);
+            color: #0a0a0a;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 168, 67, 0.25);
+        }
+
+        .btn-secondary {
+            background: #1a1a1a;
+            color: #888;
+            border: 1px solid #2a2a2a;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #222;
+            color: #fff;
+        }
+
+        /* ===== QV PROGRESS ===== */
+        .qv-section {
+            background: #0d0d0d;
+            border-radius: 16px;
+            padding: 16px 20px;
+            border: 1px solid #1a1a1a;
+            margin-top: 16px;
+        }
+
+        .qv-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .qv-header .label {
+            color: #888;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .qv-header .value {
+            color: #d4a843;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .qv-bar {
+            height: 6px;
+            background: #1a1a1a;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .qv-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #d4a843, #f0d060);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .qv-free-shipping {
+            color: #d4a843;
+            font-size: 12px;
+            margin-top: 8px;
+            text-align: right;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .calculator {
+                padding: 20px;
+            }
+
+            .config-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-section {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .result-card .value {
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== SCROLL BAR ===== */
+        .product-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .product-list::-webkit-scrollbar-track {
+            background: #0d0d0d;
+        }
+
+        .product-list::-webkit-scrollbar-thumb {
+            background: #2a2a2a;
+            border-radius: 2px;
+        }
+
+        .product-list::-webkit-scrollbar-thumb:hover {
+            background: #d4a843;
+        }
+    </style>
 </head>
 <body>
-<main class="app">
 
-<section class="hero">
-  <div class="badge">ONE MORE · Calculadora Global V14</div>
-  <h1>Calculadora One More con listas oficiales por país</h1>
-  <p class="sub">Agrega productos o selecciona una patología para cargar automáticamente la combinación sugerida y calcular precio, QV y envío.</p>
-</section>
+    <div class="calculator" id="app">
 
-<div class="main-grid">
-
-  <div class="left-col">
-
-    <section class="card animate-in delay-1">
-      <div class="card-header">
-        <div class="card-icon">⚙️</div>
-        <div class="card-title">Configuración</div>
-      </div>
-
-      <div class="form-group">
-        <label>País / Moneda local</label>
-        <select id="country">
-          <option value="US">Estados Unidos · USD</option>
-          <option value="VE">Venezuela · VES</option>
-          <option value="MX">México · MXN</option>
-          <option value="CO">Colombia · TRM · COP</option>
-          <option value="PE">Perú · PEN</option>
-          <option value="EC">Ecuador · USD</option>
-          <option value="DO">República Dominicana · DOP</option>
-          <option value="BR">Brasil · BRL</option>
-          <option value="TR">Turquía · TRY</option>
-          <option value="DE">Alemania · EUR</option>
-          <option value="FR">Francia · EUR</option>
-          <option value="IT">Italia · EUR</option>
-          <option value="GB">Inglaterra / Reino Unido · GBP</option>
-          <option value="ES">España · EUR</option>
-          <option value="PT">Portugal · EUR</option>
-          <option value="NL">Países Bajos · EUR</option>
-          <option value="BE">Bélgica · EUR</option>
-          <option value="DK">Dinamarca · DKK</option>
-          <option value="SE">Suecia · SEK</option>
-          <option value="BG">Bulgaria · BGN</option>
-          <option value="MK">Macedonia · MKD</option>
-          <option value="RO">Rumania · RON</option>
-          <option value="AZ">Azerbaiyán · AZN</option>
-          <option value="KZ">Kazajistán · KZT</option>
-          <option value="KG">Kirguistán · KGS</option>
-          <option value="TM">Turkmenistán · TMT</option>
-          <option value="UZ">Uzbekistán · UZS</option>
-          <option value="IN">India · INR</option>
-          <option value="ID">Indonesia · IDR</option>
-          <option value="PK">Pakistán · PKR</option>
-          <option value="MN">Mongolia · MNT</option>
-          <option value="BD">Bangladesh · BDT</option>
-          <option value="GE">Georgia · GEL</option>
-          <option value="JO">Jordania · JOD</option>
-          <option value="NG">Nigeria · NGN</option>
-          <option value="TN">Túnez · TND</option>
-          <option value="MA">Marruecos · MAD</option>
-          <option value="MT">Malta · EUR</option>
-          <option value="LV">Letonia · EUR</option>
-          <option value="SI">Eslovenia · EUR</option>
-          <option value="FI">Finlandia · EUR</option>
-          <option value="HR">Croacia · EUR</option>
-          <option value="PL">Polonia · EUR</option>
-          <option value="LU">Luxemburgo · EUR</option>
-          <option value="HU">Hungría · EUR</option>
-          <option value="EE">Estonia · EUR</option>
-          <option value="GR">Grecia · EUR</option>
-          <option value="SK">Eslovaquia · EUR</option>
-          <option value="CZ">Chequia · EUR</option>
-          <option value="AT">Austria · EUR</option>
-          <option value="LT">Lituania · EUR</option>
-          <option value="CY">Chipre · EUR</option>
-          <option value="IE">Irlanda · EUR</option>
-          <option value="NO">Noruega · EUR</option>
-        </select>
-      </div>
-
-      <div id="venezuelaRateBox" style="display:none">
-        <div class="form-group">
-          <label>Tipo de tasa Venezuela</label>
-          <select id="venezuelaRateType">
-            <option value="bcv">BCV oficial</option>
-            <option value="banco">Banco / subasta operativa</option>
-            <option value="kontigo">Kontigo / USDC referencial</option>
-            <option value="usdt">USDT / mercado P2P</option>
-          </select>
-          <p class="note" style="margin-top:8px">
-            Para Venezuela puedes calcular con BCV oficial, referencia bancaria/subasta, Kontigo/USDC o USDT. Las tasas cripto y Kontigo son referenciales: si tu app o banco muestra otra tasa, usa la tasa manual.
-          </p>
+        <!-- ===== HEADER ===== -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">OM</div>
+                <div class="logo-text">ONE <span>MORE</span></div>
+            </div>
+            <div class="badge">Calculadora Premium</div>
         </div>
-        <div class="ve-rate-grid" id="venezuelaRateCards">
-          <button type="button" class="ve-rate-card" data-rate-type="bcv" onclick="selectVenezuelaRate('bcv')">BCV<strong>Actual</strong></button>
-          <button type="button" class="ve-rate-card" data-rate-type="banco" onclick="selectVenezuelaRate('banco')">Banco / Subasta<strong>BCV</strong></button>
-          <button type="button" class="ve-rate-card" data-rate-type="kontigo" onclick="selectVenezuelaRate('kontigo')">Kontigo / USDC<strong>Referencial</strong></button>
-          <button type="button" class="ve-rate-card" data-rate-type="usdt" onclick="selectVenezuelaRate('usdt')">USDT P2P<strong>Actual</strong></button>
+
+        <!-- ===== CONFIGURACIÓN ===== -->
+        <div class="config-section">
+            <div class="config-grid">
+                <div class="config-item">
+                    <label>País / Moneda</label>
+                    <select id="pais">
+                        <option value="COL" data-tasa="3118.24" selected>Colombia · COP</option>
+                        <option value="VEN" data-tasa="0.00">Venezuela · VES</option>
+                        <option value="USA" data-tasa="1.00">Global · USD</option>
+                    </select>
+                </div>
+                <div class="config-item">
+                    <label>Tasa de cambio (USD → Local)</label>
+                    <div class="tasa-display">
+                        <span class="valor" id="tasaDisplay">3118.24</span>
+                        <span class="info">COP</span>
+                        <button class="btn-tasa" id="btnActualizarTasa">↻ Actualizar</button>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+                <button class="btn-tasa" id="btnTasaManual" style="background:#1a1a1a; color:#888;">Usar tasa manual</button>
+                <input type="number" id="tasaManualInput" placeholder="Ingresa tasa" style="display:none; background:#1a1a1a; color:#fff; border:1px solid #2a2a2a; border-radius:8px; padding:6px 12px; width:120px;">
+            </div>
         </div>
-      </div>
 
-      <div class="rate-display">
-        <div class="rate-label">Tasa usada</div>
-        <div class="rate-value loading" id="rateText">Cargando...</div>
-        <div class="rate-meta" id="rateMeta">Selecciona país o actualiza tasa.</div>
-        <div class="source-pill" id="sourcePill">Fuente: automática</div>
-        <div class="error-msg" id="rateError">No se pudo cargar la tasa automática. Usa la tasa manual.</div>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn btn-gold" onclick="fetchRate()">🔄 Actualizar tasa</button>
-        <button class="btn btn-dark" onclick="useManualRate()">✏️ Usar tasa manual</button>
-      </div>
-
-      <div class="mini-grid">
-        <div class="mini-item">Venezuela<strong>BCV</strong></div>
-        <div class="mini-item">Colombia<strong>TRM</strong></div>
-        <div class="mini-item">Global<strong>Moneda local</strong></div>
-      </div>
-    </section>
-
-    <section class="card animate-in delay-2">
-      <div class="card-header">
-        <div class="card-icon">🛒</div>
-        <div class="card-title">Productos y Tratamientos</div>
-      </div>
-
-      <div class="form-group">
-        <label>Modo de cálculo</label>
-        <select id="mode">
-          <option value="cart">Carrito manual de productos</option>
-          <option value="treatment">Tratamiento por patología</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Modo de precio</label>
-        <select id="priceMode">
-          <option value="standard">Precio actual / conversión por tasa</option>
-          <option value="official">Lista oficial del país si está disponible</option>
-        </select>
-        <div id="officialPriceNote" style="margin-top:8px"></div>
-      </div>
-
-      <div id="cartBox" class="grid">
-        <div class="search-box">
-          <input type="text" id="productSearch" placeholder="Buscar producto..." oninput="filterProducts()">
+        <!-- ===== RESULTADOS ===== -->
+        <div class="results-section">
+            <div class="result-card">
+                <div class="label">Total USD</div>
+                <div class="value usd" id="totalUSD">$0.00</div>
+                <div class="sub">Precio base</div>
+            </div>
+            <div class="result-card">
+                <div class="label">Total Moneda Local</div>
+                <div class="value local" id="totalLocal">$0.00</div>
+                <div class="sub" id="monedaLocalLabel">COP</div>
+            </div>
         </div>
-        <div class="product-grid">
-          <div class="form-group">
-            <label>Producto</label>
-            <select id="product"></select>
-          </div>
-          <div class="form-group">
-            <label>Tipo de precio</label>
-            <select id="priceType"><option value="distribuidor">Distribuidor</option><option value="publico">Público</option></select>
-          </div>
-          <div class="form-group">
-            <label>Cantidad</label>
-            <input id="qty" type="number" min="1" value="1" />
-          </div>
+
+        <!-- ===== LISTA DE PRODUCTOS ===== -->
+        <div class="products-section">
+            <div class="products-header">
+                <h3>🛒 Productos</h3>
+                <span class="count" id="productCount">0 productos</span>
+            </div>
+            <div class="product-list" id="productList">
+                <div style="padding:20px; text-align:center; color:#444; font-size:13px;">
+                    Agrega productos desde abajo
+                </div>
+            </div>
         </div>
-        <div class="btn-row" style="margin-top:8px">
-          <button class="btn btn-gold" onclick="addProductToCart()">➕ Agregar producto</button>
-          <button class="btn btn-red" onclick="clearCart()">🗑️ Vaciar carrito</button>
+
+        <!-- ===== BOTONES PRODUCTOS ===== -->
+        <div class="products-grid" id="productButtons">
+            <!-- Generado por JS -->
         </div>
-        <div class="form-group" style="margin-top:12px">
-          <label>Productos agregados</label>
-          <div id="cartList" class="cart"></div>
+
+        <!-- ===== ACCIONES ===== -->
+        <div class="actions">
+            <button class="btn-primary" id="btnAgregarPatologia">🧬 Cargar patología</button>
+            <button class="btn-secondary" id="btnLimpiar">🗑️ Limpiar carrito</button>
         </div>
-      </div>
 
-      <div id="treatmentBox" class="grid" style="display:none">
-        <div class="form-group">
-          <label>Patología / necesidad</label>
-          <select id="condition"></select>
+        <!-- ===== QV PROGRESS ===== -->
+        <div class="qv-section">
+            <div class="qv-header">
+                <span class="label">QV Acumulado</span>
+                <span class="value" id="qvTotal">0 / 300</span>
+            </div>
+            <div class="qv-bar">
+                <div class="qv-bar-fill" id="qvBar" style="width:0%;"></div>
+            </div>
+            <div class="qv-free-shipping" id="shippingStatus">🚚 Agrega productos para envío gratis</div>
         </div>
-        <div class="btn-row">
-          <div class="form-group">
-            <label>Tipo de precio</label>
-            <select id="treatmentPriceType"><option value="distribuidor">Distribuidor</option><option value="publico">Público</option></select>
-          </div>
-          <div class="form-group">
-            <label>Paquete</label>
-            <input value="1 unidad por producto recomendado" readonly />
-          </div>
-        </div>
-        <div class="treatment-card">
-          <div class="summary-lines" id="treatmentInfo">Selecciona una patología.</div>
-          <div class="chips" id="treatmentChips"></div>
-        </div>
-        <button class="btn btn-gold" onclick="loadTreatmentAsCart()" style="margin-top:12px">💊 Cargar tratamiento al carrito</button>
-      </div>
 
-      <div class="btn-row" style="margin-top:12px">
-        <div class="form-group">
-          <label>Tasa manual</label>
-          <input id="manualRate" type="number" step="0.01" placeholder="Ej: 36.50" />
-        </div>
-        <div class="form-group">
-          <label>Precio unitario USD</label>
-          <input id="usdPrice" type="text" readonly />
-        </div>
-      </div>
-      <button class="btn btn-gold" onclick="calculate()" style="margin-top:8px">🧮 Calcular total</button>
-    </section>
-  </div>
+    </div>
 
-  <div class="right-col">
+    <script>
+        // ================================================================
+        //  DATOS
+        // ================================================================
 
-    <section class="card animate-in delay-3">
-      <div class="card-header">
-        <div class="card-icon">📊</div>
-        <div class="card-title">Resultados</div>
-      </div>
+        const PRODUCTOS = {
+            'Melatonin': { precio: 35, qv: 30 },
+            'Slim Style': { precio: 32, qv: 25 },
+            'Glutamax / Glutamore': { precio: 67, qv: 50 },
+            'Painless Night Glut': { precio: 64, qv: 50 },
+            'Restore': { precio: 45, qv: 35 },
+            'Omega Plus': { precio: 38, qv: 28 },
+            'Collagen': { precio: 42, qv: 32 },
+            'Energy Boost': { precio: 30, qv: 22 },
+        };
 
-      <div class="kpi-grid">
-        <div class="kpi">
-          <span>Total USD</span>
-          <strong id="totalUsd">$0.00</strong>
-        </div>
-        <div class="kpi gold">
-          <span>Total moneda local</span>
-          <strong id="totalLocal">0.00</strong>
-        </div>
-      </div>
+        // Patologías con combinaciones sugeridas
+        const PATOLOGIAS = {
+            'Insomnio': ['Melatonin', 'Melatonin', 'Restore'],
+            'Sobrepeso': ['Slim Style', 'Slim Style', 'Glutamax / Glutamore'],
+            'Dolor muscular': ['Painless Night Glut', 'Painless Night Glut', 'Omega Plus'],
+            'Envejecimiento': ['Collagen', 'Collagen', 'Energy Boost'],
+            'Recuperación': ['Glutamax / Glutamore', 'Restore', 'Omega Plus'],
+        };
 
-      <div class="summary-box" id="summary">
-        Agrega productos al carrito o carga un tratamiento.
-      </div>
-    </section>
+        // ================================================================
+        //  ESTADO
+        // ================================================================
 
-    <section class="card animate-in delay-4">
-      <div class="card-header">
-        <div class="card-icon">📦</div>
-        <div class="card-title">Envíos según QV</div>
-      </div>
+        let carrito = [];
+        let tasaCambio = 3118.24;
+        let monedaNombre = 'COP';
+        let paisActual = 'COL';
 
-      <div class="shipping-section">
-        <div class="shipping-header">
-          <span class="shipping-title">Progreso hacia envío gratis</span>
-          <span style="font-size:12px;color:var(--text-secondary);font-weight:700" id="qvProgressText">0 / 300 QV</span>
-        </div>
-        <div class="shipping-progress">
-          <div class="shipping-progress-bar" id="shippingProgressBar" style="width:0%"></div>
-        </div>
-        <div class="shipping-grid">
-          <div class="ship-item" id="ship1">De 0 a 99 QV<strong>$12</strong></div>
-          <div class="ship-item" id="ship2">De 100 a 149 QV<strong>$10</strong></div>
-          <div class="ship-item" id="ship3">De 150 a 199 QV<strong>$8</strong></div>
-          <div class="ship-item" id="ship4">De 200 a 299 QV<strong>$6</strong></div>
-          <div class="ship-item free" id="ship5" style="grid-column:1/-1">De 300 QV en adelante<strong>🚚 GRATIS</strong></div>
-        </div>
-      </div>
-    </section>
+        // ================================================================
+        //  DOM REFS
+        // ================================================================
 
-    <section class="card animate-in delay-4">
-      <div class="card-header">
-        <div class="card-icon">📱</div>
-        <div class="card-title">Acciones</div>
-      </div>
-      <button class="btn btn-share" type="button" onclick="shareBudgetWhatsApp()">📲 Compartir presupuesto por WhatsApp</button>
-      <button class="brand-btn" type="button">✨ ONEMORE</button>
-      <p class="note"><b>Aviso:</b> esta herramienta es informativa y comercial. No sustituye diagnóstico, tratamiento ni recomendación médica profesional.</p>
-    </section>
-  </div>
-</div>
+        const $ = id => document.getElementById(id);
+        const totalUSD = $('totalUSD');
+        const totalLocal = $('totalLocal');
+        const monedaLocalLabel = $('monedaLocalLabel');
+        const productList = $('productList');
+        const productCount = $('productCount');
+        const qvTotal = $('qvTotal');
+        const qvBar = $('qvBar');
+        const shippingStatus = $('shippingStatus');
+        const tasaDisplay = $('tasaDisplay');
+        const paisSelect = $('pais');
 
-<div class="footer">Herramienta comercial para distribuidores One More · Global V14</div>
-</main>
+        // ================================================================
+        //  FUNCIONES PRINCIPALES
+        // ================================================================
 
-<div class="toast" id="toast"><div class="toast-icon">✓</div><span id="toastMsg">Listo</span></div>
+        function renderProductos() {
+            // Limpiar
+            productList.innerHTML = '';
 
-<script>
+            if (carrito.length === 0) {
+                productList.innerHTML =
+                    `<div style="padding:20px; text-align:center; color:#444; font-size:13px;">Agrega productos desde abajo</div>`;
+                updateTotales();
+                return;
+            }
 
-const countries={
-US:{name:"Estados Unidos",currency:"USD",symbol:"USD",api:"fixed"},
-VE:{name:"Venezuela",currency:"VES",symbol:"Bs",api:"venezuela"},
-MX:{name:"México",currency:"MXN",symbol:"MXN",api:"global"},
-CO:{name:"Colombia",currency:"COP",symbol:"COP",api:"colombia"},
-PE:{name:"Perú",currency:"PEN",symbol:"S/",api:"global"},
-EC:{name:"Ecuador",currency:"USD",symbol:"USD",api:"fixed"},
-DO:{name:"República Dominicana",currency:"DOP",symbol:"DOP",api:"global"},
-BR:{name:"Brasil",currency:"BRL",symbol:"R$",api:"global"},
-TR:{name:"Turquía",currency:"TRY",symbol:"TRY",api:"global"},
-DE:{name:"Alemania",currency:"EUR",symbol:"EUR",api:"global"},
-FR:{name:"Francia",currency:"EUR",symbol:"EUR",api:"global"},
-IT:{name:"Italia",currency:"EUR",symbol:"EUR",api:"global"},
-GB:{name:"Inglaterra / Reino Unido",currency:"GBP",symbol:"GBP",api:"global"},
-ES:{name:"España",currency:"EUR",symbol:"EUR",api:"global"},
-PT:{name:"Portugal",currency:"EUR",symbol:"EUR",api:"global"},
-NL:{name:"Países Bajos",currency:"EUR",symbol:"EUR",api:"global"},
-BE:{name:"Bélgica",currency:"EUR",symbol:"EUR",api:"global"},
-DK:{name:"Dinamarca",currency:"DKK",symbol:"DKK",api:"global"},
-SE:{name:"Suecia",currency:"SEK",symbol:"SEK",api:"global"},
-BG:{name:"Bulgaria",currency:"BGN",symbol:"BGN",api:"global"},
-MK:{name:"Macedonia",currency:"MKD",symbol:"MKD",api:"global"},
-RO:{name:"Rumania",currency:"RON",symbol:"RON",api:"global"},
-AZ:{name:"Azerbaiyán",currency:"AZN",symbol:"AZN",api:"global"},
-KZ:{name:"Kazajistán",currency:"KZT",symbol:"KZT",api:"global"},
-KG:{name:"Kirguistán",currency:"KGS",symbol:"KGS",api:"global"},
-TM:{name:"Turkmenistán",currency:"TMT",symbol:"TMT",api:"global"},
-UZ:{name:"Uzbekistán",currency:"UZS",symbol:"UZS",api:"global"},
-IN:{name:"India",currency:"INR",symbol:"INR",api:"global"},
-ID:{name:"Indonesia",currency:"IDR",symbol:"IDR",api:"global"},
-PK:{name:"Pakistán",currency:"PKR",symbol:"PKR",api:"global"},
-MN:{name:"Mongolia",currency:"MNT",symbol:"MNT",api:"global"},
-BD:{name:"Bangladesh",currency:"BDT",symbol:"BDT",api:"global"},
-GE:{name:"Georgia",currency:"GEL",symbol:"GEL",api:"global"},
-JO:{name:"Jordania",currency:"JOD",symbol:"JOD",api:"global"},
-NG:{name:"Nigeria",currency:"NGN",symbol:"NGN",api:"global"},
-TN:{name:"Túnez",currency:"TND",symbol:"TND",api:"global"},
-MA:{name:"Marruecos",currency:"MAD",symbol:"MAD",api:"global"},
-MT:{name:"Malta",currency:"EUR",symbol:"EUR",api:"global"},
-LV:{name:"Letonia",currency:"EUR",symbol:"EUR",api:"global"},
-SI:{name:"Eslovenia",currency:"EUR",symbol:"EUR",api:"global"},
-FI:{name:"Finlandia",currency:"EUR",symbol:"EUR",api:"global"},
-HR:{name:"Croacia",currency:"EUR",symbol:"EUR",api:"global"},
-PL:{name:"Polonia",currency:"PLN",symbol:"PLN",api:"global"},
-LU:{name:"Luxemburgo",currency:"EUR",symbol:"EUR",api:"global"},
-HU:{name:"Hungría",currency:"HUF",symbol:"HUF",api:"global"},
-EE:{name:"Estonia",currency:"EUR",symbol:"EUR",api:"global"},
-GR:{name:"Grecia",currency:"EUR",symbol:"EUR",api:"global"},
-SK:{name:"Eslovaquia",currency:"EUR",symbol:"EUR",api:"global"},
-CZ:{name:"Chequia",currency:"CZK",symbol:"CZK",api:"global"},
-AT:{name:"Austria",currency:"EUR",symbol:"EUR",api:"global"},
-LT:{name:"Lituania",currency:"EUR",symbol:"EUR",api:"global"},
-CY:{name:"Chipre",currency:"EUR",symbol:"EUR",api:"global"},
-IE:{name:"Irlanda",currency:"EUR",symbol:"EUR",api:"global"},
-NO:{name:"Noruega",currency:"NOK",symbol:"NOK",api:"global"}
-};
-const officialCountryPrices={"BG":{"name":"Bulgaria","currency":"EUR","symbol":"€","source":"Lista oficial Bulgaria","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":9.0,"final":34.88},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":9.0,"final":32.7},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":9.0,"final":34.88},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":9.0,"final":42.51},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":9.0,"final":34.88},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":9.0,"final":105.73},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":9.0,"final":74.12},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":20.0,"final":85.2},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":20.0,"final":21.6},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":20.0,"final":21.6},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":20.0,"final":25.2},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24}}},"DK":{"name":"Denmark","currency":"EUR","symbol":"€","source":"Lista oficial Denmark","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":25.0,"final":81.25},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":25.0,"final":45.0},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":25.0,"final":40.0},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":25.0,"final":37.5},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":25.0,"final":40.0},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":25.0,"final":81.25},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":25.0,"final":81.25},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":25.0,"final":48.75},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":25.0,"final":81.25},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":25.0,"final":40.0},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":25.0,"final":121.25},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":25.0,"final":85.0},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":25.0,"final":88.75},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":25.0,"final":22.5},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":25.0,"final":22.5},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":25.0,"final":26.25},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":25.0,"final":45.0},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":25.0,"final":45.0},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":25.0,"final":45.0}}},"MT":{"name":"Malta","currency":"EUR","symbol":"€","source":"Lista oficial Malta","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":7.0,"final":69.55},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":7.0,"final":38.52},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":7.0,"final":34.24},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":7.0,"final":32.1},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":7.0,"final":34.24},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":7.0,"final":69.55},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":7.0,"final":69.55},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":7.0,"final":41.73},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":7.0,"final":69.55},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":7.0,"final":34.24},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":7.0,"final":103.79},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":7.0,"final":72.76},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":18.0,"final":83.78},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":18.0,"final":21.24},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":18.0,"final":21.24},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":18.0,"final":24.78},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":7.0,"final":38.52},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":7.0,"final":38.52},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":7.0,"final":38.52}}},"LV":{"name":"Latvia","currency":"EUR","symbol":"€","source":"Lista oficial Latvia","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":12.0,"final":72.8},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":12.0,"final":40.32},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":12.0,"final":35.84},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":12.0,"final":33.6},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":12.0,"final":35.84},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":12.0,"final":72.8},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":12.0,"final":72.8},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":12.0,"final":43.68},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":12.0,"final":72.8},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":12.0,"final":35.84},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":12.0,"final":108.64},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":12.0,"final":76.16},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":21.0,"final":85.91},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":21.0,"final":21.78},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":21.0,"final":21.78},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":21.0,"final":25.41},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":12.0,"final":40.32},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":12.0,"final":40.32},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":12.0,"final":40.32}}},"FR":{"name":"France","currency":"EUR","symbol":"€","source":"Lista oficial France","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":10.0,"final":71.5},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":10.0,"final":39.6},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":10.0,"final":35.2},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":10.0,"final":33.0},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":10.0,"final":35.2},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":10.0,"final":71.5},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":10.0,"final":71.5},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":10.0,"final":42.9},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":10.0,"final":71.5},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":10.0,"final":35.2},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":10.0,"final":106.7},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":10.0,"final":74.8},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":20.0,"final":85.2},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":20.0,"final":21.6},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":20.0,"final":21.6},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":20.0,"final":25.2},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":10.0,"final":39.6},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":10.0,"final":39.6},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":10.0,"final":39.6}}},"PT":{"name":"Portugal","currency":"EUR","symbol":"€","source":"Lista oficial Portugal","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":13.0,"final":73.45},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":13.0,"final":40.68},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":13.0,"final":36.16},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":13.0,"final":33.9},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":13.0,"final":36.16},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":13.0,"final":73.45},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":13.0,"final":73.45},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":13.0,"final":44.07},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":13.0,"final":73.45},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":13.0,"final":36.16},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":13.0,"final":109.61},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":13.0,"final":76.84},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":23.0,"final":87.33},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":23.0,"final":22.14},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":23.0,"final":22.14},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":23.0,"final":25.83},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":13.0,"final":40.68},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":13.0,"final":40.68},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":13.0,"final":40.68}}},"SI":{"name":"Slovenia","currency":"EUR","symbol":"€","source":"Lista oficial Slovenia","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":9.5,"final":71.18},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":9.5,"final":39.42},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":9.5,"final":35.04},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":9.5,"final":32.85},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":9.5,"final":35.04},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":9.5,"final":71.18},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":9.5,"final":71.18},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":9.5,"final":42.71},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":9.5,"final":71.18},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":9.5,"final":35.04},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":9.5,"final":106.22},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":9.5,"final":74.46},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":22.0,"final":86.62},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":22.0,"final":21.96},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":22.0,"final":21.96},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":22.0,"final":25.62},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":9.5,"final":39.42},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":9.5,"final":39.42},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":9.5,"final":39.42}}},"SE":{"name":"Sweden","currency":"EUR","symbol":"€","source":"Lista oficial Sweden","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":12.0,"final":72.8},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":12.0,"final":40.32},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":12.0,"final":35.84},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":12.0,"final":33.6},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":12.0,"final":35.84},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":12.0,"final":72.8},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":12.0,"final":72.8},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":12.0,"final":43.68},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":12.0,"final":72.8},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":12.0,"final":35.84},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":12.0,"final":108.64},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":12.0,"final":76.16},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":25.0,"final":88.75},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":25.0,"final":22.5},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":25.0,"final":22.5},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":25.0,"final":26.25},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":12.0,"final":40.32},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":12.0,"final":40.32},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":12.0,"final":40.32}}},"RO":{"name":"Romania","currency":"EUR","symbol":"€","source":"Lista oficial Romania","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":9.0,"final":34.88},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":9.0,"final":32.7},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":9.0,"final":34.88},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":9.0,"final":42.51},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":9.0,"final":34.88},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":9.0,"final":105.73},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":9.0,"final":74.12},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":19.0,"final":84.49},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":19.0,"final":21.42},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":19.0,"final":21.42},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":19.0,"final":24.99},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24}}},"FI":{"name":"Finland","currency":"EUR","symbol":"€","source":"Lista oficial Finland","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":14.0,"final":74.1},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":14.0,"final":41.04},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":14.0,"final":36.48},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":14.0,"final":34.2},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":14.0,"final":36.48},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":14.0,"final":74.1},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":14.0,"final":74.1},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":14.0,"final":44.46},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":14.0,"final":74.1},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":14.0,"final":36.48},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":14.0,"final":110.58},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":14.0,"final":77.52},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":24.0,"final":88.04},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":24.0,"final":22.32},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":24.0,"final":22.32},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":24.0,"final":26.04},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":14.0,"final":41.04},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":14.0,"final":41.04},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":14.0,"final":41.04}}},"HR":{"name":"Croatia","currency":"EUR","symbol":"€","source":"Lista oficial Croatia","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":13.0,"final":73.45},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":13.0,"final":40.68},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":13.0,"final":36.16},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":13.0,"final":33.9},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":13.0,"final":36.16},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":13.0,"final":73.45},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":13.0,"final":73.45},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":13.0,"final":44.07},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":13.0,"final":73.45},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":13.0,"final":36.16},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":13.0,"final":109.61},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":13.0,"final":76.84},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":25.0,"final":88.75},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":25.0,"final":22.5},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":25.0,"final":22.5},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":25.0,"final":26.25},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":13.0,"final":40.68},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":13.0,"final":40.68},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":13.0,"final":40.68}}},"PL":{"name":"Poland","currency":"EUR","symbol":"€","source":"Lista oficial Poland","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":8.0,"final":70.2},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":8.0,"final":38.88},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":8.0,"final":34.56},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":8.0,"final":32.4},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":8.0,"final":34.56},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":8.0,"final":70.2},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":8.0,"final":70.2},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":8.0,"final":42.12},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":8.0,"final":70.2},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":8.0,"final":34.56},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":8.0,"final":104.76},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":8.0,"final":73.44},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":23.0,"final":87.33},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":23.0,"final":22.14},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":23.0,"final":22.14},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":23.0,"final":25.83},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":8.0,"final":38.88},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":8.0,"final":38.88},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":8.0,"final":38.88}}},"LU":{"name":"Luxembourg","currency":"EUR","symbol":"€","source":"Lista oficial Luxembourg","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":8.0,"final":70.2},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":8.0,"final":38.88},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":8.0,"final":34.56},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":8.0,"final":32.4},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":8.0,"final":34.56},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":8.0,"final":70.2},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":8.0,"final":70.2},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":8.0,"final":42.12},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":8.0,"final":70.2},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":8.0,"final":34.56},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":8.0,"final":104.76},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":8.0,"final":73.44},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":17.0,"final":83.07},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":17.0,"final":21.06},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":17.0,"final":21.06},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":17.0,"final":24.57},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":8.0,"final":38.88},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":8.0,"final":38.88},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":8.0,"final":38.88}}},"HU":{"name":"Hungary","currency":"EUR","symbol":"€","source":"Lista oficial Hungary","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":18.0,"final":76.7},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":18.0,"final":42.48},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":18.0,"final":37.76},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":18.0,"final":35.4},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":18.0,"final":37.76},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":18.0,"final":76.7},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":18.0,"final":76.7},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":18.0,"final":46.02},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":18.0,"final":76.7},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":18.0,"final":37.76},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":18.0,"final":114.46},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":18.0,"final":80.24},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":27.0,"final":90.17},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":27.0,"final":22.86},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":27.0,"final":22.86},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":27.0,"final":26.67},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":18.0,"final":42.48},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":18.0,"final":42.48},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":18.0,"final":42.48}}},"EE":{"name":"Estonia","currency":"EUR","symbol":"€","source":"Lista oficial Estonia","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":9.0,"final":34.88},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":9.0,"final":32.7},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":9.0,"final":34.88},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":9.0,"final":42.51},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":9.0,"final":34.88},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":9.0,"final":105.73},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":9.0,"final":74.12},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":20.0,"final":85.2},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":20.0,"final":21.6},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":20.0,"final":21.6},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":20.0,"final":25.2},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24}}},"ES":{"name":"Spain","currency":"EUR","symbol":"€","source":"Lista oficial Spain","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":10.0,"final":71.5},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":10.0,"final":39.6},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":10.0,"final":35.2},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":10.0,"final":33.0},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":10.0,"final":35.2},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":10.0,"final":71.5},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":10.0,"final":71.5},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":10.0,"final":42.9},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":10.0,"final":71.5},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":10.0,"final":35.2},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":10.0,"final":106.7},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":10.0,"final":74.8},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":21.0,"final":85.91},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":21.0,"final":21.78},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":21.0,"final":21.78},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":21.0,"final":25.41},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":10.0,"final":39.6},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":10.0,"final":39.6},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":10.0,"final":39.6}}},"GR":{"name":"Greece","currency":"EUR","symbol":"€","source":"Lista oficial Greece","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":13.0,"final":73.45},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":13.0,"final":40.68},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":13.0,"final":36.16},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":13.0,"final":33.9},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":13.0,"final":36.16},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":13.0,"final":73.45},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":13.0,"final":73.45},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":13.0,"final":44.07},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":13.0,"final":73.45},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":13.0,"final":36.16},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":13.0,"final":109.61},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":13.0,"final":76.84},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":24.0,"final":88.04},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":24.0,"final":22.32},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":24.0,"final":22.32},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":24.0,"final":26.04},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":13.0,"final":40.68},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":13.0,"final":40.68},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":13.0,"final":40.68}}},"SK":{"name":"Slovakia","currency":"EUR","symbol":"€","source":"Lista oficial Slovakia","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":10.0,"final":71.5},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":10.0,"final":39.6},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":10.0,"final":35.2},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":10.0,"final":33.0},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":10.0,"final":35.2},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":10.0,"final":71.5},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":10.0,"final":71.5},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":10.0,"final":42.9},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":10.0,"final":71.5},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":10.0,"final":35.2},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":10.0,"final":106.7},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":10.0,"final":74.8},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":20.0,"final":85.2},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":20.0,"final":21.6},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":20.0,"final":21.6},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":20.0,"final":25.2},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":10.0,"final":39.6},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":10.0,"final":39.6},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":10.0,"final":39.6}}},"CZ":{"name":"Czechia","currency":"EUR","symbol":"€","source":"Lista oficial Czechia","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":15.0,"final":74.75},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":15.0,"final":41.4},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":15.0,"final":36.8},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":15.0,"final":34.5},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":15.0,"final":36.8},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":15.0,"final":74.75},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":15.0,"final":74.75},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":15.0,"final":44.85},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":15.0,"final":74.75},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":15.0,"final":36.8},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":15.0,"final":111.55},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":15.0,"final":78.2},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":21.0,"final":85.91},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":21.0,"final":21.78},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":21.0,"final":21.78},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":21.0,"final":25.41},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":15.0,"final":41.4},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":15.0,"final":41.4},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":15.0,"final":41.4}}},"AT":{"name":"Austria","currency":"EUR","symbol":"€","source":"Lista oficial Austria","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":13.0,"final":73.45},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":13.0,"final":40.68},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":13.0,"final":36.16},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":13.0,"final":33.9},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":13.0,"final":36.16},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":13.0,"final":73.45},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":13.0,"final":73.45},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":13.0,"final":44.07},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":13.0,"final":73.45},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":13.0,"final":36.16},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":13.0,"final":109.61},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":13.0,"final":76.84},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":20.0,"final":85.2},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":20.0,"final":21.6},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":20.0,"final":21.6},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":20.0,"final":25.2},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":13.0,"final":40.68},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":13.0,"final":40.68},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":13.0,"final":40.68}}},"DE":{"name":"Germany","currency":"EUR","symbol":"€","source":"Lista oficial Germany","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":7.0,"final":69.55},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":7.0,"final":38.52},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":7.0,"final":34.24},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":7.0,"final":32.1},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":7.0,"final":34.24},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":7.0,"final":69.55},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":7.0,"final":69.55},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":7.0,"final":41.73},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":7.0,"final":69.55},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":7.0,"final":34.24},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":7.0,"final":103.79},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":7.0,"final":72.76},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":19.0,"final":84.49},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":19.0,"final":21.42},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":19.0,"final":21.42},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":19.0,"final":24.99},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":7.0,"final":38.52},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":7.0,"final":38.52},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":7.0,"final":38.52}}},"LT":{"name":"Lithuania","currency":"EUR","symbol":"€","source":"Lista oficial Lithuania","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":9.0,"final":34.88},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":9.0,"final":32.7},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":9.0,"final":34.88},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":9.0,"final":42.51},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":9.0,"final":34.88},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":9.0,"final":105.73},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":9.0,"final":74.12},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":21.0,"final":85.91},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":21.0,"final":21.78},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":21.0,"final":21.78},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":21.0,"final":25.41},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24}}},"CY":{"name":"Cyprus","currency":"EUR","symbol":"€","source":"Lista oficial Cyprus","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":9.0,"final":34.88},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":9.0,"final":32.7},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":9.0,"final":34.88},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":9.0,"final":42.51},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":9.0,"final":34.88},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":9.0,"final":105.73},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":9.0,"final":74.12},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":19.0,"final":84.49},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":19.0,"final":21.42},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":19.0,"final":21.42},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":19.0,"final":24.99},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24}}},"IE":{"name":"Ireland","currency":"EUR","symbol":"€","source":"Lista oficial Ireland","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":13.5,"final":73.78},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":13.5,"final":40.86},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":13.5,"final":36.32},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":13.5,"final":34.05},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":13.5,"final":36.32},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":13.5,"final":73.78},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":13.5,"final":73.78},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":13.5,"final":44.27},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":13.5,"final":73.78},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":13.5,"final":36.32},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":13.5,"final":110.1},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":13.5,"final":77.18},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":23.0,"final":84.49},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":23.0,"final":21.42},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":23.0,"final":21.42},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":23.0,"final":24.99},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":13.5,"final":40.86},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":13.5,"final":40.86},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":13.5,"final":40.86}}},"BE":{"name":"Belgium","currency":"EUR","symbol":"€","source":"Lista oficial Belgium","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":12.0,"final":72.8},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":12.0,"final":40.32},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":12.0,"final":35.84},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":12.0,"final":33.6},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":12.0,"final":35.84},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":12.0,"final":72.8},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":12.0,"final":72.8},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":12.0,"final":43.68},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":12.0,"final":72.8},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":12.0,"final":35.84},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":12.0,"final":108.64},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":12.0,"final":76.16},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":21.0,"final":85.91},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":21.0,"final":21.78},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":21.0,"final":21.78},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":21.0,"final":25.41},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":12.0,"final":40.32},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":12.0,"final":40.32},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":12.0,"final":40.32}}},"IT":{"name":"Italy","currency":"EUR","symbol":"€","source":"Lista oficial Italy","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":10.0,"final":71.5},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":10.0,"final":39.6},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":10.0,"final":35.2},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":10.0,"final":33.0},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":10.0,"final":35.2},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":10.0,"final":71.5},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":10.0,"final":71.5},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":10.0,"final":42.9},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":10.0,"final":71.5},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":10.0,"final":35.2},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":10.0,"final":106.7},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":10.0,"final":74.8},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":22.0,"final":86.62},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":22.0,"final":21.96},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":22.0,"final":21.96},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":22.0,"final":25.62},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":10.0,"final":39.6},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":10.0,"final":39.6},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":10.0,"final":39.6}}},"NL":{"name":"Netherlands","currency":"EUR","symbol":"€","source":"Lista oficial Netherlands","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":9.0,"final":34.88},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":9.0,"final":32.7},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":9.0,"final":34.88},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":9.0,"final":42.51},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":9.0,"final":70.85},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":9.0,"final":34.88},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":9.0,"final":105.73},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":9.0,"final":74.12},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":21.0,"final":85.91},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":21.0,"final":21.78},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":21.0,"final":21.78},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":21.0,"final":25.41},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":9.0,"final":39.24}}},"NO":{"name":"Norway","currency":"EUR","symbol":"€","source":"Lista oficial Norway","prices":{"ONEMORE PAINLESS NIGHT GLU 25 PCS":{"usd":69.15,"baseEur":65.0,"vat":12.0,"final":72.8},"ONEMORE B12 PLUS":{"usd":38.3,"baseEur":36.0,"vat":12.0,"final":40.32},"ONEMORE MELATONIN PLUS":{"usd":34.04,"baseEur":32.0,"vat":12.0,"final":35.84},"ONEMORE SLIM STYLE":{"usd":31.91,"baseEur":30.0,"vat":12.0,"final":33.6},"ONEMORE DEKAMIN":{"usd":34.04,"baseEur":32.0,"vat":12.0,"final":35.84},"ONEMORE NIGHT LADIES":{"usd":69.15,"baseEur":65.0,"vat":12.0,"final":72.8},"ONEMORE NIGHT GENTLEMEN":{"usd":69.15,"baseEur":65.0,"vat":12.0,"final":72.8},"ONEMORE OMEVIA":{"usd":41.49,"baseEur":39.0,"vat":12.0,"final":43.68},"GLUTAMORE":{"usd":69.15,"baseEur":65.0,"vat":12.0,"final":72.8},"OMIPRODENT":{"usd":34.04,"baseEur":32.0,"vat":12.0,"final":35.84},"FACE LIFTING BY LUMIERE":{"usd":103.19,"baseEur":97.0,"vat":12.0,"final":108.64},"SORNIE COLLAGEN PATCH":{"usd":72.34,"baseEur":68.0,"vat":12.0,"final":76.16},"SORNIE ANTI-AGING MASK":{"usd":75.53,"baseEur":71.0,"vat":25.0,"final":88.75},"PAWSY BY ONE MORE PET CARE TOWEL":{"usd":19.15,"baseEur":18.0,"vat":25.0,"final":22.5},"PAWSY BY ONE MORE PET CARE WIPES":{"usd":19.15,"baseEur":18.0,"vat":25.0,"final":22.5},"PAWSY BY ONE MORE PET CARE NANO SPRAY":{"usd":22.34,"baseEur":21.0,"vat":25.0,"final":26.25},"OMICOFF CLASSIC":{"usd":38.3,"baseEur":36.0,"vat":12.0,"final":40.32},"OMICOFF LATTE":{"usd":38.3,"baseEur":36.0,"vat":12.0,"final":40.32},"OMICOFF MOCHA":{"usd":38.3,"baseEur":36.0,"vat":12.0,"final":40.32}}}};
-const products=[{"name":"Painless Night Glu","aliases":["PNG","Painless","Indoloro"],"qv":50,"distribuidor":64,"publico":80,"officialKey":"ONEMORE PAINLESS NIGHT GLU 25 PCS"},{"name":"Omevia","aliases":["Omevia"],"qv":32,"distribuidor":39,"publico":50,"officialKey":"ONEMORE OMEVIA"},{"name":"Melatonin","aliases":["Melatonin"],"qv":30,"distribuidor":35,"publico":48,"officialKey":"ONEMORE MELATONIN PLUS"},{"name":"B12 Plus","aliases":["B12","B12 Plus"],"qv":30,"distribuidor":35,"publico":48,"officialKey":"ONEMORE B12 PLUS"},{"name":"Collagen Patch Sornie","aliases":["Colágeno","Colageno","Collagen"],"qv":45,"distribuidor":59,"publico":80,"officialKey":"SORNIE COLLAGEN PATCH"},{"name":"Slim Style","aliases":["Slim","Slim Style"],"qv":25,"distribuidor":32,"publico":44,"officialKey":"ONEMORE SLIM STYLE"},{"name":"Dekamin","aliases":["Dekamin","Delamin"],"qv":25,"distribuidor":32,"publico":44,"officialKey":"ONEMORE DEKAMIN"},{"name":"Night Ladies","aliases":["Night Ladies","Ladies","Night"],"qv":45,"distribuidor":59,"publico":80,"officialKey":"ONEMORE NIGHT LADIES"},{"name":"Night Gentleman","aliases":["Night Gentleman","Night Gentelman","Gentelman","Gentleman","Night"],"qv":45,"distribuidor":59,"publico":80,"officialKey":"ONEMORE NIGHT GENTLEMEN"},{"name":"Glutanad / Glutamore","aliases":["Glutanad","Glutamore"],"qv":50,"distribuidor":67,"publico":80,"officialKey":"GLUTAMORE"},{"name":"Omiprodent","aliases":["Omiprodent"],"qv":0,"distribuidor":34.04,"publico":34.04,"officialKey":"OMIPRODENT"},{"name":"Face Lifting by Lumiere","aliases":["Face Lifting","Lumiere"],"qv":0,"distribuidor":103.19,"publico":103.19,"officialKey":"FACE LIFTING BY LUMIERE"},{"name":"Sornie Anti-Aging Mask","aliases":["Sornie Mask","Anti-Aging"],"qv":0,"distribuidor":75.53,"publico":75.53,"officialKey":"SORNIE ANTI-AGING MASK"},{"name":"Pawsy Pet Care Towel","aliases":["Pawsy Towel"],"qv":0,"distribuidor":19.15,"publico":19.15,"officialKey":"PAWSY BY ONE MORE PET CARE TOWEL"},{"name":"Pawsy Pet Care Wipes","aliases":["Pawsy Wipes"],"qv":0,"distribuidor":19.15,"publico":19.15,"officialKey":"PAWSY BY ONE MORE PET CARE WIPES"},{"name":"Pawsy Pet Care Nano Spray","aliases":["Pawsy Nano Spray"],"qv":0,"distribuidor":22.34,"publico":22.34,"officialKey":"PAWSY BY ONE MORE PET CARE NANO SPRAY"},{"name":"Omicoff Classic","aliases":["Omicoff Classic"],"qv":0,"distribuidor":38.3,"publico":38.3,"officialKey":"OMICOFF CLASSIC"},{"name":"Omicoff Latte","aliases":["Omicoff Latte"],"qv":0,"distribuidor":38.3,"publico":38.3,"officialKey":"OMICOFF LATTE"},{"name":"Omicoff Mocha","aliases":["Omicoff Mocha"],"qv":0,"distribuidor":38.3,"publico":38.3,"officialKey":"OMICOFF MOCHA"}];
-const treatments=[{"c":"Alopecia","r":["Night Ladies","Melatonin","B12 Plus"],"txt":"Night según caso + Melatonin + B12 Plus","com":"No hay curación al 100%. Night según caso."},{"c":"Alzheimer","r":["Painless Night Glu","Omevia","B12 Plus"],"txt":"PNG + Omevia + B12","com":""},{"c":"Anemia","r":["B12 Plus","Dekamin"],"txt":"B12 + Dekamin","com":"Usar 3 meses y descansar 9 meses."},{"c":"Ansiedad","r":["B12 Plus","Melatonin","Painless Night Glu","Omevia"],"txt":"B12 + Melatonin + PNG + Omevia","com":""},{"c":"Articulaciones","r":["Painless Night Glu","Omevia","Collagen Patch Sornie"],"txt":"PNG + Omevia + Colágeno","com":""},{"c":"Artritis","r":["Painless Night Glu","Omevia","Melatonin","Collagen Patch Sornie"],"txt":"PNG + Omevia + Melatonin + Colágeno","com":""},{"c":"Asma","r":["Painless Night Glu","B12 Plus","Melatonin"],"txt":"PNG + B12 + Melatonin","com":"Usar por 6 meses."},{"c":"Ataques de pánico","r":["B12 Plus","Melatonin","Painless Night Glu"],"txt":"B12 + Melatonin + PNG","com":""},{"c":"Cirrosis hepática","r":["Melatonin","Omevia","Painless Night Glu","B12 Plus"],"txt":"Melatonin + Omevia + PNG + B12","com":""},{"c":"Cistitis / inflamación de tracto urinario","r":["Night Ladies","Painless Night Glu"],"txt":"Night según caso + PNG","com":"Mujeres Ladies, hombres Gentleman en zona umbilical y PNG encima de vejiga."},{"c":"Colesterol alto","r":["Omevia","Night Ladies","Painless Night Glu"],"txt":"Omevia + Night + PNG","com":"Night según caso."},{"c":"Coágulos de sangre","r":["Omevia","Painless Night Glu"],"txt":"Omevia + PNG","com":""},{"c":"Cuerdas vocales","r":["Painless Night Glu"],"txt":"PNG","com":"La mitad en cada lado de la garganta."},{"c":"Cáncer / Tumores","r":["Melatonin","Painless Night Glu","B12 Plus"],"txt":"Melatonin + PNG + B12","com":"Excepto cáncer de mama, ovario y leucemia."},{"c":"Cáncer de páncreas","r":["Painless Night Glu","Omevia","Melatonin"],"txt":"PNG + Omevia + Melatonin","com":"PNG medio en páncreas y la otra mitad en el omoplato derecho."},{"c":"Depresión","r":["Painless Night Glu","Melatonin","B12 Plus"],"txt":"PNG + Melatonin + B12","com":""},{"c":"Desmielinización","r":["B12 Plus","Melatonin","Omevia"],"txt":"B12 + Melatonin + Omevia","com":""},{"c":"Diabetes","r":["Painless Night Glu","Melatonin","B12 Plus"],"txt":"PNG + Melatonin + B12","com":""},{"c":"Diálisis de riñón","r":["Painless Night Glu","B12 Plus"],"txt":"PNG + B12","com":""},{"c":"Dolor de cadera","r":["Painless Night Glu","B12 Plus"],"txt":"PNG + B12","com":""},{"c":"Dolor de espalda crónico","r":["B12 Plus","Painless Night Glu","Melatonin","Collagen Patch Sornie"],"txt":"B12 + PNG + Melatonin + Colágeno","com":""},{"c":"Dolor de huesos","r":["Painless Night Glu","Dekamin","Omevia"],"txt":"Indoloro + Delamin/Dekamin + Omevia","com":""},{"c":"Dolores lumbares","r":["B12 Plus","Painless Night Glu","Melatonin","Omevia"],"txt":"B12 + PNG + Melatonin + Omevia","com":""},{"c":"Dolores menstruales","r":["Night Ladies","Painless Night Glu"],"txt":"Ladies + PNG","com":"Ladies al menos un mes."},{"c":"Embarazo","r":["B12 Plus","Dekamin","Melatonin"],"txt":"B12 + Dekamin + Melatonin","com":""},{"c":"Endometriosis","r":["Night Ladies"],"txt":"Night Ladies","com":"Tratamiento de 3 meses, aplicar en zona de muslos."},{"c":"Enfermedades pulmonares","r":["Painless Night Glu","Omevia","Melatonin"],"txt":"PNG + Omevia + Melatonin","com":"PNG la mitad sobre cada pulmón."},{"c":"Espondilosis","r":["Painless Night Glu","Omevia","Dekamin","Collagen Patch Sornie"],"txt":"PNG + Omevia + Dekamin + Colágeno","com":""},{"c":"Estreñimiento","r":["Painless Night Glu","Slim Style"],"txt":"PNG + Slim","com":"Debajo del ombligo. Beber progresivamente 400 ml a 1 litro de agua tibia."},{"c":"Fertilidad","r":["Painless Night Glu","Night Ladies","B12 Plus","Melatonin"],"txt":"PNG + Night + B12 + Melatonin","com":"PNG debajo del ombligo. Night según caso."},{"c":"Fiebre","r":["Painless Night Glu"],"txt":"PNG","com":"En planta del pie."},{"c":"Gonartrosis crónica","r":["Omevia","Dekamin","Painless Night Glu","Collagen Patch Sornie"],"txt":"Omevia + Dekamin + PNG + Colágeno","com":"Tratamiento de 6 meses: aplicar 3 meses + 3 semanas de descanso + aplicar 3 meses."},{"c":"Gota","r":["Painless Night Glu","Omevia","B12 Plus","Dekamin","Melatonin"],"txt":"PNG + Omevia + B12 + Dekamin + Melatonin","com":""},{"c":"Hepatitis","r":["Painless Night Glu","B12 Plus","Melatonin","Omevia"],"txt":"PNG + B12 + Melatonin + Omevia","com":""},{"c":"Hernia de disco","r":["Painless Night Glu","Collagen Patch Sornie","Dekamin"],"txt":"PNG + Colágeno + Dekamin","com":""},{"c":"Herpes","r":["Painless Night Glu","Omevia","B12 Plus"],"txt":"PNG + Omevia + B12","com":"Pegar trozos de PNG alrededor de área afectada."},{"c":"Hinchazón de piernas","r":["Painless Night Glu"],"txt":"PNG","com":"En plantas de pies."},{"c":"Hipertensión","r":["Painless Night Glu","B12 Plus","Melatonin"],"txt":"PNG + B12 + Melatonin","com":"PNG en planta del pie."},{"c":"Hipotiroidismo","r":["Painless Night Glu","Dekamin","Slim Style","Omevia"],"txt":"PNG + Dekamin + Slim + Omevia","com":""},{"c":"Hongos en los pies","r":["Painless Night Glu"],"txt":"PNG","com":"Aplicar tiras pequeñas sobre la zona."},{"c":"Impotencia","r":["Night Gentleman","Painless Night Glu","B12 Plus"],"txt":"Night Gentleman + PNG + B12","com":""},{"c":"Infarto con stent","r":["Omevia","Painless Night Glu","B12 Plus"],"txt":"Omevia + PNG + B12","com":""},{"c":"Infecciones pulmonares","r":["Painless Night Glu","Dekamin","Melatonin"],"txt":"PNG + Dekamin + Melatonin","com":""},{"c":"Inflamaciones articulares / Hidartrosis","r":["Painless Night Glu"],"txt":"PNG","com":""},{"c":"Intestino irritable","r":["Painless Night Glu","B12 Plus","Omevia","Melatonin"],"txt":"PNG + B12 + Omevia + Melatonin","com":""},{"c":"Lupus","r":["B12 Plus","Melatonin"],"txt":"B12 + Melatonin","com":""},{"c":"Malaria","r":["Painless Night Glu","B12 Plus"],"txt":"PNG + B12","com":""},{"c":"Migraña","r":["Melatonin","B12 Plus","Painless Night Glu"],"txt":"Melatonin + B12 + PNG","com":""},{"c":"Neoplasia de mama","r":["Omevia","B12 Plus","Melatonin"],"txt":"Omevia + B12 + Melatonin","com":""},{"c":"Neoplasia pancreática","r":["Painless Night Glu","Omevia","Melatonin"],"txt":"PNG + Omevia + Melatonin","com":"PNG medio en páncreas y un entero en el omoplato derecho."},{"c":"Obesidad","r":["Painless Night Glu","Melatonin","Omevia","Slim Style","Dekamin","B12 Plus","Night Ladies"],"txt":"PNG + Melatonin + Omevia + Slim + Dekamin + B12 + Night según caso","com":"Night según caso."},{"c":"Osteoporosis","r":["Painless Night Glu","Dekamin","Omevia"],"txt":"PNG + Dekamin + Omevia","com":""},{"c":"Parkinson","r":["Painless Night Glu","B12 Plus","Melatonin"],"txt":"PNG + B12 + Melatonin","com":""},{"c":"Próstata","r":["Night Gentleman","Painless Night Glu"],"txt":"Night Gentleman + PNG","com":""},{"c":"Psoriasis","r":["Painless Night Glu","Omevia","Dekamin","Melatonin"],"txt":"PNG + Omevia + Dekamin + Melatonin","com":""},{"c":"Quimioterapia / Radioterapia","r":["Melatonin"],"txt":"Melatonin","com":""},{"c":"Recuperación tras esfuerzo intenso","r":["Painless Night Glu","Melatonin"],"txt":"PNG + Melatonin","com":""},{"c":"Reumatismo","r":["Painless Night Glu","Omevia","Melatonin"],"txt":"PNG + Omevia + Melatonin","com":""},{"c":"Sangrado gingival","r":["B12 Plus","Dekamin","Omevia"],"txt":"B12 + Dekamin + Omevia","com":""},{"c":"Sinusitis crónica","r":["Painless Night Glu"],"txt":"PNG","com":"Hacer trozos pequeños y aplicar debajo de los pómulos."},{"c":"Tinnitus","r":["Melatonin","B12 Plus","Painless Night Glu"],"txt":"Melatonin + B12 + PNG","com":""},{"c":"Tiroides","r":["Painless Night Glu","B12 Plus","Omevia"],"txt":"PNG + B12 + Omevia","com":""},{"c":"Tiroides autoinmune con nódulos","r":["Painless Night Glu","Omevia","Melatonin"],"txt":"PNG + Omevia + Melatonin","com":""},{"c":"Tiroides de Hashimoto","r":["Melatonin","B12 Plus","Omevia","Painless Night Glu"],"txt":"Melatonin + B12 + Omevia + PNG","com":""},{"c":"Trazos","r":["Omevia","Melatonin","B12 Plus","Painless Night Glu"],"txt":"Omevia + Melatonin + B12","com":"Si es isquemia + PNG."},{"c":"Triglicéridos altos","r":["Omevia","Painless Night Glu","B12 Plus"],"txt":"Omevia + PNG + B12","com":""},{"c":"Tránsito intestinal","r":["Painless Night Glu","B12 Plus","Omevia","Melatonin"],"txt":"PNG + B12 + Omevia + Melatonin","com":"PNG debajo del ombligo."},{"c":"Vejiga","r":["Painless Night Glu","Night Ladies"],"txt":"PNG + Night según caso","com":"Poner en zona de la vejiga."},{"c":"Venas varicosas","r":["Painless Night Glu","Omevia"],"txt":"PNG + Omevia","com":"La mitad al inicio de la zona afectada y la otra mitad al final + ducha de agua fría en las piernas."},{"c":"Vértigo / mareo","r":["B12 Plus","Melatonin","Painless Night Glu"],"txt":"B12 + Melatonin + PNG","com":""},{"c":"Úlcera / ácido gástrico","r":["Melatonin"],"txt":"Melatonin","com":""}];
+            // Renderizar cada producto
+            carrito.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'product-item';
+                div.innerHTML = `
+                    <span class="name">${item.nombre} ×${item.cantidad || 1}</span>
+                    <span>
+                        <span class="price">$${item.precio.toFixed(2)}</span>
+                        <span class="qv">QV ${item.qv}</span>
+                        <button class="remove" data-index="${index}">✕</button>
+                    </span>
+                `;
+                productList.appendChild(div);
+            });
 
-let currentRate=null, cart=[], lastResult=null, veCardsLastUpdate=0;
-const countrySelect=document.getElementById("country"), productSelect=document.getElementById("product"), conditionSelect=document.getElementById("condition");
-products.forEach((p,i)=>{const o=document.createElement("option");o.value=i;o.textContent=p.name;productSelect.appendChild(o)});
-treatments.forEach((t,i)=>{const o=document.createElement("option");o.value=i;o.textContent=t.c;conditionSelect.appendChild(o)});
+            // Eventos de eliminar
+            document.querySelectorAll('.remove').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const idx = parseInt(this.dataset.index);
+                    carrito.splice(idx, 1);
+                    renderProductos();
+                });
+            });
 
-function getCountry(){return countries[countrySelect.value]}
-function moneyUSD(v){return "$"+Number(v).toLocaleString("es-VE",{minimumFractionDigits:2,maximumFractionDigits:2})}
-function moneyLocal(v){const c=getCountry();return (c.currency==="USD"?"USD":c.symbol)+" "+Number(v).toLocaleString("es-VE",{minimumFractionDigits:2,maximumFractionDigits:2})}
-function shippingByQV(qv){if(qv>=300)return 0;if(qv>=200)return 6;if(qv>=150)return 8;if(qv>=100)return 10;return 12}
-function highlightShipping(qv){
-  ["ship1","ship2","ship3","ship4","ship5"].forEach(id=>document.getElementById(id)?.classList.remove("ship-active"));
-  let id="ship1";if(qv>=300)id="ship5";else if(qv>=200)id="ship4";else if(qv>=150)id="ship3";else if(qv>=100)id="ship2";
-  document.getElementById(id)?.classList.add("ship-active");
-  const progressBar = document.getElementById("shippingProgressBar");
-  const progressText = document.getElementById("qvProgressText");
-  if(progressBar){ const pct = Math.min((qv/300)*100,100); progressBar.style.width = pct + "%"; }
-  if(progressText){ progressText.textContent = `${qv} / 300 QV`; }
-}
-function setRate(rate,source){const c=getCountry();currentRate=Number(rate);manualRate.value=Number(rate).toFixed(2);rateText.textContent=c.currency==="USD"?"1.00 USD":`${c.symbol} ${Number(rate).toFixed(2)}`;rateText.classList.remove("loading");rateMeta.textContent=`${c.name} · ${source} · Actualizado: ${new Date().toLocaleString("es-VE")}`;sourcePill.textContent="Fuente: "+source;rateError.style.display="none";rateError.classList.remove("show");calculate();markSelectedVenezuelaRate?.()}
-async function fetchJson(url){const r=await fetch(url);if(!r.ok)throw new Error("Error API");return await r.json()}
-const VE_RATE_FALLBACKS={
-  bcv:{valor:587.4059,fuente:"BCV oficial · respaldo local",fecha:"2026-06-15"},
-  banco:{valor:587.4059,fuente:"Banco/subasta · referencia BCV",fecha:"2026-06-15"},
-  kontigo:{valor:794.26,fuente:"Kontigo/USDC · referencia mercado USDT",fecha:"2026-06-13"},
-  usdt:{valor:794.26,fuente:"USDT/VES · referencia mercado",fecha:"2026-06-13"}
-};
-
-function parseVenezuelaNumber(value){
-  if(value===null || value===undefined) return null;
-  if(typeof value==="number") return value;
-  const clean=String(value)
-    .replace(/[^\d,.-]/g,"")
-    .replace(/\.(?=\d{3}(\D|$))/g,"")
-    .replace(",",".");
-  const n=Number(clean);
-  return Number.isFinite(n) && n>0 ? n : null;
-}
-
-function compactRate(value){
-  if(!value) return "Manual";
-  return Number(value).toLocaleString("es-VE",{minimumFractionDigits:2,maximumFractionDigits:2});
-}
-
-function updateVenezuelaRateCard(type,value,label){
-  const strong=document.querySelector(`.ve-rate-card[data-rate-type="${type}"] strong`);
-  if(strong) strong.textContent=value ? compactRate(value) : (label || "Manual");
-}
-
-function formatSourceDate(dateText){
-  if(!dateText) return "";
-  const d=new Date(dateText);
-  if(Number.isNaN(d.getTime())) return ` · Fecha: ${dateText}`;
-  return ` · Fecha: ${d.toLocaleDateString("es-VE")}`;
-}
-
-function parseMonitorDivisasRate(htmlText,rateType){
-  const plain=String(htmlText||"").replace(/<[^>]*>/g," ").replace(/\s+/g," ");
-  const patterns={
-    bcv:/Tasa\s+BCV[\s\S]{0,120}?(\d{2,5}[,.]\d{2,6})\s*Bs\s*\/\s*USD/i,
-    banco:/Tasa\s+BCV[\s\S]{0,120}?(\d{2,5}[,.]\d{2,6})\s*Bs\s*\/\s*USD/i,
-    usdt:/Tasa\s+USDT\s*\/\s*VES[\s\S]{0,180}?(\d{2,5}[,.]\d{2,6})\s*Bs\s*\/\s*USDT/i,
-    kontigo:/Tasa\s+USDT\s*\/\s*VES[\s\S]{0,180}?(\d{2,5}[,.]\d{2,6})\s*Bs\s*\/\s*USDT/i
-  };
-  const match=plain.match(patterns[rateType]);
-  return match ? parseVenezuelaNumber(match[1]) : null;
-}
-
-async function fetchMonitorDivisasRate(rateType){
-  const url="https://api.allorigins.win/raw?url="+encodeURIComponent("https://www.monitordedivisavenezuela.com/");
-  const htmlText=await (await fetch(url,{cache:"no-store"})).text();
-  const rate=parseMonitorDivisasRate(htmlText,rateType);
-  if(!rate) throw new Error("Monitor Divisas no devolvió una tasa válida");
-  const source=rateType==="usdt" ? "USDT/VES · Monitor Divisas" :
-    rateType==="kontigo" ? "Kontigo/USDC · referencial mercado USDT" :
-    rateType==="banco" ? "Banco/subasta · referencia BCV" :
-    "BCV oficial · Monitor Divisas";
-  return {rate,source,date:"actualización web"};
-}
-
-async function fetchDolarApiRate(kind){
-  const url=kind==="paralelo"
-    ? "https://ve.dolarapi.com/v1/dolares/paralelo"
-    : "https://ve.dolarapi.com/v1/dolares/oficial";
-  const data=await fetchJson(url);
-  const rate=parseVenezuelaNumber(data?.promedio ?? data?.venta ?? data?.valor ?? data?.price);
-  if(!rate) throw new Error("DolarApi no devolvió una tasa válida");
-  return {rate,source:kind==="paralelo" ? "Dólar paralelo · DolarApi" : "BCV oficial · DolarApi",date:data?.fechaActualizacion};
-}
-
-async function getVenezuelaRate(rateType){
-  // BCV y banco/subasta: la referencia bancaria pública más estable es la tasa oficial BCV.
-  // USDT y Kontigo/USDC: no son tasa legal BCV; se manejan como referencia comercial o manual.
-  const fallback=VE_RATE_FALLBACKS[rateType] || VE_RATE_FALLBACKS.bcv;
-
-  try{
-    if(rateType==="bcv") return await fetchMonitorDivisasRate("bcv");
-    if(rateType==="banco") return await fetchMonitorDivisasRate("banco");
-    if(rateType==="usdt") return await fetchMonitorDivisasRate("usdt");
-    if(rateType==="kontigo") return await fetchMonitorDivisasRate("kontigo");
-  }catch(e){}
-
-  try{
-    if(rateType==="bcv") return await fetchDolarApiRate("oficial");
-    if(rateType==="banco"){
-      const bcv=await fetchDolarApiRate("oficial");
-      return {...bcv,source:"Banco/subasta · referencia BCV/DolarApi"};
-    }
-    if(rateType==="usdt"){
-      const paralelo=await fetchDolarApiRate("paralelo");
-      return {...paralelo,source:"USDT/VES · referencia paralelo DolarApi"};
-    }
-    if(rateType==="kontigo"){
-      const paralelo=await fetchDolarApiRate("paralelo");
-      return {...paralelo,source:"Kontigo/USDC · referencial paralelo DolarApi"};
-    }
-  }catch(e){}
-
-  return {rate:fallback.valor,source:fallback.fuente+" · respaldo editable",date:fallback.fecha};
-}
-
-async function refreshVenezuelaRateCards(force=false){
-  if(countrySelect.value!=="VE") return;
-  if(!force && Date.now()-veCardsLastUpdate<10*60*1000) return;
-  veCardsLastUpdate=Date.now();
-
-  const cards={bcv:null,banco:null,kontigo:null,usdt:null};
-  Object.keys(cards).forEach(type=>updateVenezuelaRateCard(type,null,"..."));
-
-  try{
-    const bcv=await getVenezuelaRate("bcv");
-    updateVenezuelaRateCard("bcv",bcv.rate);
-    updateVenezuelaRateCard("banco",bcv.rate);
-  }catch(e){
-    updateVenezuelaRateCard("bcv",VE_RATE_FALLBACKS.bcv.valor);
-    updateVenezuelaRateCard("banco",VE_RATE_FALLBACKS.banco.valor);
-  }
-
-  try{
-    const usdt=await getVenezuelaRate("usdt");
-    updateVenezuelaRateCard("usdt",usdt.rate);
-    updateVenezuelaRateCard("kontigo",usdt.rate);
-  }catch(e){
-    updateVenezuelaRateCard("usdt",VE_RATE_FALLBACKS.usdt.valor);
-    updateVenezuelaRateCard("kontigo",VE_RATE_FALLBACKS.kontigo.valor);
-  }
-}
-
-async function fetchRate(){
-  const c=getCountry();
-  rateError.style.display="none";
-  rateError.classList.remove("show");
-  rateText.textContent="Cargando...";
-  rateText.classList.add("loading");
-  rateMeta.textContent="Consultando tasa automática...";
-
-  try{
-    if(c.api==="fixed"){
-      setRate(1,"Dolarización");
-      return;
-    }
-
-    if(countrySelect.value==="VE"){
-      const rateType=document.getElementById("venezuelaRateType")?.value || "bcv";
-      const result=await getVenezuelaRate(rateType);
-      const labels={
-        bcv:"BCV oficial",
-        banco:"Banco/subasta",
-        kontigo:"Kontigo/USDC referencial",
-        usdt:"USDT/VES mercado"
-      };
-      setRate(result.rate,`${labels[rateType]} · ${result.source}${formatSourceDate(result.date)}`);
-      updateVenezuelaRateCard(rateType,result.rate);
-      refreshVenezuelaRateCards(false);
-      return;
-    }
-
-    if(c.api==="colombia"){
-      try{
-        const url = "https://www.datos.gov.co/resource/32sa-8pi3.json?$select=valor,vigenciadesde,vigenciahasta&$order=vigenciadesde%20DESC&$limit=1";
-        const data = await fetchJson(url);
-        const row = Array.isArray(data) ? data[0] : null;
-        const rate = Number(String(row?.valor || "").replace(",","."));
-        if(rate && !isNaN(rate)){
-          const fecha = row?.vigenciadesde ? " · Vigente desde: " + String(row.vigenciadesde).slice(0,10) : "";
-          setRate(rate,"TRM oficial Colombia" + fecha);
-          return;
+            updateTotales();
         }
-      }catch(e){}
-      throw new Error("No se pudo consultar la TRM oficial de Colombia");
-    }
 
-    const g=await fetchJson("https://open.er-api.com/v6/latest/USD");
-    const rate=Number(g?.rates?.[c.currency]);
-    if(!rate || isNaN(rate)) throw new Error("No se encontró tasa global");
-    setRate(rate,"Tasa internacional");
-  }catch(e){
-    currentRate=Number(manualRate.value)||currentRate;
-    rateText.textContent=currentRate?`${c.symbol} ${Number(currentRate).toFixed(2)}`:"Manual";
-    rateMeta.textContent="No se pudo cargar la tasa automática para "+c.name+". Usa la tasa manual.";
-    rateError.style.display="block";
-    rateError.classList.add("show");
-    calculate();
-  }
-}
-function useManualRate(){const r=Number(manualRate.value);if(!r||r<=0){toast("⚠️ Escribe una tasa válida.");return}setRate(r,"Manual")}
+        function updateTotales() {
+            // Calcular totales
+            let totalUSDVal = 0;
+            let totalQV = 0;
 
-function updateVenezuelaRateVisibility(){
-  const box=document.getElementById("venezuelaRateBox");
-  const isVE=countrySelect.value==="VE";
-  if(box) box.style.display = isVE ? "block" : "none";
-  if(isVE) refreshVenezuelaRateCards(false);
-}
-function markSelectedVenezuelaRate(){
-  const selected = document.getElementById("venezuelaRateType")?.value || "bcv";
-  document.querySelectorAll(".ve-rate-card").forEach(card=>{
-    card.classList.toggle("active", card.dataset.rateType === selected);
-  });
-}
-function selectVenezuelaRate(type){
-  const selector = document.getElementById("venezuelaRateType");
-  if(selector){
-    selector.value = type;
-    markSelectedVenezuelaRate();
-    currentRate = null;
-    manualRate.value = "";
-    fetchRate();
-  }
-}
-function updateMode(){const m=mode.value;cartBox.style.display=m==="cart"?"grid":"none";treatmentBox.style.display=m==="treatment"?"grid":"none";calculate()}
-function isOfficialPriceMode(){
-  return document.getElementById("priceMode")?.value === "official" && officialCountryPrices[countrySelect.value];
-}
-function formatCurrency(value,currency){
-  const symbols={EUR:"€",USD:"$",VES:"Bs",COP:"COP",MXN:"MXN",PEN:"S/",BRL:"R$",GBP:"GBP",DKK:"DKK",SEK:"SEK",NOK:"NOK",PLN:"PLN",HUF:"HUF",CZK:"CZK"};
-  const symbol=symbols[currency]||currency;
-  return symbol+" "+Number(value).toLocaleString("es-VE",{minimumFractionDigits:2,maximumFractionDigits:2});
-}
-function getOfficialProductPrice(product){
-  const list=officialCountryPrices[countrySelect.value];
-  if(!list || !product?.officialKey) return null;
-  const entry=list.prices[product.officialKey];
-  if(!entry) return null;
-  return {unit:Number(entry.final),currency:list.currency,source:list.source,vat:entry.vat,baseEur:entry.baseEur};
-}
-function getProductPriceForCart(product,type){
-  if(isOfficialPriceMode()){
-    const official=getOfficialProductPrice(product);
-    if(official){
-      return {unit:official.unit,currency:official.currency,type:"oficial país",source:official.source,vat:official.vat};
-    }
-  }
-  return {unit:Number(product[type]),currency:"USD",type:type,source:"Lista USD / conversión por tasa",vat:null};
-}
-function updateOfficialPriceNote(){
-  const note=document.getElementById("officialPriceNote");
-  if(!note) return;
-  const list=officialCountryPrices[countrySelect.value];
-  if(list){
-    note.innerHTML=`<span class="official-badge">Lista oficial disponible: ${list.source} · precios finales en ${list.currency}</span>`;
-  }else{
-    note.textContent="Este país no tiene lista oficial cargada. Se mantiene la conversión normal por tasa.";
-  }
-}
-function updateUsdPrice(){
-  const p=products[Number(productSelect.value)], type=priceType.value;
-  const price=getProductPriceForCart(p,type);
-  usdPrice.value=formatCurrency(price.unit,price.currency)+(price.vat!==null?` · IVA ${price.vat}%`:"");
-}
-function addProductToCart(){
-  const p=products[Number(productSelect.value)], type=priceType.value, amount=Math.max(1,Number(qty.value||1));
-  const price=getProductPriceForCart(p,type);
-  cart.push({name:p.name,qv:p.qv,type:price.type,qty:amount,unit:price.unit,currency:price.currency,source:price.source,vat:price.vat});
-  renderCart();
-  calculate();
-}
-function removeCartItem(index){cart.splice(index,1);renderCart();calculate()}
-function clearCart(){cart=[];renderCart();calculate()}
-function renderCart(){
-  if(cart.length===0){
-    cartList.innerHTML='<div class="note">Aún no has agregado productos.</div>';
-    return;
-  }
-  cartList.innerHTML=cart.map((item,i)=>{
-    const subtotal=item.unit*item.qty;
-    const qvTotal=item.qv*item.qty;
-    const vatText=item.vat!==null?` · IVA ${item.vat}%`:"";
-    return `<div class="cart-item"><div><div class="cart-item-title">${item.name}</div><div class="cart-item-meta">Cantidad: ${item.qty} · Precio ${item.type}: ${formatCurrency(item.unit,item.currency)}${vatText} · QV: ${qvTotal} · Subtotal: ${formatCurrency(subtotal,item.currency)}</div></div><button class="remove" onclick="removeCartItem(${i})">Quitar</button></div>`;
-  }).join("");
-}
-function updateTreatmentInfo(){const t=treatments[conditionSelect.value];treatmentInfo.innerHTML=`<b>Combinación recomendada:</b> ${t.txt}<br><b>Comentario:</b> ${t.com||"Sin comentario adicional."}`;treatmentChips.innerHTML=t.r.map(x=>`<span class="chip">${x}</span>`).join("")}
-function loadTreatmentAsCart(){
-  const t=treatments[conditionSelect.value], type=treatmentPriceType.value;
-  cart=[];
-  t.r.forEach(name=>{
-    const p=products.find(pr=>pr.name===name || pr.aliases?.includes(name));
-    if(p){
-      const price=getProductPriceForCart(p,type);
-      cart.push({name:p.name,qv:p.qv,type:price.type,qty:1,unit:price.unit,currency:price.currency,source:price.source,vat:price.vat});
-    }
-  });
-  mode.value="cart";
-  updateMode();
-  renderCart();
-  calculate();
-  document.getElementById("cartList").scrollIntoView({behavior:"smooth",block:"center"});
-}
-function calculate(){
-  updateOfficialPriceNote();
-  updateUsdPrice();
+            carrito.forEach(item => {
+                totalUSDVal += item.precio * (item.cantidad || 1);
+                totalQV += item.qv * (item.cantidad || 1);
+            });
 
-  const rate=Number(manualRate.value||currentRate||0);
-  if(mode.value==="treatment") updateTreatmentInfo();
+            // Total en moneda local
+            const totalLocalVal = totalUSDVal * tasaCambio;
 
-  let subtotal=0,totalQV=0,lines=[];
-  const currency=cart[0]?.currency || (isOfficialPriceMode() ? "EUR" : "USD");
-  const mixedCurrency=cart.some(item=>item.currency!==currency);
+            // Actualizar UI
+            totalUSD.textContent = `$${totalUSDVal.toFixed(2)}`;
+            totalLocal.textContent = `$${totalLocalVal.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            monedaLocalLabel.textContent = monedaNombre;
 
-  cart.forEach(item=>{
-    const lineTotal=item.unit*item.qty;
-    subtotal+=lineTotal;
-    totalQV+=item.qv*item.qty;
-    const vatText=item.vat!==null?` · IVA ${item.vat}%`:"";
-    lines.push(`${item.name} x${item.qty}: <b>${formatCurrency(lineTotal,item.currency)}</b>${vatText} · QV ${item.qv*item.qty}`);
-  });
+            // Contador
+            const totalItems = carrito.reduce((acc, item) => acc + (item.cantidad || 1), 0);
+            productCount.textContent = `${totalItems} productos`;
 
-  const officialMode=cart.length>0 && cart.every(item=>item.currency==="EUR" && item.type==="oficial país");
-  const shipping=cart.length && !officialMode ? shippingByQV(totalQV) : 0;
-  const totalPrimary=subtotal+shipping;
-  const totalLocal=(!officialMode && rate) ? totalPrimary*rate : totalPrimary;
+            // QV
+            qvTotal.textContent = `${totalQV} / 300`;
+            const pct = Math.min((totalQV / 300) * 100, 100);
+            qvBar.style.width = `${pct}%`;
 
-  highlightShipping(totalQV);
+            // Envío gratis
+            if (totalQV >= 300) {
+                shippingStatus.textContent = '✅ ¡ENVÍO GRATIS! Has alcanzado 300 QV';
+                shippingStatus.style.color = '#d4a843';
+            } else {
+                shippingStatus.textContent = `🚚 Faltan ${(300 - totalQV).toFixed(0)} QV para envío gratis`;
+                shippingStatus.style.color = '#666';
+            }
+        }
 
-  const totalUsdLabel=document.getElementById("totalUsd")?.previousElementSibling;
-  const totalLocalLabel=document.getElementById("totalLocal")?.previousElementSibling;
+        function agregarProducto(nombre, cantidad = 1) {
+            const producto = PRODUCTOS[nombre];
+            if (!producto) return;
 
-  if(officialMode){
-    if(totalUsdLabel) totalUsdLabel.textContent="Total lista oficial";
-    if(totalLocalLabel) totalLocalLabel.textContent="Fuente";
-    totalUsd.textContent=formatCurrency(totalPrimary,"EUR");
-    totalLocal.textContent=cart[0]?.source || "Lista oficial";
-    summary.innerHTML=cart.length===0
-      ?"Agrega productos al carrito o carga un tratamiento."
-      :`Productos:<br>${lines.join("<br>")}<br>QV total: <b>${totalQV}</b><br>Subtotal oficial: <b>${formatCurrency(subtotal,"EUR")}</b><br>Envío: <b>No incluido en lista oficial</b><br>Total oficial: <b>${formatCurrency(totalPrimary,"EUR")}</b><br>Fuente: <b>${cart[0]?.source||"Lista oficial país"}</b>`;
-  }else{
-    if(totalUsdLabel) totalUsdLabel.textContent="Total USD";
-    if(totalLocalLabel) totalLocalLabel.textContent="Total moneda local";
-    totalUsd.textContent=moneyUSD(totalPrimary);
-    totalLocal.textContent=rate?moneyLocal(totalLocal):"Ingresa tasa";
-    summary.innerHTML=cart.length===0
-      ?"Agrega productos al carrito o carga un tratamiento."
-      :`Productos:<br>${lines.join("<br>")}<br>QV total: <b>${totalQV}</b><br>Subtotal: <b>${moneyUSD(subtotal)}</b><br>Envío: <b>${shipping===0?"GRATIS":moneyUSD(shipping)}</b><br>Total USD: <b>${moneyUSD(totalPrimary)}</b><br>Total Local: <b>${rate?moneyLocal(totalLocal):"Ingresa tasa"}</b>`;
-  }
+            // Buscar si ya existe
+            const existente = carrito.find(item => item.nombre === nombre);
+            if (existente) {
+                existente.cantidad = (existente.cantidad || 1) + cantidad;
+            } else {
+                carrito.push({
+                    nombre: nombre,
+                    precio: producto.precio,
+                    qv: producto.qv,
+                    cantidad: cantidad
+                });
+            }
 
-  if(mixedCurrency){
-    summary.innerHTML += `<br><b>Nota:</b> Hay monedas mezcladas en el carrito. Se recomienda vaciar el carrito al cambiar de modo de precio.`;
-  }
-}
-async function detectCountry(){try{const d=await fetchJson("https://ipapi.co/json/");const code=String(d?.country_code||"").toUpperCase();if(countries[code])countrySelect.value=code}catch(e){}fetchRate()}
-countrySelect.addEventListener("change",()=>{currentRate=null;manualRate.value="";updateVenezuelaRateVisibility();updateOfficialPriceNote();fetchRate()});
-document.getElementById("venezuelaRateType")?.addEventListener("change",()=>{currentRate=null;manualRate.value="";markSelectedVenezuelaRate();fetchRate()});
-productSelect.addEventListener("change",()=>{updateUsdPrice();calculate()});priceType.addEventListener("change",()=>{updateUsdPrice();calculate()});qty.addEventListener("input",calculate);
-manualRate.addEventListener("input",()=>{if(Number(manualRate.value)>0)currentRate=Number(manualRate.value);calculate()});
-mode.addEventListener("change",updateMode);priceMode.addEventListener("change",()=>{updateOfficialPriceNote();updateUsdPrice();calculate();});conditionSelect.addEventListener("change",calculate);treatmentPriceType.addEventListener("change",calculate);
-renderCart();updateTreatmentInfo();updateMode();updateVenezuelaRateVisibility();markSelectedVenezuelaRate();updateOfficialPriceNote();detectCountry();
+            renderProductos();
+        }
 
-function shareBudgetWhatsApp(){
-  calculate();
+        function limpiarCarrito() {
+            carrito = [];
+            renderProductos();
+        }
 
-  if(!cart || cart.length===0){
-    toast("⚠️ Agrega productos al carrito antes de compartir");
-    return;
-  }
+        function cargarPatologia(nombre) {
+            const productos = PATOLOGIAS[nombre];
+            if (!productos) return;
 
-  const c=getCountry();
-  let subtotal=0,totalQV=0;
-  const officialMode=cart.length>0 && cart.every(item=>item.currency==="EUR" && item.type==="oficial país");
-  const currency=officialMode ? "EUR" : "USD";
+            // Limpiar primero
+            carrito = [];
 
-  const itemsText=cart.map(item=>{
-    const lineTotal=item.unit*item.qty;
-    const lineQV=item.qv*item.qty;
-    subtotal+=lineTotal;
-    totalQV+=lineQV;
-    const vatText=item.vat!==null?` | IVA ${item.vat}%`:"";
-    return `• ${item.name} x${item.qty} (${item.type}) = ${formatCurrency(lineTotal,item.currency)} | QV ${lineQV}${vatText}`;
-  }).join("\n");
+            // Agregar cada producto sugerido
+            productos.forEach(nombreProducto => {
+                agregarProducto(nombreProducto, 1);
+            });
 
-  const shipping=officialMode ? 0 : shippingByQV(totalQV);
-  const total=subtotal+shipping;
-  const rate=Number(manualRate.value||currentRate||0);
-  const localTotal=!officialMode && rate ? total*rate : total;
-  const source=officialMode ? (cart[0]?.source || "Lista oficial país") : (document.getElementById("sourcePill")?.textContent?.replace("Fuente: ","") || "Tasa seleccionada");
+            renderProductos();
+        }
 
-  let msg="";
-  if(officialMode){
-    msg=`PRESUPUESTO ONE MORE
+        // ================================================================
+        //  BOTONES DE PRODUCTOS
+        // ================================================================
 
-País: ${c.name}
-Modo: Lista oficial del país
-Fuente: ${source}
+        function renderBotonesProductos() {
+            const container = $('productButtons');
+            container.innerHTML = '';
 
-PRODUCTOS:
-${itemsText}
+            Object.keys(PRODUCTOS).forEach(nombre => {
+                const btn = document.createElement('button');
+                btn.className = 'product-btn';
+                const p = PRODUCTOS[nombre];
+                btn.innerHTML = `
+                    <span class="p-name">${nombre}</span>
+                    <span class="p-detail">$${p.precio} · QV ${p.qv}</span>
+                `;
+                btn.addEventListener('click', () => agregarProducto(nombre, 1));
+                container.appendChild(btn);
+            });
+        }
 
-QV total: ${totalQV}
-Subtotal oficial: ${formatCurrency(subtotal,"EUR")}
-Envío: No incluido en lista oficial
-TOTAL OFICIAL: ${formatCurrency(total,"EUR")}
+        // ================================================================
+        //  PATOLOGÍAS (select rápido)
+        // ================================================================
 
-Presupuesto referencial sujeto a disponibilidad.`;
-  }else{
-    if(!rate){
-      toast("⚠️ Primero carga o escribe la tasa");
-      return;
-    }
-    msg=`PRESUPUESTO ONE MORE
+        function renderPatologias() {
+            // Crear un select en el botón de patología
+            const btn = $('btnAgregarPatologia');
+            const container = document.createElement('div');
+            container.style.cssText = 'display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;';
 
-País: ${c.name}
-Moneda: ${c.currency}
-Tasa usada: ${rate.toFixed(2)}
-Referencia: ${source}
+            Object.keys(PATOLOGIAS).forEach(nombre => {
+                const tag = document.createElement('span');
+                tag.style.cssText =
+                    'background:#1a1a1a; color:#d4a843; padding:4px 12px; border-radius:12px; font-size:11px; cursor:pointer; border:1px solid #2a2a2a; transition:all 0.3s ease;';
+                tag.textContent = nombre;
+                tag.addEventListener('click', () => cargarPatologia(nombre));
+                tag.addEventListener('mouseenter', () => {
+                    tag.style.borderColor = '#d4a843';
+                    tag.style.background = '#222';
+                });
+                tag.addEventListener('mouseleave', () => {
+                    tag.style.borderColor = '#2a2a2a';
+                    tag.style.background = '#1a1a1a';
+                });
+                container.appendChild(tag);
+            });
 
-PRODUCTOS:
-${itemsText}
+            btn.parentNode.insertBefore(container, btn.nextSibling);
+        }
 
-QV total: ${totalQV}
-Subtotal: ${moneyUSD(subtotal)}
-Envío: ${shipping===0?"GRATIS":moneyUSD(shipping)}
+        // ================================================================
+        //  TASA DE CAMBIO
+        // ================================================================
 
-TOTAL USD: ${moneyUSD(total)}
-TOTAL ${c.currency}: ${moneyLocal(localTotal)}
+        function actualizarTasa() {
+            const selected = paisSelect.options[paisSelect.selectedIndex];
+            const tasa = parseFloat(selected.dataset.tasa);
+            if (!isNaN(tasa) && tasa > 0) {
+                tasaCambio = tasa;
+                tasaDisplay.textContent = tasa.toFixed(2);
+                monedaNombre = selected.textContent.split('·')[1]?.trim() || 'COP';
+                updateTotales();
+            }
+        }
 
-Presupuesto referencial sujeto a disponibilidad y actualización de tasa.`;
-  }
+        // ================================================================
+        //  EVENTOS
+        // ================================================================
 
-  const url="https://wa.me/?text="+encodeURIComponent(msg);
-  window.open(url,"_blank");
-}
+        paisSelect.addEventListener('change', actualizarTasa);
 
+        $('btnActualizarTasa').addEventListener('click', actualizarTasa);
 
-function filterProducts(){
-  const search = document.getElementById("productSearch").value.toLowerCase();
-  const select = document.getElementById("product");
-  select.innerHTML = "";
-  products.forEach((p,i)=>{
-    const match = p.name.toLowerCase().includes(search) || p.aliases?.some(a=>a.toLowerCase().includes(search));
-    if(!search || match){
-      const o=document.createElement("option");
-      o.value=i;o.textContent=p.name;
-      select.appendChild(o);
-    }
-  });
-  if(select.options.length > 0){
-    updateUsdPrice();
-    calculate();
-  }
-}
+        $('btnTasaManual').addEventListener('click', function() {
+            const input = $('tasaManualInput');
+            if (input.style.display === 'none') {
+                input.style.display = 'inline-block';
+                input.focus();
+            } else {
+                const val = parseFloat(input.value);
+                if (!isNaN(val) && val > 0) {
+                    tasaCambio = val;
+                    tasaDisplay.textContent = val.toFixed(2);
+                    updateTotales();
+                }
+                input.style.display = 'none';
+                input.value = '';
+            }
+        });
 
-function toast(msg){
-  const el=document.getElementById("toast");
-  const msgEl=document.getElementById("toastMsg");
-  msgEl.textContent=msg;
-  el.classList.add("show");
-  setTimeout(()=>el.classList.remove("show"),2500);
-}
+        $('tasaManualInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const val = parseFloat(this.value);
+                if (!isNaN(val) && val > 0) {
+                    tasaCambio = val;
+                    tasaDisplay.textContent = val.toFixed(2);
+                    updateTotales();
+                }
+                this.style.display = 'none';
+                this.value = '';
+            }
+        });
 
-</script>
+        $('btnLimpiar').addEventListener('click', limpiarCarrito);
+
+        // ================================================================
+        //  INICIALIZACIÓN
+        // ================================================================
+
+        function init() {
+            renderBotonesProductos();
+            renderPatologias();
+            actualizarTasa();
+
+            // Productos de ejemplo (como en tu captura)
+            const productosEjemplo = [
+                'Melatonin',
+                'Melatonin',
+                'Slim Style',
+                'Glutamax / Glutamore',
+                'Painless Night Glut',
+                'Painless Night Glut',
+                'Painless Night Glut',
+                'Painless Night Glut',
+                'Painless Night Glut',
+                'Painless Night Glut'
+            ];
+
+            productosEjemplo.forEach(nombre => {
+                agregarProducto(nombre, 1);
+            });
+
+            renderProductos();
+        }
+
+        init();
+    </script>
+
 </body>
 </html>

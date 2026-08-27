@@ -5,202 +5,1039 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculadora de Precios · One More</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 :root{
-  --navy:#10264d;--navy2:#173867;--gold:#c8a15a;--green:#238b52;
-  --bg:#f4f6f9;--card:#fff;--text:#172033;--muted:#667085;
-  --line:#e4e7ec;--soft:#f8fafc;--danger:#b42318;--shadow:0 16px 42px rgba(16,24,40,.09);
+  --navy:#0a192f;
+  --navy-light:#112240;
+  --navy-lighter:#1d3a6e;
+  --gold:#d4a853;
+  --gold-light:#e8c87a;
+  --green:#1a936f;
+  --green-light:#2ecc71;
+  --danger:#e74c3c;
+  --bg:#f0f2f5;
+  --card:#ffffff;
+  --text:#0f172a;
+  --text-secondary:#64748b;
+  --border:#e2e8f0;
+  --border-light:#f1f5f9;
+  --shadow-sm:0 1px 2px 0 rgba(0,0,0,0.05);
+  --shadow:0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -2px rgba(0,0,0,0.1);
+  --shadow-lg:0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -4px rgba(0,0,0,0.1);
+  --shadow-xl:0 20px 25px -5px rgba(0,0,0,0.1),0 8px 10px -6px rgba(0,0,0,0.1);
+  --radius-sm:8px;
+  --radius:12px;
+  --radius-lg:16px;
+  --radius-xl:24px;
 }
-*{box-sizing:border-box}
-body{margin:0;font-family:Inter,system-ui,-apple-system,sans-serif;background:radial-gradient(circle at top,#fff 0,#f4f6f9 55%,#edf0f5 100%);color:var(--text)}
-.wrap{width:min(1180px,calc(100% - 24px));margin:auto;padding:18px 0 36px}
-header{display:grid;grid-template-columns:1fr auto;gap:16px;margin-bottom:16px}
-.brand,.card,.rate-card{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
-.brand{padding:24px;background:linear-gradient(135deg,#fff 0%,#f8fafc 65%,#f2eadb 100%)}
-.eyebrow{font-size:11px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
-h1{font-size:clamp(30px,5vw,50px);line-height:.96;letter-spacing:-.045em;color:var(--navy);margin:8px 0 10px}
-.subtitle{max-width:760px;margin:0;color:var(--muted);line-height:1.5}
-.badgebox{min-width:235px;padding:18px;border-radius:20px;background:linear-gradient(150deg,var(--navy),#243f72);color:#fff;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:center;gap:10px}
-.badge{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.1);border-radius:13px;padding:10px;font-size:13px;font-weight:800;text-align:center}
-.grid{display:grid;grid-template-columns:1fr 1.08fr;gap:16px;align-items:start}
-.card{padding:20px}
-h2{font-size:16px;color:var(--navy);margin:0 0 13px}
-label{display:block;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:7px}
-input,select{width:100%;padding:13px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:15px;color:var(--text);outline:none}
-input:focus,select:focus{border-color:var(--navy);box-shadow:0 0 0 4px rgba(16,38,77,.08)}
-.rate-grid,.product-grid{display:grid;gap:10px}
-.product-grid{grid-template-columns:1.8fr .8fr .7fr}
-.rate-card{padding:15px;margin-bottom:15px}
-.rate-main{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-.rate-result{margin-top:10px;padding:12px;border-radius:13px;background:#eef8f2;border:1px solid #cdebd8;color:#17663c;font-weight:900}
-.small{font-size:12px;color:var(--muted);line-height:1.45}
-.buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
-button{border:0;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;transition:.15s}
-button:hover{transform:translateY(-1px)}
-.primary{background:var(--navy);color:#fff}.secondary{background:#f1f3f6;color:var(--navy);border:1px solid var(--line)}
-.gold{background:var(--gold);color:#fff}.whatsapp{background:#128c7e;color:#fff}
-.logic{margin:14px 0;padding:13px;border-radius:13px;background:#f7f4ec;border:1px solid #eadfc9;color:#5c4a28;font-size:12px;line-height:1.45}
-table{width:100%;border-collapse:collapse;min-width:620px}
-th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left}
-th{font-size:10px;text-transform:uppercase;color:var(--muted);background:var(--soft)}
-td{font-size:13px}
-.money{font-weight:900;color:var(--navy)}
-.public{color:var(--green)}
-.selected{margin-top:14px;padding:15px;border-radius:15px;background:linear-gradient(135deg,#f7f9fc,#fff);border:1px solid var(--line)}
-.selected-title{font-weight:950;color:var(--navy);font-size:18px;margin-bottom:8px}
-.price-lines{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.price-line{padding:10px;border-radius:11px;background:#fff;border:1px solid var(--line)}
-.price-line span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;font-weight:900}
-.price-line strong{display:block;font-size:19px;margin-top:3px}
-.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:14px}
-.kpi{padding:13px;border-radius:14px;border:1px solid var(--line);background:#fff}
-.kpi small{display:block;color:var(--muted);font-weight:800;text-transform:uppercase;font-size:10px}
-.kpi strong{display:block;font-size:20px;color:var(--navy);margin-top:4px}
-.kpi.green{background:#ecfdf3;border-color:#cdebd8}.kpi.green strong{color:var(--green)}
-.total{margin-top:12px;padding:18px;border-radius:18px;background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff}
-.total small{opacity:.72;text-transform:uppercase;font-weight:800;font-size:10px}
-.total strong{display:block;font-size:clamp(29px,5vw,44px);letter-spacing:-.04em;margin-top:4px}
-.total div{font-size:12px;opacity:.8;margin-top:5px}
-.ship{margin-top:12px;padding:13px;border-radius:14px;background:#fff8e9;border:1px solid #efdfb7}
-.ship strong{color:#73571f}
-.notice{padding:11px 13px;border-radius:12px;background:#eef2ff;color:var(--navy);font-size:12px;font-weight:800;margin:12px 0}
-.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);display:none;background:#101828;color:#fff;padding:11px 16px;border-radius:999px;font-size:13px;font-weight:800;z-index:10}
-.treatment-section{margin-top:15px;padding-top:15px;border-top:1px dashed var(--line)}
-.treatment-section strong{color:var(--navy);font-size:14px}
-.treatment-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-@media(max-width:900px){header,.grid{grid-template-columns:1fr}.badgebox{min-width:0}}
-@media(max-width:600px){.wrap{width:min(100% - 14px,1180px)}.brand,.card{padding:15px}.product-grid,.buttons,.cards,.price-lines{grid-template-columns:1fr}.rate-main{grid-template-columns:1fr}}
-@media print{body{background:#fff}.buttons,.no-print{display:none!important}.brand,.card,.rate-card{box-shadow:none}}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:linear-gradient(135deg,#f0f2f5 0%,#e8ecf1 50%,#dde3eb 100%);
+  color:var(--text);
+  min-height:100vh;
+  line-height:1.5;
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes fadeIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+@keyframes slideInRight{
+  from{opacity:0;transform:translateX(30px)}
+  to{opacity:1;transform:translateX(0)}
+}
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.02)}
+}
+@keyframes shimmer{
+  0%{background-position:-200% 0}
+  100%{background-position:200% 0}
+}
+
+.animate-in{animation:fadeInUp 0.6s ease-out forwards}
+.animate-delay-1{animation-delay:0.1s}
+.animate-delay-2{animation-delay:0.2s}
+.animate-delay-3{animation-delay:0.3s}
+
+/* ===== LAYOUT ===== */
+.wrap{
+  width:min(1280px,calc(100% - 32px));
+  margin:0 auto;
+  padding:24px 0 48px;
+}
+
+/* ===== HEADER ===== */
+.header{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:20px;
+  margin-bottom:24px;
+  align-items:start;
+}
+
+.brand{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-xl);
+  padding:32px;
+  box-shadow:var(--shadow-lg);
+  position:relative;
+  overflow:hidden;
+}
+
+.brand::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:4px;
+  background:linear-gradient(90deg,var(--gold),var(--navy),var(--gold));
+}
+
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:12px;
+}
+
+.eyebrow::before{
+  content:'';
+  width:24px;
+  height:2px;
+  background:var(--gold);
+  border-radius:2px;
+}
+
+h1{
+  font-size:clamp(32px,5vw,52px);
+  font-weight:900;
+  line-height:1.05;
+  letter-spacing:-0.03em;
+  color:var(--navy);
+  margin-bottom:12px;
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-lighter) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.subtitle{
+  font-size:16px;
+  color:var(--text-secondary);
+  max-width:680px;
+  line-height:1.6;
+}
+
+.badgebox{
+  min-width:260px;
+  padding:24px;
+  border-radius:var(--radius-xl);
+  background:linear-gradient(145deg,var(--navy) 0%,var(--navy-light) 100%);
+  color:#fff;
+  box-shadow:var(--shadow-xl);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.badge{
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:var(--radius);
+  padding:12px 16px;
+  font-size:13px;
+  font-weight:700;
+  text-align:center;
+  backdrop-filter:blur(8px);
+  transition:all 0.3s ease;
+}
+
+.badge:hover{
+  background:rgba(255,255,255,0.15);
+  transform:translateY(-2px);
+}
+
+/* ===== GRID PRINCIPAL ===== */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1.15fr;
+  gap:24px;
+  align-items:start;
+}
+
+/* ===== CARDS ===== */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-xl);
+  padding:28px;
+  box-shadow:var(--shadow-lg);
+  transition:box-shadow 0.3s ease;
+}
+
+.card:hover{
+  box-shadow:var(--shadow-xl);
+}
+
+.card-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:20px;
+  padding-bottom:16px;
+  border-bottom:2px solid var(--border-light);
+}
+
+.card-icon{
+  width:40px;
+  height:40px;
+  border-radius:var(--radius);
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-lighter) 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  color:var(--gold);
+  flex-shrink:0;
+}
+
+.card-icon.gold-bg{
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold-light) 100%);
+  color:var(--navy);
+}
+
+h2{
+  font-size:18px;
+  font-weight:800;
+  color:var(--navy);
+  letter-spacing:-0.02em;
+}
+
+/* ===== FORM ELEMENTS ===== */
+.form-group{
+  margin-bottom:16px;
+}
+
+label{
+  display:block;
+  font-size:11px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  color:var(--text-secondary);
+  margin-bottom:6px;
+}
+
+input,select{
+  width:100%;
+  padding:14px 16px;
+  border:2px solid var(--border);
+  border-radius:var(--radius);
+  background:#fff;
+  font-size:15px;
+  font-weight:500;
+  color:var(--text);
+  outline:none;
+  transition:all 0.2s ease;
+  font-family:inherit;
+}
+
+input:hover,select:hover{
+  border-color:#cbd5e1;
+}
+
+input:focus,select:focus{
+  border-color:var(--navy);
+  box-shadow:0 0 0 4px rgba(10,25,47,0.08);
+}
+
+select{
+  cursor:pointer;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 14px center;
+  padding-right:44px;
+}
+
+/* ===== RATE CARD ===== */
+.rate-card{
+  background:linear-gradient(135deg,#f8fafc 0%,#f1f5f9 100%);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:20px;
+  margin-bottom:24px;
+}
+
+.rate-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.rate-result{
+  margin-top:16px;
+  padding:16px;
+  border-radius:var(--radius);
+  background:linear-gradient(135deg,var(--green) 0%,#16a085 100%);
+  color:#fff;
+  font-weight:800;
+  font-size:15px;
+  text-align:center;
+  box-shadow:var(--shadow);
+  animation:fadeIn 0.5s ease;
+}
+
+.rate-result span{
+  font-size:18px;
+  font-weight:900;
+}
+
+/* ===== PRODUCT GRID ===== */
+.product-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:12px;
+  align-items:end;
+}
+
+/* ===== BUTTONS ===== */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  border:none;
+  border-radius:var(--radius);
+  padding:14px 20px;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  font-family:inherit;
+  white-space:nowrap;
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-lg);
+}
+
+.btn:active{
+  transform:translateY(0);
+}
+
+.btn-primary{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-lighter) 100%);
+  color:#fff;
+}
+
+.btn-primary:hover{
+  background:linear-gradient(135deg,var(--navy-lighter) 0%,var(--navy) 100%);
+}
+
+.btn-secondary{
+  background:#f1f5f9;
+  color:var(--navy);
+  border:2px solid var(--border);
+}
+
+.btn-secondary:hover{
+  background:#e2e8f0;
+}
+
+.btn-gold{
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold-light) 100%);
+  color:var(--navy);
+}
+
+.btn-gold:hover{
+  filter:brightness(1.1);
+}
+
+.btn-whatsapp{
+  background:linear-gradient(135deg,#25d366 0%,#128c7e 100%);
+  color:#fff;
+}
+
+.btn-danger{
+  background:#fef2f2;
+  color:var(--danger);
+  border:2px solid #fecaca;
+  padding:8px 14px;
+  font-size:12px;
+}
+
+.btn-danger:hover{
+  background:var(--danger);
+  color:#fff;
+  border-color:var(--danger);
+}
+
+.buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:20px;
+}
+
+/* ===== SELECTED PRODUCT ===== */
+.selected{
+  margin-top:20px;
+  padding:24px;
+  border-radius:var(--radius-lg);
+  background:linear-gradient(135deg,#f8fafc 0%,#ffffff 100%);
+  border:2px solid var(--border);
+  animation:fadeInUp 0.4s ease;
+}
+
+.selected-title{
+  font-weight:900;
+  color:var(--navy);
+  font-size:20px;
+  margin-bottom:16px;
+  letter-spacing:-0.02em;
+}
+
+.price-lines{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.price-line{
+  padding:16px;
+  border-radius:var(--radius);
+  background:#fff;
+  border:1px solid var(--border);
+  transition:all 0.2s ease;
+}
+
+.price-line:hover{
+  border-color:var(--gold);
+  box-shadow:var(--shadow);
+  transform:translateY(-2px);
+}
+
+.price-line span{
+  display:block;
+  color:var(--text-secondary);
+  font-size:11px;
+  text-transform:uppercase;
+  font-weight:700;
+  letter-spacing:0.05em;
+  margin-bottom:4px;
+}
+
+.price-line strong{
+  display:block;
+  font-size:22px;
+  font-weight:900;
+  color:var(--navy);
+}
+
+.price-line strong.public{
+  color:var(--green);
+}
+
+/* ===== TREATMENT SECTION ===== */
+.treatment-section{
+  margin-top:20px;
+  padding-top:20px;
+  border-top:2px dashed var(--border);
+}
+
+.treatment-section > strong{
+  display:block;
+  color:var(--navy);
+  font-size:15px;
+  font-weight:800;
+  margin-bottom:16px;
+}
+
+.treatment-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.treatment-item{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:16px;
+}
+
+.treatment-item label{
+  margin-bottom:8px;
+}
+
+.treatment-item strong{
+  font-size:20px;
+  font-weight:900;
+  color:var(--navy);
+  display:block;
+  margin-top:4px;
+}
+
+.treatment-item strong.public{
+  color:var(--green);
+}
+
+/* ===== CART ===== */
+.cart-empty{
+  text-align:center;
+  padding:40px 20px;
+  color:var(--text-secondary);
+  font-weight:600;
+}
+
+.cart-empty-icon{
+  font-size:48px;
+  margin-bottom:12px;
+  opacity:0.5;
+}
+
+.table-container{
+  overflow-x:auto;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  margin-bottom:16px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:500px;
+}
+
+th{
+  padding:14px 12px;
+  font-size:11px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  color:var(--text-secondary);
+  background:#f8fafc;
+  border-bottom:2px solid var(--border);
+  text-align:left;
+  white-space:nowrap;
+}
+
+td{
+  padding:14px 12px;
+  border-bottom:1px solid var(--border-light);
+  font-size:14px;
+  font-weight:500;
+}
+
+tr:hover td{
+  background:#f8fafc;
+}
+
+tr:last-child td{
+  border-bottom:none;
+}
+
+.money{
+  font-weight:800;
+  color:var(--navy);
+  font-size:15px;
+}
+
+/* ===== KPI CARDS ===== */
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin:20px 0;
+}
+
+.kpi{
+  padding:20px 16px;
+  border-radius:var(--radius-lg);
+  border:1px solid var(--border);
+  background:#fff;
+  transition:all 0.3s ease;
+  position:relative;
+  overflow:hidden;
+}
+
+.kpi::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:3px;
+  background:var(--navy);
+  opacity:0.3;
+}
+
+.kpi:hover{
+  transform:translateY(-3px);
+  box-shadow:var(--shadow-lg);
+}
+
+.kpi.green::before{background:var(--green);opacity:0.6}
+.kpi.gold::before{background:var(--gold);opacity:0.8}
+.kpi.danger::before{background:var(--danger);opacity:0.6}
+
+.kpi small{
+  display:block;
+  color:var(--text-secondary);
+  font-weight:700;
+  text-transform:uppercase;
+  font-size:10px;
+  letter-spacing:0.08em;
+  margin-bottom:8px;
+}
+
+.kpi strong{
+  display:block;
+  font-size:22px;
+  font-weight:900;
+  color:var(--navy);
+  letter-spacing:-0.02em;
+}
+
+.kpi.green{background:linear-gradient(135deg,#ecfdf5 0%,#d1fae5 100%);border-color:#a7f3d0}
+.kpi.green strong{color:var(--green)}
+
+.kpi.gold{background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);border-color:#fde68a}
+.kpi.gold strong{color:#92400e}
+
+.kpi.danger{background:linear-gradient(135deg,#fef2f2 0%,#fee2e2 100%);border-color:#fecaca}
+.kpi.danger strong{color:var(--danger)}
+
+/* ===== SHIPPING INFO ===== */
+.ship-info{
+  margin:16px 0;
+  padding:20px;
+  border-radius:var(--radius-lg);
+  background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
+  border:1px solid #fde68a;
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.ship-info .icon{
+  font-size:32px;
+  flex-shrink:0;
+}
+
+.ship-info strong{
+  display:block;
+  color:#92400e;
+  font-size:16px;
+  font-weight:800;
+  margin-bottom:4px;
+}
+
+.ship-info .small{
+  color:#a16207;
+  font-size:13px;
+  font-weight:500;
+}
+
+/* ===== TOTAL BOX ===== */
+.total-box{
+  margin:20px 0;
+  padding:28px;
+  border-radius:var(--radius-xl);
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 50%,var(--navy-lighter) 100%);
+  color:#fff;
+  box-shadow:var(--shadow-xl);
+  position:relative;
+  overflow:hidden;
+}
+
+.total-box::before{
+  content:'';
+  position:absolute;
+  top:-50%;
+  right:-20%;
+  width:300px;
+  height:300px;
+  background:radial-gradient(circle,rgba(212,168,83,0.15) 0%,transparent 70%);
+  pointer-events:none;
+}
+
+.total-box small{
+  display:block;
+  opacity:0.7;
+  text-transform:uppercase;
+  font-weight:700;
+  font-size:11px;
+  letter-spacing:0.1em;
+  margin-bottom:8px;
+}
+
+.total-box strong{
+  display:block;
+  font-size:clamp(32px,6vw,52px);
+  font-weight:900;
+  letter-spacing:-0.04em;
+  line-height:1.1;
+}
+
+.total-box .detail{
+  font-size:14px;
+  opacity:0.8;
+  margin-top:8px;
+  font-weight:500;
+}
+
+/* ===== SECONDARY TOTALS ===== */
+.secondary-totals{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin:16px 0;
+}
+
+.secondary-totals .kpi{
+  padding:16px;
+}
+
+.secondary-totals .kpi strong{
+  font-size:18px;
+}
+
+/* ===== FOOTER ===== */
+footer{
+  text-align:center;
+  padding:24px;
+  color:var(--text-secondary);
+  font-size:13px;
+  font-weight:500;
+  margin-top:24px;
+}
+
+/* ===== TOAST ===== */
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:28px;
+  transform:translateX(-50%) translateY(100px);
+  background:var(--navy);
+  color:#fff;
+  padding:14px 28px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:700;
+  z-index:1000;
+  box-shadow:var(--shadow-xl);
+  opacity:0;
+  transition:all 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+.toast::before{
+  content:'✓';
+  width:24px;
+  height:24px;
+  background:var(--green);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1024px){
+  .grid{grid-template-columns:1fr}
+  .header{grid-template-columns:1fr}
+  .badgebox{min-width:0;flex-direction:row;flex-wrap:wrap}
+  .badge{flex:1;min-width:140px}
+}
+
+@media(max-width:768px){
+  .wrap{width:calc(100% - 20px);padding:16px 0 32px}
+  .brand,.card{padding:20px}
+  .product-grid{grid-template-columns:1fr}
+  .price-lines{grid-template-columns:1fr}
+  .treatment-grid{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .secondary-totals{grid-template-columns:1fr}
+  .buttons{grid-template-columns:1fr}
+  .rate-grid{grid-template-columns:1fr}
+  h1{font-size:28px}
+}
+
+@media(max-width:480px){
+  .kpi-grid{grid-template-columns:1fr}
+  .badgebox{flex-direction:column}
+}
+
+/* ===== PRINT ===== */
+@media print{
+  body{background:#fff}
+  .no-print{display:none!important}
+  .card,.brand,.rate-card{box-shadow:none;border:1px solid #ddd}
+  .total-box{background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .kpi.green,.kpi.gold,.ship-info{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+/* ===== LOGIC NOTICE ===== */
+.logic{
+  margin:16px 0;
+  padding:16px;
+  border-radius:var(--radius);
+  background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
+  border:1px solid #fde68a;
+  color:#92400e;
+  font-size:13px;
+  line-height:1.6;
+  font-weight:500;
+}
+
+/* ===== HIDE/SHOW UTILITIES ===== */
+.hidden{display:none!important}
 </style>
+<base target="_blank">
 </head>
 <body>
 <div class="wrap">
-<header>
-<section class="brand">
-<div class="eyebrow">Herramienta para distribuidores</div>
-<h1>Calculadora One More</h1>
-<p class="subtitle">Selecciona un producto, indica la cantidad y obtén automáticamente precios. Calcula tratamientos y cotizaciones adaptadas a Venezuela (BCV), Colombia (TRM) y Europa (EUR).</p>
-</section>
-<aside class="badgebox">
-<div class="badge" id="badgeCountry">🇻🇪 VE / 🇨🇴 CO / 🇪🇺 EU</div>
-<div class="badge">Análisis de Tratamiento Diario</div>
-<div class="badge">QV + precios + envío</div>
-</aside>
+
+<!-- HEADER -->
+<header class="header animate-in">
+  <section class="brand">
+    <div class="eyebrow">Herramienta para distribuidores</div>
+    <h1>Calculadora One More</h1>
+    <p class="subtitle">Selecciona un producto, indica la cantidad y obtén automáticamente precios. Calcula tratamientos y cotizaciones adaptadas a Venezuela (BCV), Colombia (TRM) y Europa (EUR).</p>
+  </section>
+  <aside class="badgebox">
+    <div class="badge" id="badgeCountry">🇻🇪 VE / 🇨🇴 CO / 🇪🇺 EU</div>
+    <div class="badge">Análisis de Tratamiento Diario</div>
+    <div class="badge">QV + precios + envío</div>
+  </aside>
 </header>
 
+<!-- MAIN GRID -->
 <div class="grid">
-<section class="card">
-<div class="rate-card">
-<h2>⚙️ Configuración de País y Tasa</h2>
-<div class="rate-main">
-<div>
-<label for="country">Región / Moneda</label>
-<select id="country">
-<option value="VE">🇻🇪 Venezuela (Bs)</option>
-<option value="CO">🇨🇴 Colombia (COP)</option>
-<option value="EU">🇪🇺 Europa (EUR)</option>
-</select>
-</div>
-</div>
-<div class="rate-main">
-<div>
-<label id="rateLabel" for="rate">Tasa BCV (Bs/USD)</label>
-<input id="rate" type="number" min="0" step="0.01" value="36.5">
-</div>
-<div id="extraBox">
-<label for="extra">Diferencial (Bs)</label>
-<input id="extra" type="number" min="0" step="1" value="200">
-</div>
-</div>
-<div class="rate-result">Tasa para cobrar: <span id="saleRate">0</span> por USD</div>
+
+  <!-- LEFT COLUMN -->
+  <section class="card animate-in animate-delay-1">
+
+    <!-- CONFIG -->
+    <div class="rate-card">
+      <div class="card-header" style="padding-bottom:12px;margin-bottom:16px">
+        <div class="card-icon">⚙️</div>
+        <h2>Configuración de País y Tasa</h2>
+      </div>
+      <div class="rate-grid">
+        <div class="form-group">
+          <label for="country">Región / Moneda</label>
+          <select id="country">
+            <option value="VE">🇻🇪 Venezuela (Bs)</option>
+            <option value="CO">🇨🇴 Colombia (COP)</option>
+            <option value="EU">🇪🇺 Europa (EUR)</option>
+          </select>
+        </div>
+        <div class="form-group" id="extraBox">
+          <label for="extra">Diferencial (Bs)</label>
+          <input id="extra" type="number" min="0" step="1" value="200">
+        </div>
+        <div class="form-group">
+          <label id="rateLabel" for="rate">Tasa BCV (Bs/USD)</label>
+          <input id="rate" type="number" min="0" step="0.01" value="36.5">
+        </div>
+      </div>
+      <div class="rate-result">
+        Tasa para cobrar: <span id="saleRate">0</span> por USD
+      </div>
+    </div>
+
+    <!-- PRODUCT SELECTION -->
+    <div class="card-header">
+      <div class="card-icon gold-bg">1</div>
+      <h2>Selecciona el producto</h2>
+    </div>
+
+    <div class="product-grid">
+      <div class="form-group">
+        <label for="product">Producto / Paquete</label>
+        <select id="product"></select>
+      </div>
+      <div class="form-group">
+        <label for="qty">Cantidad</label>
+        <input id="qty" type="number" min="1" step="1" value="1">
+      </div>
+      <div style="display:flex;align-items:end">
+        <button class="btn btn-primary" id="addBtn" style="width:100%">
+          <span>+</span> Agregar
+        </button>
+      </div>
+    </div>
+
+    <!-- SELECTED PRODUCT INFO -->
+    <div class="selected" id="selectedBox">
+      <div class="selected-title" id="selectedName">-</div>
+      <div class="price-lines">
+        <div class="price-line">
+          <span>Precio distribuidor</span>
+          <strong id="selectedDist">$0</strong>
+        </div>
+        <div class="price-line">
+          <span>Precio público</span>
+          <strong class="public" id="selectedPublic">$0</strong>
+        </div>
+        <div class="price-line patch-only">
+          <span>Piezas por paquete</span>
+          <strong id="selectedPz">0</strong>
+        </div>
+        <div class="price-line patch-only">
+          <span>Precio por parche (Costo)</span>
+          <strong id="selectedPatchCost">$0</strong>
+        </div>
+      </div>
+
+      <div class="treatment-section" id="treatmentSection">
+        <strong>🩹 Cálculo de Tratamiento (1 Semana)</strong>
+        <div class="treatment-grid">
+          <div class="treatment-item">
+            <label>Días de efecto por parche:</label>
+            <input type="number" id="patchDays" min="1" step="1" value="1" style="padding:10px;margin-top:8px">
+          </div>
+          <div class="treatment-item">
+            <label>Parches por semana:</label>
+            <strong id="calcPatches">7</strong>
+          </div>
+          <div class="treatment-item">
+            <label>Costo de 1 semana:</label>
+            <strong id="calcCost">$0</strong>
+          </div>
+          <div class="treatment-item">
+            <label>Precio Venta Cliente (100% ganancia):</label>
+            <strong id="calcSell" class="public">$0</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIGHT COLUMN -->
+  <section class="card animate-in animate-delay-2">
+    <div class="card-header">
+      <div class="card-icon">2</div>
+      <h2>Resumen del pedido</h2>
+    </div>
+
+    <div id="cartBox">
+      <div class="cart-empty">
+        <div class="cart-empty-icon">🛒</div>
+        <p>Agrega uno o varios productos para construir el pedido.</p>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi">
+        <small>QV acumulados</small>
+        <strong id="totalQv">0 QV</strong>
+      </div>
+      <div class="kpi">
+        <small>Unidades</small>
+        <strong id="totalUnits">0</strong>
+      </div>
+      <div class="kpi">
+        <small>Subtotal dist. (USD)</small>
+        <strong id="distUsd">$0,00</strong>
+      </div>
+      <div class="kpi green">
+        <small>Subtotal público (USD)</small>
+        <strong id="publicUsd">$0,00</strong>
+      </div>
+      <div class="kpi gold">
+        <small id="shipLabel">Envío</small>
+        <strong id="shippingLoc">0,00</strong>
+      </div>
+      <div class="kpi green">
+        <small>Margen bruto (USD)</small>
+        <strong id="marginUsd">$0,00</strong>
+      </div>
+    </div>
+
+    <!-- Shipping Info -->
+    <div class="ship-info">
+      <div class="icon">📦</div>
+      <div>
+        <strong id="shippingRule">Envío pendiente</strong>
+        <div class="small" id="shippingHelp">El envío se determina por los QV totales del pedido.</div>
+      </div>
+    </div>
+
+    <!-- Total -->
+    <div class="total-box">
+      <small>Total final para cobrar al cliente</small>
+      <strong id="finalLoc">0,00</strong>
+      <div class="detail" id="finalHelp">Precio público + envío, convertido a la moneda local.</div>
+    </div>
+
+    <!-- Secondary Totals -->
+    <div class="secondary-totals">
+      <div class="kpi">
+        <small>Total público USD</small>
+        <strong id="finalUsd">$0,00</strong>
+      </div>
+      <div class="kpi">
+        <small>Costo distribuidor local</small>
+        <strong id="distLoc">0,00</strong>
+      </div>
+      <div class="kpi green">
+        <small>Margen estimado local</small>
+        <strong id="marginLoc">0,00</strong>
+      </div>
+      <div class="kpi">
+        <small>Tasa aplicada</small>
+        <strong id="rateUsed">0</strong>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="buttons no-print">
+      <button class="btn btn-secondary" id="clearBtn">🗑️ Vaciar pedido</button>
+      <button class="btn btn-whatsapp" id="waBtn">📱 Enviar por WhatsApp</button>
+    </div>
+    <div class="buttons no-print">
+      <button class="btn btn-gold" id="copyBtn">📋 Copiar cotización</button>
+      <button class="btn btn-secondary" onclick="window.print()">🖨️ Imprimir / PDF</button>
+    </div>
+  </section>
 </div>
 
-<h2>1. Selecciona el producto</h2>
-<div class="product-grid">
-<div>
-<label for="product">Producto / Paquete</label>
-<select id="product"></select>
-</div>
-<div>
-<label for="qty">Cantidad</label>
-<input id="qty" type="number" min="1" step="1" value="1">
-</div>
-<div style="display:flex;align-items:end">
-<button class="primary" id="addBtn" style="width:100%">+ Agregar</button>
-</div>
-</div>
-
-<div class="selected" id="selectedBox">
-<div class="selected-title" id="selectedName">-</div>
-<div class="price-lines">
-<div class="price-line"><span>Precio distribuidor</span><strong id="selectedDist">$0</strong></div>
-<div class="price-line"><span>Precio público</span><strong class="public" id="selectedPublic">$0</strong></div>
-<div class="price-line patch-only"><span>Piezas por paquete</span><strong id="selectedPz">0</strong></div>
-<div class="price-line patch-only"><span>Precio por parche (Costo)</span><strong id="selectedPatchCost">$0</strong></div>
-</div>
-
-<div class="treatment-section" id="treatmentSection">
-<strong>Cálculo de Tratamiento (1 Semana)</strong>
-<div class="treatment-grid">
-<div><label>Días de efecto por parche:</label>
-<input type="number" id="patchDays" min="1" step="1" value="1" style="padding:8px"></div>
-<div><label>Parches por semana:</label>
-<strong id="calcPatches" style="font-size:18px; margin-top:5px; display:block">7</strong></div>
-<div><label>Costo de 1 semana:</label>
-<strong id="calcCost" style="font-size:18px; margin-top:5px; display:block">$0</strong></div>
-<div><label>Precio Venta Cliente (100% ganancia):</label>
-<strong id="calcSell" class="public" style="font-size:18px; margin-top:5px; display:block">$0</strong></div>
-</div>
-</div>
-</div>
-</section>
-
-<section class="card">
-<h2>2. Resumen del pedido</h2>
-<div id="cartBox" class="notice">Agrega uno o varios productos para construir el pedido.</div>
-
-<div class="cards">
-<div class="kpi"><small>QV acumulados</small><strong id="totalQv">0 QV</strong></div>
-<div class="kpi"><small>Unidades</small><strong id="totalUnits">0</strong></div>
-<div class="kpi"><small>Subtotal dist. (USD)</small><strong id="distUsd">$0,00</strong></div>
-<div class="kpi green"><small>Subtotal público (USD)</small><strong id="publicUsd">$0,00</strong></div>
-<div class="kpi"><small id="shipLabel">Envío</small><strong id="shippingLoc">0,00</strong></div>
-<div class="kpi green"><small>Margen bruto (USD)</small><strong id="marginUsd">$0,00</strong></div>
-</div>
-
-<div class="ship">
-<strong id="shippingRule">Envío pendiente</strong>
-<div class="small" id="shippingHelp">El envío se determina por los QV.</div>
-</div>
-
-<div class="total">
-<small>Total final para cobrar al cliente</small>
-<strong id="finalLoc">0,00</strong>
-<div id="finalHelp">Precio público + envío, convertido a la moneda local.</div>
-</div>
-
-<div class="cards">
-<div class="kpi"><small>Total público USD</small><strong id="finalUsd">$0,00</strong></div>
-<div class="kpi"><small>Costo distribuidor local</small><strong id="distLoc">0,00</strong></div>
-<div class="kpi green"><small>Margen estimado local</small><strong id="marginLoc">0,00</strong></div>
-<div class="kpi"><small>Tasa aplicada</small><strong id="rateUsed">0</strong></div>
-</div>
-
-<div class="buttons no-print">
-<button class="secondary" id="clearBtn">Vaciar pedido</button>
-<button class="whatsapp" id="waBtn">Enviar por WhatsApp</button>
-</div>
-<div class="buttons no-print">
-<button class="gold" id="copyBtn">Copiar cotización</button>
-<button class="secondary" onclick="window.print()">Imprimir / PDF</button>
-</div>
-</section>
-</div>
 <footer>Verifica la tasa oficial vigente antes de cerrar cada operación.</footer>
 </div>
+
 <div class="toast" id="toast">Listo</div>
 
 <script>
-// El parámetro 'isPack: true' oculta el despiece de parches para ese item
 const products=[
 {name:"Painless Night Glu",qv:50,dist:64,public:79,pz:25,defaultDays:2,isPack:false},
 {name:"Omevia",qv:32,dist:39,public:49,pz:27,defaultDays:1,isPack:false},
@@ -212,8 +1049,6 @@ const products=[
 {name:"Night Ladies",qv:45,dist:59,public:79,pz:27,defaultDays:1,isPack:false},
 {name:"Night Gentleman",qv:45,dist:59,public:79,pz:27,defaultDays:1,isPack:false},
 {name:"Glutanad",qv:50,dist:67,public:79,pz:30,defaultDays:1,isPack:false},
-
-// Paquetes y Nuevos Productos (se venden enteros)
 {name:"PNG Express Pack EU",qv:150,dist:150,public:300,isPack:true},
 {name:"Diamond Express Pack EU",qv:2500,dist:997,public:1994,isPack:true},
 {name:"King Pack",qv:150,dist:150,public:300,isPack:true},
@@ -238,10 +1073,10 @@ const eur=new Intl.NumberFormat("es-ES",{style:"currency",currency:"EUR"});
 
 const moneyUsd=v=>usd.format(Number(v||0));
 const moneyLoc=v=>{
-  const region = $("country").value;
-  if(region === "CO") return "COP $ " + cop.format(Number(v||0));
-  if(region === "EU") return eur.format(Number(v||0));
-  return "Bs " + bs.format(Number(v||0));
+  const region=$("country").value;
+  if(region==="CO")return"COP $ "+cop.format(Number(v||0));
+  if(region==="EU")return eur.format(Number(v||0));
+  return"Bs "+bs.format(Number(v||0));
 };
 
 function init(){
@@ -250,10 +1085,10 @@ function init(){
     o.value=i;o.textContent=`${p.name} · ${p.qv} QV`;
     $("product").appendChild(o);
   });
-  $("country").addEventListener("change", updateCountry);
-  $("product").addEventListener("change", ()=>{
-    const p = products[Number($("product").value)||0];
-    $("patchDays").value = p.defaultDays || 1; 
+  $("country").addEventListener("change",updateCountry);
+  $("product").addEventListener("change",()=>{
+    const p=products[Number($("product").value)||0];
+    $("patchDays").value=p.defaultDays||1;
     updateSelected();
   });
   $("qty").addEventListener("input",updateSelected);
@@ -264,81 +1099,77 @@ function init(){
   $("clearBtn").addEventListener("click",()=>{state.cart=[];render()});
   $("copyBtn").addEventListener("click",copyQuote);
   $("waBtn").addEventListener("click",sendWhatsApp);
-  
   updateCountry();
 }
 
 function updateCountry(){
-  const region = $("country").value;
-  if(region === "CO"){
-    $("rateLabel").textContent = "TRM (COP/USD)";
-    $("rate").value = 4000; 
-    $("extraBox").style.display = "none";
-    $("extra").value = 0;
-    $("shipLabel").textContent = "Envío (COP)";
-  } else if(region === "EU"){
-    $("rateLabel").textContent = "Tasa (EUR/USD)";
-    $("rate").value = 0.92; // Tasa base ejemplo
-    $("extraBox").style.display = "none";
-    $("extra").value = 0;
-    $("shipLabel").textContent = "Envío (EUR)";
-  } else {
-    $("rateLabel").textContent = "Tasa BCV (Bs/USD)";
-    $("rate").value = 36.5; 
-    $("extraBox").style.display = "block";
-    $("extra").value = 200;
-    $("shipLabel").textContent = "Envío (Bs)";
+  const region=$("country").value;
+  if(region==="CO"){
+    $("rateLabel").textContent="TRM (COP/USD)";
+    $("rate").value=4000;
+    $("extraBox").style.display="none";
+    $("extra").value=0;
+    $("shipLabel").textContent="Envío (COP)";
+  }else if(region==="EU"){
+    $("rateLabel").textContent="Tasa (EUR/USD)";
+    $("rate").value=0.92;
+    $("extraBox").style.display="none";
+    $("extra").value=0;
+    $("shipLabel").textContent="Envío (EUR)";
+  }else{
+    $("rateLabel").textContent="Tasa BCV (Bs/USD)";
+    $("rate").value=36.5;
+    $("extraBox").style.display="block";
+    $("extra").value=200;
+    $("shipLabel").textContent="Envío (Bs)";
   }
   render();
 }
 
 function updateSelected(){
   const p=products[Number($("product").value)||0];
-  const exRate = Number($("rate").value||0) + Number($("extra").value||0);
-  
+  const exRate=Number($("rate").value||0)+Number($("extra").value||0);
   $("selectedName").textContent=p.name;
   $("selectedDist").textContent=moneyUsd(p.dist);
   $("selectedPublic").textContent=moneyUsd(p.public);
-  
-  // Ocultar sección de parches para paquetes
-  const patchEls = document.querySelectorAll('.patch-only');
+  const patchEls=document.querySelectorAll('.patch-only');
   if(p.isPack){
-    patchEls.forEach(el => el.style.display = 'none');
-    $("treatmentSection").style.display = 'none';
-  } else {
-    patchEls.forEach(el => el.style.display = 'block');
-    $("treatmentSection").style.display = 'block';
-    
+    patchEls.forEach(el=>el.style.display='none');
+    $("treatmentSection").style.display='none';
+  }else{
+    patchEls.forEach(el=>el.style.display='block');
+    $("treatmentSection").style.display='block';
     $("selectedPz").textContent=p.pz;
-    const patchCostUsd = p.dist / p.pz;
-    $("selectedPatchCost").textContent = moneyUsd(patchCostUsd);
-    
-    const daysPerPatch = Math.max(1, Number($("patchDays").value||1));
-    const patchesPerWeek = Math.ceil(7 / daysPerPatch);
-    const costPerWeekUsd = patchCostUsd * patchesPerWeek;
-    const sellPerWeekUsd = costPerWeekUsd * 2; // 100% Ganancia
-    
-    $("calcPatches").textContent = patchesPerWeek;
-    $("calcCost").textContent = moneyLoc(costPerWeekUsd * exRate) + ` (${moneyUsd(costPerWeekUsd)})`;
-    $("calcSell").textContent = moneyLoc(sellPerWeekUsd * exRate) + ` (${moneyUsd(sellPerWeekUsd)})`;
+    const patchCostUsd=p.dist/p.pz;
+    $("selectedPatchCost").textContent=moneyUsd(patchCostUsd);
+    const daysPerPatch=Math.max(1,Number($("patchDays").value||1));
+    const patchesPerWeek=Math.ceil(7/daysPerPatch);
+    const costPerWeekUsd=patchCostUsd*patchesPerWeek;
+    const sellPerWeekUsd=costPerWeekUsd*2;
+    $("calcPatches").textContent=patchesPerWeek;
+    $("calcCost").textContent=moneyLoc(costPerWeekUsd*exRate)+` (${moneyUsd(costPerWeekUsd)})`;
+    $("calcSell").textContent=moneyLoc(sellPerWeekUsd*exRate)+` (${moneyUsd(sellPerWeekUsd)})`;
   }
 }
 
 function shippingUsdRule(qv){
-  if(qv>=300)return {usd:0,label:"ENVÍO GRATIS",detail:"300 QV o más"};
-  if(qv>=200)return {usd:6,label:"Envío $6",detail:"200–299 QV"};
-  if(qv>=150)return {usd:8,label:"Envío $8",detail:"150–199 QV"};
-  if(qv>=100)return {usd:10,label:"Envío $10",detail:"100–149 QV"};
-  return {usd:12,label:"Envío $12",detail:"0–99 QV"};
+  if(qv>=300)return{usd:0,label:"🚚 ENVÍO GRATIS",detail:"300 QV o más — Sin costo de envío"};
+  if(qv>=200)return{usd:6,label:"📦 Envío $6",detail:"200–299 QV — Envío reducido"};
+  if(qv>=150)return{usd:8,label:"📦 Envío $8",detail:"150–199 QV — Envío estándar"};
+  if(qv>=100)return{usd:10,label:"📦 Envío $10",detail:"100–149 QV — Envío parcial"};
+  return{usd:12,label:"📦 Envío $12",detail:"0–99 QV — Envío base"};
 }
 
 function addItem(){
   const p=products[Number($("product").value)];
   const qty=Math.max(1,parseInt($("qty").value||1,10));
   state.cart.push({name:p.name,qv:p.qv,dist:p.dist,public:p.public,qty});
-  $("qty").value=1;render();
+  $("qty").value=1;
+  render();
+  toast(`✅ ${p.name} × ${qty} agregado`);
 }
-function removeItem(i){state.cart.splice(i,1);render()}
+
+function removeItem(i){state.cart.splice(i,1);render();toast("🗑️ Producto eliminado");}
 window.removeItem=removeItem;
 
 function totals(){
@@ -346,29 +1177,23 @@ function totals(){
   const units=state.cart.reduce((a,x)=>a+x.qty,0);
   const dist=state.cart.reduce((a,x)=>a+x.dist*x.qty,0);
   const pub=state.cart.reduce((a,x)=>a+x.public*x.qty,0);
-  
-  const shipRule = shippingUsdRule(qv);
-  const region = $("country").value;
-  
+  const shipRule=shippingUsdRule(qv);
+  const region=$("country").value;
   const rate=Number($("rate").value||0);
-  const extra= (region === "VE") ? Number($("extra").value||0) : 0;
+  const extra=(region==="VE")?Number($("extra").value||0):0;
   const saleRate=rate+extra;
-  
-  const shipLoc = shipRule.usd * saleRate; 
+  const shipLoc=shipRule.usd*saleRate;
   const finalUsd=pub+shipRule.usd;
   const finalLoc=finalUsd*saleRate;
-  
-  const distLoc= (dist * rate) + shipLoc;
+  const distLoc=(dist*rate)+shipLoc;
   const marginUsd=pub-dist;
-  const marginLoc= marginUsd * saleRate;
-  
-  return {qv,units,dist,pub,shipRule,shipLoc,rate,extra,saleRate,finalUsd,finalLoc,distLoc,marginUsd,marginLoc,region};
+  const marginLoc=marginUsd*saleRate;
+  return{qv,units,dist,pub,shipRule,shipLoc,rate,extra,saleRate,finalUsd,finalLoc,distLoc,marginUsd,marginLoc,region};
 }
 
 function render(){
   updateSelected();
   const t=totals();
-  
   $("saleRate").textContent=moneyLoc(t.saleRate);
   $("totalQv").textContent=t.qv+" QV";
   $("totalUnits").textContent=t.units;
@@ -376,47 +1201,53 @@ function render(){
   $("publicUsd").textContent=moneyUsd(t.pub);
   $("shippingLoc").textContent=t.shipRule.usd===0?"GRATIS":moneyLoc(t.shipLoc);
   $("marginUsd").textContent=moneyUsd(t.marginUsd);
-  
   $("shippingRule").textContent=t.shipRule.label;
-  $("shippingHelp").textContent=t.qv?`${t.shipRule.detail}. Se convierte a la moneda local.`:"El envío se determina por los QV totales del pedido.";
-  
+  $("shippingHelp").textContent=t.qv?t.shipRule.detail+". Se convierte a la moneda local.":"El envío se determina por los QV totales del pedido.";
   $("finalLoc").textContent=moneyLoc(t.finalLoc);
   $("finalUsd").textContent=moneyUsd(t.finalUsd);
   $("distLoc").textContent=moneyLoc(t.distLoc);
   $("marginLoc").textContent=moneyLoc(t.marginLoc);
   $("rateUsed").textContent=moneyLoc(t.saleRate);
-  
   if(!state.cart.length){
-    $("cartBox").innerHTML="Agrega uno o varios productos para construir el pedido.";
+    $("cartBox").innerHTML=`<div class="cart-empty"><div class="cart-empty-icon">🛒</div><p>Agrega uno o varios productos para construir el pedido.</p></div>`;
   }else{
-    $("cartBox").innerHTML=`<div style="overflow:auto"><table style="min-width:540px">
+    $("cartBox").innerHTML=`<div class="table-container"><table>
     <thead><tr><th>Producto</th><th>Cant.</th><th>QV</th><th>Público</th><th></th></tr></thead>
     <tbody>${state.cart.map((x,i)=>`<tr>
       <td><strong>${x.name}</strong></td><td>${x.qty}</td><td>${x.qv*x.qty}</td>
       <td class="money">${moneyUsd(x.public*x.qty)}</td>
-      <td><button class="secondary" style="padding:6px 9px;color:#b42318" onclick="removeItem(${i})">Quitar</button></td>
+      <td><button class="btn btn-danger" onclick="removeItem(${i})">Quitar</button></td>
     </tr>`).join("")}</tbody></table></div>`;
   }
 }
 
 function quoteText(){
   const t=totals();
-  const regionNames = { VE: "VENEZUELA", CO: "COLOMBIA", EU: "EUROPA" };
-  const cName = regionNames[t.region];
+  const regionNames={VE:"VENEZUELA",CO:"COLOMBIA",EU:"EUROPA"};
+  const cName=regionNames[t.region];
   const lines=[`*COTIZACIÓN ONE MORE ${cName}*`,""];
   state.cart.forEach(x=>lines.push(`• ${x.name} · ${x.qty} und · ${x.qv*x.qty} QV · Público ${moneyUsd(x.public*x.qty)}`));
   lines.push("",`QV totales: ${t.qv} QV`,`Subtotal público: ${moneyUsd(t.pub)}`,`Envío: ${t.shipRule.usd===0?"GRATIS":moneyLoc(t.shipLoc)}`,`Tasa Aplicada: ${t.saleRate}`,`*TOTAL CLIENTE: ${moneyLoc(t.finalLoc)}*`,`Referencia USD: ${moneyUsd(t.finalUsd)}`);
   return lines.join("\n");
 }
+
 async function copyQuote(){
-  if(!state.cart.length)return toast("Agrega productos primero");
-  try{await navigator.clipboard.writeText(quoteText());toast("Cotización copiada")}catch(e){toast("No se pudo copiar")}
+  if(!state.cart.length)return toast("⚠️ Agrega productos primero");
+  try{await navigator.clipboard.writeText(quoteText());toast("📋 Cotización copiada al portapapeles")}catch(e){toast("❌ No se pudo copiar")}
 }
+
 function sendWhatsApp(){
-  if(!state.cart.length)return toast("Agrega productos primero");
+  if(!state.cart.length)return toast("⚠️ Agrega productos primero");
   window.open("https://wa.me/?text="+encodeURIComponent(quoteText()),"_blank");
 }
-function toast(msg){$("toast").textContent=msg;$("toast").style.display="block";setTimeout(()=>$("toast").style.display="none",1800)}
+
+function toast(msg){
+  const el=$("toast");
+  el.textContent=msg;
+  el.classList.add("show");
+  setTimeout(()=>el.classList.remove("show"),2500);
+}
+
 init();
 </script>
 </body>

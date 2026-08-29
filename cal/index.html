@@ -1094,18 +1094,24 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
         <div class="form-group">
           <label>Tipo de tasa Venezuela</label>
           <select id="venezuelaRateType">
-            <option value="bcv">BCV oficial</option>
-            <option value="banco">Banco / subasta operativa</option>
-            <option value="kontigo">Kontigo / USDC referencial</option>
-            <option value="usdt">USDT / mercado P2P</option>
+            <option value="bcv" selected>BCV oficial (Bs. 791,32)</option>
+            <option value="binance">Binance P2P (Bs. 953,99)</option>
+            <option value="bybit">Bybit P2P (Bs. 953,50)</option>
+            <option value="promedio">Dólar Promedio (Bs. 899,60)</option>
+            <option value="paypal">Paypal (Bs. 878,00)</option>
+            <option value="zelle">Zelle (Bs. 932,00)</option>
+            <option value="usdt">USDT / mercado P2P (Ref.)</option>
           </select>
-          <p class="note" style="margin-top:8px">Para Venezuela puedes calcular con BCV oficial, referencia bancaria/subasta, Kontigo/USDC o USDT. Las tasas cripto y Kontigo son referenciales: si tu app o banco muestra otra tasa, usa la tasa manual.</p>
+          <p class="note" style="margin-top:8px">Tasas de referencia del mercado venezolano actualizadas al 20/04/2026. La tasa del BCV es oficial.</p>
         </div>
         <div class="ve-rate-grid" id="venezuelaRateCards">
-          <button type="button" class="ve-rate-card" data-rate-type="bcv" onclick="selectVenezuelaRate('bcv')">BCV<strong>Actual</strong></button>
-          <button type="button" class="ve-rate-card" data-rate-type="banco" onclick="selectVenezuelaRate('banco')">Banco / Subasta<strong>BCV</strong></button>
-          <button type="button" class="ve-rate-card" data-rate-type="kontigo" onclick="selectVenezuelaRate('kontigo')">Kontigo / USDC<strong>Referencial</strong></button>
-          <button type="button" class="ve-rate-card" data-rate-type="usdt" onclick="selectVenezuelaRate('usdt')">USDT P2P<strong>Actual</strong></button>
+          <button type="button" class="ve-rate-card active" data-rate-type="bcv" onclick="selectVenezuelaRate('bcv', 791.32)">BCV<strong>791,32</strong></button>
+          <button type="button" class="ve-rate-card" data-rate-type="binance" onclick="selectVenezuelaRate('binance', 953.99)">Binance P2P<strong>953,99</strong></button>
+          <button type="button" class="ve-rate-card" data-rate-type="bybit" onclick="selectVenezuelaRate('bybit', 953.50)">Bybit P2P<strong>953,50</strong></button>
+          <button type="button" class="ve-rate-card" data-rate-type="promedio" onclick="selectVenezuelaRate('promedio', 899.60)">Promedio<strong>899,60</strong></button>
+          <button type="button" class="ve-rate-card" data-rate-type="paypal" onclick="selectVenezuelaRate('paypal', 878.00)">Paypal<strong>878,00</strong></button>
+          <button type="button" class="ve-rate-card" data-rate-type="zelle" onclick="selectVenezuelaRate('zelle', 932.00)">Zelle<strong>932,00</strong></button>
+          <button type="button" class="ve-rate-card" data-rate-type="usdt" onclick="selectVenezuelaRate('usdt', 953.99)">USDT P2P<strong>953,99</strong></button>
         </div>
       </div>
 
@@ -1123,7 +1129,7 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
       </div>
 
       <div class="mini-grid">
-        <div class="mini-item">Venezuela<strong>BCV</strong></div>
+        <div class="mini-item">Venezuela<strong>BCV 791,32</strong></div>
         <div class="mini-item">Colombia<strong>TRM</strong></div>
         <div class="mini-item">Global<strong>Moneda local</strong></div>
       </div>
@@ -1364,7 +1370,7 @@ const countries = {
 };
 
 // ============================================================
-// PRODUCTOS Y TRATAMIENTOS (datos completos)
+// PRODUCTOS Y TRATAMIENTOS
 // ============================================================
 
 const products = [
@@ -1546,7 +1552,6 @@ function pricePair(product) {
   const rate = getCurrentRate();
   const c = getCountry();
   
-  // Determinar qué precio usar basado en currentPriceType
   const usedUSD = currentPriceType === 'distribuidor' ? distributorUSD : clientUSD;
   const otherUSD = currentPriceType === 'distribuidor' ? clientUSD : distributorUSD;
   const diffUSD = otherUSD - usedUSD;
@@ -1572,7 +1577,7 @@ function pricePair(product) {
 }
 
 // ============================================================
-// FUNCIONES DE TASA
+// FUNCIONES DE TASA (VENEZUELA ACTUALIZADA)
 // ============================================================
 
 function setRate(rate, source) {
@@ -1594,19 +1599,30 @@ async function fetchJson(url) {
   return await r.json();
 }
 
-const VE_RATE_FALLBACKS = {
-  bcv: { valor: 587.4059, fuente: "BCV oficial · respaldo local", fecha: "2026-06-15" },
-  banco: { valor: 587.4059, fuente: "Banco/subasta · referencia BCV", fecha: "2026-06-15" },
-  kontigo: { valor: 794.26, fuente: "Kontigo/USDC · referencia mercado USDT", fecha: "2026-06-13" },
-  usdt: { valor: 794.26, fuente: "USDT/VES · referencia mercado", fecha: "2026-06-13" }
-};
+function selectVenezuelaRate(type, rateValue) {
+  const selector = document.getElementById('venezuelaRateType');
+  if (selector) {
+    selector.value = type;
+  }
 
-function parseVenezuelaNumber(value) {
-  if (value === null || value === undefined) return null;
-  if (typeof value === "number") return value;
-  const clean = String(value).replace(/[^\d,.-]/g, "").replace(/\.(?=\d{3}(\D|$))/g, "").replace(",", ".");
-  const n = Number(clean);
-  return Number.isFinite(n) && n > 0 ? n : null;
+  document.querySelectorAll('.ve-rate-card').forEach(card => {
+    card.classList.toggle('active', card.dataset.rateType === type);
+  });
+
+  if (rateValue) {
+    const labels = {
+      'bcv': 'BCV oficial',
+      'binance': 'Binance P2P',
+      'bybit': 'Bybit P2P',
+      'promedio': 'Dólar Promedio',
+      'paypal': 'Paypal',
+      'zelle': 'Zelle',
+      'usdt': 'USDT/VES mercado'
+    };
+    setRate(rateValue, labels[type] + ' · Monitor Dólar');
+  } else {
+    fetchRate();
+  }
 }
 
 async function fetchRate() {
@@ -1624,11 +1640,32 @@ async function fetchRate() {
     }
 
     if (countrySelect.value === "VE") {
-      const rateType = document.getElementById("venezuelaRateType")?.value || "bcv";
-      // Simulación de tasa para Venezuela
-      const result = { rate: 587.4059, source: "BCV oficial · respaldo local" };
-      const labels = { bcv: "BCV oficial", banco: "Banco/subasta", kontigo: "Kontigo/USDC referencial", usdt: "USDT/VES mercado" };
-      setRate(result.rate, labels[rateType] + " · " + result.source);
+      const rateType = document.getElementById('venezuelaRateType')?.value || 'bcv';
+      const rates = {
+        'bcv': 791.32,
+        'binance': 953.99,
+        'bybit': 953.50,
+        'promedio': 899.60,
+        'paypal': 878.00,
+        'zelle': 932.00,
+        'usdt': 953.99
+      };
+      const labels = {
+        'bcv': 'BCV oficial',
+        'binance': 'Binance P2P',
+        'bybit': 'Bybit P2P',
+        'promedio': 'Dólar Promedio',
+        'paypal': 'Paypal',
+        'zelle': 'Zelle',
+        'usdt': 'USDT/VES mercado'
+      };
+      const rate = rates[rateType] || 791.32;
+      setRate(rate, labels[rateType] + ' · Monitor Dólar');
+      
+      // Marcar tarjeta activa
+      document.querySelectorAll('.ve-rate-card').forEach(card => {
+        card.classList.toggle('active', card.dataset.rateType === rateType);
+      });
       return;
     }
 
@@ -1644,7 +1681,6 @@ async function fetchRate() {
           return;
         }
       } catch (e) { }
-      // Fallback para Colombia
       setRate(3200, "TRM Colombia · estimada");
       return;
     }
@@ -1766,11 +1802,9 @@ function renderCart() {
     const qvTotal = item.qv * item.qty;
     const vatText = item.vat !== null ? " · IVA " + item.vat + "%" : "";
 
-    // Calcular precios basados en el tipo de precio actual
     const distTotalUSD = Number(p?.distribuidor || item.distribuidor || 0) * item.qty;
     const pubTotalUSD = Number(p?.publico || item.publico || 0) * item.qty;
     
-    // El precio usado en el carrito es el que se seleccionó
     const usedTotalUSD = item.unit * item.qty;
     const otherTotalUSD = currentPriceType === 'distribuidor' ? pubTotalUSD : distTotalUSD;
     const diffTotalUSD = otherTotalUSD - usedTotalUSD;
@@ -1779,7 +1813,6 @@ function renderCart() {
     const otherLocal = c.currency === "USD" ? otherTotalUSD : (rate ? otherTotalUSD * rate : null);
     const diffLocal = c.currency === "USD" ? diffTotalUSD : (rate ? diffTotalUSD * rate : null);
 
-    // Mostrar distribuidor y cliente siempre, resaltando el usado
     return `
       <div class="cart-item">
         <div class="cart-item-header">
@@ -1993,10 +2026,6 @@ function highlightShipping(qv) {
   }
 }
 
-// ============================================================
-// FUNCIONES DE ACTUALIZACIÓN GLOBAL
-// ============================================================
-
 function updateAll() {
   updateUsdPrice();
   renderProductPreview();
@@ -2100,6 +2129,12 @@ function updateVenezuelaRateVisibility() {
   const box = document.getElementById("venezuelaRateBox");
   const isVE = countrySelect.value === "VE";
   if (box) box.style.display = isVE ? "block" : "none";
+  if (isVE) {
+    const rateType = document.getElementById("venezuelaRateType")?.value || "bcv";
+    document.querySelectorAll(".ve-rate-card").forEach(card => {
+      card.classList.toggle("active", card.dataset.rateType === rateType);
+    });
+  }
 }
 
 function markSelectedVenezuelaRate() {
@@ -2107,17 +2142,6 @@ function markSelectedVenezuelaRate() {
   document.querySelectorAll(".ve-rate-card").forEach(card => {
     card.classList.toggle("active", card.dataset.rateType === selected);
   });
-}
-
-function selectVenezuelaRate(type) {
-  const selector = document.getElementById("venezuelaRateType");
-  if (selector) {
-    selector.value = type;
-    markSelectedVenezuelaRate();
-    currentRate = null;
-    document.getElementById("manualRate").value = "";
-    fetchRate();
-  }
 }
 
 // ============================================================

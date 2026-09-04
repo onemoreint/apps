@@ -37,7 +37,21 @@
   NotebookLM abre ese notebook -> botón "Compartir" (arriba a la derecha) -> activa acceso público
   o "cualquiera con el enlace" -> Lector. Si ya lo compartiste, no necesitas hacer nada más.
 
-  El logo "1M" es un marcador temporal: mandame tu archivo de logo (PNG o SVG) y te lo dejo insertado.
+  RESUELTO: se agregó el panel "Calculadoras de precios" justo al lado del módulo de IA (arriba se
+  ven una junto a la otra; en el celular la IA queda primero y las calculadoras justo debajo), con 3
+  botones reales: "Cotizador VE · CO · Europa" (cal1 — precios locales con tasa BCV/TRM/EUR),
+  "Comparador Global · 50+ países" (cal — distribuidor vs. cliente en cualquier mercado) y
+  "Calculadora Europa · Con IVA" (CALEU — tus 24 países europeos). El título y la descripción de cada
+  una salieron de revisar lo que hace cada calculadora real.
+
+  ⚠ PENDIENTE — LOGO: el enlace que mandaste es una miniatura de caché de Google Imágenes
+  (encrypted-tbn0.gstatic.com) — ese tipo de enlace no es la imagen real, es solo una vista previa de
+  baja resolución, y además mis herramientas no pueden descargar imágenes desde enlaces externos (solo
+  puedo trabajar con archivos que subas directo al chat). Para insertar tu logo real: sube aquí el
+  archivo de imagen (PNG o SVG, fondo transparente si tienes) y te lo dejo puesto en el header en menos
+  de un minuto, reemplazando el círculo "1M".
+
+  El logo "1M" sigue de marcador temporal hasta que subas el archivo real.
 -->
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
@@ -266,9 +280,13 @@
   footer .row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
   footer p{font-size:12.5px;color:var(--ink-soft);font-family:'JetBrains Mono',monospace;margin:0;}
 
+  /* AI + calculators row */
+  .tools-row{padding:22px 0 0;display:grid;grid-template-columns:1.5fr 1fr;gap:20px;align-items:stretch;}
+  @media (max-width:980px){.tools-row{grid-template-columns:1fr;}}
+
   /* AI spotlight (NotebookLM) */
-  .ai-spotlight-wrap{padding:22px 0 0;}
-  .ai-spotlight{position:relative;display:flex;align-items:center;gap:26px;background:linear-gradient(135deg, color-mix(in srgb, var(--accent-2) 16%, var(--surface)), color-mix(in srgb, var(--accent) 10%, var(--surface)));border:1.5px solid var(--accent-2);border-radius:22px;padding:28px 32px;box-shadow:0 0 0 5px color-mix(in srgb, var(--accent-2) 14%, transparent), var(--shadow);}
+  .ai-spotlight-wrap{height:100%;}
+  .ai-spotlight{position:relative;height:100%;display:flex;align-items:center;gap:26px;background:linear-gradient(135deg, color-mix(in srgb, var(--accent-2) 16%, var(--surface)), color-mix(in srgb, var(--accent) 10%, var(--surface)));border:1.5px solid var(--accent-2);border-radius:22px;padding:28px 32px;box-shadow:0 0 0 5px color-mix(in srgb, var(--accent-2) 14%, transparent), var(--shadow);}
   @media (max-width:700px){.ai-spotlight{flex-direction:column;text-align:center;padding:34px 22px 26px;}}
   .ai-badge{position:absolute;top:-15px;left:32px;background:var(--accent-2);color:#fff;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700;letter-spacing:.06em;padding:6px 13px;border-radius:100px;box-shadow:0 4px 10px -2px rgba(0,0,0,.35);}
   @media (max-width:700px){.ai-badge{left:50%;transform:translateX(-50%);}}
@@ -289,6 +307,24 @@
   .ai-cta svg{width:17px;height:17px;}
   @keyframes aiPulse{0%{transform:scale(.72);opacity:.75;}100%{transform:scale(1.55);opacity:0;}}
   @keyframes aiBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(7px);}}
+
+  /* calculators panel */
+  .calc-panel{position:relative;background:linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, var(--surface)), color-mix(in srgb, var(--accent) 4%, var(--surface)));border:1.5px solid var(--accent);border-radius:22px;padding:26px 20px 20px;display:flex;flex-direction:column;gap:10px;box-shadow:0 0 0 5px color-mix(in srgb, var(--accent) 10%, transparent), var(--shadow);}
+  .calc-badge{position:absolute;top:-15px;left:26px;background:var(--accent);color:#fff;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700;letter-spacing:.06em;padding:6px 13px;border-radius:100px;box-shadow:0 4px 10px -2px rgba(0,0,0,.35);}
+  .calc-panel-head{margin:6px 0 4px;}
+  .calc-panel-head h3{font-size:17px;margin:0 0 4px;}
+  .calc-panel-head p{font-size:12.5px;color:var(--ink-soft);margin:0;}
+  .calc-btn{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 12px;text-decoration:none;color:var(--ink);transition:transform .12s,box-shadow .12s,border-color .12s;}
+  .calc-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(21,31,46,.12);border-color:var(--accent);}
+  .calc-btn .ic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;}
+  .calc-btn .ic svg{width:22px;height:22px;}
+  .calc-btn.c1 .ic{background:linear-gradient(155deg,#2C57B8,#193B87);}
+  .calc-btn.c2 .ic{background:linear-gradient(155deg,#5F3FA8,#3D2570);}
+  .calc-btn.c3 .ic{background:linear-gradient(155deg,#1E9E6B,#12724D);}
+  .calc-btn .tx{flex:1;min-width:0;}
+  .calc-btn .tx .t{display:block;font-size:13.5px;font-weight:700;line-height:1.25;}
+  .calc-btn .tx .d{display:block;font-size:11px;color:var(--ink-soft);line-height:1.35;margin-top:3px;}
+  .calc-btn .go{width:18px;height:18px;color:var(--accent);flex-shrink:0;}
 
   /* floating WhatsApp button */
   .wa-float{position:fixed;right:20px;bottom:20px;z-index:70;display:flex;align-items:center;gap:11px;background:#25D366;color:#fff;padding:13px 20px 13px 13px;border-radius:100px;text-decoration:none;box-shadow:0 12px 30px -8px rgba(37,211,102,.7),0 3px 10px rgba(0,0,0,.25);}
@@ -363,28 +399,53 @@
   </div>
 </header>
 
-<section class="ai-spotlight-wrap wrap" id="notebooklm">
-  <div class="ai-spotlight">
-    <span class="ai-badge">✨ IA · NUEVO</span>
-    <div class="ai-arrow">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4c-2 8-8 13-16 15"/><path d="M9 15.5 4 19l1.5-5.8"/></svg>
-      <span>¡Pregúntale!</span>
+<section class="tools-row wrap">
+  <div class="ai-spotlight-wrap" id="notebooklm">
+    <div class="ai-spotlight">
+      <span class="ai-badge">✨ IA · NUEVO</span>
+      <div class="ai-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4c-2 8-8 13-16 15"/><path d="M9 15.5 4 19l1.5-5.8"/></svg>
+        <span>¡Pregúntale!</span>
+      </div>
+      <div class="ai-logo">
+        <span class="ai-logo-ring"></span>
+        <span class="ai-logo-ring ring2"></span>
+        <span class="ai-logo-core"></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8L12 2.5z"/><path d="M19 14.5l.9 2.2 2.2.9-2.2.9-.9 2.2-.9-2.2-2.2-.9 2.2-.9.9-2.2z"/></svg>
+      </div>
+      <div class="ai-copy">
+        <span class="eyebrow">NotebookLM · Cerebro del negocio</span>
+        <h3>Una IA que ya se leyó todo el negocio por ti</h3>
+        <p>Productos, precios, pagos, comisiones, rangos y políticas — pregúntale lo que quieras y responde al instante con fuentes reales de la biblioteca.</p>
+        <a class="ai-cta" href="https://notebook.google.com/notebook/98c9a091-90a3-43ed-bab0-a0e2789c3954?authuser=1" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          Preguntar a la IA ahora
+        </a>
+      </div>
     </div>
-    <div class="ai-logo">
-      <span class="ai-logo-ring"></span>
-      <span class="ai-logo-ring ring2"></span>
-      <span class="ai-logo-core"></span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8L12 2.5z"/><path d="M19 14.5l.9 2.2 2.2.9-2.2.9-.9 2.2-.9-2.2-2.2-.9 2.2-.9.9-2.2z"/></svg>
+  </div>
+
+  <div class="calc-panel" id="calculadoras">
+    <span class="calc-badge">🧮 HERRAMIENTAS</span>
+    <div class="calc-panel-head">
+      <h3>Calculadoras de precios</h3>
+      <p>Cotiza al instante en la moneda de tu cliente, sin hacer cuentas a mano.</p>
     </div>
-    <div class="ai-copy">
-      <span class="eyebrow">NotebookLM · Cerebro del negocio</span>
-      <h3>Una IA que ya se leyó todo el negocio por ti</h3>
-      <p>Productos, precios, pagos, comisiones, rangos y políticas — pregúntale lo que quieras y responde al instante con fuentes reales de la biblioteca.</p>
-      <a class="ai-cta" href="https://notebook.google.com/notebook/98c9a091-90a3-43ed-bab0-a0e2789c3954?authuser=1" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-        Preguntar a la IA ahora
-      </a>
-    </div>
+    <a class="calc-btn c1" href="https://onemoreint.github.io/apps/cal1/index.html" target="_blank" rel="noopener">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2.5" width="14" height="19" rx="2.2"/><path d="M8 6.5h8"/><circle cx="8.4" cy="11" r="1"/><circle cx="12" cy="11" r="1"/><circle cx="15.6" cy="11" r="1"/><circle cx="8.4" cy="14.8" r="1"/><circle cx="12" cy="14.8" r="1"/><circle cx="15.6" cy="14.8" r="1"/><path d="M8 18.3h8"/></svg></span>
+      <span class="tx"><span class="t">Cotizador VE · CO · Europa</span><span class="d">Precios al instante en bolívares, pesos o euros, con la tasa BCV, TRM o EUR del día.</span></span>
+      <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+    </a>
+    <a class="calc-btn c2" href="https://onemoreint.github.io/apps/cal/index.html" target="_blank" rel="noopener">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.6 3.8 5.8 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.8-3.8-9S9.5 5.6 12 3z"/></svg></span>
+      <span class="tx"><span class="t">Comparador Global · 50+ países</span><span class="d">Precio distribuidor vs. cliente en cualquier mercado, con margen y envío incluidos.</span></span>
+      <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+    </a>
+    <a class="calc-btn c3" href="https://onemoreint.github.io/apps/CALEU/" target="_blank" rel="noopener">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 21 8H3l9-5.5z"/><path d="M4.5 8v10M9 8v10M15 8v10M19.5 8v10"/><path d="M2.5 21.5h19"/></svg></span>
+      <span class="tx"><span class="t">Calculadora Europa · Con IVA</span><span class="d">Precios exactos para tus 24 países europeos, con IVA ya incluido.</span></span>
+      <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+    </a>
   </div>
 </section>
 

@@ -1,17 +1,26 @@
 <title>One More Hub 2.0</title>
 <!--
   YA RESUELTOS: YouTube, Facebook, Telegram y WhatsApp (comunidad y contacto directo) en la sección
-  "Comunidad" y en los botones flotantes ya apuntan a tus enlaces reales.
+  "Comunidad" ya apuntan a tus enlaces reales. Back Office -> https://onemore.global/office/login
+  y el botón "Únete aquí" -> https://onemore.global/!aasespr ya están conectados. Cada tarjeta de la
+  biblioteca ahora es un enlace real: al tocarla, el archivo se abre en una pestaña nueva con la app
+  predeterminada del dispositivo (así los videos se reproducen y los PDF/imágenes se visualizan sin
+  pasos extra) y el botón "Compartir" ahora copia/comparte el enlace del archivo.
   Ojo con Telegram: https://t.me/c/2485498303/46 es un enlace interno de canal privado — solo funciona
   para quien YA es miembro. Si quieres que alguien nuevo pueda unirse desde aquí, pásame el enlace de
   invitación público (normalmente empieza con t.me/joinchat/... o t.me/+...) y lo cambio.
 
   ANTES DE PUBLICAR, busca y reemplaza estos marcadores restantes (Ctrl+F):
-  1. TODO-DRIVE       -> enlace real de tu carpeta de Google Drive
-  2. TODO-NOTEBOOKLM   -> enlace real de tu notebook de NotebookLM
-  3. TODO-BACKOFFICE   -> enlace real de tu Premium Office / Back Office
-  4. RESOURCES         -> dentro de <script>, reemplaza la lista de ejemplo por tus archivos reales
-     (cada objeto es: {t: titulo, type: pdf|video|img|redes, tag: categoria, d: detalle})
+  1. TODO-DRIVE        -> enlace real de tu carpeta de Google Drive (botón "Abrir Drive")
+  2. TODO-NOTEBOOKLM    -> enlace real de tu notebook de NotebookLM
+  3. TODO-ARCHIVO-01 ... TODO-ARCHIVO-21 -> dentro de <script>, en la lista RESOURCES, cada objeto
+     tiene ahora un campo "url": pega ahí el enlace para compartir de CADA archivo real (en Google
+     Drive: clic derecho sobre el archivo -> "Compartir" -> "Copiar enlace", con acceso puesto en
+     "Cualquier persona con el enlace"). Ese enlace es el que se abre al tocar la tarjeta.
+     Ejemplo: {t:"Ficha técnica GlutaNAD+", type:"pdf", tag:"glutanad", d:"actualizado ago 26",
+     url:"https://drive.google.com/file/d/TU_ID_AQUI/view"}
+     También puedes agregar, quitar o reordenar objetos de esta lista libremente para reflejar tu
+     biblioteca real (ahora mismo son 21 archivos de ejemplo).
   El logo "1M" es un marcador temporal: mandame tu archivo de logo (PNG o SVG) y te lo dejo insertado.
 -->
 <style>
@@ -100,6 +109,9 @@
   .action-tile.primary:hover{background:var(--accent-ink);}
   .action-tile:not(.primary) svg{color:var(--accent-2);}
   .action-tile:not(.primary):hover{background:var(--surface-2);}
+  .action-tile.join{background:var(--accent-2);border-color:var(--accent-2);color:#fff;}
+  .action-tile.join svg{color:#fff;}
+  .action-tile.join:hover{background:#B8791A;}
 
   /* testimonial + contact */
   .feature{padding:48px 0 0;}
@@ -161,12 +173,17 @@
   @media (max-width:460px){.grid{grid-template-columns:1fr;}}
   .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);}
   .card.hidden{display:none;}
-  .thumb{height:92px;display:flex;align-items:center;justify-content:center;}
-  .thumb svg{width:38px;height:38px;color:#fff;}
+  .card-link{display:flex;flex-direction:column;flex:1;color:inherit;text-decoration:none;cursor:pointer;}
+  .card-link:hover .t{color:var(--accent);}
+  .thumb{position:relative;height:92px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .thumb svg{width:38px;height:38px;color:#fff;transition:opacity .15s;}
   .thumb.pdf{background:linear-gradient(135deg,#EDAE4E,#B8791A);}
   .thumb.video{background:linear-gradient(135deg,#5C82E8,#2C57B8);}
   .thumb.img{background:linear-gradient(135deg,#9C82E0,#5F3FA8);}
   .thumb.redes{background:linear-gradient(135deg,#E077A3,#A83A66);}
+  .thumb-open{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(21,31,46,.62);color:#fff;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;opacity:0;transition:opacity .15s;}
+  .card-link:hover .thumb-open{opacity:1;}
+  .card-link:hover .thumb svg{opacity:0;}
   .card-body{padding:14px 14px 14px;display:flex;flex-direction:column;gap:8px;flex:1;}
   .type-badge{display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);}
   .type-badge .dot{width:7px;height:7px;border-radius:50%;}
@@ -281,7 +298,7 @@
       <button class="iconbtn" id="themeBtn" title="Cambiar tema" aria-label="Cambiar tema">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"/></svg>
       </button>
-      <a class="btn-office" href="TODO-BACKOFFICE" target="_blank" rel="noopener">
+      <a class="btn-office" href="https://onemore.global/office/login" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.2 13 13l-3.8 1.8L11 11l3.8-1.8z"/></svg>
         Back Office
       </a>
@@ -301,10 +318,14 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
         <input id="q" type="text" placeholder="Buscar en la biblioteca… ej. GlutaNAD+, bienvenida, QV" />
       </div>
-      <div class="action-tiles" style="grid-template-columns:1fr;max-width:220px;">
+      <div class="action-tiles">
         <a class="action-tile primary" href="TODO-DRIVE" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7.2A2 2 0 0 1 5.5 5.2h4l2 2h7a2 2 0 0 1 2 2v7.6a2 2 0 0 1-2 2H5.5a2 2 0 0 1-2-2V7.2z"/></svg>
           Abrir Drive
+        </a>
+        <a class="action-tile join" href="https://onemore.global/!aasespr" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/><path d="M2.5 20c.8-3.6 3.4-5.8 6.5-5.8s5.7 2.2 6.5 5.8"/><path d="M18.5 8v6M21.5 11h-6"/></svg>
+          Únete aquí
         </a>
       </div>
     </div>
@@ -491,27 +512,27 @@
 <script>
 (function(){
   var RESOURCES = [
-    {t:"Ficha técnica GlutaNAD+", type:"pdf", tag:"glutanad", d:"actualizado ago 26"},
-    {t:"Guion de bienvenida — primeros 30 días", type:"pdf", tag:"negocio", d:"actualizado jul 26"},
-    {t:"Video: tour de la oficina virtual", type:"video", tag:"negocio", d:"6:40"},
-    {t:"Comparativo QV/CV por rango", type:"pdf", tag:"negocio", d:"actualizado jun 26"},
-    {t:"PNG — energía sostenida, ficha rápida", type:"pdf", tag:"energia", d:"actualizado ago 26"},
-    {t:"Video: cómo tomar tu primer pedido", type:"video", tag:"negocio", d:"4:12"},
-    {t:"Dekamin — alivio y descanso", type:"pdf", tag:"dolor", d:"actualizado may 26"},
-    {t:"Melatonin Plus — guía de uso", type:"pdf", tag:"sueno", d:"actualizado jul 26"},
-    {t:"Infografía: control de peso en 84 días", type:"img", tag:"peso", d:"1.2 MB"},
-    {t:"Video: retiro de comisiones paso a paso", type:"video", tag:"negocio", d:"5:03"},
-    {t:"B12 Plus — energía y enfoque", type:"pdf", tag:"energia", d:"actualizado ago 26"},
-    {t:"Carrusel Instagram — testimonios reales", type:"redes", tag:"negocio", d:"pack x6"},
-    {t:"Omevia — bienestar articular", type:"pdf", tag:"dolor", d:"actualizado abr 26"},
-    {t:"Historias para WhatsApp Status", type:"redes", tag:"producto", d:"pack x8"},
-    {t:"Video: registro paso a paso en Premium Office", type:"video", tag:"negocio", d:"3:20"},
-    {t:"Slim Style — guía de activación", type:"pdf", tag:"peso", d:"actualizado mar 26"},
-    {t:"Plan de compensación — Bono 4x4 y 2+1", type:"pdf", tag:"negocio", d:"actualizado ago 26"},
-    {t:"Video: manejo del estrés con rutina ONE MORE", type:"video", tag:"estres", d:"4:55"},
-    {t:"Preguntas frecuentes del distribuidor", type:"pdf", tag:"info", d:"actualizado sep 26"},
-    {t:"Night Collagen — rutina nocturna", type:"pdf", tag:"sueno", d:"actualizado jun 26"},
-    {t:"Catálogo completo — precios y CV/QV", type:"pdf", tag:"producto", d:"actualizado sep 26"}
+    {t:"Ficha técnica GlutaNAD+", type:"pdf", tag:"glutanad", d:"actualizado ago 26", url:"TODO-ARCHIVO-01"},
+    {t:"Guion de bienvenida — primeros 30 días", type:"pdf", tag:"negocio", d:"actualizado jul 26", url:"TODO-ARCHIVO-02"},
+    {t:"Video: tour de la oficina virtual", type:"video", tag:"negocio", d:"6:40", url:"TODO-ARCHIVO-03"},
+    {t:"Comparativo QV/CV por rango", type:"pdf", tag:"negocio", d:"actualizado jun 26", url:"TODO-ARCHIVO-04"},
+    {t:"PNG — energía sostenida, ficha rápida", type:"pdf", tag:"energia", d:"actualizado ago 26", url:"TODO-ARCHIVO-05"},
+    {t:"Video: cómo tomar tu primer pedido", type:"video", tag:"negocio", d:"4:12", url:"TODO-ARCHIVO-06"},
+    {t:"Dekamin — alivio y descanso", type:"pdf", tag:"dolor", d:"actualizado may 26", url:"TODO-ARCHIVO-07"},
+    {t:"Melatonin Plus — guía de uso", type:"pdf", tag:"sueno", d:"actualizado jul 26", url:"TODO-ARCHIVO-08"},
+    {t:"Infografía: control de peso en 84 días", type:"img", tag:"peso", d:"1.2 MB", url:"TODO-ARCHIVO-09"},
+    {t:"Video: retiro de comisiones paso a paso", type:"video", tag:"negocio", d:"5:03", url:"TODO-ARCHIVO-10"},
+    {t:"B12 Plus — energía y enfoque", type:"pdf", tag:"energia", d:"actualizado ago 26", url:"TODO-ARCHIVO-11"},
+    {t:"Carrusel Instagram — testimonios reales", type:"redes", tag:"negocio", d:"pack x6", url:"TODO-ARCHIVO-12"},
+    {t:"Omevia — bienestar articular", type:"pdf", tag:"dolor", d:"actualizado abr 26", url:"TODO-ARCHIVO-13"},
+    {t:"Historias para WhatsApp Status", type:"redes", tag:"producto", d:"pack x8", url:"TODO-ARCHIVO-14"},
+    {t:"Video: registro paso a paso en Premium Office", type:"video", tag:"negocio", d:"3:20", url:"TODO-ARCHIVO-15"},
+    {t:"Slim Style — guía de activación", type:"pdf", tag:"peso", d:"actualizado mar 26", url:"TODO-ARCHIVO-16"},
+    {t:"Plan de compensación — Bono 4x4 y 2+1", type:"pdf", tag:"negocio", d:"actualizado ago 26", url:"TODO-ARCHIVO-17"},
+    {t:"Video: manejo del estrés con rutina ONE MORE", type:"video", tag:"estres", d:"4:55", url:"TODO-ARCHIVO-18"},
+    {t:"Preguntas frecuentes del distribuidor", type:"pdf", tag:"info", d:"actualizado sep 26", url:"TODO-ARCHIVO-19"},
+    {t:"Night Collagen — rutina nocturna", type:"pdf", tag:"sueno", d:"actualizado jun 26", url:"TODO-ARCHIVO-20"},
+    {t:"Catálogo completo — precios y CV/QV", type:"pdf", tag:"producto", d:"actualizado sep 26", url:"TODO-ARCHIVO-21"}
   ];
 
   var ICONS = {
@@ -557,15 +578,17 @@
       card.className = 'card';
       var isSaved = saved[i];
       card.innerHTML =
-        '<div class="thumb '+r.type+'">'+ICONS[r.type]+'</div>'+
-        '<div class="card-body">'+
-          '<div class="type-badge '+r.type+'"><span class="dot"></span>'+TYPE_LABEL[r.type]+'</div>'+
-          '<div class="t">'+r.t+'</div>'+
-          '<div class="d">'+r.d+'</div>'+
-          '<div class="card-foot">'+
-            '<div class="mini-btn mb-save save-btn '+(isSaved?'saved':'')+'" data-i="'+i+'">'+(isSaved?ICONS.starFilled:ICONS.star)+'<span>Guardar</span></div>'+
-            '<div class="mini-btn mb-share">'+ICONS.share+'<span>Compartir</span></div>'+
+        '<a class="card-link" href="'+r.url+'" target="_blank" rel="noopener" title="Abrir con la app predeterminada del dispositivo">'+
+          '<div class="thumb '+r.type+'">'+ICONS[r.type]+'<span class="thumb-open">'+(r.type==='video'?'▶ Reproducir':'Abrir archivo')+'</span></div>'+
+          '<div class="card-body">'+
+            '<div class="type-badge '+r.type+'"><span class="dot"></span>'+TYPE_LABEL[r.type]+'</div>'+
+            '<div class="t">'+r.t+'</div>'+
+            '<div class="d">'+r.d+'</div>'+
           '</div>'+
+        '</a>'+
+        '<div class="card-foot">'+
+          '<div class="mini-btn mb-save save-btn '+(isSaved?'saved':'')+'" data-i="'+i+'">'+(isSaved?ICONS.starFilled:ICONS.star)+'<span>Guardar</span></div>'+
+          '<div class="mini-btn mb-share share-btn" data-i="'+i+'">'+ICONS.share+'<span>Compartir</span></div>'+
         '</div>';
       grid.appendChild(card);
     });
@@ -577,6 +600,23 @@
       btn.addEventListener('click', function(){
         saved[this.dataset.i] = !saved[this.dataset.i];
         render();
+      });
+    });
+
+    grid.querySelectorAll('.share-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var r = RESOURCES[this.dataset.i];
+        var shareText = r.t + ' — Biblioteca ONE MORE';
+        if(navigator.share){
+          navigator.share({title:r.t, text:shareText, url:r.url}).catch(function(){});
+        } else if(navigator.clipboard){
+          navigator.clipboard.writeText(r.url).then(function(){
+            var label = btn.querySelector('span');
+            var original = label.textContent;
+            label.textContent = 'Copiado';
+            setTimeout(function(){ label.textContent = original; }, 1400);
+          }).catch(function(){});
+        }
       });
     });
   }

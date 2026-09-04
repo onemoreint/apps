@@ -6,32 +6,32 @@
   <title>Calculadora One More Global | Comparador de precios V15</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
 :root{
-  --bg:#0a0a0f;
-  --bg-card:#12121a;
-  --bg-elevated:#1a1a26;
-  --bg-hover:#222233;
-  --border:rgba(214,180,106,0.18);
-  --border-hover:rgba(214,180,106,0.35);
-  --gold:#d6b46a;
-  --gold-light:#f8dc8b;
-  --gold-dim:rgba(214,180,106,0.12);
-  --text:#f0f0f5;
-  --text-secondary:#8b8b9e;
-  --text-muted:#5a5a6e;
-  --green:#25D366;
-  --green-dim:rgba(37,211,102,0.12);
-  --red:#ff5b5b;
-  --red-dim:rgba(255,91,91,0.12);
-  --shadow:0 8px 32px rgba(0,0,0,0.4);
-  --shadow-lg:0 16px 48px rgba(0,0,0,0.5);
+  --bg:#0a0a12;
+  --bg-card:#14141f;
+  --bg-elevated:#1c1c2c;
+  --bg-hover:#262640;
+  --border:rgba(255,177,42,0.25);
+  --border-hover:rgba(255,177,42,0.5);
+  --gold:#FFB020;
+  --gold-light:#FFDD55;
+  --gold-dim:rgba(255,177,42,0.16);
+  --text:#f5f5fb;
+  --text-secondary:#9797b3;
+  --text-muted:#61617e;
+  --green:#12E28A;
+  --green-dim:rgba(18,226,138,0.14);
+  --red:#FF4D6D;
+  --red-dim:rgba(255,77,109,0.14);
+  --blue:#3BC9F5;
+  --blue-dim:rgba(59,201,245,0.14);
+  --shadow:0 8px 32px rgba(0,0,0,0.45);
+  --shadow-lg:0 16px 48px rgba(255,140,20,0.12),0 16px 48px rgba(0,0,0,0.55);
   --radius-sm:10px;
   --radius:16px;
   --radius-lg:20px;
   --radius-xl:24px;
 }
-
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{
@@ -43,7 +43,6 @@ body{
   padding:20px;
   padding-bottom:calc(24px + env(safe-area-inset-bottom));
 }
-
 @keyframes fadeInUp{
   from{opacity:0;transform:translateY(24px)}
   to{opacity:1;transform:translateY(0)}
@@ -64,15 +63,12 @@ body{
   from{opacity:0;transform:translateX(-50%) translateY(20px)}
   to{opacity:1;transform:translateX(-50%) translateY(0)}
 }
-
 .animate-in{animation:fadeInUp 0.5s ease-out forwards;opacity:0}
 .delay-1{animation-delay:0.1s}
 .delay-2{animation-delay:0.2s}
 .delay-3{animation-delay:0.3s}
 .delay-4{animation-delay:0.4s}
-
 .app{width:100%;max-width:1200px;margin:0 auto}
-
 .hero{
   text-align:center;
   padding:28px 12px 24px;
@@ -107,7 +103,7 @@ h1{
   font-weight:900;
   line-height:1.1;
   letter-spacing:-0.03em;
-  background:linear-gradient(135deg,#fff 0%,var(--gold-light) 100%);
+  background:linear-gradient(120deg,#fff 0%,var(--gold-light) 45%,var(--gold) 100%);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
@@ -118,14 +114,12 @@ h1{
   line-height:1.6;
   font-size:15px;
 }
-
 .main-grid{
   display:grid;
   grid-template-columns:1fr 1.3fr;
   gap:20px;
   align-items:start;
 }
-
 .card{
   background:linear-gradient(180deg,var(--bg-card),var(--bg-elevated));
   border:1px solid var(--border);
@@ -144,14 +138,13 @@ h1{
   left:0;
   right:0;
   height:3px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
-  opacity:0.6;
+  background:linear-gradient(90deg,transparent,var(--gold),var(--gold-light),transparent);
+  opacity:0.85;
 }
 .card:hover{
   border-color:var(--border-hover);
   box-shadow:var(--shadow-lg);
 }
-
 .card-header{
   display:flex;
   align-items:center;
@@ -176,7 +169,6 @@ h1{
   color:var(--text);
   letter-spacing:-0.01em;
 }
-
 .form-group{margin-bottom:16px}
 label{
   display:block;
@@ -216,7 +208,6 @@ select{
   padding-right:44px;
 }
 input[readonly]{opacity:0.7;cursor:not-allowed}
-
 .rate-display{
   background:linear-gradient(135deg,var(--bg-elevated),var(--bg-hover));
   border:1px solid var(--border);
@@ -284,7 +275,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   font-weight:600;
 }
 .error-msg.show{display:block;animation:fadeIn 0.3s ease}
-
 .ve-rate-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
@@ -321,7 +311,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   font-weight:900;
   margin-top:6px;
 }
-
 .btn-row{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -345,7 +334,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
 }
 .btn:hover{transform:translateY(-2px)}
 .btn:active{transform:translateY(0)}
-
 .btn-gold{
   background:linear-gradient(135deg,var(--gold),var(--gold-light));
   color:#0a0a0f;
@@ -373,18 +361,17 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   background:rgba(255,91,91,0.2);
 }
 .btn-share{
-  background:linear-gradient(135deg,var(--green),#7CFF9B);
+  background:linear-gradient(135deg,var(--green),#4CFFC4);
   color:#031006;
   margin-top:14px;
+  box-shadow:0 4px 16px rgba(18,226,138,0.3);
 }
-
 .product-grid{
   display:grid;
   grid-template-columns:1.6fr 1fr 0.8fr;
   gap:12px;
   align-items:end;
 }
-
 .search-box{
   position:relative;
   margin-bottom:12px;
@@ -395,7 +382,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   background-repeat:no-repeat;
   background-position:14px center;
 }
-
 /* ===== CARRITO MEJORADO ===== */
 .cart-item {
   background:var(--bg-elevated);
@@ -438,7 +424,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   line-height:1.6;
   margin-bottom:10px;
 }
-
 /* Tabla de precios mejorada */
 .cart-price-table {
   display:grid;
@@ -480,12 +465,11 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   color:var(--green);
 }
 .cart-price-cell.distributor b {
-  color:#6fa8dc;
+  color:var(--blue);
 }
 .cart-price-cell.client b {
   color:var(--gold-light);
 }
-
 .cart-item-remove {
   margin-top:10px;
   text-align:right;
@@ -506,7 +490,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   background:var(--red);
   color:#fff;
 }
-
 /* Product preview mejorado */
 .product-preview {
   display:grid;
@@ -591,9 +574,8 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   color:var(--gold-light);
 }
 .price-compare-card.distributor strong {
-  color:#6fa8dc;
+  color:var(--blue);
 }
-
 .preview-local-prices {
   grid-column:1/-1;
   display:grid;
@@ -628,7 +610,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   color:var(--text-muted);
   margin-top:8px;
 }
-
 /* Treatment card */
 .treatment-card{
   background:var(--bg-elevated);
@@ -653,7 +634,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   font-size:12px;
   font-weight:700;
 }
-
 .kpi-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -677,7 +657,7 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   right:0;
   height:3px;
   background:var(--gold);
-  opacity:0.4;
+  opacity:0.6;
 }
 .kpi:hover{
   transform:translateY(-2px);
@@ -703,7 +683,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
 }
 .kpi.green strong{color:var(--green)}
 .kpi.gold strong{color:var(--gold-light)}
-
 .shipping-section{margin-top:16px}
 .shipping-header{
   display:flex;
@@ -762,7 +741,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   background:linear-gradient(135deg,rgba(214,180,106,0.15),rgba(248,216,139,0.05));
   border-color:var(--gold);
 }
-
 .summary-box{
   background:var(--bg-elevated);
   border:1px solid rgba(255,255,255,0.06);
@@ -777,7 +755,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   color:var(--text);
   font-weight:700;
 }
-
 .official-badge{
   display:inline-flex;
   align-items:center;
@@ -799,7 +776,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   border-radius:50%;
   box-shadow:0 0 6px var(--green);
 }
-
 .mini-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -824,7 +800,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   font-weight:800;
   margin-top:4px;
 }
-
 .brand-btn{
   width:100%;
   margin-top:16px;
@@ -839,7 +814,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   font-size:14px;
   text-transform:uppercase;
 }
-
 .note{
   font-size:12px;
   line-height:1.6;
@@ -854,7 +828,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   padding:20px;
   margin-top:8px;
 }
-
 .toast{
   position:fixed;
   left:50%;
@@ -892,7 +865,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   color:#fff;
   flex-shrink:0;
 }
-
 .price-role-selector{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -947,7 +919,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   color:var(--text-secondary);
   font-size:11px;
 }
-
 .comparison-summary{
   margin-top:12px;
   padding:14px;
@@ -975,12 +946,10 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
   opacity:.8;
 }
 .comparison-total-grid .profit{
-  border:1px solid rgba(244,190,65,.35);
+  border:1px solid rgba(255,177,42,.4);
 }
-
 .hidden{display:none!important}
 .text-gold{color:var(--gold-light)}
-
 @media(max-width:1024px){
   .main-grid{grid-template-columns:1fr}
   .ve-rate-grid{grid-template-columns:repeat(2,1fr)}
@@ -1013,23 +982,18 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
 </head>
 <body>
 <main class="app">
-
 <section class="hero">
   <div class="badge">ONE MORE · Calculadora Global V15</div>
   <h1>Calculadora One More · Comparador Distribuidor vs Cliente</h1>
   <p class="sub">Selecciona productos y consulta al instante precio distribuidor, precio cliente y diferencia de margen, además de presentación y características.</p>
 </section>
-
 <div class="main-grid">
-
   <div class="left-col">
-
     <section class="card animate-in delay-1">
       <div class="card-header">
         <div class="card-icon">⚙️</div>
         <div class="card-title">Configuración</div>
       </div>
-
       <div class="form-group">
         <label>País / Moneda local</label>
         <select id="country">
@@ -1089,7 +1053,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
           <option value="NO">Noruega · EUR</option>
         </select>
       </div>
-
       <div id="venezuelaRateBox" style="display:none">
         <div class="form-group">
           <label>Tipo de tasa Venezuela</label>
@@ -1114,7 +1077,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
           <button type="button" class="ve-rate-card" data-rate-type="usdt" onclick="selectVenezuelaRate('usdt', 953.99)">USDT P2P<strong>953,99</strong></button>
         </div>
       </div>
-
       <div class="rate-display">
         <div class="rate-label">Tasa usada</div>
         <div class="rate-value loading" id="rateText">Cargando...</div>
@@ -1122,25 +1084,21 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
         <div class="source-pill" id="sourcePill">Fuente: automática</div>
         <div class="error-msg" id="rateError">No se pudo cargar la tasa automática. Usa la tasa manual.</div>
       </div>
-
       <div class="btn-row">
         <button class="btn btn-gold" onclick="fetchRate()">🔄 Actualizar tasa</button>
         <button class="btn btn-dark" onclick="useManualRate()">✏️ Usar tasa manual</button>
       </div>
-
       <div class="mini-grid">
         <div class="mini-item">Venezuela<strong>BCV 791,32</strong></div>
         <div class="mini-item">Colombia<strong>TRM</strong></div>
         <div class="mini-item">Global<strong>Moneda local</strong></div>
       </div>
     </section>
-
     <section class="card animate-in delay-2">
       <div class="card-header">
         <div class="card-icon">🛒</div>
         <div class="card-title">Productos y Tratamientos</div>
       </div>
-
       <div class="form-group">
         <label>Modo de cálculo</label>
         <select id="mode">
@@ -1148,7 +1106,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
           <option value="treatment">Tratamiento por patología</option>
         </select>
       </div>
-
       <div class="form-group">
         <label>Modo de precio</label>
         <select id="priceMode">
@@ -1157,7 +1114,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
         </select>
         <div id="officialPriceNote" style="margin-top:8px"></div>
       </div>
-
       <div id="cartBox" class="grid">
         <div class="search-box">
           <input type="text" id="productSearch" placeholder="Buscar producto..." oninput="filterProducts()">
@@ -1205,7 +1161,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
           <div id="cartList" class="cart"></div>
         </div>
       </div>
-
       <div id="treatmentBox" class="grid" style="display:none">
         <div class="form-group">
           <label>Patología / necesidad</label>
@@ -1227,7 +1182,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
         </div>
         <button class="btn btn-gold" onclick="loadTreatmentAsCart()" style="margin-top:12px">💊 Cargar tratamiento al carrito</button>
       </div>
-
       <div class="btn-row" style="margin-top:12px">
         <div class="form-group">
           <label>Tasa manual</label>
@@ -1241,15 +1195,12 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
       <button class="btn btn-gold" onclick="calculate()" style="margin-top:8px">🧮 Calcular total</button>
     </section>
   </div>
-
   <div class="right-col">
-
     <section class="card animate-in delay-3">
       <div class="card-header">
         <div class="card-icon">📊</div>
         <div class="card-title">Resultados</div>
       </div>
-
       <div class="kpi-grid">
         <div class="kpi">
           <span>Total USD</span>
@@ -1260,18 +1211,15 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
           <strong id="totalLocal">0.00</strong>
         </div>
       </div>
-
       <div class="summary-box" id="summary">
         Agrega productos al carrito o carga un tratamiento.
       </div>
     </section>
-
     <section class="card animate-in delay-4">
       <div class="card-header">
         <div class="card-icon">📦</div>
         <div class="card-title">Envíos según QV</div>
       </div>
-
       <div class="shipping-section">
         <div class="shipping-header">
           <span class="shipping-title">Progreso hacia envío gratis</span>
@@ -1289,7 +1237,6 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
         </div>
       </div>
     </section>
-
     <section class="card animate-in delay-4">
       <div class="card-header">
         <div class="card-icon">📱</div>
@@ -1301,17 +1248,13 @@ input[readonly]{opacity:0.7;cursor:not-allowed}
     </section>
   </div>
 </div>
-
 <div class="footer">Herramienta comercial para distribuidores One More · Global V14</div>
 </main>
-
 <div class="toast" id="toast"><div class="toast-icon">✓</div><span id="toastMsg">Listo</span></div>
-
 <script>
 // ============================================================
 // DATOS DE PAÍSES, PRODUCTOS Y TRATAMIENTOS
 // ============================================================
-
 const countries = {
   US: { name: "Estados Unidos", currency: "USD", symbol: "USD", api: "fixed" },
   VE: { name: "Venezuela", currency: "VES", symbol: "Bs", api: "venezuela" },
@@ -1368,11 +1311,9 @@ const countries = {
   IE: { name: "Irlanda", currency: "EUR", symbol: "EUR", api: "global" },
   NO: { name: "Noruega", currency: "NOK", symbol: "NOK", api: "global" }
 };
-
 // ============================================================
 // PRODUCTOS Y TRATAMIENTOS
 // ============================================================
-
 const products = [
   { name: "Painless Night Glu", aliases: ["PNG", "Painless", "Indoloro"], qv: 50, distribuidor: 64, publico: 80, officialKey: "ONEMORE PAINLESS NIGHT GLU 25 PCS", image: "https://customer-assets.emergentagent.com/job_corporate-ecosystem-2/artifacts/vzr9kz3m_WhatsApp%20Image%202026-03-31%20at%2017.03.35.jpeg", presentation: "25 parches", use: "1 parche hasta 48 h", description: "Ginseng rojo coreano, glucosamina, saponinas, minerales e iones de plata." },
   { name: "Omevia", aliases: ["Omevia"], qv: 32, distribuidor: 39, publico: 50, officialKey: "ONEMORE OMEVIA", image: "https://customer-assets.emergentagent.com/job_corporate-ecosystem-2/artifacts/3tju439h_OMEVIA.jpeg", presentation: "27 parches", use: "Uso diario", description: "Omega-3, CoQ10, DHEA y pregnenolona." },
@@ -1394,7 +1335,6 @@ const products = [
   { name: "Omicoff Latte", aliases: ["Omicoff Latte"], qv: 0, distribuidor: 38.3, publico: 38.3, officialKey: "OMICOFF LATTE", image: "", presentation: "Sachet individual", use: "Preparación con agua caliente", description: "Café funcional OMICOFF Latte." },
   { name: "Omicoff Mocha", aliases: ["Omicoff Mocha"], qv: 0, distribuidor: 38.3, publico: 38.3, officialKey: "OMICOFF MOCHA", image: "", presentation: "Sachet individual", use: "Preparación con agua caliente", description: "Café funcional con café, colágeno, guaraná, diente de león y cacao." }
 ];
-
 const treatments = [
   { c: "Alopecia", r: ["Night Ladies", "Melatonin", "B12 Plus"], txt: "Night según caso + Melatonin + B12 Plus", com: "No hay curación al 100%. Night según caso." },
   { c: "Alzheimer", r: ["Painless Night Glu", "Omevia", "B12 Plus"], txt: "PNG + Omevia + B12", com: "" },
@@ -1468,19 +1408,39 @@ const treatments = [
   { c: "Vértigo / mareo", r: ["B12 Plus", "Melatonin", "Painless Night Glu"], txt: "B12 + Melatonin + PNG", com: "" },
   { c: "Úlcera / ácido gástrico", r: ["Melatonin"], txt: "Melatonin", com: "" }
 ];
-
+// ============================================================
+// PRECIOS ESPECÍFICOS DE ECUADOR (según lista de precios oficial)
+// Solo se aplican cuando el país seleccionado es Ecuador (EC).
+// El resto de países conserva el precio base USD del catálogo global.
+// ============================================================
+const ecuadorPrices = {
+  "Painless Night Glu": { distribuidor: 76, publico: 85 },
+  "Omevia": { distribuidor: 51, publico: 62 },
+  "Melatonin": { distribuidor: 47, publico: 56 },
+  "B12 Plus": { distribuidor: 47, publico: 56 },
+  "Collagen Patch Sornie": { distribuidor: 71, publico: 85 },
+  "Slim Style": { distribuidor: 44, publico: 53 },
+  "Dekamin": { distribuidor: 44, publico: 53 },
+  "Night Ladies": { distribuidor: 71, publico: 85 },
+  "Night Gentleman": { distribuidor: 71, publico: 85 },
+  "Glutanad / Glutamore": { distribuidor: 79, publico: 89 }
+};
+function getProductPrices(product) {
+  if (!product) return { distribuidor: 0, publico: 0 };
+  if (countrySelect.value === "EC" && ecuadorPrices[product.name]) {
+    return ecuadorPrices[product.name];
+  }
+  return { distribuidor: Number(product.distribuidor || 0), publico: Number(product.publico || 0) };
+}
 // ============================================================
 // VARIABLES GLOBALES
 // ============================================================
-
 let currentRate = null;
 let cart = [];
 let currentPriceType = 'distribuidor'; // 'distribuidor' o 'publico'
-
 const countrySelect = document.getElementById("country");
 const productSelect = document.getElementById("product");
 const conditionSelect = document.getElementById("condition");
-
 // Llenar selects
 products.forEach((p, i) => {
   const o = document.createElement("option");
@@ -1488,37 +1448,30 @@ products.forEach((p, i) => {
   o.textContent = p.name;
   productSelect.appendChild(o);
 });
-
 treatments.forEach((t, i) => {
   const o = document.createElement("option");
   o.value = i;
   o.textContent = t.c;
   conditionSelect.appendChild(o);
 });
-
 // ============================================================
 // FUNCIONES UTILITARIAS
 // ============================================================
-
 function getCountry() { return countries[countrySelect.value]; }
-
 function moneyUSD(v) {
   return "$" + Number(v).toLocaleString("es-VE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
-
 function moneyLocal(v) {
   const c = getCountry();
   if (v === null || v === undefined) return "Cargando tasa…";
   const symbol = c.currency === "USD" ? "USD" : c.symbol;
   return symbol + " " + Number(v).toLocaleString("es-VE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
-
 function formatCurrency(value, currency) {
   const symbols = { EUR: "€", USD: "$", VES: "Bs", COP: "COP", MXN: "MXN", PEN: "S/", BRL: "R$", GBP: "GBP", DKK: "DKK", SEK: "SEK", NOK: "NOK", PLN: "PLN", HUF: "HUF", CZK: "CZK" };
   const symbol = symbols[currency] || currency;
   return symbol + " " + Number(value).toLocaleString("es-VE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
-
 function shippingByQV(qv) {
   if (qv >= 300) return 0;
   if (qv >= 200) return 6;
@@ -1526,40 +1479,36 @@ function shippingByQV(qv) {
   if (qv >= 100) return 10;
   return 12;
 }
-
 function getCurrentRate() {
   return Number(document.getElementById("manualRate").value || currentRate || 0);
 }
-
 function displayLocal(value) {
   return value === null || value === undefined ? "Cargando tasa…" : moneyLocal(value);
 }
-
 function getSelectedProduct() {
   const idx = Number(productSelect.value);
   return Number.isFinite(idx) ? products[idx] : null;
 }
-
 function safeProductImage(p) {
   if (!p?.image) return "";
   if (/\/product|\/urunler\/|dermolist\.com/.test(p.image)) return "";
   return p.image;
 }
-
 function pricePair(product) {
-  const distributorUSD = Number(product?.distribuidor || 0);
-  const clientUSD = Number(product?.publico || 0);
+  const prices = getProductPrices(product);
+  const distributorUSD = prices.distribuidor;
+  const clientUSD = prices.publico;
   const rate = getCurrentRate();
   const c = getCountry();
-  
+
   const usedUSD = currentPriceType === 'distribuidor' ? distributorUSD : clientUSD;
   const otherUSD = currentPriceType === 'distribuidor' ? clientUSD : distributorUSD;
   const diffUSD = otherUSD - usedUSD;
-  
+
   const usedLocal = c.currency === "USD" ? usedUSD : (rate ? usedUSD * rate : null);
   const otherLocal = c.currency === "USD" ? otherUSD : (rate ? otherUSD * rate : null);
   const diffLocal = c.currency === "USD" ? diffUSD : (rate ? diffUSD * rate : null);
-  
+
   return {
     distributorUSD,
     clientUSD,
@@ -1575,11 +1524,9 @@ function pricePair(product) {
     symbol: c.symbol
   };
 }
-
 // ============================================================
 // FUNCIONES DE TASA (VENEZUELA ACTUALIZADA)
 // ============================================================
-
 function setRate(rate, source) {
   const c = getCountry();
   currentRate = Number(rate);
@@ -1592,23 +1539,19 @@ function setRate(rate, source) {
   document.getElementById("rateError").classList.remove("show");
   updateAll();
 }
-
 async function fetchJson(url) {
   const r = await fetch(url);
   if (!r.ok) throw new Error("Error API");
   return await r.json();
 }
-
 function selectVenezuelaRate(type, rateValue) {
   const selector = document.getElementById('venezuelaRateType');
   if (selector) {
     selector.value = type;
   }
-
   document.querySelectorAll('.ve-rate-card').forEach(card => {
     card.classList.toggle('active', card.dataset.rateType === type);
   });
-
   if (rateValue) {
     const labels = {
       'bcv': 'BCV oficial',
@@ -1624,7 +1567,6 @@ function selectVenezuelaRate(type, rateValue) {
     fetchRate();
   }
 }
-
 async function fetchRate() {
   const c = getCountry();
   document.getElementById("rateError").style.display = "none";
@@ -1632,13 +1574,11 @@ async function fetchRate() {
   document.getElementById("rateText").textContent = "Cargando...";
   document.getElementById("rateText").classList.add("loading");
   document.getElementById("rateMeta").textContent = "Consultando tasa automática...";
-
   try {
     if (c.api === "fixed") {
       setRate(1, "Dolarización");
       return;
     }
-
     if (countrySelect.value === "VE") {
       const rateType = document.getElementById('venezuelaRateType')?.value || 'bcv';
       const rates = {
@@ -1661,14 +1601,13 @@ async function fetchRate() {
       };
       const rate = rates[rateType] || 791.32;
       setRate(rate, labels[rateType] + ' · Monitor Dólar');
-      
+
       // Marcar tarjeta activa
       document.querySelectorAll('.ve-rate-card').forEach(card => {
         card.classList.toggle('active', card.dataset.rateType === rateType);
       });
       return;
     }
-
     if (c.api === "colombia") {
       try {
         const url = "https://www.datos.gov.co/resource/32sa-8pi3.json?$select=valor,vigenciadesde,vigenciahasta&$order=vigenciadesde%20DESC&$limit=1";
@@ -1684,12 +1623,10 @@ async function fetchRate() {
       setRate(3200, "TRM Colombia · estimada");
       return;
     }
-
     const g = await fetchJson("https://open.er-api.com/v6/latest/USD");
     const rate = Number(g?.rates?.[c.currency]);
     if (!rate || isNaN(rate)) throw new Error("No se encontró tasa global");
     setRate(rate, "Tasa internacional");
-
   } catch (e) {
     currentRate = Number(document.getElementById("manualRate").value) || currentRate;
     document.getElementById("rateText").textContent = currentRate ? c.symbol + " " + Number(currentRate).toFixed(2) : "Manual";
@@ -1699,17 +1636,14 @@ async function fetchRate() {
     updateAll();
   }
 }
-
 function useManualRate() {
   const r = Number(document.getElementById("manualRate").value);
   if (!r || r <= 0) { toast("⚠️ Escribe una tasa válida."); return; }
   setRate(r, "Manual");
 }
-
 // ============================================================
 // FUNCIONES DE ACTUALIZACIÓN GLOBAL
 // ============================================================
-
 function setPriceType(type) {
   currentPriceType = type;
   syncPriceRoleButtons();
@@ -1718,7 +1652,6 @@ function setPriceType(type) {
   calculate();
   renderProductPreview();
 }
-
 function syncPriceRoleButtons() {
   document.getElementById("priceRoleDistributor")?.classList.toggle("active", currentPriceType === "distribuidor");
   document.getElementById("priceRoleClient")?.classList.toggle("active", currentPriceType === "publico");
@@ -1726,33 +1659,31 @@ function syncPriceRoleButtons() {
   if (role) role.textContent = currentPriceType === "distribuidor" ? "Distribuidor" : "Cliente";
   document.getElementById("priceType").value = currentPriceType;
 }
-
 function updateUsdPrice() {
   const p = getSelectedProduct();
   if (!p) return;
-  const usd = currentPriceType === 'distribuidor' ? Number(p.distribuidor) : Number(p.publico);
+  const prices = getProductPrices(p);
+  const usd = currentPriceType === 'distribuidor' ? prices.distribuidor : prices.publico;
   const pair = pricePair(p);
-  
+
   document.getElementById("usdPrice").value = moneyUSD(usd);
   document.getElementById("selectedPriceUSD").textContent = moneyUSD(usd);
   document.getElementById("selectedPriceLocal").textContent = displayLocal(pair.usedLocal);
 }
-
 function getProductPriceForCart(product) {
-  const usd = currentPriceType === 'distribuidor' ? Number(product.distribuidor) : Number(product.publico);
+  const prices = getProductPrices(product);
+  const usd = currentPriceType === 'distribuidor' ? prices.distribuidor : prices.publico;
   return { unit: usd, currency: "USD", type: currentPriceType, source: "Lista USD / conversión por tasa", vat: null };
 }
-
 // ============================================================
 // FUNCIONES DEL CARRITO
 // ============================================================
-
 function addProductToCart() {
   const p = getSelectedProduct();
   if (!p) return;
   const amount = Math.max(1, Number(document.getElementById("qty").value || 1));
   const price = getProductPriceForCart(p);
-
+  const prices = getProductPrices(p);
   cart.push({
     name: p.name,
     qv: p.qv,
@@ -1762,57 +1693,48 @@ function addProductToCart() {
     currency: price.currency,
     source: price.source,
     vat: price.vat,
-    distribuidor: Number(p.distribuidor),
-    publico: Number(p.publico)
+    distribuidor: prices.distribuidor,
+    publico: prices.publico
   });
-
   renderCart();
   calculate();
   toast("✅ " + p.name + " agregado al carrito");
 }
-
 function removeCartItem(index) {
   cart.splice(index, 1);
   renderCart();
   calculate();
 }
-
 function clearCart() {
   cart = [];
   renderCart();
   calculate();
   toast("🗑️ Carrito vaciado");
 }
-
 function renderCart() {
   const cartList = document.getElementById("cartList");
-
   if (cart.length === 0) {
     cartList.innerHTML = '<div class="note">Aún no has agregado productos.</div>';
     document.getElementById("comparisonTotals")?.remove();
     return;
   }
-
   const c = getCountry();
   const rate = getCurrentRate();
-
   cartList.innerHTML = cart.map((item, i) => {
     const p = products.find(x => x.name === item.name);
+    const prices = getProductPrices(p);
     const subtotal = item.unit * item.qty;
     const qvTotal = item.qv * item.qty;
     const vatText = item.vat !== null ? " · IVA " + item.vat + "%" : "";
+    const distTotalUSD = (prices.distribuidor || item.distribuidor || 0) * item.qty;
+    const pubTotalUSD = (prices.publico || item.publico || 0) * item.qty;
 
-    const distTotalUSD = Number(p?.distribuidor || item.distribuidor || 0) * item.qty;
-    const pubTotalUSD = Number(p?.publico || item.publico || 0) * item.qty;
-    
     const usedTotalUSD = item.unit * item.qty;
     const otherTotalUSD = currentPriceType === 'distribuidor' ? pubTotalUSD : distTotalUSD;
     const diffTotalUSD = otherTotalUSD - usedTotalUSD;
-
     const usedLocal = c.currency === "USD" ? usedTotalUSD : (rate ? usedTotalUSD * rate : null);
     const otherLocal = c.currency === "USD" ? otherTotalUSD : (rate ? otherTotalUSD * rate : null);
     const diffLocal = c.currency === "USD" ? diffTotalUSD : (rate ? diffTotalUSD * rate : null);
-
     return `
       <div class="cart-item">
         <div class="cart-item-header">
@@ -1850,34 +1772,29 @@ function renderCart() {
       </div>
     `;
   }).join("");
-
   renderCartComparisonTotals();
 }
-
 function renderCartComparisonTotals() {
   if (!cart.length) {
     const box = document.getElementById("comparisonTotals");
     if (box) box.remove();
     return;
   }
-
   let distUSD = 0, pubUSD = 0;
   cart.forEach(item => {
     const p = products.find(x => x.name === item.name);
     if (p) {
-      distUSD += Number(p.distribuidor) * item.qty;
-      pubUSD += Number(p.publico) * item.qty;
+      const prices = getProductPrices(p);
+      distUSD += prices.distribuidor * item.qty;
+      pubUSD += prices.publico * item.qty;
     }
   });
-
   const diffUSD = pubUSD - distUSD;
   const rate = getCurrentRate();
   const c = getCountry();
-
   const distLocal = c.currency === "USD" ? distUSD : (rate ? distUSD * rate : null);
   const pubLocal = c.currency === "USD" ? pubUSD : (rate ? pubUSD * rate : null);
   const diffLocal = c.currency === "USD" ? diffUSD : (rate ? diffUSD * rate : null);
-
   let box = document.getElementById("comparisonTotals");
   if (!box) {
     box = document.createElement("div");
@@ -1885,9 +1802,7 @@ function renderCartComparisonTotals() {
     box.className = "comparison-summary";
     document.getElementById("cartList").parentElement.appendChild(box);
   }
-
   const highlightUsed = currentPriceType === 'distribuidor' ? 'distribuidor' : 'cliente';
-
   box.innerHTML = `
     <b>📈 Comparativo del carrito</b>
     <div class="comparison-total-grid">
@@ -1912,18 +1827,15 @@ function renderCartComparisonTotals() {
     </div>
   `;
 }
-
 // ============================================================
 // VISTA PREVIA DEL PRODUCTO
 // ============================================================
-
 function renderProductPreview() {
   const p = getSelectedProduct();
   if (!p) return;
   const pair = pricePair(p);
   const img = document.getElementById("productPreviewImage");
   const src = safeProductImage(p);
-
   if (src) {
     img.src = src;
     img.alt = p.name;
@@ -1932,20 +1844,16 @@ function renderProductPreview() {
     img.src = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
     img.alt = "Vista previa de " + p.name;
   }
-
   document.getElementById("productPreviewName").textContent = p.name;
   document.getElementById("productPreviewDesc").textContent = p.description || "Información del producto.";
-
   document.getElementById("productPreviewTags").innerHTML = [
     p.presentation ? "📦 " + p.presentation : "",
     p.use ? "⏱️ " + p.use : "",
     p.qv ? "⭐ " + p.qv + " QV" : ""
   ].filter(Boolean).map(x => `<span class="product-tag">${x}</span>`).join("");
-
   document.getElementById("previewDistributor").textContent = moneyUSD(pair.distributorUSD);
   document.getElementById("previewPublic").textContent = moneyUSD(pair.clientUSD);
   document.getElementById("previewProfit").textContent = moneyUSD(pair.diffUSD);
-
   const localBox = document.getElementById("previewLocalPrices");
   if (localBox) {
     const usedLabel = currentPriceType === 'distribuidor' ? 'Distribuidor' : 'Cliente';
@@ -1965,20 +1873,15 @@ function renderProductPreview() {
       </div>
     `;
   }
-
   document.getElementById("previewSource").textContent = "USD + " + getCountry().name + " (" + pair.currency + ") · Precio usado: " + currentPriceType;
 }
-
 // ============================================================
 // CÁLCULO PRINCIPAL
 // ============================================================
-
 function calculate() {
   updateUsdPrice();
-
   const rate = getCurrentRate();
   let subtotal = 0, totalQV = 0, lines = [];
-
   cart.forEach(item => {
     const lineTotal = item.unit * item.qty;
     subtotal += lineTotal;
@@ -1986,37 +1889,28 @@ function calculate() {
     const vatText = item.vat !== null ? " · IVA " + item.vat + "%" : "";
     lines.push(item.name + " x" + item.qty + ": <b>" + moneyUSD(lineTotal) + "</b>" + vatText + " · QV " + item.qv * item.qty);
   });
-
   const shipping = cart.length ? shippingByQV(totalQV) : 0;
   const totalPrimary = subtotal + shipping;
   const totalLocal = rate ? totalPrimary * rate : totalPrimary;
-
   highlightShipping(totalQV);
-
   document.getElementById("totalUsd").textContent = moneyUSD(totalPrimary);
   document.getElementById("totalLocal").textContent = rate ? moneyLocal(totalLocal) : "Ingresa tasa";
-
   document.getElementById("summary").innerHTML = cart.length === 0 ?
     "Agrega productos al carrito o carga un tratamiento." :
     `Productos:<br>${lines.join("<br>")}<br>QV total: <b>${totalQV}</b><br>Subtotal: <b>${moneyUSD(subtotal)}</b><br>Envío: <b>${shipping === 0 ? "GRATIS" : moneyUSD(shipping)}</b><br>Total USD: <b>${moneyUSD(totalPrimary)}</b><br>Total Local: <b>${rate ? moneyLocal(totalLocal) : "Ingresa tasa"}</b><br><span style="font-size:11px;color:var(--text-secondary);">Precio usado: <b style="color:var(--gold-light)">${currentPriceType === 'distribuidor' ? 'Distribuidor' : 'Cliente'}</b></span>`;
 }
-
 function highlightShipping(qv) {
   ["ship1", "ship2", "ship3", "ship4", "ship5"].forEach(id => {
     document.getElementById(id)?.classList.remove("ship-active");
   });
-
   let id = "ship1";
   if (qv >= 300) id = "ship5";
   else if (qv >= 200) id = "ship4";
   else if (qv >= 150) id = "ship3";
   else if (qv >= 100) id = "ship2";
-
   document.getElementById(id)?.classList.add("ship-active");
-
   const progressBar = document.getElementById("shippingProgressBar");
   const progressText = document.getElementById("qvProgressText");
-
   if (progressBar) {
     const pct = Math.min((qv / 300) * 100, 100);
     progressBar.style.width = pct + "%";
@@ -2025,32 +1919,27 @@ function highlightShipping(qv) {
     progressText.textContent = qv + " / 300 QV";
   }
 }
-
 function updateAll() {
   updateUsdPrice();
   renderProductPreview();
   renderCart();
   calculate();
 }
-
 // ============================================================
 // FUNCIONES DE MODO
 // ============================================================
-
 function updateMode() {
   const m = document.getElementById("mode").value;
   document.getElementById("cartBox").style.display = m === "cart" ? "grid" : "none";
   document.getElementById("treatmentBox").style.display = m === "treatment" ? "grid" : "none";
   calculate();
 }
-
 function updateOfficialPriceNote() {
   const note = document.getElementById("officialPriceNote");
   if (note) {
     note.textContent = "Modo estándar · conversión por tasa";
   }
 }
-
 function filterProducts() {
   const search = document.getElementById("productSearch").value.toLowerCase();
   const select = document.getElementById("product");
@@ -2068,7 +1957,6 @@ function filterProducts() {
     updateAll();
   }
 }
-
 function toast(msg) {
   const el = document.getElementById("toast");
   const msgEl = document.getElementById("toastMsg");
@@ -2076,11 +1964,9 @@ function toast(msg) {
   el.classList.add("show");
   setTimeout(() => el.classList.remove("show"), 3000);
 }
-
 // ============================================================
 // FUNCIONES DE TRATAMIENTO
 // ============================================================
-
 function renderTreatmentInfo() {
   const t = treatments[conditionSelect.value];
   document.getElementById("treatmentInfo").innerHTML = `
@@ -2089,15 +1975,14 @@ function renderTreatmentInfo() {
   `;
   document.getElementById("treatmentChips").innerHTML = t.r.map(x => `<span class="chip">${x}</span>`).join("");
 }
-
 function loadTreatmentAsCart() {
   const t = treatments[conditionSelect.value];
-
   cart = [];
   t.r.forEach(name => {
     const p = products.find(pr => pr.name === name || pr.aliases?.includes(name));
     if (p) {
       const price = getProductPriceForCart(p);
+      const prices = getProductPrices(p);
       cart.push({
         name: p.name,
         qv: p.qv,
@@ -2107,12 +1992,11 @@ function loadTreatmentAsCart() {
         currency: price.currency,
         source: price.source,
         vat: price.vat,
-        distribuidor: Number(p.distribuidor),
-        publico: Number(p.publico)
+        distribuidor: prices.distribuidor,
+        publico: prices.publico
       });
     }
   });
-
   document.getElementById("mode").value = "cart";
   updateMode();
   renderCart();
@@ -2120,11 +2004,9 @@ function loadTreatmentAsCart() {
   document.getElementById("cartList").scrollIntoView({ behavior: "smooth", block: "center" });
   toast("💊 Tratamiento cargado: " + t.c);
 }
-
 // ============================================================
 // FUNCIONES DE VENEZUELA
 // ============================================================
-
 function updateVenezuelaRateVisibility() {
   const box = document.getElementById("venezuelaRateBox");
   const isVE = countrySelect.value === "VE";
@@ -2136,29 +2018,23 @@ function updateVenezuelaRateVisibility() {
     });
   }
 }
-
 function markSelectedVenezuelaRate() {
   const selected = document.getElementById("venezuelaRateType")?.value || "bcv";
   document.querySelectorAll(".ve-rate-card").forEach(card => {
     card.classList.toggle("active", card.dataset.rateType === selected);
   });
 }
-
 // ============================================================
 // COMPARTIR WHATSAPP
 // ============================================================
-
 function shareBudgetWhatsApp() {
   calculate();
-
   if (!cart || cart.length === 0) {
     toast("⚠️ Agrega productos al carrito antes de compartir");
     return;
   }
-
   const c = getCountry();
   let subtotal = 0, totalQV = 0;
-
   const itemsText = cart.map(item => {
     const lineTotal = item.unit * item.qty;
     const lineQV = item.qv * item.qty;
@@ -2167,39 +2043,29 @@ function shareBudgetWhatsApp() {
     const priceRole = item.priceRole === 'distribuidor' ? 'Distribuidor' : 'Cliente';
     return "• " + item.name + " x" + item.qty + " (" + priceRole + ") = " + moneyUSD(lineTotal) + " | QV " + lineQV;
   }).join("\n");
-
   const shipping = shippingByQV(totalQV);
   const total = subtotal + shipping;
   const rate = getCurrentRate();
   const localTotal = rate ? total * rate : total;
-
   const msg = `PRESUPUESTO ONE MORE
-
 País: ${c.name}
 Moneda: ${c.currency}
 Tasa usada: ${rate ? rate.toFixed(2) : 'No definida'}
 Tipo de precio: ${currentPriceType === 'distribuidor' ? 'Distribuidor' : 'Cliente'}
-
 PRODUCTOS:
 ${itemsText}
-
 QV total: ${totalQV}
 Subtotal: ${moneyUSD(subtotal)}
 Envío: ${shipping === 0 ? "GRATIS" : moneyUSD(shipping)}
-
 TOTAL USD: ${moneyUSD(total)}
 TOTAL ${c.currency}: ${rate ? moneyLocal(localTotal) : 'Ingresa tasa'}
-
 Presupuesto referencial sujeto a disponibilidad y actualización de tasa.`;
-
   const url = "https://wa.me/?text=" + encodeURIComponent(msg);
   window.open(url, "_blank");
 }
-
 // ============================================================
 // EVENTOS Y INICIALIZACIÓN
 // ============================================================
-
 countrySelect.addEventListener("change", () => {
   currentRate = null;
   document.getElementById("manualRate").value = "";
@@ -2208,28 +2074,24 @@ countrySelect.addEventListener("change", () => {
   updateAll();
   fetchRate();
 });
-
 document.getElementById("venezuelaRateType")?.addEventListener("change", () => {
   currentRate = null;
   document.getElementById("manualRate").value = "";
   markSelectedVenezuelaRate();
   fetchRate();
 });
-
 productSelect.addEventListener("change", updateAll);
 document.getElementById("priceType").addEventListener("change", () => {
   const val = document.getElementById("priceType").value;
   setPriceType(val);
 });
 document.getElementById("qty").addEventListener("input", updateAll);
-
 document.getElementById("manualRate").addEventListener("input", () => {
   if (Number(document.getElementById("manualRate").value) > 0) {
     currentRate = Number(document.getElementById("manualRate").value);
   }
   updateAll();
 });
-
 document.getElementById("mode").addEventListener("change", updateMode);
 document.getElementById("priceMode").addEventListener("change", () => {
   updateOfficialPriceNote();
@@ -2240,7 +2102,6 @@ document.getElementById("treatmentPriceType").addEventListener("change", () => {
   const val = document.getElementById("treatmentPriceType").value;
   setPriceType(val);
 });
-
 // Inicialización
 filterProducts();
 syncPriceRoleButtons();
@@ -2252,7 +2113,6 @@ markSelectedVenezuelaRate();
 updateOfficialPriceNote();
 renderProductPreview();
 updateUsdPrice();
-
 // Cargar tasa inicial
 fetchRate();
 </script>

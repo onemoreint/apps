@@ -1,3781 +1,629 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Centro de Comando del Distribuidor</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
-
+<title>One More Hub 2.0</title>
+<!--
+  ANTES DE PUBLICAR, busca y reemplaza estos marcadores (Ctrl+F):
+  1. TODO-DRIVE            -> enlace real de tu carpeta de Google Drive
+  2. TODO-NOTEBOOKLM        -> enlace real de tu notebook de NotebookLM
+  3. TODO-BACKOFFICE        -> enlace real de tu Premium Office / Back Office
+  4. TODO-YOUTUBE           -> enlace de tu canal de YouTube
+  5. TODO-FACEBOOK          -> enlace del grupo de Facebook del equipo
+  6. TODO-TELEGRAM          -> enlace del canal/grupo de Telegram
+  7. TODO-WHATSAPP-GRUPO    -> enlace de invitación al grupo de WhatsApp de líderes
+  8. RESOURCES              -> dentro de <script>, reemplaza la lista de ejemplo por tus archivos reales
+     (cada objeto es: {t: titulo, type: pdf|video|img|redes, tag: categoria, d: detalle})
+  El logo "1M" es un marcador temporal: mandame tu archivo de logo (PNG o SVG) y te lo dejo insertado.
+  El botón de WhatsApp flotante y el de "Escríbeme por WhatsApp" ya apuntan a +57 312 638 7467.
+-->
 <style>
-  /* ═══════════════════════════════════════════
-     VARIABLES — Cambia colores aquí
-  ═══════════════════════════════════════════ */
-  :root {
-    --gold:       #C9A84C;
-    --gold-light: #E8CC80;
-    --gold-dim:   #8A6C2A;
-    --bg:         #0A0A0C;
-    --bg2:        #111115;
-    --bg3:        #18181E;
-    --surface:    #1E1E26;
-    --border:     rgba(201,168,76,0.18);
-    --text:       #F0EDE6;
-    --muted:      #7A7880;
-    --radius:     14px;
-    --shadow:     0 8px 40px rgba(0,0,0,0.6);
-    /* Drive — cambia el link aquí */
-    --drive-link: "https://drive.google.com/drive/folders/1Wp-sJA50Le6g3mI_rdxj1soE7nu-yw-V";
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
-
-  /* ── NOISE OVERLAY ── */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* ── GLOW ORBS ── */
-  .orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0.12;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .orb-1 { width: 600px; height: 600px; background: var(--gold); top: -200px; right: -200px; }
-  .orb-2 { width: 400px; height: 400px; background: #2A5F8F; bottom: 0; left: -150px; }
-
-  /* ── LAYOUT ── */
-  .container { max-width: 1160px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
-
-  /* ══════════════════════════════
-     HERO / CABECERA
-  ══════════════════════════════ */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 100px 20px 60px;
-    position: relative;
-  }
-
-  .hero-inner { max-width: 1160px; margin: 0 auto; width: 100%; }
-
-  .logo-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(201,168,76,0.10);
-    border: 1px solid var(--border);
-    padding: 8px 18px;
-    border-radius: 100px;
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--gold-light);
-    margin-bottom: 36px;
-    animation: fadeUp 0.6s ease both;
-  }
-
-  .logo-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
-
-  h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.8rem, 7vw, 5.5rem);
-    font-weight: 300;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    margin-bottom: 24px;
-    animation: fadeUp 0.6s 0.1s ease both;
-  }
-
-  h1 em {
-    font-style: normal;
-    color: var(--gold);
-    position: relative;
-  }
-
-  .hero-sub {
-    font-size: 1.05rem;
-    color: var(--muted);
-    max-width: 560px;
-    margin-bottom: 44px;
-    font-weight: 300;
-    animation: fadeUp 0.6s 0.2s ease both;
-  }
-
-  .hero-btns {
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-    animation: fadeUp 0.6s 0.3s ease both;
-  }
-
-  /* ── BOTONES ── */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    padding: 14px 26px;
-    border-radius: 100px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.25s ease;
-    border: none;
-    letter-spacing: 0.01em;
-  }
-
-  .btn-gold {
-    background: var(--gold);
-    color: #0A0A0C;
-    font-weight: 600;
-  }
-  .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(201,168,76,0.35); }
-
-  .btn-outline {
-    background: transparent;
-    color: var(--text);
-    border: 1px solid var(--border);
-  }
-  .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
-
-
-  .btn-sm {
-    padding: 9px 18px;
-    font-size: 0.8rem;
-  }
-
-  .btn-ghost {
-    background: rgba(255,255,255,0.05);
-    color: var(--muted);
-    border: 1px solid rgba(255,255,255,0.08);
-  }
-  .btn-ghost:hover { background: rgba(201,168,76,0.10); color: var(--gold); border-color: var(--border); }
-
-  /* ══════════════════════════════
-     SCROLL ARROW
-  ══════════════════════════════ */
-  .scroll-hint {
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    color: var(--muted);
-    font-size: 0.75rem;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    animation: fadeUp 0.6s 0.8s ease both;
-    cursor: pointer;
-  }
-  .scroll-arrow { animation: bounce 1.8s infinite; }
-
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(6px); }
-  }
-
-  /* ══════════════════════════════
-     SECCIONES GENERALES
-  ══════════════════════════════ */
-  section { padding: 80px 0; position: relative; z-index: 1; }
-
-  .section-label {
-    font-size: 10px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 12px;
-    display: block;
-  }
-
-  .section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
-    font-weight: 300;
-    line-height: 1.2;
-    margin-bottom: 40px;
-  }
-
-  .divider {
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--border), transparent);
-    margin: 0;
-  }
-
-  /* ══════════════════════════════
-     BUSCADOR
-  ══════════════════════════════ */
-  #buscar { background: var(--bg2); }
-
-  .search-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 8px 8px 8px 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
-    transition: border-color 0.2s;
-  }
-  .search-box:focus-within { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.08); }
-
-  .search-icon { color: var(--muted); flex-shrink: 0; font-size: 1.1rem; }
-
-  #searchInput {
-    flex: 1;
-    background: none;
-    border: none;
-    outline: none;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 1rem;
-    color: var(--text);
-    padding: 8px 0;
-  }
-  #searchInput::placeholder { color: var(--muted); }
-
-  .clear-btn {
-    background: rgba(255,255,255,0.06);
-    border: none;
-    color: var(--muted);
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 1rem;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    flex-shrink: 0;
-  }
-  .clear-btn:hover { background: rgba(201,168,76,0.15); color: var(--gold); }
-  .clear-btn.visible { display: flex; }
-
-  /* Filtros */
-  .filters-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-
-  .filter-chip {
-    padding: 7px 16px;
-    border-radius: 100px;
-    font-size: 0.82rem;
-    cursor: pointer;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--muted);
-    transition: all 0.2s;
-    font-family: 'DM Sans', sans-serif;
-  }
-  .filter-chip:hover, .filter-chip.active {
-    background: rgba(201,168,76,0.12);
-    border-color: var(--gold-dim);
-    color: var(--gold-light);
-  }
-
-  .results-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 0.82rem;
-    color: var(--muted);
-    margin-bottom: 28px;
-  }
-
-  .results-count strong { color: var(--gold); }
-
-  /* ══════════════════════════════
-     GRID DE TARJETAS
-  ══════════════════════════════ */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-    gap: 20px;
-  }
-
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    transition: all 0.25s ease;
-    animation: fadeUp 0.4s ease both;
-  }
-  .card:hover {
-    border-color: var(--gold-dim);
-    transform: translateY(-4px);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.15);
-  }
-
-  .card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .card-type-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 4px 12px;
-    border-radius: 100px;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    flex-shrink: 0;
-  }
-
-  .type-pdf     { background: rgba(220,50,50,0.15);  color: #F87171; }
-  .type-video   { background: rgba(99,102,241,0.15); color: #A5B4FC; }
-  .type-ppt     { background: rgba(245,158,11,0.15); color: #FCD34D; }
-  .type-guia    { background: rgba(16,185,129,0.15); color: #6EE7B7; }
-  .type-imagen  { background: rgba(236,72,153,0.15); color: #F9A8D4; }
-  .type-doc     { background: rgba(59,130,246,0.15); color: #93C5FD; }
-  .type-prot    { background: rgba(168,85,247,0.15); color: #D8B4FE; }
-  .type-link    { background: rgba(201,168,76,0.15); color: var(--gold-light); }
-  .type-zip     { background: rgba(148,163,184,0.15); color: #CBD5E1; }
-
-  .card-cat-badge {
-    font-size: 0.72rem;
-    color: var(--muted);
-    background: rgba(255,255,255,0.04);
-    padding: 4px 10px;
-    border-radius: 100px;
-    border: 1px solid rgba(255,255,255,0.07);
-  }
-
-  .card-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.25rem;
-    font-weight: 600;
-    line-height: 1.3;
-    color: var(--text);
-  }
-
-  .card-desc {
-    font-size: 0.85rem;
-    color: var(--muted);
-    line-height: 1.6;
-    flex: 1;
-  }
-
-  .card-keywords {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  .kw {
-    font-size: 0.72rem;
-    background: rgba(201,168,76,0.07);
-    color: var(--gold-dim);
-    padding: 3px 9px;
-    border-radius: 100px;
-    border: 1px solid rgba(201,168,76,0.12);
-  }
-
-  .card-rec {
-    font-size: 0.8rem;
-    color: var(--muted);
-    background: rgba(255,255,255,0.03);
-    border-left: 2px solid var(--gold-dim);
-    padding: 8px 12px;
-    border-radius: 0 6px 6px 0;
-    line-height: 1.5;
-  }
-
-  .card-actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: 4px;
-  }
-
-  /* ── Empty State ── */
-  .empty-state {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 80px 20px;
-  }
-  .empty-icon { font-size: 3rem; margin-bottom: 16px; }
-  .empty-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; margin-bottom: 8px; }
-  .empty-sub { color: var(--muted); font-size: 0.9rem; }
-
-  /* ══════════════════════════════
-     CATEGORÍAS
-  ══════════════════════════════ */
-  #categorias { background: var(--bg); }
-
-  .cats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 12px;
-  }
-
-  .cat-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px 18px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .cat-card:hover, .cat-card.active {
-    border-color: var(--gold-dim);
-    background: rgba(201,168,76,0.05);
-  }
-  .cat-icon { font-size: 1.6rem; }
-  .cat-name { font-size: 0.88rem; font-weight: 500; }
-  .cat-count { font-size: 0.75rem; color: var(--muted); }
-
-  /* ══════════════════════════════
-     PANEL DIAGNÓSTICO
-  ══════════════════════════════ */
-  #diagnostico { background: var(--bg2); }
-
-  .diag-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 12px;
-    margin-bottom: 40px;
-  }
-
-  .diag-btn {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px 16px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    color: var(--text);
-    font-size: 0.88rem;
-    text-align: center;
-    transition: all 0.2s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-  .diag-btn:hover, .diag-btn.active {
-    border-color: var(--gold);
-    background: rgba(201,168,76,0.08);
-    color: var(--gold-light);
-  }
-  .diag-icon { font-size: 1.8rem; }
-
-  .diag-result {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 30px;
-    display: none;
-    animation: fadeUp 0.3s ease;
-  }
-  .diag-result.visible { display: block; }
-  .diag-result-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.4rem;
-    margin-bottom: 16px;
-    color: var(--gold-light);
-  }
-  .diag-items { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
-  .diag-item { display: flex; gap: 10px; font-size: 0.88rem; color: var(--muted); }
-  .diag-item strong { color: var(--text); min-width: 120px; }
-  .diag-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-
-  /* ══════════════════════════════
-     CARPETA DESTACADA
-  ══════════════════════════════ */
-  .folder-card {
-    background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.04));
-    border: 1px solid rgba(201,168,76,0.3);
-    border-radius: 20px;
-    padding: 36px;
-    display: flex;
-    gap: 28px;
-    align-items: center;
-    margin-bottom: 60px;
-    flex-wrap: wrap;
-  }
-
-  .folder-icon-big { font-size: 3.5rem; }
-
-  .folder-info { flex: 1; }
-  .folder-info h3 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.6rem;
-    margin-bottom: 6px;
-  }
-  .folder-info p { color: var(--muted); font-size: 0.9rem; max-width: 480px; }
-
-  /* ══════════════════════════════
-     FOOTER
-  ══════════════════════════════ */
-  footer {
-    background: var(--bg2);
-    border-top: 1px solid var(--border);
-    padding: 40px 20px;
-    text-align: center;
-    font-size: 0.82rem;
-    color: var(--muted);
-    position: relative;
-    z-index: 1;
-  }
-  footer a { color: var(--gold); text-decoration: none; }
-
-  /* ══════════════════════════════
-     NAVBAR
-  ══════════════════════════════ */
-  nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    padding: 16px 20px;
-    background: rgba(10,10,12,0.85);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-  }
-
-  .nav-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.1rem;
-    color: var(--gold-light);
-    letter-spacing: 0.04em;
-    text-decoration: none;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-
-  .nav-link {
-    padding: 7px 14px;
-    border-radius: 100px;
-    font-size: 0.8rem;
-    color: var(--muted);
-    text-decoration: none;
-    transition: all 0.2s;
-    cursor: pointer;
-    border: none;
-    background: none;
-    font-family: 'DM Sans', sans-serif;
-  }
-  .nav-link:hover { color: var(--gold); background: rgba(201,168,76,0.07); }
-
-  /* ══════════════════════════════
-     ANIMACIONES
-  ══════════════════════════════ */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(18px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ══════════════════════════════
-     RESPONSIVE
-  ══════════════════════════════ */
-  @media (max-width: 640px) {
-    .hero { padding: 90px 20px 50px; }
-    .nav-links { display: none; }
-    .folder-card { flex-direction: column; }
-    .cards-grid { grid-template-columns: 1fr; }
-    .cats-grid  { grid-template-columns: repeat(3, 1fr); }
-    .diag-grid  { grid-template-columns: repeat(3, 1fr); }
-  }
-
-  /* Toast */
-  .toast {
-    position: fixed;
-    bottom: 28px;
-    left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--surface);
-    border: 1px solid var(--gold-dim);
-    color: var(--gold-light);
-    padding: 12px 22px;
-    border-radius: 100px;
-    font-size: 0.85rem;
-    z-index: 9999;
-    transition: transform 0.3s ease;
-    white-space: nowrap;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-
-  /* ══════════════════════════════
-     MODO IMPERIO UI — Dashboard Premium
-  ══════════════════════════════ */
-  .imperio-panel {
-    position: sticky;
-    top: 74px;
-    z-index: 20;
-    margin: -44px auto 54px;
-    background: rgba(30,30,38,0.82);
-    backdrop-filter: blur(18px);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 18px;
-    box-shadow: var(--shadow);
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-  }
-
-  .imperio-stat {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 18px;
-    padding: 16px;
-  }
-
-  .imperio-stat strong {
-    display: block;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.75rem;
-    color: var(--gold-light);
-    line-height: 1;
-    margin-bottom: 6px;
-  }
-
-  .imperio-stat span {
-    color: var(--muted);
-    font-size: .78rem;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-  }
-
-  .quick-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin: -12px 0 28px;
-  }
-
-  .quick-action {
-    border: 1px solid var(--border);
-    background: rgba(201,168,76,0.07);
-    color: var(--gold-light);
-    border-radius: 999px;
-    padding: 10px 16px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: .82rem;
-    cursor: pointer;
-    transition: all .22s ease;
-  }
-
-  .quick-action:hover {
-    background: rgba(201,168,76,0.16);
-    transform: translateY(-2px);
-  }
-
-  .hero {
-    min-height: 88vh;
-    background:
-      radial-gradient(circle at 15% 20%, rgba(201,168,76,.12), transparent 28%),
-      radial-gradient(circle at 80% 10%, rgba(42,95,143,.22), transparent 30%);
-  }
-
-  .hero-sub {
-    max-width: 680px;
-  }
-
-  .card {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(201,168,76,.10), transparent 32%);
-    opacity: 0;
-    transition: opacity .22s ease;
-    pointer-events: none;
-  }
-
-  .card:hover::before {
-    opacity: 1;
-  }
-
-  .btn-gold {
-    box-shadow: 0 10px 30px rgba(201,168,76,.18);
-  }
-
-  .btn-muted {
-    background: rgba(255,255,255,.06);
-    color: var(--text);
-    border: 1px solid rgba(255,255,255,.1);
-  }
-
-  .btn-muted:hover {
-    border-color: var(--gold-dim);
-    color: var(--gold-light);
-    transform: translateY(-2px);
-  }
-
-  @media (max-width: 780px) {
-    .imperio-panel {
-      position: static;
-      margin: 20px 0 38px;
-      grid-template-columns: repeat(2, 1fr);
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --ink:#151F2E;
+    --ink-soft:#4C5C71;
+    --paper:#F1F4F8;
+    --surface:#FFFFFF;
+    --surface-2:#E6EAF1;
+    --line:#CDD5E1;
+    --accent:#2C57B8;
+    --accent-ink:#193B87;
+    --accent-2:#D98B2B;
+    --accent-2-soft:#FBE9CE;
+    --good-soft:#DEE7F7;
+    --shadow: 0 1px 2px rgba(21,31,46,.05), 0 10px 28px -14px rgba(21,31,46,.22);
+    --radius: 16px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#E9EEF6; --ink-soft:#A9B7CA; --paper:#0C1220; --surface:#131C2C; --surface-2:#1A2438;
+      --line:#293752; --accent:#7CA0F2; --accent-ink:#CBDAFB; --accent-2:#F0B45E; --accent-2-soft:#3C2C15;
+      --good-soft:#1B2A4A; --shadow: 0 1px 2px rgba(0,0,0,.35), 0 14px 34px -16px rgba(0,0,0,.65);
     }
   }
-
-  @media (max-width: 460px) {
-    .imperio-panel {
-      grid-template-columns: 1fr;
-    }
-  }
-
-
-  /* ══════════════════════════════
-     INTERFAZ MINIMAL FRESH — Compacta
-  ══════════════════════════════ */
-  :root {
-    --gold: #D8B45A;
-    --gold-light: #F1D98A;
-    --gold-dim: #A9893E;
-    --bg: #0C0F14;
-    --bg2: #111722;
-    --bg3: #151C29;
-    --surface: rgba(255,255,255,0.055);
-    --border: rgba(216,180,90,0.14);
-    --text: #F7F3EA;
-    --muted: #9EA7B5;
-    --radius: 18px;
-    --shadow: 0 14px 38px rgba(0,0,0,0.28);
-  }
-
-  body {
-    background:
-      radial-gradient(circle at top left, rgba(216,180,90,.10), transparent 28%),
-      radial-gradient(circle at top right, rgba(54,123,168,.12), transparent 30%),
-      var(--bg);
-  }
-
-  nav { padding: 10px 18px; background: rgba(12,15,20,0.76); }
-  .nav-logo { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: .95rem; }
-  .nav-link { font-size: .74rem; padding: 6px 10px; }
-
-  .hero {
-    min-height: 52vh;
-    padding: 86px 20px 42px;
-    justify-content: flex-end;
-  }
-
-  .logo-badge {
-    font-size: 9px;
-    padding: 7px 12px;
-    margin-bottom: 18px;
-    letter-spacing: 1.4px;
-  }
-
-  h1 {
-    font-family: 'DM Sans', sans-serif;
-    font-size: clamp(2rem, 5vw, 4rem);
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: -0.05em;
-    margin-bottom: 16px;
-  }
-
-  h1 em { color: var(--gold-light); }
-
-  .hero-sub {
-    font-size: .95rem;
-    line-height: 1.55;
-    max-width: 600px;
-    margin-bottom: 24px;
-  }
-
-  .hero-btns { gap: 9px; }
-  .btn { padding: 10px 16px; font-size: .78rem; }
-  .btn-sm { padding: 8px 12px; font-size: .72rem; }
-
-  .btn-notebook,
-  .notebook-link {
-    background: linear-gradient(135deg, rgba(98,92,255,.22), rgba(216,180,90,.16));
-    color: #EDEBFF;
-    border: 1px solid rgba(160,155,255,.32);
-    text-decoration: none;
-  }
-
-  .btn-notebook:hover,
-  .notebook-link:hover {
-    border-color: rgba(216,180,90,.55);
-    color: #fff;
-    transform: translateY(-2px);
-  }
-
-  section { padding: 44px 0; }
-  .section-label { font-size: 9px; margin-bottom: 7px; }
-
-  .section-title {
-    font-family: 'DM Sans', sans-serif;
-    font-size: clamp(1.35rem, 3vw, 2rem);
-    font-weight: 700;
-    letter-spacing: -0.04em;
-    margin-bottom: 22px;
-  }
-
-  .imperio-panel {
-    margin: -22px auto 34px;
-    padding: 10px;
-    border-radius: 20px;
-    gap: 8px;
-  }
-
-  .imperio-stat { padding: 12px; border-radius: 15px; }
-  .imperio-stat strong { font-family: 'DM Sans', sans-serif; font-size: 1.25rem; margin-bottom: 4px; }
-  .imperio-stat span { font-size: .65rem; }
-
-  .search-box {
-    padding: 5px 7px 5px 14px;
-    border-radius: 16px;
-    margin-bottom: 14px;
-  }
-
-  #searchInput { font-size: .88rem; padding: 7px 0; }
-  .filters-row { gap: 6px; margin-bottom: 10px; }
-  .filter-chip, .quick-action { font-size: .72rem; padding: 7px 11px; }
-  .precision-row { padding-top: 5px; border-top: 1px solid rgba(255,255,255,.06); }
-  .results-meta { margin-bottom: 16px; font-size: .74rem; }
-
-  .cards-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 12px;
-  }
-
-  .card {
-    padding: 15px;
-    border-radius: 16px;
-    gap: 9px;
-    background: rgba(255,255,255,0.052);
-  }
-
-  .card-title {
-    font-family: 'DM Sans', sans-serif;
-    font-size: .92rem;
-    line-height: 1.28;
-    font-weight: 700;
-  }
-
-  .card-desc { font-size: .74rem; line-height: 1.45; }
-  .card-rec { font-size: .7rem; padding: 7px 9px; }
-  .card-type-badge, .card-cat-badge, .kw { font-size: .62rem; }
-  .kw { padding: 2px 7px; }
-  .card-actions { gap: 6px; }
-
-  .folder-card {
-    padding: 20px;
-    border-radius: 18px;
-    gap: 16px;
-    margin-bottom: 28px;
-  }
-
-  .folder-icon-big { font-size: 2.4rem; }
-  .folder-info h3 { font-family: 'DM Sans', sans-serif; font-size: 1.1rem; font-weight: 700; }
-  .folder-info p { font-size: .78rem; }
-
-  .cat-card, .diag-btn { padding: 14px 12px; border-radius: 15px; }
-  .cat-icon, .diag-icon { font-size: 1.25rem; }
-  .cat-name, .diag-btn { font-size: .75rem; }
-  .cat-count { font-size: .66rem; }
-  .diag-result { padding: 20px; }
-
-  .diag-result-title {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-  }
-
-  footer { padding: 26px 16px; font-size: .72rem; }
-  .scroll-hint { display: none; }
-
-  @media (max-width: 640px) {
-    .hero { min-height: auto; padding: 86px 18px 34px; }
-    .hero-btns .btn { width: 100%; justify-content: center; }
-    .cats-grid, .diag-grid { grid-template-columns: repeat(2, 1fr); }
-    .cards-grid { grid-template-columns: 1fr; }
-    .imperio-panel { grid-template-columns: repeat(2, 1fr); }
-  }
-
-
-  /* ══════════════════════════════
-     IMPERIO PRO MAX UI — Accesos superiores
-  ══════════════════════════════ */
-  .access-section {
-    padding: 34px 0 46px;
-    background:
-      radial-gradient(circle at 12% 10%, rgba(216,180,90,.08), transparent 30%),
-      linear-gradient(180deg, var(--bg2), var(--bg));
-  }
-
-  .access-head {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    gap: 20px;
-    margin-bottom: 18px;
-  }
-
-  .access-head .section-title { margin-bottom: 0; }
-  .access-head p {
-    color: var(--muted);
-    font-size: .78rem;
-    max-width: 380px;
-    line-height: 1.5;
-  }
-
-  .access-grid-pro {
-    display: grid;
-    grid-template-columns: repeat(7, minmax(120px, 1fr));
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-
-  .access-card {
-    position: relative;
-    overflow: hidden;
-    min-height: 105px;
-    padding: 14px;
-    border-radius: 18px;
-    text-decoration: none;
-    color: var(--text);
-    background: rgba(255,255,255,.055);
-    border: 1px solid rgba(255,255,255,.08);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: all .22s ease;
-  }
-
-  .access-card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    opacity: .18;
-    background: radial-gradient(circle at top right, var(--accent), transparent 58%);
-    pointer-events: none;
-  }
-
-  .access-card:hover {
-    transform: translateY(-3px);
-    border-color: rgba(216,180,90,.42);
-    box-shadow: 0 18px 35px rgba(0,0,0,.28);
-  }
-
-  .access-icon { font-size: 1.35rem; position: relative; z-index: 1; }
-  .access-content { position: relative; z-index: 1; display: grid; gap: 2px; }
-  .access-content strong { font-size: .76rem; line-height: 1.15; }
-  .access-content small { color: var(--muted); font-size: .62rem; line-height: 1.2; }
-
-  .access-card.office { --accent: #D8B45A; }
-  .access-card.youtube { --accent: #FF0033; }
-  .access-card.facebook { --accent: #1877F2; }
-  .access-card.drive { --accent: #34A853; }
-  .access-card.notebook { --accent: #7C6CFF; }
-  .access-card.telegram { --accent: #2AABEE; }
-  .access-card.whatsapp { --accent: #25D366; }
-
-  .training-hub {
-    background: rgba(255,255,255,.045);
-    border: 1px solid rgba(216,180,90,.13);
-    border-radius: 20px;
-    padding: 13px;
-    display: grid;
-    gap: 11px;
-  }
-
-  .training-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 0 3px;
-  }
-
-  .training-title span { font-size: .86rem; font-weight: 800; color: var(--gold-light); }
-  .training-title small { color: var(--muted); font-size: .68rem; }
-
-  .training-scroll {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    padding-bottom: 3px;
-    scrollbar-width: thin;
-  }
-
-  .training-scroll a {
-    flex: 0 0 auto;
-    text-decoration: none;
-    color: var(--text);
-    background: rgba(255,255,255,.055);
-    border: 1px solid rgba(255,255,255,.08);
-    border-radius: 999px;
-    padding: 8px 12px;
-    font-size: .72rem;
-    font-weight: 700;
-    transition: all .2s ease;
-  }
-
-  .training-scroll a:hover {
-    color: var(--gold-light);
-    border-color: rgba(216,180,90,.35);
-    transform: translateY(-2px);
-  }
-
-  @media (max-width: 1100px) {
-    .access-grid-pro { grid-template-columns: repeat(4, 1fr); }
-  }
-
-  @media (max-width: 720px) {
-    .access-head { display: block; }
-    .access-head p { margin-top: 8px; }
-    .access-grid-pro { grid-template-columns: repeat(2, 1fr); }
-    .training-title { display: grid; }
-  }
-
-  @media (max-width: 420px) {
-    .access-grid-pro { grid-template-columns: 1fr; }
-    .access-card {
-      min-height: 82px;
-      flex-direction: row;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 12px;
-    }
-  }
-
-
-  /* ══════════════════════════════
-     BOTONES TIPO BIBLIOTECA DIGITAL
-  ══════════════════════════════ */
-  .library-portal {
-    padding: 30px 0 42px;
-    background:
-      linear-gradient(180deg, rgba(17,23,34,.92), rgba(12,15,20,1)),
-      radial-gradient(circle at 20% 10%, rgba(216,180,90,.10), transparent 35%);
-  }
-
-  .portal-search-card {
-    border: 1px solid rgba(216,180,90,.18);
-    border-radius: 24px;
-    padding: 24px;
-    margin-bottom: 14px;
-    background:
-      linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.035)),
-      radial-gradient(circle at top right, rgba(216,180,90,.12), transparent 38%);
-    box-shadow: 0 18px 45px rgba(0,0,0,.24);
-  }
-
-  .portal-search-card h2 {
-    font-size: clamp(1.45rem, 3.4vw, 2.35rem);
-    line-height: 1.05;
-    letter-spacing: -.05em;
-    margin: 4px 0 8px;
-  }
-
-  .portal-search-card p {
-    color: var(--muted);
-    max-width: 720px;
-    font-size: .86rem;
-    line-height: 1.55;
-    margin-bottom: 18px;
-  }
-
-  .portal-main-actions {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr;
-    gap: 10px;
-  }
-
-  .portal-main-btn {
-    min-height: 86px;
-    border-radius: 18px;
-    padding: 15px;
-    text-decoration: none;
-    color: var(--text);
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-areas:
-      "icon title"
-      "icon sub";
-    column-gap: 12px;
-    align-items: center;
-    border: 1px solid rgba(255,255,255,.09);
-    background: rgba(255,255,255,.055);
-    transition: all .22s ease;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .portal-main-btn::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at top right, var(--portal-accent), transparent 58%);
-    opacity: .18;
-    pointer-events: none;
-  }
-
-  .portal-main-btn span {
-    grid-area: icon;
-    font-size: 1.8rem;
-    position: relative;
-    z-index: 1;
-  }
-
-  .portal-main-btn strong {
-    grid-area: title;
-    font-size: .9rem;
-    position: relative;
-    z-index: 1;
-  }
-
-  .portal-main-btn small {
-    grid-area: sub;
-    color: var(--muted);
-    font-size: .68rem;
-    position: relative;
-    z-index: 1;
-  }
-
-  .portal-main-btn:hover {
-    transform: translateY(-3px);
-    border-color: rgba(216,180,90,.42);
-  }
-
-  .portal-main-btn.primary { --portal-accent: #D8B45A; }
-  .portal-main-btn.notebook { --portal-accent: #7C6CFF; }
-  .portal-main-btn.office { --portal-accent: #34A853; }
-
-  .portal-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 14px 0 14px;
-  }
-
-  .portal-tab {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    border-radius: 999px;
-    padding: 9px 13px;
-    font-size: .76rem;
-    font-weight: 800;
-    text-decoration: none;
-    color: var(--text);
-    border: 1px solid rgba(255,255,255,.09);
-    background: rgba(255,255,255,.05);
-    transition: all .2s ease;
-  }
-
-  .portal-tab:hover {
-    transform: translateY(-2px);
-    border-color: rgba(216,180,90,.4);
-  }
-
-  .portal-tab.youtube { color: #ff9aac; }
-  .portal-tab.facebook { color: #93c5fd; }
-  .portal-tab.drive { color: #86efac; }
-  .portal-tab.telegram { color: #7dd3fc; }
-  .portal-tab.whatsapp { color: #86efac; }
-
-  .library-button-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-
-  .library-btn {
-    min-height: 78px;
-    border-radius: 18px;
-    padding: 13px;
-    text-decoration: none;
-    color: var(--text);
-    background: rgba(255,255,255,.048);
-    border: 1px solid rgba(216,180,90,.12);
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-areas:
-      "icon title"
-      "icon subtitle";
-    gap: 0 10px;
-    align-items: center;
-    transition: all .22s ease;
-  }
-
-  .library-btn:hover {
-    background: rgba(216,180,90,.09);
-    border-color: rgba(216,180,90,.38);
-    transform: translateY(-3px);
-  }
-
-  .lb-icon {
-    grid-area: icon;
-    width: 38px;
-    height: 38px;
-    border-radius: 14px;
-    display: grid;
-    place-items: center;
-    background: rgba(216,180,90,.12);
-    border: 1px solid rgba(216,180,90,.16);
-    font-size: 1.15rem;
-  }
-
-  .library-btn strong {
-    grid-area: title;
-    font-size: .8rem;
-    line-height: 1.1;
-  }
-
-  .library-btn small {
-    grid-area: subtitle;
-    color: var(--muted);
-    font-size: .66rem;
-    line-height: 1.2;
-  }
-
-  @media (max-width: 820px) {
-    .portal-main-actions,
-    .library-button-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .portal-search-card {
-      padding: 18px;
-    }
-  }
-
-
-  /* ══════════════════════════════
-     BIBLIOTECA REAL — Sin saturación visual
-  ══════════════════════════════ */
-  .real-library-section {
-    background:
-      radial-gradient(circle at 14% 0%, rgba(216,180,90,.08), transparent 32%),
-      linear-gradient(180deg, var(--bg2), var(--bg));
-  }
-
-  .real-library-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
-    gap: 18px;
-    margin-bottom: 18px;
-  }
-
-  .real-library-head .section-title {
-    margin-bottom: 0;
-  }
-
-  .real-library-head p {
-    color: var(--muted);
-    max-width: 440px;
-    font-size: .8rem;
-    line-height: 1.55;
-  }
-
-  .library-entry-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-
-  .library-entry-card {
-    min-height: 118px;
-    border-radius: 20px;
-    padding: 14px;
-    border: 1px solid rgba(216,180,90,.14);
-    background: rgba(255,255,255,.045);
-    color: var(--text);
-    cursor: pointer;
-    text-decoration: none;
-    display: grid;
-    align-content: center;
-    gap: 6px;
-    text-align: center;
-    transition: all .22s ease;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .library-entry-card:hover,
-  .library-entry-card.active {
-    transform: translateY(-3px);
-    border-color: rgba(216,180,90,.45);
-    background: rgba(216,180,90,.09);
-    box-shadow: 0 16px 34px rgba(0,0,0,.20);
-  }
-
-  .entry-icon {
-    font-size: 2rem;
-  }
-
-  .library-entry-card strong {
-    font-size: .86rem;
-  }
-
-  .library-entry-card small {
-    font-size: .66rem;
-    color: var(--muted);
-  }
-
-  .notebook-entry {
-    background: linear-gradient(135deg, rgba(124,108,255,.14), rgba(216,180,90,.06));
-    border-color: rgba(124,108,255,.25);
-  }
-
-  .library-clean-panel {
-    background: rgba(255,255,255,.045);
-    border: 1px solid rgba(255,255,255,.08);
-    border-radius: 22px;
-    padding: 14px;
-  }
-
-  .clean-toolbar {
-    display: grid;
-    grid-template-columns: 1fr 220px auto;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-
-  .clean-search {
-    background: rgba(255,255,255,.06);
-    border: 1px solid rgba(255,255,255,.08);
-    border-radius: 999px;
-    padding: 8px 13px;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-
-  .clean-search input,
-  #realLibraryCategory {
-    width: 100%;
-    border: 0;
-    outline: 0;
-    background: transparent;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: .78rem;
-  }
-
-  #realLibraryCategory {
-    background: rgba(255,255,255,.06);
-    border: 1px solid rgba(255,255,255,.08);
-    border-radius: 999px;
-    padding: 8px 13px;
-  }
-
-  #realLibraryCategory option {
-    color: #111;
-  }
-
-  .clean-reset {
-    border: 1px solid rgba(216,180,90,.18);
-    background: rgba(216,180,90,.08);
-    color: var(--gold-light);
-    border-radius: 999px;
-    padding: 8px 13px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-size: .74rem;
-    font-weight: 700;
-  }
-
-  .clean-meta {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    color: var(--muted);
-    font-size: .72rem;
-    margin-bottom: 10px;
-  }
-
-  .clean-list {
-    display: grid;
-    gap: 7px;
-    max-height: 620px;
-    overflow: auto;
-    padding-right: 4px;
-  }
-
-  .clean-file-row {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 11px;
-    background: rgba(255,255,255,.035);
-    border: 1px solid rgba(255,255,255,.065);
-    border-radius: 15px;
-    padding: 10px 11px;
-    transition: all .18s ease;
-  }
-
-  .clean-file-row:hover {
-    border-color: rgba(216,180,90,.30);
-    background: rgba(216,180,90,.045);
-  }
-
-  .file-icon-clean {
-    width: 38px;
-    height: 38px;
-    border-radius: 14px;
-    display: grid;
-    place-items: center;
-    background: rgba(216,180,90,.08);
-    border: 1px solid rgba(216,180,90,.13);
-    font-size: 1.15rem;
-  }
-
-  .file-info-clean {
-    min-width: 0;
-  }
-
-  .file-info-clean strong {
-    display: block;
-    font-size: .78rem;
-    line-height: 1.25;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .file-info-clean small {
-    display: block;
-    color: var(--muted);
-    font-size: .64rem;
-    margin-top: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .file-actions-clean {
-    display: flex;
-    gap: 6px;
-  }
-
-  .clean-action-btn {
-    border-radius: 999px;
-    border: 1px solid rgba(216,180,90,.18);
-    background: rgba(255,255,255,.05);
-    color: var(--text);
-    padding: 7px 10px;
-    font-size: .68rem;
-    font-weight: 800;
-    cursor: pointer;
-    text-decoration: none;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .clean-action-btn.primary {
-    background: var(--gold);
-    color: #111;
-  }
-
-  .real-detail-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.68);
-    backdrop-filter: blur(10px);
-    z-index: 99999;
-    display: none;
-    place-items: center;
-    padding: 18px;
-  }
-
-  .real-detail-modal.visible {
-    display: grid;
-  }
-
-  .real-detail-card {
-    width: min(620px, 96vw);
-    background: var(--bg2);
-    border: 1px solid rgba(216,180,90,.22);
-    border-radius: 24px;
-    padding: 22px;
-    position: relative;
-    box-shadow: 0 25px 80px rgba(0,0,0,.45);
-  }
-
-  .real-close {
-    position: absolute;
-    right: 14px;
-    top: 14px;
-    width: 32px;
-    height: 32px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,.1);
-    background: rgba(255,255,255,.06);
-    color: var(--text);
-    cursor: pointer;
-  }
-
-  .detail-icon {
-    font-size: 2.4rem;
-    margin-bottom: 10px;
-  }
-
-  .real-detail-card h3 {
-    font-size: 1.1rem;
-    line-height: 1.25;
-    margin-bottom: 8px;
-    padding-right: 32px;
-  }
-
-  .real-detail-card p {
-    color: var(--muted);
-    font-size: .8rem;
-    line-height: 1.5;
-    margin-bottom: 14px;
-  }
-
-  .detail-meta {
-    display: grid;
-    gap: 6px;
-    background: rgba(255,255,255,.04);
-    border-radius: 16px;
-    padding: 12px;
-    margin-bottom: 14px;
-    color: var(--muted);
-    font-size: .72rem;
-  }
-
-  .detail-buttons {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  @media (max-width: 980px) {
-    .library-entry-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  @media (max-width: 720px) {
-    .real-library-head {
-      display: block;
-    }
-
-    .real-library-head p {
-      margin-top: 8px;
-    }
-
-    .library-entry-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .clean-toolbar {
-      grid-template-columns: 1fr;
-    }
-
-    .clean-file-row {
-      grid-template-columns: auto 1fr;
-    }
-
-    .file-actions-clean {
-      grid-column: 1 / -1;
-      justify-content: flex-end;
-    }
-  }
-
-  @media (max-width: 440px) {
-    .library-entry-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-
-  /* ══════════════════════════════
-     LIMPIEZA VISUAL — Sin cuerpo masivo de archivos
-  ══════════════════════════════ */
-  .library-welcome {
-    text-align: center;
-    padding: 46px 20px;
-    border: 1px dashed rgba(216,180,90,.22);
-    border-radius: 18px;
-    background: rgba(255,255,255,.025);
-  }
-
-  .library-welcome-icon {
-    font-size: 3rem;
-    margin-bottom: 10px;
-  }
-
-  .library-welcome h3 {
-    font-size: 1.05rem;
-    margin-bottom: 8px;
-    color: var(--gold-light);
-  }
-
-  .library-welcome p {
-    max-width: 560px;
-    margin: 0 auto;
-    color: var(--muted);
-    font-size: .78rem;
-    line-height: 1.55;
-  }
-
-  .library-clean-panel {
-    margin-top: 14px;
-  }
-
-  #catFilters,
-  #typeFilters,
-  .precision-row,
-  #cardsGrid,
-  #resultCount {
-    display: none !important;
-  }
-
+  :root[data-theme="dark"]{
+    --ink:#E9EEF6; --ink-soft:#A9B7CA; --paper:#0C1220; --surface:#131C2C; --surface-2:#1A2438;
+    --line:#293752; --accent:#7CA0F2; --accent-ink:#CBDAFB; --accent-2:#F0B45E; --accent-2-soft:#3C2C15;
+    --good-soft:#1B2A4A; --shadow: 0 1px 2px rgba(0,0,0,.35), 0 14px 34px -16px rgba(0,0,0,.65);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--paper);color:var(--ink);font-family:'Manrope',system-ui,-apple-system,sans-serif;line-height:1.55;font-size:16.5px;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3,.display{font-family:'Fraunces',Georgia,serif;font-weight:600;text-wrap:balance;color:var(--ink);letter-spacing:-0.01em;}
+  em{font-family:'Fraunces',serif;font-style:italic;font-weight:500;color:var(--accent-ink);}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace;}
+  a{color:inherit;}
+  svg{display:block;}
+  ::selection{background:var(--accent-2-soft);}
+  .wrap{max-width:1220px;margin:0 auto;padding:0 24px;}
+  button{font-family:inherit;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+  /* topbar */
+  .topbar{position:sticky;top:0;z-index:40;background:color-mix(in srgb, var(--paper) 90%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .topbar .row{display:flex;align-items:center;gap:22px;padding:14px 0;}
+  .brand{display:flex;align-items:center;gap:10px;flex-shrink:0;text-decoration:none;}
+  .brand-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(155deg,var(--accent),var(--accent-ink));display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Fraunces',serif;font-weight:600;font-size:15px;}
+  .brand-text{font-weight:800;font-size:16px;letter-spacing:-0.01em;}
+  nav.mainnav{display:flex;gap:2px;flex:1;}
+  nav.mainnav a{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11.5px;font-weight:700;color:var(--ink-soft);text-decoration:none;padding:6px 14px;border-radius:9px;text-transform:uppercase;letter-spacing:.03em;}
+  nav.mainnav a svg{width:23px;height:23px;color:var(--accent);}
+  nav.mainnav a:hover{background:var(--surface-2);color:var(--ink);}
+  .topbar-actions{display:flex;align-items:center;gap:8px;}
+  .iconbtn{width:46px;height:46px;border-radius:11px;border:1px solid var(--line);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--accent-2);}
+  .iconbtn svg{width:23px;height:23px;}
+  .iconbtn:hover{background:var(--surface-2);}
+  .btn-office{display:flex;align-items:center;gap:9px;background:var(--ink);color:var(--paper);border:none;border-radius:11px;padding:11px 18px;font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap;}
+  .btn-office svg{width:21px;height:21px;color:var(--accent-2);}
+  .btn-office:hover{opacity:.88;}
+
+  @media (max-width:900px){ nav.mainnav{display:none;} }
+
+  /* hero */
+  .hero{padding:56px 0 38px;}
+  .hero-inner{max-width:780px;}
+  .hero h1{font-size:clamp(34px,5vw,50px);line-height:1.08;margin:16px 0 14px;}
+  .hero p.lede{font-size:19px;color:var(--ink-soft);max-width:58ch;margin:0 0 28px;}
+
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:12.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--accent-ink);background:var(--good-soft);padding:5px 11px;border-radius:100px;display:inline-block;margin-bottom:10px;}
+
+  .search-box{display:flex;align-items:center;gap:11px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:15px 18px;box-shadow:var(--shadow);margin-bottom:14px;}
+  .search-box svg{flex-shrink:0;color:var(--accent);width:24px;height:24px;}
+  .search-box input{border:none;outline:none;background:transparent;font-family:'Manrope',sans-serif;font-size:16.5px;width:100%;color:var(--ink);}
+  .search-box input::placeholder{color:var(--ink-soft);}
+
+  .action-tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-width:380px;}
+  .action-note{font-size:13.5px;color:var(--ink-soft);margin-top:10px;}
+  .action-tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;border-radius:13px;padding:18px 8px;font-size:14px;font-weight:700;cursor:pointer;border:1px solid var(--line);background:var(--surface);text-decoration:none;color:var(--ink);text-align:center;}
+  .action-tile svg{width:30px;height:30px;color:var(--accent);}
+  .action-tile.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .action-tile.primary svg{color:#fff;}
+  .action-tile.primary:hover{background:var(--accent-ink);}
+  .action-tile:not(.primary) svg{color:var(--accent-2);}
+  .action-tile:not(.primary):hover{background:var(--surface-2);}
+
+  /* testimonial + contact */
+  .feature{padding:48px 0 0;}
+  .feature-box{display:grid;grid-template-columns:260px 1fr;gap:30px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);}
+  @media (max-width:760px){.feature-box{grid-template-columns:1fr;}}
+  .video-frame{position:relative;width:100%;max-width:260px;aspect-ratio:9/16;border-radius:18px;overflow:hidden;background:#000;border:1px solid var(--line);margin:0 auto;box-shadow:var(--shadow);}
+  .video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+  .feature-text .quote{font-size:21px;line-height:1.35;margin:10px 0 20px;max-width:44ch;}
+  .signature{display:inline-flex;align-items:center;gap:10px;background:var(--good-soft);border-radius:100px;padding:8px 16px 8px 8px;margin-bottom:20px;}
+  .signature .diamond{width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;}
+  .signature .diamond svg{width:17px;height:17px;}
+  .signature .who{font-size:13.5px;line-height:1.25;}
+  .signature .who b{display:block;font-size:14.5px;}
+  .cta-whatsapp{display:inline-flex;align-items:center;gap:10px;background:#33B26E;color:#fff;border:none;border-radius:12px;padding:13px 20px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;}
+  .cta-whatsapp svg{width:20px;height:20px;}
+  .cta-whatsapp:hover{opacity:.9;}
+
+  /* section shells */
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin:0 0 18px;flex-wrap:wrap;}
+  .section-head h2{font-size:24px;margin:0;}
+  .section-note{font-size:13.5px;color:var(--ink-soft);}
+
+  section.spaced{padding:44px 0 0;}
+
+  /* icon tile grids (categories, filters, community) */
+  .tile-grid{display:grid;gap:11px;}
+  .tile-grid.cols-5{grid-template-columns:repeat(5,1fr);}
+  @media (max-width:760px){.tile-grid.cols-5{grid-template-columns:repeat(3,1fr);}}
+  @media (max-width:480px){.tile-grid.cols-5{grid-template-columns:repeat(2,1fr);}}
+
+  .tile-grid.cols-10{grid-template-columns:repeat(5,1fr);}
+  @media (max-width:900px){.tile-grid.cols-10{grid-template-columns:repeat(4,1fr);}}
+  @media (max-width:620px){.tile-grid.cols-10{grid-template-columns:repeat(3,1fr);}}
+  @media (max-width:420px){.tile-grid.cols-10{grid-template-columns:repeat(2,1fr);}}
+
+  .tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;border:1px solid var(--line);background:var(--surface);border-radius:15px;padding:18px 10px;cursor:pointer;text-align:center;transition:border-color .15s, background .15s;}
+  .tile .icon-badge{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb, var(--tc, var(--accent)) 18%, var(--surface));color:var(--tc, var(--accent));transition:background .15s,color .15s;}
+  .tile .icon-badge svg{width:28px;height:28px;}
+  .tile .lbl{font-size:14px;font-weight:700;line-height:1.25;}
+  .tile .n{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-soft);font-variant-numeric:tabular-nums;}
+  .tile.active{background:var(--tc, var(--accent));border-color:var(--tc, var(--accent));}
+  .tile.active .icon-badge{background:rgba(255,255,255,.24);color:#fff;}
+  .tile.active .lbl{color:#fff;}
+  .tile.active .n{color:rgba(255,255,255,.85);}
+
+  .tile.small{padding:14px 8px;gap:8px;}
+  .tile.small .icon-badge{width:40px;height:40px;border-radius:11px;}
+  .tile.small .icon-badge svg{width:21px;height:21px;}
+  .tile.small .lbl{font-size:12.5px;}
+  .tile.small.active{background:var(--tc, var(--accent-2));border-color:var(--tc, var(--accent-2));}
+  .tile.small.active .icon-badge{background:rgba(255,255,255,.24);color:#fff;}
+  .tile.small.active .lbl{color:#fff;}
+
+  /* library grid */
+  .library{padding:44px 0 0;}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  @media (max-width:980px){.grid{grid-template-columns:repeat(3,1fr);}}
+  @media (max-width:700px){.grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:460px){.grid{grid-template-columns:1fr;}}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);}
+  .card.hidden{display:none;}
+  .thumb{height:92px;display:flex;align-items:center;justify-content:center;}
+  .thumb svg{width:38px;height:38px;color:#fff;}
+  .thumb.pdf{background:linear-gradient(135deg,#EDAE4E,#B8791A);}
+  .thumb.video{background:linear-gradient(135deg,#5C82E8,#2C57B8);}
+  .thumb.img{background:linear-gradient(135deg,#9C82E0,#5F3FA8);}
+  .thumb.redes{background:linear-gradient(135deg,#E077A3,#A83A66);}
+  .card-body{padding:14px 14px 14px;display:flex;flex-direction:column;gap:8px;flex:1;}
+  .type-badge{display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);}
+  .type-badge .dot{width:7px;height:7px;border-radius:50%;}
+  .type-badge.pdf .dot{background:#D98B2B;}
+  .type-badge.video .dot{background:#2C57B8;}
+  .type-badge.img .dot{background:#7A54CC;}
+  .type-badge.redes .dot{background:#C24A79;}
+  .card-body .t{font-size:15px;font-weight:700;line-height:1.32;}
+  .card-body .d{font-size:12.5px;color:var(--ink-soft);font-family:'JetBrains Mono',monospace;}
+  .card-foot{display:flex;align-items:center;gap:6px;margin-top:auto;padding-top:8px;border-top:1px solid var(--line);}
+  .mini-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;border-radius:9px;cursor:pointer;}
+  .mini-btn svg{width:20px;height:20px;}
+  .mini-btn span{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-soft);}
+  .mini-btn:hover{background:var(--surface-2);}
+  .mini-btn.mb-save{color:var(--accent-2);}
+  .mini-btn.mb-share{color:var(--accent);}
+
+  .empty-state{display:none;text-align:center;padding:54px 20px;color:var(--ink-soft);font-size:14.5px;border:1px dashed var(--line);border-radius:14px;}
+  .empty-state button{margin-top:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:9px 15px;font-size:13.5px;font-weight:700;color:var(--ink);cursor:pointer;}
+
+  /* tutorials */
+  .tutorials{padding:52px 0 0;}
+  .tut-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+  @media (max-width:980px){.tut-row{grid-template-columns:repeat(3,1fr);}}
+  @media (max-width:620px){.tut-row{grid-template-columns:repeat(2,1fr);}}
+  .tut{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
+  .tut-thumb{height:74px;background:color-mix(in srgb, var(--accent) 16%, var(--surface));display:flex;align-items:center;justify-content:center;color:var(--accent);}
+  .tut-thumb svg{width:30px;height:30px;}
+  .tut-body{padding:11px 12px 13px;}
+  .tut-body .t{font-size:13.5px;font-weight:700;line-height:1.3;}
+  .tut-body .d{font-size:11.5px;color:var(--ink-soft);font-family:'JetBrains Mono',monospace;margin-top:4px;}
+
+  /* community */
+  .community{padding:52px 0 60px;}
+  .comm-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  @media (max-width:700px){.comm-row{grid-template-columns:repeat(2,1fr);}}
+  .comm{display:flex;flex-direction:column;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 14px;text-decoration:none;color:var(--ink);text-align:center;}
+  .comm:hover{background:var(--surface-2);}
+  .comm .ic{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;}
+  .comm .ic svg{width:27px;height:27px;}
+  .comm.yt .ic{background:#D8342C;}
+  .comm.fb .ic{background:#3B5DA8;}
+  .comm.tg .ic{background:#2E9BD6;}
+  .comm.wa .ic{background:#33B26E;}
+  .comm .t{font-size:14.5px;font-weight:700;}
+  .comm .d{font-size:12px;color:var(--ink-soft);}
+
+  footer{border-top:1px solid var(--line);padding:24px 0 40px;}
+  footer .row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+  footer p{font-size:12.5px;color:var(--ink-soft);font-family:'JetBrains Mono',monospace;margin:0;}
+
+  /* AI spotlight (NotebookLM) */
+  .ai-spotlight-wrap{padding:22px 0 0;}
+  .ai-spotlight{position:relative;display:flex;align-items:center;gap:26px;background:linear-gradient(135deg, color-mix(in srgb, var(--accent-2) 16%, var(--surface)), color-mix(in srgb, var(--accent) 10%, var(--surface)));border:1.5px solid var(--accent-2);border-radius:22px;padding:28px 32px;box-shadow:0 0 0 5px color-mix(in srgb, var(--accent-2) 14%, transparent), var(--shadow);}
+  @media (max-width:700px){.ai-spotlight{flex-direction:column;text-align:center;padding:34px 22px 26px;}}
+  .ai-badge{position:absolute;top:-15px;left:32px;background:var(--accent-2);color:#fff;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700;letter-spacing:.06em;padding:6px 13px;border-radius:100px;box-shadow:0 4px 10px -2px rgba(0,0,0,.35);}
+  @media (max-width:700px){.ai-badge{left:50%;transform:translateX(-50%);}}
+  .ai-arrow{position:absolute;top:-58px;right:70px;left:auto;display:flex;flex-direction:column;align-items:center;color:var(--accent-2);animation:aiBounce 1.6s ease-in-out infinite;}
+  .ai-arrow svg{width:44px;height:44px;}
+  .ai-arrow span{font-family:'Fraunces',serif;font-style:italic;font-weight:600;font-size:13.5px;color:var(--accent-ink);white-space:nowrap;margin-top:-6px;}
+  @media (max-width:700px){.ai-arrow{display:none;}}
+  .ai-logo{position:relative;width:88px;height:88px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .ai-logo-ring{position:absolute;inset:0;border-radius:50%;border:2px solid var(--accent-2);opacity:.65;animation:aiPulse 2.2s ease-out infinite;}
+  .ai-logo-ring.ring2{animation-delay:1.1s;}
+  .ai-logo-core{position:absolute;inset:10px;border-radius:50%;background:linear-gradient(155deg,var(--accent-2),#B8791A);box-shadow:0 10px 22px -6px rgba(217,139,43,.65);}
+  .ai-logo svg{position:relative;z-index:2;width:38px;height:38px;color:#fff;}
+  .ai-copy h3{font-size:21px;margin:0 0 8px;}
+  .ai-copy p{font-size:14.5px;color:var(--ink-soft);margin:0 0 16px;max-width:56ch;}
+  @media (max-width:700px){.ai-copy p{max-width:none;}}
+  .ai-cta{display:inline-flex;align-items:center;gap:8px;background:var(--accent-2);color:#fff;font-weight:700;font-size:14.5px;padding:12px 20px;border-radius:11px;text-decoration:none;white-space:nowrap;}
+  .ai-cta:hover{background:#B8791A;}
+  .ai-cta svg{width:17px;height:17px;}
+  @keyframes aiPulse{0%{transform:scale(.72);opacity:.75;}100%{transform:scale(1.55);opacity:0;}}
+  @keyframes aiBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(7px);}}
+
+  /* floating WhatsApp button */
+  .wa-float{position:fixed;right:20px;bottom:20px;z-index:70;display:flex;align-items:center;gap:11px;background:#25D366;color:#fff;padding:13px 20px 13px 13px;border-radius:100px;text-decoration:none;box-shadow:0 12px 30px -8px rgba(37,211,102,.7),0 3px 10px rgba(0,0,0,.25);}
+  .wa-float:hover{background:#20BD5C;}
+  .wa-float-ring{position:absolute;inset:0;border-radius:100px;border:2px solid #25D366;opacity:.55;animation:waPulse 2s ease-out infinite;pointer-events:none;}
+  .wa-float .ic{position:relative;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.24);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .wa-float .ic svg{width:21px;height:21px;}
+  .wa-float .txt{font-size:14.5px;font-weight:800;line-height:1.18;white-space:nowrap;}
+  .wa-float .txt small{display:block;font-size:10.5px;font-weight:700;opacity:.85;text-transform:uppercase;letter-spacing:.04em;}
+  @keyframes waPulse{0%{transform:scale(.9);opacity:.6;}100%{transform:scale(1.4);opacity:0;}}
+  @media (max-width:480px){
+    .wa-float{padding:12px;}
+    .wa-float .txt{display:none;}
+  }
+
+  @media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important;}}
 </style>
-</head>
-<body>
 
-<!-- ── FONDO ── -->
-<div class="orb orb-1"></div>
-<div class="orb orb-2"></div>
+<a class="wa-float" href="https://wa.me/573126387467?text=Hola%20Jos%C3%A9%2C%20vengo%20de%20la%20Biblioteca%20ONE%20MORE%20y%20quiero%20contactarte." target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
+  <span class="wa-float-ring"></span>
+  <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5c-5 0-9 3.8-9 8.5 0 1.6.5 3.2 1.3 4.5L3.5 21l4.7-1.2c1.2.6 2.5.9 3.8.9 5 0 9-3.8 9-8.6s-4-8.6-9-8.6z"/><path d="M8.8 8.9c-.3.6-.6 1.4-.2 2.4.6 1.6 2.6 3.6 4.3 4.2 1 .3 1.8.1 2.4-.3"/></svg></span>
+  <span class="txt"><small>Escríbeme</small>Contáctame</span>
+</a>
 
-<!-- ══════════════════════════════
-     NAVEGACIÓN
-══════════════════════════════ -->
-<nav>
-  <a class="nav-logo" href="#">One More Hub</a>
-  <div class="nav-links">
-    <button class="nav-link" onclick="scrollTo('#accesos')">Accesos</button>
-    <button class="nav-link" onclick="scrollTo('#biblioteca-real')">Biblioteca</button>
-    <button class="nav-link" onclick="scrollTo('#categorias')">Categorías</button>
-    <button class="nav-link" onclick="scrollTo('#diagnostico')">Diagnóstico</button>
-  </div>
-</nav>
-
-<!-- ══════════════════════════════
-     HERO
-══════════════════════════════ -->
-<section class="hero">
-  <div class="hero-inner">
-    <div class="logo-badge">
-      <div class="logo-dot"></div>
-      ONE MORE International · Centro de recursos
-    </div>
-
-    <h1>Biblioteca<br/><em>Real</em><br/>One More</h1>
-
-    <p class="hero-sub">
-      Una biblioteca sencilla, limpia y práctica: primero eliges el tipo de recurso, luego buscas y abres solo lo que necesitas.
-    </p>
-
-    <div class="hero-btns">
-      <!-- ▼ Cambia el link de Drive aquí -->
-      <a class="btn btn-gold" href="https://drive.google.com/drive/folders/1Wp-sJA50Le6g3mI_rdxj1soE7nu-yw-V" target="_blank">
-        📁 Abrir Drive
-      </a>
-      <a class="btn btn-notebook" href="https://notebooklm.google.com/notebook/98c9a091-90a3-43ed-bab0-a0e2789c3954" target="_blank">
-        🧠 Consultar en NotebookLM
-      </a>
-      <button class="btn btn-outline" onclick="scrollTo('#biblioteca-real')">🔍 Abrir biblioteca</button>
-    </div>
-  </div>
-
-  <div class="scroll-hint" onclick="scrollTo('#biblioteca-real')">
-    <span>Explorar</span>
-    <span class="scroll-arrow">↓</span>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ══════════════════════════════
-     PANEL IMPERIO UI
-══════════════════════════════ -->
-<section style="padding:0;background:var(--bg2);">
-  <div class="container">
-    <div class="imperio-panel">
-      <div class="imperio-stat">
-        <strong id="imperioTotal">0</strong>
-        <span>Recursos activos</span>
-      </div>
-      <div class="imperio-stat">
-        <strong id="imperioCats">0</strong>
-        <span>Categorías</span>
-      </div>
-      <div class="imperio-stat">
-        <strong id="imperioTipos">0</strong>
-        <span>Tipos de archivo</span>
-      </div>
-      <div class="imperio-stat">
-        <strong>Drive</strong>
-        <span>Acceso directo</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-
-<!-- ══════════════════════════════
-     PORTAL DE ACCESOS TIPO BIBLIOTECA
-══════════════════════════════ -->
-<section id="accesos" class="access-section library-portal">
-  <div class="container">
-
-    <div class="portal-search-card">
-      <span class="section-label">Portal de accesos</span>
-      <h2>¿Qué necesitas abrir hoy?</h2>
-      <p>Accede rápidamente a oficina virtual, entrenamientos, comunidades, materiales y consulta ampliada en NotebookLM.</p>
-
-      <div class="portal-main-actions">
-        <a class="portal-main-btn primary" href="#buscar">
-          <span>🔎</span>
-          <strong>Buscar en biblioteca</strong>
-          <small>Materiales, PDFs, videos e imágenes</small>
-        </a>
-        <a class="portal-main-btn notebook" href="https://notebooklm.google.com/notebook/98c9a091-90a3-43ed-bab0-a0e2789c3954" target="_blank">
-          <span>🧠</span>
-          <strong>Cerebro NotebookLM</strong>
-          <small>Consulta avanzada con IA</small>
-        </a>
-        <a class="portal-main-btn office" href="https://onemore.global/office/login" target="_blank">
-          <span>🧭</span>
-          <strong>Back Office</strong>
-          <small>Oficina virtual One More</small>
-        </a>
-      </div>
-    </div>
-
-    <div class="portal-tabs">
-      <a href="https://www.youtube.com/@oportunidadonemore" target="_blank" class="portal-tab youtube">
-        <span>▶️</span> YouTube
-      </a>
-      <a href="https://www.facebook.com/groups/8030657950387631/" target="_blank" class="portal-tab facebook">
-        <span>👥</span> Facebook Team
-      </a>
-      <a href="https://bit.ly/summitnetworkersteam-marketing" target="_blank" class="portal-tab drive">
-        <span>📁</span> Marketing Drive
-      </a>
-      <a href="https://t.me/c/2485498303/46" target="_blank" class="portal-tab telegram">
-        <span>📣</span> Telegram
-      </a>
-      <a href="https://chat.whatsapp.com/IKG5Wp3WgWi0Gasekn2fnE" target="_blank" class="portal-tab whatsapp">
-        <span>💬</span> Testimonios
-      </a>
-    </div>
-
-    <div class="library-button-grid">
-      <a href="https://youtu.be/5cTr53Ce7YM?si=vXkj4l04K9w1_C1d" target="_blank" class="library-btn">
-        <span class="lb-icon">📝</span>
-        <strong>Registrar socio</strong>
-        <small>Guía rápida</small>
-      </a>
-      <a href="https://youtu.be/syv9QnNxLrs?si=iJqwwRNDUFB-p8OY" target="_blank" class="library-btn">
-        <span class="lb-icon">🛒</span>
-        <strong>Primera compra</strong>
-        <small>Nuevo socio</small>
-      </a>
-      <a href="https://youtu.be/TuRycIWz_5I?si=PT0LLFMSoZ1ZsMRt" target="_blank" class="library-btn">
-        <span class="lb-icon">📦</span>
-        <strong>Hacer pedido</strong>
-        <small>Proceso paso a paso</small>
-      </a>
-      <a href="https://www.youtube.com/live/FMsX_XUwmmY?si=MZ48My3djzCIBgeZ" target="_blank" class="library-btn">
-        <span class="lb-icon">🧩</span>
-        <strong>Oficina virtual</strong>
-        <small>Recorrido guiado</small>
-      </a>
-      <a href="https://youtu.be/ZN68nNemaXQ?si=e2VPmg-4q1oYHeC9" target="_blank" class="library-btn">
-        <span class="lb-icon">💸</span>
-        <strong>Retiro billetera</strong>
-        <small>Tutorial comisiones</small>
-      </a>
-      <a href="https://youtu.be/iUaPxywgGYA?si=Qh-D7wWRDyoBuvbc" target="_blank" class="library-btn">
-        <span class="lb-icon">🌍</span>
-        <strong>Qué es One More</strong>
-        <small>Recorrido general</small>
-      </a>
-      <a href="https://youtu.be/XUELkCdpRak?si=tzo2CN9k-YW7tJCy" target="_blank" class="library-btn">
-        <span class="lb-icon">🚀</span>
-        <strong>Primeros pasos</strong>
-        <small>Inicio duplicable</small>
-      </a>
-      <a href="https://youtu.be/GGBDAZsIztc" target="_blank" class="library-btn">
-        <span class="lb-icon">👑</span>
-        <strong>Fundadores</strong>
-        <small>Historia y visión</small>
-      </a>
-      <a href="https://youtu.be/c9pkQPT6mws" target="_blank" class="library-btn">
-        <span class="lb-icon">💰</span>
-        <strong>Ventas PRO</strong>
-        <small>Rafa y Keicy</small>
-      </a>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══════════════════════════════
-     BIBLIOTECA REAL — NAVEGACIÓN LIMPIA
-══════════════════════════════ -->
-<section id="biblioteca-real" class="real-library-section">
-  <div class="container">
-    <div class="real-library-head">
-      <div>
-        <span class="section-label">Biblioteca real</span>
-        <h2 class="section-title">Elige una sección para empezar</h2>
-      </div>
-      <p>La biblioteca no muestra todos los archivos al inicio. Primero selecciona PDF, videos, imágenes, redes o una categoría; luego aparecerá una lista limpia.</p>
-    </div>
-
-    <div class="library-entry-grid">
-      <button class="library-entry-card active" data-lib-type="todos" onclick="openLibraryType('todos', this)">
-        <span class="entry-icon">📚</span>
-        <strong>Ver todo</strong>
-        <small id="realCountTodos">0 recursos</small>
+<div class="topbar">
+  <div class="wrap row">
+    <a class="brand" href="#top">
+      <span class="brand-mark">1M</span>
+      <span class="brand-text">One More Hub</span>
+    </a>
+    <nav class="mainnav">
+      <a href="#accesos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>Accesos</a>
+      <a href="#biblioteca"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5c2-1 5-1 7 0v14c-2-1-5-1-7 0v-14z"/><path d="M21.5 5.5c-2-1-5-1-7 0v14c2-1 5-1 7 0v-14z"/></svg>Biblioteca</a>
+      <a href="#categorias"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.6"/></svg>Categorías</a>
+      <a href="#diagnostico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Diagnóstico</a>
+    </nav>
+    <div class="topbar-actions">
+      <button class="iconbtn" id="themeBtn" title="Cambiar tema" aria-label="Cambiar tema">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"/></svg>
       </button>
-      <button class="library-entry-card" data-lib-type="PDF" onclick="openLibraryType('PDF', this)">
-        <span class="entry-icon">📄</span>
-        <strong>PDF</strong>
-        <small id="realCountPDF">0 documentos</small>
-      </button>
-      <button class="library-entry-card" data-lib-type="Video" onclick="openLibraryType('Video', this)">
-        <span class="entry-icon">🎬</span>
-        <strong>Videos</strong>
-        <small id="realCountVideo">0 videos</small>
-      </button>
-      <button class="library-entry-card" data-lib-type="Imagen" onclick="openLibraryType('Imagen', this)">
-        <span class="entry-icon">🖼</span>
-        <strong>Imágenes</strong>
-        <small id="realCountImagen">0 imágenes</small>
-      </button>
-      <button class="library-entry-card" data-lib-category="Redes Sociales" onclick="openLibraryCategory('Redes Sociales', this)">
-        <span class="entry-icon">📲</span>
-        <strong>Redes</strong>
-        <small>videos e imágenes</small>
-      </button>
-      <a class="library-entry-card notebook-entry" href="https://notebooklm.google.com/notebook/98c9a091-90a3-43ed-bab0-a0e2789c3954" target="_blank">
-        <span class="entry-icon">🧠</span>
-        <strong>NotebookLM</strong>
-        <small>consulta profunda</small>
+      <a class="btn-office" href="TODO-BACKOFFICE" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.2 13 13l-3.8 1.8L11 11l3.8-1.8z"/></svg>
+        Back Office
       </a>
     </div>
-
-    <div class="library-clean-panel">
-      <div class="clean-toolbar">
-        <div class="clean-search">
-          <span>🔍</span>
-          <input id="realLibrarySearch" type="text" placeholder="Buscar dentro de la selección..." oninput="renderRealLibrary()" />
-        </div>
-        <select id="realLibraryCategory" onchange="renderRealLibrary()">
-          <option value="todos">Todas las categorías</option>
-        </select>
-        <button class="clean-reset" onclick="resetRealLibrary()">Limpiar</button>
-      </div>
-
-      <div class="clean-meta">
-        <span id="realLibraryTitle">Mostrando biblioteca completa</span>
-        <span id="realLibraryCount">0 resultados</span>
-      </div>
-
-      <div id="realLibraryList" class="clean-list"></div>
-    </div>
-  </div>
-</section>
-
-<!-- MODAL DETALLE SIMPLE -->
-<div id="realDetailModal" class="real-detail-modal" onclick="closeRealDetailModal(event)">
-  <div class="real-detail-card">
-    <button class="real-close" onclick="hideRealDetailModal()">✕</button>
-    <div id="realDetailContent"></div>
   </div>
 </div>
 
-<!-- ══════════════════════════════
-     BUSCADOR AVANZADO
-══════════════════════════════ -->
-<section id="buscar">
-  <div class="container">
-    <span class="section-label">Búsqueda inteligente</span>
-    <h2 class="section-title">Buscar recursos</h2>
-
-    <div class="quick-actions">
-      <button class="quick-action" onclick="limpiarTodo()">✨ Todo</button>
-      <button class="quick-action" onclick="filterByCat('Productos')">💊 Productos</button>
-      <button class="quick-action" onclick="filterByCat('Negocio')">💼 Negocio</button>
-      <button class="quick-action" onclick="filterByCat('GlutaNAD+')">🧬 GlutaNAD+</button>
-      <button class="quick-action" onclick="filterBySocialType('Video')">📲 Redes · Videos</button>
-      <button class="quick-action" onclick="filterBySocialType('Imagen')">📲 Redes · Imágenes</button>
-      <button class="quick-action" onclick="filterByCat('English')">🇺🇸 English</button>
-      <a class="quick-action notebook-link" href="https://notebooklm.google.com/notebook/98c9a091-90a3-43ed-bab0-a0e2789c3954" target="_blank">🧠 Buscar más en NotebookLM</a>
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="hero-inner">
+      <span class="eyebrow">Biblioteca <em>Real</em> One More</span>
+      <h1>Primero eliges el tipo de recurso, luego buscas y abres solo lo que necesitas.</h1>
+      <p class="lede">Materiales de producto, negocio y capacitación en un solo lugar — organizados para que un líder los encuentre en segundos, no en minutos.</p>
     </div>
-
-    <!-- Caja de búsqueda -->
-    <div class="search-box">
-      <span class="search-icon">🔍</span>
-      <input
-        id="searchInput"
-        type="text"
-        placeholder="Buscar: producto, video, imagen, protocolo, negocio, síntoma..."
-        autocomplete="off"
-        oninput="handleSearch()"
-      />
-      <button class="clear-btn" id="clearBtn" onclick="clearSearch()">✕</button>
-    </div>
-
-    <!-- Filtros categoría -->
-    <div class="filters-row" id="catFilters">
-      <button class="filter-chip active" data-cat="todos" onclick="setFilter('cat','todos',this)">Todos</button>
-      <!-- Generado por JS -->
-    </div>
-
-    <!-- Filtros tipo -->
-    <div class="filters-row" id="typeFilters">
-      <button class="filter-chip active" data-type="todos" onclick="setFilter('type','todos',this)">Todos los tipos</button>
-      <button class="filter-chip" data-type="PDF"    onclick="setFilter('type','PDF',this)">📄 PDF</button>
-      <button class="filter-chip" data-type="Video"  onclick="setFilter('type','Video',this)">🎬 Video</button>
-      <button class="filter-chip" data-type="Presentación" onclick="setFilter('type','Presentación',this)">📊 Presentación</button>
-      <button class="filter-chip" data-type="Guía"   onclick="setFilter('type','Guía',this)">📘 Guía</button>
-      <button class="filter-chip" data-type="Protocolo" onclick="setFilter('type','Protocolo',this)">🧾 Protocolo</button>
-      <button class="filter-chip" data-type="Imagen" onclick="setFilter('type','Imagen',this)">🖼 Imagen</button>
-      <button class="filter-chip" data-type="ZIP" onclick="setFilter('type','ZIP',this)">🗜 ZIP</button>
-      <button class="filter-chip" data-type="Documento" onclick="setFilter('type','Documento',this)">📝 Documento</button>
-      <button class="filter-chip" data-type="Enlace" onclick="setFilter('type','Enlace',this)">🔗 Enlace</button>
-    </div>
-
-
-    <div class="filters-row precision-row">
-      <button class="filter-chip" onclick="filterBySocialType('Video')">📲 Solo redes sociales · videos</button>
-      <button class="filter-chip" onclick="filterBySocialType('Imagen')">🖼 Solo redes sociales · imágenes</button>
-      <button class="filter-chip" onclick="filterByCat('Redes Sociales')">📱 Todo material de redes</button>
-      <button class="filter-chip" onclick="filterByCat('Imágenes')">🖼 Imágenes generales</button>
-      <button class="filter-chip" onclick="filterByCat('Videos')">🎬 Videos generales</button>
-    </div>
-
-    <!-- Meta resultados -->
-    <div class="results-meta">
-      <span class="results-count">Mostrando <strong id="resultCount">0</strong> materiales</span>
-    </div>
-
-    <!-- Grid tarjetas -->
-    <div class="cards-grid" id="cardsGrid"></div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ══════════════════════════════
-     CATEGORÍAS
-══════════════════════════════ -->
-<section id="categorias">
-  <div class="container">
-    <span class="section-label">Organización</span>
-    <h2 class="section-title">Explorar por categoría</h2>
-
-    <!-- Carpeta principal destacada -->
-    <div class="folder-card">
-      <div class="folder-icon-big">📁</div>
-      <div class="folder-info">
-        <h3>Carpeta Principal · Drive</h3>
-        <p>Accede directamente a todos los archivos sin filtros. Encuentra presentaciones, guías, protocolos, videos y más.</p>
+    <div id="accesos">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="q" type="text" placeholder="Buscar en la biblioteca… ej. GlutaNAD+, bienvenida, QV" />
       </div>
-      <a class="btn btn-gold" href="https://drive.google.com/drive/folders/1Wp-sJA50Le6g3mI_rdxj1soE7nu-yw-V" target="_blank">
-        📂 Abrir en Drive
-      </a>
-      <a class="btn btn-notebook" href="https://notebooklm.google.com/notebook/98c9a091-90a3-43ed-bab0-a0e2789c3954" target="_blank">
-        🧠 Cerebro NotebookLM
+      <div class="action-tiles" style="grid-template-columns:1fr;max-width:220px;">
+        <a class="action-tile primary" href="TODO-DRIVE" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7.2A2 2 0 0 1 5.5 5.2h4l2 2h7a2 2 0 0 1 2 2v7.6a2 2 0 0 1-2 2H5.5a2 2 0 0 1-2-2V7.2z"/></svg>
+          Abrir Drive
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="ai-spotlight-wrap wrap" id="notebooklm">
+  <div class="ai-spotlight">
+    <span class="ai-badge">✨ IA · NUEVO</span>
+    <div class="ai-arrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4c-2 8-8 13-16 15"/><path d="M9 15.5 4 19l1.5-5.8"/></svg>
+      <span>¡Pregúntale!</span>
+    </div>
+    <div class="ai-logo">
+      <span class="ai-logo-ring"></span>
+      <span class="ai-logo-ring ring2"></span>
+      <span class="ai-logo-core"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8L12 2.5z"/><path d="M19 14.5l.9 2.2 2.2.9-2.2.9-.9 2.2-.9-2.2-2.2-.9 2.2-.9.9-2.2z"/></svg>
+    </div>
+    <div class="ai-copy">
+      <span class="eyebrow">NotebookLM · Cerebro del negocio</span>
+      <h3>Una IA que ya se leyó todo el negocio por ti</h3>
+      <p>Productos, precios, pagos, comisiones, rangos y políticas — pregúntale lo que quieras y responde al instante con fuentes reales de la biblioteca.</p>
+      <a class="ai-cta" href="TODO-NOTEBOOKLM" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        Preguntar a la IA ahora
       </a>
     </div>
-
-    <div class="cats-grid" id="catsGrid"></div>
   </div>
 </section>
 
-<div class="divider"></div>
-
-<!-- ══════════════════════════════
-     PANEL DIAGNÓSTICO
-══════════════════════════════ -->
-<section id="diagnostico">
-  <div class="container">
-    <span class="section-label">Consulta rápida</span>
-    <h2 class="section-title">¿Qué necesitas hoy?</h2>
-
-    <div class="diag-grid">
-      <button class="diag-btn" data-need="energia" onclick="showDiag('energia',this)">
-        <span class="diag-icon">⚡</span>Energía
-      </button>
-      <button class="diag-btn" data-need="dolor" onclick="showDiag('dolor',this)">
-        <span class="diag-icon">🩹</span>Dolor / Inflamación
-      </button>
-      <button class="diag-btn" data-need="peso" onclick="showDiag('peso',this)">
-        <span class="diag-icon">⚖️</span>Control de Peso
-      </button>
-      <button class="diag-btn" data-need="sueno" onclick="showDiag('sueno',this)">
-        <span class="diag-icon">🌙</span>Sueño y Descanso
-      </button>
-      <button class="diag-btn" data-need="estres" onclick="showDiag('estres',this)">
-        <span class="diag-icon">🧘</span>Estrés
-      </button>
-      <button class="diag-btn" data-need="negocio" onclick="showDiag('negocio',this)">
-        <span class="diag-icon">💼</span>Negocio
-      </button>
-      <button class="diag-btn" data-need="info" onclick="showDiag('info',this)">
-        <span class="diag-icon">ℹ️</span>Info General
-      </button>
+<section class="feature wrap">
+  <div class="feature-box">
+    <div class="video-frame">
+      <iframe src="https://www.youtube.com/embed/GDKdTDES0ek?autoplay=1&mute=1&loop=1&playlist=GDKdTDES0ek&playsinline=1&controls=1&rel=0" title="Testimonio ONE MORE" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe>
     </div>
-
-    <div class="diag-result" id="diagResult"></div>
+    <div class="feature-text">
+      <span class="eyebrow">Testimonio real</span>
+      <p class="quote">Si has llegado hasta aquí es porque deseas conocer más sobre <em>testimonios</em> y herramientas.</p>
+      <div class="signature">
+        <span class="diamond"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5 8.5 3.5h7L20 9.5 12 20.5 4 9.5z"/><path d="M4 9.5h16M9 3.5l-1 6 4 11 4-11-1-6"/></svg></span>
+        <span class="who">Contáctame<br><b>Líder Diamante José Lugo</b></span>
+      </div>
+      <div>
+        <a class="cta-whatsapp" href="https://wa.me/573126387467?text=Hola%20Jos%C3%A9%2C%20vengo%20de%20la%20Biblioteca%20ONE%20MORE%20y%20quiero%20conocer%20m%C3%A1s%20sobre%20testimonios%20y%20herramientas." target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5c-5 0-9 3.8-9 8.5 0 1.6.5 3.2 1.3 4.5L3.5 21l4.7-1.2c1.2.6 2.5.9 3.8.9 5 0 9-3.8 9-8.6s-4-8.6-9-8.6z"/><path d="M8.8 8.9c-.3.6-.6 1.4-.2 2.4.6 1.6 2.6 3.6 4.3 4.2 1 .3 1.8.1 2.4-.3"/></svg>
+          Escríbeme por WhatsApp
+        </a>
+      </div>
+    </div>
   </div>
 </section>
 
+<section class="spaced wrap" id="categorias">
+  <div class="section-head"><h2>Categorías</h2></div>
+  <div class="tile-grid cols-5" id="catGrid">
+    <button class="tile active" data-type="all" style="--tc:#4C5C71">
+      <span class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.6 2.6L16 9.5"/></svg></span>
+      <span class="lbl">Ver todo</span><span class="n" data-count="all">21 recursos</span>
+    </button>
+    <button class="tile" data-type="pdf" style="--tc:#D98B2B">
+      <span class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 2.5h8l5 5v12a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2v-15a2 2 0 0 1 2-2z"/><path d="M14.5 2.5v5h5"/><path d="M8.5 13.5h7M8.5 17h4.5"/></svg></span>
+      <span class="lbl">PDF</span><span class="n" data-count="pdf">0 documentos</span>
+    </button>
+    <button class="tile" data-type="video" style="--tc:#2C57B8">
+      <span class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.7 16 12l-6 3.3V8.7z"/></svg></span>
+      <span class="lbl">Videos</span><span class="n" data-count="video">0 videos</span>
+    </button>
+    <button class="tile" data-type="img" style="--tc:#7A54CC">
+      <span class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="15" rx="2"/><circle cx="8.7" cy="9.7" r="1.6"/><path d="M21 15.5l-5.3-5.3L6 19.5"/></svg></span>
+      <span class="lbl">Imágenes</span><span class="n" data-count="img">0 imágenes</span>
+    </button>
+    <button class="tile" data-type="redes" style="--tc:#C24A79">
+      <span class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5.5" r="2.3"/><circle cx="6" cy="12" r="2.3"/><circle cx="18" cy="18.5" r="2.3"/><path d="M8.1 10.7 15.9 6.7M8.1 13.3l7.8 4"/></svg></span>
+      <span class="lbl">Redes</span><span class="n" data-count="redes">0 piezas</span>
+    </button>
+  </div>
+</section>
 
+<section class="spaced wrap" id="diagnostico">
+  <div class="section-head">
+    <h2>Diagnóstico rápido</h2>
+    <span class="section-note">Filtros y accesos rápidos unidos en una sola cuadrícula — nada se quita, solo se deja de repetir.</span>
+  </div>
+  <div class="tile-grid cols-10" id="filterRow">
+    <button class="tile small active" data-tag="all" style="--tc:#4C5C71">
+      <span class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.6 2.6L16 9.5"/></svg></span>
+      <span class="lbl">Todo</span>
+    </button>
+    <button class="tile small" data-tag="producto" style="--tc:#1F8F72">
+      <span class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15l6-6a4 4 0 1 1 5.7 5.7l-6 6A4 4 0 1 1 5 15z"/><path d="M9.2 8.7l6.1 6.1"/></svg></span>
+      <span class="lbl">Productos</span>
+    </button>
+    <button class="tile small" data-tag="negocio" style="--tc:#2C57B8">
+      <span class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7.5" width="19" height="12" rx="2"/><path d="M8 7.5V5.5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M2.5 13h19"/></svg></span>
+      <span class="lbl">Negocio</span>
+    </button>
+    <button class="tile small" data-tag="glutanad" style="--tc:#8B3FA0">
+      <span class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1.5"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/></svg></span>
+      <span class="lbl">GlutaNAD+</span>
+    </button>
+    <button class="tile small" data-tag="energia" style="--tc:#E3A130">
+      <span class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2.5 4.5 14h6.5l-1 7.5 8.5-11.5h-6.5l1-7.5z"/></svg></span>
+      <span class="lbl">Energía</span>
+    </button>
+    <button class="tile small" data-tag="dolor" style="--tc:#D24545">
+      <span class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12.5h-4l-2.5 7.5L11 3.5 8.5 12.5H2"/></svg></span>
+      <span class="lbl">Dolor / Inflamación</span>
+    </button>
+    <button class="tile small" data-tag="peso" style="--tc:#2A8FA6">
+      <span class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3.2M6.3 6.2h11.4M6.3 6.2l-3.3 6.6a3.3 3.3 0 0 0 6.6 0L6.3 6.2zM17.7 6.2l-3.3 6.6a3.3 3.3 0 0 0 6.6 0l-3.3-6.6z"/><path d="M8 21h8M12 9v12"/></svg></span>
+      <span class="lbl">Control de peso</span>
+    </button>
+    <button class="tile small" data-tag="sueno" style="--tc:#6B5FCC">
+      <span class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.8A8.5 8.5 0 1 1 9.7 4a7 7 0 0 0 10.8 10.8z"/></svg></span>
+      <span class="lbl">Sueño y descanso</span>
+    </button>
+    <button class="tile small" data-tag="estres" style="--tc:#2FA67A">
+      <span class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5h10.5a2.7 2.7 0 1 0-2.7-2.7"/><path d="M3 13.5h15a2.7 2.7 0 1 1-2.7 2.7"/><path d="M3 18.5h8.5a2.2 2.2 0 1 1-2.2 2.2"/></svg></span>
+      <span class="lbl">Estrés</span>
+    </button>
+    <button class="tile small" data-tag="info" style="--tc:#5C7599">
+      <span class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8.2h.01M11 11.5h1.3v5.3h1"/></svg></span>
+      <span class="lbl">Información general</span>
+    </button>
+  </div>
+</section>
 
-<!-- FOOTER -->
+<section class="library wrap" id="biblioteca">
+  <div class="section-head">
+    <h2>Biblioteca</h2>
+    <span class="section-note" id="resultCount">Mostrando 21 materiales</span>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="empty-state" id="emptyState">
+    No hay materiales para este filtro todavía.
+    <div><button id="resetBtn">Quitar filtros</button></div>
+  </div>
+</section>
+
+<section class="tutorials wrap">
+  <div class="section-head">
+    <h2>Primeros pasos</h2>
+    <span class="section-note">Los mismos 5 tutoriales de siempre, ahora en una fila propia.</span>
+  </div>
+  <div class="tut-row">
+    <div class="tut"><div class="tut-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.7 16 12l-6 3.3V8.7z"/></svg></div><div class="tut-body"><div class="t">Cómo registrarte</div><div class="d">Video · 3:20</div></div></div>
+    <div class="tut"><div class="tut-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.7 16 12l-6 3.3V8.7z"/></svg></div><div class="tut-body"><div class="t">Tu primera compra</div><div class="d">Video · 2:45</div></div></div>
+    <div class="tut"><div class="tut-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.7 16 12l-6 3.3V8.7z"/></svg></div><div class="tut-body"><div class="t">Proceso de pedidos</div><div class="d">Video · 4:10</div></div></div>
+    <div class="tut"><div class="tut-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.7 16 12l-6 3.3V8.7z"/></svg></div><div class="tut-body"><div class="t">Tour de oficina virtual</div><div class="d">Video · 6:40</div></div></div>
+    <div class="tut"><div class="tut-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.7 16 12l-6 3.3V8.7z"/></svg></div><div class="tut-body"><div class="t">Retiro de fondos</div><div class="d">Video · 5:03</div></div></div>
+  </div>
+</section>
+
+<section class="community wrap">
+  <div class="section-head"><h2>Comunidad</h2></div>
+  <div class="comm-row">
+    <a class="comm yt" href="TODO-YOUTUBE" target="_blank" rel="noopener">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="3.5"/><path d="M10.5 9.3 15 12l-4.5 2.7V9.3z" fill="currentColor" stroke="none"/></svg></span>
+      <span class="t">YouTube</span><span class="d">Canal oficial</span>
+    </a>
+    <a class="comm fb" href="TODO-FACEBOOK" target="_blank" rel="noopener">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 8.3h-2c-.6 0-1 .5-1 1.1V12h3l-.4 3h-2.6v7"/><path d="M12.5 12h3l-.4 3h-2.6"/></svg></span>
+      <span class="t">Facebook</span><span class="d">Grupo del equipo</span>
+    </a>
+    <a class="comm tg" href="TODO-TELEGRAM" target="_blank" rel="noopener">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4 3 11.5l5.5 2M21 4 15 20l-5.5-6.5M21 4l-9 8.7"/></svg></span>
+      <span class="t">Telegram</span><span class="d">Avisos y novedades</span>
+    </a>
+    <a class="comm wa" href="TODO-WHATSAPP-GRUPO" target="_blank" rel="noopener">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5c-5 0-9 3.8-9 8.5 0 1.6.5 3.2 1.3 4.5L3.5 21l4.7-1.2c1.2.6 2.5.9 3.8.9 5 0 9-3.8 9-8.6s-4-8.6-9-8.6z"/><path d="M8.8 8.9c-.3.6-.6 1.4-.2 2.4.6 1.6 2.6 3.6 4.3 4.2 1 .3 1.8.1 2.4-.3"/></svg></span>
+      <span class="t">WhatsApp</span><span class="d">Comunidad de líderes</span>
+    </a>
+  </div>
+</section>
+
 <footer>
-  <p>✦ ONE MORE International · Biblioteca Inteligente de Consulta</p>
-  <p style="margin-top:8px">
-    📁 <a href="https://drive.google.com/drive/folders/1Wp-sJA50Le6g3mI_rdxj1soE7nu-yw-V" target="_blank">Carpeta principal de Google Drive</a>
-  </p>
+  <div class="wrap row">
+    <p>ONE MORE HUB · v2.0 · SEP 2026</p>
+    <p>onemoreint.github.io/apps/drive</p>
+  </div>
 </footer>
 
-<!-- Toast -->
-<div class="toast" id="toast"></div>
-
-<!-- ══════════════════════════════════════════════════════════════
-     DATOS — AGREGA NUEVOS MATERIALES AQUÍ ABAJO
-     Copia un bloque {} y pega al final del array, separado por coma.
-     Campos:
-       titulo      → Nombre visible
-       categoria   → Debe coincidir con las categorías de CATEGORIAS[]
-       tipo        → PDF | Video | Presentación | Guía | Protocolo | Imagen | Documento | Enlace
-       descripcion → Texto breve (máx 2 líneas)
-       keywords    → Palabras para el buscador, separadas por espacio
-       recomendacion → Uso sugerido del material
-       enlace      → URL completo de Google Drive
-══════════════════════════════════════════════════════════════ -->
 <script>
-"use strict";
+(function(){
+  var RESOURCES = [
+    {t:"Ficha técnica GlutaNAD+", type:"pdf", tag:"glutanad", d:"actualizado ago 26"},
+    {t:"Guion de bienvenida — primeros 30 días", type:"pdf", tag:"negocio", d:"actualizado jul 26"},
+    {t:"Video: tour de la oficina virtual", type:"video", tag:"negocio", d:"6:40"},
+    {t:"Comparativo QV/CV por rango", type:"pdf", tag:"negocio", d:"actualizado jun 26"},
+    {t:"PNG — energía sostenida, ficha rápida", type:"pdf", tag:"energia", d:"actualizado ago 26"},
+    {t:"Video: cómo tomar tu primer pedido", type:"video", tag:"negocio", d:"4:12"},
+    {t:"Dekamin — alivio y descanso", type:"pdf", tag:"dolor", d:"actualizado may 26"},
+    {t:"Melatonin Plus — guía de uso", type:"pdf", tag:"sueno", d:"actualizado jul 26"},
+    {t:"Infografía: control de peso en 84 días", type:"img", tag:"peso", d:"1.2 MB"},
+    {t:"Video: retiro de comisiones paso a paso", type:"video", tag:"negocio", d:"5:03"},
+    {t:"B12 Plus — energía y enfoque", type:"pdf", tag:"energia", d:"actualizado ago 26"},
+    {t:"Carrusel Instagram — testimonios reales", type:"redes", tag:"negocio", d:"pack x6"},
+    {t:"Omevia — bienestar articular", type:"pdf", tag:"dolor", d:"actualizado abr 26"},
+    {t:"Historias para WhatsApp Status", type:"redes", tag:"producto", d:"pack x8"},
+    {t:"Video: registro paso a paso en Premium Office", type:"video", tag:"negocio", d:"3:20"},
+    {t:"Slim Style — guía de activación", type:"pdf", tag:"peso", d:"actualizado mar 26"},
+    {t:"Plan de compensación — Bono 4x4 y 2+1", type:"pdf", tag:"negocio", d:"actualizado ago 26"},
+    {t:"Video: manejo del estrés con rutina ONE MORE", type:"video", tag:"estres", d:"4:55"},
+    {t:"Preguntas frecuentes del distribuidor", type:"pdf", tag:"info", d:"actualizado sep 26"},
+    {t:"Night Collagen — rutina nocturna", type:"pdf", tag:"sueno", d:"actualizado jun 26"},
+    {t:"Catálogo completo — precios y CV/QV", type:"pdf", tag:"producto", d:"actualizado sep 26"}
+  ];
 
-// ════════════════════════════════════════
-// MATERIALES — Agrega aquí tus archivos
-// ════════════════════════════════════════
-const MATERIALES = [
-  {
-    "titulo": "English Catalog.pdf",
-    "categoria": "English",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “English”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "English Catalog pdf",
-    "recomendacion": "Material en inglés",
-    "enlace": "https://drive.google.com/file/d/1idPvTfJuu3y2Y091Vy3UPH4VJbisjam9/view",
-    "carpetaDrive": "English",
-    "driveId": "1idPvTfJuu3y2Y091Vy3UPH4VJbisjam9"
-  },
-  {
-    "titulo": "GlutaNAD+ ENG.pdf",
-    "categoria": "English",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “English”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "GlutaNAD+ ENG pdf English",
-    "recomendacion": "Material en inglés",
-    "enlace": "https://drive.google.com/file/d/1KIxekdgeOVtfUoct8jNKyJryEA0JC_XR/view",
-    "carpetaDrive": "English",
-    "driveId": "1KIxekdgeOVtfUoct8jNKyJryEA0JC_XR"
-  },
-  {
-    "titulo": "Products-Ingredients.pdf",
-    "categoria": "English",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “English”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Products Ingredients pdf English",
-    "recomendacion": "Material en inglés",
-    "enlace": "https://drive.google.com/file/d/1a9ZEGciftqzsM7oNyCZYtxKJTd51Ge01/view",
-    "carpetaDrive": "English",
-    "driveId": "1a9ZEGciftqzsM7oNyCZYtxKJTd51Ge01"
-  },
-  {
-    "titulo": "Technical Sheet GlutaNAD+.pdf",
-    "categoria": "English",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “English”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Technical Sheet GlutaNAD+ pdf English",
-    "recomendacion": "Material en inglés",
-    "enlace": "https://drive.google.com/file/d/1RtkIykuauBxU-gABFvom-HiuStn4mjhv/view",
-    "carpetaDrive": "English",
-    "driveId": "1RtkIykuauBxU-gABFvom-HiuStn4mjhv"
-  },
-  {
-    "titulo": "Compensation plan V2.0 (ENG).mp4",
-    "categoria": "English",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “English / English Videos”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Compensation plan V2 ENG mp4 English Videos Video",
-    "recomendacion": "Material en inglés",
-    "enlace": "https://drive.google.com/file/d/1aS_qkOxQvpfNPW3yyoRT9wHyo9kmSzCG/view",
-    "carpetaDrive": "English / English Videos",
-    "driveId": "1aS_qkOxQvpfNPW3yyoRT9wHyo9kmSzCG"
-  },
-  {
-    "titulo": "GlutaNAD Ingles (4K).mp4",
-    "categoria": "English",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “English / English Videos”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "GlutaNAD Ingles 4K mp4 English Videos Video",
-    "recomendacion": "Material en inglés",
-    "enlace": "https://drive.google.com/file/d/1wm47ATS-8qZ7WxPJpaMAyuVpCwU6uu1X/view",
-    "carpetaDrive": "English / English Videos",
-    "driveId": "1wm47ATS-8qZ7WxPJpaMAyuVpCwU6uu1X"
-  },
-  {
-    "titulo": "One More Products (ENG).mp4",
-    "categoria": "English",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “English / English Videos”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "One More Products ENG mp4 English Videos Video",
-    "recomendacion": "Material en inglés",
-    "enlace": "https://drive.google.com/file/d/1r3bAX7XIpYgp0Q5MRQPWEuhZPxj3D2Nx/view",
-    "carpetaDrive": "English / English Videos",
-    "driveId": "1r3bAX7XIpYgp0Q5MRQPWEuhZPxj3D2Nx"
-  },
-  {
-    "titulo": "Overview - OneMore Internacional (HD).mp4",
-    "categoria": "English",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “English / English Videos”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Overview OneMore Internacional HD mp4 English Videos Video",
-    "recomendacion": "Material en inglés",
-    "enlace": "https://drive.google.com/file/d/1KtFOZ0WKzVW-au3Aloe01_RWT4kkaXdf/view",
-    "carpetaDrive": "English / English Videos",
-    "driveId": "1KtFOZ0WKzVW-au3Aloe01_RWT4kkaXdf"
-  },
-  {
-    "titulo": "14.png",
-    "categoria": "GlutaNAD+",
-    "tipo": "Imagen",
-    "descripcion": "Imagen alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "14 png GlutaNAD+ Imagen",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1kx3QVvvbNc6qkIUhv8P-FpiABgY-MijU/view",
-    "carpetaDrive": "GlutaNAD+",
-    "driveId": "1kx3QVvvbNc6qkIUhv8P-FpiABgY-MijU"
-  },
-  {
-    "titulo": "28.png",
-    "categoria": "GlutaNAD+",
-    "tipo": "Imagen",
-    "descripcion": "Imagen alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "28 png GlutaNAD+ Imagen",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1iQFEzD5x2mdqT1WOmKEn7OpxeNtwRJ_x/view",
-    "carpetaDrive": "GlutaNAD+",
-    "driveId": "1iQFEzD5x2mdqT1WOmKEn7OpxeNtwRJ_x"
-  },
-  {
-    "titulo": "29.png",
-    "categoria": "GlutaNAD+",
-    "tipo": "Imagen",
-    "descripcion": "Imagen alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "29 png GlutaNAD+ Imagen",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1e0bheT2wTgudInasE4wP_C6pQ2ng6E7x/view",
-    "carpetaDrive": "GlutaNAD+",
-    "driveId": "1e0bheT2wTgudInasE4wP_C6pQ2ng6E7x"
-  },
-  {
-    "titulo": "32.png",
-    "categoria": "GlutaNAD+",
-    "tipo": "Imagen",
-    "descripcion": "Imagen alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "32 png GlutaNAD+ Imagen",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1sy2BStjP_jqnu7B94h2GNOoN1CuwQBgk/view",
-    "carpetaDrive": "GlutaNAD+",
-    "driveId": "1sy2BStjP_jqnu7B94h2GNOoN1CuwQBgk"
-  },
-  {
-    "titulo": "33.png",
-    "categoria": "GlutaNAD+",
-    "tipo": "Imagen",
-    "descripcion": "Imagen alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "33 png GlutaNAD+ Imagen",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1oMjn3Jo5xxqbKMJr1kj_j09OmFGkRkgm/view",
-    "carpetaDrive": "GlutaNAD+",
-    "driveId": "1oMjn3Jo5xxqbKMJr1kj_j09OmFGkRkgm"
-  },
-  {
-    "titulo": "7.png",
-    "categoria": "GlutaNAD+",
-    "tipo": "Imagen",
-    "descripcion": "Imagen alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "png GlutaNAD+ Imagen",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1-XQ_9ODs9VMel2DLrWzAt13tYDab98nd/view",
-    "carpetaDrive": "GlutaNAD+",
-    "driveId": "1-XQ_9ODs9VMel2DLrWzAt13tYDab98nd"
-  },
-  {
-    "titulo": "8.png",
-    "categoria": "GlutaNAD+",
-    "tipo": "Imagen",
-    "descripcion": "Imagen alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "png GlutaNAD+ Imagen",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1-4BXRFHCWja0TVtY4ZoCEfJ4v9288IvT/view",
-    "carpetaDrive": "GlutaNAD+",
-    "driveId": "1-4BXRFHCWja0TVtY4ZoCEfJ4v9288IvT"
-  },
-  {
-    "titulo": "9.png",
-    "categoria": "GlutaNAD+",
-    "tipo": "Imagen",
-    "descripcion": "Imagen alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "png GlutaNAD+ Imagen",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1oC62BVbqdF94hZMNZkOqdMx24KPPc5-5/view",
-    "carpetaDrive": "GlutaNAD+",
-    "driveId": "1oC62BVbqdF94hZMNZkOqdMx24KPPc5-5"
-  },
-  {
-    "titulo": "Ciencia GlutaNAD+.pdf",
-    "categoria": "GlutaNAD+",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Ciencia GlutaNAD+ pdf",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1jsu2A8TPB2IMfNbyNNbTP5nzQS4XASjB/view",
-    "carpetaDrive": "GlutaNAD+",
-    "driveId": "1jsu2A8TPB2IMfNbyNNbTP5nzQS4XASjB"
-  },
-  {
-    "titulo": "Ficha Tecnica GlutaNAD+.pdf",
-    "categoria": "GlutaNAD+",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Ficha Tecnica GlutaNAD+ pdf",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1a55uAUZJ7DJmFSeqSrOjEhYzcSwttr4G/view",
-    "carpetaDrive": "GlutaNAD+",
-    "driveId": "1a55uAUZJ7DJmFSeqSrOjEhYzcSwttr4G"
-  },
-  {
-    "titulo": "GlutaNAD+ ENG.pdf",
-    "categoria": "GlutaNAD+",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "GlutaNAD+ ENG pdf",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/10h_UfEER7Eez-gnwl5wvH-wxOjqvnjWC/view",
-    "carpetaDrive": "GlutaNAD+",
-    "driveId": "10h_UfEER7Eez-gnwl5wvH-wxOjqvnjWC"
-  },
-  {
-    "titulo": "Technical Sheet GlutaNAD+.pdf",
-    "categoria": "GlutaNAD+",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “GlutaNAD+”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Technical Sheet GlutaNAD+ pdf",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1gTWg8ANlDdJjI1-v-RiVkA6Sr6_Ul-32/view",
-    "carpetaDrive": "GlutaNAD+",
-    "driveId": "1gTWg8ANlDdJjI1-v-RiVkA6Sr6_Ul-32"
-  },
-  {
-    "titulo": "*Cual es el siguiente paso - Summit Networkers Team.pdf",
-    "categoria": "Negocio",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Cual es el siguiente paso Summit Networkers Team pdf Raíz Negocio",
-    "recomendacion": "Negocio / capacitación",
-    "enlace": "https://drive.google.com/file/d/1jxAYP2av9OM9z7KCKK8uuHwAA-L7ZHym/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1jxAYP2av9OM9z7KCKK8uuHwAA-L7ZHym"
-  },
-  {
-    "titulo": "1 Sistema Terapeutico Transdermico.pdf",
-    "categoria": "Protocolos",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Sistema Terapeutico Transdermico pdf Raíz Protocolos",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1SLqyy8kIN_IeS-4B_Zw3RyZfthotTv-T/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1SLqyy8kIN_IeS-4B_Zw3RyZfthotTv-T"
-  },
-  {
-    "titulo": "10 Sornie Collagen.pdf",
-    "categoria": "Productos",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "10 Sornie Collagen pdf Raíz Productos",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/11b5HB9QeBQueX6NLgU0Yn5_6MrIGgLNf/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "11b5HB9QeBQueX6NLgU0Yn5_6MrIGgLNf"
-  },
-  {
-    "titulo": "11 Sornie Anti - Aging Mask.pdf",
-    "categoria": "Productos",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "11 Sornie Anti Aging Mask pdf Raíz Productos",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1aGclb5qWeA1Ve7ijZSKcMjhYJpkMuNbQ/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1aGclb5qWeA1Ve7ijZSKcMjhYJpkMuNbQ"
-  },
-  {
-    "titulo": "2 Painless Night Glu.pdf",
-    "categoria": "Protocolos",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Painless Night Glu pdf Raíz Protocolos",
-    "recomendacion": "Orientación por necesidad",
-    "enlace": "https://drive.google.com/file/d/1ENAr8_pY11lwhvat8yl1qlaUJD4vgWoA/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1ENAr8_pY11lwhvat8yl1qlaUJD4vgWoA"
-  },
-  {
-    "titulo": "3 Ladies Night.pdf",
-    "categoria": "Productos",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Ladies Night pdf Raíz Productos",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1JMYn98LdeY4FS2PvxHmWWANnLefHNRqV/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1JMYn98LdeY4FS2PvxHmWWANnLefHNRqV"
-  },
-  {
-    "titulo": "4 Gentleman Night.pdf",
-    "categoria": "Productos",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Gentleman Night pdf Raíz Productos",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1RH_zqH24UlM3etN0lO_oDSDtBN11o2gi/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1RH_zqH24UlM3etN0lO_oDSDtBN11o2gi"
-  },
-  {
-    "titulo": "5 Melatonin Plus.pdf",
-    "categoria": "Productos",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Melatonin Plus pdf Raíz Productos",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1oA7t66vAuV6PKKEImEnq7zprVW1sNPzj/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1oA7t66vAuV6PKKEImEnq7zprVW1sNPzj"
-  },
-  {
-    "titulo": "6 Dekamin.pdf",
-    "categoria": "Productos",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Dekamin pdf Raíz Productos",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/19aME9WBv4W2NYv8Yqca2-Mxs5Q2Qw8Wb/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "19aME9WBv4W2NYv8Yqca2-Mxs5Q2Qw8Wb"
-  },
-  {
-    "titulo": "7 B12.pdf",
-    "categoria": "Productos",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "B12 pdf Raíz Productos",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1yn6PK7gF-sO4ECYECHVWZ1yvGpX_k9Pp/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1yn6PK7gF-sO4ECYECHVWZ1yvGpX_k9Pp"
-  },
-  {
-    "titulo": "8 Omevia.pdf",
-    "categoria": "Productos",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Omevia pdf Raíz Productos",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1cCBy4F8m5QQmGKCH85HPvneqOXTckMXF/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1cCBy4F8m5QQmGKCH85HPvneqOXTckMXF"
-  },
-  {
-    "titulo": "9 Slim Style.pdf",
-    "categoria": "Productos",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Slim Style pdf Raíz Productos",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/14kWjPafWgUk1o2jB5_6Qb8kYG3tNtdzR/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "14kWjPafWgUk1o2jB5_6Qb8kYG3tNtdzR"
-  },
-  {
-    "titulo": "Calendario de presentaciones Summit Networkers Nov 2025.jpeg",
-    "categoria": "Imágenes",
-    "tipo": "Imagen",
-    "descripcion": "Imagen alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Calendario de presentaciones Summit Networkers Nov 2025 jpeg Raíz Imágenes Imagen",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1ID4sdvI3P156-hN92dCpaLDesLX2iMWX/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1ID4sdvI3P156-hN92dCpaLDesLX2iMWX"
-  },
-  {
-    "titulo": "Caracteristicas y beneficios de los productos de One More International.pdf",
-    "categoria": "Productos",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Caracteristicas beneficios de los productos One More International pdf Raíz",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1oEoaOQud93PP9huTkg7ZNtUtrwth9hGe/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1oEoaOQud93PP9huTkg7ZNtUtrwth9hGe"
-  },
-  {
-    "titulo": "Catalogo productos OneMore Liviano (para enviar por WS).pdf",
-    "categoria": "Productos",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Catalogo productos OneMore Liviano para enviar por WS pdf Raíz",
-    "recomendacion": "Cliente nuevo",
-    "enlace": "https://drive.google.com/file/d/1mnAGDPYUC3JPsyOOaDY0SGscc7risUdW/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1mnAGDPYUC3JPsyOOaDY0SGscc7risUdW"
-  },
-  {
-    "titulo": "Catalogo productos OneMore.pdf",
-    "categoria": "Productos",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Catalogo productos OneMore pdf Raíz",
-    "recomendacion": "Cliente nuevo",
-    "enlace": "https://drive.google.com/file/d/1DdsobfKKTh5D-hFnXZxlzuNSDRuwD20p/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1DdsobfKKTh5D-hFnXZxlzuNSDRuwD20p"
-  },
-  {
-    "titulo": "Como hacer la solicitud de retiro de comisiones.mp4",
-    "categoria": "Negocio",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Como hacer la solicitud de retiro comisiones mp4 Raíz Negocio Video",
-    "recomendacion": "Negocio / capacitación",
-    "enlace": "https://drive.google.com/file/d/1fZcJFlNrpFV6xpk7XQn8g7sS2nc-9caV/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1fZcJFlNrpFV6xpk7XQn8g7sS2nc-9caV"
-  },
-  {
-    "titulo": "Como hacer una orden de productos.mp4",
-    "categoria": "Negocio",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Como hacer una orden de productos mp4 Raíz Negocio Video",
-    "recomendacion": "Negocio / capacitación",
-    "enlace": "https://drive.google.com/file/d/1PGQoAZIji7IrsHtwdEL_EVwM5veKRfZV/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1PGQoAZIji7IrsHtwdEL_EVwM5veKRfZV"
-  },
-  {
-    "titulo": "Costos de Envio One More America.png",
-    "categoria": "Imágenes",
-    "tipo": "Imagen",
-    "descripcion": "Imagen alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Costos de Envio One More America png Raíz Imágenes Imagen",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1OUqbOzjuUfjojO8Y9p7noZREu676qStn/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1OUqbOzjuUfjojO8Y9p7noZREu676qStn"
-  },
-  {
-    "titulo": "Detalles del Plan de Compensacion - Ideal para seguimiento o capacitacion.pdf",
-    "categoria": "Negocio",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Detalles del Plan de Compensacion Ideal para seguimiento capacitacion pdf Raíz Negocio",
-    "recomendacion": "Negocio / capacitación",
-    "enlace": "https://drive.google.com/file/d/1GHfYtZcwN8CqejWpBptVDLjT7Mi-z1t6/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1GHfYtZcwN8CqejWpBptVDLjT7Mi-z1t6"
-  },
-  {
-    "titulo": "Enlaces importantes",
-    "categoria": "Productos",
-    "tipo": "Documento",
-    "descripcion": "Google Doc alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Enlaces importantes Raíz Productos Google Doc",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://docs.google.com/document/d/19v93cRt8fliaTNMxh4umbd78Nx9tmKjUTSk19l-yLo8/edit",
-    "carpetaDrive": "Raíz",
-    "driveId": "19v93cRt8fliaTNMxh4umbd78Nx9tmKjUTSk19l-yLo8"
-  },
-  {
-    "titulo": "Lista de precios OM 24-04-2026.pdf",
-    "categoria": "Negocio",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Lista de precios OM 24 04 2026 pdf Raíz Negocio",
-    "recomendacion": "Negocio / capacitación",
-    "enlace": "https://drive.google.com/file/d/1x4NLSkGL8KdhGOKZFi9063XXRpZQNcgb/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1x4NLSkGL8KdhGOKZFi9063XXRpZQNcgb"
-  },
-  {
-    "titulo": "Men X.jpeg",
-    "categoria": "Imágenes",
-    "tipo": "Imagen",
-    "descripcion": "Imagen alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Men jpeg Raíz Imágenes Imagen",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1U5EOxlFvCVOlDaZYjIc3N978dE-0UwD7/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1U5EOxlFvCVOlDaZYjIc3N978dE-0UwD7"
-  },
-  {
-    "titulo": "One More Presentacion 2026 (Act24.4).pdf",
-    "categoria": "Negocio",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "One More Presentacion 2026 Act24 pdf Raíz Negocio",
-    "recomendacion": "Negocio / capacitación",
-    "enlace": "https://drive.google.com/file/d/1BUMnjqit4Wc70qtUlM5U8ZQmLgcDdIXb/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1BUMnjqit4Wc70qtUlM5U8ZQmLgcDdIXb"
-  },
-  {
-    "titulo": "Primer compra de un nuevo socio.mp4",
-    "categoria": "Negocio",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Primer compra de un nuevo socio mp4 Raíz Negocio Video",
-    "recomendacion": "Negocio / capacitación",
-    "enlace": "https://drive.google.com/file/d/1jHnc6w6jDbOGn7ZXBL4-PwG0V8IMmZ_E/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1jHnc6w6jDbOGn7ZXBL4-PwG0V8IMmZ_E"
-  },
-  {
-    "titulo": "Proceso de registro de nuevo socio One More International.pdf",
-    "categoria": "Negocio",
-    "tipo": "PDF",
-    "descripcion": "PDF alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Proceso de registro nuevo socio One More International pdf Raíz Negocio",
-    "recomendacion": "Negocio / capacitación",
-    "enlace": "https://drive.google.com/file/d/1YIGAe0k8KI1YtVyPD6gpgte8V_bSXyHT/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1YIGAe0k8KI1YtVyPD6gpgte8V_bSXyHT"
-  },
-  {
-    "titulo": "Proceso para hacer el registro de un socio.mp4",
-    "categoria": "Negocio",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Raíz”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Proceso para hacer el registro de un socio mp4 Raíz Negocio Video",
-    "recomendacion": "Negocio / capacitación",
-    "enlace": "https://drive.google.com/file/d/1KLGDj1LFoC3SRlgrE9jdajqIaBcb3ro1/view",
-    "carpetaDrive": "Raíz",
-    "driveId": "1KLGDj1LFoC3SRlgrE9jdajqIaBcb3ro1"
-  },
-  {
-    "titulo": "3 razones por las que rejuvenecer con productos naturales es mejor que con tratamientos invasivos.zip",
-    "categoria": "Redes Sociales",
-    "tipo": "ZIP",
-    "descripcion": "ZIP alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "razones por las que rejuvenecer con productos naturales es mejor tratamientos invasivos zip Redes Sociales contenido",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1xMMZ5LJheev66chioOKLWzesCh1hX2ML/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1xMMZ5LJheev66chioOKLWzesCh1hX2ML"
-  },
-  {
-    "titulo": "_REEL 3 RAZONES PARA ELEGIR PARCHES TRANSDERMICOS.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "REEL RAZONES PARA ELEGIR PARCHES TRANSDERMICOS mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1hc2eMYxjsrmfmtPT_q7kCThytwZTEdwx/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1hc2eMYxjsrmfmtPT_q7kCThytwZTEdwx"
-  },
-  {
-    "titulo": "alivio del dolor y tensión post entrenamiento.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "alivio del dolor tensión post entrenamiento mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1ODYb7nDDRmTUxYCtUClNc5ujxn05ifBj/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1ODYb7nDDRmTUxYCtUClNc5ujxn05ifBj"
-  },
-  {
-    "titulo": "bienestar femenino.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "bienestar femenino mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1J-Rm6YLwAF8nAwQ0DJhqdVcyQShB7afU/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1J-Rm6YLwAF8nAwQ0DJhqdVcyQShB7afU"
-  },
-  {
-    "titulo": "Carrusel Beneficio Parche Transdermico.zip",
-    "categoria": "Redes Sociales",
-    "tipo": "ZIP",
-    "descripcion": "ZIP alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Carrusel Beneficio Parche Transdermico zip Redes Sociales contenido",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1OMYNKvIRv6U9s98_yrQkQcDoL_fmif_a/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1OMYNKvIRv6U9s98_yrQkQcDoL_fmif_a"
-  },
-  {
-    "titulo": "carrusel OMEVIA.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "carrusel OMEVIA mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/13RyKhkyW63ibVL_4agbBhZXHP9r9ElZo/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "13RyKhkyW63ibVL_4agbBhZXHP9r9ElZo"
-  },
-  {
-    "titulo": "CARRUSEL PROBLEMA FEMENINO.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "CARRUSEL PROBLEMA FEMENINO mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1cQWWFDsILiwlzzMHqoDhzZnJgGpf9usG/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1cQWWFDsILiwlzzMHqoDhzZnJgGpf9usG"
-  },
-  {
-    "titulo": "Copia de reel pregunta parche.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Copia de reel pregunta parche mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1huQyrExS9L9rWKNftUIymclknj7JfEVX/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1huQyrExS9L9rWKNftUIymclknj7JfEVX"
-  },
-  {
-    "titulo": "himher .mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "himher mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1SUoKpAxUJZM4NWWqEgcuGLrK_dLLIFxz/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1SUoKpAxUJZM4NWWqEgcuGLrK_dLLIFxz"
-  },
-  {
-    "titulo": "melatonin (1).png",
-    "categoria": "Redes Sociales",
-    "tipo": "Imagen",
-    "descripcion": "Imagen alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "melatonin png Redes Sociales contenido Imagen",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1QYOYMcmBQhOjQ3YWAGYXM9_JIGDpS1kS/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1QYOYMcmBQhOjQ3YWAGYXM9_JIGDpS1kS"
-  },
-  {
-    "titulo": "Melatonin.png",
-    "categoria": "Redes Sociales",
-    "tipo": "Imagen",
-    "descripcion": "Imagen alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Melatonin png Redes Sociales contenido Imagen",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/18mfV5ZqIICCgEODZVpNlAc5DcDAqr69D/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "18mfV5ZqIICCgEODZVpNlAc5DcDAqr69D"
-  },
-  {
-    "titulo": "mitos y verdades sobre salud sexual - carrusel.zip",
-    "categoria": "Redes Sociales",
-    "tipo": "ZIP",
-    "descripcion": "ZIP alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "mitos verdades sobre salud sexual carrusel zip Redes Sociales contenido",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/10id29o7LtieZjAv75i-fFHA7YGyle-8u/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "10id29o7LtieZjAv75i-fFHA7YGyle-8u"
-  },
-  {
-    "titulo": "One More Gentlemen.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "One More Gentlemen mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1ZLYdo9eJsTtdDS4w7sGik5rIVxMdQCx5/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1ZLYdo9eJsTtdDS4w7sGik5rIVxMdQCx5"
-  },
-  {
-    "titulo": "osteoporosis.png",
-    "categoria": "Redes Sociales",
-    "tipo": "Imagen",
-    "descripcion": "Imagen alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "osteoporosis png Redes Sociales contenido Imagen",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1IV41qO3ryFNP75HlTzDZJDL1zxFWLsH4/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1IV41qO3ryFNP75HlTzDZJDL1zxFWLsH4"
-  },
-  {
-    "titulo": "Painless Animación.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Painless Animación mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1ds56j5FKNSxYnXvJ-YLtAtAbzvJYaqVG/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1ds56j5FKNSxYnXvJ-YLtAtAbzvJYaqVG"
-  },
-  {
-    "titulo": "Painless Night Glu.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Painless Night Glu mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/15atKQ4V8Zb5qpzR-O_QWU5KSgBTj30YF/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "15atKQ4V8Zb5qpzR-O_QWU5KSgBTj30YF"
-  },
-  {
-    "titulo": "post b12 plus.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "post b12 plus mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1ibb850r3BkE-L19ZdKfUT_p06Kq1QkP8/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1ibb850r3BkE-L19ZdKfUT_p06Kq1QkP8"
-  },
-  {
-    "titulo": "POST dolor de espalda (1).zip",
-    "categoria": "Redes Sociales",
-    "tipo": "ZIP",
-    "descripcion": "ZIP alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "POST dolor de espalda zip Redes Sociales contenido",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1qqzs3WGPFj5s-zMH1ewQrxcDZkQn8Hlr/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1qqzs3WGPFj5s-zMH1ewQrxcDZkQn8Hlr"
-  },
-  {
-    "titulo": "post facebook b12 plus.zip",
-    "categoria": "Redes Sociales",
-    "tipo": "ZIP",
-    "descripcion": "ZIP alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "post facebook b12 plus zip Redes Sociales contenido",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/15VOzmThU7Sds5UdbkaYQ_DULMlzG-fyL/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "15VOzmThU7Sds5UdbkaYQ_DULMlzG-fyL"
-  },
-  {
-    "titulo": "post SLIM STYLE.jpg",
-    "categoria": "Redes Sociales",
-    "tipo": "Imagen",
-    "descripcion": "Imagen alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "post SLIM STYLE jpg Redes Sociales contenido Imagen",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1qt8qIdQ6Tz1lidKJMa-53SP9c65EqgnK/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1qt8qIdQ6Tz1lidKJMa-53SP9c65EqgnK"
-  },
-  {
-    "titulo": "post SONRIE MASK Ig.png",
-    "categoria": "Redes Sociales",
-    "tipo": "Imagen",
-    "descripcion": "Imagen alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "post SONRIE MASK Ig png Redes Sociales contenido Imagen",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1HlovW6j9eYKJ7hUKM7GSVQeP6VMYGI3G/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1HlovW6j9eYKJ7hUKM7GSVQeP6VMYGI3G"
-  },
-  {
-    "titulo": "Reel dekamin.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Reel dekamin mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1SLzP1HlaBPsKwoURWa-lVxUnwpSQPDR7/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1SLzP1HlaBPsKwoURWa-lVxUnwpSQPDR7"
-  },
-  {
-    "titulo": "REEL dormir.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "REEL dormir mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1eRNR2s9soXb9d-GXDNfCmxafcQBTV5Xu/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1eRNR2s9soXb9d-GXDNfCmxafcQBTV5Xu"
-  },
-  {
-    "titulo": "reel productos (efecto cámara).mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "reel productos efecto cámara mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1HPjKPndFSUPAk61mY7iAvayKN6VEJ46f/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1HPjKPndFSUPAk61mY7iAvayKN6VEJ46f"
-  },
-  {
-    "titulo": "reel Sonrie Mask.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "reel Sonrie Mask mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1_1VWQb1d-YoyaDy-P0FYlL9cvH7oxlDf/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1_1VWQb1d-YoyaDy-P0FYlL9cvH7oxlDf"
-  },
-  {
-    "titulo": "video corto Dolor.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "video corto Dolor mp4 Redes Sociales contenido",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1jdfwYPPaSpTidmDK5uQTr8vq0TJmO4_d/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1jdfwYPPaSpTidmDK5uQTr8vq0TJmO4_d"
-  },
-  {
-    "titulo": "vitamina c vitamina d3 vitamina k12.png",
-    "categoria": "Redes Sociales",
-    "tipo": "Imagen",
-    "descripcion": "Imagen alojado en Google Drive dentro de “Redes Sociales - contenido”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "vitamina d3 k12 png Redes Sociales contenido Imagen",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1tRGkzhVRGR-Pk8CwtamIWkBtV60jB-Wc/view",
-    "carpetaDrive": "Redes Sociales - contenido",
-    "driveId": "1tRGkzhVRGR-Pk8CwtamIWkBtV60jB-Wc"
-  },
-  {
-    "titulo": "dekamin 125 mcg.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / DEKAMIN”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "dekamin 125 mcg mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1CIUzhba2LseuRZgt5eYSx2Uoy3U1oT7O/view",
-    "carpetaDrive": "Redes Sociales - contenido / DEKAMIN",
-    "driveId": "1CIUzhba2LseuRZgt5eYSx2Uoy3U1oT7O"
-  },
-  {
-    "titulo": "DEKAMIN componentes.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / DEKAMIN”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "DEKAMIN componentes mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1ybTzqmm0D0T4V_ltbaB8CMcD7cRHFKlh/view",
-    "carpetaDrive": "Redes Sociales - contenido / DEKAMIN",
-    "driveId": "1ybTzqmm0D0T4V_ltbaB8CMcD7cRHFKlh"
-  },
-  {
-    "titulo": "Dekamin facebook.png",
-    "categoria": "Redes Sociales",
-    "tipo": "Imagen",
-    "descripcion": "Imagen alojado en Google Drive dentro de “Redes Sociales - contenido / DEKAMIN”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Dekamin facebook png Redes Sociales contenido Imagen",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1YKn8l0bz5aMWEVKfwwsDa2IbT39Y6034/view",
-    "carpetaDrive": "Redes Sociales - contenido / DEKAMIN",
-    "driveId": "1YKn8l0bz5aMWEVKfwwsDa2IbT39Y6034"
-  },
-  {
-    "titulo": "reel DEKAMIN.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / DEKAMIN”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "reel DEKAMIN mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/17mbb8TchAN8OSwJJreobeBgH16SyKPe2/view",
-    "carpetaDrive": "Redes Sociales - contenido / DEKAMIN",
-    "driveId": "17mbb8TchAN8OSwJJreobeBgH16SyKPe2"
-  },
-  {
-    "titulo": "reel omevia.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / DEKAMIN”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "reel omevia mp4 Redes Sociales contenido DEKAMIN Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1uh2I2LmgGMus_WgNGESPLtQeIVHC9DYt/view",
-    "carpetaDrive": "Redes Sociales - contenido / DEKAMIN",
-    "driveId": "1uh2I2LmgGMus_WgNGESPLtQeIVHC9DYt"
-  },
-  {
-    "titulo": "GENTLEMAN.zip",
-    "categoria": "Redes Sociales",
-    "tipo": "ZIP",
-    "descripcion": "ZIP alojado en Google Drive dentro de “Redes Sociales - contenido / GENTLEMEN NIGHT”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "GENTLEMAN zip Redes Sociales contenido GENTLEMEN NIGHT",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1sS7yEWWuvBfS_aqtPsPG7BGMRG2yJIT-/view",
-    "carpetaDrive": "Redes Sociales - contenido / GENTLEMEN NIGHT",
-    "driveId": "1sS7yEWWuvBfS_aqtPsPG7BGMRG2yJIT-"
-  },
-  {
-    "titulo": "REEL testosterona.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / GENTLEMEN NIGHT”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "REEL testosterona mp4 Redes Sociales contenido GENTLEMEN NIGHT Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1E7z_jknqexjqVRI4yQ_j1usSk3lCwx3H/view",
-    "carpetaDrive": "Redes Sociales - contenido / GENTLEMEN NIGHT",
-    "driveId": "1E7z_jknqexjqVRI4yQ_j1usSk3lCwx3H"
-  },
-  {
-    "titulo": "Ladies Night.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / LADIES NIGHT”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Ladies Night mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1uZNS4gF0k1MhWtq_zLVzJkEcHb0EKF7E/view",
-    "carpetaDrive": "Redes Sociales - contenido / LADIES NIGHT",
-    "driveId": "1uZNS4gF0k1MhWtq_zLVzJkEcHb0EKF7E"
-  },
-  {
-    "titulo": "podría ser....mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / LADIES NIGHT”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "podría ser mp4 Redes Sociales contenido LADIES NIGHT Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/10JZxq1kO1xPrrF39NM7uPUfGqwr3RthS/view",
-    "carpetaDrive": "Redes Sociales - contenido / LADIES NIGHT",
-    "driveId": "10JZxq1kO1xPrrF39NM7uPUfGqwr3RthS"
-  },
-  {
-    "titulo": "carrusel melatonin.zip",
-    "categoria": "Redes Sociales",
-    "tipo": "ZIP",
-    "descripcion": "ZIP alojado en Google Drive dentro de “Redes Sociales - contenido / MELATONIN PLUS”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "carrusel melatonin zip Redes Sociales contenido PLUS",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1fA66sD5tnxGIQKrpQy_AnGGKTaB2FBST/view",
-    "carpetaDrive": "Redes Sociales - contenido / MELATONIN PLUS",
-    "driveId": "1fA66sD5tnxGIQKrpQy_AnGGKTaB2FBST"
-  },
-  {
-    "titulo": "REEL dormir.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / MELATONIN PLUS”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "REEL dormir mp4 Redes Sociales contenido MELATONIN PLUS Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1bGUL9UDDFGhQJgzYB6AyYDba9Wn-G6bH/view",
-    "carpetaDrive": "Redes Sociales - contenido / MELATONIN PLUS",
-    "driveId": "1bGUL9UDDFGhQJgzYB6AyYDba9Wn-G6bH"
-  },
-  {
-    "titulo": "reel MELATONIN.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / MELATONIN PLUS”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "reel MELATONIN mp4 Redes Sociales contenido PLUS Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1xuSDhDRGkDRARSkJWclcnGamorZAhJdA/view",
-    "carpetaDrive": "Redes Sociales - contenido / MELATONIN PLUS",
-    "driveId": "1xuSDhDRGkDRARSkJWclcnGamorZAhJdA"
-  },
-  {
-    "titulo": "omevia.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / OMEVIA”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "omevia mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1jk9YsOodOj089eVCTLGdYc1PoCPsYu1G/view",
-    "carpetaDrive": "Redes Sociales - contenido / OMEVIA",
-    "driveId": "1jk9YsOodOj089eVCTLGdYc1PoCPsYu1G"
-  },
-  {
-    "titulo": "PREGNENOLONA.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / OMEVIA”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "PREGNENOLONA mp4 Redes Sociales contenido OMEVIA Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/19Nr6T8vJO4ySlCHn7ZqnRBz3PuKaoXyU/view",
-    "carpetaDrive": "Redes Sociales - contenido / OMEVIA",
-    "driveId": "19Nr6T8vJO4ySlCHn7ZqnRBz3PuKaoXyU"
-  },
-  {
-    "titulo": "reel omevia.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / OMEVIA”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "reel omevia mp4 Redes Sociales contenido Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1JfeFNNyPn0PIbSMkMFGnLhabU0dgeNen/view",
-    "carpetaDrive": "Redes Sociales - contenido / OMEVIA",
-    "driveId": "1JfeFNNyPn0PIbSMkMFGnLhabU0dgeNen"
-  },
-  {
-    "titulo": "alivio del dolor.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / PAINLESS NIGHT”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "alivio del dolor mp4 Redes Sociales contenido PAINLESS NIGHT Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1qxNbxM08CZRR9k5Q3Jl3C7SKU7DGWG5u/view",
-    "carpetaDrive": "Redes Sociales - contenido / PAINLESS NIGHT",
-    "driveId": "1qxNbxM08CZRR9k5Q3Jl3C7SKU7DGWG5u"
-  },
-  {
-    "titulo": "alivio el dolor en 30 min.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / PAINLESS NIGHT”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "alivio el dolor en 30 min mp4 Redes Sociales contenido PAINLESS NIGHT Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1SgfBKYAJMZY83du2wBIUI7WzgD5O9uL1/view",
-    "carpetaDrive": "Redes Sociales - contenido / PAINLESS NIGHT",
-    "driveId": "1SgfBKYAJMZY83du2wBIUI7WzgD5O9uL1"
-  },
-  {
-    "titulo": "Dolor Painless.png",
-    "categoria": "Redes Sociales",
-    "tipo": "Imagen",
-    "descripcion": "Imagen alojado en Google Drive dentro de “Redes Sociales - contenido / PAINLESS NIGHT”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Dolor Painless png Redes Sociales contenido NIGHT Imagen",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/13Zbu1Lr_ysNEftHJfUd9wPnTxrsdqnoa/view",
-    "carpetaDrive": "Redes Sociales - contenido / PAINLESS NIGHT",
-    "driveId": "13Zbu1Lr_ysNEftHJfUd9wPnTxrsdqnoa"
-  },
-  {
-    "titulo": "con 1 al día verás los.mp4",
-    "categoria": "Redes Sociales",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Redes Sociales - contenido / SLIM STYLE”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "con al día verás los mp4 Redes Sociales contenido SLIM STYLE Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1dZPwX8D4moBCE1f29ijtxyfgVM4PFNLm/view",
-    "carpetaDrive": "Redes Sociales - contenido / SLIM STYLE",
-    "driveId": "1dZPwX8D4moBCE1f29ijtxyfgVM4PFNLm"
-  },
-  {
-    "titulo": "Alivio del Dolor.mp4",
-    "categoria": "Videos",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Videos para Estados”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Alivio del Dolor mp4 Videos para Estados Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1PFgNgtiHI3qVLoNmGn-qJ4geWGomc7jb/view",
-    "carpetaDrive": "Videos para Estados",
-    "driveId": "1PFgNgtiHI3qVLoNmGn-qJ4geWGomc7jb"
-  },
-  {
-    "titulo": "Dolor Cronico y Painless Night.mp4",
-    "categoria": "Videos",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Videos para Estados”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Dolor Cronico Painless Night mp4 Videos para Estados Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/12JMDXAdJDIwTcXN77mUXZDrnHh8s_ndi/view",
-    "carpetaDrive": "Videos para Estados",
-    "driveId": "12JMDXAdJDIwTcXN77mUXZDrnHh8s_ndi"
-  },
-  {
-    "titulo": "Linea de Parches.mp4",
-    "categoria": "Videos",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Videos para Estados”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Linea de Parches mp4 Videos para Estados Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1GP5k200Wu8tnDJjMDfIIw0maRJxUEOCA/view",
-    "carpetaDrive": "Videos para Estados",
-    "driveId": "1GP5k200Wu8tnDJjMDfIIw0maRJxUEOCA"
-  },
-  {
-    "titulo": "Los parches transdermicos en el mundo.mp4",
-    "categoria": "Videos",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Videos para Estados”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Los parches transdermicos en el mundo mp4 Videos para Estados Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1qSq-ILSki28uc3ys8ByGeSAGwealSV4g/view",
-    "carpetaDrive": "Videos para Estados",
-    "driveId": "1qSq-ILSki28uc3ys8ByGeSAGwealSV4g"
-  },
-  {
-    "titulo": "Parches de OneMore Superior.mp4",
-    "categoria": "Videos",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Videos para Estados”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Parches de OneMore Superior mp4 Videos para Estados Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1Dbv4WmIckkj6GKfh3o4mRdPGNk02SvGz/view",
-    "carpetaDrive": "Videos para Estados",
-    "driveId": "1Dbv4WmIckkj6GKfh3o4mRdPGNk02SvGz"
-  },
-  {
-    "titulo": "Parches deportistas.mp4",
-    "categoria": "Videos",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Videos para Estados”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Parches deportistas mp4 Videos para Estados Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/185PCuCopwkYoR9522ugyjTndvYiGfAOo/view",
-    "carpetaDrive": "Videos para Estados",
-    "driveId": "185PCuCopwkYoR9522ugyjTndvYiGfAOo"
-  },
-  {
-    "titulo": "Ventajas Parches.mp4",
-    "categoria": "Videos",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Videos para Estados”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Ventajas Parches mp4 Videos para Estados Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1KfvOAVUzTSGtWYVVsIy6kpqYxhcthRUQ/view",
-    "carpetaDrive": "Videos para Estados",
-    "driveId": "1KfvOAVUzTSGtWYVVsIy6kpqYxhcthRUQ"
-  },
-  {
-    "titulo": "GlutaNAD (whatsapp).mp4",
-    "categoria": "GlutaNAD+",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Videos para prospeccion”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "GlutaNAD whatsapp mp4 Videos para prospeccion GlutaNAD+ Video",
-    "recomendacion": "Consulta de producto",
-    "enlace": "https://drive.google.com/file/d/1qtJ5vl11Chq3RZuStkWsvuoz_7p64Fr4/view",
-    "carpetaDrive": "Videos para prospeccion",
-    "driveId": "1qtJ5vl11Chq3RZuStkWsvuoz_7p64Fr4"
-  },
-  {
-    "titulo": "Productos OneMore.mp4",
-    "categoria": "Videos",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Videos para prospeccion”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Productos OneMore mp4 Videos para prospeccion Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1M4LzsDx59t1cQKImZXCIikAx7wweN9c8/view",
-    "carpetaDrive": "Videos para prospeccion",
-    "driveId": "1M4LzsDx59t1cQKImZXCIikAx7wweN9c8"
-  },
-  {
-    "titulo": "Promo Vision Day.mp4",
-    "categoria": "Videos",
-    "tipo": "Video",
-    "descripcion": "Video alojado en Google Drive dentro de “Videos y Flyers - Promos y anuncios importantes”. Acceso directo al archivo específico para consulta del distribuidor.",
-    "keywords": "Promo Vision Day mp4 Videos Flyers Promos anuncios importantes Video",
-    "recomendacion": "Contenido para redes / prospección",
-    "enlace": "https://drive.google.com/file/d/1_AJIgYit3FbKfM-z8iS7tu-gz39oSW7X/view",
-    "carpetaDrive": "Videos y Flyers - Promos y anuncios importantes",
-    "driveId": "1_AJIgYit3FbKfM-z8iS7tu-gz39oSW7X"
-  }
-];
-// ════════════════════════════════════════
-// FIN MATERIALES — no edites más abajo
-// ════════════════════════════════════════
-
-// Categorías con iconos — Cambia o agrega aquí
-const CATEGORIAS = [
-  { nombre: "Productos",       icono: "💊" },
-  { nombre: "Protocolos",      icono: "🧾" },
-  { nombre: "GlutaNAD+",       icono: "🧬" },
-  { nombre: "Negocio",         icono: "💼" },
-  { nombre: "Videos",          icono: "🎬" },
-  { nombre: "Redes Sociales",  icono: "📲" },
-  { nombre: "Imágenes",        icono: "🖼" },
-  { nombre: "English",         icono: "🇺🇸" },
-  { nombre: "Testimonios",     icono: "⭐" },
-  { nombre: "General",         icono: "📁" },
-];
-
-// Diagnósticos — Cambia sugerencias según necesidad
-const DIAGNOSTICOS = {
-  energia: {
-    label: "⚡ Energía y Vitalidad",
-    categoria: "Productos",
-    keywords: ["energía", "vitalidad", "PNG", "B12"],
-    materiales: ["PNG", "B12 Plus"],
-    mensaje: "Busco materiales sobre energía y vitalidad en ONE MORE"
-  },
-  dolor: {
-    label: "🩹 Dolor e Inflamación",
-    categoria: "Protocolos",
-    keywords: ["dolor", "inflamación", "articulaciones"],
-    materiales: ["Protocolo de dolor"],
-    mensaje: "Busco materiales sobre dolor e inflamación en ONE MORE"
-  },
-  peso: {
-    label: "⚖️ Control de Peso",
-    categoria: "Productos",
-    keywords: ["peso", "Slim", "adelgazar"],
-    materiales: ["Slim Style", "Protocolo de control de peso"],
-    mensaje: "Busco materiales sobre control de peso en ONE MORE"
-  },
-  sueno: {
-    label: "🌙 Sueño y Descanso",
-    categoria: "Productos",
-    keywords: ["sueño", "melatonina", "descanso"],
-    materiales: ["Melatonin Plus"],
-    mensaje: "Busco materiales sobre sueño y descanso en ONE MORE"
-  },
-  estres: {
-    label: "🧘 Estrés",
-    categoria: "Productos",
-    keywords: ["estrés", "relajación", "nervioso"],
-    materiales: ["Melatonin Plus", "GlutaNAD+"],
-    mensaje: "Busco materiales sobre manejo del estrés en ONE MORE"
-  },
-  negocio: {
-    label: "💼 Negocio ONE MORE",
-    categoria: "Negocio",
-    keywords: ["negocio", "compensación", "rangos", "ingresos"],
-    materiales: ["Plan de compensación", "Presentación corporativa"],
-    mensaje: "Quiero saber más sobre la oportunidad de negocio de ONE MORE"
-  },
-  info: {
-    label: "ℹ️ Información General",
-    categoria: "General",
-    keywords: ["información", "empresa", "FDA"],
-    materiales: ["Presentación corporativa ONE MORE"],
-    mensaje: "Quiero información general sobre ONE MORE International"
-  }
-};
-
-
-
-function limpiarTodo() {
-  activeFilters = { cat: "todos", type: "todos" };
-  searchTerm = "";
-  const input = document.getElementById("searchInput");
-  if (input) input.value = "";
-  document.querySelectorAll(".filter-chip").forEach(chip => chip.classList.remove("active"));
-  document.querySelector('#catFilters .filter-chip[data-cat="todos"]')?.classList.add("active");
-  document.querySelector('#typeFilters .filter-chip[data-type="todos"]')?.classList.add("active");
-  handleSearch();
-}
-
-function actualizarImperioStats() {
-  const cats = new Set(MATERIALES.map(m => m.categoria));
-  const tipos = new Set(MATERIALES.map(m => m.tipo));
-  document.getElementById("imperioTotal").textContent = MATERIALES.length;
-  document.getElementById("imperioCats").textContent = cats.size;
-  document.getElementById("imperioTipos").textContent = tipos.size;
-}
-
-// ══════════════════════════════════
-// UTILIDADES
-// ══════════════════════════════════
-let activeFilters = { cat: "todos", type: "todos" };
-let searchTerm = "";
-
-
-function typeClass(tipo) {
-  const map = {
-    "PDF": "type-pdf",
-    "Video": "type-video",
-    "Presentación": "type-ppt",
-    "Guía": "type-guia",
-    "Protocolo": "type-prot",
-    "Imagen": "type-imagen",
-    "Documento": "type-doc",
-    "ZIP": "type-zip",
-    "Enlace": "type-link"
+  var ICONS = {
+    pdf:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 2.5h8l5 5v12a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2v-15a2 2 0 0 1 2-2z"/><path d="M14.5 2.5v5h5"/><path d="M8.5 13.5h7M8.5 17h4.5"/></svg>',
+    video:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.7 16 12l-6 3.3V8.7z"/></svg>',
+    img:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="15" rx="2"/><circle cx="8.7" cy="9.7" r="1.6"/><path d="M21 15.5l-5.3-5.3L6 19.5"/></svg>',
+    redes:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5.5" r="2.3"/><circle cx="6" cy="12" r="2.3"/><circle cx="18" cy="18.5" r="2.3"/><path d="M8.1 10.7 15.9 6.7M8.1 13.3l7.8 4"/></svg>',
+    star:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2.5 5.1 5.6.8-4 4 1 5.6L12 16.4l-5.1 2.6 1-5.6-4-4 5.6-.8L12 3.5z"/></svg>',
+    starFilled:'<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3.5l2.5 5.1 5.6.8-4 4 1 5.6L12 16.4l-5.1 2.6 1-5.6-4-4 5.6-.8L12 3.5z"/></svg>',
+    share:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M10 7h7v7"/></svg>'
   };
-  return map[tipo] || "type-link";
-}
+  var TYPE_LABEL = {pdf:'PDF',video:'Video',img:'Imagen',redes:'Redes'};
 
-function typeIcon(tipo) {
-  const icons = {
-    "PDF": "📄", "Video": "🎬", "Presentación": "📊",
-    "Guía": "📘", "Protocolo": "🧾", "Imagen": "🖼",
-    "Documento": "📝", "ZIP": "🗜", "Enlace": "🔗"
-  };
-  return icons[tipo] || "📄";
-}
+  var grid = document.getElementById('grid');
+  var empty = document.getElementById('emptyState');
+  var resultCount = document.getElementById('resultCount');
+  var saved = {};
+  var activeType = 'all';
+  var activeTag = 'all';
 
-function copyLink(enlace) {
-  navigator.clipboard.writeText(enlace).then(() => showToast("¡Enlace copiado!"));
-}
-
-function showToast(msg) {
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.classList.add("show");
-  setTimeout(() => t.classList.remove("show"), 2600);
-}
-
-function scrollTo(sel) {
-  document.querySelector(sel)?.scrollIntoView({ behavior: "smooth" });
-}
-
-// ══════════════════════════════════
-// RENDERIZAR TARJETA
-// ══════════════════════════════════
-function renderCard(m, delay = 0) {
-  const kws = m.keywords.split(" ").slice(0, 5).map(k =>
-    `<span class="kw">${k}</span>`
-  ).join("");
-
-
-  return `
-  <div class="card" style="animation-delay:${delay}ms">
-    <div class="card-top">
-      <span class="card-type-badge ${typeClass(m.tipo)}">${typeIcon(m.tipo)} ${m.tipo}</span>
-      <span class="card-cat-badge">${m.categoria}</span>
-    </div>
-    <div class="card-title">${m.titulo}</div>
-    <div class="card-desc">${m.descripcion}</div>
-    <div class="card-keywords">${kws}</div>
-    <div class="card-rec">📁 ${m.carpetaDrive || m.categoria}</div>
-    <div class="card-actions">
-      <a class="btn btn-gold btn-sm" href="${m.enlace}" target="_blank">Abrir</a>
-      <button class="btn btn-ghost btn-sm" onclick="copyLink('${m.enlace}')">Copiar</button>
-    </div>
-  </div>`;
-}
-
-// ══════════════════════════════════
-// FILTRAR Y MOSTRAR
-// ══════════════════════════════════
-function filterMateriales() {
-  return MATERIALES.filter(m => {
-    const q = searchTerm.toLowerCase();
-    const matchSearch = !q ||
-      m.titulo.toLowerCase().includes(q) ||
-      m.descripcion.toLowerCase().includes(q) ||
-      m.keywords.toLowerCase().includes(q) ||
-      m.categoria.toLowerCase().includes(q) ||
-      m.recomendacion.toLowerCase().includes(q) ||
-      m.tipo.toLowerCase().includes(q);
-
-    const matchCat  = activeFilters.cat  === "todos" || m.categoria === activeFilters.cat;
-    const matchType = activeFilters.type === "todos" || m.tipo === activeFilters.type;
-
-    return matchSearch && matchCat && matchType;
-  });
-}
-
-function renderGrid(gridId, items) {
-  const grid = document.getElementById(gridId);
-  if (!items.length) {
-    grid.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">🔎</div>
-        <div class="empty-title">Sin resultados</div>
-        <div class="empty-sub">Intenta con otras palabras o cambia los filtros.</div>
-      </div>`;
-    return;
-  }
-  grid.innerHTML = items.map((m, i) => renderCard(m, i * 40)).join("");
-}
-
-function handleSearch() {
-  const input = document.getElementById("searchInput");
-  searchTerm = input.value.trim();
-  const clearBtn = document.getElementById("clearBtn");
-  clearBtn.classList.toggle("visible", searchTerm.length > 0);
-
-  const filtered = filterMateriales();
-  document.getElementById("resultCount").textContent = filtered.length;
-  renderGrid("cardsGrid", filtered);
-}
-
-function clearSearch() {
-  document.getElementById("searchInput").value = "";
-  searchTerm = "";
-  document.getElementById("clearBtn").classList.remove("visible");
-  handleSearch();
-}
-
-function setFilter(type, value, el) {
-  activeFilters[type] = value;
-  const group = type === "cat" ? "catFilters" : "typeFilters";
-  document.querySelectorAll(`#${group} .filter-chip`).forEach(c => c.classList.remove("active"));
-  el.classList.add("active");
-  handleSearch();
-}
-
-// ══════════════════════════════════
-// CATEGORÍAS
-// ══════════════════════════════════
-function buildCatFilters() {
-  const row = document.getElementById("catFilters");
-  CATEGORIAS.forEach(c => {
-    const count = MATERIALES.filter(m => m.categoria === c.nombre).length;
-    if (count === 0) return;
-    const btn = document.createElement("button");
-    btn.className = "filter-chip";
-    btn.dataset.cat = c.nombre;
-    btn.textContent = `${c.icono} ${c.nombre}`;
-    btn.onclick = () => setFilter("cat", c.nombre, btn);
-    row.appendChild(btn);
-  });
-}
-
-function buildCatsGrid() {
-  const grid = document.getElementById("catsGrid");
-  grid.innerHTML = CATEGORIAS.map(c => {
-    const count = MATERIALES.filter(m => m.categoria === c.nombre).length;
-    return `
-    <div class="cat-card" onclick="filterByCat('${c.nombre}')">
-      <div class="cat-icon">${c.icono}</div>
-      <div class="cat-name">${c.nombre}</div>
-      <div class="cat-count">${count} material${count !== 1 ? "es" : ""}</div>
-    </div>`;
-  }).join("");
-}
-
-
-function filterBySocialType(tipo) {
-  scrollTo("#buscar");
-  setTimeout(() => {
-    activeFilters.cat = "Redes Sociales";
-    activeFilters.type = tipo;
-    searchTerm = "";
-    const input = document.getElementById("searchInput");
-    if (input) input.value = "";
-
-    document.querySelectorAll("#catFilters .filter-chip").forEach(c => {
-      c.classList.toggle("active", c.dataset.cat === "Redes Sociales");
+  function updateCounts(){
+    var counts = {all:RESOURCES.length, pdf:0, video:0, img:0, redes:0};
+    RESOURCES.forEach(function(r){ counts[r.type]++; });
+    document.querySelectorAll('.tile[data-type]').forEach(function(c){
+      var key = c.querySelector('.n').dataset.count;
+      var n = counts[key];
+      var label = key==='all' ? n+' recursos' : key==='pdf' ? n+' documentos' : key==='video' ? n+' videos' : key==='img' ? n+' imágenes' : n+' piezas';
+      c.querySelector('.n').textContent = label;
     });
-    document.querySelectorAll("#typeFilters .filter-chip").forEach(c => {
-      c.classList.toggle("active", c.dataset.type === tipo);
-    });
-
-    handleSearch();
-  }, 250);
-}
-
-function filterByCat(nombre) {
-  scrollTo("#buscar");
-  setTimeout(() => {
-    activeFilters.cat = nombre;
-    document.querySelectorAll("#catFilters .filter-chip").forEach(c => {
-      c.classList.toggle("active", c.dataset.cat === nombre);
-    });
-    handleSearch();
-  }, 400);
-}
-
-// ══════════════════════════════════
-// DIAGNÓSTICO
-// ══════════════════════════════════
-function showDiag(need, el) {
-  document.querySelectorAll(".diag-btn").forEach(b => b.classList.remove("active"));
-  el.classList.add("active");
-
-  const d = DIAGNOSTICOS[need];
-  const items = d.materiales.map(m =>
-    `<div class="diag-item"><strong>📄 Material:</strong> ${m}</div>`
-  ).join("");
-
-  document.getElementById("diagResult").innerHTML = `
-    <div class="diag-result-title">${d.label}</div>
-    <div class="diag-items">
-      <div class="diag-item"><strong>📂 Categoría:</strong> ${d.categoria}</div>
-      <div class="diag-item"><strong>🔍 Buscar:</strong> ${d.keywords.join(", ")}</div>
-      ${items}
-    </div>
-    <div class="diag-actions">
-      <button class="btn btn-gold btn-sm" onclick="filterByCat('${d.categoria}')">Ver categoría</button>
-      <a class="btn btn-notebook btn-sm" href="https://notebooklm.google.com/notebook/98c9a091-90a3-43ed-bab0-a0e2789c3954" target="_blank">🧠 Ampliar en NotebookLM</a>
-    </div>
-  `;
-  document.getElementById("diagResult").classList.add("visible");
-}
-
-
-// ══════════════════════════════════
-// BIBLIOTECA REAL — Navegación limpia
-// ══════════════════════════════════
-let realLibraryType = "inicio";
-let realLibraryCategoryLock = "todos";
-
-function realTypeIcon(tipo) {
-  if (tipo === "PDF") return "📄";
-  if (tipo === "Video") return "🎬";
-  if (tipo === "Imagen") return "🖼";
-  if (tipo === "ZIP") return "🗜";
-  if (tipo === "Documento") return "📝";
-  return "📁";
-}
-
-function setupRealLibrary() {
-  const categorySelect = document.getElementById("realLibraryCategory");
-  if (!categorySelect) return;
-
-  const cats = [...new Set(MATERIALES.map(m => m.categoria))].sort();
-  categorySelect.innerHTML = `<option value="todos">Todas las categorías</option>` + cats.map(c => `<option value="${c}">${c}</option>`).join("");
-
-  const count = tipo => tipo === "todos" ? MATERIALES.length : MATERIALES.filter(m => m.tipo === tipo).length;
-  document.getElementById("realCountTodos").textContent = `${count("todos")} recursos`;
-  document.getElementById("realCountPDF").textContent = `${count("PDF")} documentos`;
-  document.getElementById("realCountVideo").textContent = `${count("Video")} videos`;
-  document.getElementById("realCountImagen").textContent = `${count("Imagen")} imágenes`;
-
-  showLibraryWelcome();
-}
-
-function openLibraryType(tipo, btn) {
-  realLibraryType = tipo;
-  realLibraryCategoryLock = "todos";
-
-  document.querySelectorAll(".library-entry-card").forEach(b => b.classList.remove("active"));
-  if (btn) btn.classList.add("active");
-
-  const select = document.getElementById("realLibraryCategory");
-  if (select) select.value = "todos";
-
-  if (realLibraryType === "inicio") return [];
-  const input = document.getElementById("realLibrarySearch");
-  if (input) input.value = "";
-
-  renderRealLibrary();
-}
-
-function openLibraryCategory(categoria, btn) {
-  realLibraryType = "todos";
-  realLibraryCategoryLock = categoria;
-
-  document.querySelectorAll(".library-entry-card").forEach(b => b.classList.remove("active"));
-  if (btn) btn.classList.add("active");
-
-  const select = document.getElementById("realLibraryCategory");
-  if (select) select.value = categoria;
-
-  const input = document.getElementById("realLibrarySearch");
-  if (input) input.value = "";
-
-  renderRealLibrary();
-}
-
-function resetRealLibrary() {
-  realLibraryType = "inicio";
-  realLibraryCategoryLock = "todos";
-
-  const input = document.getElementById("realLibrarySearch");
-  const select = document.getElementById("realLibraryCategory");
-  if (input) input.value = "";
-  if (select) select.value = "todos";
-
-  document.querySelectorAll(".library-entry-card").forEach(b => b.classList.remove("active"));
-  showLibraryWelcome();
-}
-
-
-function showLibraryWelcome() {
-  const list = document.getElementById("realLibraryList");
-  const title = document.getElementById("realLibraryTitle");
-  const count = document.getElementById("realLibraryCount");
-
-  if (title) title.textContent = "Selecciona una sección para ver recursos";
-  if (count) count.textContent = "Vista limpia";
-
-  if (list) {
-    list.innerHTML = `
-      <div class="library-welcome">
-        <div class="library-welcome-icon">📚</div>
-        <h3>Biblioteca lista para consultar</h3>
-        <p>Escoge un botón superior: PDF, Videos, Imágenes, Redes Sociales o NotebookLM. Así evitamos mostrar demasiados archivos al mismo tiempo.</p>
-      </div>
-    `;
   }
-}
 
-function getRealLibraryItems() {
-  const input = document.getElementById("realLibrarySearch");
-  const select = document.getElementById("realLibraryCategory");
+  function render(){
+    var q = (document.getElementById('q').value || '').toLowerCase().trim();
+    grid.innerHTML = '';
+    var shown = 0;
+    RESOURCES.forEach(function(r, i){
+      var matchesType = activeType === 'all' || r.type === activeType;
+      var matchesTag = activeTag === 'all' || r.tag === activeTag;
+      var matchesQuery = !q || r.t.toLowerCase().indexOf(q) !== -1;
+      if(!(matchesType && matchesTag && matchesQuery)) return;
+      shown++;
+      var card = document.createElement('div');
+      card.className = 'card';
+      var isSaved = saved[i];
+      card.innerHTML =
+        '<div class="thumb '+r.type+'">'+ICONS[r.type]+'</div>'+
+        '<div class="card-body">'+
+          '<div class="type-badge '+r.type+'"><span class="dot"></span>'+TYPE_LABEL[r.type]+'</div>'+
+          '<div class="t">'+r.t+'</div>'+
+          '<div class="d">'+r.d+'</div>'+
+          '<div class="card-foot">'+
+            '<div class="mini-btn mb-save save-btn '+(isSaved?'saved':'')+'" data-i="'+i+'">'+(isSaved?ICONS.starFilled:ICONS.star)+'<span>Guardar</span></div>'+
+            '<div class="mini-btn mb-share">'+ICONS.share+'<span>Compartir</span></div>'+
+          '</div>'+
+        '</div>';
+      grid.appendChild(card);
+    });
+    empty.style.display = shown === 0 ? 'block' : 'none';
+    grid.style.display = shown === 0 ? 'none' : 'grid';
+    resultCount.textContent = 'Mostrando ' + shown + ' material' + (shown===1?'':'es');
 
-  const q = (input?.value || "").toLowerCase().trim();
-  const selectedCat = select?.value || "todos";
-  const finalCat = realLibraryCategoryLock !== "todos" ? realLibraryCategoryLock : selectedCat;
+    grid.querySelectorAll('.save-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        saved[this.dataset.i] = !saved[this.dataset.i];
+        render();
+      });
+    });
+  }
 
-  return MATERIALES.filter(m => {
-    const typeOk = realLibraryType === "todos" || m.tipo === realLibraryType;
-    const catOk = finalCat === "todos" || m.categoria === finalCat;
-    const text = `${m.titulo} ${m.tipo} ${m.categoria} ${m.descripcion} ${m.keywords} ${m.carpetaDrive || ""}`.toLowerCase();
-    const qOk = !q || text.includes(q);
-    return typeOk && catOk && qOk;
+  document.getElementById('q').addEventListener('input', render);
+
+  document.getElementById('catGrid').addEventListener('click', function(e){
+    var el = e.target.closest('.tile');
+    if(!el) return;
+    document.querySelectorAll('#catGrid .tile').forEach(function(c){c.classList.remove('active');});
+    el.classList.add('active');
+    activeType = el.dataset.type;
+    render();
   });
-}
 
-function renderRealLibrary() {
-  if (realLibraryType === "inicio") {
-    showLibraryWelcome();
-    return;
+  document.getElementById('filterRow').addEventListener('click', function(e){
+    var el = e.target.closest('.tile');
+    if(!el) return;
+    document.querySelectorAll('#filterRow .tile').forEach(function(c){c.classList.remove('active');});
+    el.classList.add('active');
+    activeTag = el.dataset.tag;
+    render();
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', function(){
+    document.getElementById('q').value = '';
+    activeType = 'all'; activeTag = 'all';
+    document.querySelectorAll('#catGrid .tile').forEach(function(c,i){c.classList.toggle('active', i===0);});
+    document.querySelectorAll('#filterRow .tile').forEach(function(c,i){c.classList.toggle('active', i===0);});
+    render();
+  });
+
+  var themeBtn = document.getElementById('themeBtn');
+  function applyTheme(t){
+    if(t){ document.documentElement.setAttribute('data-theme', t); }
+    else { document.documentElement.removeAttribute('data-theme'); }
   }
+  var stored = null;
+  try{ stored = localStorage.getItem('omh-theme'); }catch(e){}
+  if(stored) applyTheme(stored);
+  themeBtn.addEventListener('click', function(){
+    var current = document.documentElement.getAttribute('data-theme');
+    var next = current === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try{ localStorage.setItem('omh-theme', next); }catch(e){}
+  });
 
-  const list = document.getElementById("realLibraryList");
-  if (!list) return;
-
-  if (realLibraryCategoryLock === "todos") {
-    const select = document.getElementById("realLibraryCategory");
-    if (select) {
-      // keep selected category from dropdown
-    }
-  }
-
-  const items = getRealLibraryItems();
-  const title = document.getElementById("realLibraryTitle");
-  const count = document.getElementById("realLibraryCount");
-
-  const typeLabel = realLibraryType === "todos" ? "todos los recursos" : realLibraryType;
-  const catLabel = realLibraryCategoryLock !== "todos"
-    ? realLibraryCategoryLock
-    : (document.getElementById("realLibraryCategory")?.value || "todos");
-
-  title.textContent = catLabel === "todos" ? `Mostrando ${typeLabel}` : `Mostrando ${typeLabel} · ${catLabel}`;
-  count.textContent = `${items.length} resultado${items.length !== 1 ? "s" : ""}`;
-
-  if (!items.length) {
-    list.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">🔎</div>
-        <div class="empty-title">No hay resultados</div>
-        <div class="empty-sub">Prueba otra categoría, tipo o palabra clave.</div>
-      </div>`;
-    return;
-  }
-
-  list.innerHTML = items.map((m, i) => `
-    <article class="clean-file-row">
-      <div class="file-icon-clean">${realTypeIcon(m.tipo)}</div>
-      <div class="file-info-clean">
-        <strong title="${m.titulo}">${m.titulo}</strong>
-        <small>${m.tipo} · ${m.categoria} · ${m.carpetaDrive || "Google Drive"}</small>
-      </div>
-      <div class="file-actions-clean">
-        <button class="clean-action-btn" onclick="showRealDetail(${i})">Detalle</button>
-        <a class="clean-action-btn primary" href="${m.enlace}" target="_blank">Abrir</a>
-      </div>
-    </article>
-  `).join("");
-
-  window.__realLibraryItems = items;
-}
-
-function showRealDetail(index) {
-  const item = (window.__realLibraryItems || [])[index];
-  if (!item) return;
-
-  const modal = document.getElementById("realDetailModal");
-  const content = document.getElementById("realDetailContent");
-
-  content.innerHTML = `
-    <div class="detail-icon">${realTypeIcon(item.tipo)}</div>
-    <h3>${item.titulo}</h3>
-    <p>${item.descripcion || "Archivo disponible para consulta directa en Google Drive."}</p>
-    <div class="detail-meta">
-      <span><strong>Tipo:</strong> ${item.tipo}</span>
-      <span><strong>Categoría:</strong> ${item.categoria}</span>
-      <span><strong>Carpeta:</strong> ${item.carpetaDrive || "Google Drive"}</span>
-      <span><strong>Uso sugerido:</strong> ${item.recomendacion || "Consulta"}</span>
-    </div>
-    <div class="detail-buttons">
-      <a class="btn btn-gold btn-sm" href="${item.enlace}" target="_blank">Abrir archivo</a>
-      <button class="btn btn-ghost btn-sm" onclick="copyLink('${item.enlace}')">Copiar enlace</button>
-    </div>
-  `;
-
-  modal.classList.add("visible");
-  document.body.style.overflow = "hidden";
-}
-
-function hideRealDetailModal() {
-  const modal = document.getElementById("realDetailModal");
-  if (modal) modal.classList.remove("visible");
-  document.body.style.overflow = "";
-}
-
-function closeRealDetailModal(event) {
-  if (event.target && event.target.id === "realDetailModal") hideRealDetailModal();
-}
-
-// ══════════════════════════════════
-// INIT
-// ══════════════════════════════════
-window.addEventListener("DOMContentLoaded", () => {
-  actualizarImperioStats();
-  buildCatFilters();
-  buildCatsGrid();
-  setupRealLibrary();
-
-  const all = filterMateriales();
-  document.getElementById("resultCount").textContent = all.length;
-  renderGrid("cardsGrid", all);
-  renderGrid("allCardsGrid", MATERIALES);
-});
+  updateCounts();
+  render();
+})();
 </script>
-</body>
-</html>

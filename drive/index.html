@@ -71,8 +71,9 @@
   }
 
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{background:var(--paper);color:var(--ink);font-family:'Manrope',system-ui,-apple-system,sans-serif;line-height:1.55;font-size:16.5px;-webkit-font-smoothing:antialiased;}
+  html{scroll-behavior:smooth;overflow-x:hidden;}
+  body{background:var(--paper);color:var(--ink);font-family:'Manrope',system-ui,-apple-system,sans-serif;line-height:1.55;font-size:16.5px;-webkit-font-smoothing:antialiased;overflow-x:hidden;max-width:100vw;}
+  img,svg,video,iframe{max-width:100%;}
   h1,h2,h3,.display{font-family:'Fraunces',Georgia,serif;font-weight:600;text-wrap:balance;color:var(--ink);letter-spacing:-0.01em;}
   em{font-family:'Fraunces',serif;font-style:italic;font-weight:500;color:var(--accent-ink);}
   .mono{font-family:'JetBrains Mono',ui-monospace,monospace;}
@@ -102,6 +103,18 @@
   .btn-office:hover{opacity:.88;}
 
   @media (max-width:900px){ nav.mainnav{display:none;} }
+  @media (max-width:560px){
+    .wrap{padding:0 16px;}
+    .topbar .row{gap:10px;}
+    .brand-text{font-size:14px;}
+    .iconbtn{width:40px;height:40px;border-radius:10px;}
+    .iconbtn svg{width:20px;height:20px;}
+    .btn-office{padding:10px;gap:0;border-radius:10px;}
+    .btn-office-label{display:none;}
+  }
+  @media (max-width:380px){
+    .brand-text{display:none;}
+  }
 
   /* hero */
   .hero{padding:56px 0 38px;}
@@ -316,9 +329,9 @@
       <button class="iconbtn" id="themeBtn" title="Cambiar tema" aria-label="Cambiar tema">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"/></svg>
       </button>
-      <a class="btn-office" href="https://onemore.global/office/login" target="_blank" rel="noopener">
+      <a class="btn-office" href="https://onemore.global/office/login" target="_blank" rel="noopener" aria-label="Back Office">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.2 13 13l-3.8 1.8L11 11l3.8-1.8z"/></svg>
-        Back Office
+        <span class="btn-office-label">Back Office</span>
       </a>
     </div>
   </div>

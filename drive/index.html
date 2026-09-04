@@ -4,23 +4,30 @@
   "Comunidad" ya apuntan a tus enlaces reales. Back Office -> https://onemore.global/office/login
   y el botón "Únete aquí" -> https://onemore.global/!aasespr ya están conectados. Cada tarjeta de la
   biblioteca ahora es un enlace real: al tocarla, el archivo se abre en una pestaña nueva con la app
-  predeterminada del dispositivo (así los videos se reproducen y los PDF/imágenes se visualizan sin
-  pasos extra) y el botón "Compartir" ahora copia/comparte el enlace del archivo.
-  Ojo con Telegram: https://t.me/c/2485498303/46 es un enlace interno de canal privado — solo funciona
-  para quien YA es miembro. Si quieres que alguien nuevo pueda unirse desde aquí, pásame el enlace de
-  invitación público (normalmente empieza con t.me/joinchat/... o t.me/+...) y lo cambio.
+  predeterminada del dispositivo, y el botón "Compartir" copia/comparte el enlace del archivo.
 
-  ANTES DE PUBLICAR, busca y reemplaza estos marcadores restantes (Ctrl+F):
-  1. TODO-DRIVE        -> enlace real de tu carpeta de Google Drive (botón "Abrir Drive")
-  2. TODO-NOTEBOOKLM    -> enlace real de tu notebook de NotebookLM
-  3. TODO-ARCHIVO-01 ... TODO-ARCHIVO-21 -> dentro de <script>, en la lista RESOURCES, cada objeto
-     tiene ahora un campo "url": pega ahí el enlace para compartir de CADA archivo real (en Google
-     Drive: clic derecho sobre el archivo -> "Compartir" -> "Copiar enlace", con acceso puesto en
-     "Cualquier persona con el enlace"). Ese enlace es el que se abre al tocar la tarjeta.
-     Ejemplo: {t:"Ficha técnica GlutaNAD+", type:"pdf", tag:"glutanad", d:"actualizado ago 26",
-     url:"https://drive.google.com/file/d/TU_ID_AQUI/view"}
-     También puedes agregar, quitar o reordenar objetos de esta lista libremente para reflejar tu
-     biblioteca real (ahora mismo son 21 archivos de ejemplo).
+  BIBLIOTECA: los 21 recursos ya NO son de ejemplo — están conectados a tus archivos REALES de tu
+  carpeta de Drive "ONE MORE" (las 11 fichas de producto numeradas, catálogo, presentación oficial,
+  precios, requisitos de calificación, proceso de registro, 4 videos y el carrusel de GlutaNAD+).
+  Puedes agregar, quitar o reordenar objetos de la lista RESOURCES libremente para reflejar cambios
+  en tu biblioteca — cada objeto lleva {t: título, type: pdf|video|img|redes, tag: categoría,
+  d: detalle, url: enlace de Drive}.
+
+  ⚠ ACCIÓN PENDIENTE DE TU PARTE — MUY IMPORTANTE: revisé los permisos y estos archivos hoy son
+  PRIVADOS (solo tú tienes acceso). Mi conector de Drive solo puede compartir con una persona a la
+  vez por correo, no puede poner "cualquier persona con el enlace" — ese cambio solo lo puedes hacer
+  tú. Si no lo haces, quien toque una tarjeta va a ver "Solicitar acceso" en vez de abrir el archivo.
+  Cómo hacerlo en 1 minuto: entra a tu carpeta "ONE MORE" en Drive -> selecciona todos los archivos
+  (Ctrl/Cmd+A) -> clic derecho -> "Compartir" -> donde dice "Acceso general" cambia a
+  "Cualquier persona con el enlace" y el rol a "Lector" -> Listo. Hazlo también dentro de la
+  subcarpeta "Summit Networkers Team - Marketing" y en la carpeta "GlutaNAD+".
+
+  RESUELTO: el botón "Abrir Drive" ya apunta a tu carpeta real
+  (https://drive.google.com/drive/folders/1HktID5MEBbULAnFri_OGzXHn28CfnQ3H) — igual necesita que
+  actives "cualquier persona con el enlace" como se explica arriba para que cualquiera pueda entrar.
+
+  TODAVÍA PENDIENTE:
+  1. TODO-NOTEBOOKLM    -> enlace real de tu notebook de NotebookLM
   El logo "1M" es un marcador temporal: mandame tu archivo de logo (PNG o SVG) y te lo dejo insertado.
 -->
 <style>
@@ -319,7 +326,7 @@
         <input id="q" type="text" placeholder="Buscar en la biblioteca… ej. GlutaNAD+, bienvenida, QV" />
       </div>
       <div class="action-tiles">
-        <a class="action-tile primary" href="TODO-DRIVE" target="_blank" rel="noopener">
+        <a class="action-tile primary" href="https://drive.google.com/drive/folders/1HktID5MEBbULAnFri_OGzXHn28CfnQ3H" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7.2A2 2 0 0 1 5.5 5.2h4l2 2h7a2 2 0 0 1 2 2v7.6a2 2 0 0 1-2 2H5.5a2 2 0 0 1-2-2V7.2z"/></svg>
           Abrir Drive
         </a>
@@ -512,27 +519,27 @@
 <script>
 (function(){
   var RESOURCES = [
-    {t:"Ficha técnica GlutaNAD+", type:"pdf", tag:"glutanad", d:"actualizado ago 26", url:"TODO-ARCHIVO-01"},
-    {t:"Guion de bienvenida — primeros 30 días", type:"pdf", tag:"negocio", d:"actualizado jul 26", url:"TODO-ARCHIVO-02"},
-    {t:"Video: tour de la oficina virtual", type:"video", tag:"negocio", d:"6:40", url:"TODO-ARCHIVO-03"},
-    {t:"Comparativo QV/CV por rango", type:"pdf", tag:"negocio", d:"actualizado jun 26", url:"TODO-ARCHIVO-04"},
-    {t:"PNG — energía sostenida, ficha rápida", type:"pdf", tag:"energia", d:"actualizado ago 26", url:"TODO-ARCHIVO-05"},
-    {t:"Video: cómo tomar tu primer pedido", type:"video", tag:"negocio", d:"4:12", url:"TODO-ARCHIVO-06"},
-    {t:"Dekamin — alivio y descanso", type:"pdf", tag:"dolor", d:"actualizado may 26", url:"TODO-ARCHIVO-07"},
-    {t:"Melatonin Plus — guía de uso", type:"pdf", tag:"sueno", d:"actualizado jul 26", url:"TODO-ARCHIVO-08"},
-    {t:"Infografía: control de peso en 84 días", type:"img", tag:"peso", d:"1.2 MB", url:"TODO-ARCHIVO-09"},
-    {t:"Video: retiro de comisiones paso a paso", type:"video", tag:"negocio", d:"5:03", url:"TODO-ARCHIVO-10"},
-    {t:"B12 Plus — energía y enfoque", type:"pdf", tag:"energia", d:"actualizado ago 26", url:"TODO-ARCHIVO-11"},
-    {t:"Carrusel Instagram — testimonios reales", type:"redes", tag:"negocio", d:"pack x6", url:"TODO-ARCHIVO-12"},
-    {t:"Omevia — bienestar articular", type:"pdf", tag:"dolor", d:"actualizado abr 26", url:"TODO-ARCHIVO-13"},
-    {t:"Historias para WhatsApp Status", type:"redes", tag:"producto", d:"pack x8", url:"TODO-ARCHIVO-14"},
-    {t:"Video: registro paso a paso en Premium Office", type:"video", tag:"negocio", d:"3:20", url:"TODO-ARCHIVO-15"},
-    {t:"Slim Style — guía de activación", type:"pdf", tag:"peso", d:"actualizado mar 26", url:"TODO-ARCHIVO-16"},
-    {t:"Plan de compensación — Bono 4x4 y 2+1", type:"pdf", tag:"negocio", d:"actualizado ago 26", url:"TODO-ARCHIVO-17"},
-    {t:"Video: manejo del estrés con rutina ONE MORE", type:"video", tag:"estres", d:"4:55", url:"TODO-ARCHIVO-18"},
-    {t:"Preguntas frecuentes del distribuidor", type:"pdf", tag:"info", d:"actualizado sep 26", url:"TODO-ARCHIVO-19"},
-    {t:"Night Collagen — rutina nocturna", type:"pdf", tag:"sueno", d:"actualizado jun 26", url:"TODO-ARCHIVO-20"},
-    {t:"Catálogo completo — precios y CV/QV", type:"pdf", tag:"producto", d:"actualizado sep 26", url:"TODO-ARCHIVO-21"}
+    {t:"1. Sistema Terapéutico Transdérmico", type:"pdf", tag:"info", d:"ficha técnica", url:"https://drive.google.com/file/d/1E-OiNZyAABwDxo_ZLcihJPd9Po6O2NzZ/view"},
+    {t:"2. Painless Night — alivio del dolor", type:"pdf", tag:"dolor", d:"ficha técnica", url:"https://drive.google.com/file/d/16ZMzL_HJrhpR_NHyDrhPQlfJf7z-9ddq/view"},
+    {t:"3. Ladies Night", type:"pdf", tag:"sueno", d:"ficha técnica", url:"https://drive.google.com/file/d/1h4TnDnDfDZ9LOKRhWJI28lZlKc-AsYRj/view"},
+    {t:"4. Gentleman Night", type:"pdf", tag:"sueno", d:"ficha técnica", url:"https://drive.google.com/file/d/1JwHgSZ9JGHOrq-XZdIgEhdoVdA3aR5eG/view"},
+    {t:"5. Melatonin Plus", type:"pdf", tag:"sueno", d:"ficha técnica", url:"https://drive.google.com/file/d/1zzpvN9u1EOqgt44IUklggfgjfZ1dEgH4/view"},
+    {t:"6. Dekamin", type:"pdf", tag:"dolor", d:"ficha técnica", url:"https://drive.google.com/file/d/1RBSlzDTuAZWArxdGCVqypO5Uh1Tod-4o/view"},
+    {t:"7. B12 Plus", type:"pdf", tag:"energia", d:"ficha técnica", url:"https://drive.google.com/file/d/1H7_MEy_K3IGkTg2lNCCVxQa_QHsmqo6I/view"},
+    {t:"8. Omevia", type:"pdf", tag:"dolor", d:"ficha técnica", url:"https://drive.google.com/file/d/1PVl7v5mZlmsXz3gKW92Xcvk3hAIEzPbD/view"},
+    {t:"9. Slim Style", type:"pdf", tag:"peso", d:"ficha técnica", url:"https://drive.google.com/file/d/15bQF8gABWi3SVdHAkqxufvL_sMOtF-c6/view"},
+    {t:"10. Sornie Collagen", type:"pdf", tag:"producto", d:"ficha técnica", url:"https://drive.google.com/file/d/1_deBOC2m1E3f1YNPyegyaHaTYCqN9PGi/view"},
+    {t:"11. Sornie Anti-Aging Mask", type:"pdf", tag:"producto", d:"ficha técnica", url:"https://drive.google.com/file/d/1-TwVzQLxJwyjamvP8Lv9W8C3-fAzaIDL/view"},
+    {t:"Catálogo de productos (versión WhatsApp)", type:"pdf", tag:"producto", d:"4.7 MB", url:"https://drive.google.com/file/d/19Fkv38CYWNVu_ETxuvmyvBb7vBhqw485/view"},
+    {t:"Proceso de registro de nuevo socio", type:"pdf", tag:"negocio", d:"guía paso a paso", url:"https://drive.google.com/file/d/1_cBRRrSwDb0cROzoC52WfXO_rD-1PhWb/view"},
+    {t:"Requisitos de calificación ONE MORE", type:"pdf", tag:"negocio", d:"plan de rangos", url:"https://drive.google.com/file/d/1tRrZTVdRVr6EhEimV5fRnHKMNKpaeCSS/view"},
+    {t:"Lista de precios ONE MORE — América", type:"pdf", tag:"producto", d:"actualizada", url:"https://drive.google.com/file/d/1ugcrFtkX7rNncbezKzAm2oVlgGfBcjCX/view"},
+    {t:"Presentación oficial ONE MORE", type:"pdf", tag:"negocio", d:"presentación", url:"https://drive.google.com/file/d/1_zQPwBb4b0HnIlM2VQIf4ZjMvjvjDZwK/view"},
+    {t:"Video: línea de parches ONE MORE", type:"video", tag:"producto", d:"48 MB", url:"https://drive.google.com/file/d/1VutNFs-fLlw-ON2XYx1bT_RW_pVmHlHk/view"},
+    {t:"Video: dolor crónico y Painless Night", type:"video", tag:"dolor", d:"52 MB", url:"https://drive.google.com/file/d/1KyLmFoxDQhsd3Q2_Sj4qhK2HWuPInbvO/view"},
+    {t:"Video: alivio del dolor", type:"video", tag:"dolor", d:"32 MB", url:"https://drive.google.com/file/d/1wlBgGBk1LylLdi7_WJZ6dzljXTxoBnXm/view"},
+    {t:"Video: GlutaNAD+ (para WhatsApp)", type:"video", tag:"glutanad", d:"52 MB", url:"https://drive.google.com/file/d/1GtVkce2mvTIaIs5p4Bj_4dFcJerEM1L-/view"},
+    {t:"Carrusel GlutaNAD+ — piezas para redes", type:"redes", tag:"glutanad", d:"carpeta · 8 piezas", url:"https://drive.google.com/drive/folders/1CanjUgxKsrE_ftthufpDxEL133FZWcte"}
   ];
 
   var ICONS = {

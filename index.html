@@ -1,914 +1,1036 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>One More International — Transforma tu vida</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <style>
-    :root{
-      --navy:#0D1B3E;
-      --navy2:#142244;
-      --blue:#1B3A8C;
-      --blue-light:#2B5BE0;
-      --gold:#C9A84C;
-      --gold-light:#E8C97A;
-      --white:#FFFFFF;
-      --off-white:#F4F7FF;
-      --text:#1A1A2E;
-      --text-dim:rgba(26,26,46,0.65);
-      --radius:6px;
-      --wa:#25D366;
-    }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{background:var(--white);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One More · Evaluación de Bienestar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap">
+<style>
+  /* ═══════════════════════════════════════════════════
+     TOKENS — un color por paso, marca fija en resultado
+     ═══════════════════════════════════════════════════ */
+  :root {
+    --bg: #0a0e1a;
+    --surface: #131a2c;
+    --surface2: #1a2338;
+    --surface3: #222c46;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.16);
+    --text: #f4f7ff;
+    --muted: #8b96b8;
+    --muted-dim: #5c6684;
 
-    /* ── NAV ── */
-    nav{
-      position:fixed;top:0;left:0;right:0;z-index:200;
-      background:rgba(13,27,62,0.97);
-      backdrop-filter:blur(12px);
-      display:flex;align-items:center;justify-content:space-between;
-      padding:0.9rem 2rem;
-      border-bottom:1px solid rgba(201,168,76,0.2);
-    }
-    .nav-logo{
-      font-family:'Cormorant Garamond',serif;
-      font-size:1.4rem;font-weight:600;
-      color:var(--white);letter-spacing:0.05em;text-decoration:none;
-    }
-    .nav-logo span{color:var(--gold)}
-    .nav-links{display:flex;gap:0.5rem;align-items:center}
-    .nav-links a{
-      color:rgba(255,255,255,0.8);text-decoration:none;
-      font-size:0.78rem;font-weight:400;letter-spacing:0.05em;
-      padding:0.45rem 0.9rem;border-radius:100px;
-      transition:all 0.25s;white-space:nowrap;
-    }
-    .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.1)}
-    .nav-links .nav-cta{
-      background:var(--gold);color:var(--navy);
-      font-weight:500;
-    }
-    .nav-links .nav-cta:hover{background:var(--gold-light)}
-    .nav-links .nav-register{
-      background:var(--wa);color:#fff;
-      font-weight:700;
-      box-shadow:0 4px 14px rgba(37,211,102,0.25);
-    }
-    .nav-links .nav-register:hover{
-      background:#1ebe5a;color:#fff;
-      transform:translateY(-1px);
-    }
-    @media(max-width:720px){
-      .nav-links a:not(.nav-cta){display:none}
-    }
+    /* trío de marca (pantallas fijas: hero + resultado) */
+    --emerald: #17e0a3;
+    --emerald-deep: #0eb383;
+    --gold: #ffb238;
+    --coral: #ff6b5b;
+    --blue: #5b8def;
+    --violet: #a78bfa;
+    --red-deep: #e6483a;
 
-    /* ── HERO ── */
-    .hero{
-      min-height:100vh;
-      background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 60%,#1a4fa0 100%);
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      text-align:center;padding:8rem 2rem 5rem;
-      position:relative;overflow:hidden;
-    }
-    .hero::before{
-      content:'';position:absolute;inset:0;
-      background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,0.18) 0%,transparent 65%);
-      pointer-events:none;
-    }
-    .hero-badge{
-      display:inline-flex;align-items:center;gap:0.5rem;
-      background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);
-      color:var(--gold-light);padding:0.4rem 1rem;border-radius:100px;
-      font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;
-      margin-bottom:1.5rem;
-      opacity:0;animation:fadeUp 0.7s 0.2s forwards;
-    }
-    .hero h1{
-      font-family:'Cormorant Garamond',serif;
-      font-size:clamp(2.8rem,8vw,6.5rem);
-      font-weight:300;line-height:1.05;color:#fff;
-      margin-bottom:1.5rem;
-      opacity:0;animation:fadeUp 0.7s 0.4s forwards;
-    }
-    .hero h1 em{font-style:italic;color:var(--gold-light)}
-    .hero-sub{
-      max-width:580px;font-size:1.05rem;line-height:1.7;
-      color:rgba(255,255,255,0.75);margin-bottom:2.5rem;
-      opacity:0;animation:fadeUp 0.7s 0.6s forwards;
-    }
-    .hero-btns{
-      display:flex;flex-wrap:wrap;gap:0.85rem;justify-content:center;
-      opacity:0;animation:fadeUp 0.7s 0.8s forwards;
-    }
-    .btn-primary{
-      display:inline-flex;align-items:center;gap:0.5rem;
-      background:var(--wa);color:#fff;
-      padding:0.95rem 2rem;border-radius:100px;
-      font-size:0.85rem;font-weight:500;letter-spacing:0.05em;
-      text-decoration:none;transition:all 0.3s;
-      box-shadow:0 4px 20px rgba(37,211,102,0.35);
-    }
-    .btn-primary:hover{background:#1ebe5a;transform:translateY(-2px);box-shadow:0 8px 30px rgba(37,211,102,0.45)}
-    .btn-secondary{
-      display:inline-flex;align-items:center;gap:0.5rem;
-      background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.3);
-      padding:0.95rem 2rem;border-radius:100px;
-      font-size:0.85rem;font-weight:400;
-      text-decoration:none;transition:all 0.3s;backdrop-filter:blur(6px);
-    }
-    .btn-secondary:hover{background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.5)}
-    .btn-gold{
-      display:inline-flex;align-items:center;gap:0.5rem;
-      background:var(--gold);color:var(--navy);
-      padding:0.95rem 2rem;border-radius:100px;
-      font-size:0.85rem;font-weight:600;
-      text-decoration:none;transition:all 0.3s;
-    }
-    .btn-gold:hover{background:var(--gold-light);transform:translateY(-2px)}
-    .hero-certifs{
-      margin-top:3rem;display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;
-      opacity:0;animation:fadeUp 0.7s 1s forwards;
-    }
-    .certif-badge{
-      background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);
-      color:rgba(255,255,255,0.85);padding:0.35rem 0.85rem;border-radius:100px;
-      font-size:0.7rem;font-weight:500;letter-spacing:0.1em;
-    }
+    /* color por paso del wizard — refuerza orientación */
+    --step1: var(--emerald);
+    --step2: var(--blue);
+    --step3: var(--coral);
+    --step4: var(--gold);
+    --step5: var(--violet);
+    --current-step: var(--emerald);
 
-    /* ── TICKER ── */
-    .ticker-wrap{
-      background:var(--gold);overflow:hidden;padding:0.7rem 0;
-    }
-    .ticker{
-      display:flex;white-space:nowrap;
-      animation:ticker 30s linear infinite;
-    }
-    .ticker span{
-      font-size:0.75rem;font-weight:600;letter-spacing:0.15em;
-      color:var(--navy);padding:0 2rem;text-transform:uppercase;
-    }
-    @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    --radius: 20px;
+    --font-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
+    --font-body: 'DM Sans', -apple-system, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--current-step); color: #051019; }
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 100px; }
+  :focus-visible { outline: 2px solid var(--current-step); outline-offset: 3px; border-radius: 4px; }
 
-    /* ── SECTION BASE ── */
-    section{padding:5rem 2rem}
-    .container{max-width:1000px;margin:0 auto}
-    .section-label{
-      font-size:0.7rem;letter-spacing:0.35em;text-transform:uppercase;
-      color:var(--gold);display:block;text-align:center;margin-bottom:0.75rem;
-    }
-    .section-title{
-      font-family:'Cormorant Garamond',serif;
-      font-size:clamp(2rem,4.5vw,3.2rem);font-weight:300;
-      text-align:center;margin-bottom:1rem;color:var(--navy);
-    }
-    .section-sub{
-      text-align:center;color:var(--text-dim);max-width:560px;
-      margin:0 auto 3rem;font-size:0.95rem;line-height:1.7;
-    }
+  /* ═══════════════ FONDO ═══════════════ */
+  .bg-orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.16; animation: orbFloat 14s ease-in-out infinite; }
+  .orb1 { width: 480px; height: 480px; background: var(--emerald); top: -140px; right: -140px; }
+  .orb2 { width: 420px; height: 420px; background: var(--coral); bottom: -120px; left: -120px; animation-delay: -5s; }
+  .orb3 { width: 320px; height: 320px; background: var(--gold); top: 42%; left: 32%; animation-delay: -9s; opacity: 0.1; }
+  @keyframes orbFloat { 0%, 100% { transform: translate(0,0) scale(1); } 50% { transform: translate(30px, -40px) scale(1.08); } }
 
-    /* ── PROBLEMA ── */
-    .problema{background:var(--navy)}
-    .problema .section-title,.problema .section-label{color:#fff}
-    .problema .section-title em{color:var(--gold-light);font-style:italic}
-    .problema .section-sub{color:rgba(255,255,255,0.65)}
-    .problems-grid{
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;
-      margin-bottom:3rem;
-    }
-    .problem-card{
-      background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
-      border-radius:var(--radius);padding:1.75rem 1.5rem;
-    }
-    .problem-x{color:#e05555;font-size:1.2rem;margin-bottom:0.75rem;font-weight:700}
-    .problem-card h4{color:#fff;font-size:1rem;font-weight:500;margin-bottom:0.5rem}
-    .problem-card p{color:rgba(255,255,255,0.55);font-size:0.85rem;line-height:1.6}
+  .app { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; padding: 0 16px 60px; }
 
-    /* ── TECH ── */
-    .tech{background:var(--off-white)}
-    .tech-stats{
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-      gap:1px;background:rgba(13,27,62,0.08);border-radius:var(--radius);
-      overflow:hidden;margin-bottom:3rem;
-    }
-    .tech-stat{
-      background:var(--white);padding:2rem 1.5rem;text-align:center;
-    }
-    .tech-stat-num{
-      font-family:'Cormorant Garamond',serif;
-      font-size:3rem;font-weight:300;color:var(--blue);
-      display:block;line-height:1;margin-bottom:0.4rem;
-    }
-    .tech-stat-label{font-size:0.8rem;color:var(--text-dim);line-height:1.4}
-    .tech-badges{display:flex;flex-wrap:wrap;gap:0.75rem;justify-content:center}
-    .tech-badge{
-      background:var(--navy);color:#fff;padding:0.5rem 1.1rem;border-radius:100px;
-      font-size:0.72rem;font-weight:500;letter-spacing:0.1em;
-    }
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeUp 0.5s cubic-bezier(.16,1,.3,1); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* ── PRODUCTOS ── */
-    .productos-grid{
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;
-    }
-    .producto-card{
-      background:var(--off-white);border:1px solid rgba(13,27,62,0.08);
-      border-radius:var(--radius);padding:1.75rem 1.5rem;
-      transition:all 0.3s;position:relative;overflow:hidden;
-    }
-    .producto-card::before{
-      content:'';position:absolute;top:0;left:0;right:0;
-      height:3px;background:linear-gradient(90deg,var(--blue),var(--gold));
-    }
-    .producto-card:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(13,27,62,0.12)}
-    .producto-name{font-weight:600;font-size:1rem;color:var(--navy);margin-bottom:0.3rem}
-    .producto-desc{font-size:0.82rem;color:var(--text-dim);line-height:1.5;margin-bottom:1rem}
-    .producto-precio{
-      display:flex;justify-content:space-between;align-items:center;
-      border-top:1px solid rgba(13,27,62,0.08);padding-top:0.85rem;
-    }
-    .precio-dist{font-size:0.72rem;color:var(--text-dim)}
-    .precio-dist strong{font-size:1.1rem;color:var(--navy);display:block}
-    .precio-cv{text-align:right;font-size:0.72rem;color:var(--text-dim)}
-    .precio-cv strong{color:var(--blue);display:block}
+  /* ═══════════════ HERO ═══════════════ */
+  .hero { min-height: 92vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 48px 16px; }
+  .logo-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(23,224,163,0.1); border: 1px solid rgba(23,224,163,0.3);
+    border-radius: 100px; padding: 7px 18px; margin-bottom: 32px;
+    font-size: 12px; font-weight: 700; letter-spacing: 2px;
+    color: var(--emerald); text-transform: uppercase;
+  }
+  .hero-title { font-family: var(--font-display); font-size: clamp(46px, 10vw, 84px); line-height: 0.95; letter-spacing: 1.5px; margin-bottom: 18px; text-wrap: balance; }
+  .hero-title .line1 { color: var(--text); }
+  .hero-title .line2 { background: linear-gradient(120deg, var(--emerald), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero-sub { font-size: 16px; color: var(--muted); font-weight: 300; max-width: 420px; line-height: 1.65; margin-bottom: 40px; }
+  .hero-stats { display: flex; gap: 12px; margin-bottom: 44px; justify-content: center; flex-wrap: wrap; }
+  .stat-pill {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 100px; padding: 9px 18px; font-size: 13px; color: var(--muted);
+    border-left: 3px solid var(--pill-color, var(--emerald));
+  }
+  .stat-pill strong { color: var(--pill-color, var(--emerald)); font-weight: 700; }
+  .stat-pill.p-emerald { --pill-color: var(--emerald); }
+  .stat-pill.p-coral { --pill-color: var(--coral); }
+  .stat-pill.p-gold { --pill-color: var(--gold); }
 
-    /* ── PLAN ── */
-    .plan{background:var(--navy)}
-    .plan .section-title,.plan .section-label{color:#fff}
-    .plan .section-sub{color:rgba(255,255,255,0.6)}
-    .rangos-grid{
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;
-      margin-bottom:3rem;
-    }
-    .rango-card{
-      background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
-      border-radius:var(--radius);padding:1.25rem 1rem;text-align:center;
-      transition:all 0.25s;
-    }
-    .rango-card:hover{background:rgba(201,168,76,0.1);border-color:rgba(201,168,76,0.3)}
-    .rango-name{color:#fff;font-weight:500;font-size:0.85rem;margin-bottom:0.25rem}
-    .rango-bono{color:var(--gold-light);font-family:'Cormorant Garamond',serif;font-size:1.5rem}
-    .pack-diamond{
-      background:linear-gradient(135deg,rgba(201,168,76,0.2),rgba(201,168,76,0.05));
-      border:1px solid rgba(201,168,76,0.4);
-      border-radius:var(--radius);padding:2.5rem 2rem;text-align:center;
-    }
-    .pack-diamond h3{
-      font-family:'Cormorant Garamond',serif;font-size:2rem;
-      color:var(--gold-light);font-weight:300;margin-bottom:0.5rem;
-    }
-    .pack-price{
-      font-family:'Cormorant Garamond',serif;font-size:3.5rem;
-      color:#fff;font-weight:300;line-height:1;margin-bottom:1.5rem;
-    }
-    .pack-price sup{font-size:1.5rem;vertical-align:super}
-    .pack-features{
-      display:flex;flex-wrap:wrap;gap:0.5rem;justify-content:center;margin-bottom:2rem;
-    }
-    .pack-feat{
-      background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8);
-      padding:0.35rem 0.85rem;border-radius:100px;font-size:0.75rem;
-    }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, var(--emerald), var(--emerald-deep));
+    color: #04150f; font-weight: 700; font-size: 16px; letter-spacing: 0.3px;
+    padding: 18px 40px; border-radius: 100px; border: none; cursor: pointer;
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 0 40px rgba(23,224,163,0.32);
+    font-family: var(--font-body);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 60px rgba(23,224,163,0.48); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--muted); font-weight: 600; font-size: 14px;
+    padding: 12px 22px; border-radius: 100px; cursor: pointer;
+    transition: all .2s; font-family: var(--font-body);
+  }
+  .btn-secondary:hover { border-color: var(--current-step); color: var(--current-step); }
+  .btn-whatsapp {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #25D366; color: #04150f; font-weight: 700; font-size: 15px;
+    padding: 16px 30px; border-radius: 100px; border: none; cursor: pointer;
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 0 30px rgba(37,211,102,0.32); font-family: var(--font-body);
+  }
+  .btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 0 50px rgba(37,211,102,0.48); }
 
-    /* ── EXPANSION ── */
-    .expansion{background:var(--off-white)}
-    .paises-grid{
-      display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.75rem;
-    }
-    .pais-card{
-      background:#fff;border:1px solid rgba(13,27,62,0.08);
-      border-radius:var(--radius);padding:0.85rem 1rem;
-      display:flex;align-items:center;gap:0.6rem;font-size:0.85rem;font-weight:400;
-      color:var(--navy);transition:all 0.25s;
-    }
-    .pais-card:hover{border-color:var(--blue);transform:translateY(-1px)}
-    .pais-flag{font-size:1.3rem}
+  /* ═══════════════ WIZARD HEADER ═══════════════ */
+  .wizard-header { padding: 28px 0 22px; display: flex; flex-direction: column; gap: 16px; }
+  .step-heading { display: flex; align-items: center; gap: 14px; }
+  .step-icon-badge {
+    flex-shrink: 0; width: 46px; height: 46px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+    background: rgba(255,255,255,0.05);
+    background: color-mix(in srgb, var(--current-step) 16%, var(--surface));
+    border: 1px solid var(--border);
+    transition: background .3s;
+  }
+  .step-kicker { font-size: 11px; color: var(--muted-dim); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; }
+  .step-kicker span { color: var(--current-step); font-weight: 700; transition: color .3s; }
+  .step-title-label { font-family: var(--font-display); font-size: 22px; letter-spacing: 0.5px; margin-top: 1px; }
+  .progress-track { width: 100%; height: 6px; background: var(--surface2); border-radius: 100px; overflow: hidden; }
+  .progress-fill {
+    height: 100%; border-radius: 100px;
+    background: var(--current-step);
+    box-shadow: 0 0 10px rgba(23,224,163,0.5);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--current-step) 65%, transparent);
+    transition: width .5s cubic-bezier(.16,1,.3,1), background .3s, box-shadow .3s;
+  }
+  .step-dots { display: flex; gap: 8px; }
+  .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--surface2); transition: all .3s; }
+  .step-dot.active { background: var(--current-step); transform: scale(1.5); box-shadow: 0 0 8px color-mix(in srgb, var(--current-step) 70%, transparent); }
+  .step-dot.done { background: var(--surface3); }
 
-    /* ── TESTIMONIOS ── */
-    .testimonios-grid{
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;
-    }
-    .testi-card{
-      background:var(--off-white);border:1px solid rgba(13,27,62,0.08);
-      border-radius:var(--radius);padding:2rem 1.75rem;
-    }
-    .testi-stars{color:var(--gold);font-size:0.9rem;margin-bottom:1rem}
-    .testi-text{
-      font-size:0.9rem;line-height:1.7;color:var(--text-dim);
-      margin-bottom:1.25rem;font-style:italic;
-    }
-    .testi-author{display:flex;align-items:center;gap:0.75rem}
-    .testi-avatar{
-      width:38px;height:38px;border-radius:50%;
-      background:linear-gradient(135deg,var(--blue),var(--navy));
-      display:flex;align-items:center;justify-content:center;
-      color:#fff;font-weight:600;font-size:0.85rem;flex-shrink:0;
-    }
-    .testi-name{font-weight:500;font-size:0.85rem;color:var(--navy)}
-    .testi-loc{font-size:0.75rem;color:var(--text-dim)}
+  /* ═══════════════ CARDS ═══════════════ */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px 26px; margin-bottom: 16px; }
+  .card-title { font-family: var(--font-display); font-size: 30px; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .card-title .accent { color: var(--current-step); transition: color .3s; }
+  .card-desc { font-size: 14px; color: var(--muted); margin-bottom: 26px; line-height: 1.6; }
 
-    /* ── FORM SECTION ── */
-    .form-section{background:var(--off-white)}
-    .form-box{
-      max-width:560px;margin:0 auto;
-      background:#fff;border:1px solid rgba(13,27,62,0.1);
-      border-radius:10px;padding:2.5rem 2rem;
-      box-shadow:0 20px 60px rgba(13,27,62,0.08);
-    }
-    .field-group{display:flex;flex-direction:column;gap:1rem;margin-bottom:1.25rem}
-    .field{display:flex;flex-direction:column;gap:0.35rem}
-    .field label{font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--blue);font-weight:500}
-    .field input,.field select,.field textarea{
-      background:var(--off-white);border:1.5px solid rgba(13,27,62,0.15);
-      color:var(--text);padding:0.8rem 1rem;font-family:'DM Sans',sans-serif;
-      font-size:0.9rem;outline:none;border-radius:var(--radius);
-      transition:border-color 0.25s;width:100%;
-    }
-    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue)}
-    .field select{cursor:pointer;appearance:none}
-    .field textarea{resize:vertical;min-height:90px}
-    .btn-form{
-      width:100%;background:var(--blue);color:#fff;border:none;
-      padding:1rem 2rem;font-family:'DM Sans',sans-serif;font-size:0.85rem;
-      font-weight:500;letter-spacing:0.1em;cursor:pointer;
-      border-radius:var(--radius);transition:all 0.3s;
-    }
-    .btn-form:hover{background:var(--navy);transform:translateY(-1px)}
-    .privacy-note{text-align:center;font-size:0.72rem;color:var(--text-dim);margin-top:0.85rem}
-    .success-msg{
-      display:none;text-align:center;padding:2.5rem;
-      background:var(--off-white);border:1px solid rgba(13,27,62,0.1);border-radius:var(--radius);
-    }
-    .success-msg.show{display:block;animation:fadeUp 0.4s forwards}
-    .success-msg h3{
-      font-family:'Cormorant Garamond',serif;font-size:2rem;
-      font-weight:300;color:var(--navy);margin-bottom:0.5rem;
-    }
-    .success-msg p{font-size:0.9rem;color:var(--text-dim);margin-bottom:1.5rem;line-height:1.6}
+  /* ═══════════════ INPUTS ═══════════════ */
+  .field { margin-bottom: 20px; }
+  .field label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+  .field input, .field select, .field textarea {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 18px; color: var(--text);
+    font-family: var(--font-body); font-size: 15px;
+    transition: border-color .2s, box-shadow .2s; outline: none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: var(--current-step);
+    box-shadow: 0 0 0 3px rgba(23,224,163,0.14);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--current-step) 20%, transparent);
+  }
+  .field input::placeholder, .field textarea::placeholder { color: var(--muted-dim); }
+  .field textarea { resize: vertical; min-height: 80px; font-family: var(--font-body); }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .field.shake { animation: shake .38s; }
+  @keyframes shake { 0%,100%{transform:translateX(0);} 20%{transform:translateX(-6px);} 40%{transform:translateX(6px);} 60%{transform:translateX(-4px);} 80%{transform:translateX(4px);} }
 
-    /* ── CTA FINAL ── */
-    .cta-final{
-      background:linear-gradient(135deg,var(--navy),var(--blue));
-      padding:6rem 2rem;text-align:center;
-    }
-    .cta-final h2{
-      font-family:'Cormorant Garamond',serif;
-      font-size:clamp(2rem,5vw,3.5rem);font-weight:300;
-      color:#fff;margin-bottom:1rem;
-    }
-    .cta-final h2 em{color:var(--gold-light);font-style:italic}
-    .cta-final p{color:rgba(255,255,255,0.7);margin-bottom:2.5rem;max-width:480px;margin-left:auto;margin-right:auto}
-    .cta-btns{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center}
+  /* ═══════════════ OPCIONES VISUALES ═══════════════ */
+  .option-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  .option-card {
+    position: relative; background: var(--surface2); border: 2px solid var(--border);
+    border-radius: 14px; padding: 18px 12px; text-align: center; cursor: pointer;
+    transition: all .2s; user-select: none;
+  }
+  .option-card:hover { border-color: color-mix(in srgb, var(--current-step) 45%, var(--border)); transform: translateY(-1px); }
+  .option-card.selected {
+    border-color: var(--current-step);
+    background: rgba(23,224,163,0.08);
+    background: color-mix(in srgb, var(--current-step) 12%, var(--surface2));
+    box-shadow: 0 0 20px rgba(23,224,163,0.16);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--current-step) 35%, transparent);
+  }
+  .option-card .check { position: absolute; top: 8px; right: 8px; width: 18px; height: 18px; border-radius: 50%; background: var(--current-step); color: #04150f; font-size: 11px; font-weight: 900; display: none; align-items: center; justify-content: center; }
+  .option-card.selected .check { display: flex; }
+  .option-card .opt-icon { font-size: 26px; margin-bottom: 8px; display: block; }
+  .option-card .opt-label { font-size: 12px; font-weight: 600; color: var(--muted); }
+  .option-card.selected .opt-label { color: var(--text); }
 
-    /* ── SOPORTE STRIP ── */
-    .soporte-strip{
-      background:var(--navy2);padding:1.25rem 2rem;
-      display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;
-      border-top:1px solid rgba(201,168,76,0.2);
-    }
-    .soporte-strip p{color:rgba(255,255,255,0.7);font-size:0.82rem}
-    .soporte-strip a{
-      display:inline-flex;align-items:center;gap:0.4rem;
-      background:var(--wa);color:#fff;padding:0.5rem 1.2rem;
-      border-radius:100px;font-size:0.8rem;font-weight:500;text-decoration:none;transition:all 0.3s;
-    }
-    .soporte-strip a:hover{background:#1ebe5a}
+  /* slider */
+  .range-wrapper { position: relative; padding: 4px 0; }
+  .range-track { width: 100%; -webkit-appearance: none; appearance: none; height: 6px; border-radius: 100px; background: var(--surface2); outline: none; accent-color: var(--current-step); }
+  .range-track::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--current-step); cursor: pointer;
+    box-shadow: 0 0 12px rgba(23,224,163,0.55);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--current-step) 60%, transparent);
+    border: 3px solid var(--bg);
+  }
+  .range-track::-moz-range-thumb {
+    width: 18px; height: 18px; border-radius: 50%; background: var(--current-step); cursor: pointer; border: 3px solid var(--bg);
+  }
+  .range-value { text-align: center; font-family: var(--font-display); font-size: 38px; color: var(--current-step); margin-top: 6px; transition: color .3s; }
 
-    /* ── FOOTER ── */
-    footer{
-      background:var(--navy);padding:2.5rem 2rem;text-align:center;
-      color:rgba(255,255,255,0.35);font-size:0.75rem;line-height:1.8;
-    }
-    footer .footer-logo{
-      font-family:'Cormorant Garamond',serif;font-size:1.5rem;
-      color:#fff;margin-bottom:0.5rem;display:block;
-    }
-    footer span{color:var(--gold)}
-    footer .disclaimer{
-      max-width:520px;margin:1rem auto 0;
-      font-size:0.7rem;color:rgba(255,255,255,0.25);line-height:1.6;
-    }
+  /* ═══════════════ NAV ═══════════════ */
+  .nav-btns { display: flex; gap: 12px; justify-content: flex-end; padding: 8px 0 40px; }
+  #btn-next {
+    background: var(--current-step);
+    box-shadow: 0 0 34px rgba(23,224,163,0.3);
+    box-shadow: 0 0 34px color-mix(in srgb, var(--current-step) 45%, transparent);
+  }
+  .error-msg { color: var(--coral); font-size: 13px; margin-top: 6px; display: none; font-weight: 500; }
+  .error-msg.show { display: block; }
 
-    /* ── WA FLOTANTE ── */
-    .wa-float{
-      position:fixed;bottom:2rem;right:2rem;z-index:300;
-      display:flex;align-items:center;gap:0.65rem;
-      background:var(--wa);color:#fff;text-decoration:none;
-      padding:0.8rem 1.4rem;border-radius:100px;
-      font-size:0.8rem;font-weight:500;
-      box-shadow:0 4px 25px rgba(37,211,102,0.4);
-      transition:all 0.3s;
-      animation:fadeUp 1s 1.2s both;
-    }
-    .wa-float:hover{transform:translateY(-2px);box-shadow:0 8px 35px rgba(37,211,102,0.5)}
-    .wa-float svg{width:20px;height:20px;flex-shrink:0}
-    .wa-pulse{width:8px;height:8px;background:#fff;border-radius:50%;animation:pulse 2s infinite}
-    @media(max-width:540px){.wa-float .wa-label{display:none}.wa-float{padding:0.85rem;border-radius:50%}}
+  /* ═══════════════ RESULTADO ═══════════════ */
+  .result-header { text-align: center; padding: 44px 16px 30px; }
+  .result-greeting { font-family: var(--font-display); font-size: clamp(34px, 8vw, 60px); line-height: 1; margin-bottom: 8px; }
+  .result-tagline { font-size: 15px; color: var(--muted); max-width: 440px; margin: 0 auto; line-height: 1.7; }
 
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(1.7)}}
+  .gauge-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 28px; margin-bottom: 16px; text-align: center; }
+  .gauge-wrap { position: relative; width: 220px; height: 120px; margin: 0 auto 20px; }
+  .gauge-svg { width: 100%; overflow: visible; }
+  .gauge-value-box { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); text-align: center; }
+  .gauge-number { font-family: var(--font-display); font-size: 46px; line-height: 1; color: var(--text); font-variant-numeric: tabular-nums; }
+  .gauge-unit { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+  .imc-category { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 7px 22px; border-radius: 100px; margin-bottom: 14px; }
+  .imc-desc { font-size: 14px; color: var(--muted); line-height: 1.65; max-width: 380px; margin: 0 auto; }
 
-    /* ── BOTONES EN MAYÚSCULA ── */
-    button, .btn-form, .btn-primary, .btn-secondary, .btn-gold, .btn-wa, .btn-wa-sm, .btn-wa-lg, .nav-cta, .wa-float, .soporte-strip a {
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-  </style>
+  .semaforo-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 16px; }
+  .semaforo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; gap: 12px; }
+  .semaforo-title { font-family: var(--font-display); font-size: 24px; }
+  .semaforo-badge { font-size: 12px; font-weight: 700; letter-spacing: 0.5px; padding: 6px 16px; border-radius: 100px; white-space: nowrap; }
+  .habit-row { display: flex; align-items: center; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--border); }
+  .habit-row:last-child { border-bottom: none; }
+  .habit-icon { font-size: 18px; width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px; background: var(--surface2); display: flex; align-items: center; justify-content: center; }
+  .habit-info { flex: 1; }
+  .habit-label { font-size: 13px; font-weight: 700; }
+  .habit-detail { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .habit-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  .insight-card {
+    background: linear-gradient(135deg, rgba(23,224,163,0.07), rgba(255,178,56,0.05));
+    border: 1px solid rgba(23,224,163,0.22);
+    border-radius: var(--radius); padding: 28px; margin-bottom: 16px;
+  }
+  .insight-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--emerald); margin-bottom: 12px; }
+  .insight-text { font-size: 16px; line-height: 1.7; color: var(--text); font-weight: 300; }
+
+  .reco-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .reco-item { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px 16px; border-top: 3px solid var(--reco-color, var(--emerald)); }
+  .reco-icon { font-size: 22px; margin-bottom: 8px; }
+  .reco-title { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .reco-val { font-size: 17px; font-weight: 700; color: var(--text); }
+
+  .cierre-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px 26px; margin-bottom: 16px; text-align: center; }
+  .cierre-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 24px 0; }
+  .path-card { border-radius: 14px; padding: 20px 16px; }
+  .path-no { background: rgba(255,107,91,0.06); border: 1px solid rgba(255,107,91,0.2); }
+  .path-yes { background: rgba(23,224,163,0.07); border: 1px solid rgba(23,224,163,0.25); }
+  .path-icon { font-size: 26px; margin-bottom: 10px; }
+  .path-title { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+  .path-items { font-size: 12px; color: var(--muted); line-height: 1.8; }
+  .cierre-cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, var(--emerald), var(--gold));
+    color: #08150f; font-weight: 800; font-size: 16px;
+    padding: 18px 36px; border-radius: 100px; border: none; cursor: pointer;
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 0 40px rgba(23,224,163,0.4);
+    margin-bottom: 16px; font-family: var(--font-body);
+    animation: pulse 2.6s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%, 100% { box-shadow: 0 0 40px rgba(23,224,163,0.35); } 50% { box-shadow: 0 0 68px rgba(255,178,56,0.5); } }
+  .cierre-cta:hover { transform: translateY(-3px); }
+  .action-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+
+  .disclaimer { text-align: center; padding: 16px; font-size: 11px; color: var(--muted-dim); line-height: 1.6; border-top: 1px solid var(--border); margin-top: 8px; }
+
+  @media (max-width: 480px) {
+    .field-row { grid-template-columns: 1fr; }
+    .option-grid { grid-template-columns: repeat(2, 1fr); }
+    .cierre-vs { grid-template-columns: 1fr; }
+    .card { padding: 24px 18px; }
+  }
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--surface); border: 1px solid var(--current-step);
+    border-radius: 100px; padding: 12px 24px; font-size: 14px; color: var(--current-step);
+    transition: transform .4s cubic-bezier(.16,1,.3,1); z-index: 999;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+
+  @media print {
+    .bg-orbs, .nav-btns, .action-row, .cierre-cta, .btn-whatsapp { display: none !important; }
+    body { background: #fff; color: #000; }
+    .card, .gauge-card, .semaforo-card, .insight-card, .reco-item, .cierre-card { border: 1px solid #ddd; break-inside: avoid; }
+  }
+</style>
 </head>
 <body>
-
-<!-- NAV -->
-<nav>
-  <a class="nav-logo" href="#">One <span>More</span> International</a>
-  <div class="nav-links">
-    <a href="https://onemoreint.github.io/productos.html" target="_blank" rel="noopener">PRODUCTOS</a>
-    <a href="https://onemoreint.github.io/imc.html" target="_blank" rel="noopener">VALORACIÓN GRATIS AQUÍ</a>
-    <a href="https://onemore.global/!aasespa" class="nav-register" target="_blank" rel="noopener">REGÍSTRATE GRATIS</a>
-    <a href="#plan">PLAN</a>
-    <a href="#formulario">ÚNETE</a>
-    <a href="https://wa.me/573126387467?text=Hola%2C%20quiero%20info%20sobre%20One%20More." class="nav-cta" target="_blank" rel="noopener">📲 WHATSAPP</a>
-  </div>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-badge">✦ Expansión oficial Latinoamérica 2025–2026</div>
-  <h1>Transforma tu vida.<br/><em>ÚNETE al movimiento.</em></h1>
-  <p class="hero-sub">
-    Tecnología transdérmica certificada por la FDA. PRODUCTOS de bienestar con más del 90% de biodisponibilidad. Oportunidad de negocio global desde Colombia.
-  </p>
-  <div class="hero-btns">
-    <a href="https://wa.me/573126387467?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20One%20More%20International." class="btn-primary" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.554 4.122 1.523 5.855L.057 23.882l6.197-1.426A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.84 0-3.569-.476-5.077-1.31l-.364-.214-3.676.845.874-3.551-.237-.381A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-      HABLAR CON UN ASESOR
-    </a>
-    <a href="#formulario" class="btn-secondary">DEJAR MIS DATOS</a>
-    <a href="https://onemoreint.github.io/productos.html" class="btn-gold" target="_blank" rel="noopener">PRODUCTOS</a>
-    <a href="https://onemoreint.github.io/imc.html" class="btn-secondary" target="_blank" rel="noopener">VALORACIÓN GRATIS AQUÍ</a>
-  </div>
-  <div class="hero-certifs">
-    <span class="certif-badge">FDA Clase 1</span>
-    <span class="certif-badge">INVIMA Colombia</span>
-    <span class="certif-badge">ISO 13485</span>
-    <span class="certif-badge">GMP Certified</span>
-    <span class="certif-badge">Vegan · Halal</span>
-  </div>
-</section>
-
-<!-- TICKER -->
-<div class="ticker-wrap">
-  <div class="ticker">
-    <span>ONE MORE INTERNATIONAL</span><span>✦</span>
-    <span>TECNOLOGÍA TRANSDÉRMICA</span><span>✦</span>
-    <span>FDA CLASE 1</span><span>✦</span>
-    <span>+100 PAÍSES</span><span>✦</span>
-    <span>EXPANSIÓN LATINOAMÉRICA 2025</span><span>✦</span>
-    <span>FUNDADA TURQUÍA 2014</span><span>✦</span>
-    <span>ONE MORE INTERNATIONAL</span><span>✦</span>
-    <span>TECNOLOGÍA TRANSDÉRMICA</span><span>✦</span>
-    <span>FDA CLASE 1</span><span>✦</span>
-    <span>+100 PAÍSES</span><span>✦</span>
-    <span>EXPANSIÓN LATINOAMÉRICA 2025</span><span>✦</span>
-    <span>FUNDADA TURQUÍA 2014</span><span>✦</span>
-  </div>
+<div class="bg-orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
 </div>
-
-<!-- EL PROBLEMA -->
-<section class="problema">
-  <div class="container">
-    <span class="section-label">¿Por qué One More?</span>
-    <h2 class="section-title" style="color:#fff">El problema no eres tú.<br/><em>Es lo que te han dado.</em></h2>
-    <p class="section-sub">Si ya probaste suplementos, dietas y pastillas sin resultados reales, hay una razón científica.</p>
-    <div class="problems-grid">
-      <div class="problem-card">
-        <div class="problem-x">✕</div>
-        <h4>Suplementos orales con absorción mínima</h4>
-        <p>Las cápsulas solo alcanzan un 10–20% de biodisponibilidad. Tu cuerpo desecha el 80% restante.</p>
+<div class="toast" id="toast"></div>
+<div class="app">
+  <!-- ═══════════ HERO ═══════════ -->
+  <div class="screen active" id="screen-hero">
+    <div class="hero">
+      <div class="logo-badge">⚡ JOSÉ LUGO · ONE MORE</div>
+      <h1 class="hero-title">
+        <div class="line1">DESCUBRE CÓMO</div>
+        <div class="line2">ESTÁ TU CUERPO</div>
+      </h1>
+      <p class="hero-sub">Evaluación inteligente de tu composición corporal y hábitos de vida. Resultados personalizados en menos de 2 minutos.</p>
+      <div class="hero-stats">
+        <div class="stat-pill p-emerald"><strong>IMC</strong> personalizado</div>
+        <div class="stat-pill p-coral"><strong>Hábitos</strong> evaluados</div>
+        <div class="stat-pill p-gold"><strong>100%</strong> gratuito</div>
       </div>
-      <div class="problem-card">
-        <div class="problem-x">✕</div>
-        <h4>Rebote constante</h4>
-        <p>Bajas unos kilos y los recuperas en semanas. Sin la tecnología correcta, el ciclo no termina.</p>
-      </div>
-      <div class="problem-card">
-        <div class="problem-x">✕</div>
-        <h4>Energía baja e inflamación</h4>
-        <p>Te despiertas cansado. Algo interno no funciona bien, pero nadie te da una solución de fondo.</p>
-      </div>
-      <div class="problem-card">
-        <div class="problem-x">✕</div>
-        <h4>Ingresos limitados por el tiempo</h4>
-        <p>En la economía tradicional, solo ganas si trabajas. One More rompe esa ecuación con un modelo residual.</p>
-      </div>
-    </div>
-    <div style="text-align:center">
-      <a href="https://wa.me/573126387467?text=Hola%2C%20quiero%20conocer%20la%20soluci%C3%B3n%20de%20One%20More." class="btn-primary" target="_blank" rel="noopener">CONOCER LA SOLUCIÓN →</a>
+      <button class="btn-primary" onclick="goTo('screen-wizard')">
+        Comenzar evaluación &nbsp;→
+      </button>
     </div>
   </div>
-</section>
 
-<!-- TECNOLOGÍA -->
-<section class="tech">
-  <div class="container">
-    <span class="section-label">La ciencia detrás</span>
-    <h2 class="section-title">No una pastilla más.<br/>Una categoría diferente.</h2>
-    <p class="section-sub">One More usa tecnología de onda transdérmica — el mismo principio que la medicina aplica en parches para medicamentos críticos.</p>
-    <div class="tech-stats">
-      <div class="tech-stat">
-        <span class="tech-stat-num">+90%</span>
-        <span class="tech-stat-label">Biodisponibilidad real<br/><small style="color:#aaa">vs 10–20% en cápsulas orales</small></span>
+  <!-- ═══════════ WIZARD ═══════════ -->
+  <div class="screen" id="screen-wizard">
+    <div class="wizard-header">
+      <div class="step-heading">
+        <div class="step-icon-badge" id="step-icon-badge">👤</div>
+        <div>
+          <div class="step-kicker">Paso <span id="step-current">1</span> de 5</div>
+          <div class="step-title-label" id="step-title-label">Datos básicos</div>
+        </div>
       </div>
-      <div class="tech-stat">
-        <span class="tech-stat-num">24h</span>
-        <span class="tech-stat-label">Liberación controlada<br/><small style="color:#aaa">Administración constante todo el día</small></span>
-      </div>
-      <div class="tech-stat">
-        <span class="tech-stat-num">10+</span>
-        <span class="tech-stat-label">Años de trayectoria<br/><small style="color:#aaa">Fundada 2014 · Turquía</small></span>
-      </div>
-      <div class="tech-stat">
-        <span class="tech-stat-num">100+</span>
-        <span class="tech-stat-label">Países con envío<br/><small style="color:#aaa">+1M distribuidores activos</small></span>
-      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:20%"></div></div>
+      <div class="step-dots" id="step-dots"></div>
     </div>
-    <div class="tech-badges">
-      <span class="tech-badge">FDA Dispositivo Médico Clase 1</span>
-      <span class="tech-badge">INVIMA Colombia</span>
-      <span class="tech-badge">ISO 13485</span>
-      <span class="tech-badge">GMP Certified</span>
-      <span class="tech-badge">Halal Certified</span>
-      <span class="tech-badge">Vegan</span>
-      <span class="tech-badge">Cruelty Free</span>
-    </div>
-  </div>
-</section>
 
-<!-- PRODUCTOS -->
-<section id="productos" style="background:#fff">
-  <div class="container">
-    <span class="section-label">Portafolio</span>
-    <h2 class="section-title">Una solución para cada necesidad</h2>
-    <p class="section-sub">Todos los productos usan tecnología transdérmica SnapRelease. Precios en USD para distribuidores.</p>
-    <div class="productos-grid">
-      <div class="producto-card">
-        <div class="producto-name">PNG</div>
-        <div class="producto-desc">El primer dispositivo transdérmico. Reduce inflamación y dolor, aumenta energía y refuerza el sistema inmune.</div>
-        <div class="producto-precio">
-          <div class="precio-dist"><span>Distribuidor</span><strong>USD 64</strong></div>
-          <div class="precio-cv"><span>CV / QV</span><strong>25 / 50</strong></div>
+    <!-- PASO 1 -->
+    <div id="step-1">
+      <div class="card">
+        <div class="card-title">Datos <span class="accent">básicos</span></div>
+        <div class="card-desc">Empecemos por conocerte. Esta info es solo para personalizar tu resultado.</div>
+        <div class="field">
+          <label>Tu nombre completo</label>
+          <input type="text" id="nombre" placeholder="Ej: María García" autocomplete="off">
+          <div class="error-msg" id="err-nombre">Por favor ingresa tu nombre.</div>
         </div>
-      </div>
-      <div class="producto-card">
-        <div class="producto-name">GlutaNAD+</div>
-        <div class="producto-desc">Tecnología SnapRelease. Activa niveles de NAD+, potencia defensa antioxidante y favorece longevidad celular.</div>
-        <div class="producto-precio">
-          <div class="precio-dist"><span>Distribuidor</span><strong>USD 67</strong></div>
-          <div class="precio-cv"><span>CV / QV</span><strong>25 / 50</strong></div>
-        </div>
-      </div>
-      <div class="producto-card">
-        <div class="producto-name">Night Ladies</div>
-        <div class="producto-desc">Equilibrio hormonal para la mujer. Descanso reparador y bienestar integral durante la noche.</div>
-        <div class="producto-precio">
-          <div class="precio-dist"><span>Distribuidor</span><strong>USD 59</strong></div>
-          <div class="precio-cv"><span>CV / QV</span><strong>23 / 45</strong></div>
-        </div>
-      </div>
-      <div class="producto-card">
-        <div class="producto-name">Night Gentleman</div>
-        <div class="producto-desc">Equilibrio hormonal masculino. Recuperación y vitalidad desde el descanso nocturno.</div>
-        <div class="producto-precio">
-          <div class="precio-dist"><span>Distribuidor</span><strong>USD 59</strong></div>
-          <div class="precio-cv"><span>CV / QV</span><strong>23 / 45</strong></div>
-        </div>
-      </div>
-      <div class="producto-card">
-        <div class="producto-name">Sornie Collagen Patch</div>
-        <div class="producto-desc">Combate el envejecimiento desde adentro. Colágeno de alta absorción para piel, cabello y articulaciones.</div>
-        <div class="producto-precio">
-          <div class="precio-dist"><span>Distribuidor</span><strong>USD 59</strong></div>
-          <div class="precio-cv"><span>CV / QV</span><strong>23 / 45</strong></div>
-        </div>
-      </div>
-      <div class="producto-card">
-        <div class="producto-name">Omevia</div>
-        <div class="producto-desc">Fortalece tu corazón. Omega y nutrientes esenciales para salud cardiovascular óptima.</div>
-        <div class="producto-precio">
-          <div class="precio-dist"><span>Distribuidor</span><strong>USD 39</strong></div>
-          <div class="precio-cv"><span>CV / QV</span><strong>17 / 32</strong></div>
-        </div>
-      </div>
-      <div class="producto-card">
-        <div class="producto-name">Melatonin Plus</div>
-        <div class="producto-desc">Descanso reparador. Liberación transdérmica de melatonina para un sueño profundo y constante.</div>
-        <div class="producto-precio">
-          <div class="precio-dist"><span>Distribuidor</span><strong>USD 35</strong></div>
-          <div class="precio-cv"><span>CV / QV</span><strong>14 / 30</strong></div>
-        </div>
-      </div>
-      <div class="producto-card">
-        <div class="producto-name">B12 Plus</div>
-        <div class="producto-desc">Más enfoque y claridad mental. Vitamina B12 de absorción directa para energía y sistema nervioso.</div>
-        <div class="producto-precio">
-          <div class="precio-dist"><span>Distribuidor</span><strong>USD 35</strong></div>
-          <div class="precio-cv"><span>CV / QV</span><strong>14 / 30</strong></div>
-        </div>
-      </div>
-      <div class="producto-card">
-        <div class="producto-name">Slim Style</div>
-        <div class="producto-desc">Controla la ansiedad y apoya el control de peso. Tecnología transdérmica sin estimulantes agresivos.</div>
-        <div class="producto-precio">
-          <div class="precio-dist"><span>Distribuidor</span><strong>USD 32</strong></div>
-          <div class="precio-cv"><span>CV / QV</span><strong>13 / 25</strong></div>
-        </div>
-      </div>
-      <div class="producto-card">
-        <div class="producto-name">Dekamin</div>
-        <div class="producto-desc">Activa tu sistema inmune. Nutrientes clave en formulación transdérmica de alta eficiencia.</div>
-        <div class="producto-precio">
-          <div class="precio-dist"><span>Distribuidor</span><strong>USD 32</strong></div>
-          <div class="precio-cv"><span>CV / QV</span><strong>13 / 25</strong></div>
+        <div class="field">
+          <label>Edad (años)</label>
+          <input type="number" id="edad" placeholder="25" min="10" max="100" inputmode="numeric">
+          <div class="error-msg" id="err-edad">Ingresa una edad válida (10–100).</div>
         </div>
       </div>
     </div>
-    <div style="text-align:center;margin-top:2.5rem">
-      <a href="https://wa.me/573126387467?text=Hola%2C%20quiero%20pedir%20productos%20de%20One%20More." class="btn-primary" target="_blank" rel="noopener">PEDIR PRODUCTOS POR WHATSAPP</a>
-    </div>
-  </div>
-</section>
 
-<!-- TRANSPORTE -->
-<div style="background:var(--off-white);padding:1.5rem 2rem;border-top:1px solid rgba(13,27,62,0.08);border-bottom:1px solid rgba(13,27,62,0.08)">
-  <div class="container" style="text-align:center">
-    <span style="font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--blue);font-weight:500;">Transporte</span>
-    <p style="font-size:0.85rem;color:var(--text-dim);margin-top:0.4rem">
-      0–99 QV = USD 12 &nbsp;|&nbsp; 100–149 QV = USD 10 &nbsp;|&nbsp; 150–199 QV = USD 8 &nbsp;|&nbsp; 200–299 QV = USD 6 &nbsp;|&nbsp; <strong style="color:var(--navy)">+300 QV = Envío Gratis</strong>
-    </p>
-  </div>
-</div>
-
-<!-- PLAN DE COMPENSACIÓN -->
-<section id="plan" class="plan">
-  <div class="container">
-    <span class="section-label">Oportunidad de negocio</span>
-    <h2 class="section-title" style="color:#fff">PLAN de compensación</h2>
-    <p class="section-sub">Desde Gold hasta Royal Diamond. Bono de recalificación mensual garantizado por rango.</p>
-    <div class="rangos-grid">
-      <div class="rango-card"><div class="rango-name">Gold</div><div class="rango-bono">USD $50</div></div>
-      <div class="rango-card"><div class="rango-name">Sapphire</div><div class="rango-bono">USD $200</div></div>
-      <div class="rango-card"><div class="rango-name">Ruby</div><div class="rango-bono">USD $400</div></div>
-      <div class="rango-card"><div class="rango-name">Esmerald</div><div class="rango-bono">USD $800</div></div>
-      <div class="rango-card"><div class="rango-name">Diamond</div><div class="rango-bono">USD $1,500</div></div>
-      <div class="rango-card"><div class="rango-name">Elite Diamond</div><div class="rango-bono">USD $2,500</div></div>
-      <div class="rango-card"><div class="rango-name">Doble Diamond</div><div class="rango-bono">USD $4,000</div></div>
-      <div class="rango-card"><div class="rango-name">Triple Diamond</div><div class="rango-bono">USD $6,000</div></div>
-      <div class="rango-card"><div class="rango-name">Imperial Diamond</div><div class="rango-bono">USD $10,000</div></div>
-      <div class="rango-card"><div class="rango-name">Imperial Blue</div><div class="rango-bono">USD $16,000</div></div>
-      <div class="rango-card"><div class="rango-name">Imperial Black</div><div class="rango-bono">USD $20,000</div></div>
-      <div class="rango-card" style="border-color:rgba(201,168,76,0.5);background:rgba(201,168,76,0.12)"><div class="rango-name" style="color:var(--gold-light)">Royal Diamond</div><div class="rango-bono" style="font-size:1.8rem">USD $25,000</div></div>
-    </div>
-    <div class="pack-diamond">
-      <h3>Pack Diamante — Tu franquicia global</h3>
-      <div class="pack-price"><sup>USD</sup>2.320</div>
-      <div class="pack-features">
-        <span class="pack-feat">✓ Estatus Diamante</span>
-        <span class="pack-feat">✓ +72% margen de ganancia</span>
-        <span class="pack-feat">✓ +USD $700 en productos de regalo</span>
-        <span class="pack-feat">✓ Activación 12 meses</span>
-        <span class="pack-feat">✓ Bono de equipo 19%</span>
-        <span class="pack-feat">✓ 6 niveles uninivel</span>
-        <span class="pack-feat">✓ Envío gratis incluido</span>
-      </div>
-      <a href="https://wa.me/573126387467?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20el%20Pack%20Diamante%20de%20One%20More." class="btn-gold" target="_blank" rel="noopener">QUIERO EL PACK DIAMANTE</a>
-    </div>
-  </div>
-</section>
-
-<!-- EXPANSIÓN -->
-<section class="expansion">
-  <div class="container">
-    <span class="section-label">Presencia global</span>
-    <h2 class="section-title">Lanzamiento oficial en Latinoamérica</h2>
-    <p class="section-sub">One More inició su expansión oficial en América Latina en 2025. Las posiciones de liderazgo están abiertas.</p>
-    <div class="paises-grid">
-      <div class="pais-card"><span class="pais-flag">🇨🇴</span>Colombia</div>
-      <div class="pais-card"><span class="pais-flag">🇪🇨</span>Ecuador</div>
-      <div class="pais-card"><span class="pais-flag">🇧🇴</span>Bolivia</div>
-      <div class="pais-card"><span class="pais-flag">🇵🇪</span>Perú</div>
-      <div class="pais-card"><span class="pais-flag">🇩🇴</span>Rep. Dominicana</div>
-      <div class="pais-card"><span class="pais-flag">🇻🇪</span>Venezuela</div>
-      <div class="pais-card"><span class="pais-flag">🇨🇱</span>Chile</div>
-      <div class="pais-card"><span class="pais-flag">🇧🇷</span>Brasil</div>
-      <div class="pais-card"><span class="pais-flag">🇲🇽</span>México</div>
-      <div class="pais-card"><span class="pais-flag">🇦🇷</span>Argentina</div>
-      <div class="pais-card"><span class="pais-flag">🇨🇷</span>Costa Rica</div>
-      <div class="pais-card"><span class="pais-flag">🇵🇦</span>Panamá</div>
-      <div class="pais-card"><span class="pais-flag">🇬🇹</span>Guatemala</div>
-      <div class="pais-card"><span class="pais-flag">🌍</span>+100 países</div>
-    </div>
-  </div>
-</section>
-
-<!-- TESTIMONIOS -->
-<section style="background:#fff">
-  <div class="container">
-    <span class="section-label">Resultados reales</span>
-    <h2 class="section-title">Ellos ya lo vivieron</h2>
-    <p class="section-sub">Sin filtros. Historias de distribuidores y usuarios en Colombia y Latinoamérica.</p>
-    <div class="testimonios-grid">
-      <div class="testi-card">
-        <div class="testi-stars">★★★★★</div>
-        <p class="testi-text">"Había probado todo. Con One More fue diferente desde la semana 2. No sentí que estaba haciendo algo — simplemente empecé a cambiar."</p>
-        <div class="testi-author">
-          <div class="testi-avatar">MR</div>
-          <div><div class="testi-name">María R.</div><div class="testi-loc">Bogotá, Colombia</div></div>
-        </div>
-      </div>
-      <div class="testi-card">
-        <div class="testi-stars">★★★★★</div>
-        <p class="testi-text">"Lo que más me sorprendió fue la energía. Empecé a dormir mejor, a inflarme menos, y los ingresos del negocio crecieron con mi equipo."</p>
-        <div class="testi-author">
-          <div class="testi-avatar">CL</div>
-          <div><div class="testi-name">Carlos L.</div><div class="testi-loc">Medellín, Colombia</div></div>
-        </div>
-      </div>
-      <div class="testi-card">
-        <div class="testi-stars">★★★★★</div>
-        <p class="testi-text">"Escéptico total al principio. Le di 30 días al producto y al negocio. Al final del primer mes ya no quería parar. Mi cuerpo y mi cuenta bancaria respondieron."</p>
-        <div class="testi-author">
-          <div class="testi-avatar">VP</div>
-          <div><div class="testi-name">Valeria P.</div><div class="testi-loc">Caracas, Venezuela</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FORMULARIO -->
-<section id="formulario" class="form-section">
-  <div class="container">
-    <span class="section-label">Primer paso</span>
-    <h2 class="section-title">Déjanos tus datos</h2>
-    <p class="section-sub">Un asesor de One More te contactará en menos de 24 horas. Sin presión, sin compromiso.</p>
-    <div class="form-box">
-      <form id="leadForm">
-        <div class="field-group">
+    <!-- PASO 2 -->
+    <div id="step-2" style="display:none">
+      <div class="card">
+        <div class="card-title">Medidas <span class="accent">corporales</span></div>
+        <div class="card-desc">Con estos datos calculamos tu IMC de forma precisa.</div>
+        <div class="field-row">
           <div class="field">
-            <label for="nombre">Nombre completo</label>
-            <input type="text" id="nombre" placeholder="Tu nombre" required/>
+            <label>Peso (kg)</label>
+            <input type="number" id="peso" placeholder="70" min="20" max="300" step="0.1" inputmode="decimal">
+            <div class="error-msg" id="err-peso">Peso inválido (20–300 kg).</div>
           </div>
           <div class="field">
-            <label for="telefono">WhatsApp</label>
-            <input type="tel" id="telefono" placeholder="+57 300 000 0000" required/>
-          </div>
-          <div class="field">
-            <label for="email">Correo electrónico</label>
-            <input type="email" id="email" placeholder="tu@email.com" required/>
-          </div>
-          <div class="field">
-            <label for="ciudad">Ciudad / País</label>
-            <input type="text" id="ciudad" placeholder="¿Desde dónde nos escribes?"/>
-          </div>
-          <div class="field">
-            <label for="interes">¿Qué te interesa más?</label>
-            <select id="interes">
-              <option value="" disabled selected>Selecciona una opción</option>
-              <option value="productos">Usar los productos</option>
-              <option value="negocio">Construir un negocio</option>
-              <option value="ambos">Ambos — productos y negocio</option>
-              <option value="info">Solo quiero información</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="mensaje">¿Algo más? (opcional)</label>
-            <textarea id="mensaje" placeholder="Cuéntanos tu situación..."></textarea>
+            <label>Estatura (cm)</label>
+            <input type="number" id="estatura" placeholder="170" min="100" max="250" inputmode="numeric">
+            <div class="error-msg" id="err-estatura">Estatura inválida (100–250 cm).</div>
           </div>
         </div>
-        <button type="button" class="btn-form" onclick="enviarLeadWhatsApp()">QUIERO UNIRME A ONE MORE →</button>
-        <p class="privacy-note">🔒 Tus datos están seguros. No los compartimos con terceros.</p>
-      </form>
-      <div class="success-msg" id="successMsg">
-        <div style="font-size:2.5rem;margin-bottom:1rem">✦</div>
-        <h3>¡Registro exitoso!</h3>
-        <p>Recibimos tu información. Un asesor de <strong>One More</strong> te contactará muy pronto.<br/>Mientras tanto, escríbenos directamente.</p>
-        <a href="https://wa.me/573126387467?text=Hola%2C%20acabo%20de%20registrarme%20en%20One%20More%20y%20quiero%20m%C3%A1s%20informaci%C3%B3n." class="btn-primary" target="_blank" rel="noopener" style="margin:0 auto;display:inline-flex">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.554 4.122 1.523 5.855L.057 23.882l6.197-1.426A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.84 0-3.569-.476-5.077-1.31l-.364-.214-3.676.845.874-3.551-.237-.381A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-          ESCRIBIR POR WHATSAPP
-        </a>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- CTA FINAL -->
-<section class="cta-final">
-  <div class="container">
-    <h2>Un año a partir de hoy,<br/><em>¿cómo quieres verte y sentirte?</em></h2>
-    <p>Esa versión de ti — más saludable, con más energía, con ingresos residuales — no está a años de distancia. Está a una decisión.</p>
-    <div class="cta-btns">
-      <a href="https://wa.me/573126387467?text=Hola%2C%20quiero%20comenzar%20mi%20transformaci%C3%B3n%20con%20One%20More." class="btn-primary" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.554 4.122 1.523 5.855L.057 23.882l6.197-1.426A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.84 0-3.569-.476-5.077-1.31l-.364-.214-3.676.845.874-3.551-.237-.381A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-        COMENZAR AHORA
-      </a>
-      <a href="#formulario" class="btn-secondary">DEJAR MIS DATOS</a>
+    <!-- PASO 3 -->
+    <div id="step-3" style="display:none">
+      <div class="card">
+        <div class="card-title">Estilo de <span class="accent">vida</span></div>
+        <div class="card-desc">¿Cómo es tu actividad diaria?</div>
+        <div class="field">
+          <label>Actividad laboral principal</label>
+          <div class="option-grid" id="opt-trabajo">
+            <div class="option-card" data-val="sedentario" onclick="selectOpt('opt-trabajo', this)">
+              <span class="check">✓</span><span class="opt-icon">💻</span><span class="opt-label">Oficina / escritorio</span>
+            </div>
+            <div class="option-card" data-val="semisedentario" onclick="selectOpt('opt-trabajo', this)">
+              <span class="check">✓</span><span class="opt-icon">🚶</span><span class="opt-label">Camino bastante</span>
+            </div>
+            <div class="option-card" data-val="activo" onclick="selectOpt('opt-trabajo', this)">
+              <span class="check">✓</span><span class="opt-icon">🏗️</span><span class="opt-label">Trabajo físico</span>
+            </div>
+            <div class="option-card" data-val="muy_activo" onclick="selectOpt('opt-trabajo', this)">
+              <span class="check">✓</span><span class="opt-icon">💪</span><span class="opt-label">Muy activo</span>
+            </div>
+          </div>
+          <div class="error-msg" id="err-trabajo">Selecciona una opción.</div>
+        </div>
+        <div class="field" style="margin-top:24px">
+          <label>¿Realizas ejercicio o deporte?</label>
+          <div class="option-grid" id="opt-ejercicio" style="grid-template-columns:1fr 1fr">
+            <div class="option-card" data-val="no" onclick="selectOpt('opt-ejercicio', this); toggleEjercicio(false)">
+              <span class="check">✓</span><span class="opt-icon">😴</span><span class="opt-label">No, aún no</span>
+            </div>
+            <div class="option-card" data-val="si" onclick="selectOpt('opt-ejercicio', this); toggleEjercicio(true)">
+              <span class="check">✓</span><span class="opt-icon">🏃</span><span class="opt-label">Sí, me ejercito</span>
+            </div>
+          </div>
+          <div class="error-msg" id="err-ejercicio">Selecciona una opción.</div>
+        </div>
+        <div class="field" id="frecuencia-wrap" style="display:none; margin-top:16px">
+          <label>Frecuencia de ejercicio (días por semana)</label>
+          <div class="range-wrapper">
+            <input type="range" class="range-track" id="frecuencia" min="1" max="7" value="3" oninput="updateRange('freq-val', this.value, 'días/semana')">
+          </div>
+          <div class="range-value" id="freq-val">3 días/semana</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 4 -->
+    <div id="step-4" style="display:none">
+      <div class="card">
+        <div class="card-title">Tus <span class="accent">hábitos</span></div>
+        <div class="card-desc">Los hábitos diarios definen tu bienestar real.</div>
+        <div class="field">
+          <label>Agua que consumes al día (litros)</label>
+          <div class="range-wrapper">
+            <input type="range" class="range-track" id="agua" min="0" max="4" value="1.5" step="0.5" oninput="updateRange('agua-val', this.value, 'L/día')">
+          </div>
+          <div class="range-value" id="agua-val">1.5 L/día</div>
+        </div>
+        <div class="field" style="margin-top:24px">
+          <label>Horas de sueño por noche</label>
+          <div class="range-wrapper">
+            <input type="range" class="range-track" id="sueno" min="3" max="12" value="7" oninput="updateRange('sueno-val', this.value, 'horas')">
+          </div>
+          <div class="range-value" id="sueno-val">7 horas</div>
+        </div>
+        <div class="field" style="margin-top:24px">
+          <label>Nivel de sedentarismo</label>
+          <div class="option-grid" id="opt-sedentarismo">
+            <div class="option-card" data-val="bajo" onclick="selectOpt('opt-sedentarismo', this)">
+              <span class="check">✓</span><span class="opt-icon">🚴</span><span class="opt-label">Muy activo/a</span>
+            </div>
+            <div class="option-card" data-val="medio" onclick="selectOpt('opt-sedentarismo', this)">
+              <span class="check">✓</span><span class="opt-icon">🪑</span><span class="opt-label">Moderado</span>
+            </div>
+            <div class="option-card" data-val="alto" onclick="selectOpt('opt-sedentarismo', this)">
+              <span class="check">✓</span><span class="opt-icon">📺</span><span class="opt-label">Bastante quieto/a</span>
+            </div>
+          </div>
+          <div class="error-msg" id="err-sedentarismo">Selecciona una opción.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 5 -->
+    <div id="step-5" style="display:none">
+      <div class="card">
+        <div class="card-title">Tu <span class="accent">salud</span></div>
+        <div class="card-desc">Esta información es completamente opcional y nos ayuda a personalizar aún más tus recomendaciones.</div>
+        <div class="field">
+          <label>¿Sufres de alguna enfermedad? (opcional)</label>
+          <textarea id="enfermedades" placeholder="Ej: diabetes tipo 2, hipertensión... o deja vacío si no aplica"></textarea>
+        </div>
+        <div class="field">
+          <label>¿Tomas algún medicamento o tratamiento? (opcional)</label>
+          <textarea id="tratamientos" placeholder="Ej: metformina, suplementos... o deja vacío si no aplica"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTONES NAV -->
+    <div class="nav-btns">
+      <button class="btn-secondary" id="btn-back" onclick="prevStep()" style="display:none">← Atrás</button>
+      <button class="btn-primary" id="btn-next" onclick="nextStep()">Siguiente →</button>
     </div>
   </div>
-</section>
 
-<!-- SOPORTE LATAM -->
-<div class="soporte-strip">
-  <p>📞 Servicio al cliente Latinoamérica:</p>
-  <a href="https://wa.me/573126387467?text=Hola%2C%20necesito%20soporte%20de%20One%20More%20International." target="_blank" rel="noopener">
-    <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.554 4.122 1.523 5.855L.057 23.882l6.197-1.426A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.84 0-3.569-.476-5.077-1.31l-.364-.214-3.676.845.874-3.551-.237-.381A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-    +57 312 638 7467
-  </a>
-  <p style="margin-left:0.5rem;font-size:0.75rem;color:rgba(255,255,255,0.4)">Colombia · Ecuador · Perú · Venezuela · Bolivia · Costa Rica · Panamá · Guatemala · Rep. Dominicana · Argentina</p>
-</div>
+  <!-- ═══════════ RESULTADO ═══════════ -->
+  <div class="screen" id="screen-result">
+    <div class="result-header">
+      <div class="logo-badge">📊 TU EVALUACIÓN</div>
+      <div class="result-greeting" id="result-greeting">Hola, <span style="color:var(--emerald)" id="r-nombre"></span></div>
+      <p class="result-tagline" id="r-tagline"></p>
+    </div>
 
-<!-- FOOTER -->
-<footer>
-  <span class="footer-logo">One More <span>International</span></span>
-  <p>© 2025 One More International · Todos los derechos reservados · Colombia</p>
-  <p class="disclaimer">
-    Este sitio es material de un distribuidor independiente autorizado. Los resultados individuales varían. Los testimonios reflejan experiencias personales. Consulta a tu médico antes de iniciar cualquier plan de bienestar.
-  </p>
-</footer>
+    <!-- IMC -->
+    <div class="gauge-card">
+      <div class="gauge-wrap">
+        <svg class="gauge-svg" viewBox="0 0 220 120" id="gauge-svg">
+          <defs>
+            <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:#5b8def"/>
+              <stop offset="18%" style="stop-color:#17e0a3"/>
+              <stop offset="45%" style="stop-color:#17e0a3"/>
+              <stop offset="62%" style="stop-color:#ffb238"/>
+              <stop offset="100%" style="stop-color:#ff6b5b"/>
+            </linearGradient>
+          </defs>
+          <path d="M 20 110 A 90 90 0 0 1 200 110" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="14" stroke-linecap="round"/>
+          <path id="gauge-arc" d="M 20 110 A 90 90 0 0 1 200 110" fill="none" stroke="url(#gaugeGrad)" stroke-width="14" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="283" style="transition: stroke-dashoffset 1.2s cubic-bezier(.16,1,.3,1)"/>
+          <line id="gauge-needle" x1="110" y1="110" x2="110" y2="35" stroke="#f4f7ff" stroke-width="2.5" stroke-linecap="round" style="transform-origin: 110px 110px; transition: transform 1.2s cubic-bezier(.16,1,.3,1)"/>
+          <circle cx="110" cy="110" r="5" fill="#f4f7ff"/>
+        </svg>
+        <div class="gauge-value-box">
+          <div class="gauge-number" id="r-imc">--</div>
+          <div class="gauge-unit">IMC</div>
+        </div>
+      </div>
+      <div class="imc-category" id="r-cat-badge"></div>
+      <div class="imc-desc" id="r-cat-desc"></div>
+    </div>
 
-<!-- WA FLOTANTE -->
-<a href="https://wa.me/573126387467?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20One%20More." class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.554 4.122 1.523 5.855L.057 23.882l6.197-1.426A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.84 0-3.569-.476-5.077-1.31l-.364-.214-3.676.845.874-3.551-.237-.381A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-  <span class="wa-label">ESCRÍBENOS</span>
-  <span class="wa-pulse"></span>
-</a>
+    <!-- HÁBITOS -->
+    <div class="semaforo-card">
+      <div class="semaforo-header">
+        <div class="semaforo-title">Tus Hábitos</div>
+        <div class="semaforo-badge" id="r-habit-badge"></div>
+      </div>
+      <div id="r-habits-list"></div>
+    </div>
+
+    <!-- INSIGHT -->
+    <div class="insight-card">
+      <div class="insight-label">✦ Tu diagnóstico personalizado</div>
+      <div class="insight-text" id="r-insight"></div>
+    </div>
+
+    <!-- RECOMENDACIONES -->
+    <div class="reco-grid" id="r-recos"></div>
+
+    <!-- CIERRE -->
+    <div class="cierre-card">
+      <div class="logo-badge">🎯 TU DECISIÓN</div>
+      <h2 style="font-family:var(--font-display); font-size:36px; margin:16px 0 8px">Tienes 2 caminos</h2>
+      <p style="font-size:14px; color:var(--muted)">Solo tú decides cuál tomar a partir de hoy.<br>Tu asesor: <strong style="color:var(--text)">José Lugo</strong> — Distribuidor Oficial ONE MORE International.</p>
+      <div class="cierre-vs">
+        <div class="path-card path-no">
+          <div class="path-icon">😔</div>
+          <div class="path-title" style="color:var(--coral)">Seguir igual</div>
+          <div class="path-items">Sin cambios reales<br>Sin guía clara<br>Mismos resultados<br>Frustración continua</div>
+        </div>
+        <div class="path-card path-yes">
+          <div class="path-icon">🚀</div>
+          <div class="path-title" style="color:var(--emerald)">Acompañamiento guiado</div>
+          <div class="path-items">Plan personalizado<br>Resultados medibles<br>Apoyo constante<br>Transformación real</div>
+        </div>
+      </div>
+      <button class="cierre-cta" onclick="openWhatsApp()">
+        👉 Quiero mi asesoría personalizada
+      </button>
+      <br>
+      <p style="font-size:12px; color:var(--muted)">Sin compromisos. Primera consulta gratuita.</p>
+    </div>
+
+    <!-- ACCIONES -->
+    <div class="action-row">
+      <button class="btn-secondary" onclick="window.print()">🖨️ Imprimir / PDF</button>
+      <button class="btn-whatsapp" onclick="shareWhatsApp()">📤 Compartir</button>
+      <button class="btn-secondary" onclick="resetApp()">🔄 Nueva evaluación</button>
+    </div>
+
+    <div class="disclaimer">
+      Evaluación de bienestar de <strong>José Lugo</strong> · Distribuidor Oficial ONE MORE International.<br><br>
+      ⚠️ Esta evaluación es orientativa y <strong>no sustituye asesoría médica profesional</strong>.<br>
+      Consulta siempre con un profesional de la salud ante cualquier condición médica.
+    </div>
+  </div>
+</div><!-- /app -->
 
 <script>
-  const WHATSAPP_NUMBER = '573126387467';
+// ═══════════════════════════════════════════════════
+// ESTADO
+// ═══════════════════════════════════════════════════
+let currentStep = 1;
+const totalSteps = 5;
+const data = {};
 
-  function obtenerTextoInteres(valor) {
-    const opciones = {
-      'productos': 'Quiero información sobre los productos',
-      'negocio': 'Quiero información sobre el negocio',
-      'ambos': 'Me interesan productos y oportunidad de negocio',
-      'info': 'Solo quiero información'
-    };
-    return opciones[valor] || valor || 'No especificado';
+// metadatos visuales de cada paso: icono, título y color de acento
+const STEP_META = [
+  { title: 'Datos básicos',      icon: '👤', color: 'var(--step1)' },
+  { title: 'Medidas corporales', icon: '📏', color: 'var(--step2)' },
+  { title: 'Estilo de vida',     icon: '🏃', color: 'var(--step3)' },
+  { title: 'Tus hábitos',        icon: '💧', color: 'var(--step4)' },
+  { title: 'Tu salud',           icon: '🏥', color: 'var(--step5)' },
+];
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+function initDots() {
+  const wrap = document.getElementById('step-dots');
+  wrap.innerHTML = '';
+  for(let i=1; i<=totalSteps; i++) {
+    const d = document.createElement('div');
+    d.className = 'step-dot' + (i===1?' active':'');
+    d.id = 'dot-'+i;
+    wrap.appendChild(d);
   }
-
-  function enviarLeadWhatsApp() {
-    const lead = {
-      nombre: (document.getElementById('nombre')?.value || '').trim(),
-      telefono: (document.getElementById('telefono')?.value || '').trim(),
-      email: (document.getElementById('email')?.value || '').trim(),
-      ciudad: (document.getElementById('ciudad')?.value || '').trim(),
-      interes: obtenerTextoInteres(document.getElementById('interes')?.value || ''),
-      mensaje: (document.getElementById('mensaje')?.value || '').trim(),
-      fecha: new Date().toLocaleString('es-CO')
-    };
-
-    if (!lead.nombre || !lead.telefono || !lead.email) {
-      alert('Por favor completa nombre, WhatsApp y correo electrónico antes de continuar.');
-      return;
-    }
-
-    try {
-      const leads = JSON.parse(localStorage.getItem('onemoreLeads') || '[]');
-      leads.push(lead);
-      localStorage.setItem('onemoreLeads', JSON.stringify(leads));
-    } catch (error) {
-      console.warn('No se pudo guardar el lead localmente:', error);
-    }
-
-    const texto = [
-      'Hola José, quiero unirme a One More International.',
-      '',
-      'DATOS DEL FORMULARIO:',
-      `Nombre: ${lead.nombre}`,
-      `WhatsApp: ${lead.telefono}`,
-      `Correo: ${lead.email}`,
-      `Ciudad / País: ${lead.ciudad || 'No especificado'}`,
-      `Interés: ${lead.interes}`,
-      `Mensaje: ${lead.mensaje || 'No especificado'}`,
-      '',
-      'Estoy listo para recibir información y avanzar.'
-    ].join('
-');
-
-    const url = `https://wa.me/573126387467?text=${encodeURIComponent(texto)}`;
-    window.location.href = url;
+}
+function updateProgress() {
+  const pct = (currentStep/totalSteps)*100;
+  const meta = STEP_META[currentStep-1];
+  document.documentElement.style.setProperty('--current-step', meta.color);
+  document.getElementById('progress-fill').style.width = pct+'%';
+  document.getElementById('step-current').textContent = currentStep;
+  document.getElementById('step-title-label').textContent = meta.title;
+  document.getElementById('step-icon-badge').textContent = meta.icon;
+  for(let i=1; i<=totalSteps; i++) {
+    const d = document.getElementById('dot-'+i);
+    if(i < currentStep) { d.className='step-dot done'; }
+    else if(i===currentStep) { d.className='step-dot active'; }
+    else { d.className='step-dot'; }
   }
+  document.getElementById('btn-back').style.display = currentStep>1?'inline-flex':'none';
+  document.getElementById('btn-next').textContent = currentStep===totalSteps ? 'Ver mi resultado →' : 'Siguiente →';
+}
 
-  document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('leadForm');
-    if (form) {
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        enviarLeadWhatsApp();
-      });
+// ═══════════════════════════════════════════════════
+// NAVEGACIÓN
+// ═══════════════════════════════════════════════════
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(id==='screen-wizard') { initDots(); updateProgress(); }
+}
+function nextStep() {
+  if(!validateStep(currentStep)) return;
+  collectStep(currentStep);
+  if(currentStep===totalSteps) {
+    buildResult();
+    goTo('screen-result');
+    return;
+  }
+  document.getElementById('step-'+currentStep).style.display='none';
+  currentStep++;
+  document.getElementById('step-'+currentStep).style.display='block';
+  updateProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function prevStep() {
+  document.getElementById('step-'+currentStep).style.display='none';
+  currentStep--;
+  document.getElementById('step-'+currentStep).style.display='block';
+  updateProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+// Enter avanza al siguiente paso (más intuitivo en campos de texto/número)
+document.addEventListener('keydown', function(e){
+  if(e.key !== 'Enter') return;
+  const wizard = document.getElementById('screen-wizard');
+  if(!wizard.classList.contains('active')) return;
+  const tag = (e.target.tagName||'').toLowerCase();
+  if(tag==='input') { e.preventDefault(); nextStep(); }
+});
+
+// ═══════════════════════════════════════════════════
+// VALIDACIÓN
+// ═══════════════════════════════════════════════════
+function validateStep(step) {
+  let ok = true;
+  if(step===1) {
+    const n = document.getElementById('nombre').value.trim();
+    const e = parseInt(document.getElementById('edad').value);
+    showErr('err-nombre', !n);
+    showErr('err-edad', isNaN(e)||e<10||e>100);
+    ok = n && !isNaN(e) && e>=10 && e<=100;
+  }
+  if(step===2) {
+    const p = parseFloat(document.getElementById('peso').value);
+    const h = parseFloat(document.getElementById('estatura').value);
+    showErr('err-peso', isNaN(p)||p<20||p>300);
+    showErr('err-estatura', isNaN(h)||h<100||h>250);
+    ok = !isNaN(p)&&p>=20&&p<=300 && !isNaN(h)&&h>=100&&h<=250;
+  }
+  if(step===3) {
+    const t = getSelected('opt-trabajo');
+    const ej = getSelected('opt-ejercicio');
+    showErr('err-trabajo', !t);
+    showErr('err-ejercicio', !ej);
+    ok = t && ej;
+  }
+  if(step===4) {
+    const sed = getSelected('opt-sedentarismo');
+    showErr('err-sedentarismo', !sed);
+    ok = !!sed;
+  }
+  return ok;
+}
+function showErr(id, show) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.classList.toggle('show', show);
+  if(show) {
+    const field = el.closest('.field');
+    if(field) {
+      field.classList.remove('shake');
+      void field.offsetWidth; // reinicia la animación
+      field.classList.add('shake');
     }
-  });
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// RECOLECCIÓN
+// ═══════════════════════════════════════════════════
+function collectStep(step) {
+  if(step===1) {
+    data.nombre = document.getElementById('nombre').value.trim();
+    data.edad = parseInt(document.getElementById('edad').value);
+  }
+  if(step===2) {
+    data.peso = parseFloat(document.getElementById('peso').value);
+    data.estatura = parseFloat(document.getElementById('estatura').value)/100;
+  }
+  if(step===3) {
+    data.trabajo = getSelected('opt-trabajo');
+    data.ejercicio = getSelected('opt-ejercicio');
+    data.frecuencia = parseInt(document.getElementById('frecuencia').value);
+  }
+  if(step===4) {
+    data.agua = parseFloat(document.getElementById('agua').value);
+    data.sueno = parseInt(document.getElementById('sueno').value);
+    data.sedentarismo = getSelected('opt-sedentarismo');
+  }
+  if(step===5) {
+    data.enfermedades = document.getElementById('enfermedades').value.trim();
+    data.tratamientos = document.getElementById('tratamientos').value.trim();
+  }
+}
+function getSelected(gridId) {
+  const sel = document.querySelector('#'+gridId+' .option-card.selected');
+  return sel ? sel.dataset.val : null;
+}
+
+// ═══════════════════════════════════════════════════
+// UI HELPERS
+// ═══════════════════════════════════════════════════
+function selectOpt(gridId, el) {
+  document.querySelectorAll('#'+gridId+' .option-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function toggleEjercicio(show) {
+  document.getElementById('frecuencia-wrap').style.display = show ? 'block' : 'none';
+}
+function updateRange(id, val, unit) {
+  document.getElementById(id).textContent = val+' '+unit;
+}
+
+// ═══════════════════════════════════════════════════
+// CÁLCULO IMC
+// ═══════════════════════════════════════════════════
+function calcIMC() {
+  return data.peso / (data.estatura * data.estatura);
+}
+function classifyIMC(imc) {
+  if(imc < 18.5) return { label:'Bajo peso', color:'#5b8def', bg:'rgba(91,141,239,0.16)', desc:'Tu cuerpo está por debajo del rango saludable. Aumentar masa muscular y mejorar la nutrición son prioridades clave.' };
+  if(imc < 25)   return { label:'Peso normal', color:'#17e0a3', bg:'rgba(23,224,163,0.16)', desc:'Estás en el rango saludable. Tu enfoque puede ser optimizar rendimiento, energía y hábitos sostenibles.' };
+  if(imc < 30)   return { label:'Sobrepeso', color:'#ffb238', bg:'rgba(255,178,56,0.16)', desc:'Estás por encima del rango ideal. Pequeños cambios consistentes pueden transformar tu composición corporal.' };
+  if(imc < 35)   return { label:'Obesidad I', color:'#ff6b5b', bg:'rgba(255,107,91,0.16)', desc:'Es momento de actuar. Con el enfoque correcto, cambios reales son completamente alcanzables.' };
+  if(imc < 40)   return { label:'Obesidad II', color:'#f0483a', bg:'rgba(240,72,58,0.16)', desc:'Esta etapa requiere atención prioritaria. El acompañamiento personalizado marca toda la diferencia.' };
+  return { label:'Obesidad III', color:'#e6483a', bg:'rgba(230,72,58,0.18)', desc:'Es fundamental actuar hoy. Con guía profesional, cada paso cuenta y los resultados llegan.' };
+}
+
+// ═══════════════════════════════════════════════════
+// SCORING HÁBITOS
+// ═══════════════════════════════════════════════════
+function calcHabits() {
+  let score = 0;
+  const items = [];
+  // Ejercicio (0–8 pts)
+  if(data.ejercicio==='si') {
+    const freq = data.frecuencia||0;
+    const pts = freq>=5?8:freq>=3?5:2;
+    score+=pts;
+    items.push({ icon:'🏃', label:'Ejercicio', detail: freq+' días/semana', pts, max:8 });
+  } else {
+    items.push({ icon:'🏃', label:'Ejercicio', detail:'No realiza ejercicio', pts:0, max:8 });
+  }
+  // Trabajo (0–5 pts)
+  const tPts = {sedentario:0, semisedentario:2, activo:4, muy_activo:5}[data.trabajo]||0;
+  score+=tPts;
+  const tLabel = {sedentario:'Trabajo sedentario', semisedentario:'Actividad moderada', activo:'Trabajo activo', muy_activo:'Muy activo en el trabajo'}[data.trabajo]||'';
+  items.push({ icon:'💼', label:'Actividad laboral', detail:tLabel, pts:tPts, max:5 });
+  // Agua (0–6 pts)
+  const wPts = data.agua>=2.5?6:data.agua>=2?4:data.agua>=1.5?2:0;
+  score+=wPts;
+  items.push({ icon:'💧', label:'Hidratación', detail:data.agua+'L por día', pts:wPts, max:6 });
+  // Sueño (0–6 pts)
+  const sPts = (data.sueno>=7&&data.sueno<=9)?6:(data.sueno>=6||data.sueno===10)?3:0;
+  score+=sPts;
+  items.push({ icon:'😴', label:'Sueño', detail:data.sueno+' horas por noche', pts:sPts, max:6 });
+  // Sedentarismo inverso (penaliza si alto)
+  const sedPen = {bajo:0, medio:-2, alto:-4}[data.sedentarismo]||0;
+  score+=sedPen;
+  const sedLabel = {bajo:'Nivel bajo de sedentarismo', medio:'Sedentarismo moderado', alto:'Alto sedentarismo'}[data.sedentarismo]||'';
+  items.push({ icon:'🪑', label:'Sedentarismo', detail:sedLabel, pts:sedPen, max:0 });
+  score = Math.max(0, score);
+  let level, color, bg;
+  if(score<=10)     { level='🔴 Hábitos críticos'; color='#ff6b5b'; bg='rgba(255,107,91,0.16)'; }
+  else if(score<=18){ level='🟡 En proceso'; color='#ffb238'; bg='rgba(255,178,56,0.16)'; }
+  else              { level='🟢 Buen nivel'; color='#17e0a3'; bg='rgba(23,224,163,0.16)'; }
+  return { score, level, color, bg, items };
+}
+
+// ═══════════════════════════════════════════════════
+// CONSTRUIR RESULTADO
+// ═══════════════════════════════════════════════════
+function buildResult() {
+  collectStep(5);
+  const imc = calcIMC();
+  const imcRound = Math.round(imc*10)/10;
+  const catIMC = classifyIMC(imc);
+  const habits = calcHabits();
+  const nombre = data.nombre.split(' ')[0];
+
+  document.getElementById('r-nombre').textContent = nombre;
+  document.getElementById('r-tagline').textContent = 'Aquí está tu evaluación completa basada en tus datos y hábitos de vida.';
+
+  document.getElementById('r-imc').textContent = imcRound;
+  animateGauge(imc);
+
+  const badge = document.getElementById('r-cat-badge');
+  badge.textContent = catIMC.label;
+  badge.style.background = catIMC.bg;
+  badge.style.color = catIMC.color;
+  document.getElementById('r-cat-desc').textContent = catIMC.desc;
+
+  const hBadge = document.getElementById('r-habit-badge');
+  hBadge.textContent = habits.level;
+  hBadge.style.background = habits.bg;
+  hBadge.style.color = habits.color;
+
+  const hList = document.getElementById('r-habits-list');
+  hList.innerHTML = habits.items.map(item => {
+    let dotColor = '#5c6684';
+    if(item.pts > 0) dotColor = '#17e0a3';
+    if(item.pts < 0) dotColor = '#ff6b5b';
+    if(item.pts === 0 && item.max > 0) dotColor = '#ff6b5b';
+    return `<div class="habit-row">
+      <div class="habit-icon">${item.icon}</div>
+      <div class="habit-info">
+        <div class="habit-label">${item.label}</div>
+        <div class="habit-detail">${item.detail}</div>
+      </div>
+      <div class="habit-dot" style="background:${dotColor}"></div>
+    </div>`;
+  }).join('');
+
+  const insight = generateInsight(imc, habits.score, nombre, catIMC.label);
+  document.getElementById('r-insight').textContent = insight;
+
+  const recos = generateRecos(imc, habits);
+  document.getElementById('r-recos').innerHTML = recos.map(r=>
+    `<div class="reco-item" style="--reco-color:${r.color}">
+      <div class="reco-icon">${r.icon}</div>
+      <div class="reco-title">${r.title}</div>
+      <div class="reco-val">${r.val}</div>
+    </div>`
+  ).join('');
+}
+function animateGauge(imc) {
+  // IMC range: 14-40 → 0-100%
+  const pct = Math.min(100, Math.max(0, (imc-14)/26*100));
+  const arcLen = 283;
+  const offset = arcLen - (pct/100)*arcLen;
+  setTimeout(()=>{
+    document.getElementById('gauge-arc').style.strokeDashoffset = offset;
+    const angle = -90 + (pct/100)*180;
+    document.getElementById('gauge-needle').style.transform = `rotate(${angle}deg)`;
+  }, 300);
+}
+function generateInsight(imc, score, nombre, catLabel) {
+  if(imc<18.5 && score<=10) return `${nombre}, tu cuerpo y tus hábitos necesitan atención urgente. La buena noticia: desde este punto, cada pequeño cambio genera resultados rápidos y visibles.`;
+  if(imc<18.5) return `${nombre}, tu peso está por debajo del ideal, pero tus hábitos muestran potencial. Con ajustes nutricionales y seguimiento personalizado, puedes alcanzar una composición corporal óptima.`;
+  if(imc<25 && score>=19) return `${nombre}, tu perfil muestra una excelente base. Tienes hábitos saludables y un peso ideal. Con ajustes estratégicos puedes llevar tu bienestar al siguiente nivel.`;
+  if(imc<25) return `${nombre}, tu peso es saludable, pero tus hábitos tienen margen de mejora. Pequeños cambios sostenidos pueden transformar tu energía y calidad de vida.`;
+  if(imc<30 && score<=10) return `${nombre}, tu cuerpo está en una etapa donde pequeños cambios pueden generar grandes resultados. La combinación de hábitos y peso actual indica que es el momento perfecto para actuar.`;
+  if(imc<30) return `${nombre}, tu resultado muestra un sobrepeso moderado con hábitos en desarrollo. Con acompañamiento guiado, el proceso de transformación es completamente alcanzable y sostenible.`;
+  return `${nombre}, tu perfil indica una oportunidad de transformación real. Con el acompañamiento correcto, cada semana de trabajo consistente se traduce en resultados medibles y permanentes.`;
+}
+function generateRecos(imc, habits) {
+  const agua = data.peso < 60 ? '1.5 – 2 L' : data.peso < 80 ? '2 – 2.5 L' : '2.5 – 3 L';
+  const sueno = (data.edad < 25) ? '8 – 9 horas' : '7 – 8 horas';
+  const actividad = imc >= 30 ? 'Caminar 30 min/día' : imc >= 25 ? '3–4 días ejercicio' : '4–5 días activo';
+  const enfoque = imc < 18.5 ? 'Ganar masa muscular' : imc < 25 ? 'Optimizar rendimiento' : imc < 30 ? 'Pérdida progresiva' : 'Transformación integral';
+  return [
+    { icon:'💧', title:'Agua recomendada', val: agua, color:'#5b8def' },
+    { icon:'😴', title:'Sueño ideal', val: sueno, color:'#a78bfa' },
+    { icon:'🏃', title:'Actividad sugerida', val: actividad, color:'#ff6b5b' },
+    { icon:'🎯', title:'Enfoque principal', val: enfoque, color:'#ffb238' },
+  ];
+}
+
+// ═══════════════════════════════════════════════════
+// WHATSAPP — MENSAJE COMPLETO
+// ═══════════════════════════════════════════════════
+// ⚙️ CONFIGURA TU NÚMERO AQUÍ (formato internacional, sin + ni espacios)
+const WA_PHONE = '573126387467';
+
+function buildFullWaPayload() {
+  const imc     = calcIMC();
+  const imcR    = Math.round(imc * 10) / 10;
+  const cat     = classifyIMC(imc);
+  const habits  = calcHabits();
+  const recos   = generateRecos(imc, habits);
+  const insight = generateInsight(imc, habits.score, data.nombre.split(' ')[0], cat.label);
+
+  const trabajoLabel = {
+    sedentario:    'Oficina / escritorio',
+    semisedentario:'Camino bastante',
+    activo:        'Trabajo físico',
+    muy_activo:    'Muy activo'
+  }[data.trabajo] || data.trabajo;
+
+  const sedLabel = {
+    bajo:  'Muy activo/a',
+    medio: 'Sedentarismo moderado',
+    alto:  'Alto sedentarismo'
+  }[data.sedentarismo] || data.sedentarismo;
+
+  const ejercicioStr = data.ejercicio === 'si'
+    ? `Sí — ${data.frecuencia} días/semana`
+    : 'No realiza ejercicio';
+
+  const recosStr = recos
+    .map(r => `  • ${r.title}: ${r.val}`)
+    .join('\n');
+
+  const mensaje = [
+    `*━━━ EVALUACIÓN ONE MORE ━━━*`,
+    ``,
+    `👤 *Datos personales*`,
+    `  • Nombre: ${data.nombre}`,
+    `  • Edad: ${data.edad} años`,
+    ``,
+    `📏 *Medidas corporales*`,
+    `  • Peso: ${data.peso} kg`,
+    `  • Estatura: ${Math.round(data.estatura * 100)} cm`,
+    `  • IMC: *${imcR}*`,
+    `  • Clasificación: *${cat.label}*`,
+    ``,
+    `🏃 *Estilo de vida*`,
+    `  • Actividad laboral: ${trabajoLabel}`,
+    `  • Ejercicio: ${ejercicioStr}`,
+    `  • Sedentarismo: ${sedLabel}`,
+    ``,
+    `💧 *Hábitos diarios*`,
+    `  • Agua: ${data.agua} L/día`,
+    `  • Sueño: ${data.sueno} horas/noche`,
+    ``,
+    `🏥 *Salud*`,
+    `  • Enfermedades: ${data.enfermedades || 'No reporta'}`,
+    `  • Tratamientos: ${data.tratamientos || 'No reporta'}`,
+    ``,
+    `📊 *Perfil de hábitos: ${habits.level}*`,
+    ``,
+    `✦ *Diagnóstico inicial*`,
+    `${insight}`,
+    ``,
+    `🎯 *Recomendaciones*`,
+    `${recosStr}`,
+    ``,
+    `━━━━━━━━━━━━━━━━━━━━━━`,
+    `Quiero recibir mi *asesoría personalizada* con José Lugo · ONE MORE 💜`
+  ].join('\n');
+
+  return encodeURIComponent(mensaje);
+}
+function openWhatsApp() {
+  const text = buildFullWaPayload();
+  window.open(`https://wa.me/${WA_PHONE}?text=${text}`, '_blank');
+}
+function shareWhatsApp() {
+  const imc   = Math.round(calcIMC() * 10) / 10;
+  const cat   = classifyIMC(parseFloat(imc));
+  const h     = calcHabits();
+  const text  = encodeURIComponent(
+    `Acabo de evaluar mi bienestar con *José Lugo · One More* 🌟\n\n` +
+    `📊 IMC: ${imc} → ${cat.label}\n` +
+    `💚 Hábitos: ${h.level}\n\n` +
+    `¡Haz la tuya gratis! 👆`
+  );
+  window.open(`https://wa.me/?text=${text}`, '_blank');
+}
+
+// ═══════════════════════════════════════════════════
+// RESET
+// ═══════════════════════════════════════════════════
+function resetApp() {
+  currentStep = 1;
+  document.querySelectorAll('.option-card').forEach(c=>c.classList.remove('selected'));
+  document.querySelectorAll('input[type=text], input[type=number], textarea').forEach(i=>i.value='');
+  document.getElementById('frecuencia-wrap').style.display='none';
+  document.getElementById('agua-val').textContent='1.5 L/día';
+  document.getElementById('sueno-val').textContent='7 horas';
+  document.getElementById('freq-val').textContent='3 días/semana';
+  document.getElementById('agua').value=1.5;
+  document.getElementById('sueno').value=7;
+  document.getElementById('frecuencia').value=3;
+  for(let i=1;i<=5;i++) document.getElementById('step-'+i).style.display = i===1?'block':'none';
+  goTo('screen-wizard');
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
 </script>
 </body>
 </html>

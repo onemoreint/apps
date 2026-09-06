@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Cost Pro - Calculadora Profesional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        function FoodCostCalculator() {
+            const [darkMode, setDarkMode] = useState(false);
+            const [selectedCountry, setSelectedCountry] = useState('🇨🇴 Colombia');
+            const [recipes, setRecipes] = useState([]);
+            const [currentRecipe, setCurrentRecipe] = useState(null);
+            const [trmBcv, setTrmBcv] = useState(0);
+            const fileInputRef = useRef(null);
+
+            const currencies = {
+                '🇨🇴 Colombia': { code: 'COP', symbol: '$', fixed: 4200 },
+                '🇪🇸 España': { code: 'EUR', symbol: '€', fixed: 1.05 },
+                '🇺🇸 Estados Unidos': { code: 'USD', symbol: '$', fixed: 1 },
+                '🇲🇽 México': { code: 'MXN', symbol: '$', fixed: 17 },
+                '🇦🇷 Argentina': { code: 'ARS', symbol: '$', fixed: 900 },
+                '🇨🇱 Chile': { code: 'CLP', symbol: '$', fixed: 800 },
+                '🇵🇪 Perú': { code: 'PEN', symbol: 'S/', fixed: 3.8 },
+                '🇧🇷 Brasil': { code: 'BRL', symbol: 'R$', fixed: 5.2 },
+                '🇨🇦 Canadá': { code: 'CAD', symbol: '$', fixed: 1.35 },
+                '🇻🇪 Venezuela': { code: 'VES', symbol: 'Bs', fixed: null },
+            };
+
+            // Cargar datos del localStorage
+            useEffect(() => {
+                const saved = localStorage.getItem('foodCostRecipes');
+                const savedCountry = localStorage.getItem('selectedCountry');
+                const savedDarkMode = localStorage.getItem('darkMode');
+                
+                if (saved) setRecipes(JSON.parse(saved));
+                if (savedCountry) setSelectedCountry(savedCountry);
+                if (savedDarkMode) setDarkMode(JSON.parse(savedDarkMode));
+
+                // Obtener TRM del BCV si es Venezuela
+                if (savedCountry === 'Venezuela' || selectedCountry === 'Venezuela') {
+                    fetchTrmBcv();
+                }
+            }, []);
+
+            // Guardar en localStorage
+            useEffect(() => {
+                localStorage.setItem('foodCostRecipes', JSON.stringify(recipes));
+            }, [recipes]);
+
+            useEffect(() => {
+                localStorage.setItem('selectedCountry', selectedCountry);
+                if (selectedCountry === 'Venezuela') {
+                    fetchTrmBcv();
+                }
+            }, [selectedCountry]);
+
+            useEffect(() => {
+                localStorage.setItem('darkMode', JSON.stringify(darkMode));
+            }, [darkMode]);
+
+            const fetchTrmBcv = async () => {
+                try {
+                    // Intento 1: API de BCV
+                    const response = await fetch('https://api.exchangerate.host/latest?base=USD&symbols=VES');
+                    const data = await response.json();
+                    if (data.rates && data.rates.VES) {
+                        const rate = data.rates.VES + 200;
+                        setTrmBcv(rate);
+                        localStorage.setItem('trmBcv', rate);
+                        return;
+                    }
+                } catch (error) {
+                    console.log('API error, using fallback');
+                }
+
+                // Fallback: usar valor guardado o valor por defecto
+                const saved = localStorage.getItem('trmBcv');
+                if (saved) {
+                    setTrmBcv(parseFloat(saved));
+                } else {
+                    setTrmBcv(36.5 + 200); // Valor por defecto
+                }
+            };
+
+            const createNewRecipe = () => {
+                const newRecipe = {
+                    id: Date.now(),
+                    name: 'Nueva Receta',
+                    description: '',
+                    portions: 1,
+                    ingredients: [],
+                    foodCostTarget: 30,
+                    taxPercentage: 0,
+                };
+                setRecipes([...recipes, newRecipe]);
+                setCurrentRecipe(newRecipe);
+            };
+
+            const updateRecipe = (field, value) => {
+                const updated = { ...currentRecipe, [field]: value };
+                setCurrentRecipe(updated);
+                setRecipes(recipes.map(r => r.id === updated.id ? updated : r));
+            };
+
+            const addIngredient = () => {
+                const newIngredient = {
+                    id: Date.now(),
+                    name: '',
+                    presentation: '',
+                    unit: 'kg',
+                    unitCost: 0,
+                    quantity: 1,
+                    waste: 0,
+                };
+                const updated = {
+                    ...currentRecipe,
+                    ingredients: [...currentRecipe.ingredients, newIngredient],
+                };
+                setCurrentRecipe(updated);
+                setRecipes(recipes.map(r => r.id === updated.id ? updated : r));
+            };
+
+            const updateIngredient = (ingredientId, field, value) => {
+                const updated = {
+                    ...currentRecipe,
+                    ingredients: currentRecipe.ingredients.map(ing =>
+                        ing.id === ingredientId ? { ...ing, [field]: value } : ing
+                    ),
+                };
+                setCurrentRecipe(updated);
+                setRecipes(recipes.map(r => r.id === updated.id ? updated : r));
+            };
+
+            const removeIngredient = (ingredientId) => {
+                const updated = {
+                    ...currentRecipe,
+                    ingredients: currentRecipe.ingredients.filter(ing => ing.id !== ingredientId),
+                };
+                setCurrentRecipe(updated);
+                setRecipes(recipes.map(r => r.id === updated.id ? updated : r));
+            };
+
+            const deleteRecipe = (id) => {
+                const filtered = recipes.filter(r => r.id !== id);
+                setRecipes(filtered);
+                if (currentRecipe?.id === id) {
+                    setCurrentRecipe(filtered.length > 0 ? filtered[0] : null);
+                }
+            };
+
+            const calculateTotals = () => {
+                if (!currentRecipe) return {};
+                
+                let totalCost = 0;
+                currentRecipe.ingredients.forEach(ing => {
+                    const wasteMultiplier = 1 + (ing.waste / 100);
+                    const cost = ing.unitCost * ing.quantity * wasteMultiplier;
+                    totalCost += cost;
+                });
+
+                const costPerPortion = totalCost / currentRecipe.portions;
+                const suggestedPrice = totalCost / (currentRecipe.foodCostTarget / 100);
+                const suggestedPricePerPortion = suggestedPrice / currentRecipe.portions;
+                const tax = suggestedPrice * (currentRecipe.taxPercentage / 100);
+                const publicPrice = suggestedPrice + tax;
+                const publicPricePerPortion = publicPrice / currentRecipe.portions;
+                const profit = publicPrice - totalCost;
+                const profitPerPortion = profit / currentRecipe.portions;
+
+                return {
+                    totalCost,
+                    costPerPortion,
+                    suggestedPrice,
+                    suggestedPricePerPortion,
+                    tax,
+                    publicPrice,
+                    publicPricePerPortion,
+                    profit,
+                    profitPerPortion,
+                };
+            };
+
+            const formatCurrency = (value) => {
+                const currency = currencies[selectedCountry];
+                const rate = currency.fixed || trmBcv;
+                const converted = value * rate;
+                return `${currency.symbol} ${converted.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            };
+
+            const exportJSON = () => {
+                const data = JSON.stringify(recipes, null, 2);
+                const blob = new Blob([data], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `recetas-foodcost-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+            };
+
+            const importJSON = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        try {
+                            const imported = JSON.parse(event.target.result);
+                            if (Array.isArray(imported)) {
+                                setRecipes([...recipes, ...imported]);
+                                alert(`✅ Se importaron ${imported.length} recetas exitosamente`);
+                            } else {
+                                alert('❌ El formato del archivo no es válido');
+                            }
+                        } catch {
+                            alert('❌ Error al importar el archivo');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+
+            const totals = calculateTotals();
+
+            return (
+                <div className={`min-h-screen transition-colors ${darkMode ? 'bg-gray-900 text-white' : 'bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-900'}`}>
+                    {/* Header */}
+                    <header className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'} border-b shadow-lg sticky top-0 z-50`}>
+                        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between flex-wrap gap-4">
+                            <div className="flex items-center gap-3">
+                                <div className="text-4xl">🍽️</div>
+                                <div>
+                                    <h1 className="text-2xl md:text-3xl font-bold">Food Cost Pro 🇨🇴</h1>
+                                    <p className="text-xs md:text-sm opacity-75">Calculadora para Colombia • 100% Local</p>
+                                </div>
+                            </div>
+                            
+                            <div className="flex items-center gap-3 flex-wrap">
+                                <select
+                                    value={selectedCountry}
+                                    onChange={(e) => setSelectedCountry(e.target.value)}
+                                    className={`px-3 py-2 rounded-lg border text-sm font-medium ${
+                                        darkMode 
+                                            ? 'bg-gray-700 border-gray-600' 
+                                            : 'bg-white border-gray-300'
+                                    }`}
+                                >
+                                    {Object.keys(currencies).map(country => (
+                                        <option key={country} value={country}>{country}</option>
+                                    ))}
+                                </select>
+
+                                <button
+                                    onClick={() => setDarkMode(!darkMode)}
+                                    className={`p-2 rounded-lg transition-colors ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'}`}
+                                    title={darkMode ? 'Modo claro' : 'Modo oscuro'}
+                                >
+                                    <i className={`fas fa-${darkMode ? 'sun' : 'moon'}`}></i>
+                                </button>
+
+                                <a
+                                    href="https://wa.me/573126387467?text=Hola%20José,%20estoy%20usando%20Food%20Cost%20Pro%20y%20tengo%20una%20consulta"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg flex items-center gap-2 font-medium text-sm transition-colors"
+                                    title="Contactar al desarrollador"
+                                >
+                                    <i className="fas fa-whatsapp"></i>
+                                    <span className="hidden sm:inline">Contactar</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        {/* TRM Venezuela */}
+                        {selectedCountry === 'Venezuela' && trmBcv > 0 && (
+                            <div className={`${darkMode ? 'bg-gray-700' : 'bg-indigo-100'} px-4 py-2 text-center text-sm`}>
+                                <span className="font-semibold">📊 TRM BCV + 200 Bs:</span>
+                                <span className="ml-2 text-lg font-bold">{trmBcv.toFixed(2)} Bs/USD</span>
+                            </div>
+                        )}
+                    </header>
+
+                    <main className="max-w-7xl mx-auto px-4 py-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            {/* Panel Lateral */}
+                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6 h-fit`}>
+                                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                                    <i className="fas fa-list-check"></i> Mis Recetas
+                                </h2>
+
+                                <button
+                                    onClick={createNewRecipe}
+                                    className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 rounded-lg mb-4 flex items-center justify-center gap-2 transition-colors"
+                                >
+                                    <i className="fas fa-plus"></i> Nueva
+                                </button>
+
+                                <div className="space-y-2 max-h-96 overflow-y-auto mb-6 pb-4 border-b">
+                                    {recipes.length === 0 ? (
+                                        <p className="text-center opacity-50 py-8 text-sm">Sin recetas</p>
+                                    ) : (
+                                        recipes.map(recipe => (
+                                            <div
+                                                key={recipe.id}
+                                                onClick={() => setCurrentRecipe(recipe)}
+                                                className={`p-3 rounded-lg cursor-pointer transition-all ${
+                                                    currentRecipe?.id === recipe.id
+                                                        ? darkMode 
+                                                            ? 'bg-blue-600 ring-2 ring-blue-400'
+                                                            : 'bg-blue-500 text-white ring-2 ring-blue-300'
+                                                        : darkMode
+                                                            ? 'bg-gray-700 hover:bg-gray-600'
+                                                            : 'bg-gray-100 hover:bg-gray-200'
+                                                }`}
+                                            >
+                                                <p className="font-semibold truncate text-sm">{recipe.name}</p>
+                                                <p className="text-xs opacity-75">{recipe.ingredients.length} ingredientes</p>
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
+
+                                <div className="space-y-2">
+                                    <button
+                                        onClick={exportJSON}
+                                        disabled={recipes.length === 0}
+                                        className={`w-full py-2 rounded-lg flex items-center justify-center gap-2 font-medium text-sm transition-colors ${
+                                            recipes.length === 0
+                                                ? 'opacity-50 cursor-not-allowed'
+                                                : darkMode 
+                                                    ? 'bg-gray-700 hover:bg-gray-600'
+                                                    : 'bg-gray-100 hover:bg-gray-200'
+                                        }`}
+                                    >
+                                        <i className="fas fa-download"></i> Exportar
+                                    </button>
+                                    <label className={`w-full py-2 rounded-lg flex items-center justify-center gap-2 font-medium text-sm cursor-pointer transition-colors ${
+                                        darkMode 
+                                            ? 'bg-gray-700 hover:bg-gray-600'
+                                            : 'bg-gray-100 hover:bg-gray-200'
+                                    }`}>
+                                        <i className="fas fa-upload"></i> Importar
+                                        <input type="file" accept=".json" onChange={importJSON} className="hidden" ref={fileInputRef} />
+                                    </label>
+                                </div>
+                            </div>
+
+                            {/* Panel Principal */}
+                            <div className="lg:col-span-2 space-y-6">
+                                {currentRecipe ? (
+                                    <>
+                                        {/* Información General */}
+                                        <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                                            <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                                                <h2 className="text-2xl font-bold flex items-center gap-2">
+                                                    <i className="fas fa-pen-to-square"></i> Información General
+                                                </h2>
+                                                <button
+                                                    onClick={() => deleteRecipe(currentRecipe.id)}
+                                                    className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition-colors"
+                                                    title="Eliminar receta"
+                                                >
+                                                    <i className="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="block text-sm font-semibold mb-2">Nombre de la Receta</label>
+                                                    <input
+                                                        type="text"
+                                                        value={currentRecipe.name}
+                                                        onChange={(e) => updateRecipe('name', e.target.value)}
+                                                        className={`w-full px-4 py-2 rounded-lg border ${
+                                                            darkMode 
+                                                                ? 'bg-gray-700 border-gray-600'
+                                                                : 'bg-gray-50 border-gray-300'
+                                                        }`}
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <label className="block text-sm font-semibold mb-2">Porciones</label>
+                                                    <input
+                                                        type="number"
+                                                        min="1"
+                                                        step="0.5"
+                                                        value={currentRecipe.portions}
+                                                        onChange={(e) => updateRecipe('portions', parseFloat(e.target.value))}
+                                                        className={`w-full px-4 py-2 rounded-lg border ${
+                                                            darkMode 
+                                                                ? 'bg-gray-700 border-gray-600'
+                                                                : 'bg-gray-50 border-gray-300'
+                                                        }`}
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <label className="block text-sm font-semibold mb-2">Food Cost Objetivo (%)</label>
+                                                    <input
+                                                        type="number"
+                                                        min="1"
+                                                        max="100"
+                                                        value={currentRecipe.foodCostTarget}
+                                                        onChange={(e) => updateRecipe('foodCostTarget', parseFloat(e.target.value))}
+                                                        className={`w-full px-4 py-2 rounded-lg border ${
+                                                            darkMode 
+                                                                ? 'bg-gray-700 border-gray-600'
+                                                                : 'bg-gray-50 border-gray-300'
+                                                        }`}
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <label className="block text-sm font-semibold mb-2">IVA / Impuestos (%)</label>
+                                                    <input
+                                                        type="number"
+                                                        min="0"
+                                                        max="100"
+                                                        step="0.5"
+                                                        value={currentRecipe.taxPercentage}
+                                                        onChange={(e) => updateRecipe('taxPercentage', parseFloat(e.target.value))}
+                                                        className={`w-full px-4 py-2 rounded-lg border ${
+                                                            darkMode 
+                                                                ? 'bg-gray-700 border-gray-600'
+                                                                : 'bg-gray-50 border-gray-300'
+                                                        }`}
+                                                    />
+                                                </div>
+
+                                                <div className="md:col-span-2">
+                                                    <label className="block text-sm font-semibold mb-2">Descripción</label>
+                                                    <textarea
+                                                        value={currentRecipe.description}
+                                                        onChange={(e) => updateRecipe('description', e.target.value)}
+                                                        rows="2"
+                                                        className={`w-full px-4 py-2 rounded-lg border ${
+                                                            darkMode 
+                                                                ? 'bg-gray-700 border-gray-600'
+                                                                : 'bg-gray-50 border-gray-300'
+                                                        }`}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Ingredientes */}
+                                        <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                                            <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                                                <h2 className="text-xl font-bold flex items-center gap-2">
+                                                    <i className="fas fa-box"></i> Ingredientes
+                                                </h2>
+                                                <button
+                                                    onClick={addIngredient}
+                                                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium transition-colors"
+                                                >
+                                                    <i className="fas fa-plus"></i> Agregar
+                                                </button>
+                                            </div>
+
+                                            <div className="overflow-x-auto">
+                                                <table className="w-full text-xs md:text-sm">
+                                                    <thead>
+                                                        <tr className={`${darkMode ? 'border-gray-700' : 'border-gray-200'} border-b`}>
+                                                            <th className="text-left py-2 px-2">Insumo</th>
+                                                            <th className="text-left py-2 px-2 hidden sm:table-cell">Presentación</th>
+                                                            <th className="text-center py-2 px-2">Cantidad</th>
+                                                            <th className="text-right py-2 px-2">Costo</th>
+                                                            <th className="text-center py-2 px-2 hidden md:table-cell">Merma %</th>
+                                                            <th className="text-right py-2 px-2">Subtotal</th>
+                                                            <th className="text-center py-2 px-2">Acción</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {currentRecipe.ingredients.length === 0 ? (
+                                                            <tr>
+                                                                <td colSpan="7" className="text-center py-8 opacity-50">
+                                                                    Sin ingredientes
+                                                                </td>
+                                                            </tr>
+                                                        ) : (
+                                                            currentRecipe.ingredients.map(ing => {
+                                                                const wasteMultiplier = 1 + (ing.waste / 100);
+                                                                const subtotal = ing.unitCost * ing.quantity * wasteMultiplier;
+                                                                return (
+                                                                    <tr key={ing.id} className={`${darkMode ? 'border-gray-700' : 'border-gray-100'} border-b hover:bg-opacity-50`}>
+                                                                        <td className="py-3 px-2">
+                                                                            <input
+                                                                                type="text"
+                                                                                value={ing.name}
+                                                                                onChange={(e) => updateIngredient(ing.id, 'name', e.target.value)}
+                                                                                placeholder="Nombre"
+                                                                                className={`w-full px-2 py-1 rounded text-xs ${
+                                                                                    darkMode ? 'bg-gray-700' : 'bg-gray-50'
+                                                                                }`}
+                                                                            />
+                                                                        </td>
+                                                                        <td className="py-3 px-2 hidden sm:table-cell">
+                                                                            <input
+                                                                                type="text"
+                                                                                value={ing.presentation}
+                                                                                onChange={(e) => updateIngredient(ing.id, 'presentation', e.target.value)}
+                                                                                placeholder="Libra"
+                                                                                className={`w-full px-2 py-1 rounded text-xs ${
+                                                                                    darkMode ? 'bg-gray-700' : 'bg-gray-50'
+                                                                                }`}
+                                                                            />
+                                                                        </td>
+                                                                        <td className="py-3 px-2">
+                                                                            <input
+                                                                                type="number"
+                                                                                value={ing.quantity}
+                                                                                onChange={(e) => updateIngredient(ing.id, 'quantity', parseFloat(e.target.value))}
+                                                                                step="0.1"
+                                                                                className={`w-full px-2 py-1 rounded text-xs text-center ${
+                                                                                    darkMode ? 'bg-gray-700' : 'bg-gray-50'
+                                                                                }`}
+                                                                            />
+                                                                        </td>
+                                                                        <td className="py-3 px-2">
+                                                                            <input
+                                                                                type="number"
+                                                                                value={ing.unitCost}
+                                                                                onChange={(e) => updateIngredient(ing.id, 'unitCost', parseFloat(e.target.value))}
+                                                                                step="0.01"
+                                                                                className={`w-full px-2 py-1 rounded text-xs text-right ${
+                                                                                    darkMode ? 'bg-gray-700' : 'bg-gray-50'
+                                                                                }`}
+                                                                            />
+                                                                        </td>
+                                                                        <td className="py-3 px-2 hidden md:table-cell">
+                                                                            <input
+                                                                                type="number"
+                                                                                value={ing.waste}
+                                                                                onChange={(e) => updateIngredient(ing.id, 'waste', parseFloat(e.target.value))}
+                                                                                step="0.5"
+                                                                                className={`w-full px-2 py-1 rounded text-xs text-center ${
+                                                                                    darkMode ? 'bg-gray-700' : 'bg-gray-50'
+                                                                                }`}
+                                                                            />
+                                                                        </td>
+                                                                        <td className="py-3 px-2 text-right font-semibold text-blue-600 text-xs md:text-sm">
+                                                                            {formatCurrency(subtotal)}
+                                                                        </td>
+                                                                        <td className="py-3 px-2 text-center">
+                                                                            <button
+                                                                                onClick={() => removeIngredient(ing.id)}
+                                                                                className="text-red-500 hover:text-red-700 transition-colors"
+                                                                                title="Eliminar"
+                                                                            >
+                                                                                <i className="fas fa-trash-alt"></i>
+                                                                            </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                );
+                                                            })
+                                                        )}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        {/* Resumen */}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                                                <h3 className="text-lg font-bold mb-4 text-red-500 flex items-center gap-2">
+                                                    <i className="fas fa-calculator"></i> Costos
+                                                </h3>
+                                                <div className="space-y-3">
+                                                    <div className="flex justify-between items-center border-b pb-2">
+                                                        <span className="text-sm">Total Materia Prima</span>
+                                                        <span className="font-bold">{formatCurrency(totals.totalCost || 0)}</span>
+                                                    </div>
+                                                    <div className="flex justify-between items-center border-b pb-2">
+                                                        <span className="text-sm">Por Porción</span>
+                                                        <span className="font-bold">{formatCurrency(totals.costPerPortion || 0)}</span>
+                                                    </div>
+                                                    <div className="flex justify-between items-center">
+                                                        <span className="text-sm">Food Cost %</span>
+                                                        <span className="font-bold text-lg">{currentRecipe.foodCostTarget}%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                                                <h3 className="text-lg font-bold mb-4 text-green-500 flex items-center gap-2">
+                                                    <i className="fas fa-tag"></i> Precios
+                                                </h3>
+                                                <div className="space-y-3">
+                                                    <div className="flex justify-between items-center border-b pb-2">
+                                                        <span className="text-sm">Sugerido (sin IVA)</span>
+                                                        <span className="font-bold">{formatCurrency(totals.suggestedPrice || 0)}</span>
+                                                    </div>
+                                                    <div className="flex justify-between items-center border-b pb-2">
+                                                        <span className="text-sm">Por Porción</span>
+                                                        <span className="font-bold">{formatCurrency(totals.suggestedPricePerPortion || 0)}</span>
+                                                    </div>
+                                                    <div className="flex justify-between items-center">
+                                                        <span className="text-sm">Precio al Público</span>
+                                                        <span className="font-bold text-blue-600">{formatCurrency(totals.publicPrice || 0)}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                                                <h3 className="text-lg font-bold mb-4 text-yellow-500 flex items-center gap-2">
+                                                    <i className="fas fa-chart-line"></i> Ganancia
+                                                </h3>
+                                                <div className="space-y-3">
+                                                    <div className="flex justify-between items-center border-b pb-2">
+                                                        <span className="text-sm">Total</span>
+                                                        <span className="font-bold text-yellow-600">{formatCurrency(totals.profit || 0)}</span>
+                                                    </div>
+                                                    <div className="flex justify-between items-center">
+                                                        <span className="text-sm">Por Porción</span>
+                                                        <span className="font-bold text-yellow-600">{formatCurrency(totals.profitPerPortion || 0)}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                                                <h3 className="text-lg font-bold mb-4 text-orange-500 flex items-center gap-2">
+                                                    <i className="fas fa-receipt"></i> Impuestos
+                                                </h3>
+                                                <div className="space-y-3">
+                                                    <div className="flex justify-between items-center border-b pb-2">
+                                                        <span className="text-sm">Porcentaje</span>
+                                                        <span className="font-bold">{currentRecipe.taxPercentage}%</span>
+                                                    </div>
+                                                    <div className="flex justify-between items-center">
+                                                        <span className="text-sm">Monto</span>
+                                                        <span className="font-bold text-orange-600">{formatCurrency(totals.tax || 0)}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-12 text-center`}>
+                                        <p className="text-4xl mb-4">📋</p>
+                                        <p className="text-xl font-semibold mb-2">Sin receta seleccionada</p>
+                                        <p className="opacity-75 mb-6">Selecciona o crea una nueva para comenzar</p>
+                                        <button
+                                            onClick={createNewRecipe}
+                                            className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-lg inline-flex items-center gap-2 transition-colors"
+                                        >
+                                            <i className="fas fa-plus"></i> Crear Receta
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </main>
+
+                    {/* Footer */}
+                    <footer className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-t mt-12`}>
+                        <div className="max-w-7xl mx-auto px-4 py-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div>
+                                    <h3 className="font-bold mb-3 flex items-center gap-2">
+                                        <i className="fas fa-utensils"></i> Food Cost Pro 🇨🇴
+                                    </h3>
+                                    <p className="text-sm opacity-75 mb-4">Calculadora profesional para restaurantes y negocios de alimentos en Colombia. Precios en COP. Todos los datos se guardan localmente.</p>
+                                    <p className="text-xs opacity-50">© 2026 · Hecho para Colombia · 100% Privado · Sin conexión a servidores</p>
+                                </div>
+                                <div className="text-right">
+                                    <h3 className="font-bold mb-3 flex items-center justify-end gap-2">
+                                        <i className="fas fa-headset"></i> Contacto
+                                    </h3>
+                                    <a
+                                        href="https://wa.me/573126387467?text=Hola%20José,%20estoy%20usando%20Food%20Cost%20Pro%20y%20tengo%20una%20pregunta"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-2 text-green-500 hover:text-green-600 font-medium transition-colors"
+                                    >
+                                        <i className="fas fa-whatsapp"></i>
+                                        +57 312 638 7467
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<FoodCostCalculator />);
+    </script>
+</body>
+</html>

@@ -25,9 +25,19 @@ const app = express();
 // ============================================
 
 // CORS configuration
+// Extract origin from frontend URL (remove path, keep only domain)
+const corsOrigin = (() => {
+  try {
+    const url = new URL(config.frontendUrl);
+    return url.origin; // Returns https://domain.com without path
+  } catch {
+    return config.frontendUrl;
+  }
+})();
+
 app.use(
   cors({
-    origin: config.frontendUrl,
+    origin: corsOrigin,
     methods: ['GET', 'POST', 'OPTIONS'],
     credentials: true,
     optionsSuccessStatus: 200,

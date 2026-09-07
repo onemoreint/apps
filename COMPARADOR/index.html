@@ -11,19 +11,14 @@
     <meta property="og:description" content="Compara exactamente el mismo producto entre diferentes plataformas.">
     <meta property="og:type" content="website">
     <style>
-        /* ============================================
-           RESET & BASE STYLES
-           ============================================ */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         html, body {
             height: 100%;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
@@ -31,19 +26,11 @@
             line-height: 1.6;
             min-height: 100vh;
         }
-
-        /* ============================================
-           LAYOUT STRUCTURE
-           ============================================ */
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 20px;
         }
-
-        /* ============================================
-           HEADER
-           ============================================ */
         header {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -54,14 +41,12 @@
             z-index: 100;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
-
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 20px;
         }
-
         .logo {
             font-size: 24px;
             font-weight: 700;
@@ -69,15 +54,8 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            letter-spacing: -0.5px;
         }
-
-        nav {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-        }
-
+        nav { display: flex; gap: 30px; align-items: center; }
         nav a {
             color: #4a5568;
             text-decoration: none;
@@ -85,11 +63,7 @@
             font-weight: 500;
             transition: color 0.3s ease;
         }
-
-        nav a:hover {
-            color: #667eea;
-        }
-
+        nav a:hover { color: #667eea; }
         .nav-button {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -102,41 +76,23 @@
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
-
-        .nav-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6); }
+        .demo-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(237, 137, 54, 0.95);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 200;
         }
-
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 24px;
-        }
-
-        /* ============================================
-           HERO SECTION
-           ============================================ */
         #hero {
             text-align: center;
             padding: 60px 20px;
-            animation: fadeIn 0.6s ease-out;
         }
-
-        .hero-badge {
-            display: inline-block;
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            letter-spacing: 0.5px;
-        }
-
         .hero h1 {
             font-size: 48px;
             font-weight: 800;
@@ -145,9 +101,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            line-height: 1.2;
         }
-
         .hero h2 {
             font-size: 20px;
             color: #718096;
@@ -157,7 +111,6 @@
             margin-left: auto;
             margin-right: auto;
         }
-
         .input-group {
             display: flex;
             gap: 12px;
@@ -165,7 +118,6 @@
             margin: 0 auto 30px;
             flex-direction: column;
         }
-
         .url-input {
             padding: 16px 20px;
             border: 2px solid rgba(102, 126, 234, 0.2);
@@ -175,17 +127,11 @@
             transition: all 0.3s ease;
             background: white;
         }
-
         .url-input:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         }
-
-        .url-input::placeholder {
-            color: #cbd5e0;
-        }
-
         .analyze-button {
             padding: 16px 32px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -197,135 +143,22 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
-            letter-spacing: 0.3px;
         }
-
         .analyze-button:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 12px 32px rgba(102, 126, 234, 0.6);
         }
-
         .analyze-button:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
-
-        .hero-marketplaces {
+        #error-message {
+            color: #f56565;
+            margin-top: 16px;
             font-size: 14px;
-            color: #718096;
-            margin-top: 20px;
-            letter-spacing: 2px;
-        }
-
-        /* ============================================
-           DEMO BADGE
-           ============================================ */
-        .demo-mode-badge {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(237, 137, 54, 0.95);
-            color: white;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            z-index: 200;
-            animation: slideIn 0.4s ease-out;
-        }
-
-        /* ============================================
-           PROGRESS SECTION
-           ============================================ */
-        #analysis-progress {
             display: none;
-            padding: 40px 20px;
         }
-
-        .progress-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 16px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-        }
-
-        .progress-steps {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .progress-step {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 15px;
-            color: #718096;
-            animation: slideIn 0.4s ease-out;
-        }
-
-        .progress-step.active {
-            color: #667eea;
-            font-weight: 600;
-        }
-
-        .progress-step.completed {
-            color: #48bb78;
-        }
-
-        .progress-step-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            background: #e2e8f0;
-            color: #718096;
-            flex-shrink: 0;
-            font-weight: 700;
-        }
-
-        .progress-step.active .progress-step-icon {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .progress-step.completed .progress-step-icon {
-            background: #48bb78;
-            color: white;
-        }
-
-        .progress-step.completed .progress-step-icon::after {
-            content: '✓';
-        }
-
-        /* ============================================
-           SECTIONS (Hidden by default)
-           ============================================ */
-        #original-product,
-        #comparison,
-        #verification,
-        #similar-products,
-        #history {
-            display: none;
-            padding: 40px 20px;
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        .section-title {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 30px;
-            color: #1a202c;
-        }
-
-        /* ============================================
-           PRODUCT CARD
-           ============================================ */
+        .results-section { padding: 40px 20px; }
         .product-card {
             background: white;
             border-radius: 16px;
@@ -333,659 +166,6 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
             margin-bottom: 30px;
         }
-
-        .product-header {
-            display: flex;
-            gap: 30px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-
-        .product-image-container {
-            flex-shrink: 0;
-            width: 180px;
-            height: 180px;
-            background: #f7fafc;
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid #e2e8f0;
-        }
-
-        .product-image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .product-info {
-            flex: 1;
-            min-width: 250px;
-        }
-
-        .product-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: #1a202c;
-            line-height: 1.3;
-        }
-
-        .product-meta {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .meta-item {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .meta-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #718096;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .meta-value {
-            font-size: 15px;
-            font-weight: 600;
-            color: #1a202c;
-        }
-
-        .meta-value.unavailable {
-            color: #a0aec0;
-            font-style: italic;
-        }
-
-        .price-display {
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
-            margin: 20px 0;
-        }
-
-        .price-value {
-            font-size: 36px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .price-currency {
-            font-size: 18px;
-            color: #718096;
-            font-weight: 600;
-        }
-
-        .view-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .view-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        /* ============================================
-           IDENTITY BADGES
-           ============================================ */
-        .identity-section {
-            margin-top: 30px;
-            padding-top: 30px;
-            border-top: 2px solid #e2e8f0;
-        }
-
-        .identity-title {
-            font-size: 14px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #718096;
-            margin-bottom: 16px;
-            letter-spacing: 0.5px;
-        }
-
-        .badges-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .badge {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .badge::before {
-            content: '✓';
-            font-weight: 700;
-        }
-
-        .badge.missing {
-            background: rgba(160, 174, 192, 0.1);
-            color: #a0aec0;
-        }
-
-        .badge.missing::before {
-            content: '○';
-        }
-
-        /* ============================================
-           COMPARISON GRID
-           ============================================ */
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
-        }
-
-        .marketplace-card {
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            position: relative;
-        }
-
-        .marketplace-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
-        }
-
-        .marketplace-card.winner {
-            border-color: #48bb78;
-            box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.2);
-        }
-
-        .winner-badge {
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            letter-spacing: 0.5px;
-            z-index: 10;
-        }
-
-        .marketplace-header {
-            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-            padding: 20px;
-            border-bottom: 1px solid #e2e8f0;
-            text-align: center;
-        }
-
-        .marketplace-name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1a202c;
-            margin-bottom: 8px;
-        }
-
-        .marketplace-image {
-            width: 100%;
-            height: 200px;
-            background: #f7fafc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .marketplace-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .marketplace-content {
-            padding: 24px;
-        }
-
-        .marketplace-title {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: #1a202c;
-            line-height: 1.4;
-        }
-
-        .marketplace-description {
-            font-size: 13px;
-            color: #718096;
-            margin-bottom: 16px;
-            line-height: 1.5;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .price-section {
-            margin: 20px 0;
-            padding: 16px 0;
-            border-top: 1px solid #e2e8f0;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .price-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-
-        .price-label {
-            color: #718096;
-            font-weight: 500;
-        }
-
-        .price-amount {
-            color: #1a202c;
-            font-weight: 600;
-        }
-
-        .price-row.total {
-            border-top: 1px solid #e2e8f0;
-            padding-top: 10px;
-            font-size: 16px;
-        }
-
-        .price-row.total .price-label {
-            font-weight: 700;
-            color: #1a202c;
-        }
-
-        .price-row.total .price-amount {
-            font-size: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .match-score {
-            background: rgba(102, 126, 234, 0.1);
-            padding: 12px;
-            border-radius: 8px;
-            margin: 16px 0;
-            text-align: center;
-        }
-
-        .match-score-value {
-            font-size: 32px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .match-score-label {
-            font-size: 12px;
-            color: #718096;
-            font-weight: 600;
-            text-transform: uppercase;
-            margin-top: 4px;
-            letter-spacing: 0.5px;
-        }
-
-        .match-status {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 8px;
-        }
-
-        .match-status.exact {
-            background: rgba(72, 187, 120, 0.1);
-            color: #48bb78;
-        }
-
-        .match-status.probable {
-            background: rgba(237, 137, 54, 0.1);
-            color: #ed8936;
-        }
-
-        .match-status.unverified {
-            background: rgba(160, 174, 192, 0.1);
-            color: #a0aec0;
-        }
-
-        .match-status.rejected {
-            background: rgba(245, 101, 101, 0.1);
-            color: #f56565;
-        }
-
-        /* ============================================
-           SAVINGS
-           ============================================ */
-        .savings {
-            background: linear-gradient(135deg, rgba(72, 187, 120, 0.1) 0%, rgba(72, 187, 120, 0.05) 100%);
-            padding: 12px;
-            border-radius: 8px;
-            margin: 12px 0;
-            text-align: center;
-            border-left: 4px solid #48bb78;
-        }
-
-        .savings-text {
-            font-size: 13px;
-            color: #48bb78;
-            font-weight: 700;
-        }
-
-        /* ============================================
-           DETAILED COMPARISON TABLE
-           ============================================ */
-        .comparison-table-container {
-            overflow-x: auto;
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-            margin-bottom: 40px;
-        }
-
-        .comparison-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        .comparison-table thead {
-            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-            border-bottom: 2px solid #e2e8f0;
-        }
-
-        .comparison-table th {
-            padding: 16px;
-            text-align: left;
-            font-weight: 700;
-            color: #1a202c;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            font-size: 12px;
-        }
-
-        .comparison-table td {
-            padding: 14px 16px;
-            border-bottom: 1px solid #e2e8f0;
-            color: #1a202c;
-        }
-
-        .comparison-table tbody tr:hover {
-            background: #f7fafc;
-        }
-
-        .comparison-table .characteristic {
-            font-weight: 600;
-            color: #718096;
-            background: #f7fafc;
-            text-transform: uppercase;
-            font-size: 12px;
-            letter-spacing: 0.5px;
-        }
-
-        .comparison-table .unavailable {
-            color: #cbd5e0;
-            font-style: italic;
-        }
-
-        .comparison-table .match-highlight {
-            background: rgba(72, 187, 120, 0.1);
-            color: #48bb78;
-            font-weight: 600;
-        }
-
-        .comparison-table .diff-highlight {
-            background: rgba(245, 101, 101, 0.1);
-            color: #f56565;
-            font-weight: 600;
-        }
-
-        /* ============================================
-           VERIFICATION SECTION
-           ============================================ */
-        .verification-card {
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-            margin-bottom: 30px;
-        }
-
-        .verification-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: #1a202c;
-        }
-
-        .verification-points {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .verification-point {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background: #f7fafc;
-            border-radius: 8px;
-            font-size: 14px;
-            border-left: 4px solid #e2e8f0;
-        }
-
-        .verification-point.match {
-            border-left-color: #48bb78;
-            background: rgba(72, 187, 120, 0.05);
-            color: #22543d;
-        }
-
-        .verification-point.diff {
-            border-left-color: #f56565;
-            background: rgba(245, 101, 101, 0.05);
-            color: #742a2a;
-        }
-
-        .verification-point.warning {
-            border-left-color: #ed8936;
-            background: rgba(237, 137, 54, 0.05);
-            color: #7c2d12;
-        }
-
-        .verification-point::before {
-            content: '→';
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        .verification-point.match::before {
-            content: '✓';
-            color: #48bb78;
-        }
-
-        .verification-point.diff::before {
-            content: '✗';
-            color: #f56565;
-        }
-
-        .verification-point.warning::before {
-            content: '⚠';
-            color: #ed8936;
-        }
-
-        /* ============================================
-           UNVERIFIED PRODUCTS
-           ============================================ */
-        .unverified-notice {
-            background: rgba(160, 174, 192, 0.1);
-            border: 2px solid rgba(160, 174, 192, 0.3);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 30px;
-        }
-
-        .unverified-notice-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #2d3748;
-            margin-bottom: 12px;
-        }
-
-        .unverified-notice-text {
-            color: #718096;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 16px;
-        }
-
-        .similar-toggle-button {
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
-            border: 2px solid #667eea;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .similar-toggle-button:hover {
-            background: #667eea;
-            color: white;
-        }
-
-        /* ============================================
-           HISTORY SECTION
-           ============================================ */
-        .history-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .history-item {
-            background: white;
-            border-radius: 12px;
-            padding: 16px;
-            border-left: 4px solid #667eea;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .history-item:hover {
-            transform: translateX(4px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .history-item-info {
-            flex: 1;
-        }
-
-        .history-item-title {
-            font-weight: 600;
-            color: #1a202c;
-            margin-bottom: 4px;
-        }
-
-        .history-item-meta {
-            font-size: 13px;
-            color: #718096;
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .history-item-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .history-button {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .history-button:hover {
-            background: #764ba2;
-            transform: translateY(-1px);
-        }
-
-        .history-delete-button {
-            background: #f56565;
-        }
-
-        .history-delete-button:hover {
-            background: #c53030;
-        }
-
-        .empty-history {
-            text-align: center;
-            padding: 40px 20px;
-            color: #718096;
-        }
-
-        /* ============================================
-           FOOTER
-           ============================================ */
         footer {
             background: rgba(255, 255, 255, 0.95);
             border-top: 1px solid rgba(0, 0, 0, 0.08);
@@ -993,14 +173,7 @@
             margin-top: 60px;
             text-align: center;
             color: #718096;
-            backdrop-filter: blur(10px);
         }
-
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
         .footer-logo {
             font-size: 20px;
             font-weight: 700;
@@ -1010,243 +183,38 @@
             background-clip: text;
             margin-bottom: 12px;
         }
-
-        .footer-tagline {
-            font-size: 14px;
-            color: #a0aec0;
-            margin-bottom: 20px;
-            font-style: italic;
-        }
-
         .footer-credit {
             font-size: 13px;
             color: #718096;
             margin-bottom: 16px;
         }
-
-        .footer-credit strong {
-            color: #1a202c;
-            font-weight: 600;
-        }
-
-        .footer-disclaimer {
-            font-size: 12px;
-            color: #cbd5e0;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        /* ============================================
-           ANIMATIONS
-           ============================================ */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
-        }
-
-        /* ============================================
-           RESPONSIVE DESIGN (MOBILE FIRST)
-           ============================================ */
+        .footer-credit strong { color: #1a202c; font-weight: 600; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .hidden { display: none !important; }
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 36px;
-            }
-
-            .hero h2 {
-                font-size: 16px;
-            }
-
-            .header-content {
-                gap: 12px;
-            }
-
-            nav {
-                display: none;
-            }
-
-            .menu-toggle {
-                display: block;
-            }
-
-            .product-header {
-                flex-direction: column;
-                gap: 20px;
-            }
-
-            .product-image-container {
-                width: 100%;
-                max-width: 200px;
-                margin: 0 auto;
-            }
-
-            .comparison-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .product-meta {
-                grid-template-columns: 1fr;
-            }
-
-            .comparison-table {
-                font-size: 12px;
-            }
-
-            .comparison-table th,
-            .comparison-table td {
-                padding: 12px 8px;
-            }
-
-            .history-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            #hero {
-                padding: 40px 20px;
-            }
-
-            .input-group {
-                max-width: 100%;
-            }
-
-            .view-button {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 28px;
-            }
-
-            .hero h2 {
-                font-size: 14px;
-            }
-
-            .product-title {
-                font-size: 18px;
-            }
-
-            .section-title {
-                font-size: 22px;
-            }
-
-            .product-card,
-            .verification-card,
-            .marketplace-card {
-                padding: 16px;
-            }
-
-            .demo-mode-badge {
-                font-size: 11px;
-                padding: 8px 12px;
-                top: 10px;
-                right: 10px;
-            }
-
-            .marketplace-image {
-                height: 160px;
-            }
-
-            .market-place-content {
-                padding: 16px;
-            }
-
-            .badges-container {
-                gap: 8px;
-            }
-
-            .badge {
-                font-size: 11px;
-                padding: 6px 10px;
-            }
-        }
-
-        /* ============================================
-           UTILITY CLASSES
-           ============================================ */
-        .hidden {
-            display: none !important;
-        }
-
-        .loading {
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 60px 20px;
-            color: #718096;
-        }
-
-        .no-results-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-
-        .no-results-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #2d3748;
-            margin-bottom: 8px;
-        }
-
-        .no-results-text {
-            font-size: 14px;
-            color: #718096;
+            .hero h1 { font-size: 36px; }
+            nav { display: none; }
         }
     </style>
 </head>
 <body>
-    <!-- Demo Mode Badge -->
-    <div class="demo-mode-badge">🎯 MODO DEMO</div>
+    <div class="demo-badge" id="demoBadge" style="display: none;">🎯 MODO DEMO</div>
 
-    <!-- Header -->
     <header>
         <div class="container">
             <div class="header-content">
                 <div class="logo">PriceMatch AI</div>
                 <nav>
                     <a href="#home" onclick="resetApp()">Inicio</a>
-                    <a href="#how-it-works">Cómo funciona</a>
-                    <a href="#history" onclick="showHistory()">Historial</a>
+                    <a href="#history">Historial</a>
                 </nav>
                 <button class="nav-button" onclick="resetApp()">Nueva búsqueda</button>
-                <button class="menu-toggle">☰</button>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="container">
-        <!-- Hero Section -->
         <section id="hero">
-            <div class="hero-badge">Búsqueda inteligente de productos</div>
             <h1>PriceMatch AI</h1>
             <h2>Encuentra el mismo producto al mejor precio.</h2>
             <p style="color: #718096; margin-bottom: 40px; font-size: 16px;">Pega el enlace de un producto y descubre dónde comprar exactamente el mismo artículo por menos.</p>
@@ -1259,859 +227,177 @@
                     placeholder="🔗 Pega aquí el enlace del producto"
                     aria-label="URL del producto"
                 >
-                <button class="analyze-button" onclick="handleAnalyze()" aria-label="Analizar producto">
+                <button class="analyze-button" id="analyzeBtn" onclick="handleAnalyze()" aria-label="Analizar producto">
                     ANALIZAR PRODUCTO
                 </button>
             </div>
 
-            <div class="hero-marketplaces">
+            <div id="error-message"></div>
+            <div style="color: #a0aec0; margin-top: 20px; font-size: 14px; letter-spacing: 2px;">
                 SHEIN · ALIEXPRESS · TEMU
             </div>
-
-            <div id="error-message" style="color: #f56565; margin-top: 16px; font-size: 14px; display: none;"></div>
         </section>
 
-        <!-- Analysis Progress -->
-        <section id="analysis-progress">
-            <div class="progress-container">
-                <div class="progress-steps" id="progressSteps"></div>
-            </div>
-        </section>
-
-        <!-- Original Product -->
-        <section id="original-product">
-            <h2 class="section-title">Producto Original</h2>
-            <div class="product-card" id="originalProductCard"></div>
-        </section>
-
-        <!-- Comparison -->
-        <section id="comparison">
-            <h2 class="section-title">Comparación de precios</h2>
-            <div class="comparison-grid" id="comparisonGrid"></div>
-        </section>
-
-        <!-- Detailed Comparison -->
-        <section id="detailed-comparison" style="display: none; padding: 40px 20px;">
-            <h2 class="section-title">Comparación detallada</h2>
-            <div class="comparison-table-container" id="tableContainer"></div>
-        </section>
-
-        <!-- Verification -->
-        <section id="verification">
-            <h2 class="section-title">Explicación de la coincidencia</h2>
-            <div id="verificationContent"></div>
-        </section>
-
-        <!-- Similar Products (Unverified) -->
-        <section id="similar-products">
-            <h2 class="section-title">Coincidencias no verificadas</h2>
-            <div id="similarProductsContent"></div>
-        </section>
-
-        <!-- History -->
-        <section id="history">
-            <h2 class="section-title">Historial de búsquedas</h2>
-            <div id="historyContent"></div>
+        <section id="results" class="results-section" style="display: none;">
+            <div id="resultsContainer"></div>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer>
-        <div class="footer-content">
+        <div>
             <div class="footer-logo">PriceMatch AI</div>
-            <div class="footer-tagline">Comparamos productos. Tú eliges dónde comprar.</div>
+            <div style="color: #a0aec0; margin-bottom: 20px; font-style: italic;">Comparamos productos. Tú eliges dónde comprar.</div>
             <div class="footer-credit">
                 Diseñado por <strong>José Lugo</strong> · <strong>+57 312 638 7467</strong>
             </div>
-            <div class="footer-disclaimer">
-                Los precios y disponibilidad pueden cambiar. Esta es una herramienta de comparación de precios.
+            <div style="font-size: 12px; color: #cbd5e0; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+                Los precios y disponibilidad pueden cambiar.
             </div>
         </div>
     </footer>
 
     <script>
-        // ============================================
-        // CONFIGURATION
-        // ============================================
-        const CONFIG = {
-            matchThresholds: {
-                exact: 95,
-                probable: 85,
-                unverified: 70
-            },
-            matchWeights: {
-                gtin: 0.25,
-                sku: 0.20,
-                brand: 0.10,
-                variant: 0.10,
-                specifications: 0.15,
-                dimensions: 0.08,
-                image: 0.07,
-                title: 0.05
-            }
-        };
+        // Configuration
+        // ✅ URL DEL BACKEND YA CONFIGURADA Y LISTA
+        const API_BASE_URL = 'https://pricematch-ai-production.up.railway.app/api';
+        let isDemoMode = false;
 
-        // ============================================
-        // DATA MODELS
-        // ============================================
-        const ProductDataModel = {
-            title: "",
-            brand: "",
-            manufacturer: "",
-            model: "",
-            sku: "",
-            mpn: "",
-            gtin: "",
-            ean: "",
-            upc: "",
-            asin: "",
-            description: "",
-            images: [],
-            specifications: {},
-            dimensions: {
-                width: null,
-                height: null,
-                depth: null,
-                weight: null,
-                unit: "cm"
-            },
-            material: "",
-            color: "",
-            variant: {},
-            quantity: "",
-            price: 0,
-            currency: "USD",
-            originalPrice: null,
-            seller: "",
-            availability: "",
-            sourceUrl: "",
-            platformName: ""
-        };
-
-        // ============================================
-        // DEMO DATA
-        // ============================================
-        const DEMO_DATA = {
-            original: {
-                title: "Organizador de cocina metálico de 3 niveles",
-                brand: "KitchenPro",
-                manufacturer: "KitchenPro Manufacturing",
-                model: "KP-3000",
-                sku: "KP-3000-BLK-STD",
-                mpn: "KP3000BLK",
-                gtin: "8437012345678",
-                ean: "8437012345678",
-                upc: "843701234567",
-                description: "Organizador de cocina metálico de alta resistencia con 3 niveles de almacenamiento. Marco de acero pintado en negro mate con bandejas de vidrio templado.",
-                images: ["https://via.placeholder.com/400x300?text=Organizador+KP-3000"],
-                specifications: {
-                    material: "Acero + Vidrio templado",
-                    finish: "Negro mate",
-                    capacity: "15 kg por nivel",
-                    levels: "3"
-                },
-                dimensions: {
-                    width: 40,
-                    height: 60,
-                    depth: 20,
-                    weight: 8.5,
-                    unit: "cm"
-                },
-                material: "Acero + Vidrio",
-                color: "Negro",
-                variant: {
-                    color: "Negro",
-                    levels: 3
-                },
-                quantity: "1",
-                price: 89.99,
-                currency: "USD",
-                originalPrice: 129.99,
-                seller: "Amazon US",
-                availability: "En stock",
-                sourceUrl: "https://example.com/producto/KP-3000-BLK",
-                platformName: "Amazon"
-            },
-            shein: {
-                title: "Organizador metálico 3 niveles negro",
-                brand: "KitchenPro",
-                model: "KP-3000",
-                sku: "KP-3000-BLK",
-                gtin: "8437012345678",
-                price: 45.99,
-                currency: "USD",
-                images: ["https://via.placeholder.com/400x300?text=SHEIN+KP-3000"],
-                dimensions: {
-                    width: 40,
-                    height: 60,
-                    depth: 20,
-                    weight: 8.5
-                },
-                color: "Negro",
-                variant: { color: "Negro", levels: 3 },
-                availability: "En stock",
-                sourceUrl: "https://shein.com/p/KP3000",
-                platformName: "SHEIN",
-                shipping: 3.50,
-                description: "Estante metálico de 3 niveles para cocina",
-                match: {
-                    score: 99,
-                    status: "exact",
-                    confidence: "high"
-                }
-            },
-            aliexpress: {
-                title: "KitchenPro Organizador 3 Niveles KP-3000 Negro",
-                brand: "KitchenPro",
-                model: "KP-3000",
-                sku: "KP-3000-BLK",
-                gtin: "8437012345678",
-                price: 52.75,
-                currency: "USD",
-                images: ["https://via.placeholder.com/400x300?text=AliExpress+KP-3000"],
-                dimensions: {
-                    width: 40,
-                    height: 60,
-                    depth: 20,
-                    weight: 8.5
-                },
-                color: "Negro",
-                variant: { color: "Negro", levels: 3 },
-                availability: "En stock",
-                sourceUrl: "https://aliexpress.com/item/KP3000",
-                platformName: "AliExpress",
-                shipping: 8.00,
-                description: "Organizador de cocina de acero y vidrio templado",
-                match: {
-                    score: 98,
-                    status: "exact",
-                    confidence: "high"
-                }
-            },
-            temu: {
-                title: "Organizador cocina 3 niveles negro 40x60",
-                brand: "KitchenPro",
-                model: "KP-3000",
-                sku: "KP-3000-TEMU",
-                price: 38.99,
-                currency: "USD",
-                images: ["https://via.placeholder.com/400x300?text=TEMU+KP-3000"],
-                dimensions: {
-                    width: 40,
-                    height: 60,
-                    depth: 20,
-                    weight: 8.5
-                },
-                color: "Negro",
-                variant: { color: "Negro", levels: 3 },
-                availability: "Disponible",
-                sourceUrl: "https://temu.com/product/KP3000",
-                platformName: "Temu",
-                shipping: 2.99,
-                description: "Estante para organizar la cocina",
-                match: {
-                    score: 94,
-                    status: "probable",
-                    confidence: "medium",
-                    differences: ["SKU ligeramente diferente"]
-                }
-            }
-        };
-
-        // ============================================
-        // STATE MANAGEMENT
-        // ============================================
-        let appState = {
-            currentProduct: null,
-            analysisResults: null,
-            searchHistory: JSON.parse(localStorage.getItem('priceMatchHistory')) || []
-        };
-
-        // ============================================
-        // MAIN APPLICATION FUNCTIONS
-        // ============================================
-
-        /**
-         * Main handler for analyzing a product
-         */
+        // Handle analyze
         async function handleAnalyze() {
             const urlInput = document.getElementById('urlInput');
             const url = urlInput.value.trim();
-            const errorMessage = document.getElementById('error-message');
+            const errorMsg = document.getElementById('error-message');
+            const btn = document.getElementById('analyzeBtn');
 
-            // Validation
             if (!url) {
-                errorMessage.textContent = 'Por favor introduce un enlace.';
-                errorMessage.style.display = 'block';
+                errorMsg.textContent = 'Por favor introduce un enlace.';
+                errorMsg.style.display = 'block';
                 return;
             }
 
-            if (!isValidUrl(url)) {
-                errorMessage.textContent = 'Por favor introduce un enlace válido de producto.';
-                errorMessage.style.display = 'block';
-                return;
-            }
-
-            errorMessage.style.display = 'none';
-
-            // Start analysis
-            await analyzeProduct(url);
-        }
-
-        /**
-         * URL validation
-         */
-        function isValidUrl(string) {
             try {
-                new URL(string);
-                return true;
-            } catch (_) {
-                return false;
-            }
-        }
-
-        /**
-         * Main analysis function - Routes to DEMO or REAL backend
-         */
-        async function analyzeProduct(url) {
-            // In production, this would check for backend availability
-            // For now, we route to DEMO
-            await analyzeProductDemo(url);
-        }
-
-        /**
-         * DEMO Analysis - Shows animation and demo data
-         */
-        async function analyzeProductDemo(url) {
-            // Show hero section, hide other sections
-            document.getElementById('hero').style.display = 'none';
-            document.getElementById('analysis-progress').style.display = 'block';
-            document.getElementById('original-product').style.display = 'none';
-            document.getElementById('comparison').style.display = 'none';
-            document.getElementById('detailed-comparison').style.display = 'none';
-            document.getElementById('verification').style.display = 'none';
-            document.getElementById('similar-products').style.display = 'none';
-            document.getElementById('history').style.display = 'none';
-
-            // Get progress element
-            const progressContainer = document.getElementById('progressSteps');
-            progressContainer.innerHTML = '';
-
-            // Progress steps
-            const steps = [
-                { label: 'Analizando enlace', duration: 800 },
-                { label: 'Extrayendo información', duration: 800 },
-                { label: 'Identificando producto', duration: 800 },
-                { label: 'Analizando imágenes', duration: 600 },
-                { label: 'Normalizando especificaciones', duration: 600 },
-                { label: 'Buscando coincidencias', duration: 800 },
-                { label: 'Verificando variantes', duration: 800 },
-                { label: 'Comparando precios', duration: 600 },
-                { label: 'Calculando mejor precio', duration: 600 }
-            ];
-
-            let totalDelay = 0;
-
-            for (let i = 0; i < steps.length; i++) {
-                const step = steps[i];
-                const stepDiv = document.createElement('div');
-                stepDiv.className = 'progress-step';
-                stepDiv.innerHTML = `
-                    <div class="progress-step-icon">${i + 1}</div>
-                    <span>${step.label}</span>
-                `;
-                progressContainer.appendChild(stepDiv);
-
-                // Schedule step activation
-                await new Promise(resolve => {
-                    setTimeout(() => {
-                        stepDiv.classList.add('active');
-                    }, totalDelay);
-
-                    setTimeout(() => {
-                        stepDiv.classList.remove('active');
-                        stepDiv.classList.add('completed');
-                        resolve();
-                    }, totalDelay + step.duration);
-
-                    totalDelay += step.duration;
-                });
-            }
-
-            // After all steps, show results
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            // Process DEMO data
-            const analysis = processDemoData(url, DEMO_DATA);
-            appState.currentProduct = analysis;
-
-            // Display results
-            displayResults(analysis);
-
-            // Save to history
-            addToHistory(analysis);
-
-            // Scroll to results
-            await new Promise(resolve => setTimeout(resolve, 300));
-            document.getElementById('original-product').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        /**
-         * Process and structure demo data
-         */
-        function processDemoData(url, demoData) {
-            return {
-                original: demoData.original,
-                candidates: [demoData.shein, demoData.aliexpress, demoData.temu],
-                timestamp: new Date(),
-                url: url
-            };
-        }
-
-        /**
-         * Display all results on the page
-         */
-        function displayResults(analysis) {
-            // Hide progress, show results
-            document.getElementById('analysis-progress').style.display = 'none';
-            document.getElementById('original-product').style.display = 'block';
-            document.getElementById('comparison').style.display = 'block';
-            document.getElementById('verification').style.display = 'block';
-            document.getElementById('detailed-comparison').style.display = 'block';
-
-            // Display original product
-            displayOriginalProduct(analysis.original);
-
-            // Display comparison
-            displayComparison(analysis.candidates);
-
-            // Display detailed table
-            displayDetailedComparison(analysis.original, analysis.candidates);
-
-            // Display verification
-            displayVerification(analysis.candidates);
-        }
-
-        /**
-         * Display original product card
-         */
-        function displayOriginalProduct(product) {
-            const card = document.getElementById('originalProductCard');
-            card.innerHTML = `
-                <div class="product-header">
-                    <div class="product-image-container">
-                        <img src="${product.images[0] || 'https://via.placeholder.com/180x180?text=Imagen+no+disponible'}" alt="${product.title}">
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">${product.title}</h3>
-                        <div class="product-meta">
-                            <div class="meta-item">
-                                <span class="meta-label">Marca</span>
-                                <span class="meta-value">${product.brand || 'No disponible'}</span>
-                            </div>
-                            <div class="meta-item">
-                                <span class="meta-label">Modelo</span>
-                                <span class="meta-value">${product.model || 'No disponible'}</span>
-                            </div>
-                            <div class="meta-item">
-                                <span class="meta-label">SKU</span>
-                                <span class="meta-value">${product.sku || 'No disponible'}</span>
-                            </div>
-                            <div class="meta-item">
-                                <span class="meta-label">GTIN</span>
-                                <span class="meta-value">${product.gtin || 'No disponible'}</span>
-                            </div>
-                        </div>
-                        <div class="price-display">
-                            <span class="price-value">${product.price}</span>
-                            <span class="price-currency">${product.currency}</span>
-                        </div>
-                        <div class="product-meta">
-                            <div class="meta-item">
-                                <span class="meta-label">Vendedor</span>
-                                <span class="meta-value">${product.seller || 'No disponible'}</span>
-                            </div>
-                            <div class="meta-item">
-                                <span class="meta-label">Disponibilidad</span>
-                                <span class="meta-value">${product.availability || 'No disponible'}</span>
-                            </div>
-                        </div>
-                        <button class="view-button" onclick="window.open('${product.sourceUrl}', '_blank')">
-                            VER PRODUCTO ORIGINAL
-                        </button>
-                    </div>
-                </div>
-
-                <div class="identity-section">
-                    <div class="identity-title">Identidad detectada</div>
-                    <div class="badges-container">
-                        <div class="badge ${product.brand ? '' : 'missing'}">Marca</div>
-                        <div class="badge ${product.model ? '' : 'missing'}">Modelo</div>
-                        <div class="badge ${product.sku ? '' : 'missing'}">SKU</div>
-                        <div class="badge ${product.gtin ? '' : 'missing'}">GTIN</div>
-                        <div class="badge ${product.images.length > 0 ? '' : 'missing'}">Imagen</div>
-                        <div class="badge ${Object.keys(product.specifications).length > 0 ? '' : 'missing'}">Especificaciones</div>
-                        <div class="badge ${Object.keys(product.variant).length > 0 ? '' : 'missing'}">Variante</div>
-                    </div>
-                </div>
-            `;
-        }
-
-        /**
-         * Display comparison cards for each marketplace
-         */
-        function displayComparison(candidates) {
-            const grid = document.getElementById('comparisonGrid');
-            grid.innerHTML = '';
-
-            // Calculate winner
-            let winner = null;
-            let maxScore = 0;
-            candidates.forEach(candidate => {
-                if (candidate.match.score > maxScore && candidate.match.score >= CONFIG.matchThresholds.exact) {
-                    maxScore = candidate.match.score;
-                    winner = candidate.platformName;
-                }
-            });
-
-            candidates.forEach(product => {
-                const savings = product.match.score >= CONFIG.matchThresholds.exact
-                    ? (DEMO_DATA.original.price - product.price).toFixed(2)
-                    : null;
-
-                const isWinner = product.platformName === winner;
-
-                const card = document.createElement('div');
-                card.className = `marketplace-card ${isWinner ? 'winner' : ''}`;
-
-                let winnerBadgeHTML = '';
-                if (isWinner) {
-                    winnerBadgeHTML = `
-                        <div class="winner-badge">🏆 MEJOR PRECIO</div>
-                    `;
-                }
-
-                card.innerHTML = `
-                    ${winnerBadgeHTML}
-                    <div class="marketplace-header">
-                        <div class="marketplace-name">${product.platformName}</div>
-                    </div>
-                    <div class="marketplace-image">
-                        <img src="${product.images[0] || 'https://via.placeholder.com/400x300?text=' + product.platformName}" alt="${product.title}">
-                    </div>
-                    <div class="marketplace-content">
-                        <div class="marketplace-title">${product.title}</div>
-                        <div class="marketplace-description">${product.description}</div>
-
-                        <div class="price-section">
-                            <div class="price-row">
-                                <span class="price-label">Precio base</span>
-                                <span class="price-amount">${product.currency} ${product.price.toFixed(2)}</span>
-                            </div>
-                            <div class="price-row">
-                                <span class="price-label">Envío estimado</span>
-                                <span class="price-amount">${product.currency} ${product.shipping.toFixed(2)}</span>
-                            </div>
-                            <div class="price-row total">
-                                <span class="price-label">Precio total</span>
-                                <span class="price-amount">${product.currency} ${(product.price + product.shipping).toFixed(2)}</span>
-                            </div>
-                        </div>
-
-                        ${savings !== null ? `
-                            <div class="savings">
-                                <div class="savings-text">💰 Ahorras $${savings}</div>
-                            </div>
-                        ` : ''}
-
-                        <div class="match-score">
-                            <div class="match-score-value">${product.match.score}%</div>
-                            <div class="match-score-label">Coincidencia</div>
-                            <div class="match-status ${product.match.status}">${
-                                product.match.status === 'exact' ? 'EXACTO' :
-                                product.match.status === 'probable' ? 'PROBABLE' :
-                                product.match.status === 'unverified' ? 'NO VERIFICADO' :
-                                'RECHAZADO'
-                            }</div>
-                        </div>
-
-                        <button class="view-button" onclick="window.open('${product.sourceUrl}', '_blank')" style="width: 100%; margin-top: 16px;">
-                            VER EN ${product.platformName.toUpperCase()}
-                        </button>
-                    </div>
-                `;
-
-                grid.appendChild(card);
-            });
-        }
-
-        /**
-         * Display detailed comparison table
-         */
-        function displayDetailedComparison(original, candidates) {
-            const tableContainer = document.getElementById('tableContainer');
-
-            const characteristics = [
-                { key: 'brand', label: 'Marca' },
-                { key: 'model', label: 'Modelo' },
-                { key: 'sku', label: 'SKU' },
-                { key: 'gtin', label: 'GTIN' },
-                { key: 'material', label: 'Material' },
-                { key: 'color', label: 'Color' },
-                { key: 'dimensions', label: 'Dimensiones (L×A×P)' },
-                { key: 'price', label: 'Precio base' },
-                { key: 'shipping', label: 'Envío' },
-                { key: 'total', label: 'Precio total' },
-                { key: 'match', label: 'Coincidencia' }
-            ];
-
-            let tableHTML = `
-                <table class="comparison-table">
-                    <thead>
-                        <tr>
-                            <th>Característica</th>
-                            <th>Original</th>
-                            <th>${candidates[0].platformName}</th>
-                            <th>${candidates[1].platformName}</th>
-                            <th>${candidates[2].platformName}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-
-            characteristics.forEach(char => {
-                let originalValue = '';
-                let values = [];
-
-                if (char.key === 'dimensions') {
-                    originalValue = `${original.dimensions.width}×${original.dimensions.height}×${original.dimensions.depth} cm`;
-                    values = candidates.map(c => `${c.dimensions.width}×${c.dimensions.height}×${c.dimensions.depth} cm`);
-                } else if (char.key === 'total') {
-                    originalValue = `${original.currency} ${original.price}`;
-                    values = candidates.map(c => `${c.currency} ${(c.price + c.shipping).toFixed(2)}`);
-                } else if (char.key === 'price') {
-                    originalValue = `${original.currency} ${original.price}`;
-                    values = candidates.map(c => `${c.currency} ${c.price.toFixed(2)}`);
-                } else if (char.key === 'shipping') {
-                    originalValue = `${original.currency} 0.00`;
-                    values = candidates.map(c => `${c.currency} ${c.shipping.toFixed(2)}`);
-                } else if (char.key === 'match') {
-                    originalValue = '100%';
-                    values = candidates.map(c => `${c.match.score}%`);
-                } else {
-                    originalValue = original[char.key] || 'No disponible';
-                    values = candidates.map(c => c[char.key] || 'No disponible');
-                }
-
-                tableHTML += `
-                    <tr>
-                        <td class="characteristic">${char.label}</td>
-                        <td>${originalValue}</td>
-                        ${values.map((val, idx) => {
-                            let className = '';
-                            if (val === originalValue || (char.key === 'match' && candidates[idx].match.score >= CONFIG.matchThresholds.exact)) {
-                                className = 'match-highlight';
-                            } else if (char.key === 'dimensions' && val !== originalValue) {
-                                className = 'diff-highlight';
-                            } else if (char.key === 'color' && val !== originalValue) {
-                                className = 'diff-highlight';
-                            } else if (char.key === 'match' && candidates[idx].match.score < CONFIG.matchThresholds.probable) {
-                                className = 'diff-highlight';
-                            }
-                            return `<td class="${className}">${val}</td>`;
-                        }).join('')}
-                    </tr>
-                `;
-            });
-
-            tableHTML += `
-                    </tbody>
-                </table>
-            `;
-
-            tableContainer.innerHTML = tableHTML;
-        }
-
-        /**
-         * Display verification explanation
-         */
-        function displayVerification(candidates) {
-            const container = document.getElementById('verificationContent');
-
-            candidates.forEach(product => {
-                const card = document.createElement('div');
-                card.className = 'verification-card';
-
-                let pointsHTML = '';
-
-                // Exact matches
-                if (product.match.score >= CONFIG.matchThresholds.exact) {
-                    pointsHTML += `
-                        <div class="verification-point match">Mismo modelo exacto (${DEMO_DATA.original.model})</div>
-                        <div class="verification-point match">Misma marca verificada (${DEMO_DATA.original.brand})</div>
-                        <div class="verification-point match">Misma variante de color y capacidad</div>
-                        <div class="verification-point match">Mismas dimensiones (${DEMO_DATA.original.dimensions.width}×${DEMO_DATA.original.dimensions.height}×${DEMO_DATA.original.dimensions.depth} cm)</div>
-                        <div class="verification-point match">Mismo material (${DEMO_DATA.original.material})</div>
-                    `;
-                } else if (product.match.score >= CONFIG.matchThresholds.probable) {
-                    pointsHTML += `
-                        <div class="verification-point match">Misma marca verificada</div>
-                        <div class="verification-point warning">SKU ligeramente diferente</div>
-                        <div class="verification-point match">Mismas dimensiones</div>
-                    `;
-                }
-
-                card.innerHTML = `
-                    <h3 class="verification-title">¿Por qué creemos que ${product.platformName} tiene el mismo producto?</h3>
-                    <div style="margin-bottom: 20px;">
-                        <div style="font-size: 32px; font-weight: 800; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px;">
-                            ${product.match.score}%
-                        </div>
-                        <div style="color: #718096; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
-                            Puntuación de coincidencia
-                        </div>
-                    </div>
-                    <div class="verification-points">
-                        ${pointsHTML}
-                    </div>
-                `;
-
-                container.appendChild(card);
-            });
-        }
-
-        // ============================================
-        // HISTORY MANAGEMENT
-        // ============================================
-        /**
-         * Add analysis to history
-         */
-        function addToHistory(analysis) {
-            const historyItem = {
-                id: Date.now(),
-                title: analysis.original.title,
-                url: analysis.url,
-                originalPrice: analysis.original.price,
-                bestPrice: Math.min(...analysis.candidates.map(c => c.price + c.shipping)),
-                bestPlatform: analysis.candidates.find(c => c.platformName === 'SHEIN').price + analysis.candidates.find(c => c.platformName === 'SHEIN').shipping <
-                             analysis.candidates.find(c => c.platformName === 'AliExpress').price + analysis.candidates.find(c => c.platformName === 'AliExpress').shipping ?
-                             'SHEIN' : analysis.candidates.find(c => c.platformName === 'AliExpress').price + analysis.candidates.find(c => c.platformName === 'AliExpress').shipping <
-                             analysis.candidates.find(c => c.platformName === 'Temu').price + analysis.candidates.find(c => c.platformName === 'Temu').shipping ?
-                             'AliExpress' : 'Temu',
-                bestMatch: Math.max(...analysis.candidates.map(c => c.match.score)),
-                timestamp: new Date().toISOString()
-            };
-
-            appState.searchHistory.unshift(historyItem);
-            localStorage.setItem('priceMatchHistory', JSON.stringify(appState.searchHistory));
-        }
-
-        /**
-         * Show history section
-         */
-        function showHistory() {
-            document.getElementById('hero').style.display = 'none';
-            document.getElementById('original-product').style.display = 'none';
-            document.getElementById('comparison').style.display = 'none';
-            document.getElementById('verification').style.display = 'none';
-            document.getElementById('detailed-comparison').style.display = 'none';
-            document.getElementById('analysis-progress').style.display = 'none';
-            document.getElementById('history').style.display = 'block';
-
-            const historyContent = document.getElementById('historyContent');
-
-            if (appState.searchHistory.length === 0) {
-                historyContent.innerHTML = `
-                    <div class="empty-history">
-                        <div class="no-results-icon">📋</div>
-                        <div class="no-results-title">Historial vacío</div>
-                        <div class="no-results-text">Las búsquedas anteriores aparecerán aquí.</div>
-                    </div>
-                `;
+                new URL(url);
+            } catch {
+                errorMsg.textContent = 'Por favor introduce un enlace válido.';
+                errorMsg.style.display = 'block';
                 return;
             }
 
-            const historyList = document.createElement('div');
-            historyList.className = 'history-list';
+            errorMsg.style.display = 'none';
+            btn.disabled = true;
+            btn.textContent = 'ANALIZANDO...';
 
-            appState.searchHistory.forEach(item => {
-                const date = new Date(item.timestamp);
-                const dateStr = date.toLocaleDateString('es-CO');
-                const timeStr = date.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+            try {
+                const response = await fetch(`${API_BASE_URL}/analyze`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
 
-                const historyItemDiv = document.createElement('div');
-                historyItemDiv.className = 'history-item';
-                historyItemDiv.innerHTML = `
-                    <div class="history-item-info">
-                        <div class="history-item-title">${item.title}</div>
-                        <div class="history-item-meta">
-                            <span>📅 ${dateStr} ${timeStr}</span>
-                            <span>💰 ${item.bestPrice.toFixed(2)} USD en ${item.bestPlatform}</span>
-                            <span>✓ ${item.bestMatch}% coincidencia</span>
+                const data = await response.json();
+
+                if (data.success) {
+                    isDemoMode = data.mode === 'demo';
+                    document.getElementById('demoBadge').style.display = isDemoMode ? 'block' : 'none';
+                    displayResults(data);
+                    document.getElementById('hero').style.display = 'none';
+                    document.getElementById('results').style.display = 'block';
+                    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    errorMsg.textContent = data.error?.message || 'Error al analizar el producto.';
+                    errorMsg.style.display = 'block';
+                }
+            } catch (error) {
+                errorMsg.textContent = 'No se pudo conectar con el servidor. ¿Está ejecutándose el backend?';
+                errorMsg.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'ANALIZAR PRODUCTO';
+            }
+        }
+
+        // Display results
+        function displayResults(data) {
+            const container = document.getElementById('resultsContainer');
+            let html = '<h2 style="font-size: 28px; margin-bottom: 30px;">Resultados</h2>';
+
+            // Original product
+            html += `
+                <div class="product-card">
+                    <h3 style="font-size: 18px; margin-bottom: 16px;">Producto Original</h3>
+                    <p><strong>${data.originalProduct.title || 'N/A'}</strong></p>
+                    <p>Marca: ${data.originalProduct.brand || 'N/A'}</p>
+                    <p>Precio: $${data.originalProduct.price || 'N/A'} ${data.originalProduct.currency || 'USD'}</p>
+                </div>
+            `;
+
+            // Matches
+            html += '<h3 style="font-size: 20px; margin: 30px 0 20px;">Disponibilidad en otros marketplaces</h3>';
+            html += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">';
+
+            for (const [marketplace, match] of Object.entries(data.matches || {})) {
+                if (match && match.product) {
+                    const isWinner = data.bestMatch?.marketplace === marketplace;
+                    html += `
+                        <div class="product-card" style="${isWinner ? 'border: 3px solid #48bb78;' : ''}">
+                            ${isWinner ? '<div style="background: #48bb78; color: white; padding: 8px; border-radius: 8px; margin-bottom: 16px; text-align: center; font-weight: 700;">🏆 MEJOR PRECIO</div>' : ''}
+                            <h4 style="font-size: 16px; margin-bottom: 12px;">${marketplace}</h4>
+                            <p><strong>${match.product.title || 'Producto'}</strong></p>
+                            <p>Precio base: $${(match.product.price || 0).toFixed(2)}</p>
+                            <p>Envío: $${(match.product.shipping || 0).toFixed(2)}</p>
+                            <p style="font-weight: 700; margin-top: 12px;">Total: $${((match.product.price || 0) + (match.product.shipping || 0)).toFixed(2)}</p>
+                            <p style="color: #667eea; margin-top: 12px; font-size: 14px;"><strong>Coincidencia: ${match.matchResult?.score || 0}%</strong></p>
+                            <p style="color: #718096; font-size: 12px;">${match.matchResult?.status || 'unknown'}</p>
+                            <button onclick="window.open('${match.product.sourceUrl || '#'}', '_blank')" style="background: #667eea; color: white; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; margin-top: 12px; width: 100%;">
+                                Ver en ${marketplace}
+                            </button>
                         </div>
-                    </div>
-                    <div class="history-item-actions">
-                        <button class="history-button" onclick="reanalyzeUrl('${item.url}')">Reanalizar</button>
-                        <button class="history-button history-delete-button" onclick="deleteHistoryItem(${item.id})">Eliminar</button>
+                    `;
+                }
+            }
+            html += '</div>';
+
+            // Best match info
+            if (data.bestMatch) {
+                html += `
+                    <div class="product-card" style="background: linear-gradient(135deg, rgba(72, 187, 120, 0.05) 0%, rgba(72, 187, 120, 0.02) 100%); border-left: 4px solid #48bb78;">
+                        <h3 style="color: #48bb78; margin-bottom: 12px;">💰 Mejor compra identificada</h3>
+                        <p><strong>${data.bestMatch.marketplace}</strong> ofrece ${data.bestMatch.product.title}</p>
+                        <p style="font-size: 20px; font-weight: 700; color: #667eea; margin-top: 12px;">$${data.bestMatch.price?.toFixed(2) || 'N/A'}</p>
+                        <p style="color: #718096; font-size: 14px; margin-top: 12px;">Coincidencia: ${data.bestMatch.matchResult?.score || 0}%</p>
                     </div>
                 `;
+            }
 
-                historyList.appendChild(historyItemDiv);
-            });
+            // Demo notice
+            if (isDemoMode) {
+                html += `
+                    <div class="product-card" style="background: rgba(237, 137, 54, 0.05); border-left: 4px solid #ed8936;">
+                        <p style="color: #c05621;"><strong>📊 Modo Demo</strong></p>
+                        <p>Estos resultados son de demostración. Para búsquedas reales, configura las API de los marketplaces.</p>
+                    </div>
+                `;
+            }
 
-            historyContent.innerHTML = '';
-            historyContent.appendChild(historyList);
+            container.innerHTML = html;
         }
 
-        /**
-         * Reanalyze a previous URL
-         */
-        function reanalyzeUrl(url) {
-            document.getElementById('urlInput').value = url;
-            document.getElementById('hero').style.display = 'block';
-            document.getElementById('history').style.display = 'none';
-            handleAnalyze();
-        }
-
-        /**
-         * Delete history item
-         */
-        function deleteHistoryItem(id) {
-            appState.searchHistory = appState.searchHistory.filter(item => item.id !== id);
-            localStorage.setItem('priceMatchHistory', JSON.stringify(appState.searchHistory));
-            showHistory();
-        }
-
-        /**
-         * Reset the application
-         */
+        // Reset app
         function resetApp() {
             document.getElementById('urlInput').value = '';
             document.getElementById('error-message').style.display = 'none';
             document.getElementById('hero').style.display = 'block';
-            document.getElementById('analysis-progress').style.display = 'none';
-            document.getElementById('original-product').style.display = 'none';
-            document.getElementById('comparison').style.display = 'none';
-            document.getElementById('verification').style.display = 'none';
-            document.getElementById('detailed-comparison').style.display = 'none';
-            document.getElementById('history').style.display = 'none';
-
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('demoBadge').style.display = 'none';
             document.getElementById('urlInput').focus();
         }
 
-        // ============================================
-        // INITIALIZATION
-        // ============================================
+        // Enter key support
         document.addEventListener('DOMContentLoaded', function() {
-            // Focus on URL input on load
-            document.getElementById('urlInput').focus();
-
-            // Allow Enter key to trigger analysis
             document.getElementById('urlInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    handleAnalyze();
-                }
+                if (e.key === 'Enter') handleAnalyze();
             });
+            document.getElementById('urlInput').focus();
         });
     </script>
 </body>

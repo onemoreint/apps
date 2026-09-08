@@ -1500,15 +1500,12 @@ function pricePair(product) {
   const clientUSD = prices.publico;
   const rate = getCurrentRate();
   const c = getCountry();
-
   const usedUSD = currentPriceType === 'distribuidor' ? distributorUSD : clientUSD;
   const otherUSD = currentPriceType === 'distribuidor' ? clientUSD : distributorUSD;
   const diffUSD = otherUSD - usedUSD;
-
   const usedLocal = c.currency === "USD" ? usedUSD : (rate ? usedUSD * rate : null);
   const otherLocal = c.currency === "USD" ? otherUSD : (rate ? otherUSD * rate : null);
   const diffLocal = c.currency === "USD" ? diffUSD : (rate ? diffUSD * rate : null);
-
   return {
     distributorUSD,
     clientUSD,
@@ -1601,7 +1598,6 @@ async function fetchRate() {
       };
       const rate = rates[rateType] || 791.32;
       setRate(rate, labels[rateType] + ' · Monitor Dólar');
-
       // Marcar tarjeta activa
       document.querySelectorAll('.ve-rate-card').forEach(card => {
         card.classList.toggle('active', card.dataset.rateType === rateType);
@@ -1665,7 +1661,6 @@ function updateUsdPrice() {
   const prices = getProductPrices(p);
   const usd = currentPriceType === 'distribuidor' ? prices.distribuidor : prices.publico;
   const pair = pricePair(p);
-
   document.getElementById("usdPrice").value = moneyUSD(usd);
   document.getElementById("selectedPriceUSD").textContent = moneyUSD(usd);
   document.getElementById("selectedPriceLocal").textContent = displayLocal(pair.usedLocal);
@@ -1728,7 +1723,6 @@ function renderCart() {
     const vatText = item.vat !== null ? " · IVA " + item.vat + "%" : "";
     const distTotalUSD = (prices.distribuidor || item.distribuidor || 0) * item.qty;
     const pubTotalUSD = (prices.publico || item.publico || 0) * item.qty;
-
     const usedTotalUSD = item.unit * item.qty;
     const otherTotalUSD = currentPriceType === 'distribuidor' ? pubTotalUSD : distTotalUSD;
     const diffTotalUSD = otherTotalUSD - usedTotalUSD;
@@ -2034,31 +2028,31 @@ function shareBudgetWhatsApp() {
     return;
   }
   const c = getCountry();
+  const rate = getCurrentRate();
+  if (c.currency !== "USD" && !rate) {
+    toast("⚠️ Configura la tasa de cambio antes de compartir");
+    return;
+  }
+  const toLocal = v => c.currency === "USD" ? v : v * rate;
   let subtotal = 0, totalQV = 0;
-  const itemsText = cart.map(item => {
-    const lineTotal = item.unit * item.qty;
-    const lineQV = item.qv * item.qty;
-    subtotal += lineTotal;
-    totalQV += lineQV;
-    const priceRole = item.priceRole === 'distribuidor' ? 'Distribuidor' : 'Cliente';
-    return "• " + item.name + " x" + item.qty + " (" + priceRole + ") = " + moneyUSD(lineTotal) + " | QV " + lineQV;
-  }).join("\n");
+  cart.forEach(item => {
+    subtotal += item.unit * item.qty;
+    totalQV += item.qv * item.qty;
+  });
   const shipping = shippingByQV(totalQV);
   const total = subtotal + shipping;
-  const rate = getCurrentRate();
-  const localTotal = rate ? total * rate : total;
+  const itemsText = cart.map(item => {
+    const lineTotalLocal = toLocal(item.unit * item.qty);
+    return "• " + item.name + " x" + item.qty + " = " + moneyLocal(lineTotalLocal);
+  }).join("\n");
+  const shippingLocal = toLocal(shipping);
+  const totalLocal = toLocal(total);
   const msg = `PRESUPUESTO ONE MORE
 País: ${c.name}
-Moneda: ${c.currency}
-Tasa usada: ${rate ? rate.toFixed(2) : 'No definida'}
-Tipo de precio: ${currentPriceType === 'distribuidor' ? 'Distribuidor' : 'Cliente'}
 PRODUCTOS:
 ${itemsText}
-QV total: ${totalQV}
-Subtotal: ${moneyUSD(subtotal)}
-Envío: ${shipping === 0 ? "GRATIS" : moneyUSD(shipping)}
-TOTAL USD: ${moneyUSD(total)}
-TOTAL ${c.currency}: ${rate ? moneyLocal(localTotal) : 'Ingresa tasa'}
+Envío: ${shipping === 0 ? "GRATIS" : moneyLocal(shippingLocal)}
+TOTAL: ${moneyLocal(totalLocal)}
 Presupuesto referencial sujeto a disponibilidad y actualización de tasa.`;
   const url = "https://wa.me/?text=" + encodeURIComponent(msg);
   window.open(url, "_blank");

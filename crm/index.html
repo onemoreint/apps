@@ -1,0 +1,1502 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E2A4F">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="NETWORKER CRM - Gestion inteligente de contactos y seguimiento comercial">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230E2A4F'/%3E%3Ctext x='32' y='43' font-family='Helvetica,Arial' font-size='28' font-weight='bold' fill='%23C9A227' text-anchor='middle'%3EJL%3C/text%3E%3C/svg%3E">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px system-ui,-apple-system,sans-serif;background:#F4F6F9}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Networker CRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --marca:#0E2A4F;          /* azul oscuro - editable desde Configuración */
+  --acento:#C9A227;         /* dorado  - editable desde Configuración */
+  --bg:#F4F6F9;
+  --sup:#FFFFFF;
+  --sup2:#EAEFF6;
+  --sup3:#DFE6F0;
+  --linea:#D9E1EC;
+  --linea2:#C3CEDE;
+  --tinta:#0F1A2B;
+  --tinta2:#49576C;
+  --tinta3:#7B889C;
+  --bien:#1B7F5A;
+  --alerta:#B26B00;
+  --grave:#B3261E;
+  --sombra:0 1px 2px rgba(15,26,43,.05), 0 10px 28px rgba(15,26,43,.07);
+  --sombra-sm:0 1px 2px rgba(15,26,43,.06);
+  --r:14px; --r-sm:10px; --r-lg:20px;
+  --display:'Sora', 'Trebuchet MS', system-ui, sans-serif;
+  --texto:'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A111C; --sup:#111C2C; --sup2:#182538; --sup3:#1F2E45;
+    --linea:#26354C; --linea2:#33455F;
+    --tinta:#ECF2FA; --tinta2:#A9B8CD; --tinta3:#7A8AA2;
+    --bien:#3FB98A; --alerta:#E0A030; --grave:#F08279;
+    --sombra:0 1px 2px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.35);
+    --sombra-sm:0 1px 2px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A111C; --sup:#111C2C; --sup2:#182538; --sup3:#1F2E45;
+  --linea:#26354C; --linea2:#33455F;
+  --tinta:#ECF2FA; --tinta2:#A9B8CD; --tinta3:#7A8AA2;
+  --bien:#3FB98A; --alerta:#E0A030; --grave:#F08279;
+  --sombra:0 1px 2px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.35);
+  --sombra-sm:0 1px 2px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--tinta);font-family:var(--texto);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:-.01em}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--acento);outline-offset:2px;border-radius:6px}
+.num{font-variant-numeric:tabular-nums}
+
+/* ============ ESTRUCTURA ============ */
+.app{display:flex;flex-direction:column;height:100%;min-height:0}
+.top{
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:30;
+  background:var(--marca);color:#fff;
+  padding:10px 16px;display:flex;align-items:center;gap:12px;
+  box-shadow:0 1px 0 rgba(255,255,255,.08), 0 6px 20px rgba(0,0,0,.14);
+}
+.logo{
+  width:38px;height:38px;flex:none;border-radius:11px;display:grid;place-items:center;
+  background:linear-gradient(145deg, var(--acento), color-mix(in srgb, var(--acento) 70%, #6b4d00));
+  color:#1b1405;font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:-.02em;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4);
+}
+.top-tit{min-width:0;flex:1}
+.top-tit h1{font-size:15px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#fff;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top-tit p{margin:1px 0 0;font-size:11.5px;color:rgba(255,255,255,.72);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top-marca{display:none;font-size:11.5px;color:var(--acento);font-weight:600;letter-spacing:.02em}
+.icon-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);color:#fff;
+  width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none}
+.icon-btn:hover{background:rgba(255,255,255,.2)}
+
+.main{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:16px 16px 92px;scroll-behavior:smooth}
+.wrap{max-width:900px;margin:0 auto}
+
+.nav{
+  position:fixed;left:0;right:0;bottom:0;z-index:31;
+  display:flex;background:var(--sup);border-top:1px solid var(--linea);
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));
+  box-shadow:0 -6px 22px rgba(15,26,43,.07);
+}
+.nav button{
+  flex:1;background:none;border:0;padding:6px 2px;border-radius:12px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--tinta3);
+  font-size:10.5px;font-weight:600;letter-spacing:.01em;
+}
+.nav button svg{width:21px;height:21px;stroke-width:1.9}
+.nav button[aria-current="page"]{color:#fff;background:var(--marca)}
+.nav button[aria-current="page"] .pip{background:var(--acento);color:#241a02}
+.nav .pip{position:absolute;transform:translate(14px,-6px);min-width:16px;height:16px;border-radius:9px;
+  background:var(--grave);color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center;padding:0 4px}
+
+.fab{position:fixed;right:16px;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:29;
+  height:52px;padding:0 20px;border-radius:26px;border:0;background:var(--marca);color:#fff;
+  font-family:var(--display);font-weight:600;font-size:14.5px;display:flex;align-items:center;gap:8px;
+  box-shadow:0 6px 20px rgba(14,42,79,.35)}
+.fab:hover{filter:brightness(1.12)}
+
+@media (min-width:920px){
+  .app{display:grid;grid-template-columns:248px 1fr;grid-template-rows:auto 1fr;
+    grid-template-areas:"top top" "nav main";height:100%}
+  .top{grid-area:top;padding:12px 22px}
+  .top-marca{display:block}
+  .nav{grid-area:nav;position:static;flex-direction:column;border-top:0;border-right:1px solid var(--linea);
+    padding:14px 12px;gap:4px;box-shadow:none;background:var(--sup);overflow-y:auto}
+  .nav button{flex:none;flex-direction:row;justify-content:flex-start;gap:12px;padding:11px 14px;font-size:14px}
+  .nav button svg{width:19px;height:19px}
+  .nav .pip{position:static;transform:none;margin-left:auto}
+  .main{grid-area:main;padding:24px 28px 40px}
+  .fab{bottom:28px;right:28px}
+}
+
+/* ============ PIEZAS ============ */
+.tarjeta{background:var(--sup);border:1px solid var(--linea);border-radius:var(--r);box-shadow:var(--sombra-sm)}
+.seccion{margin:0 0 20px}
+.seccion-tit{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:0 0 10px;padding:0 2px}
+.seccion-tit h2{font-size:12px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--tinta3)}
+.seccion-tit .lnk{background:none;border:0;padding:0;color:var(--tinta2);font-size:12.5px;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+
+.saludo h2{font-size:22px;font-weight:600;letter-spacing:-.02em}
+.saludo p{margin:2px 0 0;color:var(--tinta3);font-size:13px}
+
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media (min-width:640px){.tiles{grid-template-columns:repeat(4,1fr)}}
+.tile{background:var(--sup);border:1px solid var(--linea);border-radius:var(--r);padding:13px 14px;text-align:left;width:100%;box-shadow:var(--sombra-sm)}
+.tile .k{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--tinta3)}
+.tile .v{font-family:var(--display);font-size:27px;font-weight:600;letter-spacing:-.03em;margin-top:4px;line-height:1.1}
+.tile .s{font-size:11.5px;color:var(--tinta3);margin-top:1px}
+.tile.destacada{background:var(--marca);border-color:transparent}
+.tile.destacada .k{color:var(--acento)}
+.tile.destacada .v,.tile.destacada .s{color:#fff}
+.tile.destacada .s{color:rgba(255,255,255,.7)}
+
+/* embudo */
+.embudo{padding:14px 14px 10px}
+.fila-e{display:grid;grid-template-columns:104px 1fr 40px;align-items:center;gap:10px;padding:5px 0}
+.fila-e .et{font-size:12.5px;color:var(--tinta2);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pista{height:14px;background:var(--sup2);border-radius:4px;overflow:hidden}
+.barra{height:100%;border-radius:0 4px 4px 0;min-width:2px;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.fila-e .val{font-family:var(--display);font-size:14px;font-weight:600;text-align:right}
+.embudo-pie{border-top:1px solid var(--linea);margin-top:10px;padding-top:9px;font-size:12px;color:var(--tinta3)}
+
+/* chips de etapa */
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 7px;border-radius:99px;
+  font-size:11.5px;font-weight:600;white-space:nowrap;
+  background:color-mix(in srgb, var(--et) 15%, transparent);
+  border:1px solid color-mix(in srgb, var(--et) 40%, transparent);color:var(--tinta)}
+.chip .pt{width:7px;height:7px;border-radius:99px;background:var(--et);flex:none}
+.chip.mini{font-size:10.5px;padding:2px 8px 2px 6px}
+
+/* lista de contactos */
+.lista{display:flex;flex-direction:column;gap:8px}
+.fila-c{display:flex;align-items:center;gap:11px;background:var(--sup);border:1px solid var(--linea);
+  border-radius:var(--r);padding:10px 11px;box-shadow:var(--sombra-sm);width:100%;text-align:left}
+.fila-c:hover{border-color:var(--linea2)}
+.ava{width:40px;height:40px;flex:none;border-radius:12px;display:grid;place-items:center;
+  font-family:var(--display);font-weight:600;font-size:14px;color:#fff;letter-spacing:-.01em}
+.fila-c .cuerpo{flex:1;min-width:0}
+.fila-c .nom{font-weight:600;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fila-c .sub{font-size:12px;color:var(--tinta3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}
+.fila-c .der{display:flex;align-items:center;gap:6px;flex:none}
+.mini-btn{width:32px;height:32px;border-radius:9px;border:1px solid var(--linea);background:var(--sup2);
+  display:grid;place-items:center;color:var(--tinta2);flex:none}
+.mini-btn:hover{background:var(--sup3);color:var(--tinta)}
+.mini-btn svg{width:16px;height:16px;stroke-width:1.9}
+
+/* barra de búsqueda / filtros */
+.buscador{display:flex;gap:8px;margin-bottom:10px}
+.campo-busq{flex:1;position:relative}
+.campo-busq svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--tinta3)}
+.campo-busq input{width:100%;height:42px;padding:0 12px 0 35px;border-radius:12px;border:1px solid var(--linea);
+  background:var(--sup);color:var(--tinta)}
+.filtros{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 10px;scrollbar-width:thin}
+.filtros::-webkit-scrollbar{height:0}
+.f-chip{flex:none;padding:6px 12px;border-radius:99px;border:1px solid var(--linea);background:var(--sup);
+  font-size:12.5px;font-weight:600;color:var(--tinta2);white-space:nowrap}
+.f-chip[aria-pressed="true"]{background:var(--marca);border-color:var(--marca);color:#fff}
+
+/* pipeline */
+.tablero{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;scroll-snap-type:x proximity}
+.col{flex:none;width:min(84vw,270px);scroll-snap-align:start;background:var(--sup2);border-radius:var(--r);
+  border:1px solid var(--linea);padding:10px;display:flex;flex-direction:column;gap:8px}
+.col-cab{display:flex;align-items:center;gap:8px;padding:2px 2px 6px;border-bottom:1px solid var(--linea)}
+.col-cab .pt{width:9px;height:9px;border-radius:99px;background:var(--et);flex:none}
+.col-cab h3{font-size:13px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.col-cab .n{font-family:var(--display);font-size:12.5px;font-weight:600;color:var(--tinta3)}
+.tj{background:var(--sup);border:1px solid var(--linea);border-left:3px solid var(--et);border-radius:var(--r-sm);
+  padding:9px 10px;width:100%;text-align:left;box-shadow:var(--sombra-sm)}
+.tj:hover{border-color:var(--linea2)}
+.tj .nom{font-weight:600;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tj .sub{font-size:11.5px;color:var(--tinta3);margin-top:2px}
+.tj-pie{display:flex;gap:6px;margin-top:8px}
+.tj-pie button{flex:1;height:28px;border-radius:8px;border:1px solid var(--linea);background:var(--sup2);
+  font-size:11.5px;font-weight:600;color:var(--tinta2);display:flex;align-items:center;justify-content:center;gap:5px}
+.tj-pie button svg{width:13px;height:13px;stroke-width:2}
+.vacio-col{font-size:12px;color:var(--tinta3);text-align:center;padding:14px 6px;border:1px dashed var(--linea2);border-radius:var(--r-sm)}
+
+/* agenda */
+.tarea{display:flex;gap:11px;align-items:flex-start;background:var(--sup);border:1px solid var(--linea);
+  border-radius:var(--r);padding:11px;box-shadow:var(--sombra-sm)}
+.tarea.vencida{border-left:3px solid var(--grave)}
+.tarea.hoy{border-left:3px solid var(--acento)}
+.tick{width:24px;height:24px;flex:none;border-radius:8px;border:1.8px solid var(--linea2);background:var(--sup);
+  display:grid;place-items:center;margin-top:1px}
+.tick svg{width:14px;height:14px;opacity:0;stroke-width:2.6;color:#fff}
+.tarea.lista .tick{background:var(--bien);border-color:var(--bien)}
+.tarea.lista .tick svg{opacity:1}
+.tarea.lista .t-tit{text-decoration:line-through;color:var(--tinta3)}
+.tarea .t-cuerpo{flex:1;min-width:0}
+.t-tit{font-weight:600;font-size:14px}
+.t-sub{font-size:12px;color:var(--tinta3);margin-top:2px}
+.t-fecha{font-size:11.5px;font-weight:600;color:var(--tinta2);flex:none}
+.t-fecha.rojo{color:var(--grave)}
+.t-fecha.oro{color:var(--alerta)}
+
+/* historial */
+.hito{display:flex;gap:11px;padding:11px 0;border-bottom:1px solid var(--linea)}
+.hito:last-child{border-bottom:0}
+.hito .ic{width:32px;height:32px;flex:none;border-radius:10px;display:grid;place-items:center;background:var(--sup2);color:var(--tinta2)}
+.hito .ic svg{width:16px;height:16px;stroke-width:1.9}
+.hito .h-cuerpo{flex:1;min-width:0}
+.hito .h-tit{font-size:13.5px;font-weight:600;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.hito .h-fecha{font-size:11.5px;color:var(--tinta3);font-weight:500}
+.hito .h-nota{font-size:13px;color:var(--tinta2);margin-top:2px;white-space:pre-wrap;overflow-wrap:anywhere}
+.res{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 7px;border-radius:99px}
+.res.pos{background:color-mix(in srgb,var(--bien) 16%,transparent);color:var(--bien)}
+.res.neu{background:var(--sup2);color:var(--tinta3)}
+.res.neg{background:color-mix(in srgb,var(--grave) 15%,transparent);color:var(--grave)}
+.res.sin{background:color-mix(in srgb,var(--alerta) 18%,transparent);color:var(--alerta)}
+
+/* formularios */
+.campo{margin-bottom:12px}
+.campo label{display:block;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--tinta3);margin-bottom:5px}
+.campo input,.campo select,.campo textarea{
+  width:100%;background:var(--sup);border:1px solid var(--linea);border-radius:11px;padding:11px 12px;color:var(--tinta)}
+.campo input[type="color"]{padding:4px;height:44px}
+.campo textarea{min-height:88px;resize:vertical;line-height:1.5}
+.campo .ayuda{font-size:11.5px;color:var(--tinta3);margin-top:4px}
+.par{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{height:46px;padding:0 18px;border-radius:12px;border:1px solid var(--linea);background:var(--sup2);
+  color:var(--tinta);font-weight:600;font-size:14.5px;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn svg{width:17px;height:17px;stroke-width:2}
+.btn:hover{background:var(--sup3)}
+.btn.pri{background:var(--marca);border-color:var(--marca);color:#fff}
+.btn.pri:hover{filter:brightness(1.12)}
+.btn.oro{background:var(--acento);border-color:var(--acento);color:#241a02}
+.btn.oro:hover{filter:brightness(1.07)}
+.btn.peligro{color:var(--grave);border-color:color-mix(in srgb,var(--grave) 40%,transparent)}
+.btn.bloque{width:100%}
+.btn.chico{height:38px;font-size:13.5px;padding:0 13px}
+.acciones{display:flex;gap:9px;margin-top:16px}
+.acciones .btn{flex:1}
+
+/* sheet / panel */
+.velo{position:fixed;inset:0;background:rgba(8,15,26,.55);z-index:60;opacity:0;transition:opacity .2s;backdrop-filter:blur(2px)}
+.velo.on{opacity:1}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;background:var(--sup);
+  border-radius:var(--r-lg) var(--r-lg) 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.3);
+  max-height:88vh;display:flex;flex-direction:column;transform:translateY(102%);transition:transform .26s cubic-bezier(.2,.9,.3,1)}
+.sheet.on{transform:translateY(0)}
+@media (min-width:720px){
+  .sheet{left:50%;right:auto;bottom:auto;top:50%;transform:translate(-50%,-44%) scale(.98);opacity:0;
+    width:min(560px,92vw);border-radius:var(--r-lg);max-height:86vh}
+  .sheet.on{transform:translate(-50%,-50%) scale(1);opacity:1}
+}
+.sheet-cab{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--linea);flex:none}
+.sheet-cab h3{font-size:16px;font-weight:600;flex:1}
+.sheet-cuerpo{padding:16px;overflow-y:auto;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+.agarre{width:38px;height:4px;border-radius:9px;background:var(--linea2);margin:8px auto 0}
+
+.panel{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform .25s cubic-bezier(.2,.9,.3,1)}
+.panel.on{transform:translateX(0)}
+.panel-cab{background:var(--marca);color:#fff;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 12px;flex:none}
+.panel-cab .lin1{display:flex;align-items:center;gap:10px}
+.panel-cab h2{font-size:18px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.panel-cuerpo{flex:1;overflow-y:auto;padding:14px 14px calc(24px + env(safe-area-inset-bottom,0px))}
+.panel-cuerpo .wrap{max-width:820px}
+.pestanas{display:flex;gap:6px;margin-top:12px}
+.pestanas button{flex:1;height:34px;border-radius:10px;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.08);color:rgba(255,255,255,.8);font-size:13px;font-weight:600}
+.pestanas button[aria-selected="true"]{background:#fff;color:var(--marca);border-color:#fff}
+.dato{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--linea);align-items:baseline}
+.dato:last-child{border-bottom:0}
+.dato dt{width:108px;flex:none;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta3)}
+.dato dd{margin:0;flex:1;min-width:0;font-size:14px;overflow-wrap:anywhere}
+
+/* candado */
+.candado{position:fixed;inset:0;z-index:90;background:var(--marca);color:#fff;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:24px}
+.candado .logo{width:58px;height:58px;border-radius:17px;font-size:21px}
+.puntos{display:flex;gap:13px}
+.puntos i{width:13px;height:13px;border-radius:99px;border:2px solid rgba(255,255,255,.45)}
+.puntos i.on{background:var(--acento);border-color:var(--acento)}
+.teclado{display:grid;grid-template-columns:repeat(3,72px);gap:12px}
+.teclado button{height:62px;border-radius:18px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);
+  color:#fff;font-family:var(--display);font-size:22px;font-weight:500}
+.teclado button:hover{background:rgba(255,255,255,.16)}
+.teclado button.txt{font-size:13px;font-family:var(--texto);font-weight:600}
+.candado .err{color:#FFC9C4;font-size:13px;min-height:18px;font-weight:600}
+
+/* varios */
+.vacio{text-align:center;padding:38px 20px;color:var(--tinta3)}
+.vacio h3{font-size:16px;color:var(--tinta2);margin-bottom:6px}
+.vacio p{font-size:13.5px;margin:0 auto;max-width:34ch}
+.aviso{display:flex;gap:10px;align-items:flex-start;background:color-mix(in srgb,var(--acento) 12%,var(--sup));
+  border:1px solid color-mix(in srgb,var(--acento) 38%,transparent);border-radius:var(--r);padding:11px 12px;font-size:13px;color:var(--tinta2)}
+.aviso svg{width:17px;height:17px;flex:none;color:var(--alerta);margin-top:2px;stroke-width:2}
+.toast{position:fixed;left:50%;transform:translateX(-50%) translateY(20px);z-index:95;
+  bottom:calc(92px + env(safe-area-inset-bottom,0px));background:var(--tinta);color:var(--bg);
+  padding:11px 17px;border-radius:99px;font-size:13.5px;font-weight:600;box-shadow:var(--sombra);
+  opacity:0;pointer-events:none;transition:.22s;max-width:90vw;text-align:center}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.etiqueta{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  background:var(--sup3);color:var(--tinta3);padding:1px 6px;border-radius:5px;margin-left:6px;vertical-align:middle}
+.lista-ed{display:flex;flex-direction:column;gap:8px}
+.item-ed{display:flex;align-items:center;gap:9px;background:var(--sup);border:1px solid var(--linea);
+  border-radius:var(--r-sm);padding:9px 10px}
+.item-ed .pt{width:11px;height:11px;border-radius:99px;flex:none}
+.item-ed .n{flex:1;min-width:0;font-size:13.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mensaje-prev{background:var(--sup2);border:1px solid var(--linea);border-radius:12px;padding:12px;
+  font-size:13.5px;white-space:pre-wrap;line-height:1.55;max-height:210px;overflow-y:auto;overflow-wrap:anywhere}
+@media (prefers-reduced-motion: reduce){*{transition-duration:.01ms !important;animation-duration:.01ms !important}}
+</style>
+</head>
+<body>
+
+
+<div class="candado" id="candado" hidden>
+  <div class="logo" id="candadoLogo">JL</div>
+  <div style="text-align:center">
+    <h2 style="font-size:17px;letter-spacing:.09em;text-transform:uppercase">Networker CRM</h2>
+    <p style="margin:5px 0 0;font-size:13px;color:rgba(255,255,255,.7)">Ingresa tu código de 4 dígitos</p>
+  </div>
+  <div class="puntos" id="puntos"><i></i><i></i><i></i><i></i></div>
+  <div class="err" id="pinErr"></div>
+  <div class="teclado" id="teclado"></div>
+</div>
+
+<div class="app" id="app" hidden>
+  <header class="top">
+    <div class="logo" id="logoIni">JL</div>
+    <div class="top-tit">
+      <h1 id="appNombre">NETWORKER CRM</h1>
+      <p id="appSub">Gestión inteligente de contactos y seguimiento comercial</p>
+    </div>
+    <div class="top-marca" id="appMarca"></div>
+    <button class="icon-btn" data-accion="buscar-rapido" title="Buscar contacto" aria-label="Buscar contacto">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    </button>
+  </header>
+
+  <nav class="nav" id="nav"></nav>
+  <main class="main" id="vista"></main>
+</div>
+
+<button class="fab" id="fab" hidden></button>
+<div class="velo" id="velo" hidden></div>
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true">
+  <div class="agarre"></div>
+  <div class="sheet-cab"><h3 id="sheetTit"></h3>
+    <button class="mini-btn" data-accion="cerrar-sheet" aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="sheet-cuerpo" id="sheetCuerpo"></div>
+</div>
+<div class="panel" id="panel" hidden></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* =========================================================
+   1. UTILIDADES
+   ========================================================= */
+const $  = (s,r)=> (r||document).querySelector(s);
+const $$ = (s,r)=> Array.from((r||document).querySelectorAll(s));
+const uid = ()=> Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const hoyISO = ()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+const MESES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const DIAS=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+function fechaCorta(iso){ if(!iso) return '—'; const p=String(iso).slice(0,10).split('-'); if(p.length<3) return iso;
+  return Number(p[2])+' '+MESES[Number(p[1])-1]+(p[0]!==String(new Date().getFullYear())?' '+p[0]:''); }
+function diasEntre(a,b){ return Math.round((Date.parse(b+'T00:00:00')-Date.parse(a+'T00:00:00'))/86400000); }
+function hace(iso){ if(!iso) return 'sin actividad'; const d=diasEntre(String(iso).slice(0,10),hoyISO());
+  if(d<=0) return 'hoy'; if(d===1) return 'ayer'; if(d<30) return 'hace '+d+' días';
+  if(d<365) return 'hace '+Math.round(d/30)+' meses'; return 'hace '+Math.floor(d/365)+' años'; }
+function iniciales(n){ const p=String(n||'?').trim().split(/\s+/); return ((p[0]||'?')[0]+(p[1]?p[1][0]:'')).toUpperCase(); }
+function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove('on'),2600); }
+function svg(p,extra){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"'+(extra||'')+'>'+p+'</svg>'; }
+
+const IC = {
+  inicio:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/>',
+  contactos:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16.5 7.2a3 3 0 0 1 0 5.6M18 19.8c0-2.2-.8-3.9-2-5"/>',
+  pipeline:'<rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="9.5" y="4" width="5" height="11" rx="1.5"/><rect x="16" y="4" width="5" height="7" rx="1.5"/>',
+  agenda:'<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="m9 15 2 2 4-4"/>',
+  ajustes:'<circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/>',
+  mas:'<path d="M12 5v14M5 12h14"/>',
+  wa:'<path d="M3.5 20.5 5 16a8 8 0 1 1 3 3l-4.5 1.5Z"/><path d="M8.8 9.2c-.2 1.6 1.3 3.6 2.4 4.6 1 1 2.6 1.7 3.6 1.5.5-.1 1.2-1 1.1-1.4-.1-.3-1.5-1-1.8-1-.3 0-.6.7-.9.7-.5 0-2.4-1.6-2.4-2.2 0-.2.6-.6.6-.9 0-.3-.6-1.7-.9-1.8-.4-.1-1.4.2-1.7.5Z"/>',
+  tel:'<path d="M5 3h3l1.6 4-2 1.4a12 12 0 0 0 5.9 5.9l1.4-2 4 1.6v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 3 5.2 2 2 0 0 1 5 3Z"/>',
+  mail:'<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/>',
+  lapiz:'<path d="M4 16.5 16.5 4a2.1 2.1 0 0 1 3 3L7 19.5 3 21Z"/>',
+  mover:'<path d="M5 12h14"/><path d="m14 7 5 5-5 5"/>',
+  reloj:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5.5l3.5 2"/>',
+  fuego:'<path d="M12 3s4.5 3.8 4.5 8a4.5 4.5 0 0 1-9 0c0-1.3.5-2.4 1-3 .1 1.4 1 2.3 1.8 2.3.9 0 1.4-.8 1.4-2.2 0-1.9-.7-3.6 .3-5.1Z"/><path d="M12 21a7 7 0 0 0 7-7"/>',
+  nota:'<rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+  reunion:'<circle cx="12" cy="12" r="9"/><path d="M8 11.5h8M9.5 15h5"/>',
+  msg:'<path d="M20 12a7.5 7.5 0 0 1-11 6.6L4 20l1.4-4.6A7.5 7.5 0 1 1 20 12Z"/>',
+  check:'<path d="m5 12.5 4.5 4.5L19 7"/>',
+  desc:'<path d="M12 3v12"/><path d="m7.5 11 4.5 4 4.5-4"/><path d="M4 20h16"/>',
+  sube:'<path d="M12 21V9"/><path d="m7.5 13 4.5-4 4.5 4"/><path d="M4 4h16"/>',
+  basura:'<path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13"/>',
+  alerta:'<path d="M12 3.5 22 20H2Z"/><path d="M12 10v4.5M12 17.2v.1"/>',
+  atras:'<path d="M19 12H5"/><path d="m10 7-5 5 5 5"/>',
+  copia:'<rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M15 6V5.5A2.5 2.5 0 0 0 12.5 3h-7A2.5 2.5 0 0 0 3 5.5v7A2.5 2.5 0 0 0 5.5 15H6"/>',
+  escudo:'<path d="M12 3 5 6v6c0 4 3 7.4 7 9 4-1.6 7-5 7-9V6Z"/><path d="m9 12 2 2 4-4"/>'
+};
+const ICO_TIPO={'Llamada':'tel','WhatsApp':'wa','Mensaje':'msg','Reunión':'reunion','Presentación':'pipeline','Nota':'nota','Seguimiento':'reloj'};
+
+/* =========================================================
+   2. BASE DE DATOS LOCAL (IndexedDB)
+   ========================================================= */
+const TIENDAS=['contactos','interacciones','tareas','ajustes'];
+let _db=null, sinDB=false;
+function abrirDB(){
+  return new Promise((res,rej)=>{
+    if(_db) return res(_db);
+    if(!('indexedDB' in window)) return rej(new Error('sin indexedDB'));
+    const r=indexedDB.open('networker_crm',1);
+    r.onupgradeneeded=e=>{
+      const d=e.target.result;
+      if(!d.objectStoreNames.contains('contactos'))    d.createObjectStore('contactos',{keyPath:'id'});
+      if(!d.objectStoreNames.contains('interacciones')){const s=d.createObjectStore('interacciones',{keyPath:'id'}); s.createIndex('contactoId','contactoId');}
+      if(!d.objectStoreNames.contains('tareas')){const s=d.createObjectStore('tareas',{keyPath:'id'}); s.createIndex('contactoId','contactoId');}
+      if(!d.objectStoreNames.contains('ajustes'))      d.createObjectStore('ajustes',{keyPath:'clave'});
+    };
+    r.onsuccess=()=>{_db=r.result; res(_db);};
+    r.onerror=()=>rej(r.error);
+  });
+}
+function op(tienda,modo,fn){
+  return abrirDB().then(d=>new Promise((res,rej)=>{
+    const t=d.transaction(tienda,modo), s=t.objectStore(tienda); let out;
+    try{ out=fn(s); }catch(e){ rej(e); return; }
+    t.oncomplete=()=>res(out&&out.result!==undefined?out.result:out);
+    t.onerror=()=>rej(t.error);
+  })).catch(e=>{ sinDB=true; console.warn('IndexedDB:',e); return null; });
+}
+const leerTodo = t => op(t,'readonly',s=>s.getAll());
+const guardar  = (t,o)=> op(t,'readwrite',s=>s.put(o));
+const borrar   = (t,id)=> op(t,'readwrite',s=>s.delete(id));
+const vaciar   = t => op(t,'readwrite',s=>s.clear());
+
+/* =========================================================
+   3. CONFIGURACIÓN POR DEFECTO
+   ========================================================= */
+const ETAPAS_DEF=[
+  {id:'prospecto',    nombre:'Prospecto',     color:'#2a78d6', clase:'activo'},
+  {id:'contactado',   nombre:'Contactado',    color:'#eb6834', clase:'activo'},
+  {id:'presentacion', nombre:'Presentación',  color:'#1baf7a', clase:'activo'},
+  {id:'seguimiento',  nombre:'Seguimiento',   color:'#eda100', clase:'activo'},
+  {id:'cliente',      nombre:'Cliente',       color:'#e87ba4', clase:'ganado'},
+  {id:'distribuidor', nombre:'Distribuidor',  color:'#008300', clase:'ganado'},
+  {id:'descartado',   nombre:'Descartado',    color:'#8a8f98', clase:'perdido'}
+];
+const PLANTILLAS_DEF=[
+  {id:'p1', nombre:'Primer contacto', texto:'Hola {{nombre}}, ¿cómo estás? Soy {{mi_nombre}}. Te escribo porque estoy compartiendo una alternativa de bienestar y de ingresos que está creciendo mucho en {{ciudad}}. ¿Te puedo enviar un video corto de 3 minutos para que lo veas con calma?'},
+  {id:'p2', nombre:'Invitación a presentación', texto:'{{nombre}}, te aparto un cupo para la presentación de {{producto}} de esta semana. Es en línea y dura 30 minutos. ¿Te va mejor martes o jueves a las 8:00 p. m.?'},
+  {id:'p3', nombre:'Seguimiento tras la presentación', texto:'Hola {{nombre}}, gracias por conectarte a la presentación. ¿Qué fue lo que más te llamó la atención? Con gusto resuelvo cualquier duda que te haya quedado.'},
+  {id:'p4', nombre:'Cierre / pedido', texto:'{{nombre}}, ya tengo listo tu kit de inicio de {{producto}}. Te comparto las dos opciones de paquete y la forma de envío a {{ciudad}}. ¿Cuál te sirve más?'},
+  {id:'p5', nombre:'Reactivación de contacto frío', texto:'Hola {{nombre}}, hace un tiempo hablamos sobre {{producto}}. Han cambiado varias cosas buenas desde entonces y me acordé de ti. ¿Te comparto la novedad en un audio corto?'},
+  {id:'p6', nombre:'Bienvenida a nuevo distribuidor', texto:'¡Bienvenido al equipo, {{nombre}}! Te envío los 3 primeros pasos para arrancar y agendamos 20 minutos esta semana para armar tu lista de contactos. ¿Qué día te queda bien?'}
+];
+const CFG_DEF={
+  clave:'app',
+  nombreApp:'NETWORKER CRM',
+  subtitulo:'Gestión inteligente de contactos y seguimiento comercial',
+  marca:'José Lugo — Especialista en IA',
+  miNombre:'José Lugo',
+  producto:'ONE MORE',
+  primario:'#0E2A4F',
+  acento:'#C9A227',
+  codigoPais:'57',
+  diasFrio:7,
+  etapas:ETAPAS_DEF,
+  plantillas:PLANTILLAS_DEF,
+  origenes:['WhatsApp','Instagram','Facebook','TikTok','Referido','Evento presencial','Lista caliente','Otro'],
+  pinActivo:false,
+  pinHash:null,
+  version:1
+};
+
+/* =========================================================
+   4. ESTADO
+   ========================================================= */
+const S={ cfg:JSON.parse(JSON.stringify(CFG_DEF)), contactos:[], interacciones:[], tareas:[],
+          vista:'inicio', busq:'', filtroEtapa:'', orden:'actividad', pestana:'datos', contactoAbierto:null };
+
+function etapa(id){ return S.cfg.etapas.find(e=>e.id===id) || S.cfg.etapas[0] || ETAPAS_DEF[0]; }
+function interaccionesDe(id){ return S.interacciones.filter(i=>i.contactoId===id).sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||'')); }
+function tareasDe(id){ return S.tareas.filter(t=>t.contactoId===id).sort((a,b)=>(a.fecha||'').localeCompare(b.fecha||'')); }
+function ultimaActividad(c){ const i=interaccionesDe(c.id)[0]; return (i&&i.fecha) ? i.fecha : String(c.creado||'').slice(0,10); }
+function esFrio(c){ const e=etapa(c.etapa); if(e.clase!=='activo') return false;
+  return diasEntre(ultimaActividad(c), hoyISO()) >= Number(S.cfg.diasFrio||7); }
+function contactoPorId(id){ return S.contactos.find(c=>c.id===id); }
+
+/* =========================================================
+   5. DATOS DE EJEMPLO (solo el primer arranque)
+   ========================================================= */
+function datosEjemplo(){
+  const h=new Date(); const d=n=>{const x=new Date(h); x.setDate(x.getDate()-n);
+    return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0');};
+  const C=[
+    {nombre:'Marcela Ospina', telefono:'3104457781', ciudad:'Rionegro',   origen:'Referido',        etapa:'seguimiento',  notas:'Le interesa el tema de energía y descanso. Trabaja en salud.'},
+    {nombre:'Andrés Villa',   telefono:'3115568820', ciudad:'Medellín',   origen:'Instagram',       etapa:'presentacion', notas:'Vio la presentación del martes. Pidió comparar los dos paquetes.'},
+    {nombre:'Luisa Restrepo', telefono:'3006672214', ciudad:'La Ceja',    origen:'Evento presencial',etapa:'cliente',     notas:'Primer pedido entregado. Pendiente recompra mensual.'},
+    {nombre:'Julián Cardona', telefono:'3128890044', ciudad:'Bogotá',     origen:'WhatsApp',        etapa:'distribuidor', notas:'Arrancó con kit de inicio. Va a armar su lista de 50.'},
+    {nombre:'Paola Zapata',   telefono:'3012234567', ciudad:'Carmen de Viboral', origen:'Lista caliente', etapa:'contactado', notas:'Quedó en responder el fin de semana.'},
+    {nombre:'Ricardo Mesa',   telefono:'3145559090', ciudad:'Pereira',    origen:'Facebook',        etapa:'prospecto',    notas:'Contacto nuevo de la campaña de septiembre.'}
+  ];
+  const cts=C.map((c,i)=>Object.assign({id:'ej'+(i+1), email:'', etiquetas:[], proximo:'', ejemplo:true,
+    creado:d(28-i*4)+'T09:00:00', actualizado:d(28-i*4)+'T09:00:00'}, c));
+  const ints=[
+    {contactoId:'ej1', tipo:'WhatsApp',     fecha:d(9),  resultado:'Positivo',     nota:'Pidió el video del producto. Lo envié.'},
+    {contactoId:'ej2', tipo:'Presentación', fecha:d(3),  resultado:'Positivo',     nota:'Asistió completa. Preguntó por precios.'},
+    {contactoId:'ej2', tipo:'Llamada',      fecha:d(1),  resultado:'Neutro',       nota:'Lo va a hablar con su esposa.'},
+    {contactoId:'ej3', tipo:'Reunión',      fecha:d(12), resultado:'Positivo',     nota:'Cierre del primer pedido.'},
+    {contactoId:'ej4', tipo:'Llamada',      fecha:d(2),  resultado:'Positivo',     nota:'Capacitación inicial de 30 minutos.'},
+    {contactoId:'ej5', tipo:'Mensaje',      fecha:d(14), resultado:'Sin respuesta',nota:'Primer mensaje enviado, sin lectura.'}
+  ].map(x=>Object.assign({id:uid(), ejemplo:true, creado:new Date().toISOString()},x));
+  const trs=[
+    {contactoId:'ej2', titulo:'Enviar comparativo de paquetes', fecha:hoyISO(), hecha:false},
+    {contactoId:'ej5', titulo:'Segundo intento por WhatsApp',   fecha:d(2),     hecha:false},
+    {contactoId:'ej3', titulo:'Llamar para recompra mensual',   fecha:d(-4),    hecha:false},
+    {contactoId:'ej1', titulo:'Invitar a la presentación del jueves', fecha:hoyISO(), hecha:false}
+  ].map(x=>Object.assign({id:uid(), ejemplo:true, creado:new Date().toISOString()},x));
+  return {cts, ints, trs};
+}
+
+/* =========================================================
+   6. CARGA INICIAL
+   ========================================================= */
+async function cargar(){
+  const aj = await leerTodo('ajustes');
+  if(aj===null){ sinDB=true; }
+  const guardado = (aj||[]).find(a=>a.clave==='app');
+  if(guardado){
+    S.cfg = Object.assign({}, CFG_DEF, guardado);
+    if(!Array.isArray(S.cfg.etapas)||!S.cfg.etapas.length) S.cfg.etapas=ETAPAS_DEF;
+    if(!Array.isArray(S.cfg.plantillas)) S.cfg.plantillas=PLANTILLAS_DEF;
+    S.contactos     = (await leerTodo('contactos'))||[];
+    S.interacciones = (await leerTodo('interacciones'))||[];
+    S.tareas        = (await leerTodo('tareas'))||[];
+  }else{
+    const ej=datosEjemplo();
+    S.contactos=ej.cts; S.interacciones=ej.ints; S.tareas=ej.trs;
+    if(!sinDB){
+      await guardar('ajustes', S.cfg);
+      for(const c of ej.cts)  await guardar('contactos',c);
+      for(const i of ej.ints) await guardar('interacciones',i);
+      for(const t of ej.trs)  await guardar('tareas',t);
+    }
+  }
+  aplicarIdentidad();
+}
+async function guardarCfg(){ S.cfg.clave='app'; if(!sinDB) await guardar('ajustes',S.cfg); aplicarIdentidad(); }
+function aplicarIdentidad(){
+  document.documentElement.style.setProperty('--marca', S.cfg.primario||'#0E2A4F');
+  document.documentElement.style.setProperty('--acento', S.cfg.acento||'#C9A227');
+  $('#appNombre').textContent = S.cfg.nombreApp||'NETWORKER CRM';
+  $('#appSub').textContent    = S.cfg.subtitulo||'';
+  $('#appMarca').textContent  = S.cfg.marca||'';
+  const ini = iniciales(S.cfg.miNombre||S.cfg.marca||'JL');
+  $('#logoIni').textContent=ini; $('#candadoLogo').textContent=ini;
+  document.title = (S.cfg.nombreApp && S.cfg.nombreApp!=='NETWORKER CRM') ? S.cfg.nombreApp : 'Networker CRM';
+}
+
+/* =========================================================
+   7. NAVEGACIÓN
+   ========================================================= */
+const VISTAS=[
+  {id:'inicio',   nom:'Inicio',    ic:'inicio'},
+  {id:'contactos',nom:'Contactos', ic:'contactos'},
+  {id:'pipeline', nom:'Pipeline',  ic:'pipeline'},
+  {id:'agenda',   nom:'Agenda',    ic:'agenda'},
+  {id:'ajustes',  nom:'Ajustes',   ic:'ajustes'}
+];
+function pintarNav(){
+  const pend = S.tareas.filter(t=>!t.hecha && t.fecha && t.fecha<=hoyISO()).length;
+  $('#nav').innerHTML = VISTAS.map(v=>
+    '<button data-accion="ir" data-v="'+v.id+'"'+(S.vista===v.id?' aria-current="page"':'')+'>'+
+      svg(IC[v.ic])+'<span>'+v.nom+'</span>'+
+      (v.id==='agenda'&&pend?'<span class="pip num">'+pend+'</span>':'')+
+    '</button>').join('');
+}
+function ir(v){ S.vista=v; S.pestana='datos'; render(); $('#vista').scrollTop=0; }
+
+/* =========================================================
+   8. RENDER PRINCIPAL
+   ========================================================= */
+function render(){
+  pintarNav();
+  const v=$('#vista');
+  if(S.vista==='inicio')         v.innerHTML=vistaInicio();
+  else if(S.vista==='contactos') v.innerHTML=vistaContactos();
+  else if(S.vista==='pipeline')  v.innerHTML=vistaPipeline();
+  else if(S.vista==='agenda')    v.innerHTML=vistaAgenda();
+  else                           v.innerHTML=vistaAjustes();
+  pintarFab();
+}
+function pintarFab(){
+  const f=$('#fab');
+  if(S.vista==='contactos'||S.vista==='pipeline'||S.vista==='inicio'){
+    f.hidden=false; f.dataset.accion='nuevo-contacto'; f.innerHTML=svg(IC.mas,' width="18" height="18" stroke-width="2.4"')+'Contacto';
+  }else if(S.vista==='agenda'){
+    f.hidden=false; f.dataset.accion='nueva-tarea'; f.innerHTML=svg(IC.mas,' width="18" height="18" stroke-width="2.4"')+'Tarea';
+  }else f.hidden=true;
+}
+
+/* ---------- INICIO ---------- */
+function vistaInicio(){
+  const total=S.contactos.length;
+  const activos=S.contactos.filter(c=>etapa(c.etapa).clase==='activo').length;
+  const ganados=S.contactos.filter(c=>etapa(c.etapa).clase==='ganado').length;
+  const tasa= total? Math.round(ganados/total*100):0;
+  const mes=hoyISO().slice(0,7);
+  const nuevos=S.contactos.filter(c=>String(c.creado||'').slice(0,7)===mes).length;
+  const pend=S.tareas.filter(t=>!t.hecha && t.fecha && t.fecha<=hoyISO());
+  const vencidas=pend.filter(t=>t.fecha<hoyISO()).length;
+  const frios=S.contactos.filter(esFrio);
+  const hayEjemplo=S.contactos.some(c=>c.ejemplo);
+  const max=Math.max(1,...S.cfg.etapas.map(e=>S.contactos.filter(c=>c.etapa===e.id).length));
+  const d=new Date();
+
+  const embudo=S.cfg.etapas.map(e=>{
+    const n=S.contactos.filter(c=>c.etapa===e.id).length;
+    const pct= total? Math.round(n/total*100):0;
+    return '<div class="fila-e" title="'+esc(e.nombre)+': '+n+' contacto'+(n===1?'':'s')+' ('+pct+'% del total)">'+
+      '<span class="et">'+esc(e.nombre)+'</span>'+
+      '<div class="pista"><div class="barra" style="width:'+Math.round(n/max*100)+'%;background:'+esc(e.color)+'"></div></div>'+
+      '<span class="val num">'+n+'</span></div>';
+  }).join('');
+
+  const recientes=S.interacciones.slice().sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||'')).slice(0,5).map(i=>{
+    const c=contactoPorId(i.contactoId); if(!c) return '';
+    return '<div class="hito"><div class="ic">'+svg(IC[ICO_TIPO[i.tipo]||'nota'])+'</div><div class="h-cuerpo">'+
+      '<div class="h-tit">'+esc(c.nombre)+' '+badgeRes(i.resultado)+'<span class="h-fecha">'+esc(i.tipo)+' · '+fechaCorta(i.fecha)+'</span></div>'+
+      (i.nota?'<div class="h-nota">'+esc(i.nota)+'</div>':'')+'</div></div>';
+  }).join('');
+
+  return '<div class="wrap">'+
+  '<div class="seccion saludo"><h2>Hola, '+esc((S.cfg.miNombre||'').split(' ')[0]||'bienvenido')+'</h2>'+
+    '<p>'+DIAS[d.getDay()].replace(/^./,x=>x.toUpperCase())+' '+d.getDate()+' de '+['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'][d.getMonth()]+'</p></div>'+
+
+  (hayEjemplo?'<div class="seccion"><div class="aviso">'+svg(IC.alerta)+
+    '<div><strong>Estás viendo datos de ejemplo.</strong> Sirven para que conozcas la app. Cuando quieras, bórralos desde Ajustes → Datos y empieza con tus contactos reales.</div></div></div>':'')+
+
+  '<div class="seccion"><div class="tiles">'+
+    '<button class="tile" data-accion="ir" data-v="contactos"><div class="k">Contactos</div><div class="v num">'+total+'</div><div class="s">'+nuevos+' nuevos este mes</div></button>'+
+    '<button class="tile" data-accion="ir" data-v="pipeline"><div class="k">En proceso</div><div class="v num">'+activos+'</div><div class="s">activos en el embudo</div></button>'+
+    '<button class="tile destacada" data-accion="ir" data-v="pipeline"><div class="k">Cerrados</div><div class="v num">'+ganados+'</div><div class="s">clientes y distribuidores</div></button>'+
+    '<button class="tile" data-accion="ir" data-v="pipeline"><div class="k">Conversión</div><div class="v num">'+tasa+'%</div><div class="s">'+ganados+' de '+total+' contactos</div></button>'+
+  '</div></div>'+
+
+  ((pend.length||frios.length)?'<div class="seccion"><div class="seccion-tit"><h2>Requiere tu atención</h2></div><div class="lista">'+
+    (pend.length?'<button class="fila-c" data-accion="ir" data-v="agenda">'+
+      '<div class="ava" style="background:'+(vencidas?'var(--grave)':'var(--acento)')+';color:#fff">'+svg(IC.agenda,' width="19" height="19"')+'</div>'+
+      '<div class="cuerpo"><div class="nom">'+pend.length+' seguimiento'+(pend.length===1?'':'s')+' para hoy</div>'+
+      '<div class="sub">'+(vencidas?vencidas+' ya está'+(vencidas===1?'':'n')+' vencido'+(vencidas===1?'':'s'):'Ninguno vencido, vas al día')+'</div></div>'+
+      '<div class="der">'+svg(IC.mover,' width="18" height="18" style="color:var(--tinta3)"')+'</div></button>':'')+
+    (frios.length?'<button class="fila-c" data-accion="ver-frios">'+
+      '<div class="ava" style="background:var(--tinta3);color:#fff">'+svg(IC.fuego,' width="19" height="19"')+'</div>'+
+      '<div class="cuerpo"><div class="nom">'+frios.length+' contacto'+(frios.length===1?'':'s')+' enfriándose</div>'+
+      '<div class="sub">Sin actividad hace '+S.cfg.diasFrio+' días o más</div></div>'+
+      '<div class="der">'+svg(IC.mover,' width="18" height="18" style="color:var(--tinta3)"')+'</div></button>':'')+
+  '</div></div>':'')+
+
+  '<div class="seccion"><div class="seccion-tit"><h2>Embudo por etapa</h2><span style="font-size:12px;color:var(--tinta3)" class="num">'+total+' en total</span></div>'+
+    '<div class="tarjeta embudo">'+embudo+
+    '<div class="embudo-pie">Cada barra muestra cuántos contactos tienes en esa etapa. Toca <strong>Pipeline</strong> para moverlos.</div></div></div>'+
+
+  (recientes?'<div class="seccion"><div class="seccion-tit"><h2>Actividad reciente</h2></div>'+
+    '<div class="tarjeta" style="padding:4px 14px">'+recientes+'</div></div>':'')+
+  '</div>';
+}
+function badgeRes(r){
+  const m={'Positivo':'pos','Neutro':'neu','Negativo':'neg','Sin respuesta':'sin'};
+  return r? '<span class="res '+(m[r]||'neu')+'">'+esc(r)+'</span>':'';
+}
+
+/* ---------- CONTACTOS ---------- */
+function contactosFiltrados(){
+  const q=S.busq.trim().toLowerCase();
+  let l=S.contactos.filter(c=>{
+    if(S.filtroEtapa==='__frios'){ if(!esFrio(c)) return false; }
+    else if(S.filtroEtapa && c.etapa!==S.filtroEtapa) return false;
+    if(!q) return true;
+    return [c.nombre,c.telefono,c.email,c.ciudad,c.origen,c.notas,(c.etiquetas||[]).join(' ')]
+      .join(' ').toLowerCase().includes(q);
+  });
+  if(S.orden==='nombre') l.sort((a,b)=>String(a.nombre).localeCompare(String(b.nombre),'es'));
+  else if(S.orden==='nuevos') l.sort((a,b)=>String(b.creado||'').localeCompare(String(a.creado||'')));
+  else l.sort((a,b)=>String(ultimaActividad(b)).localeCompare(String(ultimaActividad(a))));
+  return l;
+}
+function filaContacto(c){
+  const e=etapa(c.etapa); const frio=esFrio(c);
+  return '<div class="fila-c">'+
+    '<button class="ava" data-accion="abrir" data-id="'+c.id+'" style="background:'+esc(e.color)+'" aria-label="Abrir '+esc(c.nombre)+'">'+iniciales(c.nombre)+'</button>'+
+    '<button class="cuerpo" data-accion="abrir" data-id="'+c.id+'" style="background:none;border:0;padding:0;text-align:left">'+
+      '<div class="nom">'+esc(c.nombre)+(c.ejemplo?'<span class="etiqueta">ejemplo</span>':'')+'</div>'+
+      '<div class="sub"><span class="chip mini" style="--et:'+esc(e.color)+'"><span class="pt"></span>'+esc(e.nombre)+'</span> '+
+        esc([c.ciudad,c.origen].filter(Boolean).join(' · '))+'</div>'+
+      '<div class="sub" style="color:'+(frio?'var(--alerta)':'var(--tinta3)')+'">'+(frio?'⚠ ':'')+'Última actividad: '+hace(ultimaActividad(c))+'</div>'+
+    '</button>'+
+    '<div class="der">'+
+      (c.telefono?'<button class="mini-btn" data-accion="wa" data-id="'+c.id+'" title="Enviar WhatsApp" aria-label="WhatsApp">'+svg(IC.wa)+'</button>':'')+
+      '<button class="mini-btn" data-accion="registrar" data-id="'+c.id+'" title="Registrar interacción" aria-label="Registrar interacción">'+svg(IC.nota)+'</button>'+
+    '</div></div>';
+}
+function vistaContactos(){
+  const l=contactosFiltrados();
+  const chips=[{id:'',n:'Todos'}].concat(S.cfg.etapas.map(e=>({id:e.id,n:e.nombre}))).concat([{id:'__frios',n:'⚠ Fríos'}]);
+  return '<div class="wrap">'+
+  '<div class="buscador"><div class="campo-busq">'+
+    svg('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>')+
+    '<input id="qBusq" type="search" placeholder="Buscar por nombre, ciudad, teléfono…" value="'+esc(S.busq)+'" autocomplete="off"></div>'+
+    '<button class="mini-btn" style="width:42px;height:42px;border-radius:12px" data-accion="orden" title="Ordenar">'+svg(IC.pipeline)+'</button>'+
+  '</div>'+
+  '<div class="filtros">'+chips.map(c=>'<button class="f-chip" data-accion="filtro" data-e="'+c.id+'" aria-pressed="'+(S.filtroEtapa===c.id)+'">'+esc(c.n)+'</button>').join('')+'</div>'+
+  '<div class="seccion-tit"><h2>'+l.length+' contacto'+(l.length===1?'':'s')+'</h2>'+
+    '<span style="font-size:12px;color:var(--tinta3)">Orden: '+({actividad:'actividad reciente',nombre:'nombre A-Z',nuevos:'más nuevos'}[S.orden])+'</span></div>'+
+  (l.length? '<div class="lista">'+l.map(filaContacto).join('')+'</div>'
+    : '<div class="vacio"><h3>No hay contactos aquí</h3><p>Cambia el filtro o agrega tu primer contacto con el botón <strong>+ Contacto</strong>.</p></div>')+
+  '</div>';
+}
+
+/* ---------- PIPELINE ---------- */
+function vistaPipeline(){
+  return '<div class="wrap">'+
+    '<div class="seccion-tit"><h2>Tablero de etapas</h2><span style="font-size:12px;color:var(--tinta3)">Desliza de lado →</span></div>'+
+    '<div class="tablero">'+S.cfg.etapas.map(e=>{
+      const l=S.contactos.filter(c=>c.etapa===e.id)
+        .sort((a,b)=>String(ultimaActividad(b)).localeCompare(String(ultimaActividad(a))));
+      return '<div class="col" style="--et:'+esc(e.color)+'">'+
+        '<div class="col-cab"><span class="pt"></span><h3>'+esc(e.nombre)+'</h3><span class="n num">'+l.length+'</span></div>'+
+        (l.length? l.map(c=>'<div class="tj" style="--et:'+esc(e.color)+'">'+
+            '<button data-accion="abrir" data-id="'+c.id+'" style="background:none;border:0;padding:0;text-align:left;width:100%">'+
+              '<div class="nom">'+esc(c.nombre)+'</div>'+
+              '<div class="sub">'+esc([c.ciudad,hace(ultimaActividad(c))].filter(Boolean).join(' · '))+'</div>'+
+            '</button>'+
+            '<div class="tj-pie">'+
+              '<button data-accion="mover" data-id="'+c.id+'">'+svg(IC.mover)+'Mover</button>'+
+              (c.telefono?'<button data-accion="wa" data-id="'+c.id+'">'+svg(IC.wa)+'WhatsApp</button>':'')+
+            '</div></div>').join('')
+          : '<div class="vacio-col">Sin contactos</div>')+
+      '</div>';
+    }).join('')+'</div></div>';
+}
+
+/* ---------- AGENDA ---------- */
+function vistaAgenda(){
+  const h=hoyISO();
+  const abiertas=S.tareas.filter(t=>!t.hecha).sort((a,b)=>String(a.fecha||'9999').localeCompare(String(b.fecha||'9999')));
+  const hechas=S.tareas.filter(t=>t.hecha).sort((a,b)=>String(b.fecha||'').localeCompare(String(a.fecha||''))).slice(0,8);
+  const g={venc:[],hoy:[],sem:[],luego:[]};
+  abiertas.forEach(t=>{ const f=t.fecha||''; if(!f) g.luego.push(t);
+    else if(f<h) g.venc.push(t); else if(f===h) g.hoy.push(t);
+    else if(diasEntre(h,f)<=7) g.sem.push(t); else g.luego.push(t); });
+  const frios=S.contactos.filter(esFrio).sort((a,b)=>String(ultimaActividad(a)).localeCompare(String(ultimaActividad(b))));
+
+  const bloque=(tit,arr,cls)=> arr.length? '<div class="seccion"><div class="seccion-tit"><h2>'+tit+'</h2>'+
+      '<span style="font-size:12px;color:var(--tinta3)" class="num">'+arr.length+'</span></div>'+
+      '<div class="lista">'+arr.map(t=>filaTarea(t,cls)).join('')+'</div></div>' : '';
+
+  return '<div class="wrap">'+
+    bloque('Vencidas', g.venc, 'vencida')+
+    bloque('Para hoy', g.hoy, 'hoy')+
+    bloque('Próximos 7 días', g.sem, '')+
+    bloque('Más adelante', g.luego, '')+
+    (!abiertas.length? '<div class="vacio"><h3>Agenda limpia</h3><p>No tienes seguimientos pendientes. Agrega uno con el botón <strong>+ Tarea</strong>.</p></div>':'')+
+    (frios.length? '<div class="seccion"><div class="seccion-tit"><h2>Contactos enfriándose</h2>'+
+      '<span style="font-size:12px;color:var(--tinta3)">'+S.cfg.diasFrio+'+ días sin actividad</span></div>'+
+      '<div class="lista">'+frios.slice(0,12).map(filaContacto).join('')+'</div></div>':'')+
+    (hechas.length? '<div class="seccion"><div class="seccion-tit"><h2>Completadas recientemente</h2></div>'+
+      '<div class="lista">'+hechas.map(t=>filaTarea(t,'')).join('')+'</div></div>':'')+
+  '</div>';
+}
+function filaTarea(t,cls){
+  const c=t.contactoId?contactoPorId(t.contactoId):null;
+  const h=hoyISO(); const f=t.fecha||'';
+  const clase=(f&&f<h&&!t.hecha)?'rojo':(f===h&&!t.hecha)?'oro':'';
+  return '<div class="tarea '+(t.hecha?'lista ':'')+cls+'">'+
+    '<button class="tick" data-accion="tick" data-id="'+t.id+'" aria-label="Marcar como hecha">'+svg(IC.check)+'</button>'+
+    '<div class="t-cuerpo"><div class="t-tit">'+esc(t.titulo)+'</div>'+
+      '<div class="t-sub">'+(c?'<button data-accion="abrir" data-id="'+c.id+'" style="background:none;border:0;padding:0;color:var(--tinta2);font-weight:600;text-decoration:underline;text-underline-offset:2px">'+esc(c.nombre)+'</button> · ':'')+
+      (f?fechaCorta(f):'sin fecha')+'</div></div>'+
+    '<div style="display:flex;gap:6px;align-items:center">'+
+      '<span class="t-fecha '+clase+'">'+(f? (f<h&&!t.hecha? 'vencida' : f===h? 'hoy' : fechaCorta(f)) :'—')+'</span>'+
+      '<button class="mini-btn" data-accion="borrar-tarea" data-id="'+t.id+'" aria-label="Eliminar tarea">'+svg(IC.basura)+'</button>'+
+    '</div></div>';
+}
+
+/* ---------- AJUSTES ---------- */
+function vistaAjustes(){
+  const c=S.cfg;
+  const tarj=(tit,html,sub)=> '<div class="seccion"><div class="seccion-tit"><h2>'+tit+'</h2>'+(sub?'<span style="font-size:12px;color:var(--tinta3)">'+sub+'</span>':'')+'</div><div class="tarjeta" style="padding:14px">'+html+'</div></div>';
+
+  return '<div class="wrap">'+
+
+  tarj('Identidad visual',
+    '<div class="campo"><label for="cfgNombreApp">Nombre de la app</label><input id="cfgNombreApp" value="'+esc(c.nombreApp)+'"></div>'+
+    '<div class="campo"><label for="cfgSub">Subtítulo</label><input id="cfgSub" value="'+esc(c.subtitulo)+'"></div>'+
+    '<div class="campo"><label for="cfgMarca">Marca / firma</label><input id="cfgMarca" value="'+esc(c.marca)+'"></div>'+
+    '<div class="par"><div class="campo"><label for="cfgPri">Color principal</label><input type="color" id="cfgPri" value="'+esc(c.primario)+'"></div>'+
+    '<div class="campo"><label for="cfgAce">Color de acento</label><input type="color" id="cfgAce" value="'+esc(c.acento)+'"></div></div>'+
+    '<div class="par"><div class="campo"><label for="cfgMiNombre">Tu nombre</label><input id="cfgMiNombre" value="'+esc(c.miNombre)+'"><div class="ayuda">Se usa en las plantillas como {{mi_nombre}}</div></div>'+
+    '<div class="campo"><label for="cfgProducto">Producto / empresa</label><input id="cfgProducto" value="'+esc(c.producto)+'"><div class="ayuda">Variable {{producto}}</div></div></div>'+
+    '<div class="acciones"><button class="btn pri" data-accion="guardar-identidad">Guardar cambios</button>'+
+    '<button class="btn" data-accion="restablecer-colores">Colores por defecto</button></div>')+
+
+  tarj('Etapas del pipeline',
+    '<div class="lista-ed">'+c.etapas.map(e=>
+      '<div class="item-ed"><span class="pt" style="background:'+esc(e.color)+'"></span>'+
+      '<span class="n">'+esc(e.nombre)+'</span>'+
+      '<span style="font-size:11px;color:var(--tinta3)" class="num">'+S.contactos.filter(x=>x.etapa===e.id).length+'</span>'+
+      '<button class="mini-btn" data-accion="editar-etapa" data-id="'+e.id+'" aria-label="Editar etapa">'+svg(IC.lapiz)+'</button>'+
+      (c.etapas.length>2?'<button class="mini-btn" data-accion="borrar-etapa" data-id="'+e.id+'" aria-label="Eliminar etapa">'+svg(IC.basura)+'</button>':'')+
+      '</div>').join('')+'</div>'+
+    '<div class="acciones"><button class="btn bloque" data-accion="nueva-etapa">'+svg(IC.mas)+'Agregar etapa</button></div>')+
+
+  tarj('Plantillas de WhatsApp',
+    '<div class="lista-ed">'+c.plantillas.map(p=>
+      '<div class="item-ed"><span class="n">'+esc(p.nombre)+'</span>'+
+      '<button class="mini-btn" data-accion="editar-plantilla" data-id="'+p.id+'" aria-label="Editar plantilla">'+svg(IC.lapiz)+'</button>'+
+      '<button class="mini-btn" data-accion="borrar-plantilla" data-id="'+p.id+'" aria-label="Eliminar plantilla">'+svg(IC.basura)+'</button></div>').join('')+'</div>'+
+    '<div class="acciones"><button class="btn bloque" data-accion="nueva-plantilla">'+svg(IC.mas)+'Nueva plantilla</button></div>'+
+    '<p class="ayuda" style="margin-top:12px">Variables disponibles: <strong>{{nombre}}</strong>, <strong>{{ciudad}}</strong>, <strong>{{mi_nombre}}</strong>, <strong>{{producto}}</strong>.</p>')+
+
+  tarj('Preferencias de trabajo',
+    '<div class="par"><div class="campo"><label for="cfgFrio">Días para marcar "contacto frío"</label>'+
+      '<input type="number" id="cfgFrio" min="1" max="120" value="'+esc(c.diasFrio)+'" class="num"></div>'+
+    '<div class="campo"><label for="cfgPais">Código de país para WhatsApp</label>'+
+      '<input id="cfgPais" value="'+esc(c.codigoPais)+'" class="num"><div class="ayuda">Colombia = 57</div></div></div>'+
+    '<div class="campo"><label for="cfgOrigenes">Orígenes de contacto</label>'+
+      '<input id="cfgOrigenes" value="'+esc((c.origenes||[]).join(', '))+'"><div class="ayuda">Separados por coma</div></div>'+
+    '<div class="acciones"><button class="btn pri bloque" data-accion="guardar-prefs">Guardar preferencias</button></div>')+
+
+  tarj('Seguridad',
+    '<div style="display:flex;gap:11px;align-items:flex-start;margin-bottom:12px">'+svg(IC.escudo,' width="20" height="20" style="color:var(--tinta3);flex:none;margin-top:2px"')+
+    '<div style="font-size:13.5px;color:var(--tinta2)">Bloqueo con código de 4 dígitos al abrir la app. Estado actual: <strong>'+(c.pinActivo?'activado':'desactivado')+'</strong>.</div></div>'+
+    '<div class="acciones">'+(c.pinActivo
+      ? '<button class="btn" data-accion="cambiar-pin">Cambiar código</button><button class="btn peligro" data-accion="quitar-pin">Desactivar</button>'
+      : '<button class="btn pri bloque" data-accion="cambiar-pin">Activar código PIN</button>')+'</div>')+
+
+  tarj('Datos y copias de seguridad',
+    '<div class="acciones" style="margin-top:0;flex-wrap:wrap"><button class="btn bloque" data-accion="exp-json">'+svg(IC.desc)+'Copia de seguridad (JSON)</button></div>'+
+    '<div class="acciones" style="flex-wrap:wrap"><button class="btn" style="flex:1" data-accion="imp-json">'+svg(IC.sube)+'Restaurar copia</button>'+
+    '<button class="btn" style="flex:1" data-accion="exp-csv">'+svg(IC.desc)+'Exportar CSV</button></div>'+
+    '<div class="acciones"><button class="btn bloque" data-accion="imp-csv">'+svg(IC.sube)+'Importar contactos desde CSV</button></div>'+
+    (S.contactos.some(x=>x.ejemplo)?'<div class="acciones"><button class="btn peligro bloque" data-accion="borrar-ejemplo">Borrar los datos de ejemplo</button></div>':'')+
+    '<div class="acciones"><button class="btn peligro bloque" data-accion="borrar-todo">Borrar TODO y empezar de cero</button></div>'+
+    '<p class="ayuda" style="margin-top:12px">Tus datos se guardan solo en este dispositivo (sin servidores). Para pasarlos del celular al MacBook: exporta la copia JSON en uno y restáurala en el otro.</p>')+
+
+  tarj('Instalar en el teléfono',
+    '<p style="font-size:13.5px;color:var(--tinta2);margin:0 0 10px"><strong>Android (HONOR X8d):</strong> abre esta página en Chrome → menú ⋮ → <em>Agregar a pantalla de inicio</em>.</p>'+
+    '<p style="font-size:13.5px;color:var(--tinta2);margin:0"><strong>MacBook (Safari o Chrome):</strong> guarda el enlace en favoritos o usa <em>Archivo → Añadir al Dock</em>.</p>')+
+
+  '<p style="text-align:center;font-size:12px;color:var(--tinta3);padding:8px 0 16px">'+esc(c.nombreApp)+' · versión 1.0 · '+esc(c.marca)+'</p>'+
+  '</div>';
+}
+
+/* =========================================================
+   9. PANEL DE CONTACTO
+   ========================================================= */
+function abrirContacto(id){
+  S.contactoAbierto=id; S.pestana='datos'; pintarPanel();
+  const p=$('#panel'); p.hidden=false; requestAnimationFrame(()=>p.classList.add('on'));
+}
+function cerrarPanel(){ const p=$('#panel'); p.classList.remove('on'); setTimeout(()=>{p.hidden=true; S.contactoAbierto=null;},250); render(); }
+function pintarPanel(){
+  const c=contactoPorId(S.contactoAbierto); if(!c) return cerrarPanel();
+  const e=etapa(c.etapa);
+  let cuerpo='';
+  if(S.pestana==='datos'){
+    const campos=[['Etapa','<span class="chip" style="--et:'+esc(e.color)+'"><span class="pt"></span>'+esc(e.nombre)+'</span>'],
+      ['Teléfono', c.telefono?esc(c.telefono):'—'],['Correo', c.email?esc(c.email):'—'],
+      ['Ciudad', c.ciudad?esc(c.ciudad):'—'],['Origen', c.origen?esc(c.origen):'—'],
+      ['Etiquetas',(c.etiquetas&&c.etiquetas.length)?esc(c.etiquetas.join(', ')):'—'],
+      ['Próximo paso', c.proximo?fechaCorta(c.proximo):'—'],
+      ['Agregado', fechaCorta(String(c.creado||'').slice(0,10))],
+      ['Última actividad', hace(ultimaActividad(c))]];
+    cuerpo='<dl style="margin:0">'+campos.map(f=>'<div class="dato"><dt>'+f[0]+'</dt><dd>'+f[1]+'</dd></div>').join('')+'</dl>'+
+      (c.notas?'<div style="margin-top:14px"><div class="seccion-tit"><h2>Notas</h2></div><div class="tarjeta" style="padding:12px;white-space:pre-wrap;font-size:14px;overflow-wrap:anywhere">'+esc(c.notas)+'</div></div>':'')+
+      '<div class="acciones"><button class="btn pri" data-accion="editar-contacto" data-id="'+c.id+'">'+svg(IC.lapiz)+'Editar</button>'+
+      '<button class="btn" data-accion="mover" data-id="'+c.id+'">'+svg(IC.mover)+'Cambiar etapa</button></div>'+
+      '<div class="acciones"><button class="btn peligro bloque" data-accion="borrar-contacto" data-id="'+c.id+'">'+svg(IC.basura)+'Eliminar contacto</button></div>';
+  }else if(S.pestana==='historial'){
+    const l=interaccionesDe(c.id);
+    cuerpo='<div class="acciones" style="margin:0 0 14px"><button class="btn oro bloque" data-accion="registrar" data-id="'+c.id+'">'+svg(IC.mas)+'Registrar interacción</button></div>'+
+      (l.length? '<div class="tarjeta" style="padding:4px 14px">'+l.map(i=>
+        '<div class="hito"><div class="ic">'+svg(IC[ICO_TIPO[i.tipo]||'nota'])+'</div><div class="h-cuerpo">'+
+        '<div class="h-tit">'+esc(i.tipo)+' '+badgeRes(i.resultado)+'<span class="h-fecha">'+fechaCorta(i.fecha)+'</span></div>'+
+        (i.nota?'<div class="h-nota">'+esc(i.nota)+'</div>':'')+'</div>'+
+        '<button class="mini-btn" data-accion="borrar-interaccion" data-id="'+i.id+'" aria-label="Eliminar">'+svg(IC.basura)+'</button></div>').join('')+'</div>'
+        : '<div class="vacio"><h3>Sin historial todavía</h3><p>Cada llamada, mensaje o reunión que registres quedará aquí con su fecha y resultado.</p></div>');
+  }else{
+    const l=tareasDe(c.id);
+    cuerpo='<div class="acciones" style="margin:0 0 14px"><button class="btn oro bloque" data-accion="nueva-tarea" data-id="'+c.id+'">'+svg(IC.mas)+'Nuevo seguimiento</button></div>'+
+      (l.length? '<div class="lista">'+l.map(t=>filaTarea(t,'')).join('')+'</div>'
+        : '<div class="vacio"><h3>Sin seguimientos</h3><p>Programa el siguiente paso para no perder el contacto.</p></div>');
+  }
+  $('#panel').innerHTML=
+    '<div class="panel-cab"><div class="lin1">'+
+      '<button class="icon-btn" data-accion="cerrar-panel" aria-label="Volver">'+svg(IC.atras)+'</button>'+
+      '<h2>'+esc(c.nombre)+'</h2>'+
+      (c.telefono?'<button class="icon-btn" data-accion="wa" data-id="'+c.id+'" aria-label="WhatsApp">'+svg(IC.wa)+'</button>':'')+
+      (c.telefono?'<a class="icon-btn" href="tel:'+esc(String(c.telefono).replace(/[^\d+]/g,''))+'" aria-label="Llamar">'+svg(IC.tel)+'</a>':'')+
+    '</div>'+
+    '<div class="pestanas">'+
+      ['datos|Datos','historial|Historial','tareas|Seguimientos'].map(x=>{const[k,n]=x.split('|');
+        return '<button data-accion="pestana" data-p="'+k+'" aria-selected="'+(S.pestana===k)+'">'+n+'</button>';}).join('')+
+    '</div></div>'+
+    '<div class="panel-cuerpo"><div class="wrap">'+cuerpo+'</div></div>';
+}
+
+/* =========================================================
+   10. SHEETS (formularios)
+   ========================================================= */
+function abrirSheet(titulo, html, alMontar){
+  $('#sheetTit').textContent=titulo;
+  $('#sheetCuerpo').innerHTML=html;
+  const v=$('#velo'), s=$('#sheet');
+  v.hidden=false; s.hidden=false;
+  requestAnimationFrame(()=>{v.classList.add('on'); s.classList.add('on');});
+  if(alMontar) alMontar($('#sheetCuerpo'));
+}
+function cerrarSheet(){
+  const v=$('#velo'), s=$('#sheet');
+  v.classList.remove('on'); s.classList.remove('on');
+  setTimeout(()=>{v.hidden=true; s.hidden=true; $('#sheetCuerpo').innerHTML='';},260);
+}
+const val = id => { const el=$('#'+id); return el? el.value.trim() : ''; };
+
+function formContacto(id){
+  const c=id?contactoPorId(id):null;
+  const ops=S.cfg.etapas.map(e=>'<option value="'+e.id+'"'+((c&&c.etapa===e.id)?' selected':'')+'>'+esc(e.nombre)+'</option>').join('');
+  const org=(S.cfg.origenes||[]).map(o=>'<option value="'+esc(o)+'"'+((c&&c.origen===o)?' selected':'')+'>'+esc(o)+'</option>').join('');
+  abrirSheet(c?'Editar contacto':'Nuevo contacto',
+    '<div class="campo"><label for="fNombre">Nombre completo *</label><input id="fNombre" value="'+esc(c?c.nombre:'')+'" placeholder="Ej. Marcela Ospina"></div>'+
+    '<div class="par"><div class="campo"><label for="fTel">Teléfono / WhatsApp</label><input id="fTel" class="num" inputmode="tel" value="'+esc(c?c.telefono:'')+'" placeholder="3104457781"></div>'+
+    '<div class="campo"><label for="fCiudad">Ciudad</label><input id="fCiudad" value="'+esc(c?c.ciudad:'')+'" placeholder="Rionegro"></div></div>'+
+    '<div class="campo"><label for="fEmail">Correo</label><input id="fEmail" type="email" value="'+esc(c?c.email:'')+'" placeholder="opcional"></div>'+
+    '<div class="par"><div class="campo"><label for="fEtapa">Etapa</label><select id="fEtapa">'+ops+'</select></div>'+
+    '<div class="campo"><label for="fOrigen">Origen</label><select id="fOrigen"><option value="">—</option>'+org+'</select></div></div>'+
+    '<div class="par"><div class="campo"><label for="fEtiq">Etiquetas</label><input id="fEtiq" value="'+esc(c&&c.etiquetas?c.etiquetas.join(', '):'')+'" placeholder="líder, salud"></div>'+
+    '<div class="campo"><label for="fProx">Próximo paso (fecha)</label><input id="fProx" type="date" value="'+esc(c?c.proximo:'')+'"></div></div>'+
+    '<div class="campo"><label for="fNotas">Notas</label><textarea id="fNotas" placeholder="Qué le interesa, cómo lo conociste, acuerdos…">'+esc(c?c.notas:'')+'</textarea></div>'+
+    '<div class="acciones"><button class="btn" data-accion="cerrar-sheet">Cancelar</button>'+
+    '<button class="btn pri" data-accion="guardar-contacto" data-id="'+(c?c.id:'')+'">Guardar</button></div>',
+    ()=>{ const n=$('#fNombre'); if(n) n.focus(); });
+}
+async function guardarContacto(id){
+  const nombre=val('fNombre');
+  if(!nombre){ toast('El nombre es obligatorio'); const n=$('#fNombre'); if(n) n.focus(); return; }
+  const base=id?contactoPorId(id):null;
+  const obj=Object.assign({}, base||{}, {
+    id: id||uid(), nombre:nombre, telefono:val('fTel'), email:val('fEmail'), ciudad:val('fCiudad'),
+    origen:val('fOrigen'), etapa:val('fEtapa')||S.cfg.etapas[0].id,
+    etiquetas: val('fEtiq')? val('fEtiq').split(',').map(s=>s.trim()).filter(Boolean):[],
+    proximo:val('fProx'), notas:val('fNotas'),
+    creado: base? base.creado : new Date().toISOString(), actualizado:new Date().toISOString()
+  });
+  delete obj.ejemplo;
+  if(base){ Object.assign(base,obj); } else { S.contactos.push(obj); }
+  if(!sinDB) await guardar('contactos', base||obj);
+  if(obj.proximo && !base){
+    const t={id:uid(), contactoId:obj.id, titulo:'Siguiente paso con '+obj.nombre, fecha:obj.proximo, hecha:false, creado:new Date().toISOString()};
+    S.tareas.push(t); if(!sinDB) await guardar('tareas',t);
+  }
+  cerrarSheet(); toast(base?'Contacto actualizado':'Contacto agregado');
+  if(S.contactoAbierto) pintarPanel(); render();
+}
+
+function formInteraccion(id){
+  const c=contactoPorId(id); if(!c) return;
+  const tipos=['Llamada','WhatsApp','Mensaje','Reunión','Presentación','Nota'];
+  const res=['Positivo','Neutro','Sin respuesta','Negativo'];
+  abrirSheet('Registrar interacción · '+c.nombre,
+    '<div class="par"><div class="campo"><label for="iTipo">Tipo</label><select id="iTipo">'+tipos.map(t=>'<option>'+t+'</option>').join('')+'</select></div>'+
+    '<div class="campo"><label for="iFecha">Fecha</label><input type="date" id="iFecha" value="'+hoyISO()+'"></div></div>'+
+    '<div class="campo"><label for="iRes">Resultado</label><select id="iRes">'+res.map(t=>'<option>'+t+'</option>').join('')+'</select></div>'+
+    '<div class="campo"><label for="iNota">¿Qué pasó?</label><textarea id="iNota" placeholder="Lo que dijo, lo que quedó pendiente…"></textarea></div>'+
+    '<div class="campo"><label for="iProx">Programar siguiente seguimiento (opcional)</label><input type="date" id="iProx"></div>'+
+    '<div class="acciones"><button class="btn" data-accion="cerrar-sheet">Cancelar</button>'+
+    '<button class="btn pri" data-accion="guardar-interaccion" data-id="'+id+'">Guardar</button></div>');
+}
+async function guardarInteraccion(id){
+  const c=contactoPorId(id); if(!c) return;
+  const i={id:uid(), contactoId:id, tipo:val('iTipo'), fecha:val('iFecha')||hoyISO(),
+    resultado:val('iRes'), nota:val('iNota'), creado:new Date().toISOString()};
+  S.interacciones.push(i); if(!sinDB) await guardar('interacciones',i);
+  const prox=val('iProx');
+  if(prox){ const t={id:uid(), contactoId:id, titulo:'Seguimiento con '+c.nombre, fecha:prox, hecha:false, creado:new Date().toISOString()};
+    S.tareas.push(t); if(!sinDB) await guardar('tareas',t); }
+  cerrarSheet(); toast('Interacción registrada');
+  if(S.contactoAbierto) pintarPanel(); render();
+}
+
+function formTarea(contactoId){
+  const ops=S.contactos.slice().sort((a,b)=>String(a.nombre).localeCompare(String(b.nombre),'es'))
+    .map(c=>'<option value="'+c.id+'"'+(c.id===contactoId?' selected':'')+'>'+esc(c.nombre)+'</option>').join('');
+  abrirSheet('Nuevo seguimiento',
+    '<div class="campo"><label for="tTit">¿Qué hay que hacer? *</label><input id="tTit" placeholder="Ej. Llamar para confirmar el pedido"></div>'+
+    '<div class="par"><div class="campo"><label for="tFecha">Fecha</label><input type="date" id="tFecha" value="'+hoyISO()+'"></div>'+
+    '<div class="campo"><label for="tCont">Contacto</label><select id="tCont"><option value="">— Sin contacto —</option>'+ops+'</select></div></div>'+
+    '<div class="acciones"><button class="btn" data-accion="cerrar-sheet">Cancelar</button>'+
+    '<button class="btn pri" data-accion="guardar-tarea">Guardar</button></div>',
+    ()=>{const n=$('#tTit'); if(n) n.focus();});
+}
+async function guardarTarea(){
+  const titulo=val('tTit'); if(!titulo){ toast('Escribe qué hay que hacer'); return; }
+  const t={id:uid(), titulo:titulo, fecha:val('tFecha')||hoyISO(), contactoId:val('tCont')||null,
+    hecha:false, creado:new Date().toISOString()};
+  S.tareas.push(t); if(!sinDB) await guardar('tareas',t);
+  cerrarSheet(); toast('Seguimiento programado');
+  if(S.contactoAbierto) pintarPanel(); render();
+}
+
+function sheetMover(id){
+  const c=contactoPorId(id); if(!c) return;
+  abrirSheet('Mover a otra etapa',
+    '<p style="margin:0 0 12px;font-size:13.5px;color:var(--tinta2)">'+esc(c.nombre)+' está en <strong>'+esc(etapa(c.etapa).nombre)+'</strong>.</p>'+
+    '<div class="lista-ed">'+S.cfg.etapas.map(e=>
+      '<button class="item-ed" style="width:100%;text-align:left'+(e.id===c.etapa?';border-color:var(--linea2);background:var(--sup2)':'')+'" data-accion="set-etapa" data-id="'+id+'" data-e="'+e.id+'">'+
+      '<span class="pt" style="background:'+esc(e.color)+'"></span><span class="n">'+esc(e.nombre)+'</span>'+
+      (e.id===c.etapa?svg(IC.check,' width="16" height="16" style="color:var(--bien)"'):'')+'</button>').join('')+'</div>');
+}
+async function setEtapa(id,eid){
+  const c=contactoPorId(id); if(!c) return;
+  const ant=etapa(c.etapa).nombre;
+  c.etapa=eid; c.actualizado=new Date().toISOString(); delete c.ejemplo;
+  if(!sinDB) await guardar('contactos',c);
+  const i={id:uid(), contactoId:id, tipo:'Nota', fecha:hoyISO(), resultado:'Neutro',
+    nota:'Cambio de etapa: '+ant+' → '+etapa(eid).nombre, creado:new Date().toISOString()};
+  S.interacciones.push(i); if(!sinDB) await guardar('interacciones',i);
+  cerrarSheet(); toast('Movido a '+etapa(eid).nombre);
+  if(S.contactoAbierto) pintarPanel(); render();
+}
+
+/* ---------- WhatsApp ---------- */
+function numeroWA(tel){
+  let n=String(tel||'').replace(/[^\d]/g,'');
+  if(!n) return '';
+  const cp=String(S.cfg.codigoPais||'').replace(/\D/g,'');
+  if(String(tel).trim().startsWith('+')) return n;
+  if(cp && !n.startsWith(cp)) n=cp+n;
+  return n;
+}
+function rellenar(txt,c){
+  return String(txt||'')
+    .replace(/\{\{\s*nombre\s*\}\}/gi, String(c.nombre||'').split(' ')[0])
+    .replace(/\{\{\s*nombre_completo\s*\}\}/gi, c.nombre||'')
+    .replace(/\{\{\s*ciudad\s*\}\}/gi, c.ciudad||'tu ciudad')
+    .replace(/\{\{\s*mi_nombre\s*\}\}/gi, S.cfg.miNombre||'')
+    .replace(/\{\{\s*producto\s*\}\}/gi, S.cfg.producto||'');
+}
+function sheetWA(id){
+  const c=contactoPorId(id); if(!c) return;
+  const ps=S.cfg.plantillas||[];
+  const primera= ps.length? rellenar(ps[0].texto,c) : '';
+  abrirSheet('WhatsApp · '+c.nombre,
+    '<div class="campo"><label for="waSel">Plantilla</label><select id="waSel">'+
+      ps.map((p,i)=>'<option value="'+i+'">'+esc(p.nombre)+'</option>').join('')+
+      '<option value="-1">— Mensaje en blanco —</option></select></div>'+
+    '<div class="campo"><label for="waTxt">Mensaje (puedes editarlo)</label><textarea id="waTxt" style="min-height:150px">'+esc(primera)+'</textarea></div>'+
+    '<div class="acciones"><button class="btn oro" data-accion="abrir-wa" data-id="'+id+'">'+svg(IC.wa)+'Abrir WhatsApp</button>'+
+    '<button class="btn" data-accion="copiar-msg">'+svg(IC.copia)+'Copiar</button></div>'+
+    '<p class="ayuda" style="margin-top:10px">Se enviará al número <strong class="num">+'+esc(numeroWA(c.telefono)||'sin número')+'</strong>. Si el número no es correcto, edítalo en la ficha del contacto.</p>',
+    ()=>{
+      const sel=$('#waSel'), txt=$('#waTxt');
+      sel.addEventListener('change',()=>{ const i=Number(sel.value);
+        txt.value = i>=0 ? rellenar(ps[i].texto,c) : ''; });
+    });
+}
+function abrirWA(id){
+  const c=contactoPorId(id); if(!c) return;
+  const n=numeroWA(c.telefono);
+  const msg=$('#waTxt')? $('#waTxt').value : '';
+  if(!n){ toast('Este contacto no tiene teléfono'); return; }
+  const url='https://wa.me/'+n+(msg?'?text='+encodeURIComponent(msg):'');
+  let w=null;
+  try{ w=window.open(url,'_blank','noopener,noreferrer'); }catch(e){ w=null; }
+  if(!w){
+    copiar(url);
+    toast('Enlace copiado: pégalo en tu navegador');
+  }else{
+    cerrarSheet();
+    registrarWAAuto(c, msg);
+  }
+}
+async function registrarWAAuto(c,msg){
+  const i={id:uid(), contactoId:c.id, tipo:'WhatsApp', fecha:hoyISO(), resultado:'Neutro',
+    nota:'Mensaje enviado: '+String(msg||'').slice(0,160), creado:new Date().toISOString()};
+  S.interacciones.push(i); if(!sinDB) await guardar('interacciones',i);
+  if(S.contactoAbierto) pintarPanel(); render();
+  toast('WhatsApp abierto y registrado en el historial');
+}
+function copiar(t){
+  try{ if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t); return true; } }catch(e){}
+  try{ const ta=document.createElement('textarea'); ta.value=t; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); return true; }catch(e){ return false; }
+}
+
+/* =========================================================
+   11. AJUSTES: acciones
+   ========================================================= */
+async function guardarIdentidad(){
+  S.cfg.nombreApp=val('cfgNombreApp')||'NETWORKER CRM';
+  S.cfg.subtitulo=val('cfgSub'); S.cfg.marca=val('cfgMarca');
+  S.cfg.primario=val('cfgPri')||'#0E2A4F'; S.cfg.acento=val('cfgAce')||'#C9A227';
+  S.cfg.miNombre=val('cfgMiNombre'); S.cfg.producto=val('cfgProducto');
+  await guardarCfg(); render(); toast('Identidad actualizada');
+}
+async function guardarPrefs(){
+  S.cfg.diasFrio=Math.max(1,Number(val('cfgFrio'))||7);
+  S.cfg.codigoPais=val('cfgPais').replace(/\D/g,'')||'57';
+  S.cfg.origenes=val('cfgOrigenes').split(',').map(s=>s.trim()).filter(Boolean);
+  await guardarCfg(); render(); toast('Preferencias guardadas');
+}
+function formEtapa(id){
+  const e=id?S.cfg.etapas.find(x=>x.id===id):null;
+  abrirSheet(e?'Editar etapa':'Nueva etapa',
+    '<div class="campo"><label for="eNom">Nombre</label><input id="eNom" value="'+esc(e?e.nombre:'')+'" placeholder="Ej. Segunda cita"></div>'+
+    '<div class="par"><div class="campo"><label for="eCol">Color</label><input type="color" id="eCol" value="'+esc(e?e.color:'#2a78d6')+'"></div>'+
+    '<div class="campo"><label for="eCls">Tipo de etapa</label><select id="eCls">'+
+      [['activo','En proceso'],['ganado','Cerrado / ganado'],['perdido','Descartado']].map(x=>
+        '<option value="'+x[0]+'"'+((e&&e.clase===x[0])?' selected':'')+'>'+x[1]+'</option>').join('')+
+      '</select><div class="ayuda">Define cómo cuenta en las métricas</div></div></div>'+
+    '<div class="acciones"><button class="btn" data-accion="cerrar-sheet">Cancelar</button>'+
+    '<button class="btn pri" data-accion="guardar-etapa" data-id="'+(e?e.id:'')+'">Guardar</button></div>');
+}
+async function guardarEtapa(id){
+  const nom=val('eNom'); if(!nom){ toast('Escribe un nombre'); return; }
+  if(id){ const e=S.cfg.etapas.find(x=>x.id===id); e.nombre=nom; e.color=val('eCol'); e.clase=val('eCls'); }
+  else S.cfg.etapas.push({id:uid(), nombre:nom, color:val('eCol'), clase:val('eCls')});
+  await guardarCfg(); cerrarSheet(); render(); toast('Etapa guardada');
+}
+async function borrarEtapa(id){
+  if(S.cfg.etapas.length<=2){ toast('Debes dejar al menos dos etapas'); return; }
+  const n=S.contactos.filter(c=>c.etapa===id).length;
+  if(!confirm('¿Eliminar la etapa "'+etapa(id).nombre+'"?'+(n?' Sus '+n+' contacto(s) pasarán a "'+S.cfg.etapas[0].nombre+'".':''))) return;
+  S.cfg.etapas=S.cfg.etapas.filter(e=>e.id!==id);
+  for(const c of S.contactos){ if(c.etapa===id){ c.etapa=S.cfg.etapas[0].id; if(!sinDB) await guardar('contactos',c); } }
+  await guardarCfg(); render(); toast('Etapa eliminada');
+}
+function formPlantilla(id){
+  const p=id?S.cfg.plantillas.find(x=>x.id===id):null;
+  abrirSheet(p?'Editar plantilla':'Nueva plantilla',
+    '<div class="campo"><label for="plNom">Nombre</label><input id="plNom" value="'+esc(p?p.nombre:'')+'" placeholder="Ej. Invitación a evento"></div>'+
+    '<div class="campo"><label for="plTxt">Mensaje</label><textarea id="plTxt" style="min-height:160px" placeholder="Hola {{nombre}}…">'+esc(p?p.texto:'')+'</textarea>'+
+    '<div class="ayuda">Variables: {{nombre}}, {{ciudad}}, {{mi_nombre}}, {{producto}}</div></div>'+
+    '<div class="acciones"><button class="btn" data-accion="cerrar-sheet">Cancelar</button>'+
+    '<button class="btn pri" data-accion="guardar-plantilla" data-id="'+(p?p.id:'')+'">Guardar</button></div>');
+}
+async function guardarPlantilla(id){
+  const n=val('plNom'), t=$('#plTxt')?$('#plTxt').value:'';
+  if(!n||!t.trim()){ toast('Falta el nombre o el mensaje'); return; }
+  if(id){ const p=S.cfg.plantillas.find(x=>x.id===id); p.nombre=n; p.texto=t; }
+  else S.cfg.plantillas.push({id:uid(), nombre:n, texto:t});
+  await guardarCfg(); cerrarSheet(); render(); toast('Plantilla guardada');
+}
+
+/* ---------- PIN ---------- */
+async function hashPin(t){
+  const b=await crypto.subtle.digest('SHA-256', new TextEncoder().encode('nwk::'+t));
+  return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+function formPin(){
+  abrirSheet('Código de acceso',
+    '<div class="campo"><label for="pinA">Nuevo código (4 dígitos)</label><input id="pinA" type="password" inputmode="numeric" maxlength="4" class="num" style="letter-spacing:.5em;text-align:center;font-size:20px"></div>'+
+    '<div class="campo"><label for="pinB">Repite el código</label><input id="pinB" type="password" inputmode="numeric" maxlength="4" class="num" style="letter-spacing:.5em;text-align:center;font-size:20px"></div>'+
+    '<div class="aviso">'+svg(IC.alerta)+'<div>Si olvidas el código tendrás que borrar los datos del sitio para volver a entrar. Guarda antes una copia de seguridad.</div></div>'+
+    '<div class="acciones"><button class="btn" data-accion="cerrar-sheet">Cancelar</button>'+
+    '<button class="btn pri" data-accion="guardar-pin">Activar</button></div>',
+    ()=>{const a=$('#pinA'); if(a) a.focus();});
+}
+async function guardarPin(){
+  const a=val('pinA'), b=val('pinB');
+  if(!/^\d{4}$/.test(a)){ toast('El código debe tener 4 dígitos'); return; }
+  if(a!==b){ toast('Los códigos no coinciden'); return; }
+  S.cfg.pinHash=await hashPin(a); S.cfg.pinActivo=true;
+  await guardarCfg(); cerrarSheet(); render(); toast('Código activado');
+}
+async function quitarPin(){
+  if(!confirm('¿Desactivar el código de acceso?')) return;
+  S.cfg.pinActivo=false; S.cfg.pinHash=null; await guardarCfg(); render(); toast('Código desactivado');
+}
+
+/* =========================================================
+   12. IMPORTAR / EXPORTAR
+   ========================================================= */
+async function descargar(nombre, contenido){
+  try{
+    const dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null;
+    if(dl){ await dl.save({filename:nombre, data:contenido}); toast('Archivo guardado'); return; }
+  }catch(err){
+    if(err && err.code==='declined'){ toast('Descarga cancelada'); return; }
+    console.warn('descarga:',err);
+  }
+  try{
+    const tipo = nombre.endsWith('.csv') ? 'text/csv;charset=utf-8' : 'application/json;charset=utf-8';
+    const url = URL.createObjectURL(new Blob([contenido],{type:tipo}));
+    const a = document.createElement('a');
+    a.href=url; a.download=nombre; a.style.display='none';
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 4000);
+    toast('Descargando '+nombre);
+    return;
+  }catch(err2){ console.warn('blob:',err2); }
+  abrirSheet('Copia tu archivo',
+    '<p style="margin:0 0 10px;font-size:13.5px;color:var(--tinta2)">No se pudo descargar automáticamente. Copia este contenido y pégalo en un archivo llamado <strong>'+esc(nombre)+'</strong>.</p>'+
+    '<div class="mensaje-prev" id="expTxt">'+esc(contenido.slice(0,20000))+(contenido.length>20000?'\n…':'')+'</div>'+
+    '<div class="acciones"><button class="btn pri bloque" data-accion="copiar-export">'+svg(IC.copia)+'Copiar todo</button></div>',
+    ()=>{ $('#sheetCuerpo').dataset.texto=contenido; });
+}
+function exportarJSON(){
+  const d={app:'NETWORKER CRM', version:1, exportado:new Date().toISOString(),
+    cfg:S.cfg, contactos:S.contactos, interacciones:S.interacciones, tareas:S.tareas};
+  descargar('networker-crm-'+hoyISO()+'.json', JSON.stringify(d,null,2));
+}
+function csvEsc(v){ const s=String(v==null?'':v); return /[",;\n]/.test(s)? '"'+s.replace(/"/g,'""')+'"' : s; }
+function exportarCSV(){
+  const cab=['Nombre','Telefono','Email','Ciudad','Origen','Etapa','Etiquetas','Proximo paso','Notas','Ultima actividad','Agregado'];
+  const filas=S.contactos.map(c=>[c.nombre,c.telefono,c.email,c.ciudad,c.origen,etapa(c.etapa).nombre,
+    (c.etiquetas||[]).join(' | '),c.proximo,c.notas,ultimaActividad(c),String(c.creado||'').slice(0,10)]);
+  const txt='﻿'+[cab].concat(filas).map(f=>f.map(csvEsc).join(',')).join('\r\n');
+  descargar('contactos-'+hoyISO()+'.csv', txt);
+}
+function pedirArchivo(acepta, cb){
+  const inp=document.createElement('input'); inp.type='file'; inp.accept=acepta;
+  inp.style.position='fixed'; inp.style.opacity='0'; document.body.appendChild(inp);
+  inp.addEventListener('change',()=>{ const f=inp.files&&inp.files[0];
+    if(f){ const r=new FileReader(); r.onload=()=>{ cb(String(r.result||'')); document.body.removeChild(inp); };
+      r.onerror=()=>{ toast('No se pudo leer el archivo'); document.body.removeChild(inp); };
+      r.readAsText(f,'utf-8'); } else { document.body.removeChild(inp); } });
+  inp.click();
+}
+function importarJSON(){
+  pedirArchivo('.json,application/json', async txt=>{
+    let d; try{ d=JSON.parse(txt); }catch(e){ toast('El archivo no es un JSON válido'); return; }
+    if(!d || !Array.isArray(d.contactos)){ toast('No parece una copia de Networker CRM'); return; }
+    if(!confirm('Esto reemplazará TODOS los datos actuales por los de la copia ('+d.contactos.length+' contactos). ¿Continuar?')) return;
+    S.cfg = Object.assign({}, CFG_DEF, d.cfg||{}, {clave:'app'});
+    S.contactos=d.contactos||[]; S.interacciones=d.interacciones||[]; S.tareas=d.tareas||[];
+    if(!sinDB){
+      await vaciar('contactos'); await vaciar('interacciones'); await vaciar('tareas');
+      for(const c of S.contactos) await guardar('contactos',c);
+      for(const i of S.interacciones) await guardar('interacciones',i);
+      for(const t of S.tareas) await guardar('tareas',t);
+      await guardar('ajustes',S.cfg);
+    }
+    aplicarIdentidad(); render(); toast('Copia restaurada: '+S.contactos.length+' contactos');
+  });
+}
+function parsearCSV(txt){
+  const t=txt.replace(/^﻿/,''); const filas=[]; let f=[],campo='',dentro=false;
+  const sep = (t.split('\n')[0].split(';').length > t.split('\n')[0].split(',').length) ? ';' : ',';
+  for(let i=0;i<t.length;i++){ const ch=t[i];
+    if(dentro){ if(ch==='"'){ if(t[i+1]==='"'){campo+='"';i++;} else dentro=false; } else campo+=ch; }
+    else if(ch==='"') dentro=true;
+    else if(ch===sep){ f.push(campo); campo=''; }
+    else if(ch==='\n'){ f.push(campo); filas.push(f); f=[]; campo=''; }
+    else if(ch!=='\r') campo+=ch;
+  }
+  if(campo||f.length){ f.push(campo); filas.push(f); }
+  return filas.filter(x=>x.some(v=>String(v).trim()!==''));
+}
+function importarCSV(){
+  pedirArchivo('.csv,text/csv', txt=>{
+    const filas=parsearCSV(txt);
+    if(filas.length<2){ toast('El CSV está vacío'); return; }
+    const norm=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+    const cab=filas[0].map(norm);
+    const buscar=(...alt)=>{ for(const a of alt){ const i=cab.indexOf(a); if(i>=0) return i; } return -1; };
+    const iN=buscar('nombre','name','contacto','nombre completo','full name');
+    const iT=buscar('telefono','celular','whatsapp','movil','phone','numero','número');
+    const iE=buscar('email','correo','correo electronico','e-mail');
+    const iC=buscar('ciudad','city','municipio');
+    const iO=buscar('origen','fuente','source','procedencia');
+    const iS=buscar('etapa','stage','estado');
+    const iX=buscar('notas','nota','notes','observaciones','comentarios');
+    if(iN<0){ toast('El CSV necesita una columna "Nombre"'); return; }
+    const nuevos=[];
+    for(let r=1;r<filas.length;r++){
+      const f=filas[r]; const nom=String(f[iN]||'').trim(); if(!nom) continue;
+      let et=S.cfg.etapas[0].id;
+      if(iS>=0){ const v=norm(f[iS]); const m=S.cfg.etapas.find(e=>norm(e.nombre)===v); if(m) et=m.id; }
+      nuevos.push({id:uid(), nombre:nom,
+        telefono: iT>=0?String(f[iT]||'').trim():'', email: iE>=0?String(f[iE]||'').trim():'',
+        ciudad: iC>=0?String(f[iC]||'').trim():'', origen: iO>=0?String(f[iO]||'').trim():'',
+        etapa:et, etiquetas:[], proximo:'', notas: iX>=0?String(f[iX]||'').trim():'',
+        creado:new Date().toISOString(), actualizado:new Date().toISOString()});
+    }
+    if(!nuevos.length){ toast('No se encontraron contactos con nombre'); return; }
+    abrirSheet('Importar '+nuevos.length+' contactos',
+      '<p style="margin:0 0 12px;font-size:13.5px;color:var(--tinta2)">Se agregarán a tu lista actual (no se borra nada). Primeros registros detectados:</p>'+
+      '<div class="lista-ed">'+nuevos.slice(0,6).map(c=>'<div class="item-ed"><span class="n">'+esc(c.nombre)+'</span>'+
+        '<span style="font-size:11.5px;color:var(--tinta3)">'+esc([c.telefono,c.ciudad].filter(Boolean).join(' · ')||'—')+'</span></div>').join('')+
+      (nuevos.length>6?'<div style="font-size:12px;color:var(--tinta3);text-align:center;padding:4px">y '+(nuevos.length-6)+' más…</div>':'')+'</div>'+
+      '<div class="acciones"><button class="btn" data-accion="cerrar-sheet">Cancelar</button>'+
+      '<button class="btn pri" data-accion="confirmar-csv">Importar</button></div>',
+      ()=>{ importarCSV._pend=nuevos; });
+  });
+}
+async function confirmarCSV(){
+  const nuevos=importarCSV._pend||[];
+  S.contactos=S.contactos.concat(nuevos);
+  if(!sinDB) for(const c of nuevos) await guardar('contactos',c);
+  importarCSV._pend=null; cerrarSheet(); render(); toast(nuevos.length+' contactos importados');
+}
+async function borrarEjemplo(){
+  if(!confirm('¿Borrar los contactos de ejemplo y su historial?')) return;
+  const ids=S.contactos.filter(c=>c.ejemplo).map(c=>c.id);
+  S.contactos=S.contactos.filter(c=>!c.ejemplo);
+  S.interacciones=S.interacciones.filter(i=>!ids.includes(i.contactoId));
+  S.tareas=S.tareas.filter(t=>!ids.includes(t.contactoId));
+  if(!sinDB){ await vaciar('contactos'); await vaciar('interacciones'); await vaciar('tareas');
+    for(const c of S.contactos) await guardar('contactos',c);
+    for(const i of S.interacciones) await guardar('interacciones',i);
+    for(const t of S.tareas) await guardar('tareas',t); }
+  render(); toast('Datos de ejemplo eliminados');
+}
+async function borrarTodo(){
+  if(!confirm('Esto borra TODOS tus contactos, historial y tareas de este dispositivo. ¿Seguro?')) return;
+  if(!confirm('Última confirmación: no se puede deshacer. ¿Borrar todo?')) return;
+  S.contactos=[]; S.interacciones=[]; S.tareas=[];
+  if(!sinDB){ await vaciar('contactos'); await vaciar('interacciones'); await vaciar('tareas'); }
+  render(); toast('Todo borrado');
+}
+
+/* =========================================================
+   13. CANDADO (PIN)
+   ========================================================= */
+let pinBuf='';
+function pintarTeclado(){
+  const t=$('#teclado');
+  t.innerHTML=[1,2,3,4,5,6,7,8,9].map(n=>'<button data-k="'+n+'">'+n+'</button>').join('')+
+    '<button class="txt" data-k="clear">Borrar</button><button data-k="0">0</button><button class="txt" data-k="back">←</button>';
+}
+function pintarPuntos(){ $$('#puntos i').forEach((el,i)=> el.classList.toggle('on', i<pinBuf.length)); }
+async function teclaPin(k){
+  $('#pinErr').textContent='';
+  if(k==='clear') pinBuf='';
+  else if(k==='back') pinBuf=pinBuf.slice(0,-1);
+  else if(pinBuf.length<4) pinBuf+=k;
+  pintarPuntos();
+  if(pinBuf.length===4){
+    const h=await hashPin(pinBuf);
+    if(h===S.cfg.pinHash){ pinBuf=''; pintarPuntos(); $('#candado').hidden=true; $('#app').hidden=false; render(); }
+    else{ $('#pinErr').textContent='Código incorrecto'; pinBuf=''; setTimeout(pintarPuntos,220); }
+  }
+}
+
+/* =========================================================
+   14. EVENTOS
+   ========================================================= */
+document.addEventListener('click', async e=>{
+  const k=e.target.closest('[data-k]');
+  if(k && k.closest('#teclado')){ teclaPin(k.dataset.k); return; }
+  const b=e.target.closest('[data-accion]'); if(!b) return;
+  const a=b.dataset.accion, id=b.dataset.id;
+  switch(a){
+    case 'ir': ir(b.dataset.v); break;
+    case 'abrir': abrirContacto(id); break;
+    case 'cerrar-panel': cerrarPanel(); break;
+    case 'pestana': S.pestana=b.dataset.p; pintarPanel(); break;
+    case 'cerrar-sheet': cerrarSheet(); break;
+    case 'nuevo-contacto': formContacto(null); break;
+    case 'editar-contacto': formContacto(id); break;
+    case 'guardar-contacto': await guardarContacto(id||null); break;
+    case 'borrar-contacto': {
+      const c=contactoPorId(id); if(!c) break;
+      if(!confirm('¿Eliminar a '+c.nombre+' y todo su historial?')) break;
+      S.contactos=S.contactos.filter(x=>x.id!==id);
+      const ints=S.interacciones.filter(i=>i.contactoId===id), trs=S.tareas.filter(t=>t.contactoId===id);
+      S.interacciones=S.interacciones.filter(i=>i.contactoId!==id);
+      S.tareas=S.tareas.filter(t=>t.contactoId!==id);
+      if(!sinDB){ await borrar('contactos',id); for(const i of ints) await borrar('interacciones',i.id); for(const t of trs) await borrar('tareas',t.id); }
+      cerrarPanel(); toast('Contacto eliminado'); break; }
+    case 'registrar': formInteraccion(id); break;
+    case 'guardar-interaccion': await guardarInteraccion(id); break;
+    case 'borrar-interaccion': {
+      if(!confirm('¿Eliminar este registro del historial?')) break;
+      S.interacciones=S.interacciones.filter(i=>i.id!==id);
+      if(!sinDB) await borrar('interacciones',id);
+      pintarPanel(); render(); break; }
+    case 'nueva-tarea': formTarea(id||null); break;
+    case 'guardar-tarea': await guardarTarea(); break;
+    case 'tick': {
+      const t=S.tareas.find(x=>x.id===id); if(!t) break;
+      t.hecha=!t.hecha; if(!sinDB) await guardar('tareas',t);
+      if(S.contactoAbierto) pintarPanel(); render(); break; }
+    case 'borrar-tarea': {
+      S.tareas=S.tareas.filter(t=>t.id!==id); if(!sinDB) await borrar('tareas',id);
+      if(S.contactoAbierto) pintarPanel(); render(); toast('Tarea eliminada'); break; }
+    case 'mover': sheetMover(id); break;
+    case 'set-etapa': await setEtapa(id,b.dataset.e); break;
+    case 'wa': sheetWA(id); break;
+    case 'abrir-wa': abrirWA(id); break;
+    case 'copiar-msg': { const t=$('#waTxt'); if(t&&copiar(t.value)) toast('Mensaje copiado'); break; }
+    case 'copiar-export': { const t=$('#sheetCuerpo').dataset.texto||''; if(copiar(t)) toast('Copiado'); break; }
+    case 'filtro': S.filtroEtapa=b.dataset.e; render(); break;
+    case 'ver-frios': S.vista='contactos'; S.filtroEtapa='__frios'; S.busq=''; render(); break;
+    case 'buscar-rapido': S.vista='contactos'; render(); setTimeout(()=>{const q=$('#qBusq'); if(q) q.focus();},60); break;
+    case 'orden': S.orden = S.orden==='actividad'?'nombre':S.orden==='nombre'?'nuevos':'actividad'; render(); break;
+    case 'guardar-identidad': await guardarIdentidad(); break;
+    case 'restablecer-colores': S.cfg.primario=CFG_DEF.primario; S.cfg.acento=CFG_DEF.acento; await guardarCfg(); render(); toast('Colores restablecidos'); break;
+    case 'guardar-prefs': await guardarPrefs(); break;
+    case 'nueva-etapa': formEtapa(null); break;
+    case 'editar-etapa': formEtapa(id); break;
+    case 'guardar-etapa': await guardarEtapa(id||null); break;
+    case 'borrar-etapa': await borrarEtapa(id); break;
+    case 'nueva-plantilla': formPlantilla(null); break;
+    case 'editar-plantilla': formPlantilla(id); break;
+    case 'guardar-plantilla': await guardarPlantilla(id||null); break;
+    case 'borrar-plantilla': {
+      if(!confirm('¿Eliminar esta plantilla?')) break;
+      S.cfg.plantillas=S.cfg.plantillas.filter(p=>p.id!==id); await guardarCfg(); render(); break; }
+    case 'cambiar-pin': formPin(); break;
+    case 'guardar-pin': await guardarPin(); break;
+    case 'quitar-pin': await quitarPin(); break;
+    case 'exp-json': exportarJSON(); break;
+    case 'exp-csv': exportarCSV(); break;
+    case 'imp-json': importarJSON(); break;
+    case 'imp-csv': importarCSV(); break;
+    case 'confirmar-csv': await confirmarCSV(); break;
+    case 'borrar-ejemplo': await borrarEjemplo(); break;
+    case 'borrar-todo': await borrarTodo(); break;
+  }
+});
+document.addEventListener('input', e=>{
+  if(e.target && e.target.id==='qBusq'){
+    S.busq=e.target.value;
+    const foco=document.activeElement===e.target, pos=e.target.selectionStart;
+    render();
+    const q=$('#qBusq'); if(q&&foco){ q.focus(); try{q.setSelectionRange(pos,pos);}catch(err){} }
+  }
+});
+$('#velo').addEventListener('click', cerrarSheet);
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape'){
+    if(!$('#sheet').hidden) cerrarSheet();
+    else if(!$('#panel').hidden) cerrarPanel();
+  }
+});
+
+/* =========================================================
+   15. ARRANQUE
+   ========================================================= */
+(async function iniciar(){
+  pintarTeclado();
+  try{ await cargar(); }catch(e){ console.warn(e); }
+  if(S.cfg.pinActivo && S.cfg.pinHash){
+    $('#candado').hidden=false; $('#app').hidden=true; pintarPuntos();
+  }else{
+    $('#candado').hidden=true; $('#app').hidden=false; render();
+  }
+  if(sinDB) setTimeout(()=>toast('Aviso: este navegador no permite guardar datos. Usa otro navegador o desactiva el modo privado.'),900);
+})();
+})();
+</script>
+
+</body>
+</html>

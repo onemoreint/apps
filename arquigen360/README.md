@@ -61,3 +61,20 @@ src/
 - Render 3D con React Three Fiber a partir de `computeWalls` y el mobiliario.
 - Estilos premium, tropical, minimalista y contemporáneo.
 - Cotas editables arrastrando y unidades en pies.
+
+## Versión publicada
+
+`app/index.html` es la aplicación ya compilada en un solo archivo (no necesita
+instalar nada). Es la que abre GitHub Pages:
+https://onemoreint.github.io/apps/arquigen360/app/
+
+El `index.html` de esta carpeta es solo el punto de entrada de desarrollo
+(`npm run dev`) y no funciona abierto directamente en el navegador.
+
+Para actualizar la versión publicada después de cambiar el código:
+
+```bash
+npm install
+npx vite build --outDir dist-single
+cp dist-single/index.html app/index.html
+```

@@ -130,6 +130,7 @@ footer{margin-top:26px;font-size:12px;color:var(--ink-2);max-width:760px}
 .pt-h{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin:12px 0 2px}
 .seg button .small{display:block;font-weight:500}
 #chart svg{max-height:220px}
+a{color:var(--cell)}
 .toggle{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;margin-top:8px}
 .toggle input{width:auto}
 </style>
@@ -175,7 +176,7 @@ footer{margin-top:26px;font-size:12px;color:var(--ink-2);max-width:760px}
             <select id="method"><option value="ESTIMATE">Estimado</option><option value="DATABASE">Base de datos</option><option value="MEASURED">Medido</option></select></div>
         </div>
         <div class="row">
-          <div><label for="pw">Panel (W)</label><input id="pw" type="number" min="50" step="5" value="550"></div>
+          <div><label for="pw">Panel (W)</label><input id="pw" type="number" min="50" step="5" value="620"></div>
           <div><label for="pr">Performance ratio</label><input id="pr" type="number" min="0.5" max="1" step="0.01" value="0.80"></div>
         </div>
       </div>
@@ -184,17 +185,20 @@ footer{margin-top:26px;font-size:12px;color:var(--ink-2);max-width:760px}
         <div class="sec-t">Instalación</div>
         <div class="row">
           <div><label for="pps">Paneles por string</label><input id="pps" type="number" min="1" step="1" value="8"></div>
+          <div><label for="dcac">Relación DC/AC máx.</label><input id="dcac" type="number" min="0.8" max="2" step="0.05" value="1.2"></div>
+        </div>
+        <div class="row">
           <div><label for="km">Distancia (km)</label><input id="km" type="number" min="0" step="1" value="25"></div>
         </div>
         <div class="row">
-          <div><label for="mdc">Cable DC (m)</label><input id="mdc" type="number" min="0" step="1" value="40"></div>
-          <div><label for="mac">Cable AC (m)</label><input id="mac" type="number" min="0" step="1" value="20"></div>
+          <div><label for="mdc">Recorrido DC (m)</label><input id="mdc" type="number" min="0" step="1" value="40"></div>
+          <div><label for="mac">Recorrido AC (m)</label><input id="mac" type="number" min="0" step="1" value="20"></div>
         </div>
         <label class="toggle" for="bat"><input id="bat" type="checkbox"> Incluir baterías</label>
         <div id="batBox" hidden>
           <div class="row">
             <div><label for="aut">Autonomía (h)</label><input id="aut" type="number" min="1" step="1" value="6"></div>
-            <div><label for="bkwh">Batería (kWh c/u)</label><input id="bkwh" type="number" min="0.5" step="0.01" value="5.12"></div>
+            <div><label for="bkwh">Batería (kWh c/u)</label><input id="bkwh" type="number" min="0.5" step="0.01" value="4.8"></div>
           </div>
           <div class="row">
             <div><label for="bdod">DoD (0–1)</label><input id="bdod" type="number" min="0.1" max="1" step="0.01" value="0.9"></div>
@@ -218,21 +222,27 @@ footer{margin-top:26px;font-size:12px;color:var(--ink-2);max-width:760px}
       <div class="sec" id="veBox" hidden>
         <div class="sec-t">Conversión a bolívares</div>
         <div class="row">
-          <div><label for="bcv">Tasa BCV (Bs/USD)</label><input id="bcv" type="number" min="0" step="any" value="150"></div>
+          <div><label for="bcv">Tasa BCV (Bs/USD)</label><input id="bcv" type="number" min="0" step="any" value="857.0058"></div>
           <div><label for="sur">Recargo (Bs por USD)</label><input id="sur" type="number" min="0" step="1" value="200"></div>
         </div>
+        <div class="row">
+          <div><label for="trm">TRM (COP por USD)</label><input id="trm" type="number" min="1" step="any" value="3306.86"></div>
+          <div></div>
+        </div>
+        <p class="small" style="margin:8px 0 0">Precios en USD = lista colombiana ÷ TRM. Tasas del 28-sep-2026: TRM 3.306,86 (Banco de la República) y BCV 857,0058.</p>
       </div>
 
       <div class="sec">
         <div class="sec-t">Recuperación</div>
         <div class="row">
-          <div><label for="tar" id="tarL">Tarifa (COP/kWh)</label><input id="tar" type="number" min="0" step="any" value="900"></div>
+          <div><label for="tar" id="tarL">Tarifa (COP/kWh)</label><input id="tar" type="number" min="0" step="any" value="960"></div>
           <div><label for="esc">Alza tarifa anual (%)</label><input id="esc" type="number" step="0.5" value="0"></div>
         </div>
         <div class="row">
           <div><label for="deg">Degradación anual (%)</label><input id="deg" type="number" min="0" max="5" step="0.1" value="0.5"></div>
           <div><label for="life">Vida útil (años)</label><input id="life" type="number" min="1" max="40" step="1" value="25"></div>
         </div>
+        <p class="small" id="tarSrc" style="margin:8px 0 0">Tarifa EPM estrato 4, agosto 2026 (OPS Colombia). Ajuste según el operador y estrato del cliente.</p>
       </div>
 
       <div class="sec">
@@ -242,7 +252,7 @@ footer{margin-top:26px;font-size:12px;color:var(--ink-2);max-width:760px}
         </details>
       </div>
 
-      <p class="example">Todos los valores iniciales son de <b>ejemplo</b>: precios, tarifas y tasa BCV. Reemplácelos por su lista de precios, los datos del cliente y la tasa del día.</p>
+      <p class="example">Precios de tiendas colombianas consultados el 28-sep-2026 (con IVA cuando la tienda lo indica, por eso el impuesto está en 0 %). La mano de obra, el transporte y la ingeniería son <b>estimados</b>. Los datos del cliente son de ejemplo. Revise y ajuste antes de enviar una cotización.</p>
     </form>
 
     <div class="results">
@@ -282,6 +292,23 @@ footer{margin-top:26px;font-size:12px;color:var(--ink-2);max-width:760px}
     </div>
   </div>
 
+  <section class="panel" style="margin-top:22px">
+    <h2>Fuentes de precios (consultadas el 28-sep-2026)</h2>
+    <ul class="vars" style="line-height:1.8">
+      <li>Panel 620 W: <a href="https://autosolar.co/paneles-solares" target="_blank" rel="noopener">Autosolar · paneles</a></li>
+      <li>Inversores Growatt MIN: <a href="https://autosolar.co/inversores-on-grid/growatt" target="_blank" rel="noopener">Autosolar · on-grid Growatt</a></li>
+      <li>Batería 4,8 kWh: <a href="https://autosolar.co/baterias-de-litio-48v" target="_blank" rel="noopener">Autosolar · litio 48 V</a></li>
+      <li>Estructura KH915: <a href="https://autosolar.co/estructura-cubierta-metalica/estructura-cubierta-metalica-4-paneles-kh915" target="_blank" rel="noopener">Autosolar · cubierta metálica 4 paneles</a></li>
+      <li>Breaker DC: <a href="https://autosolar.co/breakers-dc" target="_blank" rel="noopener">Autosolar · breakers DC</a></li>
+      <li>MC4: <a href="https://www.emergente.com.co/producto/conector-mc4-para-paneles-solares-1500v-con-retie-cable-4-6mm" target="_blank" rel="noopener">Emergente · MC4</a> · DPS DC: <a href="https://www.emergente.com.co/producto/dps-3p-moreday-1000vdc-tipo-2" target="_blank" rel="noopener">Emergente · DPS</a> · Tablero: <a href="https://www.emergente.com.co/producto/caja-de-breaker-de-12-circuitos-riel-din-moreday-ip65" target="_blank" rel="noopener">Emergente · tablero IP65</a></li>
+      <li>Cable solar 6 mm²: <a href="https://www.ineldec.com.co/MCO-858515413-cable-solar-6mm-6mm2-fotovoltaico-procables-metro-_JM" target="_blank" rel="noopener">Ineldec</a> · Breaker AC: <a href="https://www.ineldec.com.co/MCO-864498419-breaker-electrico-enchufable-2x40-amp-breaker-de-luz-_JM" target="_blank" rel="noopener">Ineldec</a></li>
+      <li>Cable N°10: <a href="https://www.homecenter.com.co/homecenter-co/product/274228/cable-n10-100m-blanco-centelsa/274228/" target="_blank" rel="noopener">Homecenter</a> · Varilla de tierra: <a href="https://www.homecenter.com.co/homecenter-co/product/234576/kit-varilla-puesta-tierra-cobre-24m-x-5-8-grapa/234576/" target="_blank" rel="noopener">Homecenter</a> · Tubo EMT: <a href="https://www.easy.com.co/tubo-conduit-emt-34-pg-x-3mt/p" target="_blank" rel="noopener">Easy</a></li>
+      <li>Costo de referencia y distribución de costos, tarifa EPM: <a href="https://www.opscolombia.com/blog/cuanto-cuesta-realmente-un-sistema-solar-en-colombia" target="_blank" rel="noopener">OPS Colombia · costos</a> · <a href="https://www.opscolombia.com/tarifas-energia" target="_blank" rel="noopener">OPS Colombia · tarifas</a></li>
+      <li>TRM: <a href="https://www.noticiascaracol.com/economia/dolar-hoy-28-de-septiembre-de-2026-como-esta-la-trm-lunes-en-colombia-so35" target="_blank" rel="noopener">Noticias Caracol</a> · Tasa BCV: <a href="https://finanzasdigital.com/tasa-de-cambio-bcv-28-septiembre-2026/" target="_blank" rel="noopener">Finanzas Digital</a></li>
+    </ul>
+    <p class="small">No se encontró precio publicado para el DPS AC; agréguelo al catálogo cuando tenga el de su proveedor. Los precios de Venezuela son la lista colombiana convertida con la TRM; no incluyen fletes ni aranceles de importación.</p>
+  </section>
+
   <footer>
     Esta página ejecuta el motor de cálculo real de SOLARPRO 360 en el navegador. No guarda datos. Resultado preliminar: la validación técnica, normativa y de compatibilidad de equipos requiere revisión profesional.
   </footer>
@@ -293,72 +320,61 @@ footer{margin-top:26px;font-size:12px;color:var(--ink-2);max-width:760px}
   const E = window.SolarEngine;
   const $ = (id) => document.getElementById(id);
 
-  /* Listas de precios de EJEMPLO por país. En la plataforma salen del catálogo de cada empresa. */
-  const PRICES = {
-    CO: {
-      cur:'COP', dec:0, tar:900, locale:'es-CO',
-      materials:[
-        {id:'panel', cat:'PANELES',        name:'Panel solar',                     unit:'und', basis:'PER_PANEL',    factor:1,  cost:480000},
-        {id:'inv',   cat:'INVERSOR',       name:'Inversor (costo por kWp)',        unit:'kWp', basis:'PER_KWP',      factor:1,  cost:650000, rounding:'NONE'},
-        {id:'bat',   cat:'BATERIAS',       name:'Batería',                         unit:'und', basis:'PER_BATTERY',  factor:1,  cost:3200000},
-        {id:'kit',   cat:'ESTRUCTURA',     name:'Estructura y rieles (kit por panel)', unit:'und', basis:'PER_PANEL', factor:1, cost:90000},
-        {id:'grapa', cat:'GRAPAS',         name:'Grapas',                          unit:'und', basis:'PER_PANEL',    factor:4,  cost:4500},
-        {id:'cdc',   cat:'CABLE_DC',       name:'Cable solar DC',                  unit:'m',   basis:'PER_METER_DC', factor:1,  cost:6500},
-        {id:'cac',   cat:'CABLE_AC',       name:'Cable AC',                        unit:'m',   basis:'PER_METER_AC', factor:1,  cost:8000},
-        {id:'mc4',   cat:'CONECTORES',     name:'Conectores MC4 (par)',            unit:'par', basis:'PER_STRING',   factor:2,  cost:12000},
-        {id:'pdc',   cat:'PROTECCIONES_DC',name:'Protección DC por string',       unit:'und', basis:'PER_STRING',   factor:1,  cost:180000},
-        {id:'pac',   cat:'PROTECCIONES_AC',name:'Breaker AC',                      unit:'und', basis:'FIXED',        factor:1,  cost:150000},
-        {id:'dps',   cat:'DPS',            name:'DPS (DC y AC)',                   unit:'und', basis:'FIXED',        factor:2,  cost:220000},
-        {id:'tab',   cat:'TABLEROS',       name:'Tablero',                         unit:'und', basis:'FIXED',        factor:1,  cost:250000},
-        {id:'pat',   cat:'PUESTA_A_TIERRA',name:'Kit de puesta a tierra',          unit:'und', basis:'FIXED',        factor:1,  cost:350000},
-        {id:'tub',   cat:'CANALIZACIONES', name:'Tubería y canalización',          unit:'m',   basis:'PER_METER_AC', factor:1,  cost:9000},
-        {id:'eti',   cat:'ETIQUETADO',     name:'Etiquetado',                      unit:'glb', basis:'FIXED',        factor:1,  cost:60000}
-      ],
-      labor:[
-        {id:'lp',  name:'Instalación de paneles y estructura', unit:'UNIDAD', basis:'PER_PANEL',    factor:1, cost:60000},
-        {id:'li',  name:'Instalación de inversor',              unit:'UNIDAD', basis:'PER_INVERTER', factor:1, cost:250000},
-        {id:'lb',  name:'Instalación de baterías',              unit:'UNIDAD', basis:'PER_BATTERY',  factor:1, cost:150000},
-        {id:'ldc', name:'Cableado DC',                          unit:'METRO',  basis:'PER_METER_DC', factor:1, cost:4000},
-        {id:'lac', name:'Cableado AC',                          unit:'METRO',  basis:'PER_METER_AC', factor:1, cost:4000},
-        {id:'lt',  name:'Puesta a tierra',                      unit:'GLOBAL', basis:'FIXED',        factor:1, cost:200000},
-        {id:'lc',  name:'Configuración y puesta en marcha',     unit:'GLOBAL', basis:'FIXED',        factor:1, cost:300000}
-      ],
-      transport:{costPerKm:2500, trips:2},
-      engineering:[{id:'eng', name:'Diseño, planos y memoria de cálculo', unit:'GLOBAL', qty:1, cost:600000}],
-      others:[{id:'oth', name:'Trámites y documentación', unit:'GLOBAL', qty:1, cost:300000}]
-    },
-    VE: {
-      cur:'USD', dec:2, tar:0.05, locale:'es-VE',
-      materials:[
-        {id:'panel', cat:'PANELES',        name:'Panel solar',                     unit:'und', basis:'PER_PANEL',    factor:1,  cost:95},
-        {id:'inv',   cat:'INVERSOR',       name:'Inversor (costo por kWp)',        unit:'kWp', basis:'PER_KWP',      factor:1,  cost:130, rounding:'NONE'},
-        {id:'bat',   cat:'BATERIAS',       name:'Batería',                         unit:'und', basis:'PER_BATTERY',  factor:1,  cost:1100},
-        {id:'kit',   cat:'ESTRUCTURA',     name:'Estructura y rieles (kit por panel)', unit:'und', basis:'PER_PANEL', factor:1, cost:18},
-        {id:'grapa', cat:'GRAPAS',         name:'Grapas',                          unit:'und', basis:'PER_PANEL',    factor:4,  cost:1},
-        {id:'cdc',   cat:'CABLE_DC',       name:'Cable solar DC',                  unit:'m',   basis:'PER_METER_DC', factor:1,  cost:1.2},
-        {id:'cac',   cat:'CABLE_AC',       name:'Cable AC',                        unit:'m',   basis:'PER_METER_AC', factor:1,  cost:1.5},
-        {id:'mc4',   cat:'CONECTORES',     name:'Conectores MC4 (par)',            unit:'par', basis:'PER_STRING',   factor:2,  cost:2.5},
-        {id:'pdc',   cat:'PROTECCIONES_DC',name:'Protección DC por string',       unit:'und', basis:'PER_STRING',   factor:1,  cost:35},
-        {id:'pac',   cat:'PROTECCIONES_AC',name:'Breaker AC',                      unit:'und', basis:'FIXED',        factor:1,  cost:30},
-        {id:'dps',   cat:'DPS',            name:'DPS (DC y AC)',                   unit:'und', basis:'FIXED',        factor:2,  cost:45},
-        {id:'tab',   cat:'TABLEROS',       name:'Tablero',                         unit:'und', basis:'FIXED',        factor:1,  cost:50},
-        {id:'pat',   cat:'PUESTA_A_TIERRA',name:'Kit de puesta a tierra',          unit:'und', basis:'FIXED',        factor:1,  cost:70},
-        {id:'tub',   cat:'CANALIZACIONES', name:'Tubería y canalización',          unit:'m',   basis:'PER_METER_AC', factor:1,  cost:1.8},
-        {id:'eti',   cat:'ETIQUETADO',     name:'Etiquetado',                      unit:'glb', basis:'FIXED',        factor:1,  cost:12}
-      ],
-      labor:[
-        {id:'lp',  name:'Instalación de paneles y estructura', unit:'UNIDAD', basis:'PER_PANEL',    factor:1, cost:12},
-        {id:'li',  name:'Instalación de inversor',              unit:'UNIDAD', basis:'PER_INVERTER', factor:1, cost:50},
-        {id:'lb',  name:'Instalación de baterías',              unit:'UNIDAD', basis:'PER_BATTERY',  factor:1, cost:30},
-        {id:'ldc', name:'Cableado DC',                          unit:'METRO',  basis:'PER_METER_DC', factor:1, cost:0.8},
-        {id:'lac', name:'Cableado AC',                          unit:'METRO',  basis:'PER_METER_AC', factor:1, cost:0.8},
-        {id:'lt',  name:'Puesta a tierra',                      unit:'GLOBAL', basis:'FIXED',        factor:1, cost:40},
-        {id:'lc',  name:'Configuración y puesta en marcha',     unit:'GLOBAL', basis:'FIXED',        factor:1, cost:60}
-      ],
-      transport:{costPerKm:0.6, trips:2},
-      engineering:[{id:'eng', name:'Diseño, planos y memoria de cálculo', unit:'GLOBAL', qty:1, cost:150}],
-      others:[{id:'oth', name:'Trámites y documentación', unit:'GLOBAL', qty:1, cost:60}]
-    }
+  /* Lista de precios de Colombia investigada el 28-sep-2026 (precios de tienda, IVA incluido cuando la tienda lo indica).
+     Venezuela: la misma lista convertida a USD con la TRM del día. En la plataforma, cada empresa carga su propio catálogo. */
+  const SRC={
+    AUTO:'Autosolar Colombia', EMER:'Emergente', INEL:'Ineldec', HOME:'Homecenter', EASY:'Easy', OPS:'OPS Colombia',
+    EST:'Estimado sin fuente directa'
+  };
+  const CO={
+    materials:[
+      {id:'panel', cat:'PANELES',        name:'Panel bifacial 620 W N-Type Tensite', unit:'und', basis:'PER_PANEL',    factor:1, cost:558000, src:'AUTO'},
+      {id:'bat',   cat:'BATERIAS',       name:'Batería litio Tensite TS-L5000/LV 4,8 kWh', unit:'und', basis:'PER_BATTERY', factor:1, cost:5052690, src:'AUTO'},
+      {id:'kit',   cat:'ESTRUCTURA',     name:'Estructura cubierta metálica (rieles y grapas incluidos)', unit:'und', basis:'PER_PANEL', factor:1, cost:98442, src:'AUTO', note:'KH915 para 4 paneles: $393.769 ÷ 4'},
+      {id:'cdc',   cat:'CABLE_DC',       name:'Cable solar 6 mm² (2 conductores por metro de recorrido)', unit:'m', basis:'PER_METER_DC', factor:2, cost:8500, src:'INEL'},
+      {id:'cac',   cat:'CABLE_AC',       name:'Cable N°10 AWG Centelsa (3 conductores por metro de recorrido)', unit:'m', basis:'PER_METER_AC', factor:3, cost:4099, src:'HOME', note:'Rollo 100 m $409.900'},
+      {id:'mc4',   cat:'CONECTORES',     name:'Conectores MC4 1500 V (par)', unit:'par', basis:'PER_STRING', factor:2, cost:5760, src:'EMER'},
+      {id:'pdc',   cat:'PROTECCIONES_DC',name:'Breaker DC 2×16 A 800 V Suntree (por string)', unit:'und', basis:'PER_STRING', factor:1, cost:103229, src:'AUTO'},
+      {id:'dps',   cat:'DPS',            name:'DPS DC 1000 V tipo 2 Moreday', unit:'und', basis:'FIXED', factor:1, cost:145920, src:'EMER'},
+      {id:'pac',   cat:'PROTECCIONES_AC',name:'Breaker AC enchufable 2×40 A', unit:'und', basis:'FIXED', factor:1, cost:35000, src:'INEL'},
+      {id:'tab',   cat:'TABLEROS',       name:'Tablero 12 puestos riel DIN IP65 Moreday', unit:'und', basis:'FIXED', factor:1, cost:140160, src:'EMER'},
+      {id:'pat',   cat:'PUESTA_A_TIERRA',name:'Kit varilla de cobre 2,4 m × 5/8 con grapa', unit:'und', basis:'FIXED', factor:1, cost:179900, src:'HOME'},
+      {id:'tub',   cat:'CANALIZACIONES', name:'Tubo EMT 3/4" (por metro de recorrido AC)', unit:'m', basis:'PER_METER_AC', factor:1, cost:12530, src:'EASY', note:'Tubo de 3 m $37.590'},
+      {id:'eti',   cat:'ETIQUETADO',     name:'Etiquetado y señalización', unit:'glb', basis:'FIXED', factor:1, cost:60000, src:'EST'}
+    ],
+    inverters:[
+      {id:'i25', name:'Inversor on-grid Growatt MIN 2500TL-X2', kw:2.5, cost:2295095, src:'AUTO'},
+      {id:'i42', name:'Inversor on-grid Growatt MIN 4200TL-X2', kw:4.2, cost:2166892, src:'AUTO'},
+      {id:'i60', name:'Inversor on-grid Growatt MIN 6000TL-X2', kw:6,   cost:2230769, src:'AUTO'},
+      {id:'i100',name:'Inversor on-grid Growatt MIN 10000TL-X2',kw:10,  cost:3916831, src:'AUTO'}
+    ],
+    labor:[
+      {id:'lp',  name:'Instalación de paneles y estructura', unit:'UNIDAD', basis:'PER_PANEL',    factor:1, cost:120000, src:'EST'},
+      {id:'li',  name:'Instalación de inversor',              unit:'UNIDAD', basis:'PER_INVERTER', factor:1, cost:350000, src:'EST'},
+      {id:'lb',  name:'Instalación de baterías',              unit:'UNIDAD', basis:'PER_BATTERY',  factor:1, cost:150000, src:'EST'},
+      {id:'ldc', name:'Cableado DC (por metro de recorrido)', unit:'METRO',  basis:'PER_METER_DC', factor:1, cost:6000,   src:'EST'},
+      {id:'lac', name:'Cableado AC (por metro de recorrido)', unit:'METRO',  basis:'PER_METER_AC', factor:1, cost:6000,   src:'EST'},
+      {id:'lt',  name:'Puesta a tierra',                      unit:'GLOBAL', basis:'FIXED',        factor:1, cost:250000, src:'EST'},
+      {id:'lc',  name:'Configuración y puesta en marcha',     unit:'GLOBAL', basis:'FIXED',        factor:1, cost:400000, src:'EST'}
+    ],
+    transport:{costPerKm:2500, trips:2, src:'EST'},
+    engineering:[{id:'eng', name:'Diseño, planos y memoria de cálculo', unit:'GLOBAL', qty:1, cost:800000, src:'EST'}],
+    others:[{id:'oth', name:'Legalización con el operador de red y certificación RETIE', unit:'GLOBAL', qty:1, cost:1200000, src:'OPS', note:'OPS Colombia: trámites y certificación = 5–10 % del proyecto'}]
+  };
+  /* TRM 28-sep-2026 y tasa BCV 28-sep-2026 */
+  const TRM_DEFAULT=3306.86, BCV_DEFAULT=857.0058;
+  function toUsd(list,trm){ return list.map(x=>({...x,cost:Math.round(x.cost/trm*100)/100})); }
+  function buildVE(trm){
+    return {
+      cur:'USD', dec:2, tar:0.05, tarSrc:'EST', locale:'es-VE',
+      materials:toUsd(CO.materials,trm), inverters:toUsd(CO.inverters,trm), labor:toUsd(CO.labor,trm),
+      transport:{...CO.transport,costPerKm:Math.round(CO.transport.costPerKm/trm*100)/100},
+      engineering:toUsd(CO.engineering,trm), others:toUsd(CO.others,trm)
+    };
+  }
+  const PRICES={
+    CO:{cur:'COP', dec:0, tar:960, tarSrc:'OPS', locale:'es-CO', ...JSON.parse(JSON.stringify(CO))},
+    VE:buildVE(TRM_DEFAULT)
   };
   const CAT_LABEL={MATERIALES:'Materiales',MANO_DE_OBRA:'Mano de obra',TRANSPORTE:'Transporte',INGENIERIA:'Ingeniería',COSTOS_INDIRECTOS:'Costos indirectos',OTROS:'Otros'};
   const CATS=Object.keys(CAT_LABEL);
@@ -388,17 +404,20 @@ footer{margin-top:26px;font-size:12px;color:var(--ink-2);max-width:760px}
     const row=(grp,it,unitTxt)=>`<tr><td>${esc(it.name)}<span class="u">${esc(unitTxt)}</span></td>
       <td style="text-align:right"><input type="number" min="0" step="any" id="pr_${grp}_${it.id}" data-grp="${grp}" data-id="${it.id}" value="${it.cost}" aria-label="Precio ${esc(it.name)}"></td></tr>`;
     const perTxt={PER_PANEL:'por panel',PER_STRING:'por string',PER_INVERTER:'por inversor',PER_BATTERY:'por batería',PER_KWP:'por kWp',PER_METER_DC:'por metro DC',PER_METER_AC:'por metro AC',FIXED:'global'};
+    const src=(it)=>it.src?` · ${SRC[it.src]}${it.note?' ('+it.note+')':''}`:'';
     let h=`<p class="pt-h">Materiales · ${p.cur}</p><table class="pt">`;
-    p.materials.forEach(m=>{h+=row('materials',m,`${m.factor>1?m.factor+' ':''}${m.unit} ${perTxt[m.basis]} · precio por ${m.unit}`);});
+    p.materials.forEach(m=>{h+=row('materials',m,`${m.factor>1?m.factor+' ':''}${m.unit} ${perTxt[m.basis]}${src(m)}`);});
+    h+=`</table><p class="pt-h">Inversores · ${p.cur}</p><table class="pt">`;
+    p.inverters.forEach(i=>{h+=row('inverters',i,`${i.kw} kW${src(i)}`);});
     h+=`</table><p class="pt-h">Mano de obra · ${p.cur}</p><table class="pt">`;
-    p.labor.forEach(l=>{h+=row('labor',l,`${l.unit.toLowerCase()} · ${perTxt[l.basis]}`);});
+    p.labor.forEach(l=>{h+=row('labor',l,`${l.unit.toLowerCase()} · ${perTxt[l.basis]}${src(l)}`);});
     h+=`</table><p class="pt-h">Transporte, ingeniería y otros · ${p.cur}</p><table class="pt">`;
-    h+=row('transport',{id:'km',name:`Transporte (${p.transport.trips} viajes)`,cost:p.transport.costPerKm},'por km');
-    p.engineering.forEach(e=>{h+=row('engineering',e,'global');});
-    p.others.forEach(o=>{h+=row('others',o,'global');});
+    h+=row('transport',{id:'km',name:`Transporte (${p.transport.trips} viajes)`,cost:p.transport.costPerKm},'por km'+src(p.transport));
+    p.engineering.forEach(e=>{h+=row('engineering',e,'global'+src(e));});
+    p.others.forEach(o=>{h+=row('others',o,'global'+src(o));});
     h+='</table>';
     $('prices').innerHTML=h;
-    $('pricesS').textContent=`Precios y tarifas de ejemplo (${p.cur}) · editar`;
+    $('pricesS').textContent=`Precios y tarifas (${p.cur}) · ver fuentes y editar`;
     $('prices').querySelectorAll('input').forEach(inp=>inp.addEventListener('input',()=>{
       const v=parseFloat(inp.value); if(!isFinite(v)||v<0) return;
       const g=inp.dataset.grp, id=inp.dataset.id;
@@ -413,6 +432,7 @@ footer{margin-top:26px;font-size:12px;color:var(--ink-2);max-width:760px}
     $('cVE').setAttribute('aria-pressed',c==='VE');
     $('veBox').hidden = c!=='VE';
     $('tar').value=P().tar;
+    $('tarSrc').textContent = c==='CO' ? 'Tarifa EPM estrato 4, agosto 2026 (OPS Colombia). Ajuste según el operador y estrato del cliente.' : 'Tarifa de ejemplo en USD/kWh: ingrese la del cliente.';
     $('tarL').textContent=`Tarifa (${P().cur}/kWh)`;
     renderPrices();
     run();
@@ -447,17 +467,20 @@ footer{margin-top:26px;font-size:12px;color:var(--ink-2);max-width:760px}
     let batteries=0, batt=null;
     if($('bat').checked){
       batt=E.sizeBatteryBank({backedDailyKwh:dailyKwh,autonomyHours:num('aut'),
-        battery:{capacityKwh:num('bkwh'),nominalVoltageV:51.2,depthOfDischarge:num('bdod'),roundTripEfficiency:num('beff')}});
+        battery:{capacityKwh:num('bkwh'),nominalVoltageV:48,depthOfDischarge:num('bdod'),roundTripEfficiency:num('beff')}});
       batteries=batt.value.batteryCount;
     }
     const ctx={panels:v.panelCount,strings:Math.ceil(v.panelCount/Math.max(1,Math.round(num('pps')))),inverters:1,
       batteries,installedKwp:v.installedKwp,dcCableMeters:num('mdc'),acCableMeters:num('mac')};
-    const panelName=`Panel solar ${num('pw')} W`;
+    const ratio=num('dcac'), needKw=v.installedKwp/ratio;
+    const inv=[...p.inverters].sort((a,b)=>a.kw-b.kw).find(i=>i.kw>=needKw-1e-9);
+    const panelName=num('pw')===620?p.materials.find(m=>m.id==='panel').name:`Panel solar ${num('pw')} W (precio de referencia del panel de 620 W)`;
     const q=E.buildQuote({
       context:ctx,
       bomRules:p.materials.filter(m=>m.basis!=='PER_BATTERY'||batteries>0).map(m=>({id:m.id,category:m.cat,productId:m.id,
-        productName:m.id==='panel'?panelName:m.id==='bat'?`Batería ${num('bkwh')} kWh`:m.name,unit:m.unit,basis:m.basis,factor:m.factor,rounding:m.rounding})),
-      prices:Object.fromEntries(p.materials.map(m=>[m.id,{unitCost:m.cost,currency:p.cur}])),
+        productName:m.id==='panel'?panelName:m.name,unit:m.unit,basis:m.basis,factor:m.factor,rounding:m.rounding}))
+        .flatMap(r=>r.id==='panel'&&inv?[r,{id:'inv',category:'INVERSOR',productId:'inv',productName:`${inv.name} (${inv.kw} kW)`,unit:'und',basis:'PER_INVERTER',factor:1}]:[r]),
+      prices:{...Object.fromEntries(p.materials.map(m=>[m.id,{unitCost:m.cost,currency:p.cur}])),...(inv?{inv:{unitCost:inv.cost,currency:p.cur}}:{})},
       labor:p.labor.filter(l=>l.basis!=='PER_BATTERY'||batteries>0).map(l=>({id:l.id,description:l.name,unit:l.unit,basis:l.basis,factor:l.factor,unitCost:l.cost})),
       transport:{km:num('km'),costPerKm:p.transport.costPerKm,trips:p.transport.trips},
       engineering:p.engineering.map(e=>({description:e.name,quantity:e.qty,unit:e.unit,unitCost:e.cost})),
@@ -466,7 +489,10 @@ footer{margin-top:26px;font-size:12px;color:var(--ink-2);max-width:760px}
       currency:p.cur,currencyDecimals:p.dec,margin:num('mg')/100,marginMode:'MARKUP',
       taxes:num('tax')>0?[{code:'IMP',name:'Impuesto',rate:num('tax')/100}]:[]
     });
-    return {q,batt,ctx};
+    const extra=[];
+    if(!inv) extra.push({code:'NO_INVERTER',status:'ERROR',message:`Ningún inversor de la lista cubre ${fmt(needKw,2)} kW (kWp ÷ relación DC/AC). Agregue un inversor más grande.`});
+    else extra.push({code:'INV_OK',status:'OK',message:''});
+    return {q,batt,ctx,inv,extra,ratioReal: inv? v.installedKwp/inv.kw : null};
   }
 
   function run(){
@@ -493,9 +519,9 @@ footer{margin-top:26px;font-size:12px;color:var(--ink-2);max-width:760px}
       tr.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick();}});
     });
 
-    const {s,q,batt,ctx}=priced.find(x=>x.s.code===selected);
+    const {s,q,batt,ctx,inv,extra,ratioReal}=priced.find(x=>x.s.code===selected);
     const qv=q.value, pv=qv.pricing;
-    all.push(...s.sizing.validations, ...q.validations, ...(batt?batt.validations:[]));
+    all.push(...s.sizing.validations, ...q.validations, ...(batt?batt.validations:[]), ...extra);
 
     /* Barras por categoría */
     const tot=pv.costo_total||1;
@@ -529,7 +555,7 @@ footer{margin-top:26px;font-size:12px;color:var(--ink-2);max-width:760px}
       }catch(e){ all.push({code:'FX',status:'REVIEW_REQUIRED',message:'Ingrese la tasa BCV del día para calcular el precio final en bolívares.'}); }
     }
     $('bd').tBodies[0].innerHTML=rows;
-    $('qHint').textContent=`${s.label} · ${ctx.panels} paneles en ${ctx.strings} string(s) · ${fmt(ctx.installedKwp,2)} kWp${ctx.batteries?` · ${ctx.batteries} batería(s)`:''}`;
+    $('qHint').textContent=`${s.label} · ${ctx.panels} paneles en ${ctx.strings} string(s) · ${fmt(ctx.installedKwp,2)} kWp${inv?` · inversor ${inv.kw} kW (DC/AC ${fmt(ratioReal,2)})`:''}${ctx.batteries?` · ${ctx.batteries} batería(s)`:''}`;
 
     /* Recuperación */
     let roi=null;
@@ -565,6 +591,7 @@ footer{margin-top:26px;font-size:12px;color:var(--ink-2);max-width:760px}
   $('cCO').addEventListener('click',()=>setCountry('CO'));
   $('cVE').addEventListener('click',()=>setCountry('VE'));
   $('bat').addEventListener('change',()=>{$('batBox').hidden=!$('bat').checked;});
+  $('trm').addEventListener('change',()=>{ const t=num('trm'); if(t>0){ PRICES.VE=buildVE(t); if(country==='VE') renderPrices(); run(); } });
   $('f').addEventListener('input',e=>{ if(!e.target.dataset.grp) run(); });
   $('f').addEventListener('submit',e=>e.preventDefault());
   renderPrices();

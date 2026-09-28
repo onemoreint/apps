@@ -1,0 +1,33 @@
+name: NETWORKER OS · calidad
+
+# Solo verifica. La app publicada es networker-os/app/index.html (GitHub Pages desde la rama).
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'networker-os/**'
+      - '.github/workflows/networker-os-ci.yml'
+  pull_request:
+    paths:
+      - 'networker-os/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: networker-os
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: networker-os/package-lock.json
+      - run: npm ci
+      - name: Tipos, pruebas, build y verificación del bundle
+        run: npm run check

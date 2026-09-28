@@ -89,7 +89,14 @@ export function registerCoreRoutes(app: FastifyInstance, db: Database): void {
       // Entra explícitamente a la empresa recién creada para crear su configuración inicial
       // (las políticas RLS de configuración exigen empresa activa).
       await tx.execute(sql`SELECT set_config('app.company_id', ${c!.id}, true)`);
-      await tx.insert(companySettings).values({ companyId: c!.id, currencyCode: country.defaultCurrencyCode });
+      await tx.insert(companySettings).values({
+        companyId: c!.id,
+        // Moneda de cotización y conversión local por defecto del país (VE: USD → Bs a tasa BCV + recargo).
+        currencyCode: country.defaultCurrencyCode,
+        localCurrencyCode: country.localCurrencyCode,
+        fxRateSource: country.fxRateSource,
+        fxSurchargePerUnit: country.defaultFxSurcharge,
+      });
       if (body.adminUserId) {
         await tx.insert(companyMemberships).values({ companyId: c!.id, userId: body.adminUserId, roleCode: 'ADMIN_EMPRESA' });
       }

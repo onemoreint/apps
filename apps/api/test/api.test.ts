@@ -224,6 +224,52 @@ describe('endpoints del motor de cálculo', () => {
   });
 });
 
+describe('reglas de moneda', () => {
+  const quote = { totalCost: 1000, margin: 0.3, marginMode: 'MARKUP', taxes: [] };
+
+  it('Colombia: la moneda y los decimales salen de la empresa (COP, entero), no del cliente', async () => {
+    const r = await call('POST', '/api/pricing/quote', A.users.ADMIN_EMPRESA!, A.companyId, {
+      ...quote, totalCost: 1000000.4, currency: 'USD', currencyDecimals: 2,
+    });
+    expect(r.json().value.currency).toBe('COP');
+    expect(r.json().value.rounded.precio_final).toBe(1300001);
+    expect(r.json().local).toBeUndefined();
+  });
+
+  it('Venezuela sin tasa BCV registrada: pide revisión y no inventa el precio en Bs', async () => {
+    const r = await call('POST', '/api/pricing/quote', B.users.ADMIN_EMPRESA!, B.companyId, quote);
+    expect(r.statusCode).toBe(200);
+    expect(r.json().value.currency).toBe('USD');
+    expect(r.json().local).toBeNull();
+    expect(r.json().status).toBe('REVIEW_REQUIRED');
+  });
+
+  it('solo administradores registran la tasa del día', async () => {
+    const rate = { baseCurrency: 'USD', quoteCurrency: 'VES', rate: 150, source: 'BCV', rateDate: '2026-09-28' };
+    expect((await call('POST', '/api/exchange-rates', A.users.VENDEDOR!, A.companyId, rate)).statusCode).toBe(403);
+    expect((await call('POST', '/api/exchange-rates', B.users.ADMIN_EMPRESA!, B.companyId, { ...rate, global: true })).statusCode).toBe(403);
+    expect((await call('POST', '/api/exchange-rates', B.users.ADMIN_EMPRESA!, B.companyId, rate)).statusCode).toBe(201);
+  });
+
+  it('Venezuela: precio final en Bs = precio USD × (tasa BCV + 200)', async () => {
+    const r = await call('POST', '/api/pricing/quote', B.users.ADMIN_EMPRESA!, B.companyId, { ...quote, quoteDate: '2026-09-28' });
+    const b = r.json();
+    expect(b.value.precio_final).toBe(1300); // USD
+    expect(b.local.value.appliedRate).toBe(350); // 150 BCV (fixture) + 200
+    expect(b.local.value.localAmount).toBe(455000); // 1300 × 350
+    expect(b.local.value.currency).toBe('VES');
+    expect(b.local.rateScope).toBe('EMPRESA');
+    expect(b.status).toBe('REVIEW_REQUIRED'); // sin impuestos configurados; la conversión en sí está OK
+    expect(b.validations.map((v: { code: string }) => v.code)).not.toContain('FX_RATE_NOT_SAME_DAY');
+  });
+
+  it('empresa nueva de Venezuela hereda USD → Bs, BCV y recargo 200', async () => {
+    const created = await call('POST', '/api/companies', root, null, { countryCode: 'VE', legalName: 'Otra VE CA', taxId: 'J-12121212-1' });
+    const r = await call('GET', '/api/currency-settings', root, created.json().id);
+    expect(r.json()).toMatchObject({ currency: 'USD', decimals: 2, local: { currency: 'VES', source: 'BCV', surchargePerUnit: 200 } });
+  });
+});
+
 describe('rate limiting', () => {
   it('limita solicitudes excesivas', async () => {
     const extra = createDb(tdb.appUrl, { max: 1 });

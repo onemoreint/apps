@@ -16,3 +16,4 @@ export * from './costs/index.js';
 export * from './pricing/index.js';
 export * from './roi/index.js';
 export * from './environmental/index.js';
+export * from './currency/index.js';

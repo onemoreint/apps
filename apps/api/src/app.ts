@@ -9,6 +9,7 @@ import { authenticate, HttpError } from './auth/guard.js';
 import type { TokenVerifier } from './auth/token.js';
 import { registerCoreRoutes } from './modules/core.routes.js';
 import { registerCalculationRoutes } from './modules/calculations.routes.js';
+import { registerCurrencyRoutes } from './modules/currency.routes.js';
 
 export interface AppOptions {
   db: Database;
@@ -81,7 +82,8 @@ export async function buildApp(opts: AppOptions): Promise<FastifyInstance> {
   app.get('/api/health', async () => ({ status: 'ok', service: 'solarpro360-api' }));
 
   registerCoreRoutes(app, opts.db);
-  registerCalculationRoutes(app);
+  registerCalculationRoutes(app, opts.db);
+  registerCurrencyRoutes(app, opts.db);
 
   return app;
 }

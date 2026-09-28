@@ -42,6 +42,9 @@ export const countries = pgTable('countries', {
   taxIdLabel: text('tax_id_label').notNull(),
   defaultCurrencyCode: char('default_currency_code', { length: 3 }).notNull(),
   regionLabel: text('region_label'),
+  localCurrencyCode: char('local_currency_code', { length: 3 }),
+  fxRateSource: text('fx_rate_source'),
+  defaultFxSurcharge: numeric('default_fx_surcharge'),
   companyRequiredFields: jsonb('company_required_fields').$type<string[]>().notNull(),
   active: boolean('active').notNull().default(true),
 });
@@ -142,6 +145,9 @@ export const companySettings = pgTable('company_settings', {
   termsAndConditions: text('terms_and_conditions'),
   consumptionMismatchThreshold: numeric('consumption_mismatch_threshold'),
   defaultPerformanceRatio: numeric('default_performance_ratio'),
+  localCurrencyCode: char('local_currency_code', { length: 3 }),
+  fxRateSource: text('fx_rate_source'),
+  fxSurchargePerUnit: numeric('fx_surcharge_per_unit'),
   updatedAt: updated(),
   rowVersion: rowVersion(),
 });
@@ -569,6 +575,13 @@ export const budgets = pgTable('budgets', {
   isPreliminary: boolean('is_preliminary').notNull().default(true),
   status: text('status').notNull().default('BORRADOR'),
   issuedAt: ts('issued_at'),
+  localCurrencyCode: char('local_currency_code', { length: 3 }),
+  fxRateOfficial: numeric('fx_rate_official'),
+  fxSurcharge: numeric('fx_surcharge'),
+  fxRateApplied: numeric('fx_rate_applied'),
+  fxRateDate: date('fx_rate_date'),
+  fxSource: text('fx_source'),
+  finalPriceLocal: numeric('final_price_local'),
   createdBy: uuid('created_by'),
   createdAt: created(),
   updatedAt: updated(),
@@ -618,6 +631,20 @@ export const proposalVersions = pgTable('proposal_versions', {
   isPreliminary: boolean('is_preliminary').notNull(),
   pdfPath: text('pdf_path'),
   createdBy: uuid('created_by').notNull(),
+  createdAt: created(),
+});
+
+/* ───────────── Tasas de cambio ───────────── */
+
+export const exchangeRates = pgTable('exchange_rates', {
+  id: pk(),
+  companyId: uuid('company_id'),
+  baseCurrency: char('base_currency', { length: 3 }).notNull(),
+  quoteCurrency: char('quote_currency', { length: 3 }).notNull(),
+  rate: numeric('rate').notNull(),
+  source: text('source').notNull(),
+  rateDate: date('rate_date').notNull(),
+  createdBy: uuid('created_by'),
   createdAt: created(),
 });
 

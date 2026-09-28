@@ -17,6 +17,7 @@ import {
   computeCosts,
   computePrice,
   computeRoi,
+  convertToLocal,
   consumptionStats,
   generateBom,
   kwhToAh,
@@ -412,5 +413,52 @@ describe('CO₂ evitado', () => {
     const missing = co2Avoided(1000, null);
     expect(missing.value.annualKgCo2).toBeNull();
     expect(missing.validations[0]!.message).toContain('No hay información suficiente para determinar este valor');
+  });
+});
+
+/* ─────────────────────────── Moneda local (Venezuela) ─────────────────────────── */
+
+
+describe('conversión USD → Bs con tasa BCV + recargo', () => {
+  const base = {
+    fromCurrency: 'USD',
+    toCurrency: 'VES',
+    rateSource: 'BCV',
+    rateDate: '2026-09-28',
+    surchargePerUnit: 200,
+    toDecimals: 2,
+  };
+
+  it('precio final Bs = USD × (tasa BCV + 200)', () => {
+    // Tasa de prueba (fixture, no es la tasa real): 150 Bs/USD → aplicada 350
+    const r = convertToLocal({ ...base, amount: 1547.5, officialRate: 150 });
+    expect(r.value.appliedRate).toBe(350);
+    expect(r.value.localAmount).toBe(541625); // 1547.5 × 350
+    expect(r.value.currency).toBe('VES');
+    expect(r.assumptions.join(' ')).toContain('BCV');
+  });
+
+  it('redondea a los decimales del bolívar solo al final', () => {
+    const r = convertToLocal({ ...base, amount: 0.333, officialRate: 100.005 });
+    // 0.333 × 300.005 = 99.901665 → 99.90
+    expect(r.value.localAmount).toBeCloseTo(99.901665, 10);
+    expect(r.value.localAmountRounded).toBe(99.9);
+  });
+
+  it('advierte si la tasa no es del día de la cotización', () => {
+    const r = convertToLocal({ ...base, amount: 10, officialRate: 150, quoteDate: '2026-09-29' });
+    expect(r.validations[0]!.code).toBe('FX_RATE_NOT_SAME_DAY');
+  });
+
+  it('rechaza tasa ausente o cero', () => {
+    expect(() => convertToLocal({ ...base, amount: 10, officialRate: 0 })).toThrow(InputError);
+  });
+});
+
+describe('Colombia sin decimales', () => {
+  it('precio final en COP se redondea a entero', () => {
+    const r = computePrice({ totalCost: 1_000_000.4, margin: 0.3, marginMode: 'MARKUP', taxes: [], currency: 'COP', currencyDecimals: 0 });
+    expect(r.value.rounded.precio_final).toBe(1_300_001); // 1 300 000.52 → 1 300 001
+    expect(Number.isInteger(r.value.rounded.precio_final)).toBe(true);
   });
 });

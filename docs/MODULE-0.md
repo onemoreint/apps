@@ -40,12 +40,15 @@
 | API | `apps/api/test/api.test.ts` |
 | Generación de PDF | Pendiente — llega con el Módulo 7 |
 
-## Decisiones que requieren tu validación
+## Decisiones tomadas
 
-1. **Decimales de moneda**: el seed usa ISO 4217 (COP = 2). Si las cotizaciones en Colombia deben mostrarse sin decimales, se cambia a 0 en `currencies`.
-2. **Moneda por defecto de Venezuela**: VES. Si la operación real cotiza en USD, se ajusta por empresa en `company_settings.currency_code`.
-3. **Modo de margen por defecto**: `MARKUP` (utilidad = costo × margen). La alternativa `GROSS_MARGIN` está disponible por empresa y por presupuesto.
-4. **Severidades de strings**: Voc en frío sobre el máximo y cortocircuito sobre el admitido = ERROR; Vmp caliente bajo MPPT y corriente de operación sobre la máxima = ADVERTENCIA. Un ingeniero debería confirmar este criterio.
+1. **Colombia**: cotiza en COP **sin decimales**.
+2. **Venezuela**: cotiza en **USD**; el precio final en bolívares = precio USD × (tasa BCV del día + **200 Bs**). El recargo es configurable por empresa; la tasa BCV se registra con fecha y queda congelada en cada presupuesto.
+3. **Modo de margen por defecto**: `MARKUP` (utilidad = costo × margen); `GROSS_MARGIN` disponible por empresa y por presupuesto.
+
+## Pendiente de validar
+
+- **Severidades de strings**: Voc en frío sobre el máximo y cortocircuito sobre el admitido = ERROR; Vmp caliente bajo MPPT y corriente de operación sobre la máxima = ADVERTENCIA. Un ingeniero debería confirmar este criterio.
 
 ## Siguiente: Módulo 1
 

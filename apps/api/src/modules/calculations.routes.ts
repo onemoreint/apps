@@ -5,12 +5,15 @@ import {
   checkStrings,
   computePrice,
   computeRoi,
+  convertToLocal,
   sizeBatteryBank,
   sizePvSystem,
   worstStatus,
   type CalcResult,
 } from '@solarpro/calculation-engine';
-import { HttpError } from '../auth/guard.js';
+import { withTenant, type Database } from '@solarpro/db';
+import { HttpError, tenantOf } from '../auth/guard.js';
+import { loadCurrencyContext } from './currency.routes.js';
 import type { Permission } from '@solarpro/shared';
 
 /**
@@ -36,7 +39,7 @@ const envelope = <T>(r: CalcResult<T>, extra: Record<string, unknown> = {}) => (
   ...extra,
 });
 
-export function registerCalculationRoutes(app: FastifyInstance): void {
+export function registerCalculationRoutes(app: FastifyInstance, db: Database): void {
   const sizing = z.object({
     dailyConsumptionKwh: pos,
     coverage: frac,
@@ -117,13 +120,46 @@ export function registerCalculationRoutes(app: FastifyInstance): void {
     margin: z.number().min(0),
     marginMode: z.enum(['MARKUP', 'GROSS_MARGIN']),
     taxes: z.array(z.object({ code: z.string(), name: z.string(), rate: z.number().min(0).max(1) })).max(10),
-    currency: z.string().length(3),
-    currencyDecimals: z.number().int().min(0).max(4),
+    /** Fecha de la cotización (YYYY-MM-DD); por defecto, hoy. Sirve para advertir si la tasa no es del día. */
+    quoteDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   });
 
-  app.post('/api/pricing/quote', { preHandler: requireAny('budgets:write') }, async (req) =>
-    envelope(computePrice(pricing.parse(req.body))),
-  );
+  // La moneda, sus decimales y la conversión local salen de la configuración de la empresa,
+  // nunca del cliente: COP sin decimales en Colombia; USD → Bs a tasa BCV + recargo en Venezuela.
+  app.post('/api/pricing/quote', { preHandler: requireAny('budgets:write') }, async (req) => {
+    const b = pricing.parse(req.body);
+    const cur = await withTenant(db, tenantOf(req), (tx) => loadCurrencyContext(tx, req.auth!.companyId!));
+    const price = computePrice({ ...b, currency: cur.currency, currencyDecimals: cur.decimals });
+    const out = envelope(price) as ReturnType<typeof envelope> & { local?: unknown };
+    if (cur.local) {
+      if (!cur.local.rate) {
+        const missing = {
+          code: 'FX_RATE_MISSING',
+          status: 'REVIEW_REQUIRED' as const,
+          message: `No hay tasa ${cur.local.source} registrada para ${cur.currency}/${cur.local.currency}; no se puede calcular el precio final en ${cur.local.currency}.`,
+        };
+        out.validations = [...out.validations, missing];
+        out.status = worstStatus(out.validations);
+        out.local = null;
+      } else {
+        const conv = convertToLocal({
+          amount: price.value.precio_final,
+          fromCurrency: cur.currency,
+          toCurrency: cur.local.currency,
+          officialRate: cur.local.rate.value,
+          rateSource: cur.local.source,
+          rateDate: cur.local.rate.date,
+          surchargePerUnit: cur.local.surchargePerUnit,
+          toDecimals: cur.local.decimals,
+          quoteDate: b.quoteDate ?? new Date().toISOString().slice(0, 10),
+        });
+        out.local = { ...conv, rateScope: cur.local.rate.scope };
+        out.validations = [...out.validations, ...conv.validations];
+        out.status = worstStatus(out.validations);
+      }
+    }
+    return out;
+  });
 
   const roi = z.object({
     investment: pos,

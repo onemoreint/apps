@@ -92,6 +92,17 @@ recuperación_acumulada = año fraccional en que Σ neto − inversión ≥ 0
 
 Horizontes 5/10/15/20 años (null si superan la vida útil). Sin descuento del dinero en el tiempo. Siempre incluye: *"Proyección financiera estimada… No constituye una garantía."*
 
+## Moneda local (`currency`)
+
+```
+tasa_aplicada      = tasa_oficial (BCV) + recargo_por_dólar   (por defecto 200 Bs, configurable por empresa)
+precio_final_Bs    = precio_final_USD × tasa_aplicada
+```
+
+La conversión se hace sobre el precio final en USD **sin redondear**; solo el resultado en Bs se redondea a los decimales del bolívar. Si la tasa no es del día de la cotización → advertencia. Si no hay tasa registrada → `REVIEW_REQUIRED` y no se muestra precio en Bs.
+
+Colombia: `COP` con 0 decimales; el precio final se redondea a peso entero.
+
 ## CO₂ (`environmental`)
 
 `CO₂ evitado = energía_anual × factor_emisión_red` — el factor se configura por país con fuente. Sin factor → `null` + "No hay información suficiente para determinar este valor."

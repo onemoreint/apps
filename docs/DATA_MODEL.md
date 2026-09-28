@@ -23,6 +23,7 @@ Fuente de verdad: `packages/db/migrations/0001_init.sql`. Espejo tipado: `packag
 | Costos | `labor_items`, `costs`, `bom_rules` |
 | Ingeniería | `solar_scenarios`, `project_materials` |
 | Comercial | `budgets`, `budget_items`, `proposals`, `proposal_versions` |
+| Moneda | `exchange_rates` (tasa por fecha y fuente, inmutable); conversión congelada en `budgets` |
 | Trazabilidad | `audit_logs` |
 
 ## Relaciones principales
@@ -62,6 +63,6 @@ countries ── regulatory_profiles ── regulatory_versions ── technical
 
 ## Seed
 
-Carga monedas (ISO 4217), Colombia (NIT, COP, Departamento) y Venezuela (RIF, VES, Estado) con sus campos obligatorios de empresa (§7), roles, permisos y un perfil normativo por país con versión `0.0-borrador` **vacía**.
+Carga monedas (COP sin decimales; USD y VES con 2), Colombia (NIT, COP, Departamento) y Venezuela (RIF, cotiza en USD con precio final en VES a tasa BCV + 200, Estado) con sus campos obligatorios de empresa (§7), roles, permisos y un perfil normativo por país con versión `0.0-borrador` **vacía**.
 
 No se cargan impuestos, reglas técnicas, factores de emisión, productos ni precios: deben ingresarse con fuente por un responsable (Módulos 1 y 5).

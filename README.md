@@ -30,6 +30,15 @@ solarpro360/
 └── infrastructure/           docker-compose de PostgreSQL local
 ```
 
+## Reglas de moneda
+
+| País | Cotiza en | Precio final |
+|---|---|---|
+| Colombia | COP, sin decimales | COP |
+| Venezuela | USD | Bs = precio USD × (tasa BCV del día + 200 Bs) |
+
+La tasa BCV se registra cada día en `/api/exchange-rates` (fecha y fuente quedan guardadas); el recargo de 200 Bs es configurable por empresa.
+
 ## Stack
 
 Next.js · Fastify · TypeScript · PostgreSQL (Supabase: Postgres + Auth + Storage) · Drizzle ORM · Vitest · pnpm workspaces.
@@ -59,10 +68,10 @@ pnpm test
 
 | Suite | Qué prueba | Pruebas |
 |---|---|---|
-| `calculation-engine` | Consumo, cargas, dimensionamiento, strings, inversor, baterías, BOM, costos, margen, impuestos, ROI, CO₂ | 35 |
+| `calculation-engine` | Consumo, cargas, dimensionamiento, strings, inversor, baterías, BOM, costos, margen, impuestos, ROI, CO₂, conversión USD→Bs | 40 |
 | `shared` | Matriz de permisos por rol | 5 |
-| `db` | Aislamiento multiempresa con RLS en PostgreSQL real, roles en BD, auditoría, inmutabilidad, drift de esquema | 25 |
-| `api` | Autenticación JWT, autorización, acceso horizontal, validación, auditoría, rate limiting, endpoints de cálculo | 25 |
+| `db` | Aislamiento multiempresa con RLS en PostgreSQL real, roles en BD, auditoría, inmutabilidad, drift de esquema, reglas de moneda | 29 |
+| `api` | Autenticación JWT, autorización, acceso horizontal, validación, auditoría, rate limiting, endpoints de cálculo, moneda por país | 30 |
 
 Las pruebas de base de datos y API crean una base de datos efímera y se conectan con el rol real de la aplicación (sin privilegios, sujeto a RLS).
 

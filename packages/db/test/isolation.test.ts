@@ -258,3 +258,50 @@ describe('auditoría y versionado', () => {
     ).rejects.toThrow(/foreign key/);
   });
 });
+
+describe('reglas de moneda por país', () => {
+  it('Colombia cotiza en COP sin decimales', async () => {
+    const [r] = await as(A.users.CONSULTA!, A.companyId, (tx) => tx`
+      SELECT s.currency_code, s.local_currency_code, c.decimals
+      FROM company_settings s JOIN currencies c ON c.code = s.currency_code`);
+    expect(r).toEqual({ currency_code: 'COP', local_currency_code: null, decimals: 0 });
+  });
+
+  it('Venezuela cotiza en USD con precio final en Bs a tasa BCV + 200', async () => {
+    const [r] = await as(B.users.ADMIN_EMPRESA!, B.companyId, (tx) => tx`
+      SELECT currency_code, local_currency_code, fx_rate_source, fx_surcharge_per_unit::float AS surcharge FROM company_settings`);
+    expect(r).toEqual({ currency_code: 'USD', local_currency_code: 'VES', fx_rate_source: 'BCV', surcharge: 200 });
+  });
+
+  it('las tasas registradas son históricas (no se editan) y aisladas por empresa', async () => {
+    const [rate] = await as(B.users.ADMIN_EMPRESA!, B.companyId, (tx) =>
+      tx`INSERT INTO exchange_rates (company_id, base_currency, quote_currency, rate, source, rate_date)
+         VALUES (${B.companyId}, 'USD', 'VES', 150, 'BCV', '2026-09-28') RETURNING id`,
+    );
+    await expect(
+      as(B.users.ADMIN_EMPRESA!, B.companyId, (tx) => tx`UPDATE exchange_rates SET rate = 1 WHERE id = ${rate!.id}`),
+    ).rejects.toThrow(/permission denied|inmutable/);
+    const seenByA = await as(A.users.ADMIN_EMPRESA!, A.companyId, (tx) => tx`SELECT * FROM exchange_rates WHERE id = ${rate!.id}`);
+    expect(seenByA).toHaveLength(0);
+    // Un vendedor no registra tasas
+    await expect(
+      as(A.users.VENDEDOR!, A.companyId, (tx) =>
+        tx`INSERT INTO exchange_rates (company_id, base_currency, quote_currency, rate, source, rate_date)
+           VALUES (${A.companyId}, 'USD', 'VES', 150, 'BCV', '2026-09-28')`),
+    ).rejects.toThrow(/row-level security/);
+  });
+
+  it('un presupuesto en Bs debe guardar tasa aplicada = tasa oficial + recargo', async () => {
+    const insert = (applied: number) =>
+      as(B.users.ADMIN_EMPRESA!, B.companyId, async (tx) => {
+        const [cl] = await tx`INSERT INTO clients (company_id, name, client_type) VALUES (${B.companyId}, 'FX', 'OTRO') RETURNING id`;
+        const [p] = await tx`INSERT INTO projects (company_id, client_id, name, country_code) VALUES (${B.companyId}, ${cl!.id}, 'P', 'VE') RETURNING id`;
+        await tx`INSERT INTO budgets (company_id, project_id, number, currency_code, margin, margin_mode, cost_total, final_price,
+                   local_currency_code, fx_rate_official, fx_surcharge, fx_rate_applied, fx_rate_date, fx_source, final_price_local)
+                 VALUES (${B.companyId}, ${p!.id}, ${Math.floor(Math.random() * 1e6)}, 'USD', 0.3, 'MARKUP', 100, 130,
+                   'VES', 150, 200, ${applied}, '2026-09-28', 'BCV', ${130 * applied})`;
+      });
+    await expect(insert(300)).rejects.toThrow(/budgets_fx_complete/);
+    await expect(insert(350)).resolves.toBeUndefined();
+  });
+});

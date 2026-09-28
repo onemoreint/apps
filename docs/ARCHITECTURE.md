@@ -60,8 +60,11 @@ Implementado en el Módulo 0:
 | POST | `/api/solar/size` | `sizing:run` o `diagnostics:preliminary` (vendedor → preliminar) |
 | POST | `/api/solar/strings`, `/api/solar/inverter-compatibility` | `compatibility:review` |
 | POST | `/api/batteries/size` | `sizing:run` o `scenarios:write` |
-| POST | `/api/pricing/quote` | `budgets:write` |
+| POST | `/api/pricing/quote` | `budgets:write` — moneda desde la empresa; VE añade precio final en Bs |
 | POST | `/api/roi` | `budgets:read` |
+| GET | `/api/currency-settings` | `company:settings.read` |
+| POST | `/api/exchange-rates` | `pricing:configure` (global: SUPER_ADMIN) |
+| GET | `/api/exchange-rates/latest` | `budgets:read` |
 
 Reservado para módulos siguientes: `/api/users`, `/api/projects`, `/api/diagnostics`, `/api/products`, `/api/panels`, `/api/inverters`, `/api/batteries` (CRUD), `/api/bom`, `/api/costs`, `/api/budgets`, `/api/proposals`, `/api/reports`, `/api/ai`.
 

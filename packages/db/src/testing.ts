@@ -54,8 +54,10 @@ export async function createFixtureCompany(
   try {
     const [c] = await sql<{ id: string }[]>`
       INSERT INTO companies (country_code, legal_name, tax_id) VALUES (${opts.country}, ${opts.legalName}, ${opts.taxId}) RETURNING id`;
-    const currency = opts.country === 'CO' ? 'COP' : 'VES';
-    await sql`INSERT INTO company_settings (company_id, currency_code) VALUES (${c!.id}, ${currency})`;
+    // Misma regla que la API: la configuración inicial se copia de los valores del país.
+    await sql`INSERT INTO company_settings (company_id, currency_code, local_currency_code, fx_rate_source, fx_surcharge_per_unit)
+              SELECT ${c!.id}, default_currency_code, local_currency_code, fx_rate_source, default_fx_surcharge
+              FROM countries WHERE code = ${opts.country}`;
     const users: Record<string, string> = {};
     for (const role of opts.roles) {
       const id = randomUUID();

@@ -14,8 +14,8 @@ import { PERMISSIONS, ROLE_PERMISSIONS, ROLES } from '@solarpro/shared';
  */
 
 const CURRENCIES = [
-  // Decimales según ISO 4217. Editables por SUPER_ADMIN si la práctica comercial difiere.
-  { code: 'COP', name: 'Peso colombiano', symbol: '$', decimals: 2 },
+  // COP sin decimales (decisión comercial para Colombia). VES y USD con 2 (ISO 4217).
+  { code: 'COP', name: 'Peso colombiano', symbol: '$', decimals: 0 },
   { code: 'VES', name: 'Bolívar venezolano', symbol: 'Bs.', decimals: 2 },
   { code: 'USD', name: 'Dólar estadounidense', symbol: 'US$', decimals: 2 },
 ];
@@ -26,6 +26,9 @@ const COUNTRIES = [
     name: 'Colombia',
     tax_id_label: 'NIT',
     default_currency_code: 'COP',
+    local_currency_code: null,
+    fx_rate_source: null,
+    default_fx_surcharge: null,
     region_label: 'Departamento',
     company_required_fields: [
       'legal_name', 'trade_name', 'tax_id', 'address', 'city', 'phone', 'whatsapp',
@@ -36,7 +39,11 @@ const COUNTRIES = [
     code: 'VE',
     name: 'Venezuela',
     tax_id_label: 'RIF',
-    default_currency_code: 'VES',
+    // Venezuela cotiza en USD; el precio final en Bs = USD × (tasa BCV + recargo).
+    default_currency_code: 'USD',
+    local_currency_code: 'VES',
+    fx_rate_source: 'BCV',
+    default_fx_surcharge: 200,
     region_label: 'Estado',
     company_required_fields: [
       'legal_name', 'trade_name', 'tax_id', 'address', 'region', 'city', 'phone', 'whatsapp',
@@ -73,13 +80,17 @@ export async function seed(adminUrl: string, log: (m: string) => void = console.
   try {
     await sql.begin(async (tx) => {
       for (const c of CURRENCIES) {
-        await tx`INSERT INTO currencies ${tx(c)} ON CONFLICT (code) DO UPDATE SET name = EXCLUDED.name, symbol = EXCLUDED.symbol`;
+        await tx`INSERT INTO currencies ${tx(c)} ON CONFLICT (code) DO UPDATE SET name = EXCLUDED.name, symbol = EXCLUDED.symbol, decimals = EXCLUDED.decimals`;
       }
       for (const c of COUNTRIES) {
         await tx`
-          INSERT INTO countries (code, name, tax_id_label, default_currency_code, region_label, company_required_fields)
-          VALUES (${c.code}, ${c.name}, ${c.tax_id_label}, ${c.default_currency_code}, ${c.region_label}, ${tx.json(c.company_required_fields)})
+          INSERT INTO countries (code, name, tax_id_label, default_currency_code, local_currency_code, fx_rate_source,
+                                 default_fx_surcharge, region_label, company_required_fields)
+          VALUES (${c.code}, ${c.name}, ${c.tax_id_label}, ${c.default_currency_code}, ${c.local_currency_code}, ${c.fx_rate_source},
+                  ${c.default_fx_surcharge}, ${c.region_label}, ${tx.json(c.company_required_fields)})
           ON CONFLICT (code) DO UPDATE SET name = EXCLUDED.name, tax_id_label = EXCLUDED.tax_id_label,
+            default_currency_code = EXCLUDED.default_currency_code, local_currency_code = EXCLUDED.local_currency_code,
+            fx_rate_source = EXCLUDED.fx_rate_source, default_fx_surcharge = EXCLUDED.default_fx_surcharge,
             region_label = EXCLUDED.region_label, company_required_fields = EXCLUDED.company_required_fields`;
       }
       for (const r of ROLES) {

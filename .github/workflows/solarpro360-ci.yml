@@ -1,0 +1,57 @@
+name: SOLARPRO 360 · calidad
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'solarpro360/**'
+      - '.github/workflows/solarpro360-ci.yml'
+  pull_request:
+    paths:
+      - 'solarpro360/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: solarpro360
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      TEST_DATABASE_ADMIN_URL: postgres://postgres:postgres@localhost:5432/postgres
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: solarpro360/package.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: solarpro360/pnpm-lock.yaml
+
+      - name: Instalar
+        run: pnpm install --frozen-lockfile
+
+      # El build de Next genera los tipos de rutas que usa el typecheck del frontend.
+      - name: Build frontend
+        run: pnpm --filter @solarpro/web build
+
+      - name: Tipos (TypeScript)
+        run: pnpm typecheck
+
+      - name: Pruebas (motor, permisos, aislamiento en PostgreSQL, API)
+        run: pnpm test

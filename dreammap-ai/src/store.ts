@@ -55,6 +55,7 @@ export function sampleProject(): Project {
       projectName: 'Mi mapa de sueños 2027',
       title: 'Mi mapa de sueños',
       subtitle: '2027 · Lo que visualizo, lo construyo',
+      words: ['Gratitud', 'Abundancia', 'Disciplina', 'Libertad'],
       dreams: [
         dream('Casa frente al mar', 'Quiero tener una casa moderna con piscina frente al mar', 'hogar', 'lib-hogar-0'),
         dream('Toyota Fortuner 2027', 'Quiero un Toyota Fortuner negro 2027', 'auto', 'lib-auto-0'),
@@ -64,7 +65,7 @@ export function sampleProject(): Project {
         dream('Mi empresa en 5 países', 'Expandir mi empresa a 5 países', 'negocio', 'lib-negocio-0'),
       ],
     },
-    templateId: 'luxury',
+    templateId: 'scrapbook',
     format: formatFromCatalog(wallpaper),
     userAssets: [],
     aiEndpoint: '',

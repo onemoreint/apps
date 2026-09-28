@@ -1,7 +1,5 @@
 # DREAMMAP AI — MVP
 
-**App lista para usar:** [`app/index.html`](app/index.html) — con GitHub Pages activo en este repo: https://onemoreint.github.io/apps/dreammap-ai/app/
-
 Mapa de sueños que funciona igual para **celular, redes, pantalla, póster, cuadro, hoja impresa y pendón**, sin rehacer el diseño.
 
 ```bash
@@ -13,6 +11,25 @@ npm run build:single # un solo HTML autónomo en dist-single/index.html
 ```
 
 Stack: React 19 + TypeScript + Vite. Sin backend obligatorio. Persistencia local en IndexedDB. Exportación PNG/JPG/PDF 100 % en el navegador (jsPDF).
+
+## Plantillas
+Diez estilos basados en las estéticas de mapas de sueños más populares en Pinterest. Cada uno cambia la distribución, la forma de las fotos, la tipografía y las decoraciones, no solo los colores:
+
+| Plantilla | Distribución | Fotos | Detalles |
+|---|---|---|---|
+| Scrapbook Polaroid | Collage inclinado | Polaroid | Papel kraft, cinta washi, etiquetas tipo rotuladora, letra a mano |
+| Tablero de corcho | Collage | Impresión con borde blanco | Corcho, chinches de colores, notas adhesivas |
+| Boho de arcos | Cuadrícula | Arco | Lino, tonos tierra, cursiva Fraunces |
+| Luxury Deco | Cuadrícula | Arco con filete dorado | Doble marco Art Déco con abanicos, Bodoni |
+| Editorial archivo | Bento (foto protagonista) | Rectas en blanco y negro | Año gigante en rojo, grano, tipografía mono |
+| Aura Y2K | Mosaico Pinterest | Píldora | Degradado aura pastel, destellos, stickers |
+| Celestial | Cuadrícula | Círculo | Azul noche, estrellas, luna creciente |
+| Película 35 mm | Cuadrícula | Fotograma con perforaciones | Grano, año gigante, mono |
+| Dopamina | Mosaico Pinterest | Tarjeta de color | Colores vivos, stickers |
+| Minimalista suave | Cuadrícula | Rectas | Marfil y mucho aire |
+
+Las **palabras de poder** (Gratitud, Abundancia…) se editan en la pestaña Sueños.
+Las tipografías vienen incluidas en la app (paquetes @fontsource), así que el archivo exportado siempre sale con la letra correcta.
 
 ## Arquitectura: 5 capas independientes
 

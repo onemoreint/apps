@@ -1,0 +1,23 @@
+/** Tipografías incluidas en la app (sin depender de servicios externos, también al exportar). */
+import '@fontsource/caveat/latin-500.css';
+import '@fontsource/caveat/latin-600.css';
+import '@fontsource/caveat/latin-700.css';
+import '@fontsource/fraunces/latin-400.css';
+import '@fontsource/fraunces/latin-500.css';
+import '@fontsource/fraunces/latin-400-italic.css';
+import '@fontsource/fraunces/latin-500-italic.css';
+import '@fontsource/bodoni-moda/latin-500.css';
+import '@fontsource/bodoni-moda/latin-600.css';
+import '@fontsource/dm-serif-display/latin-400.css';
+import '@fontsource/dm-mono/latin-400.css';
+import '@fontsource/dm-mono/latin-500.css';
+import '@fontsource/syne/latin-600.css';
+import '@fontsource/syne/latin-700.css';
+import '@fontsource/syne/latin-800.css';
+import '@fontsource/cormorant-garamond/latin-500.css';
+import '@fontsource/cormorant-garamond/latin-600.css';
+import '@fontsource/cormorant-garamond/latin-700.css';
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-500.css';
+import '@fontsource/inter/latin-600.css';
+import '@fontsource/inter/latin-700.css';

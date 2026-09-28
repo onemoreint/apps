@@ -31,7 +31,7 @@ export function imageQualities(format: DocumentFormat, t: DesignTemplate, conten
     const asset = dream?.imageId ? assets.get(dream.imageId) : undefined;
     if (!dream || !asset) continue;
     if (asset.vector) { out.push({ dreamId: dream.id, effectivePpi: Infinity, level: 'vector' }); continue; }
-    const { image } = imageRectForCell(cell.rect, t.card.caption);
+    const { image } = imageRectForCell(cell.rect, t);
     // Tamaño físico de la celda en pulgadas (a la resolución objetivo, pxPerMm incluye dpi).
     const wIn = image.w / layout.pxPerMm / 25.4;
     const hIn = image.h / layout.pxPerMm / 25.4;
@@ -98,11 +98,13 @@ export function validateBoard(format: DocumentFormat, t: DesignTemplate, content
 
   // Tamaño físico del texto de los sueños
   const layout = layoutBoard(format, t, content.dreams.map((d) => d.id));
-  const firstCell = layout.cells[0];
-  if (firstCell && t.card.caption !== 'none') {
-    const cap = imageRectForCell(firstCell.rect, t.card.caption).caption;
-    if (cap) {
-      const px = captionFontPx(cap);
+  if (t.card.caption !== 'none') {
+    const sizes = layout.cells
+      .map((c) => imageRectForCell(c.rect, t).caption)
+      .filter((c): c is NonNullable<typeof c> => !!c)
+      .map((c) => captionFontPx(c, t));
+    if (sizes.length) {
+      const px = Math.min(...sizes);
       if (isPrint) {
         const mm = px / layout.pxPerMm;
         if (mm < 2.2) alerts.push({ id: 'text-small', severity: 'warning', message: `Los textos de los sueños quedarán muy pequeños (${formatNumber(mm)} mm). Usa menos sueños o un formato más grande.` });

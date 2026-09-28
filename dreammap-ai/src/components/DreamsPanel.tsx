@@ -21,6 +21,12 @@ export function DreamsPanel({ api, selectedId, onSelect, onOpenPicker }: {
           <label htmlFor="bs">Frase o año</label>
           <input id="bs" className="input" value={content.subtitle} maxLength={90} onChange={(e) => actions.updateContent((c) => ({ ...c, subtitle: e.target.value }))} />
         </div>
+        <div className="field">
+          <label htmlFor="bw">Palabras de poder</label>
+          <input id="bw" className="input" placeholder="Gratitud, Abundancia, Disciplina" value={(content.words ?? []).join(', ')}
+            onChange={(e) => actions.updateContent((c) => ({ ...c, words: e.target.value.split(',').map((w) => w.trimStart()).slice(0, 8) }))} />
+          <span className="hint" style={{ margin: 0 }}>Separadas por comas. Aparecen como etiquetas, notas o stickers en las plantillas Scrapbook, Corcho, Aura y Dopamina.</span>
+        </div>
       </div>
       <div className="section">
         <h3>Sueños ({content.dreams.length})</h3>

@@ -126,6 +126,8 @@ export type BoardContent = {
   projectName: string;
   title: string;
   subtitle: string;
+  /** Palabras de poder / afirmaciones cortas (1 a 3 palabras). */
+  words?: string[];
   dreams: Dream[];
 };
 
@@ -178,7 +180,7 @@ export type DocumentFormat = {
 
 export type Rect = { x: number; y: number; w: number; h: number };
 
-export type LayoutCell = { dreamId: string; rect: Rect };
+export type LayoutCell = { dreamId: string; rect: Rect; /** radianes, alrededor del centro */ rotation?: number };
 
 /** Resultado del motor de distribución en coordenadas de píxeles del documento. */
 export type VisionBoardCanvas = {
@@ -187,6 +189,8 @@ export type VisionBoardCanvas = {
   canvasH: number;
   trim: Rect;
   safe: Rect;
+  /** Área de composición (zona segura + aire de diseño). */
+  area: Rect;
   header: Rect;
   headerMode: 'top' | 'side';
   cells: LayoutCell[];

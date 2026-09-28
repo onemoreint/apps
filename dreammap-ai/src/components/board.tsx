@@ -23,7 +23,7 @@ function ensure(src: string) {
 
 let fontsReady = false;
 if (typeof document !== 'undefined' && document.fonts) {
-  Promise.all(FONT_FAMILIES.map((f) => document.fonts.load(`600 40px "${f}"`).catch(() => null)))
+  Promise.all(FONT_FAMILIES.flatMap((f) => ['400', '500', '600', '700', '800', 'italic 500'].map((w) => document.fonts.load(`${w} 40px "${f}"`).catch(() => null))))
     .then(() => document.fonts.ready)
     .then(() => { fontsReady = true; notify(); });
 }

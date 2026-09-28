@@ -19,7 +19,7 @@ export function candidateQuality(project: Project, dreamId: string, asset: Pick<
   const L = layoutBoard(project.format, t, project.content.dreams.map((d) => d.id));
   const cell = L.cells.find((c) => c.dreamId === dreamId);
   if (!cell) return null;
-  const { image } = imageRectForCell(cell.rect, t.card.caption);
+  const { image } = imageRectForCell(cell.rect, t);
   const print = isPrintCategory(project.format.category);
   const wMm = image.w / L.pxPerMm, hMm = image.h / L.pxPerMm;
   const sizeLabel = print ? `${formatNumber(wMm / 10)} × ${formatNumber(hMm / 10)} cm` : `${Math.round(image.w)} × ${Math.round(image.h)} px`;

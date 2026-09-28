@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { FORMAT_CATALOG, formatFromCatalog, documentResolution, exportableDpi, reorient, customFormat, recommendProduct, toMm, fromMm, aspectRatioLabel } from '../core/formats';
 import { layoutBoard, bestGrid } from '../core/layout';
-import { getTemplate } from '../core/templates';
+import { getTemplate, TEMPLATES } from '../core/templates';
 import { qualityLevel, validateBoard } from '../core/validation';
 import { buildSearchQuery, toEnglishQuery, buildAIPrompt } from '../providers/query';
 import type { BoardContent, ImageAsset } from '../core/types';
@@ -74,6 +74,29 @@ describe('motor de distribución', () => {
           expect(c.rect.y).toBeGreaterThanOrEqual(L.safe.y - 0.01);
           expect(c.rect.x + c.rect.w).toBeLessThanOrEqual(L.safe.x + L.safe.w + 0.01);
           expect(c.rect.y + c.rect.h).toBeLessThanOrEqual(L.safe.y + L.safe.h + 0.01);
+        }
+      }
+    }
+  });
+
+  it('todas las plantillas (bento, collage, mosaico) mantienen cada foto girada dentro del área', () => {
+    for (const t of TEMPLATES) {
+      for (const id of ['dig-wallpaper', 'dig-4k', 'pos-50x70', 'pen-60x160', 'imp-a4']) {
+        for (const n of [1, 3, 6, 9]) {
+          const L = layoutBoard(formatFromCatalog(cat(id)), t, ids.concat(['g', 'h', 'i']).slice(0, n), 0.3);
+          expect(L.cells).toHaveLength(n);
+          for (const c of L.cells) {
+            const a = c.rotation ?? 0;
+            const bw = (c.rect.w * Math.abs(Math.cos(a)) + c.rect.h * Math.abs(Math.sin(a))) / 2;
+            const bh = (c.rect.w * Math.abs(Math.sin(a)) + c.rect.h * Math.abs(Math.cos(a))) / 2;
+            const cx = c.rect.x + c.rect.w / 2, cy = c.rect.y + c.rect.h / 2;
+            expect(cx - bw).toBeGreaterThanOrEqual(L.area.x - 0.5);
+            expect(cy - bh).toBeGreaterThanOrEqual(L.area.y - 0.5);
+            expect(cx + bw).toBeLessThanOrEqual(L.area.x + L.area.w + 0.5);
+            expect(cy + bh).toBeLessThanOrEqual(L.area.y + L.area.h + 0.5);
+            expect(c.rect.w).toBeGreaterThan(0);
+            expect(c.rect.h).toBeGreaterThan(0);
+          }
         }
       }
     }

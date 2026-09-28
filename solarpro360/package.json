@@ -1,0 +1,27 @@
+{
+  "name": "solarpro360",
+  "private": true,
+  "version": "0.1.0",
+  "description": "SOLARPRO 360 — Dimensiona · Costea · Cotiza · Instala. Plataforma SaaS multiempresa para sistemas solares fotovoltaicos.",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r --workspace-concurrency=1 test",
+    "test:engine": "pnpm --filter @solarpro/calculation-engine test",
+    "test:api": "pnpm --filter @solarpro/api test",
+    "db:migrate": "pnpm --filter @solarpro/db migrate",
+    "db:seed": "pnpm --filter @solarpro/db seed",
+    "dev:api": "pnpm --filter @solarpro/api dev",
+    "dev:web": "pnpm --filter @solarpro/web dev"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4",
+    "@types/node": "^22.9.0",
+    "tsx": "^4.19.2"
+  }
+}

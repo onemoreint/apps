@@ -8,6 +8,7 @@ import { computeStats, processInsights } from '../domain/engine/stats';
 import { progressFor } from '../domain/challenges';
 import { dueLabel, greeting } from '../utils/dates';
 import { clearDemo } from '../services/dataService';
+import { Globe } from '../components/Globe';
 
 export default function Home() {
   const d = useData();
@@ -23,6 +24,8 @@ export default function Home() {
   const todayTasks = contacts
     .filter((c) => c.nextAction && new Date(c.nextAction.dueDate) <= new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59))
     .sort((a, b) => a.nextAction!.dueDate.localeCompare(b.nextAction!.dueDate));
+
+  const countries = Array.from(new Set(contacts.map((c) => c.country.trim()).filter(Boolean)));
 
   const kpis = [
     { label: 'Contactos totales', value: stats.total, hint: 'Ver todos', to: '/contactos' },
@@ -58,14 +61,23 @@ export default function Home() {
         </div>
       )}
 
-      <section className="card-hero">
-        <div className="eyebrow">{now.toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
-        <h1 className="page-title" style={{ marginTop: 6 }}>{greeting(now)}, {d.userName}.</h1>
-        <p className="muted" style={{ marginTop: 4 }}>Hoy tienes:</p>
-        <div className="today-pills">
-          <button className="today-pill" onClick={() => navigate('/radar')}>🔥 <b>{altas}</b> acciones prioritarias</button>
-          <button className="today-pill" onClick={() => navigate('/radar')}>🟡 <b>{seguimientos}</b> seguimientos</button>
-          <button className="today-pill" onClick={() => navigate('/contactos?filtro=nuevos')}>👥 <b>{stats.nuevos}</b> prospectos nuevos</button>
+      <section className="card-hero hero-globe">
+        <div className="hero-text">
+          <div className="eyebrow">{now.toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
+          <h1 className="page-title hero-title">{greeting(now)}, {d.userName}.</h1>
+          <p className="hero-network">
+            <span className="live-dot" aria-hidden="true" />
+            <span>Tu red: <b>{contacts.length}</b> contactos conectados en <b>{countries.length}</b> {countries.length === 1 ? 'país' : 'países'}</span>
+          </p>
+          <p className="muted" style={{ marginTop: 14 }}>Hoy tienes:</p>
+          <div className="today-pills">
+            <button className="today-pill" onClick={() => navigate('/radar')}>🔥 <b>{altas}</b> acciones prioritarias</button>
+            <button className="today-pill" onClick={() => navigate('/radar')}>🟡 <b>{seguimientos}</b> seguimientos</button>
+            <button className="today-pill" onClick={() => navigate('/contactos?filtro=nuevos')}>👥 <b>{stats.nuevos}</b> prospectos nuevos</button>
+          </div>
+        </div>
+        <div className="hero-visual">
+          <Globe hub={d.company.country} active={countries} size={380} />
         </div>
       </section>
 

@@ -3,6 +3,16 @@ import type { Project } from '../geometry/types';
 import { computeAreas } from '../layout-engine/validate';
 import { PlanSvg, planViewBox, NorthArrow } from './PlanSvg';
 import type { PlanStyle } from './styles';
+import { LEGAL_NOTICE, STATUS_TEXT } from '../projects/legal';
+import { RULESET_VERSION } from '../normative-engine';
+
+/** parte un texto en líneas de hasta n caracteres */
+const wrap = (text: string, n: number) => text.split(' ').reduce<string[]>((acc, w) => {
+  const last = acc[acc.length - 1];
+  if (last !== undefined && (last + ' ' + w).length <= n) acc[acc.length - 1] = `${last} ${w}`;
+  else acc.push(w);
+  return acc;
+}, []);
 
 export const SHEET = { w: 420, h: 297 };
 const BRAND = '#0e7c86';
@@ -20,7 +30,7 @@ export function Sheet({ project: p, style, svgRef, showFurniture = true }: { pro
   const ratio = Math.round(1000 / scale / 5) * 5;
   const px = 304;
   const pw = 104;
-  const rows = [...a.rooms].sort((x, y) => y.area - x.area).slice(0, 18);
+  const rows = [...a.rooms].sort((x, y) => y.area - x.area).slice(0, 15);
   const date = new Date(p.updatedAt).toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
   const kv: [string, string][] = [
     ['Terreno', `${p.site.width.toFixed(2)} × ${p.site.length.toFixed(2)} m`],
@@ -78,6 +88,16 @@ export function Sheet({ project: p, style, svgRef, showFurniture = true }: { pro
             </g>
           ))}
         </g>
+      </g>
+
+      <g transform={`translate(${px} 202)`}>
+        <text fontSize={2.6} fill={BRAND} letterSpacing={0.5} fontWeight={600}>ESTADO DEL DOCUMENTO</text>
+        <text y={5} fontSize={2.8} fill={INK} fontWeight={700}>{STATUS_TEXT[p.metadata.status].toUpperCase()}</text>
+        <text x={pw} y={5} fontSize={2.4} fill="#5b6570" textAnchor="end">v{p.versions.length + 1} · reglas {RULESET_VERSION}</text>
+        <text y={9.5} fontSize={2.4} fill="#5b6570">Autor: {p.metadata.author || 'sin indicar'}{p.jurisdiction.municipality.trim() ? ` · ${p.jurisdiction.municipality.trim()}` : ''}</text>
+        {wrap(LEGAL_NOTICE, 92).map((line, i) => (
+          <text key={i} y={14.5 + i * 2.7} fontSize={1.95} fill="#6b747d">{line}</text>
+        ))}
       </g>
 
       {/* norte, escala y rótulo */}

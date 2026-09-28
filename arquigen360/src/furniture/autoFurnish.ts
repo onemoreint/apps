@@ -71,6 +71,8 @@ export function furnishRoom(room: Room, rooms: Room[], openings: Opening[]): Fur
   };
 
   const tryWall = (kind: FurnitureKind, wall: WallSide, where: ('center' | 'start' | 'end')[] = ['center', 'start', 'end'], w?: number) => {
+    // piezas lineales demasiado cortas (o de largo negativo en ambientes pequeños) no se colocan
+    if (w !== undefined && w < 0.4) return null;
     const len = wallLength(room, wall);
     const iw = w ?? FURNITURE[kind].w;
     for (const pos of where) {

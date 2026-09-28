@@ -1,0 +1,1090 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onemoreint.github.io/apps/arquigen360/schema/project-2.0.0.json",
+  "title": "Proyecto ARQUIGEN 360",
+  "description": "Modelo digital del proyecto. Es la fuente única de verdad de la geometría. Medidas en metros.",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "createdAt",
+    "updatedAt",
+    "schemaVersion",
+    "site",
+    "program",
+    "rooms",
+    "openings",
+    "furniture",
+    "style",
+    "metadata",
+    "jurisdiction",
+    "versions",
+    "audit"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "maxLength": 64,
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "createdAt": {
+      "type": "number",
+      "minimum": 0
+    },
+    "updatedAt": {
+      "type": "number",
+      "minimum": 0
+    },
+    "version": {
+      "const": 1
+    },
+    "schemaVersion": {
+      "const": "2.0.0"
+    },
+    "site": {
+      "type": "object",
+      "required": [
+        "width",
+        "length",
+        "units",
+        "floors",
+        "access",
+        "northAngle",
+        "maxOccupancy",
+        "setbacks"
+      ],
+      "properties": {
+        "width": {
+          "type": "number",
+          "minimum": 2,
+          "maximum": 500
+        },
+        "length": {
+          "type": "number",
+          "minimum": 2,
+          "maximum": 500
+        },
+        "units": {
+          "enum": [
+            "m"
+          ]
+        },
+        "floors": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "access": {
+          "enum": [
+            "front",
+            "back",
+            "left",
+            "right"
+          ]
+        },
+        "northAngle": {
+          "type": "number",
+          "minimum": -360,
+          "maximum": 360
+        },
+        "maxOccupancy": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "setbacks": {
+          "type": "object",
+          "required": [
+            "front",
+            "back",
+            "side"
+          ],
+          "properties": {
+            "front": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 50
+            },
+            "back": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 50
+            },
+            "side": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 50
+            }
+          }
+        }
+      }
+    },
+    "program": {
+      "type": "object",
+      "required": [
+        "rooms",
+        "preferences"
+      ],
+      "properties": {
+        "rooms": {
+          "type": "array",
+          "maxItems": 300,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "type",
+              "name",
+              "minWidth",
+              "minLength",
+              "minArea",
+              "priority",
+              "nearTo"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 64,
+                "minLength": 1
+              },
+              "type": {
+                "enum": [
+                  "master_bedroom",
+                  "bedroom",
+                  "bathroom",
+                  "ensuite",
+                  "living",
+                  "dining",
+                  "kitchen",
+                  "laundry",
+                  "service",
+                  "patio",
+                  "garden",
+                  "garage",
+                  "study",
+                  "office",
+                  "terrace",
+                  "balcony",
+                  "storage",
+                  "closet",
+                  "hall"
+                ]
+              },
+              "name": {
+                "type": "string",
+                "maxLength": 80
+              },
+              "minWidth": {
+                "type": "number",
+                "minimum": 0.3,
+                "maximum": 100
+              },
+              "minLength": {
+                "type": "number",
+                "minimum": 0.3,
+                "maximum": 100
+              },
+              "minArea": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10000
+              },
+              "priority": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 5
+              },
+              "nearTo": {
+                "type": "array",
+                "maxItems": 30,
+                "items": {
+                  "enum": [
+                    "master_bedroom",
+                    "bedroom",
+                    "bathroom",
+                    "ensuite",
+                    "living",
+                    "dining",
+                    "kitchen",
+                    "laundry",
+                    "service",
+                    "patio",
+                    "garden",
+                    "garage",
+                    "study",
+                    "office",
+                    "terrace",
+                    "balcony",
+                    "storage",
+                    "closet",
+                    "hall"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "preferences": {
+          "type": "object",
+          "required": [
+            "socialZone",
+            "openKitchen",
+            "garageCars"
+          ],
+          "properties": {
+            "socialZone": {
+              "enum": [
+                "front",
+                "back"
+              ]
+            },
+            "openKitchen": {
+              "type": "boolean"
+            },
+            "garageCars": {
+              "enum": [
+                0,
+                1,
+                2
+              ]
+            }
+          }
+        }
+      }
+    },
+    "rooms": {
+      "type": "array",
+      "maxItems": 300,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "name",
+          "x",
+          "y",
+          "width",
+          "length"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "specId": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "type": {
+            "enum": [
+              "master_bedroom",
+              "bedroom",
+              "bathroom",
+              "ensuite",
+              "living",
+              "dining",
+              "kitchen",
+              "laundry",
+              "service",
+              "patio",
+              "garden",
+              "garage",
+              "study",
+              "office",
+              "terrace",
+              "balcony",
+              "storage",
+              "closet",
+              "hall"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "x": {
+            "type": "number",
+            "minimum": -500,
+            "maximum": 500
+          },
+          "y": {
+            "type": "number",
+            "minimum": -500,
+            "maximum": 500
+          },
+          "width": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 100
+          },
+          "length": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 100
+          }
+        }
+      }
+    },
+    "openings": {
+      "type": "array",
+      "maxItems": 1500,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "roomId",
+          "wall",
+          "offset",
+          "width",
+          "swing",
+          "hinge"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "door",
+              "window",
+              "garage_door"
+            ]
+          },
+          "roomId": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "wall": {
+            "enum": [
+              "S",
+              "N",
+              "W",
+              "E"
+            ]
+          },
+          "offset": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "width": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 20
+          },
+          "swing": {
+            "enum": [
+              "in",
+              "out"
+            ]
+          },
+          "hinge": {
+            "enum": [
+              "start",
+              "end"
+            ]
+          }
+        }
+      }
+    },
+    "furniture": {
+      "type": "array",
+      "maxItems": 3000,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "roomId",
+          "kind",
+          "cx",
+          "cy",
+          "rotation"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "roomId": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "bed_single",
+              "bed_double",
+              "bed_queen",
+              "bed_king",
+              "wardrobe",
+              "nightstand",
+              "desk",
+              "sofa2",
+              "sofa3",
+              "sofaL",
+              "coffee_table",
+              "tv_unit",
+              "table4",
+              "table6",
+              "table8",
+              "fridge",
+              "sink",
+              "stove",
+              "island",
+              "counter",
+              "upper_cabinets",
+              "shower",
+              "bathtub",
+              "wc",
+              "basin",
+              "washer",
+              "car",
+              "plant",
+              "tree",
+              "stairs"
+            ]
+          },
+          "cx": {
+            "type": "number",
+            "minimum": -100,
+            "maximum": 100
+          },
+          "cy": {
+            "type": "number",
+            "minimum": -100,
+            "maximum": 100
+          },
+          "rotation": {
+            "enum": [
+              0,
+              90,
+              180,
+              270
+            ]
+          },
+          "w": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 20
+          }
+        }
+      }
+    },
+    "style": {
+      "enum": [
+        "tecnico",
+        "inmobiliario",
+        "moderno",
+        "calido"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "author",
+        "status"
+      ],
+      "properties": {
+        "author": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "status": {
+          "enum": [
+            "BORRADOR",
+            "PREVALIDACION",
+            "REVISION_PROFESIONAL",
+            "APROBADO_POR_USUARIO"
+          ]
+        }
+      }
+    },
+    "jurisdiction": {
+      "type": "object",
+      "required": [
+        "country",
+        "department",
+        "municipality",
+        "planningInstrument",
+        "zone"
+      ],
+      "properties": {
+        "country": {
+          "enum": [
+            "CO"
+          ]
+        },
+        "department": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "municipality": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "planningInstrument": {
+          "enum": [
+            "",
+            "POT",
+            "PBOT",
+            "EOT"
+          ]
+        },
+        "zone": {
+          "type": "string",
+          "maxLength": 80
+        }
+      }
+    },
+    "versions": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "snapshot"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "createdAt": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "snapshot": {
+            "type": "object",
+            "required": [
+              "site",
+              "program",
+              "rooms",
+              "openings",
+              "furniture",
+              "style"
+            ],
+            "properties": {
+              "site": {
+                "type": "object",
+                "required": [
+                  "width",
+                  "length",
+                  "units",
+                  "floors",
+                  "access",
+                  "northAngle",
+                  "maxOccupancy",
+                  "setbacks"
+                ],
+                "properties": {
+                  "width": {
+                    "type": "number",
+                    "minimum": 2,
+                    "maximum": 500
+                  },
+                  "length": {
+                    "type": "number",
+                    "minimum": 2,
+                    "maximum": 500
+                  },
+                  "units": {
+                    "enum": [
+                      "m"
+                    ]
+                  },
+                  "floors": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10
+                  },
+                  "access": {
+                    "enum": [
+                      "front",
+                      "back",
+                      "left",
+                      "right"
+                    ]
+                  },
+                  "northAngle": {
+                    "type": "number",
+                    "minimum": -360,
+                    "maximum": 360
+                  },
+                  "maxOccupancy": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 100
+                  },
+                  "setbacks": {
+                    "type": "object",
+                    "required": [
+                      "front",
+                      "back",
+                      "side"
+                    ],
+                    "properties": {
+                      "front": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 50
+                      },
+                      "back": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 50
+                      },
+                      "side": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 50
+                      }
+                    }
+                  }
+                }
+              },
+              "program": {
+                "type": "object",
+                "required": [
+                  "rooms",
+                  "preferences"
+                ],
+                "properties": {
+                  "rooms": {
+                    "type": "array",
+                    "maxItems": 300,
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id",
+                        "type",
+                        "name",
+                        "minWidth",
+                        "minLength",
+                        "minArea",
+                        "priority",
+                        "nearTo"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 64,
+                          "minLength": 1
+                        },
+                        "type": {
+                          "enum": [
+                            "master_bedroom",
+                            "bedroom",
+                            "bathroom",
+                            "ensuite",
+                            "living",
+                            "dining",
+                            "kitchen",
+                            "laundry",
+                            "service",
+                            "patio",
+                            "garden",
+                            "garage",
+                            "study",
+                            "office",
+                            "terrace",
+                            "balcony",
+                            "storage",
+                            "closet",
+                            "hall"
+                          ]
+                        },
+                        "name": {
+                          "type": "string",
+                          "maxLength": 80
+                        },
+                        "minWidth": {
+                          "type": "number",
+                          "minimum": 0.3,
+                          "maximum": 100
+                        },
+                        "minLength": {
+                          "type": "number",
+                          "minimum": 0.3,
+                          "maximum": 100
+                        },
+                        "minArea": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 10000
+                        },
+                        "priority": {
+                          "type": "number",
+                          "minimum": 1,
+                          "maximum": 5
+                        },
+                        "nearTo": {
+                          "type": "array",
+                          "maxItems": 30,
+                          "items": {
+                            "enum": [
+                              "master_bedroom",
+                              "bedroom",
+                              "bathroom",
+                              "ensuite",
+                              "living",
+                              "dining",
+                              "kitchen",
+                              "laundry",
+                              "service",
+                              "patio",
+                              "garden",
+                              "garage",
+                              "study",
+                              "office",
+                              "terrace",
+                              "balcony",
+                              "storage",
+                              "closet",
+                              "hall"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "preferences": {
+                    "type": "object",
+                    "required": [
+                      "socialZone",
+                      "openKitchen",
+                      "garageCars"
+                    ],
+                    "properties": {
+                      "socialZone": {
+                        "enum": [
+                          "front",
+                          "back"
+                        ]
+                      },
+                      "openKitchen": {
+                        "type": "boolean"
+                      },
+                      "garageCars": {
+                        "enum": [
+                          0,
+                          1,
+                          2
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              "rooms": {
+                "type": "array",
+                "maxItems": 300,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "type",
+                    "name",
+                    "x",
+                    "y",
+                    "width",
+                    "length"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "maxLength": 64,
+                      "minLength": 1
+                    },
+                    "specId": {
+                      "type": "string",
+                      "maxLength": 64
+                    },
+                    "type": {
+                      "enum": [
+                        "master_bedroom",
+                        "bedroom",
+                        "bathroom",
+                        "ensuite",
+                        "living",
+                        "dining",
+                        "kitchen",
+                        "laundry",
+                        "service",
+                        "patio",
+                        "garden",
+                        "garage",
+                        "study",
+                        "office",
+                        "terrace",
+                        "balcony",
+                        "storage",
+                        "closet",
+                        "hall"
+                      ]
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 80
+                    },
+                    "x": {
+                      "type": "number",
+                      "minimum": -500,
+                      "maximum": 500
+                    },
+                    "y": {
+                      "type": "number",
+                      "minimum": -500,
+                      "maximum": 500
+                    },
+                    "width": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 100
+                    },
+                    "length": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 100
+                    }
+                  }
+                }
+              },
+              "openings": {
+                "type": "array",
+                "maxItems": 1500,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "roomId",
+                    "wall",
+                    "offset",
+                    "width",
+                    "swing",
+                    "hinge"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "maxLength": 64,
+                      "minLength": 1
+                    },
+                    "kind": {
+                      "enum": [
+                        "door",
+                        "window",
+                        "garage_door"
+                      ]
+                    },
+                    "roomId": {
+                      "type": "string",
+                      "maxLength": 64,
+                      "minLength": 1
+                    },
+                    "wall": {
+                      "enum": [
+                        "S",
+                        "N",
+                        "W",
+                        "E"
+                      ]
+                    },
+                    "offset": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "width": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 20
+                    },
+                    "swing": {
+                      "enum": [
+                        "in",
+                        "out"
+                      ]
+                    },
+                    "hinge": {
+                      "enum": [
+                        "start",
+                        "end"
+                      ]
+                    }
+                  }
+                }
+              },
+              "furniture": {
+                "type": "array",
+                "maxItems": 3000,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "roomId",
+                    "kind",
+                    "cx",
+                    "cy",
+                    "rotation"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "maxLength": 64,
+                      "minLength": 1
+                    },
+                    "roomId": {
+                      "type": "string",
+                      "maxLength": 64,
+                      "minLength": 1
+                    },
+                    "kind": {
+                      "enum": [
+                        "bed_single",
+                        "bed_double",
+                        "bed_queen",
+                        "bed_king",
+                        "wardrobe",
+                        "nightstand",
+                        "desk",
+                        "sofa2",
+                        "sofa3",
+                        "sofaL",
+                        "coffee_table",
+                        "tv_unit",
+                        "table4",
+                        "table6",
+                        "table8",
+                        "fridge",
+                        "sink",
+                        "stove",
+                        "island",
+                        "counter",
+                        "upper_cabinets",
+                        "shower",
+                        "bathtub",
+                        "wc",
+                        "basin",
+                        "washer",
+                        "car",
+                        "plant",
+                        "tree",
+                        "stairs"
+                      ]
+                    },
+                    "cx": {
+                      "type": "number",
+                      "minimum": -100,
+                      "maximum": 100
+                    },
+                    "cy": {
+                      "type": "number",
+                      "minimum": -100,
+                      "maximum": 100
+                    },
+                    "rotation": {
+                      "enum": [
+                        0,
+                        90,
+                        180,
+                        270
+                      ]
+                    },
+                    "w": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 20
+                    }
+                  }
+                }
+              },
+              "style": {
+                "enum": [
+                  "tecnico",
+                  "inmobiliario",
+                  "moderno",
+                  "calido"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "audit": {
+      "type": "array",
+      "maxItems": 1000,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "timestamp",
+          "actor",
+          "action",
+          "projectId",
+          "result"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "timestamp": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "actor": {
+            "enum": [
+              "user",
+              "ai",
+              "system"
+            ]
+          },
+          "action": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "projectId": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "entityId": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "result": {
+            "enum": [
+              "ok",
+              "rejected",
+              "error"
+            ]
+          },
+          "detail": {
+            "type": "string",
+            "maxLength": 400
+          }
+        }
+      }
+    }
+  }
+}

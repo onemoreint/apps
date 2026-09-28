@@ -1,15 +1,18 @@
 {
   "name": "arquigen-360",
   "private": true,
-  "version": "0.1.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "oxlint",
-    "preview": "vite preview",
+    "typecheck": "tsc -b",
+    "lint": "oxlint src",
     "test": "vitest run",
-    "build:single": "SINGLE=1 vite build --outDir dist-single && node scripts-artifact.mjs"
+    "build": "tsc -b && vite build",
+    "verify:bundle": "node scripts/verify-bundle.mjs dist/index.html",
+    "check": "npm run typecheck && npm run lint && npm test && npm run build && npm run verify:bundle",
+    "publish:app": "npm run check && node scripts/verify-bundle.mjs dist/index.html --copy",
+    "preview": "vite preview"
   },
   "dependencies": {
     "jspdf": "^4.2.1",

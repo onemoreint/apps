@@ -1,4 +1,5 @@
-import type { Program, Project, RoomSpec, RoomType, Site } from '../geometry/types';
+import { SCHEMA_VERSION, type Program, type Project, type RoomSpec, type RoomType, type Site } from '../geometry/types';
+import { defaultJurisdiction } from '../schema/migrations';
 import { CATALOG } from '../layout-engine/catalog';
 import { uid } from '../utils/id';
 
@@ -75,5 +76,10 @@ export function newProject(name = 'Casa 8 × 16'): Project {
     furniture: [],
     style: 'inmobiliario',
     version: 1,
+    schemaVersion: SCHEMA_VERSION,
+    metadata: { author: '', status: 'BORRADOR' },
+    jurisdiction: defaultJurisdiction(),
+    versions: [],
+    audit: [],
   };
 }

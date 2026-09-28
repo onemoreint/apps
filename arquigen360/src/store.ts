@@ -1,5 +1,8 @@
 import { create } from 'zustand';
-import type { FurnitureItem, Opening, Program, Project, Room, Site, StyleId } from './geometry/types';
+import type { AuditEvent, DocStatus, FurnitureItem, Jurisdiction, Opening, Program, Project, ProjectSnapshot, Room, Site, StyleId } from './geometry/types';
+import { runCommands, type Actor, type CommandResult } from './commands/commands';
+import { LIMITS } from './schema/projectSchema';
+import { sanitizeText } from './schema/migrations';
 import { generateLayout } from './layout-engine/engine';
 import { newProject } from './projects/defaults';
 import type { Selection } from './render/PlanSvg';
@@ -7,7 +10,7 @@ import { uid } from './utils/id';
 import { furnishRoom } from './furniture/autoFurnish';
 
 type Geometry = Pick<Project, 'rooms' | 'openings' | 'furniture'>;
-export type View = 'plan' | 'axo' | 'sheet';
+export type View = 'plan' | 'axo' | 'sheet' | 'compliance' | 'history';
 
 interface State {
   project: Project;
@@ -50,7 +53,22 @@ interface State {
   deleteFurniture: (id: string) => void;
   undo: () => void;
   redo: () => void;
+
+  /** registro de auditoría dentro del proyecto (modo local) */
+  log: (e: Omit<AuditEvent, 'id' | 'timestamp' | 'projectId'>) => void;
+  /** única vía para cambios propuestos por IA u orígenes externos */
+  applyCommands: (commands: unknown[], actor: Actor) => CommandResult[];
+  setJurisdiction: (patch: Partial<Jurisdiction>) => void;
+  setStatus: (status: DocStatus) => void;
+  setAuthor: (author: string) => void;
+  saveVersion: (name: string) => boolean;
+  restoreVersion: (id: string) => void;
+  deleteVersion: (id: string) => void;
 }
+
+export const snapshotOf = (p: Project): ProjectSnapshot => structuredClone({
+  site: p.site, program: p.program, rooms: p.rooms, openings: p.openings, furniture: p.furniture, style: p.style,
+});
 
 const geom = (p: Project): Geometry => ({ rooms: p.rooms, openings: p.openings, furniture: p.furniture });
 
@@ -102,6 +120,7 @@ export const useStore = create<State>((set, get) => {
         selection: null,
         dirty: true,
       });
+      get().log({ actor: 'user', action: opts?.keepSizes ? 'regenerate_keep_sizes' : 'generate', result: 'ok', detail: `${res.rooms.length} ambientes` });
     },
     loadProject: (p) => set({ project: p, past: [], future: [], selection: null, notes: [], dirty: false }),
     setName: (name) => edit(() => ({ name })),
@@ -115,7 +134,11 @@ export const useStore = create<State>((set, get) => {
       window.setTimeout(() => get().toast === toast && set({ toast: null }), 2600);
     },
 
-    checkpoint: () => set((s) => ({ past: [...s.past, geom(s.project)].slice(-60), future: [] })),
+    checkpoint: () => {
+      set((s) => ({ past: [...s.past, geom(s.project)].slice(-60), future: [] }));
+      const sel = get().selection;
+      get().log({ actor: 'user', action: 'edit', entityId: sel?.id, result: 'ok' });
+    },
     patch: (partial) => edit(() => partial),
     updateRoom: (id, patch) => edit((p) => ({ rooms: p.rooms.map((r) => (r.id === id ? { ...r, ...patch } : r)) })),
     updateRooms: (patches) =>
@@ -129,11 +152,14 @@ export const useStore = create<State>((set, get) => {
       const id = uid();
       get().checkpoint();
       edit((p) => ({ rooms: [...p.rooms, { ...room, id }] }));
+      get().log({ actor: 'user', action: 'add_space', entityId: id, result: 'ok', detail: room.name });
       set({ selection: { kind: 'room', id } });
       return id;
     },
     deleteRoom: (id) => {
+      const name = get().project.rooms.find((r) => r.id === id)?.name;
       get().checkpoint();
+      get().log({ actor: 'user', action: 'delete_space', entityId: id, result: 'ok', detail: name });
       edit((p) => ({
         rooms: p.rooms.filter((r) => r.id !== id),
         openings: p.openings.filter((o) => o.roomId !== id),
@@ -198,6 +224,54 @@ export const useStore = create<State>((set, get) => {
       const next = s.future[0];
       if (!next) return;
       set({ future: s.future.slice(1), past: [...s.past, geom(s.project)], project: { ...s.project, ...next }, selection: null, dirty: true });
+    },
+
+    log: (e) =>
+      set((s) => {
+        const ev: AuditEvent = { ...e, id: uid(), timestamp: new Date().toISOString(), projectId: s.project.id, detail: e.detail ? sanitizeText(e.detail, 400) : undefined };
+        return { project: { ...s.project, audit: [...(s.project.audit ?? []), ev].slice(-LIMITS.audit) } };
+      }),
+    applyCommands: (commands, actor) => {
+      const s = get();
+      const { project, results } = runCommands(s.project, commands, actor);
+      const okCount = results.filter((r) => r.ok).length;
+      if (okCount) {
+        set({ past: [...s.past, geom(s.project)].slice(-60), future: [], project, dirty: true, selection: null });
+      }
+      for (const r of results) {
+        const c = r.command as { command?: string; targetId?: string };
+        get().log({ actor, action: `command:${String(c?.command ?? 'desconocido').slice(0, 40)}`, entityId: typeof c?.targetId === 'string' ? c.targetId.slice(0, 64) : undefined, result: r.ok ? 'ok' : 'rejected', detail: r.ok ? r.summary : `${r.stage}: ${r.reason}` });
+      }
+      return results;
+    },
+    setJurisdiction: (patch) => edit((p) => ({ jurisdiction: { ...p.jurisdiction, ...patch } })),
+    setStatus: (status) => {
+      const before = get().project.metadata.status;
+      if (before === status) return;
+      edit((p) => ({ metadata: { ...p.metadata, status } }));
+      get().log({ actor: 'user', action: 'status_change', result: 'ok', before, after: status });
+    },
+    setAuthor: (author) => edit((p) => ({ metadata: { ...p.metadata, author } })),
+    saveVersion: (name) => {
+      const p = get().project;
+      if (p.versions.length >= LIMITS.versions) return false;
+      const v = { id: uid(), name: sanitizeText(name) || `Versión ${p.versions.length + 1}`, createdAt: new Date().toISOString(), snapshot: snapshotOf(p) };
+      edit((q) => ({ versions: [...q.versions, v] }));
+      get().log({ actor: 'user', action: 'version_save', entityId: v.id, result: 'ok', detail: v.name });
+      return true;
+    },
+    restoreVersion: (id) => {
+      const s = get();
+      const v = s.project.versions.find((x) => x.id === id);
+      if (!v) return;
+      set({ past: [...s.past, geom(s.project)].slice(-60), future: [], selection: null });
+      edit(() => structuredClone(v.snapshot));
+      get().log({ actor: 'user', action: 'version_restore', entityId: id, result: 'ok', detail: v.name });
+    },
+    deleteVersion: (id) => {
+      const v = get().project.versions.find((x) => x.id === id);
+      edit((p) => ({ versions: p.versions.filter((x) => x.id !== id) }));
+      get().log({ actor: 'user', action: 'version_delete', entityId: id, result: 'ok', detail: v?.name });
     },
   };
 });

@@ -1,0 +1,61 @@
+name: ARQUIGEN 360 · calidad
+
+# Solo verifica. NO publica en GitHub Pages (la app publicada es arquigen360/app/index.html).
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'arquigen360/**'
+      - '.github/workflows/arquigen360-ci.yml'
+  pull_request:
+    paths:
+      - 'arquigen360/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: arquigen360
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: arquigen360/package-lock.json
+
+      - name: Instalar
+        run: npm ci
+
+      - name: Tipos (TypeScript)
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Pruebas (unitarias, seguridad, propiedades)
+        run: npm test
+
+      - name: Auditoría de dependencias
+        run: npm audit --omit=dev --audit-level=critical
+
+      - name: Build
+        run: npx vite build
+
+      - name: Verificar HTML autocontenido (un archivo, sin secretos, sin eval)
+        run: npm run verify:bundle
+
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high

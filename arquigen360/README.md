@@ -14,8 +14,8 @@ La arquitectura completa está en [ARQUITECTURA.md](./ARQUITECTURA.md).
 npm install
 npm run dev          # servidor de desarrollo en http://localhost:5173
 npm test             # pruebas del motor de distribución y del intérprete
-npm run build        # build de producción en dist/
-npm run build:single # un solo HTML autocontenido en dist-single/
+npm run build        # HTML autocontenido en dist/index.html
+npm run check        # tipos, lint, pruebas, build y verificación del HTML
 ```
 
 ## Qué hace el MVP
@@ -39,6 +39,15 @@ npm run build:single # un solo HTML autocontenido en dist-single/
     eliminar proyectos (almacenados en el navegador).
 11. **Asistente**: convierte una descripción en español en terreno + programa.
 
+## Actualización 2.0 (Fase A de la Actualización Maestra 2026)
+
+- **Modelo versionado**: `schemaVersion: "2.0.0"`, migraciones explícitas desde 1.x, JSON Schema en `schema/project.schema.json`.
+- **La IA propone comandos, no edita**: pestaña «Asistente IA → Editar el plano con texto». Cada comando pasa por JSON → esquema → permiso → objeto existe → límites → geometría → colisiones → ocupación.
+- **Normativa y cumplimiento**: vista «Normativa» con estados PASS / WARNING / FAIL / NOT_EVALUATED / NOT_APPLICABLE / UNVERIFIED, fuente y versión de cada regla, jurisdicción (Colombia → Antioquia → Valle de Aburrá) y matriz de referencia. Nada se marca como cumplido sin fuente verificada.
+- **Historial**: vista «Historial» con versiones nombradas (guardar, restaurar, duplicar, comparar), estado del documento y registro de auditoría.
+- **IndexedDB** para proyectos, respaldo completo y restauración; importaciones validadas.
+- **Calidad**: 53 pruebas (incluye seguridad y 300 casos aleatorios), verificación del HTML y CI en GitHub Actions. Trazabilidad en `quality/fase-a.md`.
+
 ## Estructura
 
 ```
@@ -49,7 +58,10 @@ src/
   render/         estilos, plano SVG, vista 2.5D, lámina
   export/         SVG, PNG, JPG, PDF
   ai/             intérprete local y contrato para un proveedor LLM
-  projects/       valores por defecto y persistencia
+  projects/       valores por defecto, persistencia (IndexedDB), versiones, textos legales
+  schema/         JSON Schema, validador, migraciones y validación de dominio
+  commands/       comandos declarativos y su pipeline de validación
+  normative-engine/ reglas con fuente y versión, jurisdicciones, matriz, adaptadores
   components/     interfaz
   store.ts        estado global con historial
 ```
@@ -75,6 +87,7 @@ Para actualizar la versión publicada después de cambiar el código:
 
 ```bash
 npm install
-npx vite build --outDir dist-single
-cp dist-single/index.html app/index.html
+npm run publish:app   # tipos + lint + pruebas + build + verificación + copia a app/index.html
 ```
+
+Luego haz commit de `app/index.html` y súbelo a `main`.

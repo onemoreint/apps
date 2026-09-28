@@ -1,5 +1,5 @@
 import type { Opening, FurnitureItem, Program, Room, RoomSpec, RoomType, Site } from '../geometry/types';
-import { snapR } from '../geometry/rect';
+import { GRID } from '../geometry/rect';
 import { CATALOG } from './catalog';
 import { PRIVATE_ORDER, SOCIAL_ORDER } from './rules';
 import { uid } from '../utils/id';
@@ -344,15 +344,23 @@ export function generateLayout(site: Site, program: Program): LayoutResult {
   }
   if (extRowsUsed.length && extDepth > 0) P.push(...placeRows(extRowsUsed, bx, band1V + b1 + b2, bw, extDepth));
 
-  // --- a coordenadas del lote, con redondeo a 5 cm sobre bordes (bordes compartidos coinciden)
+  // --- redondeo a 5 cm en el marco canónico, anclado al borde del área construible
+  // (así los bordes compartidos coinciden exactamente y nada se sale de los retiros);
+  // después se transforma al lote con redondeo a centímetros para eliminar ruido de coma flotante.
+  const r2c = (v: number) => Math.round(v * 100) / 100;
+  const snapEdge = (val: number, lo: number, hi: number) => r2c(Math.min(hi, Math.max(lo, lo + Math.round((val - lo) / GRID) * GRID)));
+  const uHi = bx + bw;
+  const vHi = by + bdRaw;
   const rooms: Room[] = P.filter((p) => p.w > 0.05 && p.d > 0.05).map((p) => {
-    const r = toLot(site, p.u, p.v, p.w, p.d);
-    const x1 = snapR(r.x);
-    const y1 = snapR(r.y);
-    const x2 = snapR(r.x + r.w);
-    const y2 = snapR(r.y + r.h);
-    return { id: uid(), specId: p.spec?.id, type: p.type, name: p.name, x: x1, y: y1, width: +(x2 - x1).toFixed(2), length: +(y2 - y1).toFixed(2) };
-  });
+    const u1 = snapEdge(p.u, bx, uHi);
+    const u2 = snapEdge(p.u + p.w, bx, uHi);
+    const v1 = snapEdge(p.v, by, vHi);
+    const v2 = snapEdge(p.v + p.d, by, vHi);
+    const r = toLot(site, u1, v1, r2c(u2 - u1), r2c(v2 - v1));
+    const x1 = r2c(r.x);
+    const y1 = r2c(r.y);
+    return { id: uid(), specId: p.spec?.id, type: p.type, name: p.name, x: x1, y: y1, width: r2c(r2c(r.x + r.w) - x1), length: r2c(r2c(r.y + r.h) - y1) };
+  }).filter((r) => r.width > 0.05 && r.length > 0.05);
 
   const openings = generateOpenings(rooms, site, prefs);
   const furniture = autoFurnish(rooms, openings);

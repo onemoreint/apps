@@ -7,6 +7,9 @@ import { AssistantPanel } from './components/AssistantPanel';
 import { Editor, boundsFor, collides, findFreeSpot } from './components/Editor';
 import { RightPanel } from './components/RightPanel';
 import { Icon } from './components/ui';
+import { checkProject } from './schema/migrations';
+import { ComplianceCenter } from './components/ComplianceCenter';
+import { HistoryCenter } from './components/HistoryCenter';
 import { AxoView } from './render/AxoView';
 import { Sheet } from './render/Sheet';
 import { PlanSvg, planViewBox } from './render/PlanSvg';
@@ -63,7 +66,7 @@ export default function App() {
       if (mod && e.key.toLowerCase() === 'z') { e.preventDefault(); if (e.shiftKey) s.redo(); else s.undo(); return; }
       if (mod && e.key.toLowerCase() === 'y') { e.preventDefault(); s.redo(); return; }
       const sel = s.selection;
-      if (!sel) return;
+      if (!sel || s.view !== 'plan') return;
       if (e.key === 'Delete' || e.key === 'Backspace') {
         e.preventDefault();
         if (sel.kind === 'room') s.deleteRoom(sel.id);
@@ -97,6 +100,8 @@ export default function App() {
     const p = useStore.getState().project;
     const base = slug(p.name);
     if (t === 'json') {
+      const errs = checkProject(p);
+      if (errs.length) throw new Error(`El proyecto no cumple el esquema: ${errs[0]}`);
       await saveFile(`${base}.arquigen.json`, new Blob([JSON.stringify(p, null, 2)], { type: 'application/json' }));
       return;
     }
@@ -133,6 +138,8 @@ export default function App() {
     { id: 'plan', label: 'Plano 2D' },
     { id: 'axo', label: 'Vista 2.5D' },
     { id: 'sheet', label: 'Lámina' },
+    { id: 'compliance', label: 'Normativa' },
+    { id: 'history', label: 'Historial' },
   ];
 
   return (
@@ -207,6 +214,8 @@ export default function App() {
               <AxoView project={project} style={style} theta={axo.theta} elev={axo.elev} cut={axo.cut} showFurniture={showFurniture} />
             </div>
           )}
+          {view === 'compliance' && <ComplianceCenter />}
+          {view === 'history' && <HistoryCenter />}
           {view === 'sheet' && (
             <div className="canvas-inner" style={{ width: fitW(420 / 297) }}>
               <Sheet project={project} style={style} showFurniture={showFurniture} />

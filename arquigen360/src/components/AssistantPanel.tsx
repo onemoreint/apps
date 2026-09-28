@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useStore } from '../store';
-import { localProvider } from '../ai/provider';
+import { aiProvider } from '../ai/provider';
+import { CommandEditor } from './CommandEditor';
 import type { Interpretation } from '../ai/localParser';
 import { CATALOG } from '../layout-engine/catalog';
 import { Icon, Section } from './ui';
@@ -24,7 +25,9 @@ export function AssistantPanel({ onApplied }: { onApplied: () => void }) {
   const run = async () => {
     setBusy(true);
     try {
-      setResult(await localProvider.interpret(text));
+      setResult(await aiProvider.interpretRequest(text));
+    } catch (e) {
+      notify((e as Error).message);
     } finally {
       setBusy(false);
     }
@@ -66,6 +69,8 @@ export function AssistantPanel({ onApplied }: { onApplied: () => void }) {
           <button className="btn primary" type="button" onClick={apply}>Aplicar y generar distribución</button>
         </Section>
       )}
+
+      <CommandEditor />
 
       <p className="hint">
         El asistente solo traduce el texto a terreno, programa y preferencias. La geometría la calcula el motor de

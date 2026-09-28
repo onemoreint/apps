@@ -3,10 +3,9 @@ import { useStore } from '../store';
 import { PlanSvg, type PickTarget } from '../render/PlanSvg';
 import { STYLES } from '../render/styles';
 import { overlaps, roomRect, snapR, EPS, wallLength } from '../geometry/rect';
-import { buildableRect } from '../geometry/site';
-import { CATALOG } from '../layout-engine/catalog';
 import { footprint } from '../furniture/library';
-import type { FurnitureItem, Opening, Project, Rect, Room, WallSide } from '../geometry/types';
+import type { FurnitureItem, Opening, Room, WallSide } from '../geometry/types';
+import { boundsFor, collides } from '../geometry/freeSpot';
 
 type Drag =
   | { mode: 'room'; id: string; sx: number; sy: number; ox: number; oy: number; moved: boolean }
@@ -16,22 +15,7 @@ type Drag =
 
 const MAGNET = 0.15;
 
-export function boundsFor(p: Project, r: Room): Rect {
-  return CATALOG[r.type].covered ? buildableRect(p.site) : { x: 0, y: 0, w: p.site.width, h: p.site.length };
-}
-
-export function collides(p: Project, r: Rect, ignore: Set<string>) {
-  return p.rooms.some((o) => !ignore.has(o.id) && overlaps(roomRect(o), r, 0.005));
-}
-
-/** posición libre para un ambiente nuevo */
-export function findFreeSpot(p: Project, w: number, l: number, covered: boolean): { x: number; y: number } {
-  const b = covered ? buildableRect(p.site) : { x: 0, y: 0, w: p.site.width, h: p.site.length };
-  for (let y = b.y; y + l <= b.y + b.h + EPS; y += 0.25)
-    for (let x = b.x; x + w <= b.x + b.w + EPS; x += 0.25)
-      if (!collides(p, { x, y, w, h: l }, new Set())) return { x: snapR(x), y: snapR(y) };
-  return { x: b.x, y: b.y };
-}
+export { boundsFor, collides, findFreeSpot } from '../geometry/freeSpot';
 
 /** desplaza puertas/muebles para que conserven su posición global cuando cambia el origen del ambiente */
 function keepContents(openings: Opening[], furniture: FurnitureItem[], room: Room, dx: number, dy: number) {

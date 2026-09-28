@@ -143,6 +143,53 @@ export interface FurnitureItem {
 
 export type StyleId = 'tecnico' | 'inmobiliario' | 'moderno' | 'calido';
 
+/** Versión actual del esquema del proyecto (ver src/schema/migrations.ts) */
+export const SCHEMA_VERSION = '2.0.0';
+
+/** Estado profesional del documento. Nunca existe "aprobado para construcción" automático. */
+export type DocStatus = 'BORRADOR' | 'PREVALIDACION' | 'REVISION_PROFESIONAL' | 'APROBADO_POR_USUARIO';
+
+export type PlanningInstrument = '' | 'POT' | 'PBOT' | 'EOT';
+
+export interface Jurisdiction {
+  country: 'CO';
+  department: string;
+  municipality: string;
+  planningInstrument: PlanningInstrument;
+  /** zona o tratamiento urbanístico, texto libre */
+  zone: string;
+}
+
+export interface ProjectMetadata {
+  author: string;
+  status: DocStatus;
+}
+
+/** Copia del modelo para el historial de versiones (sin versiones ni auditoría) */
+export type ProjectSnapshot = Pick<Project, 'site' | 'program' | 'rooms' | 'openings' | 'furniture' | 'style'>;
+
+export interface ProjectVersion {
+  id: string;
+  name: string;
+  createdAt: string;
+  snapshot: ProjectSnapshot;
+}
+
+export interface AuditEvent {
+  id: string;
+  timestamp: string;
+  actorId?: string;
+  /** 'user' | 'ai' | 'system' */
+  actor: 'user' | 'ai' | 'system';
+  action: string;
+  projectId: string;
+  entityId?: string;
+  before?: unknown;
+  after?: unknown;
+  result: 'ok' | 'rejected' | 'error';
+  detail?: string;
+}
+
 export interface Project {
   id: string;
   name: string;
@@ -150,11 +197,18 @@ export interface Project {
   updatedAt: number;
   site: Site;
   program: Program;
+  /** "spaces" en la especificación 2026; se conserva el nombre para compatibilidad */
   rooms: Room[];
   openings: Opening[];
   furniture: FurnitureItem[];
   style: StyleId;
+  /** campo heredado del esquema 1.x, se conserva para compatibilidad */
   version: 1;
+  schemaVersion: typeof SCHEMA_VERSION;
+  metadata: ProjectMetadata;
+  jurisdiction: Jurisdiction;
+  versions: ProjectVersion[];
+  audit: AuditEvent[];
 }
 
 export interface Rect {

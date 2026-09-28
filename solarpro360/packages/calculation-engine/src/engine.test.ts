@@ -18,6 +18,7 @@ import {
   computePrice,
   computeRoi,
   convertToLocal,
+  buildQuote,
   consumptionStats,
   generateBom,
   kwhToAh,
@@ -460,5 +461,83 @@ describe('Colombia sin decimales', () => {
     const r = computePrice({ totalCost: 1_000_000.4, margin: 0.3, marginMode: 'MARKUP', taxes: [], currency: 'COP', currencyDecimals: 0 });
     expect(r.value.rounded.precio_final).toBe(1_300_001); // 1 300 000.52 → 1 300 001
     expect(Number.isInteger(r.value.rounded.precio_final)).toBe(true);
+  });
+});
+
+/* ─────────────────────────── Cotización con desglose ─────────────────────────── */
+
+describe('cotización con desglose completo', () => {
+  // Fixture: 8 paneles, 2 strings, 4.4 kWp, 1 inversor, 0 baterías, 40 m DC, 20 m AC. Precios de prueba.
+  const ctx = { panels: 8, strings: 2, inverters: 1, batteries: 0, installedKwp: 4.4, dcCableMeters: 40, acCableMeters: 20 };
+  const bomRules = [
+    { id: 'p', category: 'PANELES', productId: 'panel', productName: 'Panel 550 W', unit: 'und', basis: 'PER_PANEL' as const, factor: 1 },
+    { id: 'i', category: 'INVERSOR', productId: 'inv', productName: 'Inversor', unit: 'und', basis: 'PER_INVERTER' as const, factor: 1 },
+    { id: 'e', category: 'ESTRUCTURA', productId: 'kit', productName: 'Kit de montaje', unit: 'und', basis: 'PER_PANEL' as const, factor: 1 },
+    { id: 'c', category: 'CABLE_DC', productId: 'cdc', productName: 'Cable DC', unit: 'm', basis: 'PER_METER_DC' as const, factor: 1 },
+    { id: 'm', category: 'CONECTORES', productId: 'mc4', productName: 'Conector MC4', unit: 'par', basis: 'PER_STRING' as const, factor: 2 },
+  ];
+  const prices = {
+    panel: { unitCost: 100, currency: 'USD' },
+    inv: { unitCost: 800, currency: 'USD' },
+    kit: { unitCost: 25, currency: 'USD' },
+    cdc: { unitCost: 1.5, currency: 'USD' },
+    mc4: { unitCost: 3, currency: 'USD' },
+  };
+  const q = buildQuote({
+    context: ctx,
+    bomRules,
+    prices,
+    labor: [
+      { id: 'l1', description: 'Instalación de panel', unit: 'UNIDAD', basis: 'PER_PANEL', factor: 1, unitCost: 10 },
+      { id: 'l2', description: 'Cableado DC', unit: 'METRO', basis: 'PER_METER_DC', factor: 1, unitCost: 0.5 },
+      { id: 'l3', description: 'Puesta en marcha', unit: 'GLOBAL', basis: 'FIXED', factor: 1, unitCost: 50 },
+    ],
+    transport: { km: 30, costPerKm: 1, trips: 2 },
+    engineering: [{ description: 'Diseño y memoria', quantity: 1, unit: 'GLOBAL', unitCost: 120 }],
+    indirectRate: 0.05,
+    others: [{ description: 'Trámites', quantity: 1, unit: 'GLOBAL', unitCost: 40 }],
+    currency: 'USD',
+    currencyDecimals: 2,
+    margin: 0.3,
+    marginMode: 'MARKUP',
+    taxes: [],
+  });
+
+  it('desglosa materiales por componente', () => {
+    const m = q.value.lines.filter((l) => l.category === 'MATERIALES');
+    expect(m.map((l) => [l.description, l.quantity, l.total])).toEqual([
+      ['Panel 550 W', 8, 800],
+      ['Inversor', 1, 800],
+      ['Kit de montaje', 8, 200],
+      ['Cable DC', 40, 60],
+      ['Conector MC4', 4, 12],
+    ]);
+    expect(q.value.subtotals.MATERIALES).toBe(1872);
+    expect(q.value.materialsByBomCategory.PANELES).toBe(800);
+  });
+
+  it('desglosa mano de obra, transporte, ingeniería, indirectos y otros', () => {
+    const s = q.value.subtotals;
+    expect(s.MANO_DE_OBRA).toBe(150); // 8×10 + 40×0.5 + 50
+    expect(s.TRANSPORTE).toBe(60); // 2 × 30 km × 1
+    expect(s.INGENIERIA).toBe(120);
+    // 5 % × (1872 + 150 + 60 + 120) = 110.1
+    expect(s.COSTOS_INDIRECTOS).toBeCloseTo(110.1, 10);
+    expect(s.OTROS).toBe(40);
+  });
+
+  it('el costo total es la suma de categorías y el precio parte de ahí', () => {
+    const total = 1872 + 150 + 60 + 120 + 110.1 + 40; // 2352.1
+    expect(q.value.pricing.costo_total).toBeCloseTo(total, 10);
+    expect(q.value.pricing.precio_final).toBeCloseTo(total * 1.3, 10);
+  });
+
+  it('un material sin precio no suma y queda señalado', () => {
+    const r = buildQuote({
+      context: ctx, bomRules, prices: { ...prices, mc4: undefined as never }, labor: [],
+      currency: 'USD', currencyDecimals: 2, margin: 0, marginMode: 'MARKUP', taxes: [],
+    });
+    expect(r.value.unpricedMaterials.map((l) => l.productName)).toEqual(['Conector MC4']);
+    expect(r.validations.map((x) => x.code)).toContain('BOM_PRICE_MISSING');
   });
 });

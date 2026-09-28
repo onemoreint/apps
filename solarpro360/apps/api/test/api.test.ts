@@ -270,6 +270,30 @@ describe('reglas de moneda', () => {
   });
 });
 
+describe('cotización con desglose', () => {
+  const body = {
+    context: { panels: 8, strings: 2, inverters: 1, batteries: 0, installedKwp: 4.4, dcCableMeters: 40, acCableMeters: 20 },
+    materials: [
+      { id: 'p', category: 'PANELES', productName: 'Panel 550 W', unit: 'und', basis: 'PER_PANEL', factor: 1, unitCost: 100 },
+      { id: 'i', category: 'INVERSOR', productName: 'Inversor', unit: 'und', basis: 'PER_INVERTER', factor: 1, unitCost: 800 },
+    ],
+    labor: [{ id: 'l', description: 'Instalación de panel', unit: 'UNIDAD', basis: 'PER_PANEL', factor: 1, unitCost: 10 }],
+    transport: { km: 30, costPerKm: 1 },
+    engineering: [{ description: 'Diseño', quantity: 1, unit: 'GLOBAL', unitCost: 120 }],
+    margin: 0.3, marginMode: 'MARKUP', taxes: [], quoteDate: '2026-09-28',
+  };
+  it('devuelve cada línea, subtotales por categoría y precio en USD y Bs (VE)', async () => {
+    const r = await call('POST', '/api/quotes/preview', B.users.ADMIN_EMPRESA!, B.companyId, body);
+    expect(r.statusCode).toBe(200);
+    const b = r.json();
+    expect(b.value.lines).toHaveLength(5);
+    expect(b.value.subtotals).toMatchObject({ MATERIALES: 1600, MANO_DE_OBRA: 80, TRANSPORTE: 30, INGENIERIA: 120 });
+    expect(b.value.pricing.costo_total).toBe(1830);
+    expect(b.value.pricing.precio_final).toBeCloseTo(2379, 10);
+    expect(b.local.value.localAmount).toBeCloseTo(2379 * 350, 6);
+  });
+});
+
 describe('rate limiting', () => {
   it('limita solicitudes excesivas', async () => {
     const extra = createDb(tdb.appUrl, { max: 1 });

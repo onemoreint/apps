@@ -59,7 +59,7 @@ export interface BomLine {
   note: string | null;
 }
 
-function basisQuantity(basis: BomBasis, ctx: BomContext): number | null {
+export function basisQuantity(basis: BomBasis, ctx: BomContext): number | null {
   switch (basis) {
     case 'PER_PANEL':
       return ctx.panels;

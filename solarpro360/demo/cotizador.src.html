@@ -1,0 +1,573 @@
+<title>SOLARPRO 360</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F2F4F6; --surface:#FFFFFF; --ink:#12233A; --ink-2:#4B5B6E; --line:#DCE2E8;
+  --sun:#E3A02F; --sun-soft:#FBF0DB; --cell:#2F5E8E; --cell-soft:#E6EEF6;
+  --ok:#1E7B4E; --ok-soft:#E3F2EA; --warn:#A8620A; --warn-soft:#FBEEDB; --err:#B3261E; --err-soft:#F9E3E1;
+  --field:#F7F9FA;
+  --display:'Archivo', 'Arial Narrow', system-ui, sans-serif;
+  --sans:'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0D1622; --surface:#15212F; --ink:#E6ECF2; --ink-2:#98A7B7; --line:#26364A;
+    --sun:#F0B24A; --sun-soft:#3A2C12; --cell:#7FB0E0; --cell-soft:#1B2E44;
+    --ok:#5CC592; --ok-soft:#133526; --warn:#F0B24A; --warn-soft:#3A2C12; --err:#F08A82; --err-soft:#3D1D1B;
+    --field:#101B28;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0D1622; --surface:#15212F; --ink:#E6ECF2; --ink-2:#98A7B7; --line:#26364A;
+  --sun:#F0B24A; --sun-soft:#3A2C12; --cell:#7FB0E0; --cell-soft:#1B2E44;
+  --ok:#5CC592; --ok-soft:#133526; --warn:#F0B24A; --warn-soft:#3A2C12; --err:#F08A82; --err-soft:#3D1D1B;
+  --field:#101B28;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;padding-inline:16px;padding-block:0 48px}
+.wrap{max-width:1180px;margin:0 auto}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:18px;border-bottom:1px solid var(--line);margin-bottom:22px}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{width:30px;height:30px;flex:none}
+.brand b{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.01em}
+.brand span{display:block;font-size:12px;color:var(--ink-2);letter-spacing:.08em;text-transform:uppercase}
+.mode{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--cell);background:var(--cell-soft);padding:5px 10px;border-radius:999px}
+.grid{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+.panel h2{font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin:0 0 4px;color:var(--ink)}
+.panel .hint{font-size:13px;color:var(--ink-2);margin:0 0 12px}
+form .sec{border-top:1px solid var(--line);padding-top:12px;margin-top:14px}
+form .sec:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.sec-t{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin-bottom:6px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:block;font-size:13px;font-weight:500;margin:8px 0 4px}
+input,select{width:100%;font:inherit;font-family:var(--mono);font-size:14px;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+select{font-family:var(--sans)}
+input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--sun);outline-offset:1px}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg button{font:inherit;font-weight:600;border:0;background:var(--field);color:var(--ink-2);padding:9px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.example{font-size:12px;color:var(--warn);background:var(--warn-soft);border-radius:8px;padding:8px 10px;margin-top:12px}
+.results{display:grid;gap:18px}
+.status{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:10px;font-size:14px}
+.status.WARNING,.status.REVIEW_REQUIRED{background:var(--warn-soft);color:var(--ink)}
+.status.OK{background:var(--ok-soft)}
+.status.ERROR{background:var(--err-soft)}
+.pill{flex:none;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--surface);border:1px solid currentColor}
+.pill.OK{color:var(--ok)} .pill.WARNING,.pill.REVIEW_REQUIRED{color:var(--warn)} .pill.ERROR{color:var(--err)}
+.status ul{margin:4px 0 0;padding-left:18px}
+.scen-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:right;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);font-weight:600}
+td{font-family:var(--mono);font-variant-numeric:tabular-nums}
+td:first-child{font-family:var(--sans)}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--field)}
+tbody tr.sel{background:var(--cell-soft)}
+tbody tr.sel td:first-child{box-shadow:inset 3px 0 0 var(--cell)}
+.scen-name{font-weight:600}
+.scen-sub{display:block;font-size:12px;color:var(--ink-2)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:700px){.cols{grid-template-columns:1fr}}
+.ledger{display:grid;gap:0}
+.ledger div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.ledger div span:last-child{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+.ledger .total{border-bottom:0;border-top:2px solid var(--ink);margin-top:4px;padding-top:10px;font-weight:600;font-size:16px}
+.ledger .local{background:var(--sun-soft);border:0;border-radius:8px;padding:10px 12px;margin-top:8px;font-weight:600}
+.ledger .local span:last-child{font-size:18px}
+.small{font-size:12px;color:var(--ink-2)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:10px}
+.kpi{background:var(--field);border-radius:8px;padding:10px}
+.kpi small{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.kpi b{white-space:nowrap;font-family:var(--mono);font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
+svg text{font-family:var(--mono);font-size:10px;fill:var(--ink-2)}
+details{border-top:1px solid var(--line);padding-top:10px}
+details+details{margin-top:10px}
+summary{cursor:pointer;font-weight:600;font-size:14px;list-style:none;display:flex;justify-content:space-between;gap:8px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'+';font-family:var(--mono);color:var(--ink-2)}
+details[open] summary::after{content:'−'}
+.formula{font-family:var(--mono);font-size:12.5px;background:var(--field);border-radius:8px;padding:10px;white-space:pre-wrap;word-break:break-word;margin:8px 0}
+.vars{font-size:13px;margin:0;padding-left:18px}
+.vars code{font-family:var(--mono);font-size:12.5px}
+footer{margin-top:26px;font-size:12px;color:var(--ink-2);max-width:760px}
+@media (prefers-reduced-motion:no-preference){tbody tr{transition:background .15s}}
+
+/* ── Desglose ── */
+.bd-wrap{overflow-x:auto}
+.bd{width:100%;border-collapse:collapse;font-size:13.5px}
+.bd th,.bd td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+.bd th:first-child,.bd td:first-child{text-align:left;white-space:normal;min-width:180px}
+.bd td{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.bd td:first-child{font-family:var(--sans)}
+.bd tr.cat td{background:var(--field);font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
+.bd tr.cat td:last-child{font-family:var(--mono);letter-spacing:0;font-size:13.5px}
+.bd tr.sum td{font-weight:600;border-bottom:0}
+.bd tr.sum.first td{border-top:2px solid var(--ink)}
+.bd tr.final td{font-size:16px;font-weight:700;border-top:1px solid var(--ink)}
+.bd tr.local td{background:var(--sun-soft);font-weight:700;font-size:16px}
+.bd .tag{display:inline-block;font-family:var(--mono);font-size:10.5px;color:var(--ink-2);border:1px solid var(--line);border-radius:4px;padding:0 4px;margin-left:6px}
+.bars{display:grid;gap:6px;margin-top:4px}
+.bar{display:grid;grid-template-columns:120px 1fr 120px;gap:10px;align-items:center;font-size:12.5px}
+.bar i{display:block;height:10px;border-radius:3px;background:var(--cell)}
+.bar i.mat{background:var(--cell)} .bar i.mo{background:var(--sun)} .bar i.oth{background:var(--ink-2)}
+.bar span:last-child{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+@media (max-width:520px){.bar{grid-template-columns:90px 1fr 96px}}
+/* ── Precios editables ── */
+.pt{width:100%;border-collapse:collapse;font-size:13px}
+.pt td{padding:4px 0;border-bottom:1px dashed var(--line);vertical-align:middle}
+.pt td:first-child{padding-right:8px}
+.pt .u{display:block;font-size:11px;color:var(--ink-2)}
+.pt input{padding:5px 7px;font-size:13px;width:110px;text-align:right}
+.pt-h{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin:12px 0 2px}
+.seg button .small{display:block;font-weight:500}
+#chart svg{max-height:220px}
+.toggle{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;margin-top:8px}
+.toggle input{width:auto}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 30 30" aria-hidden="true">
+        <circle cx="15" cy="15" r="6" fill="var(--sun)"/>
+        <g stroke="var(--sun)" stroke-width="2" stroke-linecap="round">
+          <line x1="15" y1="2" x2="15" y2="5"/><line x1="15" y1="25" x2="15" y2="28"/>
+          <line x1="2" y1="15" x2="5" y2="15"/><line x1="25" y1="15" x2="28" y2="15"/>
+          <line x1="5.8" y1="5.8" x2="7.9" y2="7.9"/><line x1="22.1" y1="22.1" x2="24.2" y2="24.2"/>
+          <line x1="5.8" y1="24.2" x2="7.9" y2="22.1"/><line x1="22.1" y1="7.9" x2="24.2" y2="5.8"/>
+        </g>
+      </svg>
+      <div><b>SOLARPRO 360</b><span>Dimensiona · Costea · Cotiza · Instala</span></div>
+    </div>
+    <span class="mode">Modo vendedor · cotización preliminar</span>
+  </header>
+
+  <div class="grid">
+    <form class="panel" id="f" autocomplete="off">
+      <div class="sec">
+        <div class="sec-t">País de la cotización</div>
+        <div class="seg" role="group" aria-label="País">
+          <button type="button" id="cCO" aria-pressed="true">Colombia <span class="small">COP</span></button>
+          <button type="button" id="cVE" aria-pressed="false">Venezuela <span class="small">USD → Bs</span></button>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-t">Consumo del cliente</div>
+        <label for="kwh">Consumo mensual (kWh)</label>
+        <input id="kwh" type="number" min="1" step="1" value="450">
+      </div>
+
+      <div class="sec">
+        <div class="sec-t">Sitio y equipo</div>
+        <div class="row">
+          <div><label for="hsp">Horas solares pico</label><input id="hsp" type="number" min="0.5" max="12" step="0.1" value="4.5"></div>
+          <div><label for="method">Origen del dato</label>
+            <select id="method"><option value="ESTIMATE">Estimado</option><option value="DATABASE">Base de datos</option><option value="MEASURED">Medido</option></select></div>
+        </div>
+        <div class="row">
+          <div><label for="pw">Panel (W)</label><input id="pw" type="number" min="50" step="5" value="550"></div>
+          <div><label for="pr">Performance ratio</label><input id="pr" type="number" min="0.5" max="1" step="0.01" value="0.80"></div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-t">Instalación</div>
+        <div class="row">
+          <div><label for="pps">Paneles por string</label><input id="pps" type="number" min="1" step="1" value="8"></div>
+          <div><label for="km">Distancia (km)</label><input id="km" type="number" min="0" step="1" value="25"></div>
+        </div>
+        <div class="row">
+          <div><label for="mdc">Cable DC (m)</label><input id="mdc" type="number" min="0" step="1" value="40"></div>
+          <div><label for="mac">Cable AC (m)</label><input id="mac" type="number" min="0" step="1" value="20"></div>
+        </div>
+        <label class="toggle" for="bat"><input id="bat" type="checkbox"> Incluir baterías</label>
+        <div id="batBox" hidden>
+          <div class="row">
+            <div><label for="aut">Autonomía (h)</label><input id="aut" type="number" min="1" step="1" value="6"></div>
+            <div><label for="bkwh">Batería (kWh c/u)</label><input id="bkwh" type="number" min="0.5" step="0.01" value="5.12"></div>
+          </div>
+          <div class="row">
+            <div><label for="bdod">DoD (0–1)</label><input id="bdod" type="number" min="0.1" max="1" step="0.01" value="0.9"></div>
+            <div><label for="beff">Eficiencia (0–1)</label><input id="beff" type="number" min="0.1" max="1" step="0.01" value="0.95"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-t">Precio</div>
+        <div class="row">
+          <div><label for="mg">Margen sobre costo (%)</label><input id="mg" type="number" min="0" step="1" value="30"></div>
+          <div><label for="tax">Impuesto (%)</label><input id="tax" type="number" min="0" max="100" step="0.5" value="0"></div>
+        </div>
+        <div class="row">
+          <div><label for="ind">Costos indirectos (%)</label><input id="ind" type="number" min="0" max="100" step="0.5" value="5"></div>
+          <div></div>
+        </div>
+      </div>
+
+      <div class="sec" id="veBox" hidden>
+        <div class="sec-t">Conversión a bolívares</div>
+        <div class="row">
+          <div><label for="bcv">Tasa BCV (Bs/USD)</label><input id="bcv" type="number" min="0" step="any" value="150"></div>
+          <div><label for="sur">Recargo (Bs por USD)</label><input id="sur" type="number" min="0" step="1" value="200"></div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-t">Recuperación</div>
+        <div class="row">
+          <div><label for="tar" id="tarL">Tarifa (COP/kWh)</label><input id="tar" type="number" min="0" step="any" value="900"></div>
+          <div><label for="esc">Alza tarifa anual (%)</label><input id="esc" type="number" step="0.5" value="0"></div>
+        </div>
+        <div class="row">
+          <div><label for="deg">Degradación anual (%)</label><input id="deg" type="number" min="0" max="5" step="0.1" value="0.5"></div>
+          <div><label for="life">Vida útil (años)</label><input id="life" type="number" min="1" max="40" step="1" value="25"></div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <details id="pricesD">
+          <summary id="pricesS">Precios y tarifas (COP)</summary>
+          <div id="prices"></div>
+        </details>
+      </div>
+
+      <p class="example">Todos los valores iniciales son de <b>ejemplo</b>: precios, tarifas y tasa BCV. Reemplácelos por su lista de precios, los datos del cliente y la tasa del día.</p>
+    </form>
+
+    <div class="results">
+      <div id="status"></div>
+
+      <section class="panel">
+        <h2>Escenarios técnicos comparables</h2>
+        <p class="hint">Toque un escenario para ver su desglose. Ninguno se marca como recomendado.</p>
+        <div class="scen-wrap"><table id="scen">
+          <thead><tr><th>Escenario</th><th>Paneles</th><th>kWp</th><th>kWh/mes</th><th>Cobertura</th><th>Baterías</th><th>Precio final</th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+      </section>
+
+      <section class="panel">
+        <h2>Desglose de la cotización</h2>
+        <p class="hint" id="qHint"></p>
+        <div class="bars" id="bars"></div>
+        <div class="bd-wrap" style="margin-top:14px"><table class="bd" id="bd">
+          <thead><tr><th>Concepto</th><th>Cant.</th><th>Unidad</th><th>Unitario</th><th>Total</th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+      </section>
+
+      <section class="panel">
+        <h2>Recuperación estimada</h2>
+        <p class="hint">Ahorro acumulado menos inversión. No es una garantía.</p>
+        <div class="kpis" id="kpis"></div>
+        <div id="chart"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Cómo se calculó</h2>
+        <p class="hint">Fórmulas, variables y supuestos tal como los entrega el motor de cálculo.</p>
+        <div id="how"></div>
+      </section>
+    </div>
+  </div>
+
+  <footer>
+    Esta página ejecuta el motor de cálculo real de SOLARPRO 360 en el navegador. No guarda datos. Resultado preliminar: la validación técnica, normativa y de compatibilidad de equipos requiere revisión profesional.
+  </footer>
+</div>
+
+<script>/*__ENGINE__*/</script>
+<script>
+(function(){
+  const E = window.SolarEngine;
+  const $ = (id) => document.getElementById(id);
+
+  /* Listas de precios de EJEMPLO por país. En la plataforma salen del catálogo de cada empresa. */
+  const PRICES = {
+    CO: {
+      cur:'COP', dec:0, tar:900, locale:'es-CO',
+      materials:[
+        {id:'panel', cat:'PANELES',        name:'Panel solar',                     unit:'und', basis:'PER_PANEL',    factor:1,  cost:480000},
+        {id:'inv',   cat:'INVERSOR',       name:'Inversor (costo por kWp)',        unit:'kWp', basis:'PER_KWP',      factor:1,  cost:650000, rounding:'NONE'},
+        {id:'bat',   cat:'BATERIAS',       name:'Batería',                         unit:'und', basis:'PER_BATTERY',  factor:1,  cost:3200000},
+        {id:'kit',   cat:'ESTRUCTURA',     name:'Estructura y rieles (kit por panel)', unit:'und', basis:'PER_PANEL', factor:1, cost:90000},
+        {id:'grapa', cat:'GRAPAS',         name:'Grapas',                          unit:'und', basis:'PER_PANEL',    factor:4,  cost:4500},
+        {id:'cdc',   cat:'CABLE_DC',       name:'Cable solar DC',                  unit:'m',   basis:'PER_METER_DC', factor:1,  cost:6500},
+        {id:'cac',   cat:'CABLE_AC',       name:'Cable AC',                        unit:'m',   basis:'PER_METER_AC', factor:1,  cost:8000},
+        {id:'mc4',   cat:'CONECTORES',     name:'Conectores MC4 (par)',            unit:'par', basis:'PER_STRING',   factor:2,  cost:12000},
+        {id:'pdc',   cat:'PROTECCIONES_DC',name:'Protección DC por string',       unit:'und', basis:'PER_STRING',   factor:1,  cost:180000},
+        {id:'pac',   cat:'PROTECCIONES_AC',name:'Breaker AC',                      unit:'und', basis:'FIXED',        factor:1,  cost:150000},
+        {id:'dps',   cat:'DPS',            name:'DPS (DC y AC)',                   unit:'und', basis:'FIXED',        factor:2,  cost:220000},
+        {id:'tab',   cat:'TABLEROS',       name:'Tablero',                         unit:'und', basis:'FIXED',        factor:1,  cost:250000},
+        {id:'pat',   cat:'PUESTA_A_TIERRA',name:'Kit de puesta a tierra',          unit:'und', basis:'FIXED',        factor:1,  cost:350000},
+        {id:'tub',   cat:'CANALIZACIONES', name:'Tubería y canalización',          unit:'m',   basis:'PER_METER_AC', factor:1,  cost:9000},
+        {id:'eti',   cat:'ETIQUETADO',     name:'Etiquetado',                      unit:'glb', basis:'FIXED',        factor:1,  cost:60000}
+      ],
+      labor:[
+        {id:'lp',  name:'Instalación de paneles y estructura', unit:'UNIDAD', basis:'PER_PANEL',    factor:1, cost:60000},
+        {id:'li',  name:'Instalación de inversor',              unit:'UNIDAD', basis:'PER_INVERTER', factor:1, cost:250000},
+        {id:'lb',  name:'Instalación de baterías',              unit:'UNIDAD', basis:'PER_BATTERY',  factor:1, cost:150000},
+        {id:'ldc', name:'Cableado DC',                          unit:'METRO',  basis:'PER_METER_DC', factor:1, cost:4000},
+        {id:'lac', name:'Cableado AC',                          unit:'METRO',  basis:'PER_METER_AC', factor:1, cost:4000},
+        {id:'lt',  name:'Puesta a tierra',                      unit:'GLOBAL', basis:'FIXED',        factor:1, cost:200000},
+        {id:'lc',  name:'Configuración y puesta en marcha',     unit:'GLOBAL', basis:'FIXED',        factor:1, cost:300000}
+      ],
+      transport:{costPerKm:2500, trips:2},
+      engineering:[{id:'eng', name:'Diseño, planos y memoria de cálculo', unit:'GLOBAL', qty:1, cost:600000}],
+      others:[{id:'oth', name:'Trámites y documentación', unit:'GLOBAL', qty:1, cost:300000}]
+    },
+    VE: {
+      cur:'USD', dec:2, tar:0.05, locale:'es-VE',
+      materials:[
+        {id:'panel', cat:'PANELES',        name:'Panel solar',                     unit:'und', basis:'PER_PANEL',    factor:1,  cost:95},
+        {id:'inv',   cat:'INVERSOR',       name:'Inversor (costo por kWp)',        unit:'kWp', basis:'PER_KWP',      factor:1,  cost:130, rounding:'NONE'},
+        {id:'bat',   cat:'BATERIAS',       name:'Batería',                         unit:'und', basis:'PER_BATTERY',  factor:1,  cost:1100},
+        {id:'kit',   cat:'ESTRUCTURA',     name:'Estructura y rieles (kit por panel)', unit:'und', basis:'PER_PANEL', factor:1, cost:18},
+        {id:'grapa', cat:'GRAPAS',         name:'Grapas',                          unit:'und', basis:'PER_PANEL',    factor:4,  cost:1},
+        {id:'cdc',   cat:'CABLE_DC',       name:'Cable solar DC',                  unit:'m',   basis:'PER_METER_DC', factor:1,  cost:1.2},
+        {id:'cac',   cat:'CABLE_AC',       name:'Cable AC',                        unit:'m',   basis:'PER_METER_AC', factor:1,  cost:1.5},
+        {id:'mc4',   cat:'CONECTORES',     name:'Conectores MC4 (par)',            unit:'par', basis:'PER_STRING',   factor:2,  cost:2.5},
+        {id:'pdc',   cat:'PROTECCIONES_DC',name:'Protección DC por string',       unit:'und', basis:'PER_STRING',   factor:1,  cost:35},
+        {id:'pac',   cat:'PROTECCIONES_AC',name:'Breaker AC',                      unit:'und', basis:'FIXED',        factor:1,  cost:30},
+        {id:'dps',   cat:'DPS',            name:'DPS (DC y AC)',                   unit:'und', basis:'FIXED',        factor:2,  cost:45},
+        {id:'tab',   cat:'TABLEROS',       name:'Tablero',                         unit:'und', basis:'FIXED',        factor:1,  cost:50},
+        {id:'pat',   cat:'PUESTA_A_TIERRA',name:'Kit de puesta a tierra',          unit:'und', basis:'FIXED',        factor:1,  cost:70},
+        {id:'tub',   cat:'CANALIZACIONES', name:'Tubería y canalización',          unit:'m',   basis:'PER_METER_AC', factor:1,  cost:1.8},
+        {id:'eti',   cat:'ETIQUETADO',     name:'Etiquetado',                      unit:'glb', basis:'FIXED',        factor:1,  cost:12}
+      ],
+      labor:[
+        {id:'lp',  name:'Instalación de paneles y estructura', unit:'UNIDAD', basis:'PER_PANEL',    factor:1, cost:12},
+        {id:'li',  name:'Instalación de inversor',              unit:'UNIDAD', basis:'PER_INVERTER', factor:1, cost:50},
+        {id:'lb',  name:'Instalación de baterías',              unit:'UNIDAD', basis:'PER_BATTERY',  factor:1, cost:30},
+        {id:'ldc', name:'Cableado DC',                          unit:'METRO',  basis:'PER_METER_DC', factor:1, cost:0.8},
+        {id:'lac', name:'Cableado AC',                          unit:'METRO',  basis:'PER_METER_AC', factor:1, cost:0.8},
+        {id:'lt',  name:'Puesta a tierra',                      unit:'GLOBAL', basis:'FIXED',        factor:1, cost:40},
+        {id:'lc',  name:'Configuración y puesta en marcha',     unit:'GLOBAL', basis:'FIXED',        factor:1, cost:60}
+      ],
+      transport:{costPerKm:0.6, trips:2},
+      engineering:[{id:'eng', name:'Diseño, planos y memoria de cálculo', unit:'GLOBAL', qty:1, cost:150}],
+      others:[{id:'oth', name:'Trámites y documentación', unit:'GLOBAL', qty:1, cost:60}]
+    }
+  };
+  const CAT_LABEL={MATERIALES:'Materiales',MANO_DE_OBRA:'Mano de obra',TRANSPORTE:'Transporte',INGENIERIA:'Ingeniería',COSTOS_INDIRECTOS:'Costos indirectos',OTROS:'Otros'};
+  const CATS=Object.keys(CAT_LABEL);
+  const BOM_LABEL={PANELES:'Paneles',INVERSOR:'Inversor',BATERIAS:'Baterías',ESTRUCTURA:'Estructura',GRAPAS:'Grapas',CABLE_DC:'Cable DC',CABLE_AC:'Cable AC',CONECTORES:'Conectores',PROTECCIONES_DC:'Protecciones DC',PROTECCIONES_AC:'Protecciones AC',DPS:'DPS',TABLEROS:'Tableros',PUESTA_A_TIERRA:'Puesta a tierra',CANALIZACIONES:'Canalizaciones',ETIQUETADO:'Etiquetado'};
+  const LBL={OK:'OK',WARNING:'Advertencia',REVIEW_REQUIRED:'Revisión',ERROR:'Error'};
+
+  let country='CO', selected='C';
+  const SCEN=[
+    {code:'A',label:'Escenario A',sub:'Cobertura aproximada 50 %',coverage:0.5},
+    {code:'B',label:'Escenario B',sub:'Cobertura aproximada 80 %',coverage:0.8},
+    {code:'C',label:'Escenario C',sub:'Cobertura aproximada 100 %',coverage:1}
+  ];
+
+  const num=(id)=>parseFloat($(id).value);
+  const P=()=>PRICES[country];
+  const fmt=(v,d,cur)=>{
+    if(v===null||v===undefined||!isFinite(v)) return '—';
+    const s=new Intl.NumberFormat(P().locale,{minimumFractionDigits:d,maximumFractionDigits:d}).format(v);
+    return cur?`${cur==='VES'?'Bs.':cur==='USD'?'US$':'$'} ${s}`:s;
+  };
+  const qfmt=(v)=>Number.isInteger(v)?fmt(v,0):fmt(v,2);
+  const esc=(s)=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  /* ── Tabla de precios editable ── */
+  function renderPrices(){
+    const p=P();
+    const row=(grp,it,unitTxt)=>`<tr><td>${esc(it.name)}<span class="u">${esc(unitTxt)}</span></td>
+      <td style="text-align:right"><input type="number" min="0" step="any" id="pr_${grp}_${it.id}" data-grp="${grp}" data-id="${it.id}" value="${it.cost}" aria-label="Precio ${esc(it.name)}"></td></tr>`;
+    const perTxt={PER_PANEL:'por panel',PER_STRING:'por string',PER_INVERTER:'por inversor',PER_BATTERY:'por batería',PER_KWP:'por kWp',PER_METER_DC:'por metro DC',PER_METER_AC:'por metro AC',FIXED:'global'};
+    let h=`<p class="pt-h">Materiales · ${p.cur}</p><table class="pt">`;
+    p.materials.forEach(m=>{h+=row('materials',m,`${m.factor>1?m.factor+' ':''}${m.unit} ${perTxt[m.basis]} · precio por ${m.unit}`);});
+    h+=`</table><p class="pt-h">Mano de obra · ${p.cur}</p><table class="pt">`;
+    p.labor.forEach(l=>{h+=row('labor',l,`${l.unit.toLowerCase()} · ${perTxt[l.basis]}`);});
+    h+=`</table><p class="pt-h">Transporte, ingeniería y otros · ${p.cur}</p><table class="pt">`;
+    h+=row('transport',{id:'km',name:`Transporte (${p.transport.trips} viajes)`,cost:p.transport.costPerKm},'por km');
+    p.engineering.forEach(e=>{h+=row('engineering',e,'global');});
+    p.others.forEach(o=>{h+=row('others',o,'global');});
+    h+='</table>';
+    $('prices').innerHTML=h;
+    $('pricesS').textContent=`Precios y tarifas de ejemplo (${p.cur}) · editar`;
+    $('prices').querySelectorAll('input').forEach(inp=>inp.addEventListener('input',()=>{
+      const v=parseFloat(inp.value); if(!isFinite(v)||v<0) return;
+      const g=inp.dataset.grp, id=inp.dataset.id;
+      if(g==='transport') p.transport.costPerKm=v; else p[g].find(x=>x.id===id).cost=v;
+      run();
+    }));
+  }
+
+  function setCountry(c){
+    country=c;
+    $('cCO').setAttribute('aria-pressed',c==='CO');
+    $('cVE').setAttribute('aria-pressed',c==='VE');
+    $('veBox').hidden = c!=='VE';
+    $('tar').value=P().tar;
+    $('tarL').textContent=`Tarifa (${P().cur}/kWh)`;
+    renderPrices();
+    run();
+  }
+
+  function howBlock(title,r){
+    const vars=r.variables.map(v=>`<li><code>${esc(v.name)}</code> = ${esc(v.value===null?'sin dato':(typeof v.value==='number'?+v.value.toPrecision(8):v.value))}${v.unit?' '+esc(v.unit):''}${v.source?` <span class="small">(${esc(v.source)})</span>`:''}</li>`).join('');
+    const asm=[...new Set(r.assumptions)].map(a=>`<li>${esc(a)}</li>`).join('');
+    return `<details><summary>${esc(title)}</summary><div class="formula">${esc(r.formula.split(' ; ').join('\n'))}</div>
+      <ul class="vars">${vars}</ul>${asm?`<p class="small" style="margin:10px 0 4px">Supuestos</p><ul class="vars">${asm}</ul>`:''}</details>`;
+  }
+
+  function chart(years,cur){
+    const W=420,H=150,pl=8,pr=8,pt=10,pb=22;
+    const vals=years.map(y=>y.cumulative);
+    const max=Math.max(0,...vals), min=Math.min(0,...vals);
+    const span=(max-min)||1, y=v=>pt+(max-v)/span*(H-pt-pb), bw=(W-pl-pr)/years.length;
+    let bars='';
+    years.forEach((d,i)=>{
+      const x=pl+i*bw+1, top=Math.min(y(d.cumulative),y(0)), h=Math.max(1,Math.abs(y(d.cumulative)-y(0)));
+      bars+=`<rect x="${x.toFixed(1)}" y="${top.toFixed(1)}" width="${Math.max(1,bw-2).toFixed(1)}" height="${h.toFixed(1)}" fill="${d.cumulative>=0?'var(--ok)':'var(--cell)'}" opacity="${d.cumulative>=0?0.85:0.55}"><title>Año ${d.year}: ${fmt(d.cumulative,P().dec,cur)}</title></rect>`;
+    });
+    const ticks=[1,5,10,15,20,25,30,35,40].filter(t=>t<=years.length).map(t=>`<text x="${(pl+(t-0.5)*bw).toFixed(1)}" y="${H-6}" text-anchor="middle">${t}</text>`).join('');
+    return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Flujo acumulado por año">
+      <line x1="${pl}" x2="${W-pr}" y1="${y(0).toFixed(1)}" y2="${y(0).toFixed(1)}" stroke="var(--ink-2)" stroke-width="1"/>${bars}${ticks}</svg>
+      <p class="small" style="margin:4px 0 0">Eje horizontal: años. Azul: inversión aún no recuperada. Verde: ganancia neta acumulada.</p>`;
+  }
+
+  /* ── Cotización de un escenario con el motor ── */
+  function quoteFor(s, dailyKwh){
+    const p=P(), v=s.sizing.value;
+    let batteries=0, batt=null;
+    if($('bat').checked){
+      batt=E.sizeBatteryBank({backedDailyKwh:dailyKwh,autonomyHours:num('aut'),
+        battery:{capacityKwh:num('bkwh'),nominalVoltageV:51.2,depthOfDischarge:num('bdod'),roundTripEfficiency:num('beff')}});
+      batteries=batt.value.batteryCount;
+    }
+    const ctx={panels:v.panelCount,strings:Math.ceil(v.panelCount/Math.max(1,Math.round(num('pps')))),inverters:1,
+      batteries,installedKwp:v.installedKwp,dcCableMeters:num('mdc'),acCableMeters:num('mac')};
+    const panelName=`Panel solar ${num('pw')} W`;
+    const q=E.buildQuote({
+      context:ctx,
+      bomRules:p.materials.filter(m=>m.basis!=='PER_BATTERY'||batteries>0).map(m=>({id:m.id,category:m.cat,productId:m.id,
+        productName:m.id==='panel'?panelName:m.id==='bat'?`Batería ${num('bkwh')} kWh`:m.name,unit:m.unit,basis:m.basis,factor:m.factor,rounding:m.rounding})),
+      prices:Object.fromEntries(p.materials.map(m=>[m.id,{unitCost:m.cost,currency:p.cur}])),
+      labor:p.labor.filter(l=>l.basis!=='PER_BATTERY'||batteries>0).map(l=>({id:l.id,description:l.name,unit:l.unit,basis:l.basis,factor:l.factor,unitCost:l.cost})),
+      transport:{km:num('km'),costPerKm:p.transport.costPerKm,trips:p.transport.trips},
+      engineering:p.engineering.map(e=>({description:e.name,quantity:e.qty,unit:e.unit,unitCost:e.cost})),
+      indirectRate:num('ind')/100,
+      others:p.others.map(o=>({description:o.name,quantity:o.qty,unit:o.unit,unitCost:o.cost})),
+      currency:p.cur,currencyDecimals:p.dec,margin:num('mg')/100,marginMode:'MARKUP',
+      taxes:num('tax')>0?[{code:'IMP',name:'Impuesto',rate:num('tax')/100}]:[]
+    });
+    return {q,batt,ctx};
+  }
+
+  function run(){
+    const p=P(), all=[];
+    let sc, daily;
+    try{
+      daily=num('kwh')/(365/12);
+      sc=E.buildScenarios({dailyConsumptionKwh:daily,
+        resource:{peakSunHours:num('hsp'),source:'dato ingresado por el vendedor',method:$('method').value},
+        panelPowerW:num('pw'),performanceRatio:num('pr')},SCEN);
+    }catch(e){ return showError(e); }
+
+    let priced;
+    try{ priced=sc.scenarios.map(s=>({s,...quoteFor(s,daily)})); }catch(e){ return showError(e); }
+
+    $('scen').tBodies[0].innerHTML=priced.map(({s,q,ctx})=>{const v=s.sizing.value;return `
+      <tr data-code="${s.code}" class="${s.code===selected?'sel':''}" tabindex="0">
+        <td><span class="scen-name">${s.label}</span><span class="scen-sub">${s.sub}</span></td>
+        <td>${v.panelCount}</td><td>${fmt(v.installedKwp,2)}</td><td>${fmt(v.estimatedMonthlyKwh,0)}</td>
+        <td>${fmt(v.achievedCoverage*100,0)} %</td><td>${ctx.batteries||'—'}</td><td>${fmt(q.value.pricing.rounded.precio_final,p.dec,p.cur)}</td></tr>`;}).join('');
+    [...$('scen').tBodies[0].rows].forEach(tr=>{
+      const pick=()=>{selected=tr.dataset.code;run();};
+      tr.addEventListener('click',pick);
+      tr.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick();}});
+    });
+
+    const {s,q,batt,ctx}=priced.find(x=>x.s.code===selected);
+    const qv=q.value, pv=qv.pricing;
+    all.push(...s.sizing.validations, ...q.validations, ...(batt?batt.validations:[]));
+
+    /* Barras por categoría */
+    const tot=pv.costo_total||1;
+    $('bars').innerHTML=CATS.filter(c=>qv.subtotals[c]>0).map(c=>{
+      const cls=c==='MATERIALES'?'mat':c==='MANO_DE_OBRA'?'mo':'oth';
+      return `<div class="bar"><span>${CAT_LABEL[c]}</span><span><i class="${cls}" style="width:${(qv.subtotals[c]/tot*100).toFixed(1)}%"></i></span><span>${fmt(qv.subtotals[c]/tot*100,1)} %</span></div>`;
+    }).join('');
+
+    /* Tabla de desglose */
+    let rows='';
+    CATS.forEach(c=>{
+      const ls=qv.lines.filter(l=>l.category===c);
+      if(!ls.length) return;
+      rows+=`<tr class="cat"><td colspan="4">${CAT_LABEL[c]}</td><td>${fmt(qv.subtotals[c],p.dec,p.cur)}</td></tr>`;
+      ls.forEach(l=>{
+        rows+=`<tr><td>${esc(l.description)}${l.bomCategory?`<span class="tag">${esc(BOM_LABEL[l.bomCategory]||l.bomCategory)}</span>`:''}</td>
+          <td>${qfmt(l.quantity)}</td><td>${esc(l.unit)}</td><td>${fmt(l.unitCost,p.dec)}</td><td>${fmt(l.total,p.dec)}</td></tr>`;
+      });
+    });
+    rows+=`<tr class="sum first"><td colspan="4">Costo total</td><td>${fmt(pv.rounded.costo_total,p.dec,p.cur)}</td></tr>
+      <tr class="sum"><td colspan="4">Utilidad (${fmt(pv.margen*100,0)} % sobre costo)</td><td>${fmt(pv.rounded.utilidad,p.dec,p.cur)}</td></tr>
+      <tr class="sum"><td colspan="4">Subtotal</td><td>${fmt(pv.rounded.subtotal,p.dec,p.cur)}</td></tr>
+      <tr class="sum"><td colspan="4">Impuestos</td><td>${fmt(pv.rounded.impuestos,p.dec,p.cur)}</td></tr>
+      <tr class="final"><td colspan="4">${country==='VE'?'Precio en dólares':'Precio final'}</td><td>${fmt(pv.rounded.precio_final,p.dec,p.cur)}</td></tr>`;
+    let conv=null;
+    if(country==='VE'){
+      try{
+        conv=E.convertToLocal({amount:pv.precio_final,fromCurrency:'USD',toCurrency:'VES',officialRate:num('bcv'),
+          rateSource:'BCV',rateDate:new Date().toISOString().slice(0,10),surchargePerUnit:num('sur'),toDecimals:2});
+        rows+=`<tr class="local"><td colspan="4">Precio final en bolívares <span class="small">(tasa ${fmt(num('bcv'),2)} + ${fmt(num('sur'),0)} = ${fmt(conv.value.appliedRate,2)} Bs/USD)</span></td><td>${fmt(conv.value.localAmountRounded,2,'VES')}</td></tr>`;
+      }catch(e){ all.push({code:'FX',status:'REVIEW_REQUIRED',message:'Ingrese la tasa BCV del día para calcular el precio final en bolívares.'}); }
+    }
+    $('bd').tBodies[0].innerHTML=rows;
+    $('qHint').textContent=`${s.label} · ${ctx.panels} paneles en ${ctx.strings} string(s) · ${fmt(ctx.installedKwp,2)} kWp${ctx.batteries?` · ${ctx.batteries} batería(s)`:''}`;
+
+    /* Recuperación */
+    let roi=null;
+    try{
+      roi=E.computeRoi({investment:pv.precio_final,firstYearProductionKwh:s.sizing.value.estimatedAnnualKwh,selfConsumptionRatio:1,
+        tariffPerKwh:num('tar'),tariffEscalation:num('esc')/100,annualDegradation:num('deg')/100,annualMaintenance:0,lifetimeYears:Math.round(num('life'))});
+      const r=roi.value;
+      $('kpis').innerHTML=`
+        <div class="kpi"><small>Ahorro mes 1</small><b>${fmt(r.monthlySavingsYear1,p.dec,p.cur)}</b></div>
+        <div class="kpi"><small>Recuperación</small><b>${r.cumulativePaybackYears===null?'No en vida útil':fmt(r.cumulativePaybackYears,1)+' años'}</b></div>
+        <div class="kpi"><small>Acumulado ${r.years.length} años</small><b>${fmt(r.years[r.years.length-1].cumulative,p.dec,p.cur)}</b></div>`;
+      $('chart').innerHTML=chart(r.years,p.cur);
+      const co2=E.co2Avoided(s.sizing.value.estimatedAnnualKwh,null);
+      all.push(...co2.validations.map(v=>({...v,message:'CO₂ evitado: falta el factor de emisión de la red del país, así que no se calcula.'})));
+    }catch(e){ $('kpis').innerHTML=''; $('chart').innerHTML=`<p class="small">${esc(e.message)}</p>`; }
+
+    let how=howBlock('Dimensionamiento',s.sizing)+(batt?howBlock('Baterías',batt):'')+howBlock('Desglose y precio de venta',q);
+    if(conv) how+=howBlock('Conversión a bolívares',conv);
+    if(roi) how+=howBlock('Recuperación',roi);
+    $('how').innerHTML=how;
+
+    const issues=all.filter(v=>v.status!=='OK');
+    const worst=E.worstStatus(issues);
+    $('status').innerHTML=issues.length
+      ? `<div class="status ${worst}"><span class="pill ${worst}">${LBL[worst]}</span><div>Cotización preliminar. Puntos a revisar:<ul>${[...new Set(issues.map(v=>v.message))].map(m=>`<li>${esc(m)}</li>`).join('')}</ul></div></div>`
+      : `<div class="status OK"><span class="pill OK">OK</span><div>Sin advertencias con los datos ingresados. Sigue siendo una cotización preliminar hasta la visita técnica.</div></div>`;
+  }
+
+  function showError(e){
+    $('status').innerHTML=`<div class="status ERROR"><span class="pill ERROR">Error</span><div>${esc(e.message||e)}. Corrija el dato para recalcular.</div></div>`;
+  }
+
+  $('cCO').addEventListener('click',()=>setCountry('CO'));
+  $('cVE').addEventListener('click',()=>setCountry('VE'));
+  $('bat').addEventListener('change',()=>{$('batBox').hidden=!$('bat').checked;});
+  $('f').addEventListener('input',e=>{ if(!e.target.dataset.grp) run(); });
+  $('f').addEventListener('submit',e=>e.preventDefault());
+  renderPrices();
+  run();
+})();
+</script>

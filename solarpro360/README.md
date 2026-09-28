@@ -39,6 +39,10 @@ solarpro360/
 
 La tasa BCV se registra cada día en `/api/exchange-rates` (fecha y fuente quedan guardadas); el recargo de 200 Bs es configurable por empresa.
 
+## Cotizador (demo)
+
+`demo/cotizador.html` es una página autónoma que ejecuta el motor real en el navegador (modo vendedor): escenarios comparables y desglose línea por línea de materiales por componente, mano de obra, transporte, ingeniería, costos indirectos y otros; precio en COP o en USD con precio final en Bs. Los precios que trae son de ejemplo y se editan en la página. Se regenera con `demo/build.sh`.
+
 ## Stack
 
 Next.js · Fastify · TypeScript · PostgreSQL (Supabase: Postgres + Auth + Storage) · Drizzle ORM · Vitest · pnpm workspaces.
@@ -68,10 +72,10 @@ pnpm test
 
 | Suite | Qué prueba | Pruebas |
 |---|---|---|
-| `calculation-engine` | Consumo, cargas, dimensionamiento, strings, inversor, baterías, BOM, costos, margen, impuestos, ROI, CO₂, conversión USD→Bs | 40 |
+| `calculation-engine` | Consumo, cargas, dimensionamiento, strings, inversor, baterías, BOM, costos, margen, impuestos, ROI, CO₂, conversión USD→Bs, cotización con desglose | 44 |
 | `shared` | Matriz de permisos por rol | 5 |
 | `db` | Aislamiento multiempresa con RLS en PostgreSQL real, roles en BD, auditoría, inmutabilidad, drift de esquema, reglas de moneda | 29 |
-| `api` | Autenticación JWT, autorización, acceso horizontal, validación, auditoría, rate limiting, endpoints de cálculo, moneda por país | 30 |
+| `api` | Autenticación JWT, autorización, acceso horizontal, validación, auditoría, rate limiting, endpoints de cálculo, moneda por país, desglose | 31 |
 
 Las pruebas de base de datos y API crean una base de datos efímera y se conectan con el rol real de la aplicación (sin privilegios, sujeto a RLS).
 

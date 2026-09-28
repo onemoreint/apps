@@ -65,6 +65,19 @@ Ah                  = kWh × 1000 / V_nominal
 
 `cantidad = ⌈base(regla) × factor⌉`, con base ∈ {por panel, string, inversor, batería, kWp, metro DC, metro AC, fijo}. Las reglas las define cada empresa. Líneas sin precio o en otra moneda no suman y se marcan.
 
+## Cotización con desglose (`quote`)
+
+```
+material_i        = ⌈base(regla_i) × factor_i⌉ × precio_i          (una línea por componente)
+mano_de_obra_j    = base(regla_j) × factor_j × tarifa_j              (una línea por actividad)
+transporte        = km × viajes × tarifa_km
+ingeniería, otros = cantidad × valor                                 (líneas globales)
+indirectos        = % × (materiales + mano de obra + transporte + ingeniería)
+COSTO TOTAL       = Σ de las seis categorías → utilidad → impuestos → precio de venta
+```
+
+Bases posibles: por panel, string, inversor, batería, kWp, metro DC, metro AC o fija. Un material sin precio no suma y queda señalado.
+
 ## Costos y precio (`costs`, `pricing`)
 
 ```

@@ -6,6 +6,7 @@ import {
   computePrice,
   computeRoi,
   convertToLocal,
+  buildQuote,
   sizeBatteryBank,
   sizePvSystem,
   worstStatus,
@@ -157,6 +158,67 @@ export function registerCalculationRoutes(app: FastifyInstance, db: Database): v
         out.validations = [...out.validations, ...conv.validations];
         out.status = worstStatus(out.validations);
       }
+    }
+    return out;
+  });
+
+  const basis = z.enum(['PER_PANEL', 'PER_STRING', 'PER_INVERTER', 'PER_BATTERY', 'PER_KWP', 'PER_METER_DC', 'PER_METER_AC', 'FIXED']);
+  const fixedLine = z.object({ description: z.string().min(1), quantity: z.number().min(0), unit: z.string().min(1), unitCost: z.number().min(0) });
+  const quoteBody = z.object({
+    context: z.object({
+      panels: z.number().int().min(0), strings: z.number().int().min(0), inverters: z.number().int().min(0),
+      batteries: z.number().int().min(0), installedKwp: z.number().min(0),
+      dcCableMeters: z.number().min(0).nullish(), acCableMeters: z.number().min(0).nullish(),
+    }),
+    materials: z.array(z.object({
+      id: z.string(), category: z.string(), productName: z.string().min(1), unit: z.string().min(1),
+      basis, factor: z.number().min(0), unitCost: z.number().min(0), rounding: z.enum(['CEIL', 'NONE']).optional(),
+      supplier: z.string().optional(),
+    })).max(200),
+    labor: z.array(z.object({
+      id: z.string(), description: z.string().min(1), unit: z.string().min(1), basis, factor: z.number().min(0),
+      unitCost: z.number().min(0), rounding: z.enum(['CEIL', 'NONE']).optional(),
+    })).max(100),
+    transport: z.object({ km: z.number().min(0), costPerKm: z.number().min(0), trips: z.number().int().min(0).optional() }).nullish(),
+    engineering: z.array(fixedLine).max(50).optional(),
+    indirectRate: z.number().min(0).max(1).optional(),
+    others: z.array(fixedLine).max(50).optional(),
+    margin: z.number().min(0),
+    marginMode: z.enum(['MARKUP', 'GROSS_MARGIN']),
+    taxes: z.array(z.object({ code: z.string(), name: z.string(), rate: z.number().min(0).max(1) })).max(10),
+    quoteDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  });
+
+  // Cotización con desglose completo. Moneda y conversión local desde la configuración de la empresa.
+  // (En el Módulo 5 los materiales y tarifas saldrán del catálogo y la mano de obra de la empresa.)
+  app.post('/api/quotes/preview', { preHandler: requireAny('budgets:write') }, async (req) => {
+    const b = quoteBody.parse(req.body);
+    const cur = await withTenant(db, tenantOf(req), (tx) => loadCurrencyContext(tx, req.auth!.companyId!));
+    const prices = Object.fromEntries(b.materials.map((m) => [m.id, { unitCost: m.unitCost, currency: cur.currency, supplier: m.supplier ?? null }]));
+    const q = buildQuote({
+      ...b,
+      bomRules: b.materials.map((m) => ({ id: m.id, category: m.category, productId: m.id, productName: m.productName, unit: m.unit, basis: m.basis, factor: m.factor, rounding: m.rounding })),
+      prices,
+      currency: cur.currency,
+      currencyDecimals: cur.decimals,
+    });
+    const out = envelope(q) as ReturnType<typeof envelope> & { local?: unknown };
+    if (cur.local) {
+      if (!cur.local.rate) {
+        out.validations = [...out.validations, { code: 'FX_RATE_MISSING', status: 'REVIEW_REQUIRED' as const,
+          message: `No hay tasa ${cur.local.source} registrada; no se puede calcular el precio final en ${cur.local.currency}.` }];
+        out.local = null;
+      } else {
+        const conv = convertToLocal({
+          amount: q.value.pricing.precio_final, fromCurrency: cur.currency, toCurrency: cur.local.currency,
+          officialRate: cur.local.rate.value, rateSource: cur.local.source, rateDate: cur.local.rate.date,
+          surchargePerUnit: cur.local.surchargePerUnit, toDecimals: cur.local.decimals,
+          quoteDate: b.quoteDate ?? new Date().toISOString().slice(0, 10),
+        });
+        out.local = { ...conv, rateScope: cur.local.rate.scope };
+        out.validations = [...out.validations, ...conv.validations];
+      }
+      out.status = worstStatus(out.validations);
     }
     return out;
   });

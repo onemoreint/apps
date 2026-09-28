@@ -44,7 +44,9 @@
 
 1. **Colombia**: cotiza en COP **sin decimales**.
 2. **Venezuela**: cotiza en **USD**; el precio final en bolívares = precio USD × (tasa BCV del día + **200 Bs**). El recargo es configurable por empresa; la tasa BCV se registra con fecha y queda congelada en cada presupuesto.
-3. **Modo de margen por defecto**: `MARKUP` (utilidad = costo × margen); `GROSS_MARGIN` disponible por empresa y por presupuesto.
+3. **Lista de precios de referencia**: precios de tiendas colombianas del 28-sep-2026 con fuente (`docs/PRECIOS.md`); en Venezuela se convierten a USD con la TRM. Mano de obra, transporte e ingeniería son estimados.
+4. **Selección de inversor en el cotizador**: el más pequeño de la lista que cubra kWp ÷ relación DC/AC máxima (1,2 por defecto, configurable).
+5. **Modo de margen por defecto**: `MARKUP` (utilidad = costo × margen); `GROSS_MARGIN` disponible por empresa y por presupuesto.
 
 ## Pendiente de validar
 

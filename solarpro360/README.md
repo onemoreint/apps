@@ -23,10 +23,11 @@ solarpro360/
 │   └── web/                  Frontend Next.js (mobile-first)
 ├── packages/
 │   ├── calculation-engine/   Motor matemático puro y testeable
-│   │   └── src/{core,energy,solar,strings,inverter,battery,bom,costs,pricing,roi,environmental}
+│   │   └── src/{core,energy,solar,strings,inverter,battery,bom,costs,pricing,quote,currency,roi,environmental}
 │   ├── db/                   Migraciones SQL (RLS), esquema Drizzle, seed, utilidades de prueba
 │   └── shared/               Enums, roles y matriz de permisos compartidos
-├── docs/                     Arquitectura, modelo de datos, seguridad, fórmulas, checklist del Módulo 0
+├── demo/                     Cotizador autónomo (modo vendedor) con el motor real
+├── docs/                     Arquitectura, modelo de datos, seguridad, fórmulas, precios, checklist del Módulo 0
 └── infrastructure/           docker-compose de PostgreSQL local
 ```
 
@@ -41,7 +42,7 @@ La tasa BCV se registra cada día en `/api/exchange-rates` (fecha y fuente queda
 
 ## Cotizador (demo)
 
-`demo/cotizador.html` es una página autónoma que ejecuta el motor real en el navegador (modo vendedor): escenarios comparables y desglose línea por línea de materiales por componente, mano de obra, transporte, ingeniería, costos indirectos y otros; precio en COP o en USD con precio final en Bs. Los precios que trae son de ejemplo y se editan en la página. Se regenera con `demo/build.sh`.
+`demo/cotizador.html` es una página autónoma que ejecuta el motor real en el navegador (modo vendedor): escenarios comparables y desglose línea por línea de materiales por componente, mano de obra, transporte, ingeniería, costos indirectos y otros; precio en COP o en USD con precio final en Bs. Trae precios de tiendas colombianas consultados el 28-sep-2026, cada uno con su fuente (ver [lista de precios](docs/PRECIOS.md)); Venezuela usa esa lista convertida a USD con la TRM y el precio final en Bs a tasa BCV + 200. Todos los precios se editan en la página. Se regenera con `demo/build.sh`.
 
 ## Stack
 
@@ -85,5 +86,6 @@ Las pruebas de base de datos y API crean una base de datos efímera y se conecta
 - [Modelo de datos](docs/DATA_MODEL.md)
 - [Seguridad](docs/SECURITY.md)
 - [Fórmulas del motor](docs/FORMULAS.md)
+- [Lista de precios de referencia](docs/PRECIOS.md)
 - [Checklist de aceptación del Módulo 0](docs/MODULE-0.md)
 - [Especificación original](docs/requisitos/MODULO-0-especificacion.md)

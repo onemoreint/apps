@@ -34,7 +34,11 @@ jobs:
             echo "ACC_KEYSTORE_PATH=$RUNNER_TEMP/acc.jks" >> "$GITHUB_ENV"
             echo "Firmando con la clave del repositorio"
           else
-            echo "Sin secreto ACC_KEYSTORE_B64: se firma con la clave de depuración"
+            echo "Sin secreto ACC_KEYSTORE_B64: se firma con una clave de depuración generada en el runner"
+            mkdir -p ~/.config/.android ~/.android
+            keytool -genkeypair -v -keystore ~/.config/.android/debug.keystore -storepass android -alias androiddebugkey \
+              -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+            cp ~/.config/.android/debug.keystore ~/.android/debug.keystore
           fi
 
       - name: Pruebas, lint y APK

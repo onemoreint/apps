@@ -65,8 +65,8 @@ export function Login() {
           </div>
           <p className="mt-4 text-xs text-muted">
             Código abierto en{' '}
-            <a className="underline" href="https://github.com/onemoreint/android-control-center">
-              github.com/onemoreint/android-control-center
+            <a className="underline" href="https://github.com/onemoreint/apps/tree/android-control-center">
+              github.com/onemoreint/apps (rama android-control-center)
             </a>
           </p>
         </div>

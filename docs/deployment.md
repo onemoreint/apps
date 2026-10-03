@@ -1,13 +1,13 @@
 # Despliegue
 
 ## Panel demo (GitHub Pages)
-Automático: cada push a `main` que toque `web/` ejecuta `.github/workflows/web.yml`, que prueba, compila con `VITE_BASE=/android-control-center/` y publica en Pages. En la configuración del repositorio, **Settings › Pages › Source** debe ser **GitHub Actions**.
+El código vive en la rama `android-control-center` del repositorio `onemoreint/apps`. Cada push a esa rama compila el panel (`.github/workflows/web.yml`) con `VITE_BASE=/apps/android-control-center/` y deja el resultado como artefacto `panel-web`. El panel publicado está en la carpeta `android-control-center/` de la rama `main` de `onemoreint/apps`, que GitHub Pages sirve en https://onemoreint.github.io/apps/android-control-center/.
 
 ## Servidor propio (VPS) con HTTPS
 Requisitos: un dominio apuntando al servidor, Docker y los puertos 80/443 abiertos.
 
 ```bash
-git clone https://github.com/onemoreint/android-control-center
+git clone -b android-control-center https://github.com/onemoreint/apps android-control-center
 cd android-control-center/infra
 cp .env.example .env    # edita ACC_DOMAIN, contraseñas y orígenes CORS
 docker compose up -d --build

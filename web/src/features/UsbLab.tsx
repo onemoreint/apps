@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { Check, Copy } from 'lucide-react';
 import { PageHeader, Panel } from '../components/ui';
 
-const REPO = 'https://github.com/onemoreint/android-control-center';
-const APK = `${REPO}/releases/latest/download/acc-agent.apk`;
+const REPO = 'https://github.com/onemoreint/apps/tree/android-control-center';
+const APK = 'https://github.com/onemoreint/apps/releases/download/acc-agent-latest/acc-agent.apk';
 const RX = 'com.acc.agent/.lab.AccDeviceAdminReceiver';
 const CMD = (c: string, extra = '') => `adb shell am broadcast -a com.acc.agent.COMMAND -n com.acc.agent/.lab.AdbCommandReceiver --es cmd ${c}${extra}`;
 
@@ -81,7 +81,7 @@ export function UsbLab() {
         <Step n={3} title="Descarga el agente">
           <p>
             Descarga <a className="font-semibold text-managed underline" href={APK}>acc-agent.apk</a> desde la última versión publicada y guárdalo en la carpeta de platform-tools. También puedes usar los scripts{' '}
-            <a className="font-semibold text-managed underline" href={`${REPO}/tree/main/tools`}>acc-usb.ps1 (Windows) y acc-usb.sh (Mac/Linux)</a>, que ejecutan estos mismos comandos.
+            <a className="font-semibold text-managed underline" href={`${REPO}/tools`}>acc-usb.ps1 (Windows) y acc-usb.sh (Mac/Linux)</a>, que ejecutan estos mismos comandos.
           </p>
         </Step>
 

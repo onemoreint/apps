@@ -13,7 +13,7 @@ if (Test-Path ".\adb.exe") { $Adb = ".\adb.exe" }
 $Pkg = "com.acc.agent"
 $Admin = "$Pkg/.lab.AccDeviceAdminReceiver"
 $Rx = "$Pkg/.lab.AdbCommandReceiver"
-$ApkUrl = "https://github.com/onemoreint/android-control-center/releases/latest/download/acc-agent.apk"
+$ApkUrl = "https://github.com/onemoreint/apps/releases/download/acc-agent-latest/acc-agent.apk"
 
 function Send-Cmd([string]$cmd, [string]$val = "") {
   $cmdArgs = @("shell", "am", "broadcast", "-a", "com.acc.agent.COMMAND", "-n", $Rx, "--es", "cmd", $cmd)

@@ -2,7 +2,7 @@ name: Android
 
 on:
   push:
-    branches: [main]
+    branches: [android-control-center]
     paths: ["android-agent/**", ".github/workflows/android.yml"]
   pull_request:
     paths: ["android-agent/**"]
@@ -57,13 +57,19 @@ jobs:
             android-agent/acc-agent.apk
             android-agent/acc-agent.apk.sha256
 
+      - name: Mover la etiqueta al commit actual
+        if: github.ref == 'refs/heads/android-control-center' && github.event_name != 'pull_request'
+        run: git push -f origin HEAD:refs/tags/acc-agent-latest
+
       - name: Publicar versión
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/android-control-center' && github.event_name != 'pull_request'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: agent-v0.1.${{ github.run_number }}
-          name: Android Control Agent 0.1.${{ github.run_number }}
-          make_latest: true
+          # Etiqueta fija: el enlace releases/download/acc-agent-latest/acc-agent.apk siempre apunta al último APK
+          tag_name: acc-agent-latest
+          target_commitish: ${{ github.sha }}
+          name: Android Control Agent (último, build ${{ github.run_number }})
+          make_latest: false
           body: |
             APK del agente para el laboratorio USB. Guía: docs/android-agent.md
 

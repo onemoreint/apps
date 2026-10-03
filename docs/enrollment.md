@@ -22,7 +22,7 @@ El QR de laboratorio sigue el formato oficial de aprovisionamiento de Android:
 ```json
 {
   "android.app.extra.PROVISIONING_DEVICE_ADMIN_COMPONENT_NAME": "com.acc.agent/.lab.AccDeviceAdminReceiver",
-  "android.app.extra.PROVISIONING_DEVICE_ADMIN_PACKAGE_DOWNLOAD_LOCATION": "https://github.com/onemoreint/android-control-center/releases/latest/download/acc-agent.apk",
+  "android.app.extra.PROVISIONING_DEVICE_ADMIN_PACKAGE_DOWNLOAD_LOCATION": "https://github.com/onemoreint/apps/releases/download/acc-agent-latest/acc-agent.apk",
   "android.app.extra.PROVISIONING_DEVICE_ADMIN_SIGNATURE_CHECKSUM": "EbA63MXU_t62gR3IhENVXaZVhHxMWbbyovTHF6ddG8A",
   "android.app.extra.PROVISIONING_LEAVE_ALL_SYSTEM_APPS_ENABLED": true
 }

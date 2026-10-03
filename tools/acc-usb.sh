@@ -9,7 +9,7 @@ ADB="${ADB:-adb}"
 PKG="com.acc.agent"
 ADMIN="$PKG/.lab.AccDeviceAdminReceiver"
 RX="$PKG/.lab.AdbCommandReceiver"
-APK_URL="https://github.com/onemoreint/android-control-center/releases/latest/download/acc-agent.apk"
+APK_URL="https://github.com/onemoreint/apps/releases/download/acc-agent-latest/acc-agent.apk"
 
 send() { # $1 = cmd, $2 = valor opcional
   local extra=()

@@ -69,7 +69,7 @@ class MainActivity : Activity() {
                 2. En tu computador ejecuta:
                 adb shell dpm set-device-owner ${DpcActions.COMPONENT}
 
-                Guía completa: github.com/onemoreint/android-control-center
+                Guía completa: github.com/onemoreint/apps (rama android-control-center)
             """.trimIndent()
         }
         root.addView(help)

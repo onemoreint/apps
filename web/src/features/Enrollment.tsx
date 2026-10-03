@@ -14,7 +14,7 @@ const SCENARIOS: { id: EnrollmentScenario; title: string; who: string; requires:
   { id: 'LAB', title: 'Laboratorio por USB', who: 'Tu propio teléfono de pruebas', requires: 'Sin cuentas en el teléfono', method: 'adb por USB o QR con el APK del agente' },
 ];
 
-const AGENT_APK = 'https://github.com/onemoreint/android-control-center/releases/latest/download/acc-agent.apk';
+const AGENT_APK = 'https://github.com/onemoreint/apps/releases/download/acc-agent-latest/acc-agent.apk';
 
 function payloadFor(e: Enr): string {
   if (e.scenario === 'LAB') {

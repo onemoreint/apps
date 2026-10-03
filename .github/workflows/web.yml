@@ -2,7 +2,7 @@ name: Web
 
 on:
   push:
-    branches: [main]
+    branches: [android-control-center]
     paths: ["web/**", ".github/workflows/web.yml"]
   pull_request:
     paths: ["web/**"]
@@ -10,12 +10,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
 
 jobs:
   build:
@@ -35,22 +29,12 @@ jobs:
         run: npm run lint
       - name: Pruebas
         run: npm test
-      - name: Compilar para GitHub Pages
+      - name: Compilar
         run: npm run build
         env:
-          VITE_BASE: /${{ github.event.repository.name }}/
-      - uses: actions/upload-pages-artifact@v3
-        if: github.ref == 'refs/heads/main'
+          # Se publica en https://onemoreint.github.io/apps/android-control-center/
+          VITE_BASE: /apps/android-control-center/
+      - uses: actions/upload-artifact@v4
         with:
+          name: panel-web
           path: web/dist
-
-  deploy:
-    if: github.ref == 'refs/heads/main'
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4

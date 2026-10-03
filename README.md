@@ -2,8 +2,8 @@
 
 Plataforma open source para administrar los dispositivos Android de una organización desde un panel web, usando **solo** mecanismos oficiales de Android Enterprise.
 
-- **Panel demo en línea:** https://onemoreint.github.io/android-control-center/
-- **Agente Android (APK):** [última versión](https://github.com/onemoreint/android-control-center/releases/latest)
+- **Panel demo en línea:** https://onemoreint.github.io/apps/android-control-center/
+- **Agente Android (APK):** [última versión](https://github.com/onemoreint/apps/releases/tag/acc-agent-latest)
 - **Arquitectura:** [docs/architecture.md](docs/architecture.md)
 
 > Este proyecto no es malware, spyware ni una herramienta para saltarse la seguridad de Android. Solo trabaja con dispositivos inscritos voluntariamente y bajo administración autorizada. Si Android no permite una acción en un modo de administración, la plataforma lo dice: *«Esta operación requiere un modo de administración compatible o no está permitida por Android.»*
@@ -36,7 +36,7 @@ Panel web ──HTTPS/JWT──> Backend ──API──> Android Management API
 
 ## Probar el panel sin instalar nada
 
-Abre https://onemoreint.github.io/android-control-center/ y entra con cualquier usuario de demostración. Cada rol (Superadministrador, Administrador, Operador, Auditor, Lector) ve y puede hacer cosas distintas. Los datos son ficticios y se guardan solo en tu navegador; «Restablecer demo» los vuelve a su estado inicial.
+Abre https://onemoreint.github.io/apps/android-control-center/ y entra con cualquier usuario de demostración. Cada rol (Superadministrador, Administrador, Operador, Auditor, Lector) ve y puede hacer cosas distintas. Los datos son ficticios y se guardan solo en tu navegador; «Restablecer demo» los vuelve a su estado inicial.
 
 ## Controlar tu propio teléfono por USB (laboratorio)
 

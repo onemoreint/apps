@@ -41,7 +41,8 @@ jobs:
         run: |
           set -o pipefail
           ./gradlew --no-daemon test lint assembleRelease 2>&1 | tee build.log || {
-            grep -E "^e: |error:|What went wrong|FAILED|Exception|> " build.log | head -40 | while IFS= read -r line; do echo "::error::$line"; done
+            { grep -E "^e: |^ERROR|error:" build.log | head -6; grep -A6 "What went wrong" build.log | grep -v "^--$" | head -8; } \
+              | grep -v "> Task" | head -10 | while IFS= read -r line; do echo "::error::$line"; done
             exit 1
           }
         env:

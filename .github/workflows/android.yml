@@ -38,7 +38,12 @@ jobs:
           fi
 
       - name: Pruebas, lint y APK
-        run: ./gradlew --no-daemon test lint assembleRelease
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon test lint assembleRelease 2>&1 | tee build.log || {
+            grep -E "^e: |error:|What went wrong|FAILED|Exception|> " build.log | head -40 | while IFS= read -r line; do echo "::error::$line"; done
+            exit 1
+          }
         env:
           ACC_KEYSTORE_PASSWORD: ${{ secrets.ACC_KEYSTORE_PASSWORD }}
           ACC_KEY_ALIAS: ${{ secrets.ACC_KEY_ALIAS }}

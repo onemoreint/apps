@@ -1,0 +1,27 @@
+# HTTPS automático con Let's Encrypt para ACC_DOMAIN.
+{$ACC_DOMAIN:localhost} {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+
+	@api path /api/* /v3/api-docs* /swagger-ui* /actuator/health
+	handle @api {
+		reverse_proxy backend:8080
+	}
+
+	handle {
+		root * /srv/web
+		try_files {path} /index.html
+		file_server
+	}
+
+	log {
+		output stdout
+		format json
+	}
+}

@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: acc-backend
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/acc}
+    username: ${DATABASE_USER:acc}
+    password: ${DATABASE_PASSWORD:acc}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: ${PORT:8080}
+  forward-headers-strategy: framework
+  error:
+    include-stacktrace: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+acc:
+  cors:
+    allowed-origins: ${ACC_CORS_ORIGINS:http://localhost:5173,https://onemoreint.github.io}

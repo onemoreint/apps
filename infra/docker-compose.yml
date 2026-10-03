@@ -1,0 +1,48 @@
+name: android-control-center
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-acc}
+      POSTGRES_USER: ${POSTGRES_USER:-acc}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD en infra/.env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432" # solo accesible desde el propio servidor
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-acc}"]
+      interval: 10s
+      retries: 5
+
+  backend:
+    build: ../backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-acc}
+      DATABASE_USER: ${POSTGRES_USER:-acc}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      ACC_CORS_ORIGINS: ${ACC_CORS_ORIGINS:-https://localhost}
+
+  web:
+    build:
+      context: ..
+      dockerfile: infra/web.Dockerfile
+    restart: unless-stopped
+    depends_on: [backend]
+    environment:
+      ACC_DOMAIN: ${ACC_DOMAIN:-localhost}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+
+volumes:
+  pgdata:
+  caddy_data:

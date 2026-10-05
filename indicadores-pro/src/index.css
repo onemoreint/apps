@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Tokens de diseño. Valores HSL sin "hsl()" para que Tailwind pueda aplicar opacidad.
+ * --primary y --secondary se sobrescriben en tiempo de ejecución con los colores
+ * institucionales de la organización (ver src/lib/brand.ts).
+ */
+@layer base {
+  :root {
+    --background: 210 40% 98%; /* #F8FAFC */
+    --foreground: 222 47% 11%; /* #0F172A */
+    --surface: 0 0% 100%;
+    --border: 214 32% 91%;
+    --input: 214 32% 86%;
+    --ring: 221 83% 53%;
+
+    --primary: 221 83% 53%; /* #2563EB */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 222 47% 11%; /* #0F172A */
+    --secondary-foreground: 210 40% 98%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 40%;
+    --accent: 214 95% 96%;
+    --accent-foreground: 221 83% 40%;
+
+    --success: 142 76% 36%; /* #16A34A */
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%; /* #F59E0B */
+    --warning-foreground: 26 90% 14%;
+    --destructive: 0 72% 51%; /* #DC2626 */
+    --destructive-foreground: 0 0% 100%;
+
+    --sidebar: 222 47% 11%;
+    --sidebar-foreground: 214 32% 91%;
+    --sidebar-muted: 215 20% 65%;
+    --sidebar-active: 221 83% 53%;
+  }
+
+  .dark {
+    --background: 222 47% 7%;
+    --foreground: 210 40% 96%;
+    --surface: 222 40% 11%;
+    --border: 217 28% 20%;
+    --input: 217 28% 26%;
+    --ring: 217 91% 60%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 8%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 217 30% 16%;
+    --muted-foreground: 215 20% 68%;
+    --accent: 217 40% 18%;
+    --accent-foreground: 213 94% 78%;
+
+    --success: 142 69% 45%;
+    --success-foreground: 144 80% 8%;
+    --warning: 38 92% 55%;
+    --warning-foreground: 26 90% 10%;
+    --destructive: 0 84% 62%;
+    --destructive-foreground: 0 0% 100%;
+
+    --sidebar: 222 50% 5%;
+    --sidebar-foreground: 214 32% 91%;
+    --sidebar-muted: 215 20% 60%;
+    --sidebar-active: 217 91% 60%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+
+  /* Cifras alineadas en tablas y tarjetas KPI */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

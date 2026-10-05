@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>INDICADORES PRO · Gestión de indicadores</title>
+    <meta name="description" content="Sistema inteligente para gestión, seguimiento, análisis y mejora de indicadores organizacionales. Fichas técnicas, metas, semáforos, planes de acción y dashboard, desde cualquier dispositivo." />
+    <meta name="theme-color" content="#2563EB" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="INDICADORES PRO" />
+    <meta property="og:description" content="Gestión, seguimiento y mejora de indicadores KPI y SGC. Web, móvil y multiusuario." />
+    <meta property="og:image" content="./icons/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./icons/favicon.svg" />
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Indicadores" />
+    <script>
+      // Aplica el tema antes de pintar para evitar parpadeo.
+      try {
+        var t = localStorage.getItem('ip.theme') || 'system'
+        var dark = t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
+        if (dark) document.documentElement.classList.add('dark')
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>INDICADORES PRO necesita JavaScript para funcionar.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

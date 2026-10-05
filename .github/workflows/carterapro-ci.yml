@@ -1,0 +1,32 @@
+name: CarteraPro · pruebas
+
+# Solo verifica. La app se publica tal cual desde carterapro/ con GitHub Pages.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'carterapro/**'
+      - '.github/workflows/carterapro-ci.yml'
+  pull_request:
+    paths:
+      - 'carterapro/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: carterapro
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Motor de cálculo, copias y lista del service worker
+        run: node --test tests/*.test.mjs

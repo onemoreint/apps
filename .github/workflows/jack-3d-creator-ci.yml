@@ -1,0 +1,38 @@
+name: Jack 3D Creator · build
+
+# Solo verifica que el proyecto compile. NO publica en GitHub Pages:
+# el sitio completo (todas las apps del repositorio) se publica desde la rama main,
+# y un despliegue por Actions de una sola carpeta reemplazaría todo el sitio.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'jack-3d-creator/**'
+      - '.github/workflows/jack-3d-creator-ci.yml'
+  pull_request:
+    paths:
+      - 'jack-3d-creator/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: jack-3d-creator
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar
+        run: npm install
+
+      - name: Build
+        run: npm run build

@@ -1,35 +1,23 @@
 /**
  * API de demostración (sin Supabase). Usa el menú incluido en la app y aplica
- * las mismas reglas que create_order en el servidor: productos disponibles,
- * opciones válidas para el producto, mínimos/máximos por grupo y totales en centavos.
+ * las mismas reglas que create_public_order en el servidor: productos disponibles,
+ * opciones válidas, mínimos/máximos por grupo, datos del cliente y totales en centavos.
  * Los pedidos NO se guardan en una base de datos: solo se arma el mensaje de WhatsApp.
  */
-import type { CreatedOrder, Menu, MenuOptionGroup } from '@/shared/types/menu';
+import type { CreatedOrder, CustomerInfo, Menu, MenuOptionGroup } from '@/shared/types/menu';
 import { BASE } from './asset';
 import { ApiError } from './errors';
 import type { OrderLineInput } from './rpc';
 
-export interface DemoData {
-  menu: Omit<Menu, 'table'>;
-  tables: { token: string; number: number; label: string | null }[];
-}
+let cache: Promise<Menu> | null = null;
 
-let cache: Promise<DemoData> | null = null;
-
-export function loadDemoData(): Promise<DemoData> {
+export function demoFetchMenu(): Promise<Menu> {
   cache ??= fetch(`${BASE}demo-data/menu.json`).then((r) => {
     if (!r.ok) throw new ApiError('NETWORK');
-    return r.json() as Promise<DemoData>;
+    return r.json() as Promise<Menu>;
   });
   cache.catch(() => (cache = null));
   return cache;
-}
-
-export async function demoFetchMenu(token: string): Promise<Menu> {
-  const data = await loadDemoData();
-  const table = data.tables.find((t) => t.token === token);
-  if (!table) throw new ApiError('TABLE_NOT_FOUND');
-  return { ...data.menu, table: { number: table.number, label: table.label } };
 }
 
 const COUNTER_KEY = 'mesaqr-demo-counter';
@@ -45,8 +33,20 @@ function nextNumber(): number {
 
 const cents = (usd: number) => Math.round(Number(usd) * 100);
 
-export async function demoCreateOrder(token: string, items: OrderLineInput[], notes: string): Promise<CreatedOrder> {
-  const menu = await demoFetchMenu(token);
+export async function demoCreateOrder(items: OrderLineInput[], customer: CustomerInfo, notes: string): Promise<CreatedOrder> {
+  const menu = await demoFetchMenu();
+  const b = menu.business;
+  const name = customer.name.trim();
+  const address = customer.address.trim();
+  if (
+    !name ||
+    name.length > 60 ||
+    !b.order_types.includes(customer.type) ||
+    (customer.type === 'delivery' && address.length < 5) ||
+    (b.payment_methods.length > 0 && !b.payment_methods.includes(customer.payment))
+  ) {
+    throw new ApiError('INVALID_CUSTOMER');
+  }
   if (items.length < 1 || items.length > 30) throw new ApiError('INVALID_CART');
   const trimmed = notes.trim();
   if (trimmed.length > 280) throw new ApiError('INVALID_CART');
@@ -73,10 +73,7 @@ export async function demoCreateOrder(token: string, items: OrderLineInput[], no
       }
       return null;
     });
-    if (chosen.some((c) => c === null) || new Set(item.option_ids).size !== item.option_ids.length) {
-      // Opción inexistente para este producto (o agotada: ya no aparece en el menú)
-      throw new ApiError('INVALID_CART');
-    }
+    if (chosen.some((c) => c === null) || new Set(item.option_ids).size !== item.option_ids.length) throw new ApiError('INVALID_CART');
     for (const g of applicable) {
       const n = chosen.filter((c) => c!.g.id === g.id).length;
       if (n < g.min_select || n > g.max_select) throw new ApiError('INVALID_CART');
@@ -97,17 +94,23 @@ export async function demoCreateOrder(token: string, items: OrderLineInput[], no
 
   const number = nextNumber();
   const totalUsd = (subtotal + extras) / 100;
-  const rate = Number(menu.business.exchange_rate);
+  const rate = Number(b.exchange_rate);
   return {
-    code: `M${menu.table.number}-${String(number).padStart(4, '0')}`,
+    code: String(number).padStart(4, '0'),
     order_number: number,
     created_at: new Date().toISOString(),
-    table_number: menu.table.number,
+    customer: {
+      name,
+      phone: customer.phone.trim() || null,
+      type: customer.type,
+      address: customer.type === 'delivery' ? address : null,
+      payment: customer.payment || null,
+    },
     subtotal_usd: subtotal / 100,
     extras_usd: extras / 100,
     total_usd: totalUsd,
     exchange_rate: rate,
-    show_bs: menu.business.show_bs,
+    show_bs: b.show_bs,
     total_bs: Math.round(totalUsd * rate * 100) / 100,
     notes: trimmed || null,
     items: lines,

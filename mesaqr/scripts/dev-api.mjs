@@ -2,7 +2,7 @@
 /**
  * API local para probar el MENÚ PÚBLICO sin crear un proyecto en Supabase.
  * Ejecuta las migraciones y el seed reales sobre Postgres en memoria (PGlite)
- * y responde como PostgREST en /rest/v1/rpc/get_menu y /rest/v1/rpc/create_order.
+ * y responde como PostgREST en /rest/v1/rpc/get_public_menu y /rest/v1/rpc/create_public_order.
  *
  * Uso:  npm run dev:api   (y en otra terminal: npm run dev)
  * .env.local:  VITE_SUPABASE_URL=http://127.0.0.1:54321  VITE_SUPABASE_ANON_KEY=dev
@@ -36,8 +36,11 @@ await db.exec(readFileSync(join(root, 'seed.sql'), 'utf8'));
 if (process.env.WHATSAPP) await db.query('update public.businesses set whatsapp = $1', [process.env.WHATSAPP]);
 
 const RPC = {
-  get_menu: { sql: 'select public.get_menu($1) as r', args: (b) => [b.p_token] },
-  create_order: { sql: 'select public.create_order($1, $2::jsonb, $3) as r', args: (b) => [b.p_token, JSON.stringify(b.p_items), b.p_notes ?? null] },
+  get_public_menu: { sql: 'select public.get_public_menu($1) as r', args: (b) => [b.p_slug] },
+  create_public_order: {
+    sql: 'select public.create_public_order($1, $2::jsonb, $3::jsonb, $4) as r',
+    args: (b) => [b.p_slug, JSON.stringify(b.p_items), JSON.stringify(b.p_customer), b.p_notes ?? null],
+  },
 };
 
 const cors = {
@@ -65,9 +68,6 @@ createServer(async (req, res) => {
       .writeHead(400, { ...cors, 'Content-Type': 'application/json' })
       .end(JSON.stringify({ code: e.code ?? 'P0001', message: e.message, details: e.detail ?? null, hint: null }));
   }
-}).listen(PORT, '127.0.0.1', async () => {
-  const { rows } = await db.query('select number, qr_token from public.dining_tables order by number');
-  console.log(`API local lista en http://127.0.0.1:${PORT}`);
-  console.log('Mesas demo (abre en el navegador):');
-  for (const t of rows) console.log(`  Mesa ${String(t.number).padStart(2)}: http://localhost:5173/menu?mesa=${t.qr_token}`);
+}).listen(PORT, '127.0.0.1', () => {
+  console.log(`API local lista en http://127.0.0.1:${PORT} — abre http://localhost:5173/`);
 });

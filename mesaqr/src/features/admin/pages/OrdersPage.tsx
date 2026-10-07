@@ -7,6 +7,7 @@ import { toast } from '@/shared/ui/Toast';
 import { useAdmin } from '../AdminContext';
 import { clockTime, must, timeAgo, useLoad } from '../lib';
 import { STATUS_LABEL, type Order, type OrderStatus } from '../types';
+import { ORDER_TYPE_EMOJI, ORDER_TYPE_LABEL } from '@/shared/types/menu';
 import { Button, Empty, ErrorBox, Loading, PageHeader, Select } from '../ui';
 
 type Filter = 'open' | 'all' | OrderStatus;
@@ -73,7 +74,7 @@ export default function OrdersPage() {
           </Button>
         }
       >
-        Cada pedido llega también por WhatsApp con el mismo código. Si un pedido no llegó al chat, el cliente no pulsó Enviar.
+        Cada pedido llega también por WhatsApp con el mismo número. Si uno no llegó al chat, el cliente no pulsó Enviar.
       </PageHeader>
 
       <div className="no-scrollbar -mx-4 mb-4 flex gap-2 overflow-x-auto px-4" role="tablist" aria-label="Filtrar pedidos">
@@ -102,9 +103,12 @@ export default function OrdersPage() {
             <li key={o.id} className="rounded-2xl border border-line bg-paper">
               <button type="button" onClick={() => setOpenId(open ? null : o.id)} aria-expanded={open} className="flex w-full items-center gap-3 p-4 text-left">
                 <div className="min-w-0 flex-1">
-                  <p className="font-display text-lg font-extrabold">#{o.code}</p>
+                  <p className="font-display text-lg font-extrabold">
+                    #{o.code} <span className="font-sans text-base font-semibold">{o.customer_name}</span>
+                  </p>
                   <p className="text-sm text-ink-2">
-                    Mesa {o.table_number} · {clockTime(o.created_at)} · {timeAgo(o.created_at)}
+                    {o.order_type && `${ORDER_TYPE_EMOJI[o.order_type]} ${ORDER_TYPE_LABEL[o.order_type]} · `}
+                    {clockTime(o.created_at)} · {timeAgo(o.created_at)}
                   </p>
                 </div>
                 <div className="text-right">
@@ -115,6 +119,30 @@ export default function OrdersPage() {
               </button>
               {open && (
                 <div className="border-t border-line px-4 pt-3 pb-4">
+                  <dl className="mb-3 space-y-1 rounded-xl bg-shelf px-3 py-2 text-sm">
+                    {o.customer_phone && (
+                      <div className="flex gap-2">
+                        <dt className="font-semibold">Teléfono</dt>
+                        <dd>
+                          <a href={`tel:${o.customer_phone.replace(/[^0-9+]/g, '')}`} className="underline underline-offset-2">
+                            {o.customer_phone}
+                          </a>
+                        </dd>
+                      </div>
+                    )}
+                    {o.address && (
+                      <div className="flex gap-2">
+                        <dt className="font-semibold">Dirección</dt>
+                        <dd>{o.address}</dd>
+                      </div>
+                    )}
+                    {o.payment_method && (
+                      <div className="flex gap-2">
+                        <dt className="font-semibold">Pago</dt>
+                        <dd>{o.payment_method}</dd>
+                      </div>
+                    )}
+                  </dl>
                   <ul className="space-y-2">
                     {[...(o.order_items ?? [])]
                       .sort((a, b) => a.sort_order - b.sort_order)

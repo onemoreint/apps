@@ -2,7 +2,7 @@
  * Llamadas públicas a Supabase con fetch directo (PostgREST /rest/v1/rpc).
  * Evita cargar @supabase/supabase-js en el menú → el cliente descarga mucho menos.
  */
-import type { CreatedOrder, Menu } from '@/shared/types/menu';
+import type { CreatedOrder, CustomerInfo, Menu } from '@/shared/types/menu';
 import { ApiError, toApiError } from './errors';
 import { DEMO_MODE, SUPABASE_ANON_KEY, SUPABASE_URL } from './env';
 import { demoCreateOrder, demoFetchMenu } from './demoApi';
@@ -37,12 +37,23 @@ async function rpc<T>(fn: string, body: Record<string, unknown>, signal?: AbortS
   return data as T;
 }
 
-export function fetchMenu(token: string, signal?: AbortSignal): Promise<Menu> {
-  if (DEMO_MODE) return demoFetchMenu(token);
-  return rpc<Menu>('get_menu', { p_token: token }, signal);
+export function fetchMenu(slug: string, signal?: AbortSignal): Promise<Menu> {
+  if (DEMO_MODE) return demoFetchMenu();
+  return rpc<Menu>('get_public_menu', { p_slug: slug }, signal);
 }
 
-export function createOrder(token: string, items: OrderLineInput[], notes: string): Promise<CreatedOrder> {
-  if (DEMO_MODE) return demoCreateOrder(token, items, notes);
-  return rpc<CreatedOrder>('create_order', { p_token: token, p_items: items, p_notes: notes || null });
+export function createOrder(slug: string, items: OrderLineInput[], customer: CustomerInfo, notes: string): Promise<CreatedOrder> {
+  if (DEMO_MODE) return demoCreateOrder(items, customer, notes);
+  return rpc<CreatedOrder>('create_public_order', {
+    p_slug: slug,
+    p_items: items,
+    p_customer: {
+      name: customer.name.trim(),
+      phone: customer.phone.trim() || null,
+      type: customer.type,
+      address: customer.type === 'delivery' ? customer.address.trim() : null,
+      payment: customer.payment || null,
+    },
+    p_notes: notes || null,
+  });
 }

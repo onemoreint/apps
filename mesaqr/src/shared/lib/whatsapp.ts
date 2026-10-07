@@ -1,4 +1,4 @@
-import type { CreatedOrder } from '@/shared/types/menu';
+import { ORDER_TYPE_EMOJI, ORDER_TYPE_LABEL, type CreatedOrder } from '@/shared/types/menu';
 import { formatBs, formatUsd } from './money';
 import { waDigits } from './phone';
 
@@ -15,13 +15,15 @@ export function formatTime(date: Date): string {
   }).format(date);
 }
 
-function tableLine(tableNumber: number, label?: string | null): string {
-  return label ? `📍 MESA ${tableNumber} (${label})` : `📍 MESA ${tableNumber}`;
-}
-
 /** Mensaje del pedido, construido SOLO con los datos que devolvió el servidor. */
-export function buildOrderMessage(order: CreatedOrder, tableLabel?: string | null): string {
-  const lines: string[] = [`🍔 NUEVO PEDIDO #${order.code}`, tableLine(order.table_number, tableLabel), RULE];
+export function buildOrderMessage(order: CreatedOrder): string {
+  const c = order.customer;
+  const lines: string[] = [`🍔 NUEVO PEDIDO #${order.code}`, `👤 ${c.name}`];
+  if (c.phone) lines.push(`📞 ${c.phone}`);
+  lines.push(`${ORDER_TYPE_EMOJI[c.type]} ${ORDER_TYPE_LABEL[c.type]}`);
+  if (c.type === 'delivery' && c.address) lines.push(`📍 ${c.address}`);
+  if (c.payment) lines.push(`💳 ${c.payment}`);
+  lines.push(RULE);
 
   for (const item of order.items) {
     lines.push(`${item.quantity}x ${item.product_name}`);
@@ -40,29 +42,6 @@ export function buildOrderMessage(order: CreatedOrder, tableLabel?: string | nul
   lines.push(`⏰ ${formatTime(new Date(order.created_at))}`);
 
   return lines.join('\n');
-}
-
-export type HelpKind = 'waiter' | 'bill' | 'more' | 'other';
-
-const HELP_TITLES: Record<HelpKind, [string, string]> = {
-  waiter: ['🔔 LLAMAR AL MESERO', 'El cliente necesita atención.'],
-  bill: ['💳 SOLICITUD DE CUENTA', 'El cliente solicita la cuenta.'],
-  more: ['🥤 NECESITO ALGO MÁS', 'El cliente necesita algo más.'],
-  other: ['❓ AYUDA', 'El cliente necesita ayuda.'],
-};
-
-export function buildHelpMessage(
-  kind: HelpKind,
-  tableNumber: number,
-  tableLabel: string | null,
-  date: Date,
-  detail?: string,
-): string {
-  const [title, body] = HELP_TITLES[kind];
-  const text = detail?.trim();
-  return [title, tableLine(tableNumber, tableLabel), '', text ? text.slice(0, 200) : body, '', `⏰ ${formatTime(date)}`].join(
-    '\n',
-  );
 }
 
 /** https://wa.me/584XXXXXXXXX?text=… con el texto codificado (acentos, emojis, saltos de línea). */

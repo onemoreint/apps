@@ -1,7 +1,7 @@
 import { CheckCircle2 } from 'lucide-react';
 import { formatBs, formatUsd } from '@/shared/lib/money';
-import type { SentOrder } from '@/features/menu/tableSession';
-import { WhatsAppGlyph } from './ConfirmSheet';
+import type { SentOrder } from '@/features/menu/session';
+import { WhatsAppGlyph } from './CheckoutSheet';
 
 interface Props {
   order: SentOrder;

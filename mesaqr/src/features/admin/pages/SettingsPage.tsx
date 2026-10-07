@@ -10,6 +10,9 @@ import { must } from '../lib';
 import type { Business } from '../types';
 import { Button, Card, Field, Input, TextArea, ToggleRow } from '../ui';
 import { ExchangeRateCard } from './DashboardPage';
+import { ShareLinkCard } from '../ShareLinkCard';
+import { PasswordCard } from '../PasswordCard';
+import { X } from 'lucide-react';
 
 const PRESETS = ['#D62828', '#E85D04', '#2B7A3D', '#1D4E89', '#6A1B9A', '#1A1714'];
 
@@ -25,9 +28,14 @@ export default function SettingsPage() {
     show_bs: business.show_bs,
     primary_color: business.primary_color,
     logo_url: business.logo_url,
+    payment_methods: business.payment_methods,
+    pickup_enabled: business.pickup_enabled,
+    delivery_enabled: business.delivery_enabled,
+    dine_in_enabled: business.dine_in_enabled,
   });
+  const [newPayment, setNewPayment] = useState('');
   const [saving, setSaving] = useState(false);
-  const [errors, setErrors] = useState<{ name?: string; whatsapp?: string; color?: string }>({});
+  const [errors, setErrors] = useState<{ name?: string; whatsapp?: string; color?: string; types?: string }>({});
   const set = <K extends keyof typeof f>(k: K, v: (typeof f)[K]) => setF((s) => ({ ...s, [k]: v }));
 
   const save = async (e: FormEvent) => {
@@ -37,6 +45,7 @@ export default function SettingsPage() {
     if (!f.name.trim()) errs.name = 'Escribe el nombre del negocio.';
     if (!isValidE164(whatsapp)) errs.whatsapp = 'Usa el formato internacional, por ejemplo +58 412 1234567.';
     if (!/^#[0-9a-f]{6}$/i.test(f.primary_color)) errs.color = 'Color no válido.';
+    if (!f.pickup_enabled && !f.delivery_enabled && !f.dine_in_enabled) errs.types = 'Activa al menos un tipo de pedido.';
     setErrors(errs);
     if (Object.keys(errs).length) return;
 
@@ -55,6 +64,10 @@ export default function SettingsPage() {
             show_bs: f.show_bs,
             primary_color: f.primary_color.toUpperCase(),
             logo_url: f.logo_url,
+            payment_methods: f.payment_methods,
+            pickup_enabled: f.pickup_enabled,
+            delivery_enabled: f.delivery_enabled,
+            dine_in_enabled: f.dine_in_enabled,
           })
           .eq('id', business.id)
           .select()
@@ -74,7 +87,65 @@ export default function SettingsPage() {
     <form onSubmit={save} noValidate className="space-y-4">
       <h1 className="font-display text-2xl font-extrabold tracking-tight">Configuración</h1>
 
+      <ShareLinkCard />
       <ExchangeRateCard />
+
+      <Card className="space-y-3">
+        <h2 className="font-display text-lg font-bold">Tipos de pedido</h2>
+        <ToggleRow label="🥡 Para llevar" checked={f.pickup_enabled} onChange={(v) => set('pickup_enabled', v)} />
+        <ToggleRow label="🛵 Delivery" hint="Al cliente se le pide la dirección." checked={f.delivery_enabled} onChange={(v) => set('delivery_enabled', v)} />
+        <ToggleRow label="🍽️ Comer en el local" checked={f.dine_in_enabled} onChange={(v) => set('dine_in_enabled', v)} />
+        {errors.types && <p className="text-sm text-danger">{errors.types}</p>}
+      </Card>
+
+      <Card className="space-y-3">
+        <h2 className="font-display text-lg font-bold">Formas de pago</h2>
+        <p className="text-sm text-ink-2">El cliente elige una al enviar su pedido. Si dejas la lista vacía, no se le pregunta.</p>
+        <div className="flex flex-wrap gap-2">
+          {f.payment_methods.map((m) => (
+            <span key={m} className="inline-flex h-10 items-center gap-1 rounded-full bg-shelf pr-1 pl-4 font-medium">
+              {m}
+              <button
+                type="button"
+                aria-label={`Quitar ${m}`}
+                onClick={() => set('payment_methods', f.payment_methods.filter((x) => x !== m))}
+                className="grid size-8 place-items-center rounded-full text-ink-2"
+              >
+                <X size={16} />
+              </button>
+            </span>
+          ))}
+        </div>
+        {f.payment_methods.length < 8 && (
+          <div className="flex gap-2">
+            <Input
+              aria-label="Nueva forma de pago"
+              placeholder="Ej.: Binance"
+              value={newPayment}
+              maxLength={40}
+              onChange={(e) => setNewPayment(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  const v = newPayment.trim();
+                  if (v && !f.payment_methods.includes(v)) set('payment_methods', [...f.payment_methods, v]);
+                  setNewPayment('');
+                }
+              }}
+            />
+            <Button
+              variant="secondary"
+              onClick={() => {
+                const v = newPayment.trim();
+                if (v && !f.payment_methods.includes(v)) set('payment_methods', [...f.payment_methods, v]);
+                setNewPayment('');
+              }}
+            >
+              Agregar
+            </Button>
+          </div>
+        )}
+      </Card>
 
       <Card className="space-y-4">
         <h2 className="font-display text-lg font-bold">Pedidos por WhatsApp</h2>
@@ -144,11 +215,12 @@ export default function SettingsPage() {
         </div>
       </Card>
 
-      <div className="sticky bottom-20 md:bottom-4">
+      <div className="sticky bottom-20 z-10 md:bottom-4">
         <Button type="submit" busy={saving} className="w-full shadow-lg sm:w-auto">
           Guardar configuración
         </Button>
       </div>
+      <PasswordCard />
     </form>
   );
 }

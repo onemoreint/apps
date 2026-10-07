@@ -38,17 +38,19 @@ export default defineConfig({
       },
       workbox: {
         navigateFallback: `${base}index.html`,
-        navigateFallbackDenylist: [/\/qr\//],
         // El chunk del panel admin no se precachea: el cliente nunca lo descarga.
         globIgnores: ['**/admin*.js', '**/AdminApp*.js', '**/demo/**'],
         runtimeCaching: [
           {
             // Fotos del menú (Storage de Supabase e imágenes demo locales)
             urlPattern: ({ url }) =>
-              url.pathname.includes('/demo/') || url.pathname.includes('/storage/v1/object/public/'),
+              url.hostname === 'images.unsplash.com' ||
+              url.pathname.includes('/demo/') ||
+              url.pathname.includes('/storage/v1/object/public/'),
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'menu-images',
+              cacheableResponse: { statuses: [0, 200] },
               expiration: { maxEntries: 150, maxAgeSeconds: 60 * 60 * 24 * 30 },
             },
           },

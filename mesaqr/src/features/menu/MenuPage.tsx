@@ -1,55 +1,40 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, navigate, useUrl } from '@/app/nav';
-import { AtSign, BellRing, MapPin } from 'lucide-react';
-import type { MenuProduct } from '@/shared/types/menu';
+import { AtSign, MapPin, MessageCircle } from 'lucide-react';
+import { ORDER_TYPE_EMOJI, ORDER_TYPE_LABEL, type CustomerInfo, type MenuProduct } from '@/shared/types/menu';
 import { fetchMenu } from '@/shared/lib/rpc';
 import { ApiError, CUSTOMER_MESSAGES, toApiError } from '@/shared/lib/errors';
 import { applyBrand } from '@/shared/lib/color';
-import { DEMO_MODE, isConfigured, menuPath } from '@/shared/lib/env';
+import { BUSINESS_SLUG, DEMO_MODE, isConfigured } from '@/shared/lib/env';
 import { asset } from '@/shared/lib/asset';
+import { waLink } from '@/shared/lib/whatsapp';
 import { toast } from '@/shared/ui/Toast';
 import { useCart } from '@/features/cart/cartStore';
 import { cartTotals, type CartLine } from '@/features/cart/cartMath';
 import { CartBar } from '@/features/cart/CartBar';
 import { CartSheet } from '@/features/cart/CartSheet';
-import { ConfirmSheet } from '@/features/checkout/ConfirmSheet';
+import { CheckoutSheet } from '@/features/checkout/CheckoutSheet';
 import { SentView } from '@/features/checkout/SentView';
 import { sendOrder } from '@/features/checkout/sendOrder';
-import { HelpSheet } from '@/features/help/HelpSheet';
 import { indexMenu, groupsFor, needsChoice, unavailableIn, type MenuIndex } from './menuIndex';
-import { TableTicket } from './TableTicket';
 import { CategoryTabs } from './CategoryTabs';
 import { ProductRow } from './ProductRow';
 import { ProductSheet, type ProductChoice } from './ProductSheet';
 import { UpsellSheet } from './UpsellSheet';
 import { MenuSkeleton } from './MenuSkeleton';
 import { NoticeScreen } from './NoticeScreen';
-import {
-  clearSent,
-  forgetTable,
-  isValidTokenFormat,
-  loadSent,
-  loadTable,
-  saveSent,
-  saveTable,
-  type SentOrder,
-} from './tableSession';
+import { clearSent, loadSent, saveCustomer, saveSent, type SentOrder } from './session';
 
-type Status = 'loading' | 'ready' | 'no-table' | 'offline';
+type Status = 'loading' | 'ready' | 'unavailable' | 'offline';
 type SheetState =
   | { kind: 'product'; product: MenuProduct; editing?: CartLine }
   | { kind: 'upsell' }
   | { kind: 'cart' }
-  | { kind: 'confirm' }
-  | { kind: 'help' }
+  | { kind: 'checkout' }
   | null;
 
 const UPSELL_KEY = 'mesaqr-upsell-shown';
 
 export default function MenuPage() {
-  const { search } = useUrl();
-  const token = search.get('mesa');
-
   const [status, setStatus] = useState<Status>('loading');
   const [idx, setIdx] = useState<MenuIndex | null>(null);
   const [sheet, setSheet] = useState<SheetState>(null);
@@ -65,53 +50,32 @@ export default function MenuPage() {
   const totals = cartTotals(cart.lines);
 
   // ---------- Carga del menú ----------
-  const load = useCallback(
-    async (signal?: AbortSignal) => {
-      if (!token) {
-        const stored = loadTable();
-        if (stored) navigate(menuPath(stored), { replace: true });
-        else setStatus('no-table');
-        return;
+  const load = useCallback(async (signal?: AbortSignal) => {
+    try {
+      const menu = await fetchMenu(BUSINESS_SLUG, signal);
+      const index = indexMenu(menu);
+      applyBrand(menu.business.primary_color);
+      document.title = `${menu.business.name} · Menú`;
+      const store = useCart.getState();
+      store.bindToken(BUSINESS_SLUG);
+      // Si algo del carrito se agotó desde la última visita, se quita y se avisa
+      const bad = unavailableIn(index, store.lines.map((l) => l.productId), store.lines.flatMap((l) => l.options.map((o) => o.id)));
+      if (bad.size > 0) {
+        const removed = store.purge(bad);
+        if (removed.length) toast(`Ya no está disponible: ${removed.join(', ')}. Lo quitamos de tu pedido.`, 'warn');
       }
-      if (!isValidTokenFormat(token)) {
-        setStatus('no-table');
-        return;
-      }
-      try {
-        const menu = await fetchMenu(token, signal);
-        const index = indexMenu(menu);
-        saveTable(token);
-        applyBrand(menu.business.primary_color);
-        document.title = `${menu.business.name} · Menú`;
-        const store = useCart.getState();
-        store.bindToken(token);
-        // Si algo del carrito se agotó desde la última visita, se quita y se avisa
-        const bad = unavailableIn(index, store.lines.map((l) => l.productId), store.lines.flatMap((l) => l.options.map((o) => o.id)));
-        if (bad.size > 0) {
-          const removed = store.purge(bad);
-          if (removed.length) toast(`Ya no está disponible: ${removed.join(', ')}. Lo quitamos de tu pedido.`, 'warn');
-        }
-        setIdx(index);
-        setActiveCat((c) => c ?? index.menu.categories[0]?.id ?? null);
-        setStatus('ready');
-      } catch (e) {
-        if ((e as Error).name === 'AbortError') return;
-        const err = toApiError(e);
-        if (err.code === 'TABLE_NOT_FOUND') {
-          forgetTable();
-          setStatus('no-table');
-        } else {
-          setStatus('offline');
-        }
-      }
-    },
-    [token],
-  );
+      setIdx(index);
+      setActiveCat((c) => c ?? index.menu.categories[0]?.id ?? null);
+      setStatus('ready');
+    } catch (e) {
+      if ((e as Error).name === 'AbortError') return;
+      setStatus(toApiError(e).code === 'BUSINESS_NOT_FOUND' ? 'unavailable' : 'offline');
+    }
+  }, []);
 
   useEffect(() => {
     if (!isConfigured && !DEMO_MODE) return;
     const ctrl = new AbortController();
-    setStatus('loading');
     void load(ctrl.signal);
     return () => ctrl.abort();
   }, [load]);
@@ -196,8 +160,8 @@ export default function MenuPage() {
   };
 
   // ---------- Envío ----------
-  const send = async () => {
-    if (!idx || !token || sending) return;
+  const send = async (customer: CustomerInfo) => {
+    if (!idx || sending) return;
     setSendError(null);
     const lines = useCart.getState().lines;
     const bad = unavailableIn(idx, lines.map((l) => l.productId), lines.flatMap((l) => l.options.map((o) => o.id)));
@@ -210,13 +174,14 @@ export default function MenuPage() {
     setSending(true);
     try {
       const result = await sendOrder({
-        token,
+        slug: BUSINESS_SLUG,
         lines,
+        customer,
         notes: useCart.getState().notes,
         expectedTotalCents: cartTotals(lines).totalCents,
         whatsapp: idx.menu.business.whatsapp,
-        tableLabel: idx.menu.table.label,
       });
+      saveCustomer(customer);
       saveSent(result);
       useCart.getState().clear();
       setSheet(null);
@@ -231,10 +196,6 @@ export default function MenuPage() {
         toast(removed.length ? `Ya no está disponible: ${removed.join(', ')}. Lo quitamos de tu pedido.` : CUSTOMER_MESSAGES.ITEMS_UNAVAILABLE, 'warn');
         setSheet({ kind: 'cart' });
         void load();
-      } else if (err.code === 'TABLE_NOT_FOUND') {
-        setSheet(null);
-        forgetTable();
-        setStatus('no-table');
       } else {
         setSendError(CUSTOMER_MESSAGES[err.code]);
       }
@@ -252,18 +213,10 @@ export default function MenuPage() {
     );
   }
   if (status === 'loading') return <MenuSkeleton />;
-  if (status === 'no-table') {
+  if (status === 'unavailable') {
     return (
-      <NoticeScreen
-        icon="⚠️"
-        title="No pudimos identificar esta mesa"
-        action={
-          <Link to="/" className="inline-flex h-12 items-center rounded-full bg-ink px-6 font-display font-bold text-white">
-            Volver al inicio
-          </Link>
-        }
-      >
-        Escanea otra vez el código QR de tu mesa o pide ayuda al personal.
+      <NoticeScreen icon="🕐" title="El menú no está disponible">
+        Este enlace no está activo en este momento. Intenta más tarde o escríbele directamente al restaurante.
       </NoticeScreen>
     );
   }
@@ -290,27 +243,35 @@ export default function MenuPage() {
     );
   }
 
-  const { business, table, categories } = idx.menu;
+  const { business, categories } = idx.menu;
 
   return (
     <>
       <div className={`mx-auto max-w-3xl ${totals.count > 0 ? 'pb-28' : 'pb-10'}`}>
-        <header className="flex items-start gap-4 px-4 pt-6 pb-1">
-          {business.logo_url && <img src={asset(business.logo_url)!} alt="" className="size-12 shrink-0 rounded-xl object-cover" />}
-          <div className="min-w-0 flex-1">
-            <h1 className="font-display text-[1.75rem] leading-[1.1] font-extrabold tracking-tight">{business.name}</h1>
-            <button
-              type="button"
-              onClick={() => setSheet({ kind: 'help' })}
-              className="mt-2 inline-flex h-9 items-center gap-1.5 rounded-full border border-line px-3 text-sm font-semibold"
-            >
-              <BellRing size={16} aria-hidden /> Necesito ayuda
-            </button>
+        <header className="px-4 pt-6 pb-1">
+          <div className="flex items-start gap-4">
+            {business.logo_url && <img src={asset(business.logo_url)!} alt="" className="size-14 shrink-0 rounded-2xl object-cover" />}
+            <div className="min-w-0 flex-1">
+              <h1 className="font-display text-[1.875rem] leading-[1.05] font-extrabold tracking-tight">{business.name}</h1>
+              {business.description && <p className="mt-1 text-ink-2">{business.description}</p>}
+            </div>
           </div>
-          <TableTicket number={table.number} label={table.label} />
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            {business.order_types.map((t) => (
+              <span key={t} className="ticket rounded-lg px-3 py-1 text-sm font-semibold">
+                <span aria-hidden>{ORDER_TYPE_EMOJI[t]}</span> {ORDER_TYPE_LABEL[t]}
+              </span>
+            ))}
+            <a
+              href={waLink(business.whatsapp, `Hola ${business.name}, tengo una consulta.`)}
+              className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line px-3 text-sm font-semibold"
+            >
+              <MessageCircle size={16} aria-hidden /> Escríbenos
+            </a>
+          </div>
         </header>
 
-        <div className="sticky top-0 z-20 border-b border-line bg-paper/95 backdrop-blur">
+        <div className="sticky top-0 z-20 mt-3 border-b border-line bg-paper/95 backdrop-blur">
           <CategoryTabs categories={categories} active={activeCat} onSelect={goToCategory} />
         </div>
 
@@ -367,6 +328,7 @@ export default function MenuPage() {
             </a>
           )}
           {business.show_bs && <p className="text-ink-3">Precios en dólares. Montos en Bs. referenciales a la tasa del día.</p>}
+          <p className="text-ink-3">Fotos referenciales.</p>
           {DEMO_MODE && <p className="text-ink-3">Modo demostración: los pedidos se envían por WhatsApp pero no se guardan en el sistema.</p>}
         </footer>
       </div>
@@ -398,25 +360,13 @@ export default function MenuPage() {
           }}
           onReview={() => {
             setSendError(null);
-            setSheet({ kind: 'confirm' });
+            setSheet({ kind: 'checkout' });
           }}
           onClose={() => setSheet(null)}
         />
       )}
-      {sheet?.kind === 'confirm' && (
-        <ConfirmSheet
-          tableNumber={table.number}
-          tableLabel={table.label}
-          rate={business.exchange_rate}
-          showBs={business.show_bs}
-          sending={sending}
-          error={sendError}
-          onSend={send}
-          onBack={() => setSheet({ kind: 'cart' })}
-        />
-      )}
-      {sheet?.kind === 'help' && (
-        <HelpSheet whatsapp={business.whatsapp} tableNumber={table.number} tableLabel={table.label} onClose={() => setSheet(null)} />
+      {sheet?.kind === 'checkout' && (
+        <CheckoutSheet business={business} sending={sending} error={sendError} onSend={send} onBack={() => setSheet({ kind: 'cart' })} />
       )}
       {sent && (
         <SentView

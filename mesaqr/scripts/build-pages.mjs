@@ -21,6 +21,5 @@ const run = (cmd) => execSync(cmd, { stdio: 'inherit', env });
 run('node scripts/build-demo-data.mjs');
 run('npx tsc -b');
 run('npx vite build --outDir app --emptyOutDir');
-run('node scripts/build-qr-sheet.mjs app');
 run('node -e "require(\'fs\').writeFileSync(\'app/.nojekyll\', \'\')"');
 console.log(`\nListo: app/ → ${PUBLIC_URL}`);

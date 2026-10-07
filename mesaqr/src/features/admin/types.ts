@@ -13,6 +13,10 @@ export interface Business {
   exchange_rate: number;
   exchange_rate_updated_at: string;
   primary_color: string;
+  payment_methods: string[];
+  pickup_enabled: boolean;
+  delivery_enabled: boolean;
+  dine_in_enabled: boolean;
 }
 
 export interface Category {
@@ -61,22 +65,17 @@ export interface Option {
   sort_order: number;
 }
 
-export interface DiningTable {
-  id: string;
-  business_id: string;
-  number: number;
-  label: string | null;
-  qr_token: string;
-  active: boolean;
-}
-
 export type OrderStatus = 'draft' | 'pending' | 'confirmed' | 'preparing' | 'ready' | 'completed' | 'cancelled';
 
 export interface Order {
   id: string;
   code: string;
-  table_number: number;
   status: OrderStatus;
+  customer_name: string | null;
+  customer_phone: string | null;
+  order_type: 'pickup' | 'delivery' | 'dine_in' | null;
+  address: string | null;
+  payment_method: string | null;
   subtotal_usd: number;
   extras_usd: number;
   total_usd: number;

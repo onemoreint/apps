@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router';
-import { ClipboardList, Grid3X3, Home, LayoutList, LogOut, Menu as MenuIcon, QrCode, Settings, SlidersHorizontal, UtensilsCrossed } from 'lucide-react';
+import { ClipboardList, ExternalLink, Home, LayoutList, LogOut, Menu as MenuIcon, Settings, SlidersHorizontal, UtensilsCrossed } from 'lucide-react';
+import { menuUrl } from './lib';
 import { Sheet } from '@/shared/ui/Sheet';
 import { useAdmin } from './AdminContext';
 
@@ -8,12 +9,11 @@ const MAIN = [
   { to: '/dashboard', label: 'Inicio', icon: Home, end: true },
   { to: '/dashboard/pedidos', label: 'Pedidos', icon: ClipboardList },
   { to: '/dashboard/productos', label: 'Productos', icon: UtensilsCrossed },
-  { to: '/dashboard/mesas', label: 'Mesas', icon: QrCode },
+  { to: '/dashboard/ajustes', label: 'Ajustes', icon: Settings },
 ];
 const MORE = [
   { to: '/dashboard/categorias', label: 'Categorías', icon: LayoutList },
   { to: '/dashboard/opciones', label: 'Extras y opciones', icon: SlidersHorizontal },
-  { to: '/dashboard/ajustes', label: 'Configuración', icon: Settings },
 ];
 
 export function AdminLayout() {
@@ -98,16 +98,9 @@ export function AdminLayout() {
             </li>
           ))}
           <li>
-            <button
-              type="button"
-              className="flex h-14 w-full items-center gap-3 text-left font-medium"
-              onClick={() => {
-                setMore(false);
-                navigate('/dashboard/mesas/imprimir');
-              }}
-            >
-              <Grid3X3 size={20} aria-hidden /> Imprimir QR de todas las mesas
-            </button>
+            <a href={menuUrl()} target="_blank" rel="noopener noreferrer" className="flex h-14 w-full items-center gap-3 text-left font-medium">
+              <ExternalLink size={20} aria-hidden /> Ver el menú como cliente
+            </a>
           </li>
           <li>
             <button type="button" className="flex h-14 w-full items-center gap-3 text-left font-medium text-danger" onClick={() => void signOut()}>

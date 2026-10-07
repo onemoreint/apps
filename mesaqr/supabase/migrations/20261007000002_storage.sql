@@ -26,6 +26,7 @@ begin
   return null;
 end;
 $$;
+revoke all on function public.storage_business_id(text) from public, anon;
 grant execute on function public.storage_business_id(text) to authenticated;
 
 create policy "menu images: members insert" on storage.objects for insert to authenticated

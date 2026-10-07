@@ -3,7 +3,13 @@
 > **Escanea. Elige. Envía tu pedido.**
 > Menú digital por QR de mesa con pedidos por WhatsApp. Primer cliente: restaurante de comida rápida en Maracay, Aragua (Venezuela). Diseñado para evolucionar a SaaS multirestaurante.
 
-Estado: **MVP implementado (Fases 1–17).** Decisiones aprobadas: QR con token aleatorio, repositorio propio `mesaqr`.
+Estado: **En producción con modelo de ENLACE ÚNICO** (7 oct. 2026).
+
+> **Cambio de alcance aprobado por el cliente:** se eliminó el QR por mesa. Ahora hay **un solo enlace** que se comparte;
+> el cliente indica nombre, tipo de pedido (para llevar / delivery / comer en el local), dirección si es delivery y forma
+> de pago. API pública: `get_public_menu(slug)` y `create_public_order(slug, items, customer, notes)`
+> (migración `20261007000003_menu_por_enlace.sql`). Las secciones sobre QR y mesas de este documento quedan como
+> historia de diseño; la tabla `dining_tables` y las funciones por mesa siguen en la base sin acceso público.
 Fecha: 2026-10-07
 
 ---

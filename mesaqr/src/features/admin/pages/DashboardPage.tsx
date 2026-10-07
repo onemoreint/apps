@@ -9,6 +9,7 @@ import { useAdmin } from '../AdminContext';
 import { clockTime, must, startOfTodayCaracas, timeAgo, useLoad } from '../lib';
 import { STATUS_LABEL, type Business, type Order } from '../types';
 import { Button, Card, ErrorBox, Input, Loading, PageHeader } from '../ui';
+import { ShareLinkCard } from '../ShareLinkCard';
 
 const DEMO_WHATSAPP = '+580000000000';
 
@@ -17,20 +18,19 @@ export default function DashboardPage() {
   const { data, error, loading, reload } = useLoad(async () => {
     const c = db();
     const head = { count: 'exact' as const, head: true };
-    const [active, soldOut, tables, today, recent] = await Promise.all([
+    const [active, soldOut, today, recent] = await Promise.all([
       c.from('products').select('id', head).eq('business_id', business.id).eq('active', true).eq('available', true),
       c.from('products').select('id', head).eq('business_id', business.id).eq('active', true).eq('available', false),
-      c.from('dining_tables').select('id', head).eq('business_id', business.id).eq('active', true),
-      c.from('orders').select('id', head).eq('business_id', business.id).gte('created_at', startOfTodayCaracas()),
-      c.from('orders').select('id, code, table_number, status, total_usd, total_bs, exchange_rate, subtotal_usd, extras_usd, notes, created_at')
-        .eq('business_id', business.id).order('created_at', { ascending: false }).limit(5),
+      c.from('orders').select('total_usd, status').eq('business_id', business.id).gte('created_at', startOfTodayCaracas()),
+      c.from('orders').select('*').eq('business_id', business.id).order('created_at', { ascending: false }).limit(5),
     ]);
-    for (const r of [active, soldOut, tables, today]) if (r.error) throw r.error;
+    for (const r of [active, soldOut]) if (r.error) throw r.error;
+    const todayRows = (must(today) as { total_usd: number; status: string }[]).filter((o) => o.status !== 'cancelled');
     return {
       active: active.count ?? 0,
       soldOut: soldOut.count ?? 0,
-      tables: tables.count ?? 0,
-      today: today.count ?? 0,
+      today: todayRows.length,
+      salesToday: todayRows.reduce((s, o) => s + Number(o.total_usd), 0),
       recent: must(recent) as Order[],
     };
   }, [business.id]);
@@ -50,7 +50,10 @@ export default function DashboardPage() {
         </Link>
       ))}
 
-      <ExchangeRateCard />
+      <ShareLinkCard />
+      <div className="mt-4">
+        <ExchangeRateCard />
+      </div>
 
       {error && <ErrorBox message={error} onRetry={reload} />}
       {loading && !data && <Loading />}
@@ -60,7 +63,7 @@ export default function DashboardPage() {
             <Stat to="/dashboard/pedidos" value={data.today} label="Pedidos hoy" />
             <Stat to="/dashboard/productos" value={data.active} label="Productos disponibles" />
             <Stat to="/dashboard/productos" value={data.soldOut} label="Agotados" warn={data.soldOut > 0} />
-            <Stat to="/dashboard/mesas" value={data.tables} label="Mesas activas" />
+            <Stat to="/dashboard/pedidos" value={formatUsd(data.salesToday)} label="Vendido hoy" />
           </div>
 
           <div className="mt-6 flex items-center justify-between">
@@ -70,14 +73,16 @@ export default function DashboardPage() {
             </Link>
           </div>
           {data.recent.length === 0 ? (
-            <p className="mt-2 text-ink-2">Todavía no hay pedidos. Escanea el QR de una mesa para probar el flujo.</p>
+            <p className="mt-2 text-ink-2">Todavía no hay pedidos. Abre tu enlace y haz un pedido de prueba.</p>
           ) : (
             <ul className="mt-2 divide-y divide-line rounded-2xl border border-line bg-paper">
               {data.recent.map((o) => (
                 <li key={o.id} className="flex items-center gap-3 px-4 py-3">
-                  <span className="font-display font-extrabold">#{o.code}</span>
-                  <span className="text-sm text-ink-2">
-                    {clockTime(o.created_at)} · {timeAgo(o.created_at)}
+                  <span className="min-w-0">
+                    <span className="block font-display font-extrabold">#{o.code} {o.customer_name && <span className="font-sans text-sm font-medium text-ink-2">{o.customer_name}</span>}</span>
+                    <span className="text-sm text-ink-3">
+                      {clockTime(o.created_at)} · {timeAgo(o.created_at)}
+                    </span>
                   </span>
                   <span className="ml-auto text-right">
                     <span className="block font-display font-bold tabular-nums">{formatUsd(Number(o.total_usd))}</span>
@@ -93,7 +98,7 @@ export default function DashboardPage() {
   );
 }
 
-function Stat({ value, label, to, warn }: { value: number; label: string; to: string; warn?: boolean }) {
+function Stat({ value, label, to, warn }: { value: number | string; label: string; to: string; warn?: boolean }) {
   return (
     <Link to={to} className="rounded-2xl border border-line bg-paper p-4">
       <span className={`block font-display text-3xl font-extrabold tabular-nums ${warn ? 'text-danger' : ''}`}>{value}</span>

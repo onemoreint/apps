@@ -2,8 +2,7 @@
 /**
  * Genera public/demo-data/menu.json para el MODO DEMOSTRACIÓN (sin Supabase):
  * ejecuta las migraciones y el seed reales en Postgres en memoria y guarda el
- * resultado de get_menu. Los tokens de mesa son fijos ("mesa07demo") para que
- * los QR impresos de la demo no cambien entre compilaciones.
+ * resultado de get_public_menu (el menú del enlace único).
  *
  *   DEMO_WHATSAPP=+58412XXXXXXX node scripts/build-demo-data.mjs
  */
@@ -23,14 +22,12 @@ for (const f of readdirSync(join(root, 'supabase/migrations')).sort()) {
   if (!f.includes('storage')) await db.exec(readFileSync(join(root, 'supabase/migrations', f), 'utf8'));
 }
 await db.exec(readFileSync(join(root, 'supabase/seed.sql'), 'utf8'));
-await db.exec(`update public.dining_tables set qr_token = 'mesa' || lpad(number::text, 2, '0') || 'demo'`);
 if (process.env.DEMO_WHATSAPP) await db.query('update public.businesses set whatsapp = $1', [process.env.DEMO_WHATSAPP]);
 if (process.env.DEMO_RATE) await db.query('update public.businesses set exchange_rate = $1', [Number(process.env.DEMO_RATE)]);
 
-const tables = (await db.query('select qr_token as token, number, label from public.dining_tables where active order by number')).rows;
-const { menu } = (await db.query('select public.get_menu($1) as menu', [tables[0].token])).rows[0];
-delete menu.table;
+const slug = process.env.VITE_BUSINESS_SLUG || 'lorenz-express';
+const { menu } = (await db.query('select public.get_public_menu($1) as menu', [slug])).rows[0];
 
 mkdirSync(join(root, 'public/demo-data'), { recursive: true });
-writeFileSync(join(root, 'public/demo-data/menu.json'), JSON.stringify({ menu, tables }));
-console.log(`demo-data/menu.json: ${menu.products.length} productos, ${tables.length} mesas, WhatsApp ${menu.business.whatsapp}`);
+writeFileSync(join(root, 'public/demo-data/menu.json'), JSON.stringify(menu));
+console.log(`demo-data/menu.json: ${menu.products.length} productos, WhatsApp ${menu.business.whatsapp}`);

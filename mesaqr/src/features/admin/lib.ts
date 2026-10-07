@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { db } from '@/shared/lib/supabase';
 import { adminMessage } from '@/shared/lib/errors';
 import { appUrl } from '@/shared/lib/asset';
-import { menuPath } from '@/shared/lib/env';
 
 /** Desenvuelve una respuesta de Supabase o lanza su error. */
 export function must<T>(res: { data: T | null; error: unknown }): T {
@@ -38,15 +37,9 @@ export function useLoad<T>(fn: () => Promise<T>, deps: unknown[]) {
   return { data, setData, error, loading, reload };
 }
 
-/** URL pública del menú de una mesa (lo que va dentro del QR). */
-export function tableUrl(token: string): string {
-  return appUrl(menuPath(token));
-}
-
-/** Token aleatorio de 10 caracteres hex (mismo formato que genera la base de datos). */
-export function newToken(): string {
-  const bytes = crypto.getRandomValues(new Uint8Array(5));
-  return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+/** Enlace único del menú (el que se comparte con los clientes). */
+export function menuUrl(): string {
+  return appUrl('');
 }
 
 /**

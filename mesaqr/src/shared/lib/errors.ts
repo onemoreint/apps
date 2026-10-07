@@ -3,7 +3,8 @@
  * El detalle técnico va a la consola, nunca a la pantalla del cliente.
  */
 export type ApiErrorCode =
-  | 'TABLE_NOT_FOUND'
+  | 'BUSINESS_NOT_FOUND'
+  | 'INVALID_CUSTOMER'
   | 'ITEMS_UNAVAILABLE'
   | 'INVALID_CART'
   | 'RATE_LIMITED'
@@ -19,7 +20,7 @@ export class ApiError extends Error {
   }
 }
 
-const KNOWN: ApiErrorCode[] = ['TABLE_NOT_FOUND', 'ITEMS_UNAVAILABLE', 'INVALID_CART', 'RATE_LIMITED'];
+const KNOWN: ApiErrorCode[] = ['BUSINESS_NOT_FOUND', 'INVALID_CUSTOMER', 'ITEMS_UNAVAILABLE', 'INVALID_CART', 'RATE_LIMITED'];
 
 export function toApiError(err: unknown): ApiError {
   if (err instanceof ApiError) return err;
@@ -33,10 +34,11 @@ export function toApiError(err: unknown): ApiError {
 }
 
 export const CUSTOMER_MESSAGES: Record<ApiErrorCode, string> = {
-  TABLE_NOT_FOUND: 'No pudimos identificar esta mesa.',
+  BUSINESS_NOT_FOUND: 'Este menú no está disponible en este momento.',
+  INVALID_CUSTOMER: 'Revisa tus datos: nombre, tipo de pedido, dirección (si es delivery) y forma de pago.',
   ITEMS_UNAVAILABLE: 'Uno de los productos de tu pedido ya no está disponible. Lo quitamos del carrito.',
   INVALID_CART: 'Revisa tu pedido: falta elegir una opción o hay algo que no cuadra.',
-  RATE_LIMITED: 'Se enviaron varios pedidos seguidos desde esta mesa. Espera un par de minutos.',
+  RATE_LIMITED: 'Estamos recibiendo muchos pedidos. Espera un minuto e intenta de nuevo.',
   NETWORK: 'Sin conexión. Revisa tu internet e intenta de nuevo.',
   UNKNOWN: 'Ocurrió un problema. Intenta nuevamente.',
 };

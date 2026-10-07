@@ -10,8 +10,6 @@ import ProductsPage from './pages/ProductsPage';
 import ProductFormPage from './pages/ProductFormPage';
 import CategoriesPage from './pages/CategoriesPage';
 import OptionsPage from './pages/OptionsPage';
-import TablesPage from './pages/TablesPage';
-import PrintQrPage from './pages/PrintQrPage';
 import OrdersPage from './pages/OrdersPage';
 import SettingsPage from './pages/SettingsPage';
 import { Button } from './ui';
@@ -94,7 +92,6 @@ function AdminGate() {
           onBusiness={(b) => setPhase({ ...phase, business: b })}
         >
           <Routes>
-            <Route path="mesas/imprimir" element={<PrintQrPage />} />
             <Route element={<AdminLayout />}>
               <Route index element={<DashboardPage />} />
               <Route path="productos" element={<ProductsPage />} />
@@ -102,7 +99,6 @@ function AdminGate() {
               <Route path="productos/:id" element={<ProductFormPage />} />
               <Route path="categorias" element={<CategoriesPage />} />
               <Route path="opciones" element={<OptionsPage />} />
-              <Route path="mesas" element={<TablesPage />} />
               <Route path="pedidos" element={<OrdersPage />} />
               <Route path="ajustes" element={<SettingsPage />} />
               <Route path="*" element={<Navigate to="/dashboard" replace />} />

@@ -1,39 +1,29 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { forgetTable, isValidTokenFormat, loadTable, saveTable } from './tableSession';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { loadCustomer, saveCustomer } from './session';
 import { groupRule, groupsFor, indexMenu, needsChoice, unavailableIn } from './menuIndex';
 import type { Menu } from '@/shared/types/menu';
 
-describe('QR / mesa en sesión', () => {
+describe('Datos del cliente recordados', () => {
   beforeEach(() => localStorage.clear());
 
-  it('acepta solo tokens con formato válido', () => {
-    expect(isValidTokenFormat('a1b2c3d4e5')).toBe(true);
-    for (const bad of ['7', '999', 'ABCDEFGHIJ', 'a1b2c3d4e5; drop', '', null, undefined]) {
-      expect(isValidTokenFormat(bad)).toBe(false);
-    }
+  it('guarda y recupera nombre, dirección y preferencias', () => {
+    saveCustomer({ name: 'Ana', phone: '0412', type: 'delivery', address: 'Calle 1', payment: 'Pago móvil' });
+    expect(loadCustomer()).toEqual({ name: 'Ana', phone: '0412', type: 'delivery', address: 'Calle 1', payment: 'Pago móvil' });
   });
 
-  it('recuerda la mesa y caduca a las 4 horas', () => {
-    vi.useFakeTimers();
-    saveTable('a1b2c3d4e5');
-    expect(loadTable()).toBe('a1b2c3d4e5');
-    vi.advanceTimersByTime(4 * 60 * 60 * 1000 + 1);
-    expect(loadTable()).toBeNull();
-    vi.useRealTimers();
-  });
-
-  it('ignora un valor manipulado en el almacenamiento', () => {
-    localStorage.setItem('mesaqr-table', JSON.stringify({ token: '../../x', at: Date.now() }));
-    expect(loadTable()).toBeNull();
-    saveTable('a1b2c3d4e5');
-    forgetTable();
-    expect(loadTable()).toBeNull();
+  it('ignora datos manipulados en el almacenamiento', () => {
+    localStorage.setItem('mesaqr-customer', JSON.stringify({ name: 'x'.repeat(500), type: 'helicoptero', payment: 42 }));
+    const c = loadCustomer();
+    expect(c.name).toHaveLength(60);
+    expect(c.type).toBeUndefined();
+    expect(c.payment).toBe('');
+    localStorage.setItem('mesaqr-customer', '{roto');
+    expect(loadCustomer()).toEqual({});
   });
 });
 
 const menu: Menu = {
-  business: { id: 'b', name: 'X', description: null, logo_url: null, address: null, phone: null, whatsapp: '+584121234567', instagram: null, show_bs: true, exchange_rate: 100, primary_color: '#D62828' },
-  table: { number: 7, label: null },
+  business: { id: 'b', name: 'X', description: null, logo_url: null, address: null, phone: null, whatsapp: '+584121234567', instagram: null, show_bs: true, exchange_rate: 100, primary_color: '#D62828', payment_methods: ['Pago móvil'], order_types: ['pickup'] },
   categories: [{ id: 'c1', name: 'Bebidas', emoji: null, image_url: null }],
   products: [
     { id: 'p1', category_id: 'c1', type: 'simple', name: 'Pepsi', description: null, image_url: null, price_usd: 1.5, available: true, featured: false, upsell: false, group_ids: ['g1', 'g-empty'], combo_items: [] },

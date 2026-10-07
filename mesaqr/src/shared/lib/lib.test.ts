@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { bsLabel, formatBs, formatUsd, toCents, usdToBs } from './money';
 import { isValidE164, normalizePhone, waDigits } from './phone';
-import { buildHelpMessage, buildOrderMessage, formatTime, waLink } from './whatsapp';
+import { buildOrderMessage, formatTime, waLink } from './whatsapp';
 import { toApiError } from './errors';
 import { readableOn } from './color';
 import type { CreatedOrder } from '@/shared/types/menu';
@@ -47,10 +47,10 @@ describe('Teléfono', () => {
 });
 
 const order: CreatedOrder = {
-  code: 'M7-0042',
+  code: '0042',
   order_number: 42,
   created_at: '2026-10-08T00:42:00Z', // 8:42 PM en Caracas (UTC-4)
-  table_number: 7,
+  customer: { name: 'María Pérez', phone: '0414 555 1234', type: 'delivery', address: 'Urb. La Esmeralda, calle 3', payment: 'Pago móvil' },
   subtotal_usd: 23,
   extras_usd: 2,
   total_usd: 25,
@@ -78,12 +78,15 @@ describe('WhatsApp', () => {
     expect(formatTime(new Date('2026-10-08T00:42:00Z'))).toBe('8:42 PM');
   });
 
-  it('mensaje del pedido legible', () => {
-    const msg = buildOrderMessage(order);
-    expect(msg).toBe(
+  it('mensaje del pedido legible, con datos de entrega y pago', () => {
+    expect(buildOrderMessage(order)).toBe(
       [
-        '🍔 NUEVO PEDIDO #M7-0042',
-        '📍 MESA 7',
+        '🍔 NUEVO PEDIDO #0042',
+        '👤 María Pérez',
+        '📞 0414 555 1234',
+        '🛵 Delivery',
+        '📍 Urb. La Esmeralda, calle 3',
+        '💳 Pago móvil',
         '────────────',
         '2x Hamburguesa Especial',
         '   • Sin cebolla',
@@ -98,10 +101,17 @@ describe('WhatsApp', () => {
     );
   });
 
-  it('sin Bs. ni notas cuando no aplican; incluye nombre de mesa', () => {
-    const msg = buildOrderMessage({ ...order, show_bs: false, notes: null }, 'Terraza');
-    expect(msg).toContain('📍 MESA 7 (Terraza)');
-    expect(msg).toContain('💰 TOTAL: $25.00\n');
+  it('para llevar: sin dirección ni teléfono; sin Bs. ni notas cuando no aplican', () => {
+    const msg = buildOrderMessage({
+      ...order,
+      show_bs: false,
+      notes: null,
+      customer: { name: 'Ana', phone: null, type: 'pickup', address: null, payment: 'Efectivo (USD)' },
+    });
+    expect(msg).toContain('🥡 Para llevar');
+    expect(msg).toContain('💳 Efectivo (USD)');
+    expect(msg).not.toContain('📞');
+    expect(msg).not.toContain('📍');
     expect(msg).not.toContain('📝');
     expect(msg).not.toContain('Bs.');
   });
@@ -120,17 +130,12 @@ describe('WhatsApp', () => {
     expect(decodeURIComponent(waLink('+584121234567', msg).split('?text=')[1]!)).toBe(msg);
   });
 
-  it('mensajes de ayuda', () => {
-    const d = new Date('2026-10-08T01:35:00Z');
-    expect(buildHelpMessage('bill', 7, null, d)).toBe('💳 SOLICITUD DE CUENTA\n📍 MESA 7\n\nEl cliente solicita la cuenta.\n\n⏰ 9:35 PM');
-    expect(buildHelpMessage('other', 3, null, d, '  Una servilleta  ')).toContain('\nUna servilleta\n');
-  });
 });
 
 describe('Errores', () => {
   it('reconoce códigos del servidor y oculta detalles técnicos', () => {
     expect(toApiError({ message: 'ITEMS_UNAVAILABLE', details: 'a,b' })).toMatchObject({ code: 'ITEMS_UNAVAILABLE', detail: 'a,b' });
-    expect(toApiError({ message: 'TABLE_NOT_FOUND' }).code).toBe('TABLE_NOT_FOUND');
+    expect(toApiError({ message: 'INVALID_CUSTOMER' }).code).toBe('INVALID_CUSTOMER');
     const original = console.error;
     console.error = () => undefined;
     expect(toApiError({ message: 'duplicate key value violates unique constraint' }).code).toBe('UNKNOWN');

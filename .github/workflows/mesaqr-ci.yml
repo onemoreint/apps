@@ -1,0 +1,47 @@
+name: MesaQR · calidad
+
+# Solo verifica. La app publicada es mesaqr/app/ (compilada con "npm run build:pages")
+# y GitHub Pages la sirve tal cual desde la rama main.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'mesaqr/**'
+      - '.github/workflows/mesaqr-ci.yml'
+  pull_request:
+    paths:
+      - 'mesaqr/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mesaqr
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: mesaqr/package-lock.json
+
+      - name: Instalar
+        run: npm ci
+
+      - name: Tipos (TypeScript estricto)
+        run: npm run typecheck
+
+      - name: Pruebas (carrito, WhatsApp, moneda, QR y base de datos con RLS en PostgreSQL)
+        run: npm test
+
+      - name: Build (modo GitHub Pages)
+        run: node scripts/build-pages.mjs
+        env:
+          # Compila igual que la versión publicada (solo en el runner; no se sube nada)
+          PUBLIC_URL: https://onemoreint.github.io/apps/mesaqr/app/

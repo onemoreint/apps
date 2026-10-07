@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MOLDERA 360 — Del diseño a la moldería</title>
+<style>
+:root{
+  --bg:#f3efe8; --panel:#ffffff; --ink:#1b1d22; --muted:#6b6f78; --line:#e4ddd1; --line2:#efe9df;
+  --side:#14161b; --side2:#1e2229; --sideInk:#cfcbc2;
+  --accent:#b8692e; --accent2:#8f4f20; --accentSoft:#f6e8db;
+  --ok:#2f855a; --okSoft:#e3f4ea; --warn:#a86a12; --warnSoft:#fcf1dc; --err:#c53030; --errSoft:#fde8e8;
+  --seam:#2b6cb0; --radius:12px; --shadow:0 1px 2px rgba(0,0,0,.04),0 6px 18px rgba(40,30,20,.06);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:Inter,"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer;color:inherit}
+input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3,h4{margin:0}
+.app{display:grid;grid-template-columns:236px 1fr;grid-template-rows:58px 1fr;height:100vh;height:100dvh}
+/* header */
+header.top{grid-column:1/3;display:flex;align-items:center;gap:14px;padding:0 18px;background:var(--side);color:#fff;border-bottom:1px solid #000;z-index:5}
+.brand{display:flex;align-items:center;gap:11px;cursor:pointer}
+.brand .mark{width:32px;height:32px;border-radius:9px;background:linear-gradient(140deg,#d9955a,#8f4f20);display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.brand .mark svg{width:20px;height:20px}
+.brand b{letter-spacing:.14em;font-size:15px}
+.brand small{display:block;color:#9d988e;font-size:11px;letter-spacing:.03em;margin-top:1px}
+.spacer{flex:1}
+.top .hbtn{background:#23272f;border:1px solid #30353e;border-radius:9px;padding:7px 12px;color:#e8e4dc;display:flex;gap:7px;align-items:center}
+.top .hbtn:hover{background:#2b3039}
+/* sidebar */
+nav.side{background:var(--side);color:var(--sideInk);padding:14px 10px;overflow:auto;border-right:1px solid #000}
+.nav-sec{font-size:10.5px;letter-spacing:.14em;color:#7d786f;margin:16px 10px 6px;text-transform:uppercase}
+.nav-it{display:flex;align-items:center;gap:11px;width:100%;background:none;border:0;padding:9px 11px;border-radius:9px;text-align:left;color:var(--sideInk)}
+.nav-it .ic{width:22px;text-align:center;font-size:16px}
+.nav-it:hover{background:var(--side2);color:#fff}
+.nav-it.on{background:#2a2219;color:#f3c79e;box-shadow:inset 3px 0 0 var(--accent)}
+.nav-open{margin:14px 6px 0;padding:11px;border:1px solid #2c3038;border-radius:10px;background:#1a1d23;font-size:12px}
+.nav-open b{display:block;color:#fff;font-size:13px;margin:3px 0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-foot{margin:22px 10px 0;font-size:11px;color:#6d685f;line-height:1.5}
+main{overflow:auto;position:relative}
+.wrap{max-width:1280px;margin:0 auto;padding:26px 28px 60px}
+/* common */
+.btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 13px;font-weight:550;font-size:13.5px;white-space:nowrap}
+.btn:hover{border-color:#cfc5b5;background:#fbf9f6}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent2)}
+.btn.dark{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.ghost{background:transparent;border-color:transparent}
+.btn.ghost:hover{background:rgba(0,0,0,.05)}
+.btn.sm{padding:5px 9px;font-size:12.5px;border-radius:8px}
+.btn.danger{color:var(--err)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.muted{color:var(--muted)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.h-title{font-size:26px;font-weight:750;letter-spacing:-.02em}
+.h-sub{color:var(--muted);margin-top:4px}
+.sec-title{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8a8478;margin:30px 0 12px}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:.06em;padding:4px 9px;border-radius:999px}
+.badge.ok{background:var(--okSoft);color:var(--ok)}
+.badge.rev{background:var(--warnSoft);color:var(--warn)}
+.badge.err{background:var(--errSoft);color:var(--err)}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--accentSoft);color:var(--accent2);border-radius:999px;padding:4px 10px;font-size:12.5px;font-weight:600}
+/* home */
+.hero{display:grid;grid-template-columns:1.25fr 1fr;gap:20px;align-items:stretch}
+.hero-main{padding:28px;background:linear-gradient(135deg,#1b1d22 0%,#2b241d 100%);color:#fff;border-radius:16px;position:relative;overflow:hidden}
+.hero-main h1{font-size:30px;letter-spacing:-.02em;line-height:1.1}
+.hero-main p{color:#c9c2b6;max-width:440px;line-height:1.55}
+.hero-main .flow{font-size:11px;letter-spacing:.12em;color:#e5b48a;margin-top:18px}
+.hero-main svg.deco{position:absolute;right:-30px;bottom:-30px;opacity:.16}
+.create-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.create{border:1px solid var(--line);background:#fff;border-radius:14px;padding:18px 16px;text-align:left;display:flex;flex-direction:column;gap:6px;transition:.15s}
+.create:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 22px rgba(184,105,46,.14)}
+.create .em{font-size:30px}
+.create b{font-size:15px}
+.create span{color:var(--muted);font-size:12.5px}
+.ai-card{display:flex;gap:16px;align-items:center;padding:18px 20px;margin-top:12px;cursor:pointer}
+.ai-card .ai-ic{width:44px;height:44px;border-radius:12px;background:var(--accentSoft);display:grid;place-items:center;font-size:22px}
+.designs{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.dcard{padding:14px;display:flex;flex-direction:column;gap:10px}
+.dcard .thumb{height:120px;border-radius:9px;background:#f8f5f0;border:1px solid var(--line2);display:grid;place-items:center;overflow:hidden}
+.dcard .thumb svg{width:92%;height:92%}
+.dcard h4{font-size:15px}
+.dcard .meta{font-size:12px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
+.dcard .acts{display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--line2);padding-top:10px}
+.empty{padding:36px;text-align:center;color:var(--muted)}
+/* editor */
+.ed-bar{position:sticky;top:0;z-index:4;background:rgba(243,239,232,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding:10px 22px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.name-input{border:1px solid transparent;background:transparent;font-size:18px;font-weight:700;padding:5px 8px;border-radius:8px;min-width:120px;max-width:300px}
+.name-input:hover,.name-input:focus{border-color:var(--line);background:#fff;outline:none}
+.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--muted);background:#ebe5db;padding:3px 7px;border-radius:6px}
+.dirty{font-size:12px;color:var(--warn)}
+.tabs{display:flex;gap:4px;padding:10px 22px 0;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{border:0;background:none;padding:10px 14px;border-bottom:2.5px solid transparent;font-weight:600;color:var(--muted);white-space:nowrap;display:flex;gap:7px;align-items:center}
+.tab.on{color:var(--ink);border-color:var(--accent)}
+.tab .n{font-size:11px;background:#e9e2d6;border-radius:999px;padding:1px 7px}
+.tab-body{padding:20px 22px 70px}
+.grid-d{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:18px;align-items:start}
+.panel{padding:16px}
+.pgroup{border-bottom:1px solid var(--line2);padding:4px 0 14px;margin-bottom:12px}
+.pgroup:last-child{border:0;margin:0;padding-bottom:0}
+.pgroup h4{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:#8a8478;margin:6px 0 10px}
+.fld{display:flex;flex-direction:column;gap:5px;margin-bottom:11px}
+.fld>span{font-size:12.5px;font-weight:600;color:#3d4048}
+.inp-u{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:9px;background:#fff;overflow:hidden}
+.inp-u:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(184,105,46,.14)}
+.inp-u input{border:0;outline:none;padding:8px 10px;flex:1;min-width:0;font-variant-numeric:tabular-nums;background:transparent}
+.inp-u em{font-style:normal;background:#f6f2ec;color:var(--muted);padding:8px 10px;font-size:12.5px;border-left:1px solid var(--line)}
+.inp{border:1px solid var(--line);border-radius:9px;padding:8px 10px;background:#fff;width:100%}
+.inp:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(184,105,46,.14)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:flex;flex-wrap:wrap;gap:4px;background:#f3eee6;padding:3px;border-radius:10px}
+.seg button{border:0;background:transparent;padding:6px 10px;border-radius:8px;font-size:12.5px;font-weight:600;color:#5a5e66;flex:1;white-space:nowrap}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.tgl{display:flex;align-items:center;gap:10px;padding:7px 0;cursor:pointer;font-weight:550;font-size:13.5px}
+.tgl input{display:none}
+.tgl i{width:34px;height:20px;border-radius:999px;background:#d8d1c5;position:relative;transition:.15s;flex:none}
+.tgl i:after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.tgl input:checked+i{background:var(--accent)}
+.tgl input:checked+i:after{left:16px}
+.prev-card{padding:14px}
+.prev-box{background:#faf8f4 radial-gradient(#e8e1d5 1px,transparent 1px) 0 0/16px 16px;border:1px solid var(--line2);border-radius:10px;height:380px;display:grid;place-items:center;padding:10px}
+.prev-box svg{width:100%;height:100%}
+.issues{margin-top:14px;display:flex;flex-direction:column;gap:6px}
+.issue{display:flex;gap:9px;align-items:flex-start;padding:9px 11px;border-radius:9px;font-size:13px;line-height:1.4}
+.issue.error{background:var(--errSoft);color:#8e2222}
+.issue.warn{background:var(--warnSoft);color:#7a4d0c}
+.issue.ok{background:var(--okSoft);color:#1f5e3e}
+.aibar{display:flex;gap:8px;margin-top:14px}
+.aibar input{flex:1}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.stat{background:#faf8f4;border:1px solid var(--line2);border-radius:10px;padding:10px 12px}
+.stat b{display:block;font-size:18px}
+.stat span{font-size:11.5px;color:var(--muted)}
+/* despiece */
+.pieces{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.pcard{padding:12px;display:flex;flex-direction:column;gap:8px}
+.pcard .pthumb{height:140px;background:#faf8f4;border:1px solid var(--line2);border-radius:9px;display:grid;place-items:center;padding:6px}
+.pcard .pthumb svg{width:100%;height:100%}
+.pcard h4{font-size:14.5px;letter-spacing:.02em;text-transform:uppercase}
+.pcard .pc-code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--accent2)}
+.pcard .pc-dim{font-size:13px;font-variant-numeric:tabular-nums}
+.pcard .pc-meta{font-size:12px;color:var(--muted)}
+/* molderia viewer */
+.vw-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.vw-grid{display:grid;grid-template-columns:1fr 280px;gap:14px}
+.viewer{position:relative;height:calc(100vh - 260px);min-height:420px;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#eef0ec;touch-action:none;cursor:grab}
+.viewer.drag{cursor:grabbing}
+.viewer svg{width:100%;height:100%;display:block;user-select:none}
+.viewer .hint{position:absolute;left:10px;bottom:10px;font-size:11.5px;background:rgba(255,255,255,.9);padding:5px 9px;border-radius:7px;color:var(--muted);pointer-events:none}
+.viewer .zoomlvl{position:absolute;right:10px;bottom:10px;font-size:11.5px;background:rgba(20,22,27,.8);color:#fff;padding:4px 8px;border-radius:7px;pointer-events:none}
+.info{padding:14px;font-size:13px;align-self:start}
+.info h4{font-size:15px;margin-bottom:8px}
+.kv{width:100%;border-collapse:collapse}
+.kv td{padding:6px 0;border-bottom:1px solid var(--line2);vertical-align:top}
+.kv td:first-child{color:var(--muted);width:42%}
+.legend{display:flex;flex-direction:column;gap:6px;font-size:12px;margin-top:14px;color:var(--muted)}
+.legend i{display:inline-block;width:26px;vertical-align:middle;margin-right:6px}
+/* print */
+.pr-grid{display:grid;grid-template-columns:330px 1fr;gap:18px;align-items:start}
+.warnbox{background:#fff6e6;border:1px solid #f0d29a;color:#6d4608;padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.45}
+.sheets{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
+.sheet-prev{background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.12);border-radius:3px;overflow:hidden}
+.sheet-prev svg{display:block;width:100%;height:auto}
+.sheet-cap{font-size:11.5px;color:var(--muted);margin-top:5px;text-align:center}
+.pcheck{display:flex;flex-direction:column;gap:2px;max-height:240px;overflow:auto;border:1px solid var(--line2);border-radius:9px;padding:6px 10px;background:#fcfbf9}
+.pcheck label{display:flex;gap:8px;align-items:center;font-size:13px;padding:3px 0}
+/* ficha */
+.ficha{background:#fff;color:#111;padding:34px 38px;max-width:900px;margin:0 auto;border:1px solid var(--line);border-radius:6px;box-shadow:var(--shadow);font-size:13px}
+.f-head{display:flex;justify-content:space-between;gap:20px;border-bottom:3px solid #111;padding-bottom:14px;margin-bottom:18px;align-items:flex-end}
+.f-head h2{font-size:24px;letter-spacing:.06em}
+.f-head img{max-height:56px;max-width:160px;object-fit:contain}
+.f-meta{text-align:right;font-size:12px;line-height:1.6;color:#444}
+.ficha h3{font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin:22px 0 8px;color:#333}
+.ftab{width:100%;border-collapse:collapse;font-size:12.5px}
+.ftab th{background:#1b1d22;color:#fff;text-align:left;padding:7px 8px;font-weight:600;font-size:11.5px;letter-spacing:.04em}
+.ftab td{padding:6px 8px;border-bottom:1px solid #e3e3e3;font-variant-numeric:tabular-nums}
+.ftab tr:nth-child(even) td{background:#fafafa}
+.fkv{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid #ddd}
+.fkv div{padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee}
+.fkv small{display:block;color:#777;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em}
+.fkv b{font-size:13.5px}
+.fstatus{display:inline-block;padding:3px 10px;border:2px solid;font-weight:800;letter-spacing:.1em;font-size:12px}
+/* ai */
+.ai-wrap{max-width:860px}
+.ai-box{padding:18px}
+.ai-box textarea{width:100%;min-height:110px;border:1px solid var(--line);border-radius:10px;padding:12px;resize:vertical;line-height:1.5}
+.ai-box textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(184,105,46,.14)}
+.ex-chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px}
+.ex-chips button{border:1px dashed #cdbfa9;background:#fffaf4;border-radius:999px;padding:5px 11px;font-size:12.5px;color:#6b4a2c}
+.ex-chips button:hover{border-style:solid;border-color:var(--accent)}
+pre.json{background:#16181d;color:#e9d9c3;padding:14px;border-radius:10px;overflow:auto;font-size:12.5px;line-height:1.5}
+.pipeline{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:11.5px;font-weight:600;color:#6b6f78;margin:12px 0}
+.pipeline span{background:#fff;border:1px solid var(--line);padding:4px 9px;border-radius:7px}
+.pipeline span.hl{border-color:var(--accent);color:var(--accent2);background:var(--accentSoft)}
+/* settings */
+.set-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:900px}
+.logo-prev{width:120px;height:60px;border:1px dashed var(--line);border-radius:8px;display:grid;place-items:center;background:#faf8f4;overflow:hidden}
+.logo-prev img{max-width:100%;max-height:100%}
+/* toast */
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;z-index:50;pointer-events:none;align-items:center}
+.toast{background:#1b1d22;color:#fff;padding:10px 16px;border-radius:10px;font-size:13.5px;box-shadow:0 8px 24px rgba(0,0,0,.25);animation:tin .2s ease;max-width:90vw}
+.toast.err{background:#9b2c2c}
+.toast.ok{background:#276749}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#printRoot{display:none}
+/* responsive */
+@media (max-width:1100px){
+  .hero{grid-template-columns:1fr}
+  .grid-d{grid-template-columns:1fr}
+  .vw-grid{grid-template-columns:1fr}
+  .pr-grid{grid-template-columns:1fr}
+}
+@media (max-width:820px){
+  .app{grid-template-columns:1fr;grid-template-rows:54px 1fr 64px}
+  header.top{grid-column:1}
+  .brand small{display:none}
+  nav.side{grid-row:3;display:flex;justify-content:space-around;align-items:stretch;padding:4px 4px calc(4px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid #000;overflow:visible}
+  .nav-sec,.nav-open,.nav-foot,.hide-m{display:none!important}
+  .nav-it{flex-direction:column;gap:2px;padding:6px 4px;font-size:10.5px;justify-content:center;flex:1;text-align:center;border-radius:8px}
+  .nav-it.on{box-shadow:inset 0 -2px 0 var(--accent)}
+  .nav-it .ic{font-size:18px}
+  .show-m{display:flex!important}
+  .wrap{padding:18px 14px 40px}
+  .create-grid{grid-template-columns:1fr}
+  .create{flex-direction:row;align-items:center;gap:14px}
+  .create .em{font-size:26px}
+  .tab-body{padding:14px 12px 50px}
+  .ed-bar{padding:8px 12px}
+  .tabs{padding:6px 10px 0}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .viewer{height:60vh}
+  .set-grid{grid-template-columns:1fr}
+  .ficha{padding:18px 14px}
+  .fkv{grid-template-columns:1fr 1fr}
+  .top .hbtn span{display:none}
+  .hero-main h1{font-size:24px}
+}
+.show-m{display:none!important}
+@media print{
+  html,body{height:auto;background:#fff;margin:0}
+  body.printing-pat .app,body.printing-ficha .app,#toast{display:none!important}
+  body.printing-pat #printRoot,body.printing-ficha #printRoot{display:block}
+  .sheet{overflow:hidden;page-break-after:always;break-after:page;position:relative}
+  .sheet:last-child{page-break-after:auto;break-after:auto}
+  .sheet svg{display:block}
+  body.printing-ficha .ficha{border:0;box-shadow:none;padding:0;max-width:none}
+  .ftab th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ftab tr{break-inside:avoid}
+}
+</style>
+<style id="pageStyle"></style>
+</head>
+<body>
+<div class="app" id="app">
+  <header class="top">
+    <div class="brand" data-act="nav" data-view="home">
+      <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8" stroke-dasharray="2 1.6"/></svg></div>
+      <div><b>MOLDERA 360</b><small>Del diseño a la moldería.</small></div>
+    </div>
+    <div class="spacer"></div>
+    <button class="hbtn" data-act="nav" data-view="settings">⚙ <span>Perfil</span></button>
+  </header>
+  <nav class="side" id="side"></nav>
+  <main id="main"></main>
+</div>
+<div id="printRoot"></div>
+<div id="toast"></div>
+<input type="file" id="fileImport" accept=".json,application/json" hidden>
+<input type="file" id="fileLogo" accept="image/*" hidden>
+
+<script>
+'use strict';
+/* =====================================================================
+   MOLDERA 360 — MVP
+   Arquitectura (módulos lógicos en un único archivo):
+   Util · Units · Store · PRODUCTS · Validation · Geo · Patterns · Engine
+   SVGR (render SVG) · Preview · Ficha · Print · AI · UI
+   Regla de oro: IA → parámetros → motor geométrico → SVG → validación → impresión.
+   Todas las medidas internas están en MILÍMETROS.
+   ===================================================================== */
+
+/* ---------------- Util ---------------- */
+const R = n => Math.round(n);
+const fx = n => Math.round(n * 1000) / 1000;
+const mmf = n => String(Math.round(n * 10) / 10).replace('.', ',');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const Util = {
+  uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); },
+  now(){ return new Date().toISOString(); },
+  date(s){ try { return new Date(s).toLocaleDateString('es-CO', {day:'2-digit', month:'short', year:'numeric'}); } catch(e){ return s || ''; } },
+  download(name, content, type){
+    const b = new Blob([content], {type}); const a = document.createElement('a');
+    a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800);
+  },
+  debounce(fn, ms){ let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; },
+  clone(o){ return JSON.parse(JSON.stringify(o)); }
+};
+
+/* ---------------- Units ---------------- */
+const Units = {
+  factor: {mm:1, cm:10, in:25.4},
+  label: {mm:'mm', cm:'cm', in:'pulg'},
+  toMM(v, u){ return v * this.factor[u]; },
+  fromMM(v, u){ const d = u === 'mm' ? 2 : (u === 'cm' ? 3 : 4); const x = v / this.factor[u]; return Math.round(x * 10 ** d) / 10 ** d; },
+  step(u){ return u === 'mm' ? 1 : (u === 'cm' ? 0.1 : 0.01); }
+};
+
+/* ---------------- Store (localStorage) ---------------- */
+const DEFAULT_SETTINGS = {designer:'', taller:'', logo:'', unit:'mm', margin:5, paper:'A4', orientation:'portrait', customW:600, customH:900, printMargin:8, overlap:10};
+const Store = {
+  K: {designs:'m360_designs', settings:'m360_settings', seeded:'m360_seeded'},
+  mem: {},
+  get(k, def){ try { const v = (typeof localStorage !== 'undefined') ? localStorage.getItem(k) : this.mem[k]; return v ? JSON.parse(v) : def; } catch(e){ return def; } },
+  set(k, v){
+    try { const s = JSON.stringify(v); if (typeof localStorage !== 'undefined') localStorage.setItem(k, s); else this.mem[k] = s; return true; }
+    catch(e){ if (typeof UI !== 'undefined') UI.toast('No se pudo guardar: almacenamiento lleno o bloqueado.', 'err'); return false; }
+  },
+  designs(){ return this.get(this.K.designs, []); },
+  saveDesign(d){ const all = this.designs(); const i = all.findIndex(x => x.id === d.id); if (i >= 0) all[i] = d; else all.unshift(d); return this.set(this.K.designs, all); },
+  deleteDesign(id){ return this.set(this.K.designs, this.designs().filter(d => d.id !== id)); },
+  settings(){ return Object.assign({}, DEFAULT_SETTINGS, this.get(this.K.settings, {})); },
+  saveSettings(s){ return this.set(this.K.settings, s); }
+};
+
+/* ---------------- Catálogo de productos (esquema de parámetros) ---------------- */
+const MATERIALS = [['cuero','Cuero'],['sintético','Sintético'],['lona','Lona'],['textil','Textil'],['vinilo','Vinilo'],['otro','Otro']];
+const PRODUCTS = {
+  bolso: {label:'Bolso', plural:'Bolsos', icon:'👜', prefix:'BOL', groups:[
+    {title:'Medidas', params:[
+      {k:'ancho', label:'Ancho', type:'len', def:300, min:80, max:800},
+      {k:'alto', label:'Alto', type:'len', def:250, min:80, max:700},
+      {k:'fondo', label:'Fondo (fuelle)', type:'len', def:100, min:20, max:400},
+      {k:'radioSup', label:'Radio esquinas superiores', type:'len', def:20, min:0, max:200, zero:true}
+    ]},
+    {title:'Cierre y asas', params:[
+      {k:'cierre', label:'Tipo de cierre', type:'radio', def:'cremallera', opts:[['cremallera','Cremallera'],['magnetico','Magnético'],['broche','Broche'],['ninguno','Sin cierre']]},
+      {k:'asa', label:'Tipo de asa', type:'radio', def:'corta', opts:[['corta','Corta'],['larga','Larga'],['ambas','Ambas'],['ninguna','Sin asa']]},
+      {k:'largoAsaCorta', label:'Largo asa corta', type:'len', def:550, min:200, max:1000, show:p => p.asa === 'corta' || p.asa === 'ambas'},
+      {k:'largoAsaLarga', label:'Largo asa larga', type:'len', def:1000, min:500, max:1600, show:p => p.asa === 'larga' || p.asa === 'ambas'},
+      {k:'anchoAsa', label:'Ancho asa / correa (terminado)', type:'len', def:25, min:10, max:60, show:p => p.asa !== 'ninguna' || p.correa}
+    ]},
+    {title:'Componentes', params:[
+      {k:'correa', label:'Correa (bandolera)', type:'bool', def:true},
+      {k:'largoCorrea', label:'Largo de correa', type:'len', def:1200, min:400, max:1600, show:p => p.correa},
+      {k:'bolsilloExt', label:'Bolsillo externo', type:'bool', def:false},
+      {k:'bolsilloInt', label:'Bolsillo interno', type:'bool', def:true},
+      {k:'forro', label:'Forro', type:'bool', def:false},
+      {k:'tapa', label:'Tapa', type:'bool', def:false}
+    ]}
+  ]},
+  billetera: {label:'Billetera', plural:'Billeteras', icon:'👛', prefix:'BIL', groups:[
+    {title:'Medidas (abierta)', params:[
+      {k:'ancho', label:'Ancho abierta', type:'len', def:220, min:120, max:400},
+      {k:'alto', label:'Alto', type:'len', def:100, min:60, max:220},
+      {k:'radioEsq', label:'Radio de esquinas', type:'len', def:6, min:0, max:30, zero:true},
+      {k:'plegado', label:'Tipo de plegado', type:'radio', def:'bifold', opts:[['bifold','Dos cuerpos'],['trifold','Tres cuerpos']]}
+    ]},
+    {title:'Interior', params:[
+      {k:'tarjetas', label:'Ranuras para tarjetas', type:'num', def:8, min:0, max:16, zero:true, suffix:'u'},
+      {k:'compartimentos', label:'Compartimentos para billetes', type:'num', def:2, min:1, max:4, suffix:'u'},
+      {k:'monedas', label:'Bolsillo para monedas', type:'bool', def:true},
+      {k:'cierre', label:'Cierre', type:'radio', def:'boton', opts:[['boton','Botón'],['cremallera','Cremallera'],['ninguno','Ninguno']]}
+    ]}
+  ]},
+  morral: {label:'Morral', plural:'Morrales', icon:'🎒', prefix:'MOR', groups:[
+    {title:'Medidas', params:[
+      {k:'ancho', label:'Ancho', type:'len', def:300, min:180, max:600},
+      {k:'alto', label:'Alto', type:'len', def:420, min:250, max:700},
+      {k:'fondo', label:'Fondo (fuelle)', type:'len', def:120, min:50, max:300},
+      {k:'radioSup', label:'Radio esquinas superiores', type:'len', def:40, min:0, max:200, zero:true}
+    ]},
+    {title:'Bolsillos', params:[
+      {k:'bolsilloFrontal', label:'Bolsillo frontal', type:'bool', def:true},
+      {k:'altoBolsilloFrontal', label:'Alto del bolsillo frontal', type:'len', def:180, min:60, max:500, show:p => p.bolsilloFrontal},
+      {k:'bolsillosLaterales', label:'Bolsillos laterales (2)', type:'bool', def:true},
+      {k:'portatil', label:'Compartimento para portátil', type:'bool', def:true},
+      {k:'pulgadasPortatil', label:'Tamaño del portátil', type:'num', def:15, min:10, max:17.3, suffix:'pulg', step:0.1, show:p => p.portatil}
+    ]},
+    {title:'Asas, correas y cierre', params:[
+      {k:'asas', label:'Asa de mano', type:'bool', def:true},
+      {k:'correas', label:'Correas (hombreras)', type:'bool', def:true},
+      {k:'largoCorrea', label:'Largo de hombrera', type:'len', def:750, min:400, max:1100, show:p => p.correas},
+      {k:'tapa', label:'Tapa', type:'bool', def:false},
+      {k:'cierre', label:'Cierre', type:'radio', def:'cremallera', opts:[['cremallera','Cremallera'],['broche','Broche'],['ninguno','Ninguno']]}
+    ]}
+  ]}
+};
+function paramDefs(cat){ return PRODUCTS[cat].groups.flatMap(g => g.params); }
+function defaultsOf(cat, margin){ const o = {margen: margin ?? 5}; paramDefs(cat).forEach(f => o[f.k] = f.def); return o; }
+function laptopBody(inch){ const d = inch * 25.4; return {long: R(d * 0.8716 + 24), short: R(d * 0.4903 + 24)}; }
+
+/* ---------------- Validation ---------------- */
+const Validation = {
+  params(cat, p){
+    const out = []; const E = msg => out.push({level:'error', msg}); const Wn = msg => out.push({level:'warn', msg});
+    for (const f of paramDefs(cat)){
+      if (f.type !== 'len' && f.type !== 'num') continue;
+      if (f.show && !f.show(p)) continue;
+      const v = p[f.k];
+      if (v === null || v === undefined || v === '' || !isFinite(v)) { E(`«${f.label}» no es un número válido.`); continue; }
+      if (v < 0) { E(`«${f.label}» no puede ser negativo.`); continue; }
+      if (v === 0 && !f.zero) { E(`«${f.label}» no puede ser 0.`); continue; }
+      const u = f.type === 'len' ? ' mm' : (f.suffix ? ' ' + f.suffix : '');
+      if (v < f.min || v > f.max) Wn(`«${f.label}» (${mmf(v)}${u}) está fuera del rango recomendado (${f.min}–${f.max}${u}).`);
+    }
+    const m = p.margen;
+    if (!isFinite(m) || m === null) E('El margen de costura no es válido.');
+    else if (m <= 0) E('El margen de costura debe ser mayor que 0.');
+    else if (m > 25) E('El margen de costura no puede superar 25 mm.');
+    else if (m > 15) Wn('Margen de costura muy grande (> 15 mm). Revisa que sea intencional.');
+    if (out.some(i => i.level === 'error')) return out;
+
+    if (cat === 'bolso' || cat === 'morral'){
+      if (p.fondo > p.ancho) E('El fondo no puede ser mayor que el ancho del producto.');
+      if (p.radioSup > p.ancho / 2 || p.radioSup > p.alto / 2) E('El radio superior no puede superar la mitad del ancho ni la mitad del alto.');
+    }
+    if (cat === 'bolso'){
+      const L = 2 * (p.alto - p.radioSup) + p.ancho;
+      if (L > 1400) Wn(`El fuelle mide ${mmf(L)} mm: es una pieza muy larga, considera dividirla en dos con unión en la base.`);
+      if (p.asa === 'corta' || p.asa === 'ambas') { if (p.largoAsaCorta < p.ancho * 0.6) Wn('El asa corta es más corta que el 60 % del ancho: puede quedar incómoda.'); }
+      if (p.correa && p.largoCorrea < p.alto * 2) Wn('La correa parece corta para usarla al hombro.');
+    }
+    if (cat === 'billetera'){
+      if (!Number.isInteger(p.tarjetas)) E('El número de tarjetas debe ser un número entero.');
+      if (!Number.isInteger(p.compartimentos)) E('El número de compartimentos debe ser un número entero.');
+      const panels = p.plegado === 'trifold' ? 3 : 2; const panelW = p.ancho / panels;
+      if (p.radioEsq > Math.min(p.ancho, p.alto) / 2) E('El radio de esquinas es demasiado grande para las medidas.');
+      if (p.tarjetas > 0 && panelW < 92) Wn(`Cada cuerpo mide ${mmf(panelW)} mm: una tarjeta (85,6 mm) necesita al menos 92 mm de ancho.`);
+      const rows = Math.ceil(p.tarjetas / 2); const minH = p.alto - 12 - (rows - 1) * 14;
+      if (rows > 0 && minH < 40) Wn(`Demasiadas tarjetas para el alto: la ranura más baja quedaría de ${mmf(minH)} mm (mínimo 40 mm). Reduce tarjetas o aumenta el alto.`);
+      if (p.cierre === 'cremallera' && !p.monedas) Wn('La cremallera se aplica al bolsillo de monedas: activa el bolsillo de monedas.');
+      if (p.monedas && panelW < 70) Wn('El bolsillo de monedas queda muy estrecho.');
+    }
+    if (cat === 'morral'){
+      if (p.portatil){
+        const lb = laptopBody(p.pulgadasPortatil);
+        if (p.alto - 30 < lb.long) Wn(`Un portátil de ${mmf(p.pulgadasPortatil)}″ mide aprox. ${lb.long} mm de largo: necesita un alto de al menos ${lb.long + 30} mm (actual ${mmf(p.alto)} mm).`);
+        if (p.ancho - 20 < lb.short) Wn(`Un portátil de ${mmf(p.pulgadasPortatil)}″ mide aprox. ${lb.short} mm de ancho: necesita un ancho de al menos ${lb.short + 20} mm.`);
+      }
+      if (p.bolsilloFrontal && p.altoBolsilloFrontal > p.alto * 0.8) Wn('El bolsillo frontal supera el 80 % del alto del morral.');
+      const L = 2 * (p.alto - p.radioSup) + (p.ancho - 2 * p.radioSup) + Math.PI * p.radioSup;
+      if (L > 1500) Wn(`El fuelle mide ${mmf(L)} mm: pieza muy larga, considera dividirla.`);
+    }
+    return out;
+  },
+  pieces(pcs){
+    const out = [];
+    for (const pc of pcs){
+      const ok = [pc.width, pc.height, pc.seamAllowance].every(v => isFinite(v) && v > 0);
+      if (!ok) { out.push({level:'error', msg:`La pieza ${pc.code} tiene dimensiones inválidas.`}); continue; }
+      const lim = Math.min(pc.width, pc.height) / 2 + 1e-6;
+      if (pc.geometry.radii.some(r => r < 0 || r > lim)) out.push({level:'error', msg:`La pieza ${pc.code} tiene un radio imposible para su tamaño.`});
+      for (const n of pc.markers){ const len = (n.edge === 'top' || n.edge === 'bottom') ? pc.width : pc.height; if (n.pos < 0 || n.pos > len) out.push({level:'warn', msg:`Piquete fuera de la pieza ${pc.code}.`}); }
+      for (const k of pc.marks){ if (k.t === 'rect' && (k.x < 0 || k.y < 0 || k.x + k.w > pc.width + 1e-6 || k.y + k.h > pc.height + 1e-6)) out.push({level:'warn', msg:`La marca «${k.label}» se sale de la pieza ${pc.code}.`}); }
+      if (pc.quantity < 1 || !Number.isInteger(pc.quantity)) out.push({level:'error', msg:`Cantidad inválida en ${pc.code}.`});
+    }
+    return out;
+  }
+};
+
+/* ---------------- Geometría 2D (mm) ---------------- */
+const Geo = {
+  /* rectángulo redondeado: radios [sup-izq, sup-der, inf-der, inf-izq] */
+  rr(x, y, w, h, r){
+    const [a, b, c, d] = r.map(fx); const p = [];
+    p.push(`M${fx(x + a)} ${fx(y)}`, `L${fx(x + w - b)} ${fx(y)}`);
+    if (b) p.push(`A${b} ${b} 0 0 1 ${fx(x + w)} ${fx(y + b)}`);
+    p.push(`L${fx(x + w)} ${fx(y + h - c)}`);
+    if (c) p.push(`A${c} ${c} 0 0 1 ${fx(x + w - c)} ${fx(y + h)}`);
+    p.push(`L${fx(x + d)} ${fx(y + h)}`);
+    if (d) p.push(`A${d} ${d} 0 0 1 ${fx(x)} ${fx(y + h - d)}`);
+    p.push(`L${fx(x)} ${fx(y + a)}`);
+    if (a) p.push(`A${a} ${a} 0 0 1 ${fx(x + a)} ${fx(y)}`);
+    p.push('Z'); return p.join(' ');
+  },
+  /* margen de costura exacto: desplazamiento de un rectángulo redondeado */
+  offsetRadii(r, m){ return r.map(v => v > 0 ? v + m : 0); },
+  perimeter(w, h, r){ return 2 * w + 2 * h - r.reduce((s, v) => s + v, 0) * (4 - Math.PI) / 2; }
+};
+function makePiece(o){
+  return {id:o.code, code:o.code, name:o.name, category:o.cat, width:fx(o.w), height:fx(o.h), quantity:o.q || 1,
+    material:o.mat, seamAllowance:o.m, geometry:{type:'roundedRect', radii:(o.radii || [0,0,0,0]).map(fx)},
+    grain:o.grain || 'v', markers:o.markers || [], marks:o.marks || [], notes:o.notes || ''};
+}
+const foldLine = (w, y, label) => ({t:'line', x1:0, y1:y, x2:w, y2:y, label:label || 'Doblez'});
+
+/* ---------------- Patrones paramétricos ---------------- */
+const Patterns = {
+  bolso(p, d){
+    const m = p.margen, W = p.ancho, H = p.alto, D = p.fondo, r = p.radioSup, mat = d.material || 'cuero';
+    const C = s => `${d.codigo}-${s}`, pcs = [], hw = [], cat = 'bag';
+    const L = 2 * (H - r) + W;
+    const hy = Math.max(20, r * 0.5 + 15);
+    const handles = p.asa !== 'ninguna' ? [{t:'point', x:W / 2 - W * 0.2, y:hy, label:'Asa'}, {t:'point', x:W / 2 + W * 0.2, y:hy, label:'Asa'}] : [];
+    const bodyMk = [{edge:'top', pos:W / 2, label:'C'}, {edge:'bottom', pos:W / 2, label:'2'}];
+    if (r > 0) bodyMk.push({edge:'left', pos:r, label:'A'}, {edge:'right', pos:r, label:'B'});
+    const frMarks = [...handles];
+    if ((p.cierre === 'magnetico' || p.cierre === 'broche')) frMarks.push({t:'point', x:W / 2, y:p.tapa ? R(H * 0.45) : hy + 14, label:p.cierre === 'magnetico' ? 'Imán' : 'Broche'});
+    if (p.bolsilloExt){ const bw = R(W * 0.7), bh = R(H * 0.5); frMarks.push({t:'rect', x:(W - bw) / 2, y:H - bh - R(H * 0.12), w:bw, h:bh, label:'Bolsillo externo'}); }
+    const bi = {w:R(W * 0.6), h:R(H * 0.45)};
+    const esMarks = [...handles];
+    if (p.bolsilloInt && !p.forro) esMarks.push({t:'rect', x:(W - bi.w) / 2, y:R(H * 0.2), w:bi.w, h:bi.h, label:'Bolsillo interno (cara interior)'});
+    pcs.push(makePiece({cat, code:C('FR'), name:'Frente', w:W, h:H, mat, m, radii:[r, r, 0, 0], markers:bodyMk, marks:frMarks,
+      notes:r > 0 ? 'Unir al fuelle desde A hasta B. Piquete 2 = centro de la base.' : 'Unir al fuelle por laterales y base. Piquete 2 = centro de la base.'}));
+    pcs.push(makePiece({cat, code:C('ES'), name:'Espalda', w:W, h:H, mat, m, radii:[r, r, 0, 0], markers:bodyMk, marks:esMarks, notes:'Igual al frente. Unir al fuelle con los mismos piquetes.'}));
+    const fuMk = ['top', 'bottom'].flatMap(e => [{edge:e, pos:H - r, label:'1'}, {edge:e, pos:H - r + W / 2, label:'2'}, {edge:e, pos:H - r + W, label:'3'}]);
+    pcs.push(makePiece({cat, code:C('FU'), name:'Fuelle', w:L, h:D, mat, m, grain:'h', markers:fuMk,
+      marks:p.correa ? [{t:'point', x:18, y:D / 2, label:'Lengüeta'}, {t:'point', x:L - 18, y:D / 2, label:'Lengüeta'}] : [],
+      notes:`Largo = 2 × (alto − radio) + ancho = ${mmf(L)} mm. 1 y 3 = esquinas inferiores; 2 = centro de la base.`}));
+    if (p.bolsilloInt) pcs.push(makePiece({cat, code:C('BI'), name:'Bolsillo interno', w:bi.w, h:bi.h + 10, mat:p.forro ? 'forro textil' : mat, m, marks:[foldLine(bi.w, 10)], markers:[{edge:'bottom', pos:bi.w / 2, label:'C'}], notes:'Incluye 10 mm de dobladillo superior. Coser a la espalda (o al forro).'}));
+    if (p.bolsilloExt){ const bw = R(W * 0.7), bh = R(H * 0.5); pcs.push(makePiece({cat, code:C('BE'), name:'Bolsillo externo', w:bw, h:bh + 10, mat, m, radii:[0, 0, 10, 10], marks:[foldLine(bw, 10)], markers:[{edge:'bottom', pos:bw / 2, label:'C'}], notes:'Incluye 10 mm de dobladillo superior. Posición marcada en el frente.'})); }
+    const aw = p.anchoAsa;
+    if (p.asa === 'corta' || p.asa === 'ambas') pcs.push(makePiece({cat, code:C('AC'), name:'Asa corta', w:p.largoAsaCorta, h:aw * 2, q:2, mat, m, grain:'h', marks:[foldLine(p.largoAsaCorta, aw, 'Doblez central')], notes:`Doblar a lo largo. Ancho terminado ${mmf(aw)} mm.`}));
+    if (p.asa === 'larga' || p.asa === 'ambas') pcs.push(makePiece({cat, code:C('AL'), name:'Asa larga', w:p.largoAsaLarga, h:aw * 2, q:2, mat, m, grain:'h', marks:[foldLine(p.largoAsaLarga, aw, 'Doblez central')], notes:`Doblar a lo largo. Ancho terminado ${mmf(aw)} mm.`}));
+    if (p.correa){
+      pcs.push(makePiece({cat, code:C('CO'), name:'Correa', w:p.largoCorrea, h:aw * 2, q:1, mat, m, grain:'h', marks:[foldLine(p.largoCorrea, aw, 'Doblez central')], notes:'Doblar a lo largo. Termina en mosquetones.'}));
+      pcs.push(makePiece({cat, code:C('LE'), name:'Lengüeta argolla', w:60, h:aw * 2, q:2, mat, m, grain:'h', marks:[foldLine(60, aw, 'Doblez')], notes:'Sujeta la argolla D al fuelle (posición marcada).'}));
+      hw.push(`Argollas D de ${mmf(aw)} mm ×2`, 'Mosquetones ×2');
+    }
+    if (p.tapa){
+      const th = R(D + H * 0.45), tr = Math.min(25, th / 2, W / 2);
+      const tm = (p.cierre === 'magnetico' || p.cierre === 'broche') ? [{t:'point', x:W / 2, y:th - 22, label:p.cierre === 'magnetico' ? 'Imán' : 'Broche'}] : [];
+      pcs.push(makePiece({cat, code:C('TA'), name:'Tapa', w:W, h:th, mat, m, radii:[0, 0, tr, tr], markers:[{edge:'top', pos:W / 2, label:'C'}], marks:tm, notes:'Coser a la espalda por el borde superior (C con C).'}));
+    }
+    if (p.forro){
+      pcs.push(makePiece({cat, code:C('FF'), name:'Forro cuerpo', w:W, h:H, q:2, mat:'forro textil', m, radii:[r, r, 0, 0], markers:bodyMk,
+        marks:p.bolsilloInt ? [{t:'rect', x:(W - bi.w) / 2, y:R(H * 0.2), w:bi.w, h:bi.h, label:'Bolsillo interno'}] : [], notes:'Forro de frente y espalda.'}));
+      pcs.push(makePiece({cat, code:C('FL'), name:'Forro fuelle', w:L, h:D, mat:'forro textil', m, grain:'h', markers:fuMk, notes:'Igual al fuelle exterior.'}));
+    }
+    if (p.cierre === 'cremallera') hw.unshift(`Cremallera de ${R(W - 30)} mm`);
+    if (p.cierre === 'magnetico') hw.unshift('Broche magnético ×1');
+    if (p.cierre === 'broche') hw.unshift('Broche de presión ×1');
+    if (p.asa !== 'ninguna') hw.push(`Remaches ×${p.asa === 'ambas' ? 8 : 4}`);
+    return {pieces:pcs, hardware:hw, dims:`${mmf(W)} × ${mmf(H)} × ${mmf(D)} mm`};
+  },
+
+  billetera(p, d){
+    const m = p.margen, W = p.ancho, H = p.alto, rr = p.radioEsq, mat = d.material || 'cuero';
+    const C = s => `${d.codigo}-${s}`, pcs = [], hw = [], cat = 'wallet';
+    const panels = p.plegado === 'trifold' ? 3 : 2, pw = W / panels;
+    const folds = []; const foldMk = [];
+    for (let i = 1; i < panels; i++){ const x = pw * i; folds.push({t:'line', x1:x, y1:0, x2:x, y2:H, label:'Pliegue'}); foldMk.push({edge:'top', pos:x, label:'P' + i}, {edge:'bottom', pos:x, label:'P' + i}); }
+    pcs.push(makePiece({cat, code:C('CU'), name:'Cuerpo principal', w:W, h:H, mat, m, radii:[rr, rr, rr, rr], markers:foldMk, marks:folds, grain:'h', notes:'Exterior. Marcar los pliegues sin cortar.'}));
+    const N = p.tarjetas, A = Math.ceil(N / 2), B = Math.floor(N / 2);
+    const slotMarks = [];
+    for (let i = 0; i < A; i++){
+      const top = 12 + i * 14, h = H - top, q = (i < A ? 1 : 0) + (i < B ? 1 : 0);
+      pcs.push(makePiece({cat, code:C('T' + (i + 1)), name:`Porta tarjetas ${i + 1}`, w:pw, h:h, q, mat, m, radii:[0, 0, 0, 0], grain:'h', markers:[{edge:'top', pos:pw / 2, label:'C'}],
+        notes:`Ranura ${i + 1}: borde superior a ${top} mm del borde de la billetera (escalonado 14 mm).`}));
+      slotMarks.push({t:'line', x1:0, y1:top, x2:pw, y2:top, label:`Ranura ${i + 1}`});
+      if (q === 2) slotMarks.push({t:'line', x1:W - pw, y1:top, x2:W, y2:top, label:`Ranura ${i + 1}`});
+    }
+    pcs.push(makePiece({cat, code:C('IN'), name:'Interior', w:W, h:H, mat, m, radii:[rr, rr, rr, rr], markers:foldMk, marks:[...folds, ...slotMarks], grain:'h', notes:'Forma el primer compartimento de billetes con el cuerpo principal. Líneas = posición de ranuras.'}));
+    if (p.compartimentos > 1) pcs.push(makePiece({cat, code:C('SE'), name:'Separador', w:W, h:H - 8, q:p.compartimentos - 1, mat, m, radii:[0, 0, rr, rr], markers:foldMk.filter(x => x.edge === 'bottom'), grain:'h', notes:'Cada separador añade un compartimento para billetes.'}));
+    if (p.monedas){
+      const bw = R(pw - 10), bh = R(H * 0.62);
+      pcs.push(makePiece({cat, code:C('BO'), name:'Bolsillo monedas', w:bw, h:bh + 8, mat, m, radii:[0, 0, Math.min(rr, 10), Math.min(rr, 10)], marks:[foldLine(bw, 8)], markers:[{edge:'bottom', pos:bw / 2, label:'C'}], notes:p.cierre === 'cremallera' ? 'Con cremallera en la boca.' : 'Incluye 8 mm de dobladillo superior.'}));
+      if (p.cierre === 'cremallera') hw.push(`Cremallera de ${R(bw - 16)} mm para monedas`);
+    }
+    if (p.cierre === 'boton'){
+      const th = R(H * 0.5 + 30);
+      pcs.push(makePiece({cat, code:C('CI'), name:'Pieza de cierre', w:30, h:th, q:2, mat, m, radii:[0, 0, 15, 15], marks:[{t:'point', x:15, y:th - 14, label:'Botón'}], notes:'Lengüeta: 2 capas pegadas. Coser al cuerpo por la espalda.'}));
+      hw.push('Broche / botón de presión ×1');
+    }
+    return {pieces:pcs, hardware:hw, dims:`${mmf(W)} × ${mmf(H)} mm (cerrada ${mmf(pw)} × ${mmf(H)} mm)`};
+  },
+
+  morral(p, d){
+    const m = p.margen, W = p.ancho, H = p.alto, D = p.fondo, r = p.radioSup, mat = d.material || 'cuero';
+    const C = s => `${d.codigo}-${s}`, pcs = [], hw = [], cat = 'backpack';
+    const arc = Math.PI * r / 2, L = 2 * (H - r) + (W - 2 * r) + Math.PI * r;
+    const bodyMk = [{edge:'top', pos:W / 2, label:'C'}, {edge:'bottom', pos:W / 2, label:'B'}];
+    if (r > 0) bodyMk.push({edge:'left', pos:r, label:'1'}, {edge:'right', pos:r, label:'2'}, {edge:'top', pos:r, label:'a'}, {edge:'top', pos:W - r, label:'b'});
+    const frMarks = [];
+    let fb = null;
+    if (p.bolsilloFrontal){ fb = {w:R(W * 0.75), h:p.altoBolsilloFrontal}; frMarks.push({t:'rect', x:(W - fb.w) / 2, y:H - fb.h - R(H * 0.06), w:fb.w, h:fb.h, label:'Bolsillo frontal'}); }
+    pcs.push(makePiece({cat, code:C('FR'), name:'Frente', w:W, h:H, mat, m, radii:[r, r, 0, 0], markers:bodyMk, marks:frMarks, notes:'Unir al fuelle por laterales y parte superior, y a la base por el borde inferior.'}));
+    const esMarks = [];
+    if (p.correas){ const y1 = R(Math.max(r, 30) + 30); esMarks.push({t:'point', x:W / 2 - 45, y:y1, label:'Correa sup.'}, {t:'point', x:W / 2 + 45, y:y1, label:'Correa sup.'}, {t:'point', x:25, y:H - 25, label:'Correa inf.'}, {t:'point', x:W - 25, y:H - 25, label:'Correa inf.'}); }
+    if (p.asas) esMarks.push({t:'point', x:W / 2, y:R(Math.max(r * 0.5, 10) + 14), label:'Asa'});
+    pcs.push(makePiece({cat, code:C('ES'), name:'Espalda', w:W, h:H, mat, m, radii:[r, r, 0, 0], markers:bodyMk, marks:esMarks, notes:'Igual al frente. Lleva las posiciones de correas y asa.'}));
+    const fuMk = ['top', 'bottom'].flatMap(e => {
+      const a = [{edge:e, pos:L / 2, label:'C'}];
+      if (r > 0) a.push({edge:e, pos:H - r, label:'1'}, {edge:e, pos:H - r + arc, label:'a'}, {edge:e, pos:L - (H - r) - arc, label:'b'}, {edge:e, pos:L - (H - r), label:'2'});
+      return a;
+    });
+    pcs.push(makePiece({cat, code:C('FU'), name:'Fuelle', w:L, h:D, mat, m, grain:'h', markers:fuMk,
+      marks:p.bolsillosLaterales ? [{t:'rect', x:0, y:0, w:R(H * 0.35), h:D, label:'Bolsillo lateral'}, {t:'rect', x:L - R(H * 0.35), y:0, w:R(H * 0.35), h:D, label:'Bolsillo lateral'}] : [],
+      notes:`Rodea laterales y parte superior. Largo = 2(alto − r) + (ancho − 2r) + πr = ${mmf(L)} mm. Extremos unidos a la base.`}));
+    pcs.push(makePiece({cat, code:C('BA'), name:'Base', w:W, h:D, mat, m, grain:'h', markers:[{edge:'top', pos:W / 2, label:'B'}, {edge:'bottom', pos:W / 2, label:'B'}], notes:'Bordes largos: frente y espalda. Bordes cortos: extremos del fuelle. Se recomienda refuerzo.'}));
+    if (fb) pcs.push(makePiece({cat, code:C('BF'), name:'Bolsillo frontal', w:fb.w, h:fb.h + 10, mat, m, radii:[0, 0, Math.min(20, fb.w / 2), Math.min(20, fb.w / 2)], marks:[foldLine(fb.w, 10)], markers:[{edge:'bottom', pos:fb.w / 2, label:'B'}], notes:'Incluye 10 mm de dobladillo. Posición marcada en el frente.'}));
+    if (p.bolsillosLaterales) pcs.push(makePiece({cat, code:C('BL'), name:'Bolsillo lateral', w:D, h:R(H * 0.35) + 10, q:2, mat, m, marks:[foldLine(D, 10, 'Doblez / elástico')], notes:'Se cose dentro de las costuras del fuelle, en la parte baja.'}));
+    if (p.portatil){ const lb = laptopBody(p.pulgadasPortatil); pcs.push(makePiece({cat, code:C('PO'), name:'Divisor portátil', w:W, h:lb.long + 30, q:2, mat:'textil acolchado', m, markers:[{edge:'bottom', pos:W / 2, label:'B'}], notes:`Portátil ${mmf(p.pulgadasPortatil)}″ ≈ ${lb.long} × ${lb.short} mm. Dos capas con espuma de 5 mm.`})); }
+    if (p.asas) pcs.push(makePiece({cat, code:C('AS'), name:'Asa de mano', w:280, h:50, mat, m, grain:'h', marks:[foldLine(280, 25, 'Doblez central')], notes:'Doblar a lo largo. Ancho terminado 25 mm.'}));
+    if (p.correas){ pcs.push(makePiece({cat, code:C('CR'), name:'Hombrera', w:p.largoCorrea, h:80, q:2, mat, m, grain:'h', radii:[0, 0, 0, 0], markers:[{edge:'top', pos:p.largoCorrea / 2, label:'C'}], notes:'Acolchar. Ancho terminado aprox. 70 mm. Continúa con cinta reata regulable.'})); hw.push('Hebillas reguladoras ×2', 'Cinta reata 25 mm × 1 m ×2'); }
+    if (p.tapa){ const th = R(D + H * 0.3), tr = Math.min(30, th / 2); pcs.push(makePiece({cat, code:C('TA'), name:'Tapa', w:W, h:th, mat, m, radii:[0, 0, tr, tr], markers:[{edge:'top', pos:W / 2, label:'C'}], marks:p.cierre === 'broche' ? [{t:'point', x:W / 2, y:th - 22, label:'Broche'}] : [], notes:'Coser a la espalda por el borde superior.'})); }
+    if (p.cierre === 'cremallera') hw.unshift(`Cremallera de doble carro de ${R((W - 2 * r) + Math.PI * r + 2 * (H - r) * 0.6)} mm`);
+    if (p.cierre === 'broche') hw.unshift('Broche de presión o hebilla ×1');
+    return {pieces:pcs, hardware:hw, dims:`${mmf(W)} × ${mmf(H)} × ${mmf(D)} mm`};
+  }
+};
+
+/* ---------------- Motor: parámetros → validación → piezas ---------------- */
+const Engine = {
+  run(d){
+    const p = Object.assign(defaultsOf(d.categoria, 5), d.parametros);
+    const issues = Validation.params(d.categoria, p);
+    let out = {pieces:[], hardware:[], dims:''};
+    if (!issues.some(i => i.level === 'error')){
+      out = Patterns[d.categoria](p, d);
+      issues.push(...Validation.pieces(out.pieces));
+      if (issues.some(i => i.level === 'error')) out.pieces = [];
+    }
+    const hasErr = issues.some(i => i.level === 'error');
+    return Object.assign(out, {params:p, issues, status:hasErr ? 'ERROR' : (issues.length ? 'REVISAR' : 'VALIDADO'),
+      totalCuts:out.pieces.reduce((s, x) => s + x.quantity, 0)});
+  }
+};
+
+/* ---------------- Render SVG de piezas ---------------- */
+const SVGR = {
+  FONT: 'Helvetica,Arial,sans-serif',
+  PAD: 13,
+  piece(pc, d, o){
+    const m = pc.seamAllowance, w = pc.width, h = pc.height, r = pc.geometry.radii, cr = Geo.offsetRadii(r, m);
+    const cut = Geo.rr(-m, -m, w + 2 * m, h + 2 * m, cr), seam = Geo.rr(0, 0, w, h, r);
+    let s = `<path d="${cut}" fill="${o.fill || '#fffdf9'}"/>`;
+    if (o.selected) s += `<path d="${cut}" fill="rgba(184,105,46,.07)" stroke="#b8692e" stroke-width="2.6" stroke-opacity=".45"/>`;
+    // marcas internas
+    for (const k of pc.marks){
+      if (k.t === 'point') s += `<g stroke="#b8692e" stroke-width="0.35" fill="none"><circle cx="${fx(k.x)}" cy="${fx(k.y)}" r="1.6"/><path d="M${fx(k.x - 3.2)} ${fx(k.y)}H${fx(k.x + 3.2)}M${fx(k.x)} ${fx(k.y - 3.2)}V${fx(k.y + 3.2)}"/></g><text x="${fx(k.x + 2.6)}" y="${fx(k.y - 2.2)}" font-size="2.6" fill="#8f4f20" font-family="${this.FONT}">${esc(k.label)}</text>`;
+      else if (k.t === 'rect') s += `<rect x="${fx(k.x)}" y="${fx(k.y)}" width="${fx(k.w)}" height="${fx(k.h)}" fill="none" stroke="#b8692e" stroke-width="0.35" stroke-dasharray="3 1.5"/><text x="${fx(k.x + 1.5)}" y="${fx(k.y + 4)}" font-size="2.8" fill="#8f4f20" font-family="${this.FONT}">${esc(k.label)}</text>`;
+      else if (k.t === 'line') s += `<path d="M${fx(k.x1)} ${fx(k.y1)}L${fx(k.x2)} ${fx(k.y2)}" stroke="#7a5ab0" stroke-width="0.35" stroke-dasharray="5 1.5 1 1.5"/><text x="${fx(Math.min(k.x1, k.x2) + 1.5)}" y="${fx(Math.min(k.y1, k.y2) - 1)}" font-size="2.4" fill="#5b3f8c" font-family="${this.FONT}">${esc(k.label)}</text>`;
+    }
+    // hilo / dirección
+    if (Math.min(w, h) >= 70){
+      if (pc.grain === 'v'){ const x = fx(w * 0.1), y1 = fx(h * 0.22), y2 = fx(h * 0.78); s += `<g stroke="#666" stroke-width="0.35" fill="none"><path d="M${x} ${y1}V${y2}M${x - 1.6} ${y1 + 3}L${x} ${y1}L${x + 1.6} ${y1 + 3}M${x - 1.6} ${y2 - 3}L${x} ${y2}L${x + 1.6} ${y2 - 3}"/></g><text transform="translate(${x - 1.4} ${fx(h / 2)}) rotate(-90)" font-size="2.4" fill="#666" text-anchor="middle" font-family="${this.FONT}">DIRECCIÓN</text>`; }
+      else { const y = fx(h * 0.88), x1 = fx(w * 0.25), x2 = fx(w * 0.75); s += `<g stroke="#666" stroke-width="0.35" fill="none"><path d="M${x1} ${y}H${x2}M${x1 + 3} ${y - 1.6}L${x1} ${y}L${x1 + 3} ${y + 1.6}M${x2 - 3} ${y - 1.6}L${x2} ${y}L${x2 - 3} ${y + 1.6}"/></g><text x="${fx(w / 2)}" y="${fx(y - 1.4)}" font-size="2.4" fill="#666" text-anchor="middle" font-family="${this.FONT}">DIRECCIÓN</text>`; }
+    }
+    // líneas de corte y costura
+    if (o.seam) s += `<path d="${seam}" fill="none" stroke="#2b6cb0" stroke-width="0.35" stroke-dasharray="2.4 1.4"/>`;
+    if (o.cut) s += `<path d="${cut}" fill="none" stroke="#15171c" stroke-width="0.5"/>`;
+    if (!o.cut && !o.seam) s += `<path d="${seam}" fill="none" stroke="#15171c" stroke-width="0.5"/>`;
+    // piquetes
+    if (o.notch) for (const n of pc.markers){
+      const q = fx(n.pos); let line, tri, tx, ty, anchor = 'middle';
+      if (n.edge === 'top'){ line = `M${q} ${-m}V0`; tri = `M${q - 1.2} ${-m}L${q + 1.2} ${-m}L${q} ${-m + 2.2}Z`; tx = q; ty = -m - 1.4; }
+      else if (n.edge === 'bottom'){ line = `M${q} ${fx(h + m)}V${h}`; tri = `M${q - 1.2} ${fx(h + m)}L${q + 1.2} ${fx(h + m)}L${q} ${fx(h + m - 2.2)}Z`; tx = q; ty = fx(h + m + 3.6); }
+      else if (n.edge === 'left'){ line = `M${-m} ${q}H0`; tri = `M${-m} ${q - 1.2}L${-m} ${q + 1.2}L${-m + 2.2} ${q}Z`; tx = -m - 1.4; ty = q + 1; anchor = 'end'; }
+      else { line = `M${fx(w + m)} ${q}H${w}`; tri = `M${fx(w + m)} ${q - 1.2}L${fx(w + m)} ${q + 1.2}L${fx(w + m - 2.2)} ${q}Z`; tx = fx(w + m + 1.4); ty = q + 1; anchor = 'start'; }
+      s += `<path d="${line}" stroke="#c53030" stroke-width="0.4"/><path d="${tri}" fill="#c53030"/><text x="${tx}" y="${ty}" font-size="3" font-weight="700" fill="#c53030" text-anchor="${anchor}" font-family="${this.FONT}">${esc(n.label)}</text>`;
+    }
+    // cotas
+    if (o.dims){
+      const y = -m - 7, x = -m - 7;
+      s += `<g stroke="#555" stroke-width="0.3"><path d="M0 ${y}H${w}M0 ${y - 1.5}V${y + 1.5}M${w} ${y - 1.5}V${y + 1.5}M${x} 0V${h}M${x - 1.5} 0H${x + 1.5}M${x - 1.5} ${h}H${x + 1.5}"/></g>`;
+      s += `<text x="${fx(w / 2)}" y="${y - 1.3}" font-size="3.4" text-anchor="middle" fill="#333" font-family="${this.FONT}">${mmf(w)} mm</text>`;
+      s += `<text transform="translate(${x - 1.3} ${fx(h / 2)}) rotate(-90)" font-size="3.4" text-anchor="middle" fill="#333" font-family="${this.FONT}">${mmf(h)} mm</text>`;
+    }
+    // bloque de identificación
+    if (o.label !== false) s += this.label(pc, d);
+    return s;
+  },
+  label(pc, d){
+    const w = pc.width, h = pc.height;
+    const lines = ['MOLDERA 360', (d.nombre || '').toUpperCase(), 'PIEZA: ' + pc.name.toUpperCase(), 'CÓDIGO: ' + pc.code, 'CANTIDAD: ' + pc.quantity, 'MATERIAL: ' + (pc.material || '').toUpperCase(), 'ESCALA: 1:1'];
+    const maxLen = Math.max(...lines.map(l => l.length));
+    let fs = Math.min(6, (h * 0.6) / (lines.length * 1.35), (w * 0.72) / (maxLen * 0.6));
+    if (fs >= 2.1){
+      const lh = fs * 1.35, y0 = h / 2 - (lines.length - 1) * lh / 2;
+      return `<g font-family="${this.FONT}" text-anchor="middle" fill="#1b1d22">` + lines.map((l, i) => `<text x="${fx(w / 2)}" y="${fx(y0 + i * lh + fs * 0.35)}" font-size="${fx(i === 0 ? fs * 0.8 : fs)}" ${i === 2 || i === 3 ? 'font-weight="700"' : ''} ${i === 0 ? 'fill="#b8692e" letter-spacing="0.4"' : ''}>${esc(l)}</text>`).join('') + '</g>';
+    }
+    const t = `${pc.name.toUpperCase()} · ${pc.code} · ×${pc.quantity} · ${(pc.material || '').toUpperCase()} · 1:1 · MOLDERA 360`;
+    const f2 = Math.max(1.4, Math.min(h * 0.32, (w * 0.92) / (t.length * 0.6)));
+    return `<text x="${fx(w / 2)}" y="${fx(h / 2 + f2 * 0.35)}" font-size="${fx(f2)}" text-anchor="middle" font-weight="700" fill="#1b1d22" font-family="${this.FONT}">${esc(t)}</text>`;
+  },
+  bbox(pc, pad){ const m = pc.seamAllowance; return {x:-m - pad, y:-m - pad, w:pc.width + 2 * m + 2 * pad, h:pc.height + 2 * m + 2 * pad}; },
+  thumb(pc, d){
+    const b = this.bbox(pc, 6);
+    return `<svg viewBox="${fx(b.x)} ${fx(b.y)} ${fx(b.w)} ${fx(b.h)}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">${this.piece(pc, d, {cut:true, seam:true, notch:true, dims:false})}</svg>`;
+  },
+  layout(pieces, pad, gap){
+    const items = pieces.map(pc => { const b = this.bbox(pc, pad); return {pc, bw:b.w, bh:b.h}; });
+    const area = items.reduce((s, i) => s + i.bw * i.bh, 0);
+    const boardW = Math.max(...items.map(i => i.bw), Math.sqrt(area) * 1.5);
+    let x = 0, y = 0, rowH = 0;
+    for (const it of items){ if (x > 0 && x + it.bw > boardW){ x = 0; y += rowH + gap; rowH = 0; } it.x = x; it.y = y; x += it.bw + gap; rowH = Math.max(rowH, it.bh); }
+    return {items, w:boardW, h:y + rowH};
+  },
+  board(pieces, d, o){
+    const L = this.layout(pieces, this.PAD, 14);
+    const body = L.items.map(it => { const m = it.pc.seamAllowance; return `<g transform="translate(${fx(it.x + this.PAD + m)} ${fx(it.y + this.PAD + m)})" data-pc="${esc(it.pc.code)}" style="cursor:pointer">${this.piece(it.pc, d, Object.assign({}, o, {selected:o.sel === it.pc.code}))}</g>`; }).join('');
+    return {L, body};
+  },
+  exportSVG(pieces, d){
+    const L = this.layout(pieces, this.PAD, 14), top = 24;
+    const W = fx(L.w + 20), H = fx(L.h + top + 10);
+    let s = `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${W}mm" height="${H}mm" viewBox="0 0 ${W} ${H}">\n<title>MOLDERA 360 — ${esc(d.nombre)} (${esc(d.codigo)}) — escala 1:1, unidades mm</title>\n<rect width="${W}" height="${H}" fill="#fff"/>\n`;
+    s += `<text x="10" y="12" font-size="6" font-weight="700" font-family="${this.FONT}">MOLDERA 360 · ${esc(d.nombre)} · ${esc(d.codigo)}</text><text x="10" y="19" font-size="3.4" fill="#555" font-family="${this.FONT}">Escala 1:1 · Unidades: mm · Línea continua = corte · Línea discontinua azul = costura · Rojo = piquetes</text>\n`;
+    s += `<g transform="translate(10 ${top})">` + L.items.map(it => { const m = it.pc.seamAllowance; return `<g id="${esc(it.pc.code)}" transform="translate(${fx(it.x + this.PAD + m)} ${fx(it.y + this.PAD + m)})">${this.piece(it.pc, d, {cut:true, seam:true, notch:true, dims:true})}</g>`; }).join('\n') + '</g>\n</svg>';
+    return s;
+  }
+};
+
+/* ---------------- Previsualización 2D del producto ---------------- */
+const Preview = {
+  shade(hex, k){ const n = parseInt((hex || '#8b5a2b').slice(1), 16); let r = n >> 16, g = (n >> 8) & 255, b = n & 255; r = R(Math.max(0, Math.min(255, r * k))); g = R(Math.max(0, Math.min(255, g * k))); b = R(Math.max(0, Math.min(255, b * k))); return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1); },
+  dimH(x1, x2, y, t, fs){ return `<g stroke="#8a8478" stroke-width="${fs * 0.08}"><path d="M${x1} ${y}H${x2}M${x1} ${y - fs * 0.4}V${y + fs * 0.4}M${x2} ${y - fs * 0.4}V${y + fs * 0.4}"/></g><text x="${(x1 + x2) / 2}" y="${y + fs * 1.3}" font-size="${fs}" text-anchor="middle" fill="#6b6f78" font-family="${SVGR.FONT}">${t}</text>`; },
+  dimV(x, y1, y2, t, fs){ return `<g stroke="#8a8478" stroke-width="${fs * 0.08}"><path d="M${x} ${y1}V${y2}M${x - fs * 0.4} ${y1}H${x + fs * 0.4}M${x - fs * 0.4} ${y2}H${x + fs * 0.4}"/></g><text transform="translate(${x - fs * 0.6} ${(y1 + y2) / 2}) rotate(-90)" font-size="${fs}" text-anchor="middle" fill="#6b6f78" font-family="${SVGR.FONT}">${t}</text>`; },
+  svg(d, res){
+    const p = res.params, col = d.color || '#8b5a2b', dk = this.shade(col, 0.7), lt = this.shade(col, 1.18);
+    if (res.status === 'ERROR') return `<svg viewBox="0 0 200 80"><text x="100" y="40" text-anchor="middle" font-size="7" fill="#c53030" font-family="${SVGR.FONT}">Corrige los errores para ver la vista previa</text></svg>`;
+    let s = '', minX = 0, minY = 0, maxX = 0, maxY = 0;
+    const fs = Math.max(p.ancho || 100, p.alto || 100) * 0.045;
+    if (d.categoria === 'bolso' || d.categoria === 'morral'){
+      const W = p.ancho, H = p.alto, D = p.fondo, r = p.radioSup, gap = Math.max(50, W * 0.18);
+      s += `<path d="${Geo.rr(0, 0, W, H, [r, r, 0, 0])}" fill="${col}" stroke="${dk}" stroke-width="${fs * 0.12}"/>`;
+      s += `<path d="${Geo.rr(5, 5, W - 10, H - 10, [Math.max(0, r - 5), Math.max(0, r - 5), 0, 0])}" fill="none" stroke="${lt}" stroke-width="${fs * 0.07}" stroke-dasharray="${fs * 0.35} ${fs * 0.25}"/>`;
+      let top = 0;
+      if (d.categoria === 'bolso'){
+        const hy = Math.max(20, r * 0.5 + 15), c = W * 0.2;
+        const loop = (Ln, sw) => { const hgt = Math.sqrt(Math.max(0, (Ln / 2) ** 2 - c * c)) * 0.82; top = Math.min(top, hy - hgt); return `<path d="M${W / 2 - c} ${hy}C${W / 2 - c} ${hy - hgt * 1.33} ${W / 2 + c} ${hy - hgt * 1.33} ${W / 2 + c} ${hy}" fill="none" stroke="${dk}" stroke-width="${sw}" stroke-linecap="round"/>`; };
+        if (p.asa === 'larga' || p.asa === 'ambas') s = loop(p.largoAsaLarga, p.anchoAsa * 0.8) + s;
+        if (p.asa === 'corta' || p.asa === 'ambas') s = loop(p.largoAsaCorta, p.anchoAsa) + s;
+        if (p.correa){ const hgt = p.largoCorrea * 0.38; top = Math.min(top, r - hgt); s = `<path d="M0 ${r}C${-W * 0.1} ${r - hgt * 1.3} ${W * 1.1} ${r - hgt * 1.3} ${W} ${r}" fill="none" stroke="${dk}" stroke-width="${p.anchoAsa * 0.5}" stroke-opacity=".55"/>` + s; }
+        if (p.bolsilloExt){ const bw = R(W * 0.7), bh = R(H * 0.5); s += `<path d="${Geo.rr((W - bw) / 2, H - bh - R(H * 0.12), bw, bh, [0, 0, 10, 10])}" fill="${this.shade(col, 0.88)}" stroke="${dk}" stroke-width="${fs * 0.08}"/>`; }
+        if (p.tapa){ const th = H * 0.45; s += `<path d="${Geo.rr(-2, -2, W + 4, th, [r, r, 25, 25])}" fill="${this.shade(col, 0.82)}" stroke="${dk}" stroke-width="${fs * 0.1}"/>`; }
+        if (p.cierre === 'cremallera' && !p.tapa) s += `<path d="M${r + 8} 7H${W - r - 8}" stroke="#d9c39a" stroke-width="${fs * 0.25}" stroke-dasharray="${fs * 0.12} ${fs * 0.12}"/>`;
+        if (p.cierre === 'magnetico' || p.cierre === 'broche') s += `<circle cx="${W / 2}" cy="${p.tapa ? H * 0.45 - 22 : hy + 14}" r="${fs * 0.45}" fill="#d9c39a" stroke="${dk}"/>`;
+      } else {
+        if (p.asas){ const hgt = 55; top = Math.min(top, -hgt); s = `<path d="M${W / 2 - 40} ${Math.max(r * 0.3, 4)}C${W / 2 - 40} ${-hgt} ${W / 2 + 40} ${-hgt} ${W / 2 + 40} ${Math.max(r * 0.3, 4)}" fill="none" stroke="${dk}" stroke-width="18" stroke-linecap="round"/>` + s; }
+        if (p.cierre === 'cremallera') s += `<path d="${Geo.rr(9, 9, W - 18, H * 0.75, [Math.max(0, r - 9), Math.max(0, r - 9), 0, 0]).replace(/Z$/, '')}" fill="none" stroke="#d9c39a" stroke-width="${fs * 0.22}" stroke-dasharray="${fs * 0.12} ${fs * 0.12}" clip-path="none"/>`;
+        if (p.bolsilloFrontal){ const bw = R(W * 0.75), bh = p.altoBolsilloFrontal, by = H - bh - R(H * 0.06); s += `<path d="${Geo.rr((W - bw) / 2, by, bw, bh, [0, 0, 20, 20])}" fill="${this.shade(col, 0.86)}" stroke="${dk}" stroke-width="${fs * 0.1}"/><path d="M${(W - bw) / 2 + 12} ${by + 10}H${(W + bw) / 2 - 12}" stroke="#d9c39a" stroke-width="${fs * 0.2}" stroke-dasharray="${fs * 0.12} ${fs * 0.12}"/>`; }
+        if (p.tapa){ const th = D + H * 0.3; s += `<path d="${Geo.rr(-2, -2, W + 4, th, [r, r, 30, 30])}" fill="${this.shade(col, 0.82)}" stroke="${dk}" stroke-width="${fs * 0.1}"/>`; }
+      }
+      // vista lateral
+      const sx = W + gap;
+      s += `<path d="${Geo.rr(sx, 0, D, H, d.categoria === 'morral' ? [Math.min(r, D / 2), Math.min(r, D / 2), 0, 0] : [0, 0, 0, 0])}" fill="${this.shade(col, 0.85)}" stroke="${dk}" stroke-width="${fs * 0.12}"/>`;
+      if (d.categoria === 'morral'){
+        if (p.bolsillosLaterales) s += `<rect x="${sx}" y="${H - H * 0.35}" width="${D}" height="${H * 0.35}" fill="${this.shade(col, 0.75)}" stroke="${dk}" stroke-width="${fs * 0.08}"/>`;
+        if (p.correas) s += `<path d="M${sx + D} ${r + 40}C${sx + D + 70} ${H * 0.3} ${sx + D + 60} ${H * 0.75} ${sx + D} ${H - 25}" fill="none" stroke="${dk}" stroke-width="16" stroke-opacity=".55" stroke-linecap="round"/>`;
+      }
+      s += `<text x="${sx + D / 2}" y="${H + fs * 3.3}" font-size="${fs * 0.85}" text-anchor="middle" fill="#8a8478" font-family="${SVGR.FONT}">LATERAL</text>`;
+      s += this.dimH(0, W, H + fs * 1.4, `Ancho ${mmf(W)} mm`, fs) + this.dimV(-fs * 1.4, 0, H, `Alto ${mmf(H)} mm`, fs) + this.dimH(sx, sx + D, H + fs * 1.4, `Fondo ${mmf(D)}`, fs * 0.85);
+      minX = -fs * 3.2; minY = top - fs; maxX = sx + D + (d.categoria === 'morral' && p.correas ? 80 : fs); maxY = H + fs * 4.2;
+    } else {
+      const W = p.ancho, H = p.alto, rr = p.radioEsq, panels = p.plegado === 'trifold' ? 3 : 2, pw = W / panels;
+      s += `<path d="${Geo.rr(0, 0, W, H, [rr, rr, rr, rr])}" fill="${lt}" stroke="${dk}" stroke-width="${fs * 0.1}"/>`;
+      const N = p.tarjetas, A = Math.ceil(N / 2), B = Math.floor(N / 2);
+      const slots = (x0, n) => { let t = ''; for (let i = 0; i < n; i++){ const y = 12 + i * 14; t += `<path d="${Geo.rr(x0 + 3, y, pw - 6, H - y - 3, [0, 0, Math.min(rr, 6), Math.min(rr, 6)])}" fill="${this.shade(col, 0.92 - i * 0.04)}" stroke="${dk}" stroke-width="${fs * 0.06}"/>`; } return t; };
+      s += slots(0, A); s += slots(W - pw, B);
+      if (p.monedas && panels === 3) s += `<path d="${Geo.rr(pw + 5, H * 0.35, pw - 10, H * 0.62, [0, 0, 6, 6])}" fill="${this.shade(col, 0.85)}" stroke="${dk}" stroke-width="${fs * 0.06}"/>`;
+      for (let i = 1; i < panels; i++) s += `<path d="M${pw * i} -3V${H + 3}" stroke="${dk}" stroke-width="${fs * 0.07}" stroke-dasharray="${fs * 0.4} ${fs * 0.3}"/>`;
+      const cx = W + Math.max(40, W * 0.15);
+      s += `<path d="${Geo.rr(cx, 0, pw, H, [rr, rr, rr, rr])}" fill="${col}" stroke="${dk}" stroke-width="${fs * 0.1}"/>`;
+      if (p.cierre === 'boton') s += `<path d="${Geo.rr(cx + pw - 30, H * 0.25, 34, 30, [0, 15, 15, 0])}" fill="${this.shade(col, 0.8)}" stroke="${dk}" stroke-width="${fs * 0.08}"/><circle cx="${cx + pw - 10}" cy="${H * 0.25 + 15}" r="${fs * 0.35}" fill="#d9c39a"/>`;
+      s += `<text x="${cx + pw / 2}" y="${H + fs * 3.3}" font-size="${fs * 0.85}" text-anchor="middle" fill="#8a8478" font-family="${SVGR.FONT}">CERRADA</text>`;
+      s += `<text x="${W / 2}" y="${-fs * 0.8}" font-size="${fs * 0.85}" text-anchor="middle" fill="#8a8478" font-family="${SVGR.FONT}">ABIERTA · ${N} tarjetas · ${p.compartimentos} compart.${p.monedas ? ' · monedas' : ''}</text>`;
+      s += this.dimH(0, W, H + fs * 1.4, `Ancho ${mmf(W)} mm`, fs) + this.dimV(-fs * 1.4, 0, H, `Alto ${mmf(H)}`, fs);
+      minX = -fs * 3.2; minY = -fs * 2.2; maxX = cx + pw + fs; maxY = H + fs * 4.2;
+    }
+    return `<svg viewBox="${fx(minX)} ${fx(minY)} ${fx(maxX - minX)} ${fx(maxY - minY)}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+  }
+};
+
+/* ---------------- Impresión a escala + mosaico ---------------- */
+const Print = {
+  papers: {A4:[210, 297], A3:[297, 420], Carta:[215.9, 279.4], Oficio:[215.9, 330.2]},
+  PP: 6, HEAD: 10, FOOT: 13,
+  paperSize(c){ let s = c.paper === 'Personalizado' ? [+c.customW, +c.customH] : this.papers[c.paper]; if (c.orientation === 'landscape') s = [s[1], s[0]]; return s; },
+  plan(pieces, c){
+    const [pw, ph] = this.paperSize(c), mg = +c.printMargin, s = (+c.scale) / 100, ov = +c.overlap;
+    const Uw = pw - 2 * mg, Uh = ph - 2 * mg - this.HEAD - this.FOOT;
+    if (!(pw > 0 && ph > 0) || Uw < 60 || Uh < 60) return {error:'El papel es demasiado pequeño para los márgenes elegidos.'};
+    if (!(s > 0)) return {error:'La escala debe ser mayor que 0.'};
+    if (!(ov >= 0) || ov >= Math.min(Uw, Uh) / 2) return {error:'El solape debe ser mayor o igual a 0 y menor que la mitad del área útil.'};
+    const pages = [], small = [];
+    for (const pc of pieces){
+      const b = SVGR.bbox(pc, this.PP), w0 = b.w * s, h0 = b.h * s;
+      const fits = (w, h) => w <= Uw && h <= Uh;
+      const tiles = (w, h) => [Math.max(1, Math.ceil((w - ov) / (Uw - ov))), Math.max(1, Math.ceil((h - ov) / (Uh - ov)))];
+      if (fits(w0, h0)) small.push({pc, bw:w0, bh:h0, rot:false});
+      else if (fits(h0, w0)) small.push({pc, bw:h0, bh:w0, rot:true});
+      else {
+        const A = tiles(w0, h0), B = tiles(h0, w0), rot = B[0] * B[1] < A[0] * A[1];
+        const [cols, rows] = rot ? B : A, bw = rot ? h0 : w0, bh = rot ? w0 : h0;
+        for (let ri = 0; ri < rows; ri++) for (let ci = 0; ci < cols; ci++) pages.push({type:'tile', pc, bw, bh, rot, cols, rows, ci, ri, x0:ci * (Uw - ov), y0:ri * (Uh - ov)});
+      }
+    }
+    const packs = []; let cur = null, x = 0, y = 0, rowH = 0; const G = 4;
+    for (const it of small){
+      if (!cur){ cur = {type:'pack', items:[]}; x = 0; y = 0; rowH = 0; }
+      if (x > 0 && x + it.bw > Uw + 1e-6){ x = 0; y += rowH + G; rowH = 0; }
+      if (y + it.bh > Uh + 1e-6){ packs.push(cur); cur = {type:'pack', items:[]}; x = 0; y = 0; rowH = 0; }
+      cur.items.push(Object.assign({}, it, {x, y})); x += it.bw + G; rowH = Math.max(rowH, it.bh);
+    }
+    if (cur && cur.items.length) packs.push(cur);
+    const all = [...packs, ...pages];
+    if (c.calib) all.unshift({type:'calib'});
+    return {pages:all, pw, ph, mg, s, ov, Uw, Uh};
+  },
+  pieceAt(pc, d, s, rot){ const m = pc.seamAllowance; const g = `<g transform="scale(${s}) translate(${fx(this.PP + m)} ${fx(this.PP + m)})">${SVGR.piece(pc, d, {cut:true, seam:true, notch:true, dims:false})}</g>`; return rot ? `<g transform="translate(${fx((pc.height + 2 * m + 2 * this.PP) * s)} 0) rotate(90)">${g}</g>` : g; },
+  ruler(x, y){
+    let t = `<g font-family="${SVGR.FONT}"><rect x="${x}" y="${y}" width="50" height="6" fill="none" stroke="#000" stroke-width="0.3"/>`;
+    for (let i = 0; i <= 50; i += 1){ const hh = i % 10 === 0 ? 3.2 : (i % 5 === 0 ? 2.2 : 1.2); t += `<path d="M${x + i} ${y}V${y + hh}" stroke="#000" stroke-width="${i % 10 === 0 ? 0.25 : 0.15}"/>`; }
+    t += `<text x="${x}" y="${y + 9}" font-size="2.4">0</text><text x="${x + 50}" y="${y + 9}" font-size="2.4" text-anchor="end">50 mm</text></g>`;
+    return t;
+  },
+  sheet(plan, page, idx, total, d, preview){
+    const {pw, ph, mg, s, ov, Uw, Uh} = plan; const F = SVGR.FONT;
+    const attrs = preview ? `width="100%" viewBox="0 0 ${fx(pw)} ${fx(ph)}"` : `width="${fx(pw)}mm" height="${fx(ph)}mm" viewBox="0 0 ${fx(pw)} ${fx(ph)}"`;
+    let o = `<svg xmlns="http://www.w3.org/2000/svg" ${attrs}><rect width="${fx(pw)}" height="${fx(ph)}" fill="#fff"/>`;
+    const head = (sub) => `<text x="${mg}" y="${mg + 4}" font-size="3.6" font-weight="700" font-family="${F}">MOLDERA 360 · ${esc(d.nombre)} · ${esc(d.codigo)}</text><text x="${fx(pw - mg)}" y="${mg + 4}" font-size="3.6" font-weight="700" text-anchor="end" font-family="${F}">HOJA ${idx} / ${total}</text><text x="${mg}" y="${mg + 8.2}" font-size="2.7" fill="#555" font-family="${F}">${sub}</text>`;
+    const foot = () => { const fy = ph - mg - this.FOOT + 2; return this.ruler(mg, fy) + `<text x="${mg + 56}" y="${fy + 3}" font-size="2.6" font-family="${F}">Verificar que la regla mida exactamente 50 mm después de imprimir.</text><text x="${mg + 56}" y="${fy + 7}" font-size="2.6" font-weight="700" font-family="${F}" fill="${s === 1 ? '#000' : '#c53030'}">${s === 1 ? 'Imprimir al 100 % — no seleccionar «Ajustar a página».' : `ESCALA ${R(s * 100)} % — solo referencia, NO usar para fabricar.`}</text>`; };
+    if (page.type === 'calib'){
+      const cx = pw / 2, cy = ph * 0.38;
+      o += head('Página de calibración');
+      o += `<rect x="${fx(cx - 25)}" y="${fx(cy - 25)}" width="50" height="50" fill="none" stroke="#000" stroke-width="0.4"/><path d="M${fx(cx - 25)} ${fx(cy)}h50M${fx(cx)} ${fx(cy - 25)}v50" stroke="#999" stroke-width="0.2" stroke-dasharray="1 1"/>`;
+      o += `<text x="${fx(cx)}" y="${fx(cy + 1.5)}" font-size="4.2" text-anchor="middle" font-weight="700" font-family="${F}">50 mm × 50 mm</text>`;
+      o += `<text x="${fx(cx)}" y="${fx(cy + 34)}" font-size="4" text-anchor="middle" font-family="${F}">Verificar que el cuadrado mida exactamente 50 mm después de imprimir.</text>`;
+      o += `<text x="${fx(cx)}" y="${fx(cy + 40)}" font-size="3.4" text-anchor="middle" fill="#c53030" font-family="${F}">Imprime con escala 100 %. No seleccionar «Ajustar a página».</text>`;
+      const lx = cx - 50, ly = cy + 52;
+      o += `<rect x="${fx(lx)}" y="${fx(ly)}" width="100" height="8" fill="none" stroke="#000" stroke-width="0.3"/>`;
+      for (let i = 0; i <= 100; i++) o += `<path d="M${fx(lx + i)} ${fx(ly)}v${i % 10 === 0 ? 4 : (i % 5 === 0 ? 2.6 : 1.4)}" stroke="#000" stroke-width="${i % 10 === 0 ? 0.25 : 0.15}"/>` + (i % 10 === 0 ? `<text x="${fx(lx + i)}" y="${fx(ly + 7)}" font-size="2.2" text-anchor="middle" font-family="${F}">${i / 10}</text>` : '');
+      o += `<text x="${fx(cx)}" y="${fx(ly + 13)}" font-size="3" text-anchor="middle" fill="#555" font-family="${F}">Regla de 100 mm (cm)</text>`;
+      const tips = ['1. Imprime esta página primero y mide el cuadrado con una regla.', '2. Si no mide 50 mm, revisa la configuración: escala 100 % / «Tamaño real».', `3. Papel: ${pw} × ${ph} mm · Solape entre hojas: ${ov} mm.`, '4. Une las hojas haciendo coincidir las marcas ⊕ y la zona sombreada.'];
+      tips.forEach((t, i) => o += `<text x="${mg + 6}" y="${fx(ly + 26 + i * 6)}" font-size="3.3" font-family="${F}">${t}</text>`);
+      o += foot();
+    } else if (page.type === 'pack'){
+      o += head(`${page.items.length} pieza(s) completas en esta hoja · escala ${R(s * 100)} %`);
+      for (const it of page.items) o += `<g transform="translate(${fx(mg + it.x)} ${fx(mg + this.HEAD + it.y)})">${this.pieceAt(it.pc, d, s, it.rot)}</g>`;
+      o += foot();
+    } else {
+      const {pc, cols, rows, ci, ri, x0, y0, bw, bh} = page;
+      o += head(`Pieza ${esc(pc.name.toUpperCase())} (${esc(pc.code)}) · mosaico ${rows}×${cols} · fila ${ri + 1}, columna ${ci + 1} · solape ${ov} mm${page.rot ? ' · girada 90°' : ''}`);
+      let inner = this.pieceAt(pc, d, s, page.rot);
+      for (let k = 1; k < cols; k++){ const bx = k * (Uw - ov); inner += `<rect x="${fx(bx)}" y="0" width="${ov}" height="${fx(bh)}" fill="#b8692e" fill-opacity="0.08"/><path d="M${fx(bx)} 0V${fx(bh)}M${fx(bx + ov)} 0V${fx(bh)}" stroke="#b8692e" stroke-width="0.25" stroke-dasharray="2 1.2"/>`; let n = 1; for (let yy = 25; yy < bh - 5; yy += 60, n++){ const xc = fx(bx + ov / 2); inner += `<g stroke="#000" stroke-width="0.3" fill="none"><circle cx="${xc}" cy="${fx(yy)}" r="2.2"/><path d="M${xc - 3.5} ${fx(yy)}h7M${xc} ${fx(yy - 3.5)}v7"/></g><text x="${fx(xc - 3)}" y="${fx(yy - 3)}" font-size="2.6" font-weight="700" text-anchor="end" font-family="${F}">V${k}.${n}</text>`; } }
+      for (let k = 1; k < rows; k++){ const by = k * (Uh - ov); inner += `<rect x="0" y="${fx(by)}" width="${fx(bw)}" height="${ov}" fill="#b8692e" fill-opacity="0.08"/><path d="M0 ${fx(by)}H${fx(bw)}M0 ${fx(by + ov)}H${fx(bw)}" stroke="#b8692e" stroke-width="0.25" stroke-dasharray="2 1.2"/>`; let n = 1; for (let xx = 25; xx < bw - 5; xx += 60, n++){ const yc = fx(by + ov / 2); inner += `<g stroke="#000" stroke-width="0.3" fill="none"><circle cx="${fx(xx)}" cy="${yc}" r="2.2"/><path d="M${fx(xx - 3.5)} ${yc}h7M${fx(xx)} ${yc - 3.5}v7"/></g><text x="${fx(xx + 3)}" y="${yc - 3}" font-size="2.6" font-weight="700" font-family="${F}">H${k}.${n}</text>`; } }
+      o += `<svg x="${mg}" y="${mg + this.HEAD}" width="${fx(Uw)}" height="${fx(Uh)}" viewBox="${fx(x0)} ${fx(y0)} ${fx(Uw)} ${fx(Uh)}" overflow="hidden">${inner}</svg>`;
+      o += `<rect x="${mg}" y="${mg + this.HEAD}" width="${fx(Uw)}" height="${fx(Uh)}" fill="none" stroke="#ccc" stroke-width="0.2"/>`;
+      const lab = String.fromCharCode(65 + ri) + (ci + 1);
+      o += `<text x="${fx(mg + Uw - 3)}" y="${fx(mg + this.HEAD + 12)}" font-size="10" font-weight="800" fill="#000" fill-opacity="0.12" text-anchor="end" font-family="${F}">${lab}</text>`;
+      o += foot();
+    }
+    return o + '</svg>';
+  }
+};
+
+/* ---------------- IA (intérprete local de lenguaje natural → parámetros) ----------------
+   La IA nunca genera coordenadas: solo devuelve parámetros que el motor geométrico valida.
+   provider:'local' funciona sin internet y gratis. Preparado para 'claude' (API) en la versión PRO. */
+const AI = {
+  provider: 'local',
+  words: {un:1, uno:1, una:1, dos:2, tres:3, cuatro:4, cinco:5, seis:6, siete:7, ocho:8, nueve:9, diez:10, once:11, doce:12, trece:13, catorce:14, quince:15, dieciseis:16, veinte:20},
+  norm(t){ return ' ' + t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/(\d),(\d)/g, '$1.$2').replace(/[¿?¡!]/g, ' ').replace(/\s+/g, ' ') + ' '; },
+  n(s){ s = (s || '').trim(); return this.words[s] != null ? this.words[s] : parseFloat(s); },
+  toMM(v, u){
+    u = (u || '').trim();
+    if (/^(mm|milimetro)/.test(u)) return v;
+    if (/^(cm|centimetro)/.test(u)) return v * 10;
+    if (/^(m|metros?)$/.test(u)) return v * 1000;
+    if (/^(pulg|in|")/.test(u)) return v * 25.4;
+    return v <= 80 ? v * 10 : v;   // sin unidad: ≤ 80 se asume cm
+  },
+  dimKey(w){ if (/^(alto|alta|altura|bajo|baja)/.test(w)) return 'alto'; if (/^(ancho|ancha|anchura|angost|estrech)/.test(w)) return 'ancho'; if (/^(fondo|profund)/.test(w)) return 'fondo'; return null; },
+  detectCat(t){ if (/morral|mochila|backpack/.test(t)) return 'morral'; if (/billetera|monedero|wallet/.test(t)) return 'billetera'; if (/bolso|cartera|tote|bandolera|clutch/.test(t)) return 'bolso'; return null; },
+  negBefore(t, idx){
+    const pre = t.slice(Math.max(0, idx - 40), idx);
+    const cut = Math.max(pre.lastIndexOf(','), pre.lastIndexOf('.'), pre.lastIndexOf(' y '), pre.lastIndexOf(' con '), pre.lastIndexOf(' pero '));
+    const seg = cut >= 0 ? pre.slice(cut) : pre;
+    return /(sin|elimina|eliminar|quita|quitar|quitale|remueve|retira|desactiva|no quiero|no lleva|no tenga|no necesito)\b/.test(seg);
+  },
+  parse(text, current){
+    const res = {categoria:null, cambios:{}, notas:[]};
+    let t = this.norm(text);
+    const NUM = '(\\d+(?:\\.\\d+)?|' + Object.keys(this.words).join('|') + ')';
+    const UNIT = '(mm|milimetros?|cm|centimetros?|metros?|m|pulgadas?|pulg|in|")?';
+    res.categoria = this.detectCat(t);
+    const cat = res.categoria || (current && current.categoria) || (/portatil|laptop|computador/.test(t) ? 'morral' : null);
+    const base = Object.assign(defaultsOf(cat || 'bolso'), current && (!res.categoria || res.categoria === current.categoria) ? current.parametros : {});
+    const C = res.cambios; const val = k => (C[k] != null ? C[k] : base[k]);
+    const blank = m => { t = t.replace(m, ' '.repeat(m.length)); };
+    // portátil + pulgadas
+    if (/portatil|laptop|computador|notebook/.test(t)){
+      const idx = t.search(/portatil|laptop|computador|notebook/);
+      if (cat === 'morral') C.portatil = !this.negBefore(t, idx);
+      const mi = t.match(new RegExp(NUM + '\\s*(pulgadas?|pulg|")'));
+      if (mi){ C.pulgadasPortatil = this.n(mi[1]); blank(mi[0]); }
+    }
+    // medidas tipo 30x25x10 cm
+    let mx = t.match(/(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)(?:\s*[x×]\s*(\d+(?:\.\d+)?))?\s*(mm|cm)?/);
+    if (mx){ C.ancho = this.toMM(+mx[1], mx[4]); C.alto = this.toMM(+mx[2], mx[4]); if (mx[3]) C.fondo = this.toMM(+mx[3], mx[4]); blank(mx[0]); }
+    // relativos: "5 cm mas alto", "3 cm menos de fondo"
+    const rel = new RegExp(NUM + '\\s*' + UNIT + '\\s*(mas|menos)\\s*(?:de\\s+)?(alto|alta|ancho|ancha|fondo|profundo|profunda|bajo|baja|angosto|angosta|estrecho|estrecha)', 'g');
+    for (const mm of [...t.matchAll(rel)]){
+      const k = this.dimKey(mm[4]); if (!k) continue;
+      let sign = mm[3] === 'mas' ? 1 : -1; if (/^(bajo|baja|angost|estrech)/.test(mm[4])) sign *= -1;
+      C[k] = val(k) + sign * this.toMM(this.n(mm[1]), mm[2]); blank(mm[0]);
+    }
+    // "aumenta el alto en 5 cm" / "reduce el fondo 2 cm"
+    const rel2 = new RegExp('(aumenta|sube|agranda|amplia|alarga|crece|reduce|disminuye|baja|acorta|achica)\\s+(?:el\\s+|la\\s+)?(alto|altura|ancho|anchura|fondo|profundidad)\\s+(?:en\\s+)' + NUM + '\\s*' + UNIT, 'g');
+    for (const mm of [...t.matchAll(rel2)]){ const k = this.dimKey(mm[2]); const sign = /^(reduce|disminuye|baja|acorta|achica)/.test(mm[1]) ? -1 : 1; C[k] = val(k) + sign * this.toMM(this.n(mm[3]), mm[4]); blank(mm[0]); }
+    // "hazlo mas alto" sin cantidad → 5 cm
+    const rel3 = /(?:hazlo|hazla|mas)\s+(mas\s+)?(alto|alta|ancho|ancha|profundo|profunda|bajo|baja|angosto|angosta)\b/g;
+    for (const mm of [...t.matchAll(rel3)]){ const k = this.dimKey(mm[2]); const sign = /^(bajo|baja|angost)/.test(mm[2]) ? -1 : 1; C[k] = val(k) + sign * 50; res.notas.push(`Sin cantidad indicada: se aplicó ${sign > 0 ? '+' : '−'}5 cm al ${k}.`); blank(mm[0]); }
+    // valores absolutos
+    const set1 = new RegExp(NUM + '\\s*' + UNIT + '\\s*(?:de\\s+)?(alto|altura|ancho|anchura|fondo|profundidad)\\b', 'g');
+    for (const mm of [...t.matchAll(set1)]){ const k = this.dimKey(mm[3]); C[k] = this.toMM(this.n(mm[1]), mm[2]); blank(mm[0]); }
+    const set2 = new RegExp('(alto|altura|ancho|anchura|fondo|profundidad)\\s*(?:de|a|=|:|en)?\\s*' + NUM + '\\s*' + UNIT, 'g');
+    for (const mm of [...t.matchAll(set2)]){ const k = this.dimKey(mm[1]); C[k] = this.toMM(this.n(mm[2]), mm[3]); blank(mm[0]); }
+    // tarjetas / compartimentos
+    let mt = t.match(new RegExp('tarjetas\\s*(?:a|en|de|=)\\s*' + NUM)) || t.match(new RegExp(NUM + '\\s+(?:ranuras\\s+(?:para\\s+|de\\s+)?)?tarjetas'));
+    if (mt) C.tarjetas = R(this.n(mt[1]));
+    else if (/(mas|aumenta)[^.]*tarjetas/.test(t)) C.tarjetas = val('tarjetas') + 2;
+    let mc = t.match(new RegExp('compartimentos\\s*(?:a|en|de|=)\\s*' + NUM)) || t.match(new RegExp(NUM + '\\s+compartimentos'));
+    if (mc) C.compartimentos = R(this.n(mc[1]));
+    // correa / asas
+    const cKey = cat === 'morral' ? 'largoCorrea' : 'largoCorrea';
+    let mco = t.match(new RegExp('(correa|correas|hombreras?)\\s+(?:de\\s+)?' + NUM + '\\s*' + UNIT));
+    if (mco){ C[cKey] = this.toMM(this.n(mco[2]), mco[3]); }
+    if (/(correa|correas|hombreras?|bandolera)\s+mas\s+larga/.test(t)) C[cKey] = val(cKey) + 200;
+    if (/(correa|correas|hombreras?|bandolera)\s+mas\s+corta/.test(t)) C[cKey] = val(cKey) - 200;
+    if (cat === 'bolso'){
+      if (/asas?\s+mas\s+larga/.test(t)) { const k = val('asa') === 'larga' ? 'largoAsaLarga' : 'largoAsaCorta'; C[k] = val(k) + 100; }
+      if (/asas?\s+mas\s+corta/.test(t)) { const k = val('asa') === 'larga' ? 'largoAsaLarga' : 'largoAsaCorta'; C[k] = val(k) - 100; }
+      if (/asas?\s+(corta|larga)s?\s+y\s+(larga|corta)|ambas\s+asas|dos\s+tipos\s+de\s+asa/.test(t)) C.asa = 'ambas';
+      else if (/asas?\s+largas?|asa\s+de\s+hombro/.test(t)) C.asa = 'larga';
+      else if (/asas?\s+cortas?|asa\s+de\s+mano/.test(t)) C.asa = 'corta';
+      else if (/sin\s+asas?/.test(t)) C.asa = 'ninguna';
+    }
+    // componentes on/off
+    const feats = [
+      {re:/bolsillos?\s+frontal(es)?|bolsillo\s+delantero/, k:{morral:'bolsilloFrontal', bolso:'bolsilloExt'}},
+      {re:/bolsillos?\s+lateral(es)?|bolsillos?\s+de\s+los\s+lados/, k:{morral:'bolsillosLaterales'}},
+      {re:/bolsillos?\s+(externos?|exterior(es)?)/, k:{bolso:'bolsilloExt', morral:'bolsilloFrontal'}},
+      {re:/bolsillos?\s+(internos?|interior(es)?)/, k:{bolso:'bolsilloInt'}},
+      {re:/bolsillos?\s+(?:para\s+|de\s+)?monedas|monedero/, k:{billetera:'monedas'}},
+      {re:/\bforro\b|\bforrad[oa]/, k:{bolso:'forro'}},
+      {re:/\btapa\b|\bsolapa\b/, k:{bolso:'tapa', morral:'tapa'}},
+      {re:/\bcorreas?\b|bandolera|hombreras?/, k:{bolso:'correa', morral:'correas'}},
+      {re:/\basas?\s+de\s+mano|\basas?\b/, k:{morral:'asas'}}
+    ];
+    for (const f of feats){ const m2 = t.match(f.re); if (!m2 || !cat || !f.k[cat]) continue; const key = f.k[cat]; if (key === 'correa' || key === 'correas'){ if (C.largoCorrea != null && !this.negBefore(t, m2.index)) { C[key] = true; continue; } } C[key] = !this.negBefore(t, m2.index); }
+    // cierre
+    if (/sin\s+cierre/.test(t)) C.cierre = 'ninguno';
+    else if (/cremallera|zipper|cierre\s+de\s+cremallera/.test(t) && !this.negBefore(t, t.search(/cremallera|zipper/))) C.cierre = 'cremallera';
+    else if (/magnetic|\biman\b/.test(t) && cat === 'bolso') C.cierre = 'magnetico';
+    else if (/broche|boton|hebilla/.test(t)) C.cierre = cat === 'billetera' ? 'boton' : 'broche';
+    // plegado
+    if (cat === 'billetera'){ if (/tri\s*fold|tres\s+(cuerpos|pliegues|partes)|triple/.test(t)) C.plegado = 'trifold'; else if (/bi\s*fold|dos\s+(cuerpos|pliegues|partes)/.test(t)) C.plegado = 'bifold'; }
+    // margen
+    const mm2 = t.match(new RegExp('margen\\s*(?:de\\s+costura\\s*)?(?:de|a|=|en)?\\s*' + NUM + '\\s*(mm|milimetros?|cm)?'));
+    if (mm2){ let v = this.n(mm2[1]); if (/^cm/.test(mm2[2] || '')) v *= 10; C.margen = v; }
+    // limpiar: solo claves válidas del esquema
+    const valid = new Set(['margen', ...paramDefs(cat || 'bolso').map(f => f.k)]);
+    for (const k of Object.keys(C)){ if (!valid.has(k)) { delete C[k]; continue; } if (typeof C[k] === 'number') C[k] = Math.round(C[k] * 100) / 100; }
+    res.categoria = res.categoria || (cat && (!current || current.categoria !== cat) ? cat : null);
+    res.categoriaEfectiva = cat;
+    return res;
+  },
+  describe(res, base){
+    const cat = res.categoriaEfectiva || 'bolso'; const defs = Object.fromEntries(paramDefs(cat).map(f => [f.k, f]));
+    return Object.entries(res.cambios).map(([k, v]) => {
+      const f = defs[k]; const lab = f ? f.label : (k === 'margen' ? 'Margen' : k);
+      const fmt = x => typeof x === 'boolean' ? (x ? 'Sí' : 'No') : (typeof x === 'number' ? (f && f.type === 'num' ? mmf(x) + (f.suffix ? ' ' + f.suffix : '') : mmf(x) + ' mm') : (f && f.opts ? (f.opts.find(o => o[0] === x) || [x, x])[1] : x));
+      const before = base && base[k] != null ? fmt(base[k]) + ' → ' : '';
+      return `${lab}: ${before}${fmt(v)}`;
+    });
+  }
+};
+
+/* ---------------- Ficha técnica ---------------- */
+const Ficha = {
+  html(d, res, st){
+    const P = PRODUCTS[d.categoria], p = res.params;
+    const rows = res.pieces.map(pc => `<tr><td><b>${esc(pc.code)}</b></td><td>${esc(pc.name)}</td><td>${esc(pc.material)}</td><td style="text-align:center">${pc.quantity}</td><td>${mmf(pc.width)} × ${mmf(pc.height)} mm</td><td>${mmf(pc.width + 2 * pc.seamAllowance)} × ${mmf(pc.height + 2 * pc.seamAllowance)} mm</td></tr>`).join('');
+    const prm = paramDefs(d.categoria).filter(f => !f.show || f.show(p)).map(f => { const v = p[f.k]; const tv = f.type === 'bool' ? (v ? 'Sí' : 'No') : f.type === 'radio' ? (f.opts.find(o => o[0] === v) || [v, v])[1] : f.type === 'len' ? mmf(v) + ' mm' : mmf(v) + (f.suffix ? ' ' + f.suffix : ''); return `<tr><td>${esc(f.label)}</td><td><b>${esc(tv)}</b></td></tr>`; }).join('');
+    const statusCol = res.status === 'VALIDADO' ? '#2f855a' : '#a86a12';
+    return `<div class="ficha">
+      <div class="f-head"><div>${st.logo ? `<img src="${st.logo}" alt="logo"><br>` : ''}<h2>FICHA TÉCNICA</h2><div style="color:#666;font-size:12px">MOLDERA 360 · Del diseño a la moldería.</div></div>
+      <div class="f-meta">${st.taller ? `<b>${esc(st.taller)}</b><br>` : ''}${st.designer ? `Diseñador: ${esc(st.designer)}<br>` : ''}Fecha: ${Util.date(d.fechaActualizacion || Util.now())}<br><span class="fstatus" style="color:${statusCol};border-color:${statusCol}">${res.status === 'VALIDADO' ? 'VALIDADO' : 'REVISAR'}</span></div></div>
+      <div class="fkv">
+        <div><small>Producto</small><b>${esc(d.nombre)}</b></div><div><small>Código</small><b>${esc(d.codigo)}</b></div><div><small>Categoría</small><b>${P.icon} ${P.label}</b></div>
+        <div><small>Dimensiones</small><b>${esc(res.dims)}</b></div><div><small>Margen de costura</small><b>${mmf(p.margen)} mm</b></div><div><small>Material principal</small><b>${esc(d.material)}</b></div>
+        <div><small>Color (solo visual)</small><b><span style="display:inline-block;width:11px;height:11px;border-radius:3px;background:${esc(d.color)};vertical-align:-1px"></span> ${esc(d.color)}</b></div><div><small>Piezas distintas</small><b>${res.pieces.length}</b></div><div><small>Total de cortes</small><b>${res.totalCuts}</b></div>
+      </div>
+      ${res.status !== 'VALIDADO' ? `<p style="color:#a86a12;font-weight:700;margin:14px 0 0">⚠ Revisión recomendada antes de fabricar.</p>` : ''}
+      <h3>Tabla de piezas</h3>
+      <table class="ftab"><thead><tr><th>Código</th><th>Pieza</th><th>Material</th><th>Cantidad</th><th>Dimensiones (terminada)</th><th>Corte (con margen)</th></tr></thead><tbody>${rows || '<tr><td colspan="6">Sin piezas: corrige los errores.</td></tr>'}</tbody></table>
+      <h3>Herrajes y avíos</h3>${res.hardware.length ? '<ul>' + res.hardware.map(h => `<li>${esc(h)}</li>`).join('') + '</ul>' : '<p style="color:#777">Ninguno.</p>'}
+      <h3>Parámetros del diseño</h3><table class="ftab"><tbody>${prm}<tr><td>Margen de costura</td><td><b>${mmf(p.margen)} mm</b></td></tr></tbody></table>
+      <h3>Observaciones de armado</h3><ul>${res.pieces.filter(pc => pc.notes).map(pc => `<li><b>${esc(pc.code)} · ${esc(pc.name)}:</b> ${esc(pc.notes)}</li>`).join('')}</ul>
+      ${d.observaciones ? `<p>${esc(d.observaciones)}</p>` : ''}
+      <h3>Validación</h3>${res.issues.length ? '<ul>' + res.issues.map(i => `<li>${i.level === 'error' ? '⛔' : '⚠'} ${esc(i.msg)}</li>`).join('') + '</ul>' : '<p>✔ Sin observaciones geométricas. Medidas derivadas matemáticamente de los parámetros; unidades en mm.</p>'}
+      <p style="margin-top:22px;font-size:11px;color:#888">Generado con MOLDERA 360 · ${new Date().toLocaleString('es-CO')}</p>
+    </div>`;
+  }
+};
+
+/* =====================================================================
+   UI
+   ===================================================================== */
+const S = {view:'home', design:null, res:null, tab:'diseno', dirty:false, unit:'mm', sel:null,
+  layers:{cut:true, seam:true, notch:true, dims:true}, vb:null, printCfg:null, printSel:null, ai:null, aiText:''};
+const $ = s => document.querySelector(s);
+
+function newDesign(cat, extra){
+  const st = Store.settings(), P = PRODUCTS[cat];
+  const n = Store.designs().filter(d => d.categoria === cat).length + 1;
+  const d = {id:Util.uid(), nombre:`${P.label} ${String(n).padStart(3, '0')}`, categoria:cat, codigo:`${P.prefix}-${String(n).padStart(3, '0')}`,
+    parametros:defaultsOf(cat, st.margin), material:'cuero', color:cat === 'billetera' ? '#5b3a29' : (cat === 'morral' ? '#2f3a40' : '#9a5b2e'),
+    piezas:[], observaciones:'', fechaCreacion:Util.now(), fechaActualizacion:Util.now(), version:1};
+  if (extra) Object.assign(d.parametros, extra);
+  return d;
+}
+function nextCode(cat){ const P = PRODUCTS[cat]; const used = new Set(Store.designs().map(d => d.codigo)); let n = 1; while (used.has(`${P.prefix}-${String(n).padStart(3, '0')}`)) n++; return `${P.prefix}-${String(n).padStart(3, '0')}`; }
+function seedDemos(){
+  if (Store.get(Store.K.seeded, false)) return;
+  const mk = (cat, nombre, codigo, extra, color) => { const d = newDesign(cat, extra); d.nombre = nombre; d.codigo = codigo; d.color = color; d.piezas = Engine.run(d).pieces; return d; };
+  const list = [
+    mk('morral', 'Morral Ejecutivo', 'MOR-001', {ancho:300, alto:420, fondo:120}, '#2f3a40'),
+    mk('billetera', 'Billetera Clásica', 'BIL-001', {ancho:220, alto:100, tarjetas:8}, '#5b3a29'),
+    mk('bolso', 'Bolso Urbano', 'BOL-001', {ancho:300, alto:250, fondo:100}, '#9a5b2e')
+  ];
+  list.forEach(d => Store.saveDesign(d));
+  Store.set(Store.K.seeded, true);
+}
+
+const UI = {
+  toast(msg, kind){ const t = document.createElement('div'); t.className = 'toast ' + (kind || ''); t.textContent = msg; $('#toast').appendChild(t); setTimeout(() => t.remove(), 3200); },
+  go(view){ S.view = view; this.render(); $('#main').scrollTop = 0; },
+  render(){
+    this.nav();
+    const m = $('#main');
+    if (S.view === 'home') m.innerHTML = this.home();
+    else if (S.view === 'library') m.innerHTML = this.library();
+    else if (S.view === 'ai') m.innerHTML = this.aiView();
+    else if (S.view === 'settings') m.innerHTML = this.settingsView();
+    else if (S.view === 'editor') { m.innerHTML = this.editor(); this.renderTab(); }
+  },
+  nav(){
+    const it = (act, ic, label, on, extra = '', cls = '') => `<button class="nav-it ${on ? 'on' : ''} ${cls}" data-act="${act}" ${extra}><span class="ic">${ic}</span><span>${label}</span></button>`;
+    const v = S.view;
+    let h = `<div class="nav-sec">Principal</div>` + it('nav', '⌂', 'Inicio', v === 'home', 'data-view="home"');
+    h += `<div class="nav-sec">Categorías</div>` + Object.entries(PRODUCTS).map(([k, P]) => it('new', P.icon, P.plural, v === 'editor' && S.design && S.design.categoria === k, `data-cat="${k}"`, 'hide-m')).join('');
+    h += it('nav', '＋', 'Nuevo', false, 'data-view="home"', 'show-m');
+    h += `<div class="nav-sec">Herramientas</div>` + it('nav', '✦', 'Diseñar con IA', v === 'ai', 'data-view="ai"') + it('nav', '▤', 'Mis diseños', v === 'library', 'data-view="library"');
+    if (S.design && v !== 'editor') h += it('open', '✎', 'Editor', false, '', 'show-m');
+    h += it('nav', '⚙', 'Configuración', v === 'settings', 'data-view="settings"');
+    if (S.design && v !== 'editor') h += `<div class="nav-open">Diseño abierto<b>${esc(S.design.nombre)}</b><button class="btn sm primary" data-act="open">Volver al editor</button></div>`;
+    h += `<div class="nav-foot">MVP · sin servidor · tus diseños se guardan en este navegador.</div>`;
+    $('#side').innerHTML = h;
+  },
+  designCard(d){
+    const P = PRODUCTS[d.categoria]; if (!P) return '';
+    let res; try { res = Engine.run(d); } catch(e){ res = {status:'ERROR', pieces:[], dims:'', params:d.parametros}; }
+    const b = res.status === 'VALIDADO' ? '<span class="badge ok">✔ VALIDADO</span>' : res.status === 'REVISAR' ? '<span class="badge rev">REVISAR</span>' : '<span class="badge err">ERROR</span>';
+    return `<div class="card dcard">
+      <div class="thumb">${res.status !== 'ERROR' ? Preview.svg(d, res) : ''}</div>
+      <div class="row" style="justify-content:space-between"><h4>${P.icon} ${esc(d.nombre)}</h4>${b}</div>
+      <div class="meta"><span>${P.label}</span><span>${esc(d.codigo)}</span><span>${Util.date(d.fechaActualizacion)}</span></div>
+      <div class="meta"><span>📐 ${esc(res.dims)}</span><span>🧩 ${res.pieces.length} piezas</span></div>
+      <div class="acts"><button class="btn sm primary" data-act="openId" data-id="${d.id}">Abrir</button><button class="btn sm" data-act="dup" data-id="${d.id}">Duplicar</button><button class="btn sm" data-act="ren" data-id="${d.id}">Renombrar</button><button class="btn sm" data-act="expId" data-id="${d.id}">JSON</button><button class="btn sm ghost danger" data-act="del" data-id="${d.id}">Eliminar</button></div>
+    </div>`;
+  },
+  home(){
+    const ds = Store.designs();
+    return `<div class="wrap">
+      <div class="hero">
+        <div class="hero-main">
+          <h1>Del diseño a la moldería.</h1>
+          <p style="margin:12px 0 0">Introduce medidas, ajusta características y obtén un despiece paramétrico con líneas de corte, costura y piquetes, listo para imprimir a escala real.</p>
+          <div class="flow">IDEA → DISEÑO → DESPIECE → MOLDERÍA → IMPRESIÓN → FABRICACIÓN</div>
+          <svg class="deco" width="260" height="200" viewBox="0 0 260 200" fill="none" stroke="#fff" stroke-width="1.5"><path d="M20 60h220v130H20z"/><path d="M28 68h204v114H28z" stroke-dasharray="6 4"/><path d="M90 60V40a40 40 0 0 1 80 0v20"/><path d="M130 60v-8M130 190v8M20 125h-8M240 125h8" stroke="#e5b48a" stroke-width="3"/></svg>
+        </div>
+        <div>
+          <div class="create-grid">
+            ${Object.entries(PRODUCTS).map(([k, P]) => `<button class="create" data-act="new" data-cat="${k}"><span class="em">${P.icon}</span><div><b>Nuevo ${P.label.toLowerCase()}</b><br><span>${k === 'bolso' ? 'Frente, espalda, fuelle, asas…' : k === 'billetera' ? 'Plegable, tarjetas, monedas…' : 'Fuelle, base, bolsillos, portátil…'}</span></div></button>`).join('')}
+          </div>
+          <div class="card ai-card" data-act="nav" data-view="ai"><div class="ai-ic">✦</div><div><b>Diseñar con IA</b><div class="muted" style="font-size:13px;margin-top:3px">Describe tu producto en palabras; se convierte en parámetros y moldería real.</div></div></div>
+        </div>
+      </div>
+      <div class="sec-title">Mis diseños · ${ds.length}</div>
+      ${ds.length ? `<div class="designs">${ds.map(d => this.designCard(d)).join('')}</div>` : `<div class="card empty">Aún no tienes diseños. Crea uno arriba.</div>`}
+    </div>`;
+  },
+  library(){
+    const ds = Store.designs();
+    return `<div class="wrap"><div class="row" style="justify-content:space-between"><div><div class="h-title">Mis diseños</div><div class="h-sub">Guardados localmente en este navegador (JSON).</div></div>
+      <div class="row"><button class="btn" data-act="import">⇪ Importar JSON</button><button class="btn" data-act="expAll" ${ds.length ? '' : 'disabled'}>⇩ Exportar biblioteca</button><button class="btn ghost" data-act="resetDemos">Restaurar demos</button></div></div>
+      <div style="height:18px"></div>
+      ${ds.length ? `<div class="designs">${ds.map(d => this.designCard(d)).join('')}</div>` : `<div class="card empty">No hay diseños guardados.</div>`}</div>`;
+  },
+  /* -------- Editor -------- */
+  editor(){
+    const d = S.design, P = PRODUCTS[d.categoria], n = S.res.pieces.length;
+    const tabs = [['diseno', 'Diseño'], ['despiece', 'Despiece', n], ['molderia', 'Moldería'], ['ficha', 'Ficha técnica'], ['imprimir', 'Imprimir']];
+    return `<div class="ed-bar">
+      <button class="btn ghost" data-act="back">← Atrás</button>
+      <span class="chip">${P.icon} ${P.label}</span>
+      <input class="name-input" id="dName" value="${esc(d.nombre)}" aria-label="Nombre del diseño">
+      <span class="code">${esc(d.codigo)}</span>
+      <span id="statusBadge">${this.badge()}</span>
+      <span class="dirty" id="dirtyMark">${S.dirty ? '● sin guardar' : ''}</span>
+      <div class="spacer"></div>
+      <button class="btn" data-act="regen">⟳ Regenerar</button>
+      <button class="btn primary" data-act="save">Guardar</button>
+    </div>
+    <div class="tabs">${tabs.map(([k, l, c]) => `<button class="tab ${S.tab === k ? 'on' : ''}" data-act="tab" data-tab="${k}">${l}${c != null ? ` <span class="n" id="tabCount">${c}</span>` : ''}</button>`).join('')}</div>
+    <div class="tab-body" id="tabBody"></div>`;
+  },
+  badge(){ const s = S.res.status; return s === 'VALIDADO' ? '<span class="badge ok">✔ VALIDADO</span>' : s === 'REVISAR' ? '<span class="badge rev" title="Revisión recomendada antes de fabricar">⚠ REVISAR</span>' : '<span class="badge err">⛔ ERRORES</span>'; },
+  renderTab(){
+    const b = $('#tabBody'); if (!b) return;
+    if (S.tab === 'diseno') { b.innerHTML = this.tabDiseno(); }
+    else if (S.tab === 'despiece') b.innerHTML = this.tabDespiece();
+    else if (S.tab === 'molderia') { b.innerHTML = this.tabMolderia(); Viewer.init(); }
+    else if (S.tab === 'ficha') b.innerHTML = `<div class="row" style="justify-content:flex-end;margin-bottom:12px"><button class="btn" data-act="expJSON">⇩ Proyecto .json</button><button class="btn primary" data-act="printFicha">🖨 Imprimir / PDF</button></div>` + Ficha.html(S.design, S.res, Store.settings());
+    else if (S.tab === 'imprimir') { b.innerHTML = this.tabImprimir(); this.refreshPrintPreview(); }
+  },
+  field(f, p){
+    if (f.show && !f.show(p)) return '';
+    const v = p[f.k];
+    if (f.type === 'len'){ const u = S.unit; const dv = (v == null || !isFinite(v)) ? '' : Units.fromMM(v, u); return `<label class="fld"><span>${esc(f.label)}</span><div class="inp-u"><input type="number" inputmode="decimal" step="${Units.step(u)}" min="0" data-param="${f.k}" data-type="len" value="${dv}"><em>${Units.label[u]}</em></div></label>`; }
+    if (f.type === 'num') return `<label class="fld"><span>${esc(f.label)}</span><div class="inp-u"><input type="number" inputmode="decimal" step="${f.step || 1}" min="0" data-param="${f.k}" data-type="num" value="${v ?? ''}"><em>${esc(f.suffix || '')}</em></div></label>`;
+    if (f.type === 'bool') return `<label class="tgl"><input type="checkbox" data-param="${f.k}" data-type="bool" ${v ? 'checked' : ''}><i></i><span>${esc(f.label)}</span></label>`;
+    if (f.type === 'radio') return `<div class="fld"><span>${esc(f.label)}</span><div class="seg">${f.opts.map(([val, lab]) => `<button type="button" class="${v === val ? 'on' : ''}" data-act="setp" data-k="${f.k}" data-v="${val}">${lab}</button>`).join('')}</div></div>`;
+    return '';
+  },
+  form(){
+    const d = S.design, p = Object.assign(defaultsOf(d.categoria), d.parametros);
+    const m = p.margen, std = [3, 5, 7, 10];
+    let h = `<div class="pgroup"><h4>Unidades</h4><div class="seg">${['mm', 'cm', 'in'].map(u => `<button type="button" class="${S.unit === u ? 'on' : ''}" data-act="unit" data-u="${u}">${u === 'in' ? 'pulgadas' : u}</button>`).join('')}</div><div class="muted" style="font-size:11.5px;margin-top:6px">Internamente todo se calcula en milímetros.</div></div>`;
+    h += PRODUCTS[d.categoria].groups.map(g => `<div class="pgroup"><h4>${g.title}</h4>${g.params.map(f => this.field(f, p)).join('')}</div>`).join('');
+    h += `<div class="pgroup"><h4>Margen de costura (global)</h4><div class="seg">${std.map(x => `<button type="button" class="${m === x ? 'on' : ''}" data-act="margin" data-v="${x}">${x} mm</button>`).join('')}<button type="button" class="${std.includes(m) ? '' : 'on'}" data-act="marginCustom">Otro</button></div>
+      ${std.includes(m) ? '' : `<label class="fld" style="margin-top:8px"><span>Margen personalizado</span><div class="inp-u"><input type="number" step="0.5" min="0" data-param="margen" data-type="num" value="${m ?? ''}"><em>mm</em></div></label>`}</div>`;
+    h += `<div class="pgroup"><h4>Material y color</h4><div class="two"><label class="fld"><span>Material</span><select class="inp" data-meta="material">${MATERIALS.map(([k, l]) => `<option value="${k}" ${d.material === k ? 'selected' : ''}>${l}</option>`).join('')}</select></label><label class="fld"><span>Color (solo vista previa)</span><input type="color" class="inp" style="height:38px;padding:3px" data-meta="color" value="${esc(d.color)}"></label></div>
+      <label class="fld"><span>Observaciones (ficha técnica)</span><textarea class="inp" rows="2" data-meta="observaciones">${esc(d.observaciones || '')}</textarea></label></div>`;
+    return h;
+  },
+  issuesHTML(){
+    const r = S.res;
+    if (!r.issues.length) return `<div class="issue ok">✔ <div><b>VALIDADO.</b> Geometría coherente: las medidas se derivan matemáticamente de los parámetros.</div></div>`;
+    let h = r.status === 'ERROR' ? `<div class="issue error">⛔ <div><b>No se puede generar la moldería.</b> Corrige los errores:</div></div>` : `<div class="issue warn">⚠ <div><b>Revisión recomendada antes de fabricar.</b></div></div>`;
+    return h + r.issues.map(i => `<div class="issue ${i.level}">${i.level === 'error' ? '⛔' : '⚠'}<div>${esc(i.msg)}</div></div>`).join('');
+  },
+  statsHTML(){ const r = S.res; return `<div class="stats"><div class="stat"><b>${r.pieces.length}</b><span>piezas distintas</span></div><div class="stat"><b>${r.totalCuts}</b><span>cortes totales</span></div><div class="stat"><b>${mmf(r.params.margen)} mm</b><span>margen</span></div><div class="stat"><b>${r.hardware.length}</b><span>herrajes</span></div></div>`; },
+  tabDiseno(){
+    return `<div class="grid-d"><div class="card panel" id="paramForm">${this.form()}</div>
+      <div><div class="card prev-card"><div class="row" style="justify-content:space-between;margin-bottom:10px"><b>Vista previa 2D</b><span class="muted" style="font-size:12px" id="dimsTxt">${esc(S.res.dims)}</span></div>
+        <div class="prev-box" id="prevBox">${Preview.svg(S.design, S.res)}</div>
+        <div id="statsBox">${this.statsHTML()}</div>
+        <div class="aibar"><input class="inp" id="aiCmd" placeholder="✦ Comando IA: «Hazlo 5 cm más alto», «Agrega un bolsillo frontal»…"><button class="btn dark" data-act="aiCmd">Aplicar</button></div>
+        <div class="row" style="margin-top:12px"><button class="btn" data-act="tab" data-tab="despiece">Ver despiece →</button><button class="btn" data-act="tab" data-tab="molderia">Moldería →</button><button class="btn" data-act="tab" data-tab="imprimir">Imprimir →</button></div>
+      </div>
+      <div class="issues" id="issuesBox">${this.issuesHTML()}</div></div></div>`;
+  },
+  refreshLive(){
+    const pb = $('#prevBox'); if (pb) pb.innerHTML = Preview.svg(S.design, S.res);
+    const ib = $('#issuesBox'); if (ib) ib.innerHTML = this.issuesHTML();
+    const sb = $('#statsBox'); if (sb) sb.innerHTML = this.statsHTML();
+    const dt = $('#dimsTxt'); if (dt) dt.textContent = S.res.dims;
+    const bd = $('#statusBadge'); if (bd) bd.innerHTML = this.badge();
+    const tc = $('#tabCount'); if (tc) tc.textContent = S.res.pieces.length;
+    const dm = $('#dirtyMark'); if (dm) dm.textContent = S.dirty ? '● sin guardar' : '';
+  },
+  tabDespiece(){
+    const r = S.res, d = S.design;
+    if (!r.pieces.length) return `<div class="issues">${this.issuesHTML()}</div>`;
+    return `<div class="row" style="justify-content:space-between;margin-bottom:14px"><div><b style="font-size:17px">DESPIECE</b> <span class="muted">· ${r.pieces.length} piezas · ${r.totalCuts} cortes · margen ${mmf(r.params.margen)} mm</span></div>${r.status !== 'VALIDADO' ? '<span class="badge rev">⚠ Revisión recomendada antes de fabricar</span>' : '<span class="badge ok">✔ VALIDADO</span>'}</div>
+    <div class="pieces">${r.pieces.map(pc => `<div class="card pcard"><div class="pthumb">${SVGR.thumb(pc, d)}</div><h4>${esc(pc.name)}</h4><div class="pc-code">${esc(pc.code)}</div><div class="pc-dim"><b>${mmf(pc.width)} × ${mmf(pc.height)} mm</b> <span class="muted">terminada</span></div><div class="pc-meta">Corte: ${mmf(pc.width + 2 * pc.seamAllowance)} × ${mmf(pc.height + 2 * pc.seamAllowance)} mm</div><div class="pc-meta">Cantidad: <b style="color:var(--ink)">${pc.quantity}</b> · ${esc(pc.material)}</div><button class="btn sm" data-act="viewPiece" data-code="${esc(pc.code)}">VER MOLDE</button></div>`).join('')}</div>
+    ${r.hardware.length ? `<div class="sec-title">Herrajes y avíos</div><div class="card panel"><ul style="margin:0;padding-left:18px;line-height:1.8">${r.hardware.map(h => `<li>${esc(h)}</li>`).join('')}</ul></div>` : ''}`;
+  },
+  tabMolderia(){
+    if (!S.res.pieces.length) return `<div class="issues">${this.issuesHTML()}</div>`;
+    const L = S.layers, tg = (k, l) => `<label class="tgl" style="padding:0 6px 0 0"><input type="checkbox" data-layer="${k}" ${L[k] ? 'checked' : ''}><i></i><span>${l}</span></label>`;
+    return `<div class="vw-tools">${tg('cut', 'Margen / corte')}${tg('seam', 'Costura')}${tg('notch', 'Piquetes')}${tg('dims', 'Medidas')}<div class="spacer"></div>
+      <button class="btn sm" data-act="zoomOut" title="Alejar">−</button><button class="btn sm" data-act="zoomIn" title="Acercar">＋</button><button class="btn sm" data-act="fit">⤢ Centrar</button><button class="btn sm" data-act="expSVG">⇩ SVG 1:1</button></div>
+      <div class="vw-grid"><div class="viewer" id="viewer"><svg id="board" xmlns="http://www.w3.org/2000/svg"></svg><div class="hint">Arrastra para mover · rueda o pellizco para zoom · toca una pieza</div><div class="zoomlvl" id="zoomLvl"></div></div>
+      <div class="card info" id="infoPanel">${this.infoHTML()}</div></div>`;
+  },
+  infoHTML(){
+    const pc = S.res.pieces.find(x => x.code === S.sel);
+    const legend = `<div class="legend"><div><i style="border-top:1.5px solid #15171c"></i>Línea exterior = corte</div><div><i style="border-top:1.5px dashed #2b6cb0"></i>Línea interior = costura</div><div><i style="border-top:2px solid #c53030"></i>Piquetes (numerados)</div><div><i style="border-top:1.5px dashed #b8692e"></i>Posiciones (asas, bolsillos)</div><div><i style="border-top:1.5px dashed #7a5ab0"></i>Dobleces / pliegues</div></div>`;
+    if (!pc) return `<h4>Selecciona una pieza</h4><div class="muted">Haz clic sobre cualquier molde para ver su información.</div>${legend}`;
+    return `<h4>${esc(pc.name)}</h4><table class="kv"><tr><td>Código</td><td><b>${esc(pc.code)}</b></td></tr><tr><td>Ancho</td><td>${mmf(pc.width)} mm</td></tr><tr><td>Alto</td><td>${mmf(pc.height)} mm</td></tr><tr><td>Corte</td><td>${mmf(pc.width + 2 * pc.seamAllowance)} × ${mmf(pc.height + 2 * pc.seamAllowance)} mm</td></tr><tr><td>Cantidad</td><td>${pc.quantity}</td></tr><tr><td>Material</td><td>${esc(pc.material)}</td></tr><tr><td>Margen</td><td>${mmf(pc.seamAllowance)} mm</td></tr><tr><td>Piquetes</td><td>${pc.markers.length}</td></tr></table>
+      ${pc.notes ? `<p style="font-size:12.5px;line-height:1.45;margin:10px 0">${esc(pc.notes)}</p>` : ''}<div class="row"><button class="btn sm primary" data-act="printPiece" data-code="${esc(pc.code)}">🖨 Imprimir esta pieza</button><button class="btn sm" data-act="focusPiece" data-code="${esc(pc.code)}">Enfocar</button></div>${legend}`;
+  },
+  /* -------- Impresión -------- */
+  ensurePrintCfg(){
+    const st = Store.settings();
+    if (!S.printCfg) S.printCfg = {paper:st.paper, orientation:st.orientation, customW:st.customW, customH:st.customH, scale:100, printMargin:st.printMargin, overlap:st.overlap, calib:true};
+    const codes = S.res.pieces.map(p => p.code);
+    if (!S.printSel) S.printSel = new Set(codes); else S.printSel = new Set([...S.printSel].filter(c => codes.includes(c)));
+  },
+  tabImprimir(){
+    if (!S.res.pieces.length) return `<div class="issues">${this.issuesHTML()}</div>`;
+    this.ensurePrintCfg(); const c = S.printCfg;
+    const sc = [100, 50, 25];
+    return `<div class="pr-grid"><div class="card panel">
+      <b style="font-size:16px">PREPARAR PARA IMPRIMIR</b>
+      <div class="warnbox" style="margin:12px 0">⚠ Imprime utilizando <b>escala 100 %</b> («Tamaño real»). <b>No</b> seleccionar «Ajustar a página». Verifica la regla de 50 mm de cada hoja.</div>
+      <div class="fld"><span>Tamaño de papel</span><div class="seg">${['A4', 'A3', 'Carta', 'Oficio', 'Personalizado'].map(p => `<button type="button" class="${c.paper === p ? 'on' : ''}" data-act="pcfg" data-k="paper" data-v="${p}">${p}</button>`).join('')}</div></div>
+      ${c.paper === 'Personalizado' ? `<div class="two"><label class="fld"><span>Ancho papel</span><div class="inp-u"><input type="number" data-pcfg="customW" value="${c.customW}"><em>mm</em></div></label><label class="fld"><span>Alto papel</span><div class="inp-u"><input type="number" data-pcfg="customH" value="${c.customH}"><em>mm</em></div></label></div>` : ''}
+      <div class="fld"><span>Orientación</span><div class="seg"><button type="button" class="${c.orientation === 'portrait' ? 'on' : ''}" data-act="pcfg" data-k="orientation" data-v="portrait">Vertical</button><button type="button" class="${c.orientation === 'landscape' ? 'on' : ''}" data-act="pcfg" data-k="orientation" data-v="landscape">Horizontal</button></div></div>
+      <div class="fld"><span>Escala</span><div class="seg">${sc.map(x => `<button type="button" class="${+c.scale === x ? 'on' : ''}" data-act="pcfg" data-k="scale" data-v="${x}">${x} %</button>`).join('')}<button type="button" class="${sc.includes(+c.scale) ? '' : 'on'}" data-act="pcfg" data-k="scale" data-v="custom">Otra</button></div></div>
+      ${sc.includes(+c.scale) ? '' : `<label class="fld"><span>Escala personalizada</span><div class="inp-u"><input type="number" data-pcfg="scale" value="${c.scale}" min="1" max="400"><em>%</em></div></label>`}
+      <div class="two"><label class="fld"><span>Margen de impresora</span><div class="inp-u"><input type="number" data-pcfg="printMargin" value="${c.printMargin}" min="3"><em>mm</em></div></label><label class="fld"><span>Solape mosaico</span><div class="inp-u"><input type="number" data-pcfg="overlap" value="${c.overlap}" min="0"><em>mm</em></div></label></div>
+      <label class="tgl"><input type="checkbox" data-pcfg="calib" ${c.calib ? 'checked' : ''}><i></i><span>Incluir página de calibración (50 × 50 mm)</span></label>
+      <div class="fld" style="margin-top:8px"><span>Piezas a imprimir <a href="#" data-act="selAll" style="font-weight:500;margin-left:6px;color:var(--accent2)">todas</a> · <a href="#" data-act="selNone" style="font-weight:500;color:var(--accent2)">ninguna</a></span><div class="pcheck">${S.res.pieces.map(pc => `<label><input type="checkbox" data-psel="${esc(pc.code)}" ${S.printSel.has(pc.code) ? 'checked' : ''}> <b>${esc(pc.code)}</b> ${esc(pc.name)} <span class="muted">×${pc.quantity}</span></label>`).join('')}</div></div>
+      <div class="row" style="margin-top:14px"><button class="btn primary" data-act="doPrint">🖨 Imprimir moldes / PDF</button><button class="btn" data-act="expSVG">⇩ SVG 1:1</button></div>
+      <div class="muted" style="font-size:12px;margin-top:10px;line-height:1.45">Para PDF: en la ventana de impresión elige «Guardar como PDF», márgenes «Ninguno» y escala 100 %.</div>
+    </div><div><div class="row" style="justify-content:space-between;margin-bottom:12px"><b>Vista previa de hojas</b><span class="muted" id="pageCount"></span></div><div id="sheetPrev" class="sheets"></div></div></div>`;
+  },
+  printPlan(){ this.ensurePrintCfg(); const pcs = S.res.pieces.filter(p => S.printSel.has(p.code)); return Print.plan(pcs, S.printCfg); },
+  refreshPrintPreview(){
+    const box = $('#sheetPrev'); if (!box) return;
+    const pl = this.printPlan();
+    if (pl.error){ box.innerHTML = `<div class="issue error">⛔ ${esc(pl.error)}</div>`; $('#pageCount').textContent = ''; return; }
+    const N = pl.pages.length;
+    $('#pageCount').textContent = `${N} hoja(s) · ${pl.pw} × ${pl.ph} mm`;
+    if (!N){ box.innerHTML = `<div class="muted">Selecciona al menos una pieza.</div>`; return; }
+    const lim = 40;
+    box.innerHTML = pl.pages.slice(0, lim).map((pg, i) => `<div><div class="sheet-prev">${Print.sheet(pl, pg, i + 1, N, S.design, true)}</div><div class="sheet-cap">Hoja ${i + 1}${pg.type === 'tile' ? ' · ' + esc(pg.pc.code) : pg.type === 'calib' ? ' · calibración' : ''}</div></div>`).join('') + (N > lim ? `<div class="muted">… y ${N - lim} hojas más</div>` : '');
+  },
+  doPrint(){
+    const pl = this.printPlan();
+    if (pl.error) return this.toast(pl.error, 'err');
+    if (!pl.pages.length) return this.toast('Selecciona al menos una pieza.', 'err');
+    if (S.res.status !== 'VALIDADO') this.toast('Atención: el diseño tiene observaciones. Revisión recomendada antes de fabricar.');
+    const N = pl.pages.length;
+    const html = pl.pages.map((pg, i) => `<div class="sheet" style="width:${pl.pw}mm;height:${fx(pl.ph - 0.4)}mm">${Print.sheet(pl, pg, i + 1, N, S.design, false)}</div>`).join('');
+    this.printHTML('pat', html, `@page{size:${pl.pw}mm ${pl.ph}mm;margin:0}`);
+  },
+  printHTML(mode, html, css){
+    $('#printRoot').innerHTML = html; $('#pageStyle').textContent = css;
+    document.body.classList.add('printing-' + mode);
+    setTimeout(() => window.print(), 80);
+  },
+  /* -------- IA -------- */
+  aiView(){
+    const ex = ['Quiero un morral urbano de 35 cm de alto para un portátil de 15 pulgadas, con bolsillo frontal y dos bolsillos laterales.', 'Bolso de 32 x 24 x 11 cm con cierre magnético, asas cortas, forro y bolsillo interno.', 'Billetera de tres cuerpos con 10 tarjetas y bolsillo de monedas, cierre de botón.', 'Hazlo 5 cm más alto', 'Reduce el fondo a 8 cm', 'Elimina el bolsillo lateral', 'Quiero una correa más larga'];
+    const r = S.ai;
+    let out = '';
+    if (r){
+      const sameCat = S.design && (!r.categoria || r.categoria === S.design.categoria);
+      const base = sameCat ? Object.assign(defaultsOf(S.design.categoria), S.design.parametros) : null;
+      const list = AI.describe(r, base);
+      const json = Object.assign({categoria:r.categoriaEfectiva}, r.cambios);
+      out = `<div class="card ai-box" style="margin-top:16px"><b>Interpretación → parámetros estructurados</b>
+        <div class="pipeline"><span>IA</span>→<span class="hl">Parámetros</span>→<span>Motor geométrico</span>→<span>Moldería SVG</span>→<span>Validación</span>→<span>Impresión</span></div>
+        ${list.length ? `<ul style="margin:6px 0 12px;line-height:1.7">${list.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : `<div class="issue warn">⚠ <div>No identifiqué medidas ni componentes. Prueba con: «35 cm de alto», «agrega un bolsillo frontal», «10 tarjetas».</div></div>`}
+        ${r.notas.map(n => `<div class="muted" style="font-size:12.5px">ℹ ${esc(n)}</div>`).join('')}
+        <pre class="json">${esc(JSON.stringify(json, null, 2))}</pre>
+        <div class="row">${r.categoriaEfectiva ? `<button class="btn primary" data-act="aiNew">Crear nuevo ${PRODUCTS[r.categoriaEfectiva].label.toLowerCase()} con estos parámetros</button>` : ''}${sameCat && list.length ? `<button class="btn dark" data-act="aiApply">Aplicar a «${esc(S.design.nombre)}»</button>` : ''}</div>
+        ${!r.categoriaEfectiva ? `<div class="issue warn" style="margin-top:10px">⚠ <div>Indica el tipo de producto: bolso, billetera o morral.</div></div>` : ''}</div>`;
+    }
+    return `<div class="wrap ai-wrap"><div class="h-title">✦ Diseñar con IA</div><div class="h-sub">Describe el producto o el cambio. La IA traduce tu texto a <b>parámetros</b>; el motor geométrico genera la moldería. La IA nunca dibuja coordenadas.</div>
+      <div class="card ai-box" style="margin-top:18px"><textarea id="aiText" placeholder="Ej.: Quiero un morral urbano de 35 cm de alto para un portátil de 15 pulgadas…">${esc(S.aiText)}</textarea>
+      <div class="ex-chips">${ex.map(e => `<button data-act="aiEx" data-t="${esc(e)}">${esc(e.length > 60 ? e.slice(0, 58) + '…' : e)}</button>`).join('')}</div>
+      <div class="row" style="justify-content:space-between"><span class="muted" style="font-size:12px">Modo: intérprete local (gratis, sin conexión). Preparado para la API de Claude en la versión PRO.</span><button class="btn primary" data-act="aiRun">Interpretar</button></div></div>${out}</div>`;
+  },
+  /* -------- Configuración -------- */
+  settingsView(){
+    const s = Store.settings();
+    const sel = (k, opts) => `<select class="inp" data-set="${k}">${opts.map(([v, l]) => `<option value="${v}" ${String(s[k]) === String(v) ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
+    return `<div class="wrap"><div class="h-title">Configuración</div><div class="h-sub">Se guarda en este navegador.</div><div style="height:18px"></div>
+      <div class="set-grid"><div class="card panel"><div class="pgroup"><h4>Perfil</h4>
+        <label class="fld"><span>Nombre del diseñador</span><input class="inp" data-set="designer" value="${esc(s.designer)}"></label>
+        <label class="fld"><span>Nombre del taller</span><input class="inp" data-set="taller" value="${esc(s.taller)}"></label>
+        <div class="fld"><span>Logo (aparece en la ficha técnica)</span><div class="row"><div class="logo-prev">${s.logo ? `<img src="${s.logo}" alt="">` : '<span class="muted" style="font-size:11px">sin logo</span>'}</div><button class="btn sm" data-act="logo">Subir logo</button>${s.logo ? '<button class="btn sm ghost danger" data-act="logoDel">Quitar</button>' : ''}</div></div></div></div>
+      <div class="card panel"><div class="pgroup"><h4>Preferencias</h4>
+        <label class="fld"><span>Unidad predeterminada</span>${sel('unit', [['mm', 'Milímetros'], ['cm', 'Centímetros'], ['in', 'Pulgadas']])}</label>
+        <label class="fld"><span>Margen de costura predeterminado</span>${sel('margin', [[3, '3 mm'], [5, '5 mm'], [7, '7 mm'], [10, '10 mm']])}</label></div>
+        <div class="pgroup"><h4>Impresión</h4>
+        <div class="two"><label class="fld"><span>Papel</span>${sel('paper', [['A4', 'A4'], ['A3', 'A3'], ['Carta', 'Carta'], ['Oficio', 'Oficio'], ['Personalizado', 'Personalizado']])}</label><label class="fld"><span>Orientación</span>${sel('orientation', [['portrait', 'Vertical'], ['landscape', 'Horizontal']])}</label></div>
+        <div class="two"><label class="fld"><span>Margen impresora (mm)</span><input type="number" class="inp" data-set="printMargin" value="${s.printMargin}"></label><label class="fld"><span>Solape mosaico (mm)</span><input type="number" class="inp" data-set="overlap" value="${s.overlap}"></label></div>
+        <div class="two"><label class="fld"><span>Papel personalizado ancho</span><input type="number" class="inp" data-set="customW" value="${s.customW}"></label><label class="fld"><span>alto (mm)</span><input type="number" class="inp" data-set="customH" value="${s.customH}"></label></div></div>
+        <button class="btn primary" data-act="saveSettings">Guardar configuración</button></div></div></div>`;
+  },
+  /* -------- acciones de diseño -------- */
+  open(d){ S.design = Util.clone(d); S.res = Engine.run(S.design); S.tab = 'diseno'; S.dirty = false; S.sel = null; S.vb = null; S.printSel = null; S.printCfg = null; S.unit = Store.settings().unit; this.go('editor'); },
+  regen(){ S.res = Engine.run(S.design); },
+  changed(rerenderForm){
+    S.dirty = true; this.regen();
+    if (rerenderForm){ const f = $('#paramForm'); if (f) f.innerHTML = this.form(); }
+    this.refreshLive();
+  },
+  save(){
+    const d = S.design; d.fechaActualizacion = Util.now(); d.piezas = S.res.pieces;
+    if (Store.saveDesign(Util.clone(d))){ S.dirty = false; this.refreshLive(); this.toast('Diseño guardado ✔', 'ok'); }
+  },
+  applyAI(res, toCurrent){
+    if (toCurrent && S.design){ Object.assign(S.design.parametros, res.cambios); S.dirty = true; this.regen(); return; }
+    const cat = res.categoriaEfectiva; if (!cat) return;
+    const d = newDesign(cat); d.codigo = nextCode(cat); Object.assign(d.parametros, res.cambios); d.nombre = `${PRODUCTS[cat].label} IA ${d.codigo.slice(-3)}`;
+    S.design = d; S.res = Engine.run(d); S.dirty = true; S.tab = 'diseno'; S.sel = null; S.vb = null; S.printSel = null; S.printCfg = null; S.unit = Store.settings().unit;
+  }
+};
+
+/* ---------------- Visor interactivo (zoom / mover / seleccionar) ---------------- */
+const Viewer = {
+  data: null,
+  init(){
+    const svg = $('#board'); if (!svg) return;
+    this.draw(true);
+    const el = $('#viewer'); const ptrs = new Map(); let start = null, moved = false, pinch = null;
+    const toSvg = (cx, cy) => { const r = svg.getBoundingClientRect(); return {x:S.vb.x + (cx - r.left) / r.width * S.vb.w, y:S.vb.y + (cy - r.top) / r.height * S.vb.h}; };
+    el.onwheel = e => { e.preventDefault(); const p = toSvg(e.clientX, e.clientY); this.zoom(e.deltaY > 0 ? 1.15 : 1 / 1.15, p); };
+    el.onpointerdown = e => { el.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, {x:e.clientX, y:e.clientY}); moved = false; start = {x:e.clientX, y:e.clientY, vb:Object.assign({}, S.vb)}; if (ptrs.size === 2){ const [a, b] = [...ptrs.values()]; pinch = {d:Math.hypot(a.x - b.x, a.y - b.y)}; } el.classList.add('drag'); };
+    el.onpointermove = e => {
+      if (!ptrs.has(e.pointerId)) return; ptrs.set(e.pointerId, {x:e.clientX, y:e.clientY});
+      if (ptrs.size === 2 && pinch){ const [a, b] = [...ptrs.values()]; const dd = Math.hypot(a.x - b.x, a.y - b.y); if (dd > 0){ this.zoom(pinch.d / dd, toSvg((a.x + b.x) / 2, (a.y + b.y) / 2)); pinch.d = dd; moved = true; } return; }
+      const r = svg.getBoundingClientRect(); const dx = e.clientX - start.x, dy = e.clientY - start.y;
+      if (Math.abs(dx) + Math.abs(dy) > 3) moved = true;
+      S.vb.x = start.vb.x - dx / r.width * start.vb.w; S.vb.y = start.vb.y - dy / r.height * start.vb.h; this.apply();
+    };
+    el.onpointerup = el.onpointercancel = e => {
+      ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; el.classList.remove('drag');
+      if (!moved && e.type === 'pointerup'){ const t = document.elementFromPoint(e.clientX, e.clientY); const g = t && t.closest && t.closest('[data-pc]'); S.sel = g ? g.getAttribute('data-pc') : null; this.draw(false); $('#infoPanel').innerHTML = UI.infoHTML(); }
+      if (ptrs.size === 1){ const [p] = [...ptrs.values()]; start = {x:p.x, y:p.y, vb:Object.assign({}, S.vb)}; }
+    };
+    if (this._ro) this._ro.disconnect();
+    if (window.ResizeObserver){ this._ro = new ResizeObserver(() => { if (S.vb) this.fitAspect(); }); this._ro.observe(el); }
+  },
+  draw(fit){
+    const svg = $('#board'); if (!svg) return;
+    const {L, body} = SVGR.board(S.res.pieces, S.design, Object.assign({}, S.layers, {sel:S.sel}));
+    this.data = L;
+    const grid = `<defs><pattern id="g10" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" fill="none" stroke="#dfe3dc" stroke-width="0.3"/></pattern><pattern id="g50" width="50" height="50" patternUnits="userSpaceOnUse"><rect width="50" height="50" fill="url(#g10)"/><path d="M50 0H0V50" fill="none" stroke="#cdd3ca" stroke-width="0.6"/></pattern></defs><rect x="-3000" y="-3000" width="${fx(L.w + 6000)}" height="${fx(L.h + 6000)}" fill="url(#g50)"/>`;
+    svg.innerHTML = grid + body;
+    if (fit || !S.vb) this.fit(); else this.apply();
+  },
+  fit(code){
+    let bx = -10, by = -10, bw = this.data.w + 20, bh = this.data.h + 20;
+    if (code){ const it = this.data.items.find(i => i.pc.code === code); if (it){ bx = it.x - 10; by = it.y - 10; bw = it.bw + 20; bh = it.bh + 20; } }
+    S.vb = {x:bx, y:by, w:bw, h:bh}; this.fitAspect();
+  },
+  fitAspect(){
+    const el = $('#viewer'); if (!el) return; const ar = el.clientWidth / Math.max(1, el.clientHeight);
+    const cx = S.vb.x + S.vb.w / 2, cy = S.vb.y + S.vb.h / 2;
+    if (S.vb.w / S.vb.h > ar) S.vb.h = S.vb.w / ar; else S.vb.w = S.vb.h * ar;
+    S.vb.x = cx - S.vb.w / 2; S.vb.y = cy - S.vb.h / 2; this.apply();
+  },
+  zoom(f, p){
+    const el = $('#viewer'); if (!el) return;
+    const nw = Math.min(20000, Math.max(20, S.vb.w * f)), k = nw / S.vb.w;
+    p = p || {x:S.vb.x + S.vb.w / 2, y:S.vb.y + S.vb.h / 2};
+    S.vb = {x:p.x - (p.x - S.vb.x) * k, y:p.y - (p.y - S.vb.y) * k, w:S.vb.w * k, h:S.vb.h * k}; this.apply();
+  },
+  apply(){
+    const svg = $('#board'); if (!svg || !S.vb) return;
+    svg.setAttribute('viewBox', `${fx(S.vb.x)} ${fx(S.vb.y)} ${fx(S.vb.w)} ${fx(S.vb.h)}`);
+    const el = $('#viewer'), z = $('#zoomLvl'); if (el && z){ const pxPerMm = el.clientWidth / S.vb.w; z.textContent = `${(pxPerMm / 3.78 * 100).toFixed(0)} % aprox. en pantalla`; }
+  }
+};
+
+/* ---------------- Eventos ---------------- */
+function readImportFile(file){
+  const fr = new FileReader();
+  fr.onload = () => {
+    try {
+      const data = JSON.parse(fr.result); const arr = Array.isArray(data) ? data : [data]; let n = 0;
+      const ids = new Set(Store.designs().map(d => d.id));
+      for (const d of arr){
+        if (!d || !PRODUCTS[d.categoria] || typeof d.parametros !== 'object') continue;
+        const x = Object.assign(newDesign(d.categoria), d, {parametros:Object.assign(defaultsOf(d.categoria), d.parametros)});
+        if (ids.has(x.id)) { x.id = Util.uid(); x.nombre += ' (importado)'; x.codigo = nextCode(x.categoria); }
+        x.fechaActualizacion = Util.now(); x.piezas = Engine.run(x).pieces; Store.saveDesign(x); ids.add(x.id); n++;
+      }
+      UI.toast(n ? `${n} diseño(s) importado(s) ✔` : 'El archivo no contiene diseños válidos de MOLDERA 360.', n ? 'ok' : 'err'); UI.render();
+    } catch(e){ UI.toast('Archivo JSON no válido.', 'err'); }
+  };
+  fr.readAsText(file);
+}
+function exportDesign(d){ const res = Engine.run(d); const x = Object.assign({}, d, {piezas:res.pieces, app:'MOLDERA 360', unidades:'mm'}); Util.download(`${d.codigo}-${(d.nombre || 'diseno').replace(/[^\w\-]+/g, '_')}.json`, JSON.stringify(x, null, 2), 'application/json'); }
+function confirmLeave(){ return !S.dirty || confirm('Hay cambios sin guardar. ¿Salir sin guardar?'); }
+
+function bindEvents(){
+  document.addEventListener('click', e => {
+    const a = e.target.closest('[data-act]'); if (!a) return;
+    const act = a.dataset.act;
+    if (a.tagName === 'A') e.preventDefault();
+    switch (act){
+      case 'nav': if (S.view === 'editor' && a.dataset.view !== 'editor' && S.dirty && !confirm('Hay cambios sin guardar. ¿Salir del editor? (el diseño seguirá abierto)')) return; UI.go(a.dataset.view); break;
+      case 'new': { if (S.view === 'editor' && !confirmLeave()) return; const d = newDesign(a.dataset.cat); d.codigo = nextCode(a.dataset.cat); d.nombre = `${PRODUCTS[a.dataset.cat].label} ${d.codigo.slice(-3)}`; UI.open(d); S.dirty = true; UI.refreshLive(); break; }
+      case 'open': if (S.design) UI.go('editor'); break;
+      case 'openId': { const d = Store.designs().find(x => x.id === a.dataset.id); if (d){ if (S.view === 'editor' && !confirmLeave()) return; UI.open(d); } break; }
+      case 'dup': { const d = Store.designs().find(x => x.id === a.dataset.id); if (!d) break; const c = Util.clone(d); c.id = Util.uid(); c.codigo = nextCode(c.categoria); c.nombre = d.nombre + ' (copia)'; c.fechaCreacion = c.fechaActualizacion = Util.now(); Store.saveDesign(c); UI.toast('Diseño duplicado'); UI.render(); break; }
+      case 'ren': { const d = Store.designs().find(x => x.id === a.dataset.id); if (!d) break; const n = prompt('Nuevo nombre:', d.nombre); if (n && n.trim()){ d.nombre = n.trim(); d.fechaActualizacion = Util.now(); Store.saveDesign(d); if (S.design && S.design.id === d.id) S.design.nombre = d.nombre; UI.render(); } break; }
+      case 'del': { const d = Store.designs().find(x => x.id === a.dataset.id); if (d && confirm(`¿Eliminar «${d.nombre}»? Esta acción no se puede deshacer.`)){ Store.deleteDesign(d.id); if (S.design && S.design.id === d.id){ S.design = null; } UI.toast('Diseño eliminado'); UI.render(); } break; }
+      case 'expId': { const d = Store.designs().find(x => x.id === a.dataset.id); if (d) exportDesign(d); break; }
+      case 'expAll': Util.download('moldera360-biblioteca.json', JSON.stringify(Store.designs(), null, 2), 'application/json'); break;
+      case 'import': $('#fileImport').click(); break;
+      case 'resetDemos': if (confirm('¿Volver a crear los diseños de demostración?')){ Store.set(Store.K.seeded, false); Store.set(Store.K.designs, Store.designs().filter(d => !['BOL-001', 'BIL-001', 'MOR-001'].includes(d.codigo))); seedDemos(); UI.render(); } break;
+      case 'back': UI.go('home'); break;
+      case 'tab': S.tab = a.dataset.tab; document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.tab === S.tab)); UI.renderTab(); $('#main').scrollTop = 0; break;
+      case 'save': UI.save(); break;
+      case 'regen': UI.regen(); UI.renderTab(); UI.refreshLive(); UI.toast(S.res.status === 'ERROR' ? 'Hay errores: revisa los parámetros.' : `Moldería regenerada · ${S.res.pieces.length} piezas`, S.res.status === 'ERROR' ? 'err' : ''); break;
+      case 'setp': S.design.parametros[a.dataset.k] = a.dataset.v; UI.changed(true); break;
+      case 'unit': S.unit = a.dataset.u; $('#paramForm').innerHTML = UI.form(); break;
+      case 'margin': S.design.parametros.margen = +a.dataset.v; UI.changed(true); break;
+      case 'marginCustom': S.design.parametros.margen = 6; UI.changed(true); break;
+      case 'aiCmd': {
+        const inp = $('#aiCmd'); const txt = inp.value.trim(); if (!txt) break;
+        const r = AI.parse(txt, S.design);
+        if (r.categoria && r.categoria !== S.design.categoria){ UI.toast(`Ese texto describe un ${PRODUCTS[r.categoria].label.toLowerCase()}. Usa «Diseñar con IA» para crearlo.`, 'err'); break; }
+        const list = AI.describe(r, Object.assign(defaultsOf(S.design.categoria), S.design.parametros));
+        if (!list.length){ UI.toast('No entendí el cambio. Ej.: «Hazlo 5 cm más alto», «Agrega un bolsillo frontal».', 'err'); break; }
+        UI.applyAI(r, true); $('#paramForm').innerHTML = UI.form(); UI.refreshLive(); inp.value = ''; UI.toast('✦ ' + list.join(' · '), 'ok'); break;
+      }
+      case 'viewPiece': S.sel = a.dataset.code; S.tab = 'molderia'; S.vb = null; document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.tab === S.tab)); UI.renderTab(); Viewer.fit(S.sel); break;
+      case 'focusPiece': Viewer.fit(a.dataset.code); break;
+      case 'zoomIn': Viewer.zoom(1 / 1.3); break;
+      case 'zoomOut': Viewer.zoom(1.3); break;
+      case 'fit': Viewer.fit(); break;
+      case 'expSVG': if (!S.res.pieces.length) break; Util.download(`${S.design.codigo}-molderia-1a1.svg`, SVGR.exportSVG(S.res.pieces, S.design), 'image/svg+xml'); UI.toast('SVG descargado (escala 1:1, mm)'); break;
+      case 'expJSON': exportDesign(Object.assign({}, S.design, {fechaActualizacion:Util.now()})); break;
+      case 'printFicha': UI.printHTML('ficha', Ficha.html(S.design, S.res, Store.settings()), '@page{size:A4;margin:12mm}'); break;
+      case 'printPiece': S.printSel = new Set([a.dataset.code]); S.tab = 'imprimir'; document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.tab === S.tab)); UI.renderTab(); break;
+      case 'pcfg': { const k = a.dataset.k; let v = a.dataset.v; if (k === 'scale') v = v === 'custom' ? 75 : +v; S.printCfg[k] = v; UI.renderTab(); break; }
+      case 'selAll': S.printSel = new Set(S.res.pieces.map(p => p.code)); UI.renderTab(); break;
+      case 'selNone': S.printSel = new Set(); UI.renderTab(); break;
+      case 'doPrint': UI.doPrint(); break;
+      case 'aiEx': S.aiText = a.dataset.t; $('#aiText').value = S.aiText; break;
+      case 'aiRun': { S.aiText = $('#aiText').value; if (!S.aiText.trim()) { UI.toast('Escribe una descripción.', 'err'); break; } S.ai = AI.parse(S.aiText, S.design); UI.render(); break; }
+      case 'aiNew': if (S.design && S.dirty && !confirm('El diseño abierto tiene cambios sin guardar. ¿Continuar?')) break; UI.applyAI(S.ai, false); S.ai = null; UI.go('editor'); break;
+      case 'aiApply': UI.applyAI(S.ai, true); S.ai = null; S.tab = 'diseno'; UI.go('editor'); UI.toast('Parámetros aplicados y moldería regenerada', 'ok'); break;
+      case 'logo': $('#fileLogo').click(); break;
+      case 'logoDel': { const s = Store.settings(); s.logo = ''; Store.saveSettings(s); UI.render(); break; }
+      case 'saveSettings': {
+        const s = Store.settings();
+        document.querySelectorAll('[data-set]').forEach(el => { const k = el.dataset.set; let v = el.value; if (['margin', 'printMargin', 'overlap', 'customW', 'customH'].includes(k)) v = +v; s[k] = v; });
+        Store.saveSettings(s); S.printCfg = null; UI.toast('Configuración guardada ✔', 'ok'); break;
+      }
+    }
+  });
+  document.addEventListener('input', e => {
+    const t = e.target;
+    if (t.matches('[data-param]')){
+      const k = t.dataset.param, ty = t.dataset.type;
+      if (ty === 'bool') return;
+      const raw = t.value.trim(), v = parseFloat(raw);
+      S.design.parametros[k] = raw === '' || isNaN(v) ? null : (ty === 'len' ? fx(Units.toMM(v, S.unit)) : v);
+      liveUpdate();
+    } else if (t.matches('[data-meta]')){
+      S.design[t.dataset.meta] = t.value; S.dirty = true; if (t.dataset.meta !== 'observaciones'){ UI.regen(); UI.refreshLive(); } else { const dm = $('#dirtyMark'); if (dm) dm.textContent = '● sin guardar'; }
+    } else if (t.id === 'dName'){ S.design.nombre = t.value; S.dirty = true; const dm = $('#dirtyMark'); if (dm) dm.textContent = '● sin guardar'; UI.regen(); }
+    else if (t.matches('[data-pcfg]') && t.type !== 'checkbox'){ S.printCfg[t.dataset.pcfg] = parseFloat(t.value); printUpdate(); }
+  });
+  document.addEventListener('change', e => {
+    const t = e.target;
+    if (t.matches('[data-param][data-type="bool"]')){ S.design.parametros[t.dataset.param] = t.checked; UI.changed(true); }
+    else if (t.matches('[data-layer]')){ S.layers[t.dataset.layer] = t.checked; Viewer.draw(false); }
+    else if (t.matches('[data-pcfg]') && t.type === 'checkbox'){ S.printCfg[t.dataset.pcfg] = t.checked; UI.refreshPrintPreview(); }
+    else if (t.matches('[data-psel]')){ if (t.checked) S.printSel.add(t.dataset.psel); else S.printSel.delete(t.dataset.psel); UI.refreshPrintPreview(); }
+    else if (t.id === 'fileImport'){ if (t.files[0]) readImportFile(t.files[0]); t.value = ''; }
+    else if (t.id === 'fileLogo' && t.files[0]){
+      const fr = new FileReader(); fr.onload = () => { const img = new Image(); img.onload = () => { const k = Math.min(1, 320 / Math.max(img.width, img.height)); const c = document.createElement('canvas'); c.width = R(img.width * k); c.height = R(img.height * k); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); const s = Store.settings(); s.logo = c.toDataURL('image/png'); Store.saveSettings(s); UI.render(); }; img.src = fr.result; }; fr.readAsDataURL(t.files[0]); t.value = '';
+    }
+  });
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's' && S.view === 'editor'){ e.preventDefault(); UI.save(); }
+    if (e.key === 'Enter' && e.target.id === 'aiCmd'){ e.preventDefault(); document.querySelector('[data-act="aiCmd"]').click(); }
+  });
+  window.addEventListener('afterprint', () => { document.body.classList.remove('printing-pat', 'printing-ficha'); $('#printRoot').innerHTML = ''; });
+  window.addEventListener('beforeunload', e => { if (S.dirty){ e.preventDefault(); e.returnValue = ''; } });
+}
+const liveUpdate = Util.debounce(() => { S.dirty = true; UI.regen(); UI.refreshLive(); }, 140);
+const printUpdate = Util.debounce(() => UI.refreshPrintPreview(), 200);
+
+if (typeof document !== 'undefined' && document.getElementById('app')){
+  seedDemos(); bindEvents(); S.unit = Store.settings().unit; UI.render();
+}
+</script>
+</body>
+</html>

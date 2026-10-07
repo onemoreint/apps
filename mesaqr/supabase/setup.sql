@@ -747,10 +747,9 @@ create policy "menu images: members delete" on storage.objects for delete to aut
 -- =============================================================================
 -- MesaQR — MENÚ INICIAL (tomado de los menús impresos del restaurante, oct. 2026)
 -- Precios en USD tal como aparecen en el menú.
--- ⚠️ Antes de abrir al público, desde el panel (/dashboard):
---    · Configura el WhatsApp que recibe los pedidos (este es de prueba).
---    · Escribe la tasa BCV del día (la inicial es de prueba).
---    · Confirma el nombre del negocio.
+-- Datos confirmados por el negocio (7 oct. 2026): nombre Lorenz Express,
+-- WhatsApp 0424-323.01.13, tasa inicial 900 Bs./USD, precios de Granjeros.
+-- La tasa se actualiza a diario desde el panel (/dashboard).
 -- Se puede ejecutar más de una vez: si el negocio "demo" ya existe, no hace nada.
 -- =============================================================================
 do $$
@@ -768,7 +767,7 @@ begin
 
   insert into public.businesses (slug, name, description, address, whatsapp, show_bs, exchange_rate, exchange_rate_updated_at, primary_color)
   values ('demo', 'Lorenz Express', 'Comida rápida en Maracay.', 'Maracay, Aragua',
-          '+580000000000', true, 100.0000, '2000-01-01', '#D62828')
+          '+584243230113', true, 900.0000, now(), '#D62828')
   returning id into b;
 
   -- ─── Categorías (orden del menú) ───

@@ -158,7 +158,7 @@ values ('mi-restaurante', 'Mi Restaurante', '+58412XXXXXXX', 1);
 
 Las variantes de proteína son opciones del producto. El cliente elige, por ejemplo, *Pollo crispy*, y el precio se ajusta solo. También carga 12 mesas.
 
-⚠️ **El WhatsApp (`+580000000000`) y la tasa son de prueba.** El panel muestra avisos hasta que los cambies. Las imágenes son ilustraciones locales en `public/demo/`; reemplázalas con fotos reales desde el panel.
+Datos confirmados: **Lorenz Express**, WhatsApp **+58 424 323 0113**, tasa inicial **900 Bs./USD** (el panel avisa cuando la tasa no se ha actualizado en el día). Las imágenes son ilustraciones locales en `public/demo/`; reemplázalas con fotos reales desde el panel.
 
 Si el negocio ya existe, el seed no hace nada.
 

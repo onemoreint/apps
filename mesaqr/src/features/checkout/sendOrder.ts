@@ -6,7 +6,12 @@ import type { CartLine } from '@/features/cart/cartMath';
 import type { SentOrder } from '@/features/menu/session';
 
 export function toOrderLines(lines: CartLine[]): OrderLineInput[] {
-  return lines.map((l) => ({ product_id: l.productId, quantity: l.quantity, option_ids: l.options.map((o) => o.id) }));
+  return lines.map((l) => ({
+    product_id: l.productId,
+    quantity: l.quantity,
+    option_ids: l.options.map((o) => o.id),
+    notes: l.note?.trim() || null,
+  }));
 }
 
 /**

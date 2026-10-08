@@ -12,7 +12,10 @@ const INTRUDER = '22222222-2222-4222-8222-222222222222';
 type Menu = {
   business: { name: string; whatsapp: string; exchange_rate: number; payment_methods: string[]; order_types: string[] };
   categories: { id: string; name: string }[];
-  products: { id: string; name: string; available: boolean; price_usd: number; image_url: string; group_ids: string[] }[];
+  products: {
+    id: string; name: string; available: boolean; price_usd: number; image_url: string; group_ids: string[];
+    badges: string[]; cravings: string[]; compare_at_price_usd: number | null; combo_upgrade_id: string | null;
+  }[];
   option_groups: { id: string; name: string; options: { id: string; name: string; price_delta_usd: number }[] }[];
 };
 
@@ -209,6 +212,53 @@ describe('Pedido', () => {
       }
     }
     expect(last?.message).toBe('RATE_LIMITED');
+  });
+});
+
+describe('Experiencia V2', () => {
+  it('el menú trae etiquetas, antojos, precio anterior y combo sugerido', async () => {
+    const m = await menu();
+    expect(product(m, 'Salchipapa de la Casa').badges).toEqual(['especial']);
+    expect(product(m, 'Salchipapa de la Casa').cravings).toEqual(expect.arrayContaining(['queso', 'tocineta', 'contundente', 'compartir']));
+    expect(product(m, 'Hamburguesa Clásica').cravings).toEqual([]);
+    expect(product(m, 'Hamburguesa Clásica').compare_at_price_usd).toBeNull();
+    expect(product(m, 'Hamburguesa Clásica').combo_upgrade_id).toBeNull();
+    // Sin datos inventados: ningún producto trae precio anterior ni combo en el menú inicial.
+    expect(m.products.filter((p) => p.compare_at_price_usd !== null || p.combo_upgrade_id !== null)).toHaveLength(0);
+  });
+
+  it('etiquetas y antojos solo aceptan valores conocidos; el combo no puede ser el mismo producto', async () => {
+    expect((await errorOf(db.query(`update public.products set badges = array['mas-vendido'] where name = 'Polaco Clásico'`))).message).toMatch(/check/);
+    expect((await errorOf(db.query(`update public.products set cravings = array['dulce'] where name = 'Polaco Clásico'`))).message).toMatch(/check/);
+    expect((await errorOf(db.query(`update public.products set combo_upgrade_id = id where name = 'Polaco Clásico'`))).message).toMatch(/check/);
+  });
+
+  it('el admin configura un combo sugerido y un precio anterior', async () => {
+    const r = await as<{ id: string }>(db, 'authenticated',
+      `update public.products set combo_upgrade_id = (select id from public.products where name = 'Salchipapa de la Casa'),
+              compare_at_price_usd = 9.00
+        where name = 'Polaco de la Casa' returning id`, [], ADMIN);
+    expect(r).toHaveLength(1);
+    const m = await menu();
+    expect(product(m, 'Polaco de la Casa').combo_upgrade_id).toBe(product(m, 'Salchipapa de la Casa').id);
+    expect(Number(product(m, 'Polaco de la Casa').compare_at_price_usd)).toBe(9);
+  });
+
+  it('guarda la observación de cada producto y la valida', async () => {
+    await db.query(`update public.orders set created_at = now() - interval '5 minutes'`); // libera el límite por minuto
+    const m = await menu();
+    const id = product(m, 'Polaco Clásico').id;
+    const o = await order([
+      { product_id: id, quantity: 1, notes: '  Sin salsas  ' },
+      { product_id: id, quantity: 1 },
+    ]);
+    const items = o.items as { name: string; notes: string | null }[];
+    expect(items.map((i) => i.notes)).toEqual(['Sin salsas', null]);
+    const saved = await db.query<{ notes: string | null }>(
+      `select i.notes from public.order_items i join public.orders o on o.id = i.order_id where o.code = $1 order by i.notes nulls last`, [o.code]);
+    expect(saved.rows.map((r) => r.notes)).toEqual(['Sin salsas', null]);
+    expect((await errorOf(order([{ product_id: id, quantity: 1, notes: 'x'.repeat(141) }]))).message).toBe('INVALID_CART');
+    expect((await errorOf(order([{ product_id: id, quantity: 1, notes: 5 }]))).message).toBe('INVALID_CART');
   });
 });
 

@@ -38,6 +38,9 @@ export interface CustomerInfo {
   payment: string;
 }
 
+export type Badge = 'recomendado' | 'especial' | 'nuevo' | 'oferta' | 'favorito';
+export type Craving = 'contundente' | 'queso' | 'tocineta' | 'picante' | 'compartir';
+
 export interface MenuCategory {
   id: string;
   name: string;
@@ -71,6 +74,14 @@ export interface MenuProduct {
   available: boolean;
   featured: boolean;
   upsell: boolean;
+  /** Etiquetas editoriales que pone el restaurante (nunca estadísticas). */
+  badges: Badge[];
+  /** Antojos para "¿No sabes qué pedir?". */
+  cravings: Craving[];
+  /** Precio anterior: solo se usa si es mayor que el actual. */
+  compare_at_price_usd: number | null;
+  /** Combo que se ofrece al agregar este producto. */
+  combo_upgrade_id: string | null;
   group_ids: string[];
   combo_items: { label: string; quantity: number }[];
 }
@@ -100,6 +111,7 @@ export interface CreatedOrder {
     quantity: number;
     unit_price_usd: number;
     line_total_usd: number;
+    notes?: string | null;
     options: { group_name: string; option_name: string; price_delta_usd: number }[];
   }[];
 }

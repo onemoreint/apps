@@ -21,7 +21,7 @@ export default function LoginPage() {
   return (
     <main className="mx-auto flex min-h-dvh max-w-sm flex-col justify-center px-6 py-12">
       <h1 className="font-display text-3xl font-extrabold tracking-tight">Panel del restaurante</h1>
-      <p className="mt-2 text-ink-2">Entra para cambiar precios, marcar agotados y administrar tus mesas.</p>
+      <p className="mt-2 text-ink-2">Entra para cambiar precios, marcar agotados y ver tus pedidos.</p>
       <form onSubmit={submit} className="mt-8 space-y-4" noValidate>
         <Field label="Correo" htmlFor="email">
           <Input id="email" type="email" autoComplete="email" inputMode="email" required value={email} onChange={(e) => setEmail(e.target.value)} />

@@ -8,6 +8,9 @@ import { useAdmin } from '../AdminContext';
 import { ImageField } from '../ImageField';
 import { must, useLoad } from '../lib';
 import type { Category, OptionGroup, Product } from '../types';
+import type { Badge, Craving } from '@/shared/types/menu';
+import { BADGE_ORDER, BADGES, CRAVINGS } from '@/shared/config/experience';
+import { formatUsd } from '@/shared/lib/money';
 import { Button, Card, ErrorBox, Field, Input, Loading, Select, TextArea, ToggleRow } from '../ui';
 
 interface ComboRow {
@@ -28,6 +31,10 @@ interface FormState {
   upsell: boolean;
   groupIds: string[];
   combo: ComboRow[];
+  badges: Badge[];
+  cravings: Craving[];
+  compareAt: string;
+  comboUpgradeId: string;
 }
 
 const EMPTY: FormState = {
@@ -43,7 +50,16 @@ const EMPTY: FormState = {
   upsell: false,
   groupIds: [],
   combo: [],
+  badges: [],
+  cravings: [],
+  compareAt: '',
+  comboUpgradeId: '',
 };
+
+const CRAVING_OPTIONS = CRAVINGS.filter((c): c is (typeof CRAVINGS)[number] & { key: Craving } => c.key !== 'economico');
+
+const chip = (on: boolean) =>
+  `min-h-10 rounded-full border-2 px-3 text-sm font-semibold transition-colors ${on ? 'border-ink bg-ink text-white' : 'border-line bg-paper text-ink'}`;
 
 export default function ProductFormPage() {
   const { id } = useParams();
@@ -52,14 +68,15 @@ export default function ProductFormPage() {
   const { business } = useAdmin();
   const [form, setForm] = useState<FormState>(EMPTY);
   const [saving, setSaving] = useState(false);
-  const [errors, setErrors] = useState<Partial<Record<'name' | 'price' | 'category', string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<'name' | 'price' | 'category' | 'compareAt', string>>>({});
 
   const { data, error, loading, reload } = useLoad(async () => {
     const c = db();
-    const [cats, groups, catGroups] = await Promise.all([
+    const [cats, groups, catGroups, all] = await Promise.all([
       c.from('categories').select('*').eq('business_id', business.id).order('sort_order'),
       c.from('option_groups').select('*').eq('business_id', business.id).order('sort_order'),
       c.from('category_option_groups').select('category_id, group_id').eq('business_id', business.id),
+      c.from('products').select('id, name, type, price_usd').eq('business_id', business.id).order('name'),
     ]);
     let product: Product | null = null;
     let groupIds: string[] = [];
@@ -78,6 +95,7 @@ export default function ProductFormPage() {
       categories: must(cats) as Category[],
       groups: must(groups) as OptionGroup[],
       catGroups: must(catGroups) as { category_id: string; group_id: string }[],
+      products: must(all) as Pick<Product, 'id' | 'name' | 'type' | 'price_usd'>[],
       product,
       groupIds,
       combo,
@@ -102,6 +120,10 @@ export default function ProductFormPage() {
             upsell: p.upsell,
             groupIds: data.groupIds,
             combo: data.combo,
+            badges: p.badges ?? [],
+            cravings: p.cravings ?? [],
+            compareAt: p.compare_at_price_usd === null || p.compare_at_price_usd === undefined ? '' : String(p.compare_at_price_usd),
+            comboUpgradeId: p.combo_upgrade_id ?? '',
           }
         : { ...EMPTY, category_id: data.categories[0]?.id ?? '' },
     );
@@ -115,6 +137,11 @@ export default function ProductFormPage() {
     const price = Number(form.price.replace(',', '.'));
     if (!form.price || !Number.isFinite(price) || price < 0 || price >= 100000) e.price = 'Escribe un precio válido en dólares.';
     if (!form.category_id) e.category = 'Elige una categoría.';
+    if (form.compareAt.trim()) {
+      const before = Number(form.compareAt.replace(',', '.'));
+      if (!Number.isFinite(before) || before <= 0 || before >= 100000) e.compareAt = 'Escribe un precio válido o déjalo vacío.';
+      else if (Number.isFinite(price) && before <= price) e.compareAt = 'Debe ser mayor que el precio actual para mostrar el ahorro.';
+    }
     setErrors(e);
     return Object.keys(e).length === 0 ? price : null;
   };
@@ -138,6 +165,10 @@ export default function ProductFormPage() {
         available: form.available,
         featured: form.featured,
         upsell: form.upsell,
+        badges: BADGE_ORDER.filter((b) => form.badges.includes(b)),
+        cravings: form.cravings,
+        compare_at_price_usd: form.compareAt.trim() ? Math.round(Number(form.compareAt.replace(',', '.')) * 100) / 100 : null,
+        combo_upgrade_id: form.comboUpgradeId && form.comboUpgradeId !== id ? form.comboUpgradeId : null,
       };
       const saved = must(
         isNew ? await c.from('products').insert(row).select().single() : await c.from('products').update(row).eq('id', id!).select().single(),
@@ -221,8 +252,65 @@ export default function ProductFormPage() {
         <Card className="space-y-2">
           <ToggleRow label="Disponible" hint="Apágalo cuando se agote: el cliente lo verá como “Agotado”." checked={form.available} onChange={(v) => set('available', v)} />
           <ToggleRow label="Visible en el menú" hint="Ocúltalo si no lo vendes por ahora." checked={form.active} onChange={(v) => set('active', v)} />
-          <ToggleRow label="Sugerir para completar el pedido" hint="Aparece en “¿Quieres completar tu pedido?”." checked={form.upsell} onChange={(v) => set('upsell', v)} />
-          <ToggleRow label="Destacado" checked={form.featured} onChange={(v) => set('featured', v)} />
+          <ToggleRow label="Sugerir para completar el pedido" hint="Aparece en “Completa tu pedido” y dentro del carrito." checked={form.upsell} onChange={(v) => set('upsell', v)} />
+          <ToggleRow label="Favorito de la casa" hint="Se muestra arriba, en Inicio (hasta 4)." checked={form.featured} onChange={(v) => set('featured', v)} />
+        </Card>
+
+        <Card className="space-y-4">
+          <div>
+            <h2 className="font-display text-lg font-bold">Etiquetas</h2>
+            <p className="text-sm text-ink-2">Las eliges tú. No afirman cifras de ventas.</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {BADGE_ORDER.map((b) => {
+                const on = form.badges.includes(b);
+                return (
+                  <button key={b} type="button" aria-pressed={on} className={chip(on)} onClick={() => set('badges', on ? form.badges.filter((x) => x !== b) : [...form.badges, b])}>
+                    {BADGES[b].emoji} {BADGES[b].label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <div>
+            <h2 className="font-display text-lg font-bold">Antojos</h2>
+            <p className="text-sm text-ink-2">Para “¿No sabes qué pedir?”. “Algo económico” se calcula solo por precio.</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {CRAVING_OPTIONS.map((c) => {
+                const on = form.cravings.includes(c.key);
+                return (
+                  <button key={c.key} type="button" aria-pressed={on} className={chip(on)} onClick={() => set('cravings', on ? form.cravings.filter((x) => x !== c.key) : [...form.cravings, c.key])}>
+                    {c.emoji} {c.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </Card>
+
+        <Card className="space-y-4">
+          <h2 className="font-display text-lg font-bold">Ofertas y combos</h2>
+          <Field
+            label="Precio anterior (USD)"
+            htmlFor="compare"
+            error={errors.compareAt}
+            hint="Opcional. Si es mayor que el precio, el cliente ve “Antes” tachado y cuánto ahorra, y el producto aparece en Ofertas."
+          >
+            <Input id="compare" inputMode="decimal" placeholder="Vacío = sin oferta" value={form.compareAt} onChange={(e) => set('compareAt', e.target.value)} aria-invalid={!!errors.compareAt} />
+          </Field>
+          <Field label="Ofrecer convertirlo en combo" htmlFor="combo-up" hint="Al agregar este producto, se le pregunta al cliente si lo quiere en este combo. Para combos, el ahorro sale del precio anterior del combo.">
+            <Select id="combo-up" value={form.comboUpgradeId} onChange={(e) => set('comboUpgradeId', e.target.value)}>
+              <option value="">No ofrecer combo</option>
+              {data.products
+                .filter((p) => p.id !== id)
+                .sort((a, b) => (a.type === b.type ? 0 : a.type === 'combo' ? -1 : 1))
+                .map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.type === 'combo' ? '🍱 ' : ''}
+                    {p.name} · {formatUsd(Number(p.price_usd))}
+                  </option>
+                ))}
+            </Select>
+          </Field>
         </Card>
 
         <Card>

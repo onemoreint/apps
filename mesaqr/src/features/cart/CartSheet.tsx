@@ -5,6 +5,8 @@ import { QtyStepper } from '@/shared/ui/QtyStepper';
 import { useCart } from './cartStore';
 import { cartTotals, lineTotalCents, MAX_NOTES, type CartLine } from './cartMath';
 import { CartSummary } from './CartSummary';
+import type { MenuProduct } from '@/shared/types/menu';
+import { SuggestionList } from '@/features/menu/SuggestionList';
 
 interface Props {
   rate: number;
@@ -13,9 +15,12 @@ interface Props {
   onEdit: (line: CartLine) => void;
   onReview: () => void;
   onClose: () => void;
+  /** "¿Quieres agregar algo más?": máximo 3, se agregan con un toque. */
+  suggested: MenuProduct[];
+  onSuggest: (p: MenuProduct) => void;
 }
 
-export function CartSheet({ rate, showBs, canEdit, onEdit, onReview, onClose }: Props) {
+export function CartSheet({ rate, showBs, canEdit, onEdit, onReview, onClose, suggested, onSuggest }: Props) {
   const { lines, notes, setQty, remove, setNotes } = useCart();
   const totals = cartTotals(lines);
   const empty = lines.length === 0;
@@ -61,6 +66,7 @@ export function CartSheet({ rate, showBs, canEdit, onEdit, onReview, onClose }: 
                         ))}
                       </ul>
                     )}
+                    {l.note && <p className="mt-0.5 text-sm text-ink-2 italic">✏️ {l.note}</p>}
                     {canEdit(l) && (
                       <button type="button" onClick={() => onEdit(l)} className="mt-1 text-sm font-semibold text-brand underline underline-offset-2">
                         Editar
@@ -76,9 +82,18 @@ export function CartSheet({ rate, showBs, canEdit, onEdit, onReview, onClose }: 
             ))}
           </ul>
 
-          <div className="mt-2">
+          {suggested.length > 0 && (
+            <section className="mt-2 rounded-2xl bg-shelf px-4 pt-3 pb-1" aria-labelledby="more-title">
+              <h3 id="more-title" className="font-display font-bold">
+                🔥 ¿Quieres agregar algo más?
+              </h3>
+              <SuggestionList products={suggested} onPick={onSuggest} />
+            </section>
+          )}
+
+          <div className="mt-4">
             <label htmlFor="notes" className="font-display font-bold">
-              Observaciones
+              Observaciones del pedido
             </label>
             <textarea
               id="notes"

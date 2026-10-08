@@ -20,10 +20,17 @@ Arquitectura y decisiones: [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md).
 
 ## 1. Qué hace
 
-**Cliente**
-- Menú por categorías con fotos referenciales, precios en USD y su equivalente en Bs. a la tasa del día. Los productos agotados quedan bloqueados.
-- Personalización: proteína (por ejemplo, Pollo crispy +$2.50) y quitar ingredientes.
-- Carrito con cantidades, edición, observaciones y sugerencias discretas, como las papas.
+**Cliente: un "mesero digital"**
+- **Inicio:** "¿Qué se te antoja hoy?", buscador instantáneo (nombre, descripción, categoría y etiquetas, sin importar acentos), **Favoritos de la casa** y categorías con foto.
+- **¿No sabes qué pedir?:** antojos (contundente, mucho queso, tocineta, picante, económico, para compartir). Solo aparecen los que tienen productos. "Económico" se calcula por precio.
+- **Menú** por categorías con pestañas que siguen el desplazamiento. **Ofertas** aparece solo si hay productos en oferta.
+- **Navegación inferior** (Inicio, Menú, Ofertas, Mi pedido). "Mi pedido" muestra siempre cantidad y total. El botón Atrás del teléfono funciona entre vistas.
+- Tarjetas con foto, etiqueta (Recomendado, Especial de la casa, Nuevo, Oferta, Favorito), precio, precio anterior tachado si existe, y **+ Agregar** directo, sin entrar al detalle.
+- **Detalle:** proteína (por ejemplo, Pollo crispy +$2.50), quitar ingredientes, **observación por producto** ("sin cebolla") y precio que se actualiza al instante.
+- **Combo sugerido:** si el restaurante lo configura, al agregar un producto se ofrece convertirlo en combo. El ahorro se muestra solo si hay precio anterior real.
+- **Completa tu pedido:** hasta 3 sugerencias al agregar (una vez por visita) y dentro del carrito, con un toque.
+- Precios en USD y su equivalente en Bs. a la tasa del día. Los productos agotados se ven claramente y no se pueden agregar.
+- El carrito se guarda en el teléfono hasta 6 horas: sobrevive cerrar la pestaña o ir a WhatsApp y volver.
 - Al confirmar, el cliente indica:
   - nombre y teléfono (opcional);
   - **para llevar**, **delivery** (con dirección) o **comer en el local**;
@@ -31,18 +38,26 @@ Arquitectura y decisiones: [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md).
 - El pedido se **guarda en la base de datos** con número `#0042` y se abre WhatsApp con el mensaje listo:
 
 ```text
-🍔 NUEVO PEDIDO #0042
+Hola 👋
+Quiero realizar este pedido:
+
+🧾 Pedido #0042
 👤 María Pérez
 📞 0414 555 1234
 🛵 Delivery
 📍 Urb. La Esmeralda, calle 3, casa 12
 💳 Pago móvil
-────────────
-1x Hamburguesa con Queso
+
+1x Hamburguesa con Queso — $10.50
    + Pollo crispy
-1x Papas Fritas + 2 Salsas
-────────────
-💰 TOTAL: $15.00 (≈ Bs. 13.500,00)
+   ✏️ sin cebolla
+1x Papas Fritas + 2 Salsas — $4.50
+
+💰 Total: $15.00 (≈ Bs. 13.500,00)
+
+📝 Observaciones:
+La salsa aparte, por favor.
+
 ⏰ 4:15 PM
 ```
 
@@ -52,7 +67,7 @@ Arquitectura y decisiones: [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md).
 **Panel (`#/dashboard`)**
 - **Inicio:** enlace para copiar o compartir, tasa del día, pedidos y ventas de hoy, productos agotados.
 - **Pedidos:** cliente, tipo, dirección, teléfono (toque para llamar), pago, productos y cambio de estado. Se actualiza solo cada 20 segundos.
-- **Productos:** precio, foto (se comprime a WebP), agotado con un toque, extras, combos.
+- **Productos:** precio, foto (se comprime a WebP), agotado con un toque, extras, combos, **etiquetas**, **antojos**, **precio anterior** (oferta) y **combo sugerido**.
 - **Categorías** y **Extras y opciones**.
 - **Ajustes:**
   - nombre, logo, WhatsApp y color;
@@ -90,7 +105,7 @@ where b.slug = 'lorenz-express' and u.email = 'correo@ejemplo.com';
 
 ```bash
 npm install
-npm test            # 49 pruebas: lógica + base de datos (Postgres real en memoria, con RLS)
+npm test            # 61 pruebas: lógica + base de datos (Postgres real en memoria, con RLS)
 npm run typecheck
 npm run dev         # con .env.local (ver .env.example)
 ```
@@ -126,6 +141,9 @@ Si se compila sin las variables de Supabase, la app funciona en **modo demostrac
 - Las fotos se suben a la carpeta del negocio. Máximo 1 MB, solo imágenes.
 
 ## 7. Limitaciones
+
+- **Bebidas, postres y combos:** la estructura está lista (categorías, combo sugerido, precio anterior y sugerencias), pero el menú de Lorenz Express no los tiene cargados. Cuando se creen en el panel, aparecen solos en Inicio, Ofertas y las sugerencias.
+- **Sin seguimiento del pedido:** no se muestran estados como "En preparación", porque no existen. El pedido queda guardado con su número para agregar seguimiento más adelante.
 
 - **WhatsApp no confirma el envío.** El enlace abre el chat con el mensaje escrito, pero el cliente debe pulsar *Enviar*. El pedido queda guardado como *Pendiente* en el panel aunque no lo envíe.
 - **Las fotos son referenciales**, de [Unsplash](https://unsplash.com/license) (licencia libre). Reemplázalas con fotos reales desde el panel.

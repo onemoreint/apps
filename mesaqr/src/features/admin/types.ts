@@ -1,3 +1,4 @@
+import type { Badge, Craving } from '@/shared/types/menu';
 export interface Business {
   id: string;
   slug: string;
@@ -43,6 +44,10 @@ export interface Product {
   featured: boolean;
   upsell: boolean;
   sort_order: number;
+  badges: Badge[];
+  cravings: Craving[];
+  compare_at_price_usd: number | null;
+  combo_upgrade_id: string | null;
 }
 
 export interface OptionGroup {
@@ -90,6 +95,7 @@ export interface Order {
     unit_price_usd: number;
     line_total_usd: number;
     sort_order: number;
+    notes: string | null;
     order_item_options: { id: string; option_name: string; price_delta_usd: number }[];
   }[];
 }

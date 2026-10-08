@@ -2,7 +2,6 @@ import { ORDER_TYPE_EMOJI, ORDER_TYPE_LABEL, type CreatedOrder } from '@/shared/
 import { formatBs, formatUsd } from './money';
 import { waDigits } from './phone';
 
-const RULE = '────────────';
 const TIME_ZONE = 'America/Caracas';
 
 /** "8:42 PM" en la hora del restaurante, sin importar la zona del teléfono. */
@@ -15,32 +14,34 @@ export function formatTime(date: Date): string {
   }).format(date);
 }
 
-/** Mensaje del pedido, construido SOLO con los datos que devolvió el servidor. */
+/**
+ * Mensaje del pedido, construido SOLO con los datos que devolvió el servidor
+ * (precios recalculados allí). Formato pensado para leerse rápido en la cocina.
+ */
 export function buildOrderMessage(order: CreatedOrder): string {
   const c = order.customer;
-  const lines: string[] = [`🍔 NUEVO PEDIDO #${order.code}`, `👤 ${c.name}`];
+  const lines: string[] = ['Hola 👋', 'Quiero realizar este pedido:', '', `🧾 Pedido #${order.code}`, `👤 ${c.name}`];
   if (c.phone) lines.push(`📞 ${c.phone}`);
   lines.push(`${ORDER_TYPE_EMOJI[c.type]} ${ORDER_TYPE_LABEL[c.type]}`);
   if (c.type === 'delivery' && c.address) lines.push(`📍 ${c.address}`);
   if (c.payment) lines.push(`💳 ${c.payment}`);
-  lines.push(RULE);
+  lines.push('');
 
   for (const item of order.items) {
-    lines.push(`${item.quantity}x ${item.product_name}`);
+    lines.push(`${item.quantity}x ${item.product_name} — ${formatUsd(Number(item.line_total_usd))}`);
     for (const opt of item.options) {
       lines.push(`   ${opt.price_delta_usd > 0 ? '+' : '•'} ${opt.option_name}`);
     }
+    if (item.notes) lines.push(`   ✏️ ${item.notes}`);
   }
 
-  if (order.notes) {
-    lines.push(RULE, `📝 ${order.notes}`);
-  }
-
-  lines.push(RULE);
-  const total = `💰 TOTAL: ${formatUsd(Number(order.total_usd))}`;
+  lines.push('');
+  const total = `💰 Total: ${formatUsd(Number(order.total_usd))}`;
   lines.push(order.show_bs ? `${total} (≈ ${formatBs(Number(order.total_bs))})` : total);
-  lines.push(`⏰ ${formatTime(new Date(order.created_at))}`);
 
+  if (order.notes) lines.push('', '📝 Observaciones:', order.notes);
+
+  lines.push('', `⏰ ${formatTime(new Date(order.created_at))}`);
   return lines.join('\n');
 }
 

@@ -1,20 +1,24 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { EXPERIENCE } from '@/shared/config/experience';
 import { clampQty, lineKey, MAX_LINES, MAX_NOTES, type CartLine, type CartOption } from './cartMath';
 
-interface AddInput {
+export interface AddInput {
   productId: string;
   name: string;
   baseCents: number;
   options: CartOption[];
   quantity: number;
+  note?: string;
 }
 
 interface CartState {
-  /** El carrito pertenece a una mesa: si cambia el token, se vacía. */
+  /** Negocio al que pertenece el carrito: si cambia, se vacía. */
   token: string | null;
   lines: CartLine[];
   notes: string;
+  /** Última modificación (para descartar carritos viejos al volver). */
+  updatedAt: number;
   bindToken: (token: string) => void;
   add: (input: AddInput) => boolean;
   replace: (oldKey: string, input: AddInput) => void;
@@ -26,51 +30,70 @@ interface CartState {
   clear: () => void;
 }
 
+function toLine(input: AddInput): CartLine {
+  const note = (input.note ?? '').trim().slice(0, EXPERIENCE.itemNoteMax);
+  return {
+    key: lineKey(input.productId, input.options.map((o) => o.id), note),
+    productId: input.productId,
+    name: input.name,
+    baseCents: input.baseCents,
+    options: input.options,
+    quantity: clampQty(input.quantity),
+    note,
+  };
+}
+
+const now = () => Date.now();
+
 export const useCart = create<CartState>()(
   persist(
     (set, get) => ({
       token: null,
       lines: [],
       notes: '',
+      updatedAt: 0,
 
       bindToken: (token) => {
-        if (get().token !== token) set({ token, lines: [], notes: '' });
+        if (get().token !== token) set({ token, lines: [], notes: '', updatedAt: now() });
       },
 
       add: (input) => {
-        const key = lineKey(input.productId, input.options.map((o) => o.id));
+        const next = toLine(input);
         const lines = get().lines;
-        const existing = lines.find((l) => l.key === key);
-        if (existing) {
-          set({ lines: lines.map((l) => (l.key === key ? { ...l, quantity: clampQty(l.quantity + input.quantity) } : l)) });
+        if (lines.some((l) => l.key === next.key)) {
+          set({
+            lines: lines.map((l) => (l.key === next.key ? { ...l, quantity: clampQty(l.quantity + next.quantity) } : l)),
+            updatedAt: now(),
+          });
           return true;
         }
         if (lines.length >= MAX_LINES) return false;
-        set({ lines: [...lines, { key, ...input, quantity: clampQty(input.quantity) }] });
+        set({ lines: [...lines, next], updatedAt: now() });
         return true;
       },
 
       replace: (oldKey, input) => {
-        const key = lineKey(input.productId, input.options.map((o) => o.id));
-        const next: CartLine = { key, ...input, quantity: clampQty(input.quantity) };
+        const next = toLine(input);
         const others = get().lines.filter((l) => l.key !== oldKey);
-        const dup = others.find((l) => l.key === key);
         const idx = get().lines.findIndex((l) => l.key === oldKey);
-        if (dup) {
-          set({ lines: others.map((l) => (l.key === key ? { ...l, quantity: clampQty(l.quantity + next.quantity) } : l)) });
+        if (others.some((l) => l.key === next.key)) {
+          set({
+            lines: others.map((l) => (l.key === next.key ? { ...l, quantity: clampQty(l.quantity + next.quantity) } : l)),
+            updatedAt: now(),
+          });
         } else {
           const copy = [...others];
           copy.splice(Math.max(0, idx), 0, next);
-          set({ lines: copy });
+          set({ lines: copy, updatedAt: now() });
         }
       },
 
       setQty: (key, qty) =>
-        set({ lines: get().lines.map((l) => (l.key === key ? { ...l, quantity: clampQty(qty) } : l)) }),
+        set({ lines: get().lines.map((l) => (l.key === key ? { ...l, quantity: clampQty(qty) } : l)), updatedAt: now() }),
 
-      remove: (key) => set({ lines: get().lines.filter((l) => l.key !== key) }),
+      remove: (key) => set({ lines: get().lines.filter((l) => l.key !== key), updatedAt: now() }),
 
-      setNotes: (notes) => set({ notes: notes.slice(0, MAX_NOTES) }),
+      setNotes: (notes) => set({ notes: notes.slice(0, MAX_NOTES), updatedAt: now() }),
 
       purge: (ids) => {
         const removed: string[] = [];
@@ -79,17 +102,31 @@ export const useCart = create<CartState>()(
           if (bad) removed.push(l.name);
           return !bad;
         });
-        set({ lines });
+        set({ lines, updatedAt: now() });
         return removed;
       },
 
-      clear: () => set({ lines: [], notes: '' }),
+      clear: () => set({ lines: [], notes: '', updatedAt: now() }),
     }),
     {
       name: 'mesaqr-cart',
-      version: 1,
-      storage: createJSONStorage(() => sessionStorage),
-      partialize: (s) => ({ token: s.token, lines: s.lines, notes: s.notes }),
+      version: 2,
+      // localStorage: el pedido sobrevive si el cliente cierra la pestaña o va a WhatsApp y vuelve.
+      storage: createJSONStorage(() => localStorage),
+      partialize: (s) => ({ token: s.token, lines: s.lines, notes: s.notes, updatedAt: s.updatedAt }),
+      // Versión 1 (sin observación por producto) → se completa con nota vacía.
+      migrate: (persisted, version) => {
+        const p = (persisted ?? {}) as Partial<CartState>;
+        if (version < 2) p.lines = (p.lines ?? []).map((l) => ({ ...l, note: l.note ?? '' }));
+        return p as CartState;
+      },
+      // Un carrito olvidado hace horas no se recupera.
+      merge: (persisted, current) => {
+        const p = (persisted ?? {}) as Partial<CartState>;
+        const fresh = typeof p.updatedAt === 'number' && now() - p.updatedAt < EXPERIENCE.cartTtlMs;
+        if (!fresh || !Array.isArray(p.lines)) return current;
+        return { ...current, token: p.token ?? null, lines: p.lines, notes: typeof p.notes === 'string' ? p.notes : '', updatedAt: p.updatedAt! };
+      },
     },
   ),
 );

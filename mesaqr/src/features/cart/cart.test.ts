@@ -11,8 +11,8 @@ const coca = { productId: 'p-coca', name: 'Coca-Cola', baseCents: 150 };
 const s = () => useCart.getState();
 
 beforeEach(() => {
-  sessionStorage.clear();
-  useCart.setState({ token: null, lines: [], notes: '' });
+  localStorage.clear();
+  useCart.setState({ token: null, lines: [], notes: '', updatedAt: 0 });
   s().bindToken('mesa7token');
 });
 
@@ -94,9 +94,33 @@ describe('Carrito', () => {
     expect(s().lines).toHaveLength(0);
   });
 
-  it('persiste en sessionStorage', () => {
+  it('persiste en localStorage (sobrevive cerrar la pestaña o ir a WhatsApp)', () => {
     s().add({ ...coca, options: [], quantity: 2 });
-    const saved = JSON.parse(sessionStorage.getItem('mesaqr-cart')!);
+    const saved = JSON.parse(localStorage.getItem('mesaqr-cart')!);
     expect(saved.state.lines[0].quantity).toBe(2);
+    expect(saved.state.updatedAt).toBeGreaterThan(0);
+  });
+
+  it('la observación de cada producto separa líneas y se recorta', () => {
+    s().add({ ...especial, options: [], quantity: 1, note: '  Sin cebolla ' });
+    s().add({ ...especial, options: [], quantity: 1, note: 'sin cebolla' });
+    s().add({ ...especial, options: [], quantity: 1 });
+    expect(s().lines).toHaveLength(2);
+    expect(s().lines[0]!.note).toBe('Sin cebolla');
+    expect(s().lines[0]!.quantity).toBe(2);
+    expect(s().lines[1]!.note).toBe('');
+    s().add({ ...coca, options: [], quantity: 1, note: 'x'.repeat(300) });
+    expect(s().lines[2]!.note).toHaveLength(140);
+  });
+
+  it('un carrito viejo (más de 6 horas) no se recupera', async () => {
+    const old = { state: { token: 'mesa7token', lines: [{ key: 'k', productId: 'p', name: 'Viejo', baseCents: 100, options: [], quantity: 1, note: '' }], notes: '', updatedAt: Date.now() - 7 * 3600_000 }, version: 2 };
+    localStorage.setItem('mesaqr-cart', JSON.stringify(old));
+    useCart.setState({ lines: [], notes: '', updatedAt: 0 });
+    await useCart.persist.rehydrate();
+    expect(s().lines).toHaveLength(0);
+    localStorage.setItem('mesaqr-cart', JSON.stringify({ ...old, state: { ...old.state, updatedAt: Date.now() - 3600_000 } }));
+    await useCart.persist.rehydrate();
+    expect(s().lines.map((l) => l.name)).toEqual(['Viejo']);
   });
 });

@@ -11,6 +11,8 @@ export interface OrderLineInput {
   product_id: string;
   quantity: number;
   option_ids: string[];
+  /** Observación de este producto (máx. 140). */
+  notes?: string | null;
 }
 
 async function rpc<T>(fn: string, body: Record<string, unknown>, signal?: AbortSignal): Promise<T> {

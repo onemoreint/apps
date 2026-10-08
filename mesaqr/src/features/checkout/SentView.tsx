@@ -1,6 +1,7 @@
 import { CheckCircle2 } from 'lucide-react';
 import { formatBs, formatUsd } from '@/shared/lib/money';
 import type { SentOrder } from '@/features/menu/session';
+import { DEMO_MODE } from '@/shared/lib/env';
 import { WhatsAppGlyph } from './CheckoutSheet';
 
 interface Props {
@@ -16,9 +17,9 @@ export function SentView({ order, onContinue }: Props) {
   return (
     <div className="fixed inset-0 z-40 overflow-y-auto bg-paper" role="dialog" aria-modal="true" aria-labelledby="sent-title">
       <div className="mx-auto flex min-h-full max-w-md flex-col px-6 pt-16 pb-8">
-        <CheckCircle2 size={56} className="text-send" aria-hidden />
-        <h1 id="sent-title" className="mt-4 font-display text-3xl leading-tight font-extrabold">
-          Tu pedido está listo para enviarse por WhatsApp
+        <CheckCircle2 size={56} className="rise text-send" aria-hidden />
+        <h1 id="sent-title" className="rise mt-4 font-display text-3xl leading-tight font-extrabold">
+          🎉 ¡Tu pedido está listo!
         </h1>
         <p className="mt-3 text-lg text-ink-2">
           Pedido <strong className="font-display text-ink">#{order.code}</strong> por{' '}
@@ -31,7 +32,8 @@ export function SentView({ order, onContinue }: Props) {
           </p>
         )}
         <p className="mt-6 rounded-2xl bg-shelf px-4 py-3">
-          En WhatsApp, pulsa <strong>Enviar</strong> para que el restaurante reciba tu pedido.
+          {DEMO_MODE ? 'Se abrió WhatsApp con tu pedido escrito. ' : 'Ya quedó registrado. '}
+          Pulsa <strong>Enviar</strong> en WhatsApp para que el restaurante lo reciba y te confirme.
         </p>
 
         <div className="mt-auto space-y-3 pt-10">

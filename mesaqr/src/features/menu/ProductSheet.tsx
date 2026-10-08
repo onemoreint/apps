@@ -7,6 +7,9 @@ import { ProductImage } from '@/shared/ui/ProductImage';
 import { QtyStepper } from '@/shared/ui/QtyStepper';
 import { Price } from '@/shared/ui/Price';
 import type { CartLine, CartOption } from '@/features/cart/cartMath';
+import { EXPERIENCE } from '@/shared/config/experience';
+import { BadgeChip } from './BadgeChip';
+import { savingsCents } from './catalog';
 import { groupRule, groupsFor, type MenuIndex } from './menuIndex';
 
 export interface ProductChoice {
@@ -15,6 +18,7 @@ export interface ProductChoice {
   baseCents: number;
   options: CartOption[];
   quantity: number;
+  note: string;
 }
 
 interface Props {
@@ -22,6 +26,8 @@ interface Props {
   product: MenuProduct;
   /** Si viene, se está editando esa línea del carrito. */
   editing?: CartLine;
+  /** Observación inicial (por ejemplo, la del producto que se convirtió en combo). */
+  initialNote?: string;
   onClose: () => void;
   onConfirm: (choice: ProductChoice) => void;
 }
@@ -40,11 +46,13 @@ function initialSelection(groups: MenuOptionGroup[], editing?: CartLine): Record
   return sel;
 }
 
-export function ProductSheet({ idx, product, editing, onClose, onConfirm }: Props) {
+export function ProductSheet({ idx, product, editing, initialNote, onClose, onConfirm }: Props) {
   const { business } = idx.menu;
   const groups = useMemo(() => groupsFor(idx, product), [idx, product]);
   const [sel, setSel] = useState(() => initialSelection(groups, editing));
   const [qty, setQty] = useState(editing?.quantity ?? 1);
+  const [note, setNote] = useState(editing?.note ?? initialNote ?? '');
+  const saving = savingsCents(product);
 
   const toggle = (g: MenuOptionGroup, optionId: string) => {
     setSel((prev) => {
@@ -70,7 +78,7 @@ export function ProductSheet({ idx, product, editing, onClose, onConfirm }: Prop
 
   const confirm = () => {
     if (missing) return;
-    onConfirm({ productId: product.id, name: product.name, baseCents: toCents(product.price_usd), options: chosen, quantity: qty });
+    onConfirm({ productId: product.id, name: product.name, baseCents: toCents(product.price_usd), options: chosen, quantity: qty, note: note.trim() });
   };
 
   return (
@@ -89,18 +97,33 @@ export function ProductSheet({ idx, product, editing, onClose, onConfirm }: Prop
             className="flex h-12 flex-1 items-center justify-between gap-2 rounded-full bg-brand px-5 font-display font-bold text-brand-ink disabled:opacity-45"
           >
             <span>{missing ? `Elige ${missing.name.toLowerCase()}` : editing ? 'Guardar cambios' : 'Agregar'}</span>
-            <span className="tabular-nums">{formatUsd(totalUsd)}</span>
+            <span key={unitCents * qty} className="bump tabular-nums" aria-live="polite">
+              {formatUsd(totalUsd)}
+            </span>
           </button>
         </div>
       }
     >
       <ProductImage src={product.image_url} alt={product.name} eager className="-mx-5 mb-4 aspect-[16/10] w-[calc(100%+2.5rem)] max-w-none" />
+      {product.badges.length > 0 && (
+        <div className="mb-2 flex flex-wrap gap-1.5">
+          {product.badges.map((b) => (
+            <BadgeChip key={b} badge={b} />
+          ))}
+        </div>
+      )}
       <div className="flex items-start justify-between gap-4">
         <h2 className="font-display text-2xl leading-tight font-extrabold" aria-hidden>
           {product.name}
         </h2>
         <Price usd={product.price_usd} rate={business.exchange_rate} showBs={business.show_bs} className="items-end pt-1" />
       </div>
+      {saving !== null && product.compare_at_price_usd !== null && (
+        <p className="mt-1 text-sm text-ink-2">
+          Antes <s className="tabular-nums">{formatUsd(product.compare_at_price_usd)}</s> · Ahorras{' '}
+          <strong className="text-send tabular-nums">{formatUsd(saving / 100)}</strong>
+        </p>
+      )}
       {product.description && <p className="mt-2 text-ink-2">{product.description}</p>}
 
       {product.type === 'combo' && product.combo_items.length > 0 && (
@@ -162,6 +185,26 @@ export function ProductSheet({ idx, product, editing, onClose, onConfirm }: Prop
           </fieldset>
         );
       })}
+
+      <div className="mt-6">
+        <label htmlFor="item-note" className="font-display text-lg font-bold">
+          Observaciones <span className="text-sm font-normal text-ink-3">(opcional)</span>
+        </label>
+        <textarea
+          id="item-note"
+          value={note}
+          onChange={(e) => setNote(e.target.value.slice(0, EXPERIENCE.itemNoteMax))}
+          maxLength={EXPERIENCE.itemNoteMax}
+          rows={2}
+          placeholder="Ej.: sin cebolla, poca salsa…"
+          className="mt-2 w-full resize-none rounded-2xl border border-line bg-shelf px-4 py-3 text-base outline-none focus:border-ink"
+        />
+        {note.length > EXPERIENCE.itemNoteMax - 30 && (
+          <p className="text-right text-xs text-ink-3 tabular-nums">
+            {note.length}/{EXPERIENCE.itemNoteMax}
+          </p>
+        )}
+      </div>
     </Sheet>
   );
 }

@@ -60,6 +60,9 @@ export async function demoCreateOrder(items: OrderLineInput[], customer: Custome
 
   for (const item of items) {
     if (!Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 20) throw new ApiError('INVALID_CART');
+    if (item.notes !== undefined && item.notes !== null && typeof item.notes !== 'string') throw new ApiError('INVALID_CART');
+    const itemNote = (item.notes ?? '').trim() || null;
+    if (itemNote && itemNote.length > 140) throw new ApiError('INVALID_CART');
     const p = products.get(item.product_id);
     if (!p || !p.available) {
       unavailable.push(item.product_id);
@@ -87,6 +90,7 @@ export async function demoCreateOrder(items: OrderLineInput[], customer: Custome
       quantity: item.quantity,
       unit_price_usd: (base + optCents) / 100,
       line_total_usd: ((base + optCents) * item.quantity) / 100,
+      notes: itemNote,
       options: chosen.map((c) => ({ group_name: c!.g.name, option_name: c!.o.name, price_delta_usd: Number(c!.o.price_delta_usd) })),
     });
   }

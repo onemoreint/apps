@@ -141,5 +141,23 @@ begin
     (b, c_kids, 'Tenders de Pollo con Papas', 'Tenders de pollo con papas fritas.', 'https://images.unsplash.com/photo-1569691899455-88464f6d3ab1?w=640&h=480&fit=crop&auto=format&q=70', 7.00, 2),
     (b, c_kids, 'Hamburguesa de Carne con Queso', 'Hamburguesa infantil de carne con queso.', 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=640&h=480&fit=crop&auto=format&q=70', 4.00, 3);
 
+
+  -- ─── V2: etiquetas y antojos (editables desde el panel) ───
+  -- "Especial de la casa" = los productos "de la Casa" del menú impreso.
+  update public.products set badges = array['especial'] where business_id = b and name ilike '%de la Casa%';
+  update public.products set badges = array['recomendado']
+   where business_id = b and name in ('Hamburguesa con Queso, Tocineta y Huevo', 'Pepito con Queso y Tocineta');
+  -- Antojos, según los ingredientes escritos en cada producto.
+  update public.products set cravings = array_remove(array[
+      case when description ilike '%queso%' then 'queso' end,
+      case when description ilike '%tocineta%' then 'tocineta' end,
+      case when name in ('Hamburguesa con Queso, Tocineta y Huevo', 'Salchipapa de la Casa', 'Granjero 35 cm')
+             or name ilike 'Pepito%' or name ilike 'Club House%' then 'contundente' end,
+      case when name in ('Salchipapa de la Casa', 'Granjero 35 cm', 'Club House Triple', 'Club House de la Casa',
+                         'Papas Fritas + 2 Salsas', 'Papas con Tocineta y Queso')
+             or name ilike 'Pepito%' then 'compartir' end
+    ]::text[], null)
+   where business_id = b;
+
 end;
 $$;

@@ -8,20 +8,23 @@ export interface CartOption {
 }
 
 export interface CartLine {
-  key: string; // producto + opciones elegidas (misma combinación = misma línea)
+  key: string; // producto + opciones + observación (misma combinación = misma línea)
   productId: string;
   name: string;
   baseCents: number;
   options: CartOption[];
   quantity: number;
+  /** Observación de este producto ("sin cebolla"). Vacío si no hay. */
+  note: string;
 }
 
 export const MAX_QTY = 20;
 export const MAX_LINES = 30;
 export const MAX_NOTES = 280;
 
-export function lineKey(productId: string, optionIds: string[]): string {
-  return `${productId}|${[...optionIds].sort().join(',')}`;
+export function lineKey(productId: string, optionIds: string[], note = ''): string {
+  const n = note.trim().toLowerCase();
+  return `${productId}|${[...optionIds].sort().join(',')}${n ? `|${n}` : ''}`;
 }
 
 export function unitCents(line: Pick<CartLine, 'baseCents' | 'options'>): number {

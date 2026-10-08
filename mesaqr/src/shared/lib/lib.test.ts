@@ -64,6 +64,7 @@ const order: CreatedOrder = {
       quantity: 2,
       unit_price_usd: 8,
       line_total_usd: 16,
+      notes: 'bien cocida',
       options: [
         { group_name: 'Quitar ingredientes', option_name: 'Sin cebolla', price_delta_usd: 0 },
         { group_name: 'Extras', option_name: 'Extra queso', price_delta_usd: 1 },
@@ -81,21 +82,27 @@ describe('WhatsApp', () => {
   it('mensaje del pedido legible, con datos de entrega y pago', () => {
     expect(buildOrderMessage(order)).toBe(
       [
-        '🍔 NUEVO PEDIDO #0042',
+        'Hola 👋',
+        'Quiero realizar este pedido:',
+        '',
+        '🧾 Pedido #0042',
         '👤 María Pérez',
         '📞 0414 555 1234',
         '🛵 Delivery',
         '📍 Urb. La Esmeralda, calle 3',
         '💳 Pago móvil',
-        '────────────',
-        '2x Hamburguesa Especial',
+        '',
+        '2x Hamburguesa Especial — $16.00',
         '   • Sin cebolla',
         '   + Extra queso',
-        '1x Pepito Mixto',
-        '────────────',
-        '📝 Una hamburguesa sin cebolla & bebida sin hielo #2',
-        '────────────',
-        '💰 TOTAL: $25.00 (≈ Bs. 9.125,00)',
+        '   ✏️ bien cocida',
+        '1x Pepito Mixto — $8.00',
+        '',
+        '💰 Total: $25.00 (≈ Bs. 9.125,00)',
+        '',
+        '📝 Observaciones:',
+        'Una hamburguesa sin cebolla & bebida sin hielo #2',
+        '',
         '⏰ 8:42 PM',
       ].join('\n'),
     );
@@ -113,6 +120,7 @@ describe('WhatsApp', () => {
     expect(msg).not.toContain('📞');
     expect(msg).not.toContain('📍');
     expect(msg).not.toContain('📝');
+    expect(msg).not.toContain('✏️ null');
     expect(msg).not.toContain('Bs.');
   });
 

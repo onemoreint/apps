@@ -3,7 +3,8 @@ import { Loader2 } from 'lucide-react';
 import { ORDER_TYPE_EMOJI, ORDER_TYPE_LABEL, type CustomerInfo, type OrderType, type PublicBusiness } from '@/shared/types/menu';
 import { Sheet } from '@/shared/ui/Sheet';
 import { useCart } from '@/features/cart/cartStore';
-import { cartTotals } from '@/features/cart/cartMath';
+import { cartTotals, lineTotalCents } from '@/features/cart/cartMath';
+import { formatUsd, fromCents } from '@/shared/lib/money';
 import { CartSummary } from '@/features/cart/CartSummary';
 import { loadCustomer } from '@/features/menu/session';
 
@@ -175,6 +176,7 @@ export function CheckoutSheet({ business, sending, error, onSend, onBack }: Prop
         )}
 
         <div className="rounded-2xl bg-shelf p-4">
+          <h3 className="mb-2 font-display font-bold">Tu pedido</h3>
           <ul className="space-y-2">
             {lines.map((l) => (
               <li key={l.key} className="flex gap-3">
@@ -182,7 +184,9 @@ export function CheckoutSheet({ business, sending, error, onSend, onBack }: Prop
                 <div>
                   <p className="font-medium">{l.name}</p>
                   {l.options.length > 0 && <p className="text-sm text-ink-2">{l.options.map((o) => o.name).join(', ')}</p>}
+                  {l.note && <p className="text-sm text-ink-2 italic">✏️ {l.note}</p>}
                 </div>
+                <span className="ml-auto font-display font-bold tabular-nums">{formatUsd(fromCents(lineTotalCents(l)))}</span>
               </li>
             ))}
           </ul>

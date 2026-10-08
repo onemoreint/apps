@@ -30,7 +30,7 @@ export default function AdminApp() {
         <h1 className="font-display text-2xl font-extrabold">{DEMO_MODE ? 'El panel se activa al conectar la base de datos' : 'Falta configurar Supabase'}</h1>
         <p className="mt-2 text-ink-2">
           {DEMO_MODE
-            ? 'Por ahora el menú funciona en modo demostración. Al conectar Supabase podrás cambiar precios, marcar agotados, administrar mesas y ver los pedidos aquí.'
+            ? 'Por ahora el menú funciona en modo demostración. Al conectar Supabase podrás cambiar precios, marcar agotados, configurar etiquetas y ofertas, y ver los pedidos aquí.'
             : 'Crea el archivo .env.local a partir de .env.example. Instrucciones en el README.'}
         </p>
         <a href={import.meta.env.BASE_URL} className="mt-8 text-sm font-semibold underline underline-offset-2">Ir al menú</a>

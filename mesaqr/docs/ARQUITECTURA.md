@@ -10,6 +10,22 @@ Estado: **En producción con modelo de ENLACE ÚNICO** (7 oct. 2026).
 > de pago. API pública: `get_public_menu(slug)` y `create_public_order(slug, items, customer, notes)`
 > (migración `20261007000003_menu_por_enlace.sql`). Las secciones sobre QR y mesas de este documento quedan como
 > historia de diseño; la tabla `dining_tables` y las funciones por mesa siguen en la base sin acceso público.
+
+> **V2 — "mesero digital"** (migración `20261007000004_experiencia_v2.sql`). Se agregan a `products`:
+> - `badges`: etiquetas editoriales con valores cerrados por `check`; nunca estadísticas.
+> - `cravings`: antojos para "¿No sabes qué pedir?".
+> - `compare_at_price_usd`: el ahorro se muestra solo si es mayor que el precio.
+> - `combo_upgrade_id`: FK compuesta al mismo negocio, `on delete set null`.
+>
+> También se agrega `order_items.notes` (observación por producto, máx. 140, validada en `create_public_order`). La firma de las funciones públicas no cambia.
+>
+> En el frontend:
+> - la lógica pura del catálogo está en `src/features/menu/catalog.ts` (búsqueda, favoritos, ofertas, combo, sugerencias, antojos);
+> - los textos y límites de la interfaz están en `src/shared/config/experience.ts`;
+> - las vistas Inicio, Menú y Ofertas usan `?vista=` con `history.pushState`;
+> - el carrito vive en `localStorage` con caducidad de 6 h.
+>
+> **No se implementó**, por decisión del cliente (solo enlace único): número de mesa, "Necesito ayuda" y "Pedir la cuenta".
 Fecha: 2026-10-07
 
 ---

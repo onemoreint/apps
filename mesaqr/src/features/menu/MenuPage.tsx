@@ -1,43 +1,72 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AtSign, MapPin, MessageCircle } from 'lucide-react';
-import { ORDER_TYPE_EMOJI, ORDER_TYPE_LABEL, type CustomerInfo, type MenuProduct } from '@/shared/types/menu';
+import { AtSign, MapPin } from 'lucide-react';
+import type { CustomerInfo, MenuProduct } from '@/shared/types/menu';
 import { fetchMenu } from '@/shared/lib/rpc';
 import { ApiError, CUSTOMER_MESSAGES, toApiError } from '@/shared/lib/errors';
 import { applyBrand } from '@/shared/lib/color';
 import { BUSINESS_SLUG, DEMO_MODE, isConfigured } from '@/shared/lib/env';
-import { asset } from '@/shared/lib/asset';
-import { waLink } from '@/shared/lib/whatsapp';
+import { toCents } from '@/shared/lib/money';
 import { toast } from '@/shared/ui/Toast';
-import { useCart } from '@/features/cart/cartStore';
-import { cartTotals, type CartLine } from '@/features/cart/cartMath';
-import { CartBar } from '@/features/cart/CartBar';
+import { useCart, type AddInput } from '@/features/cart/cartStore';
+import { cartTotals, lineKey, type CartLine } from '@/features/cart/cartMath';
 import { CartSheet } from '@/features/cart/CartSheet';
 import { CheckoutSheet } from '@/features/checkout/CheckoutSheet';
 import { SentView } from '@/features/checkout/SentView';
 import { sendOrder } from '@/features/checkout/sendOrder';
-import { indexMenu, groupsFor, needsChoice, unavailableIn, type MenuIndex } from './menuIndex';
+import { indexMenu, needsChoice, unavailableIn, type MenuIndex } from './menuIndex';
+import { comboFor, offers as offersOf, suggestions } from './catalog';
 import { CategoryTabs } from './CategoryTabs';
 import { ProductRow } from './ProductRow';
-import { ProductSheet, type ProductChoice } from './ProductSheet';
+import { ProductSheet } from './ProductSheet';
 import { UpsellSheet } from './UpsellSheet';
+import { ComboSheet } from './ComboSheet';
+import { CravingSheet } from './CravingSheet';
+import { HomeView } from './HomeView';
+import { OffersView } from './OffersView';
+import { BottomNav, type View } from './BottomNav';
 import { MenuSkeleton } from './MenuSkeleton';
 import { NoticeScreen } from './NoticeScreen';
 import { clearSent, loadSent, saveCustomer, saveSent, type SentOrder } from './session';
 
 type Status = 'loading' | 'ready' | 'unavailable' | 'offline';
 type SheetState =
-  | { kind: 'product'; product: MenuProduct; editing?: CartLine }
-  | { kind: 'upsell' }
+  /** followUp: tras agregar, ofrecer combo/sugerencias. replaceKey: reemplaza esa línea (convertir en combo). */
+  | { kind: 'product'; product: MenuProduct; editing?: CartLine; followUp?: boolean; note?: string }
+  | { kind: 'upsell'; products: MenuProduct[] }
+  | { kind: 'combo'; base: MenuProduct; combo: MenuProduct; key: string; qty: number; note: string }
+  | { kind: 'craving' }
   | { kind: 'cart' }
   | { kind: 'checkout' }
   | null;
 
 const UPSELL_KEY = 'mesaqr-upsell-shown';
+const VIEW_PARAM = 'vista';
+
+function viewFromUrl(): View {
+  const v = new URLSearchParams(window.location.search).get(VIEW_PARAM);
+  return v === 'menu' || v === 'ofertas' ? v : 'inicio';
+}
+
+function sessionFlag(key: string): boolean {
+  try {
+    return sessionStorage.getItem(key) === '1';
+  } catch {
+    return false;
+  }
+}
+function setSessionFlag(key: string) {
+  try {
+    sessionStorage.setItem(key, '1');
+  } catch {
+    /* sin almacenamiento */
+  }
+}
 
 export default function MenuPage() {
   const [status, setStatus] = useState<Status>('loading');
   const [idx, setIdx] = useState<MenuIndex | null>(null);
   const [sheet, setSheet] = useState<SheetState>(null);
+  const [view, setViewState] = useState<View>(viewFromUrl);
   const [sent, setSent] = useState<SentOrder | null>(() => {
     const s = loadSent();
     return s && Date.now() - s.at < 30 * 60 * 1000 ? s : null;
@@ -45,6 +74,8 @@ export default function MenuPage() {
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
   const [activeCat, setActiveCat] = useState<string | null>(null);
+  const [pendingCat, setPendingCat] = useState<string | null>(null);
+  const comboOffered = useRef(new Set<string>());
 
   const cart = useCart();
   const totals = cartTotals(cart.lines);
@@ -80,11 +111,29 @@ export default function MenuPage() {
     return () => ctrl.abort();
   }, [load]);
 
-  // ---------- Pestañas que siguen el desplazamiento ----------
+  // ---------- Vistas (Inicio / Menú / Ofertas) con el botón Atrás del teléfono ----------
+  useEffect(() => {
+    const onPop = () => setViewState(viewFromUrl());
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+
+  const setView = (v: View, keepScroll = false) => {
+    if (v !== view) {
+      const url = new URL(window.location.href);
+      if (v === 'inicio') url.searchParams.delete(VIEW_PARAM);
+      else url.searchParams.set(VIEW_PARAM, v);
+      window.history.pushState({ view: v }, '', url);
+      setViewState(v);
+    }
+    if (!keepScroll) window.scrollTo({ top: 0 });
+  };
+
+  // ---------- Pestañas que siguen el desplazamiento (vista Menú) ----------
   const sectionsRef = useRef<Map<string, HTMLElement>>(new Map());
   const scrollingTo = useRef(false);
   useEffect(() => {
-    if (status !== 'ready') return;
+    if (status !== 'ready' || view !== 'menu') return;
     const obs = new IntersectionObserver(
       (entries) => {
         if (scrollingTo.current) return;
@@ -96,14 +145,21 @@ export default function MenuPage() {
     );
     sectionsRef.current.forEach((el) => obs.observe(el));
     return () => obs.disconnect();
-  }, [status, idx]);
+  }, [status, idx, view]);
 
-  const goToCategory = (id: string) => {
+  const scrollToCategory = (id: string, smooth: boolean) => {
     setActiveCat(id);
     scrollingTo.current = true;
-    sectionsRef.current.get(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    sectionsRef.current.get(id)?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
     window.setTimeout(() => (scrollingTo.current = false), 700);
   };
+
+  // Desde Inicio: cambiar a Menú y bajar hasta la categoría elegida
+  useEffect(() => {
+    if (view !== 'menu' || !pendingCat) return;
+    scrollToCategory(pendingCat, false);
+    setPendingCat(null);
+  }, [view, pendingCat]);
 
   // ---------- Carrito ----------
   const qtyInCart = useMemo(() => {
@@ -111,52 +167,61 @@ export default function MenuPage() {
     for (const l of cart.lines) m.set(l.productId, (m.get(l.productId) ?? 0) + l.quantity);
     return m;
   }, [cart.lines]);
+  const inCartIds = useMemo(() => new Set(qtyInCart.keys()), [qtyInCart]);
+  const offerList = useMemo(() => (idx ? offersOf(idx) : []), [idx]);
+  const cartSuggestions = useMemo(() => (idx ? suggestions(idx, inCartIds) : []), [idx, inCartIds]);
 
-  const upsellCandidates = useMemo(
-    () => (idx ? idx.menu.products.filter((p) => p.upsell && p.available && !qtyInCart.has(p.id)).slice(0, 4) : []),
-    [idx, qtyInCart],
-  );
-
-  const addChoice = (choice: ProductChoice, product: MenuProduct, editing?: CartLine) => {
-    if (editing) {
-      cart.replace(editing.key, choice);
-      setSheet({ kind: 'cart' });
-      return;
+  /** Qué ofrecer después de agregar: primero el combo configurado; si no, sugerencias una vez por visita. */
+  const followUp = (product: MenuProduct, key: string, qty: number, note: string) => {
+    if (!idx) return setSheet(null);
+    const combo = comboFor(idx, product);
+    if (combo && !comboOffered.current.has(product.id)) {
+      comboOffered.current.add(product.id);
+      return setSheet({ kind: 'combo', base: product, combo, key, qty, note });
     }
-    if (!cart.add(choice)) {
-      toast('Tu pedido ya tiene muchos productos distintos. Envíalo y haz otro.', 'warn');
-      setSheet(null);
-      return;
+    const ids = new Set(useCart.getState().lines.map((l) => l.productId));
+    const list = suggestions(idx, ids, product);
+    if (!product.upsell && list.length > 0 && !sessionFlag(UPSELL_KEY)) {
+      setSessionFlag(UPSELL_KEY);
+      return setSheet({ kind: 'upsell', products: list });
     }
-    toast(`Agregado: ${choice.quantity > 1 ? `${choice.quantity} × ` : ''}${choice.name}`);
-    let shown = false;
-    try {
-      shown = sessionStorage.getItem(UPSELL_KEY) === '1';
-    } catch {
-      /* sin almacenamiento */
-    }
-    const candidates = upsellCandidates.filter((p) => p.id !== product.id);
-    if (!shown && !product.upsell && candidates.length > 0) {
-      try {
-        sessionStorage.setItem(UPSELL_KEY, '1');
-      } catch {
-        /* sin almacenamiento */
-      }
-      setSheet({ kind: 'upsell' });
-    } else {
-      setSheet(null);
-    }
+    setSheet(null);
   };
 
-  const quickAdd = (p: MenuProduct) => {
-    if (!idx) return;
-    if (needsChoice(idx, p)) {
-      setSheet({ kind: 'product', product: p });
-      return;
+  const commitAdd = (input: AddInput, product: MenuProduct, after: 'followUp' | 'close' | 'cart'): boolean => {
+    if (!cart.add(input)) {
+      toast('Tu pedido ya tiene muchos productos distintos. Envíalo y haz otro.', 'warn');
+      setSheet(null);
+      return false;
     }
-    cart.add({ productId: p.id, name: p.name, baseCents: Math.round(p.price_usd * 100), options: [], quantity: 1 });
-    toast(`Agregado: ${p.name}`);
-    setSheet(null);
+    toast(`Agregado: ${input.quantity > 1 ? `${input.quantity} × ` : ''}${input.name}`);
+    if (after === 'followUp') followUp(product, lineKey(input.productId, input.options.map((o) => o.id), input.note ?? ''), input.quantity, input.note ?? '');
+    else if (after === 'cart') setSheet({ kind: 'cart' });
+    else setSheet(null);
+    return true;
+  };
+
+  /** "+ Agregar" sin entrar al detalle. Si el producto exige elegir algo, abre el detalle. */
+  const quickAdd = (p: MenuProduct, after: 'followUp' | 'close' | 'cart' = 'followUp') => {
+    if (!idx || !p.available) return;
+    if (needsChoice(idx, p)) return setSheet({ kind: 'product', product: p, followUp: after === 'followUp' });
+    commitAdd({ productId: p.id, name: p.name, baseCents: toCents(p.price_usd), options: [], quantity: 1, note: '' }, p, after);
+  };
+
+  const acceptCombo = (s: Extract<SheetState, { kind: 'combo' }>) => {
+    if (!idx) return;
+    // Quita del pedido el producto que se convierte en combo
+    const line = useCart.getState().lines.find((l) => l.key === s.key);
+    if (line) {
+      if (line.quantity > s.qty) cart.setQty(line.key, line.quantity - s.qty);
+      else cart.remove(line.key);
+    }
+    if (needsChoice(idx, s.combo)) return setSheet({ kind: 'product', product: s.combo, followUp: false, note: s.note });
+    commitAdd(
+      { productId: s.combo.id, name: s.combo.name, baseCents: toCents(s.combo.price_usd), options: [], quantity: s.qty, note: s.note },
+      s.combo,
+      'close',
+    );
   };
 
   // ---------- Envío ----------
@@ -244,72 +309,76 @@ export default function MenuPage() {
   }
 
   const { business, categories } = idx.menu;
+  const current: View = view === 'ofertas' && offerList.length === 0 ? 'inicio' : view;
+  const open = (p: MenuProduct) => setSheet({ kind: 'product', product: p, followUp: true });
 
   return (
     <>
-      <div className={`mx-auto max-w-3xl ${totals.count > 0 ? 'pb-28' : 'pb-10'}`}>
-        <header className="px-4 pt-6 pb-1">
-          <div className="flex items-start gap-4">
-            {business.logo_url && <img src={asset(business.logo_url)!} alt="" className="size-14 shrink-0 rounded-2xl object-cover" />}
-            <div className="min-w-0 flex-1">
-              <h1 className="font-display text-[1.875rem] leading-[1.05] font-extrabold tracking-tight">{business.name}</h1>
-              {business.description && <p className="mt-1 text-ink-2">{business.description}</p>}
+      <div className="mx-auto max-w-3xl pb-28">
+        {current === 'inicio' && (
+          <HomeView
+            idx={idx}
+            qtyInCart={qtyInCart}
+            onOpen={open}
+            onQuickAdd={(p) => quickAdd(p)}
+            onCategory={(id) => {
+              setPendingCat(id);
+              setView('menu', true);
+            }}
+            onCraving={() => setSheet({ kind: 'craving' })}
+            onAllMenu={() => setView('menu')}
+          />
+        )}
+
+        {current === 'menu' && (
+          <>
+            <div className="px-4 pt-6 pb-1">
+              <h1 className="font-display text-[1.875rem] leading-tight font-extrabold tracking-tight">Menú</h1>
+              <p className="text-ink-2">{business.name}</p>
             </div>
-          </div>
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            {business.order_types.map((t) => (
-              <span key={t} className="ticket rounded-lg px-3 py-1 text-sm font-semibold">
-                <span aria-hidden>{ORDER_TYPE_EMOJI[t]}</span> {ORDER_TYPE_LABEL[t]}
-              </span>
-            ))}
-            <a
-              href={waLink(business.whatsapp, `Hola ${business.name}, tengo una consulta.`)}
-              className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line px-3 text-sm font-semibold"
-            >
-              <MessageCircle size={16} aria-hidden /> Escríbenos
-            </a>
-          </div>
-        </header>
+            <div className="sticky top-0 z-20 mt-2 border-b border-line bg-paper/95 backdrop-blur">
+              <CategoryTabs categories={categories} active={activeCat} onSelect={(id) => scrollToCategory(id, true)} />
+            </div>
+            <main>
+              {categories.map((c, ci) => {
+                const products = idx.byCategory.get(c.id) ?? [];
+                if (products.length === 0) return null;
+                return (
+                  <section
+                    key={c.id}
+                    data-section={c.id}
+                    ref={(el) => {
+                      if (el) sectionsRef.current.set(c.id, el);
+                      else sectionsRef.current.delete(c.id);
+                    }}
+                    className="scroll-mt-16 px-4 pt-6"
+                    aria-labelledby={`cat-${c.id}`}
+                  >
+                    <h2 id={`cat-${c.id}`} className="font-display text-2xl font-extrabold tracking-tight">
+                      {c.name}
+                    </h2>
+                    <div className="divide-y divide-line">
+                      {products.map((p, pi) => (
+                        <ProductRow
+                          key={p.id}
+                          product={p}
+                          rate={business.exchange_rate}
+                          showBs={business.show_bs}
+                          inCart={qtyInCart.get(p.id) ?? 0}
+                          eager={ci === 0 && pi < 3}
+                          onOpen={open}
+                          onQuickAdd={(prod) => quickAdd(prod)}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                );
+              })}
+            </main>
+          </>
+        )}
 
-        <div className="sticky top-0 z-20 mt-3 border-b border-line bg-paper/95 backdrop-blur">
-          <CategoryTabs categories={categories} active={activeCat} onSelect={goToCategory} />
-        </div>
-
-        <main>
-          {categories.map((c, ci) => {
-            const products = idx.byCategory.get(c.id) ?? [];
-            if (products.length === 0) return null;
-            return (
-              <section
-                key={c.id}
-                data-section={c.id}
-                ref={(el) => {
-                  if (el) sectionsRef.current.set(c.id, el);
-                  else sectionsRef.current.delete(c.id);
-                }}
-                className="scroll-mt-16 px-4 pt-6"
-                aria-labelledby={`cat-${c.id}`}
-              >
-                <h2 id={`cat-${c.id}`} className="font-display text-2xl font-extrabold tracking-tight">
-                  {c.name}
-                </h2>
-                <div className="divide-y divide-line">
-                  {products.map((p, pi) => (
-                    <ProductRow
-                      key={p.id}
-                      product={p}
-                      rate={business.exchange_rate}
-                      showBs={business.show_bs}
-                      inCart={qtyInCart.get(p.id) ?? 0}
-                      eager={ci === 0 && pi < 3}
-                      onOpen={(prod) => setSheet({ kind: 'product', product: prod })}
-                    />
-                  ))}
-                </div>
-              </section>
-            );
-          })}
-        </main>
+        {current === 'ofertas' && <OffersView idx={idx} products={offerList} qtyInCart={qtyInCart} onOpen={open} onQuickAdd={(p) => quickAdd(p)} />}
 
         <footer className="mt-10 space-y-2 px-4 text-sm text-ink-2">
           {business.address && (
@@ -333,7 +402,7 @@ export default function MenuPage() {
         </footer>
       </div>
 
-      {!sheet && <CartBar totals={totals} onOpen={() => setSheet({ kind: 'cart' })} />}
+      <BottomNav view={current} showOffers={offerList.length > 0} totals={totals} onView={(v) => setView(v)} onCart={() => setSheet({ kind: 'cart' })} />
 
       {sheet?.kind === 'product' && (
         <ProductSheet
@@ -341,23 +410,49 @@ export default function MenuPage() {
           idx={idx}
           product={sheet.product}
           editing={sheet.editing}
+          initialNote={sheet.note}
           onClose={() => setSheet(sheet.editing ? { kind: 'cart' } : null)}
-          onConfirm={(choice) => addChoice(choice, sheet.product, sheet.editing)}
+          onConfirm={(choice) => {
+            if (sheet.editing) {
+              cart.replace(sheet.editing.key, choice);
+              setSheet({ kind: 'cart' });
+            } else {
+              commitAdd(choice, sheet.product, sheet.followUp ? 'followUp' : 'close');
+            }
+          }}
         />
       )}
-      {sheet?.kind === 'upsell' && <UpsellSheet products={upsellCandidates} onPick={quickAdd} onClose={() => setSheet(null)} />}
+      {sheet?.kind === 'upsell' && <UpsellSheet products={sheet.products} onPick={(p) => quickAdd(p, 'close')} onClose={() => setSheet(null)} />}
+      {sheet?.kind === 'combo' && (
+        <ComboSheet
+          base={sheet.base}
+          combo={sheet.combo}
+          rate={business.exchange_rate}
+          showBs={business.show_bs}
+          onAccept={() => acceptCombo(sheet)}
+          onClose={() => setSheet(null)}
+        />
+      )}
+      {sheet?.kind === 'craving' && (
+        <CravingSheet
+          idx={idx}
+          qtyInCart={qtyInCart}
+          onOpen={(p) => setSheet({ kind: 'product', product: p, followUp: false })}
+          onQuickAdd={(p) => quickAdd(p, 'close')}
+          onClose={() => setSheet(null)}
+        />
+      )}
       {sheet?.kind === 'cart' && (
         <CartSheet
           rate={business.exchange_rate}
           showBs={business.show_bs}
-          canEdit={(l) => {
-            const p = idx.productById.get(l.productId);
-            return !!p && groupsFor(idx, p).length > 0;
-          }}
+          canEdit={(l) => idx.productById.has(l.productId)}
           onEdit={(l) => {
             const p = idx.productById.get(l.productId);
             if (p) setSheet({ kind: 'product', product: p, editing: l });
           }}
+          suggested={cartSuggestions}
+          onSuggest={(p) => quickAdd(p, 'cart')}
           onReview={() => {
             setSendError(null);
             setSheet({ kind: 'checkout' });

@@ -153,6 +153,7 @@ export default function OrdersPage() {
                             {it.order_item_options.length > 0 && (
                               <span className="block text-sm text-ink-2">{it.order_item_options.map((x) => x.option_name).join(', ')}</span>
                             )}
+                            {it.notes && <span className="block text-sm font-semibold text-brand">✏️ {it.notes}</span>}
                           </span>
                           <span className="tabular-nums">{formatUsd(Number(it.line_total_usd))}</span>
                         </li>

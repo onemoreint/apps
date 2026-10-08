@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { bsLabel, formatBs, formatUsd, toCents, usdToBs } from './money';
-import { isValidE164, normalizePhone, waDigits } from './phone';
+import { displayPhone, isValidE164, normalizePhone, waDigits } from './phone';
 import { buildOrderMessage, formatTime, waLink } from './whatsapp';
 import { toApiError } from './errors';
 import { readableOn } from './color';
@@ -36,6 +36,11 @@ describe('Moneda', () => {
 });
 
 describe('Teléfono', () => {
+  it('muestra el número venezolano en formato local', () => {
+    expect(displayPhone('+584243230113')).toBe('0424-3230113');
+    expect(displayPhone('+573001234567')).toBe('+573001234567');
+  });
+
   it('normaliza y valida formato internacional', () => {
     expect(normalizePhone('+58 (412) 123-4567')).toBe('+584121234567');
     expect(normalizePhone('0058 412 1234567')).toBe('+584121234567');

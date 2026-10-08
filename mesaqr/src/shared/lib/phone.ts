@@ -16,3 +16,10 @@ export function isValidE164(phone: string): boolean {
 export function waDigits(phone: string): string {
   return phone.replace(/\D/g, '');
 }
+
+/** Número para mostrar: Venezuela como "0424-3230113"; otros países tal cual. */
+export function displayPhone(phone: string): string {
+  const d = waDigits(phone);
+  if (d.startsWith('58') && d.length === 12) return `0${d.slice(2, 5)}-${d.slice(5)}`;
+  return phone;
+}

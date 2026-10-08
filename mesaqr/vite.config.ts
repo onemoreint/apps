@@ -7,6 +7,8 @@ import { fileURLToPath, URL } from 'node:url';
 
 // Subcarpeta de publicación: '/' (dominio propio) o '/mesaqr/' (GitHub Pages).
 const base = process.env.VITE_BASE ?? '/';
+// URL pública completa (vista previa al compartir el enlace por WhatsApp/redes).
+const publicUrl = process.env.PUBLIC_URL ?? base;
 
 export default defineConfig({
   base,
@@ -14,22 +16,23 @@ export default defineConfig({
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
   plugins: [
+    { name: 'public-url', transformIndexHtml: (html) => html.replaceAll('__PUBLIC_URL__', publicUrl) },
     react(),
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: 'script-defer',
-      includeAssets: ['favicon.svg', 'icons/apple-touch-icon.png'],
+      includeAssets: ['favicon.png', 'icons/apple-touch-icon.png', 'brand/lorenz-logo.webp'],
       manifest: {
-        name: 'MesaQR — Menú digital',
-        short_name: 'MesaQR',
-        description: 'Escanea. Elige. Envía tu pedido.',
+        name: 'Lorenz Express · Menú',
+        short_name: 'Lorenz Express',
+        description: 'Comida rápida en Maracay. Pide por WhatsApp.',
         lang: 'es',
         start_url: base,
         scope: base,
         display: 'standalone',
-        background_color: '#FFFFFF',
-        theme_color: '#D62828',
+        background_color: '#000000',
+        theme_color: '#000000',
         icons: [
           { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png' },

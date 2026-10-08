@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react';
-import { MessageCircle, Plus, Search, X } from 'lucide-react';
+import { Plus, Search, X } from 'lucide-react';
 import { ORDER_TYPE_EMOJI, ORDER_TYPE_LABEL, type MenuProduct } from '@/shared/types/menu';
 import { EXPERIENCE } from '@/shared/config/experience';
 import { asset } from '@/shared/lib/asset';
 import { formatUsd } from '@/shared/lib/money';
 import { waLink } from '@/shared/lib/whatsapp';
+import { displayPhone } from '@/shared/lib/phone';
+import { WhatsAppGlyph } from '@/features/checkout/CheckoutSheet';
 import { ProductImage } from '@/shared/ui/ProductImage';
 import { BadgeChip } from './BadgeChip';
 import { favorites, searchProducts, topBadge } from './catalog';
@@ -32,25 +34,42 @@ export function HomeView({ idx, qtyInCart, onOpen, onQuickAdd, onCategory, onCra
   return (
     <>
       <header className="px-4 pt-6">
-        <div className="flex items-start gap-4">
-          {business.logo_url && <img src={asset(business.logo_url)!} alt="" className="size-14 shrink-0 rounded-2xl object-cover" />}
+        <div className="flex items-center gap-4">
+          {business.logo_url && (
+            <img
+              src={asset(business.logo_url)!}
+              alt={`Logo de ${business.name}`}
+              width={96}
+              height={96}
+              className="size-24 shrink-0 rounded-full bg-black object-cover shadow-[0_6px_20px_-8px_rgb(0_0_0/0.6)] sm:size-28"
+            />
+          )}
           <div className="min-w-0 flex-1">
-            <h1 className="font-display text-[1.875rem] leading-[1.05] font-extrabold tracking-tight">{business.name}</h1>
-            {business.description && <p className="mt-1 text-ink-2">{business.description}</p>}
+            <h1 className="font-display text-[2.375rem] leading-[1] font-extrabold tracking-tight sm:text-5xl">{business.name}</h1>
+            {business.description && <p className="mt-1.5 text-ink-2 sm:text-lg">{business.description}</p>}
           </div>
         </div>
-        <div className="mt-4 flex flex-wrap items-center gap-2">
+
+        <a
+          href={waLink(business.whatsapp, `Hola ${business.name}, tengo una consulta.`)}
+          className="mt-5 flex items-center gap-3 rounded-2xl bg-send px-4 py-3 text-white shadow-[0_8px_20px_-10px_rgb(15_123_69/0.8)]"
+          aria-label={`Escríbenos por WhatsApp al ${displayPhone(business.whatsapp)}`}
+        >
+          <span className="grid size-11 shrink-0 place-items-center rounded-full bg-white/15">
+            <WhatsAppGlyph size={26} />
+          </span>
+          <span className="min-w-0 flex-1 leading-tight">
+            <span className="block text-sm font-semibold whitespace-nowrap text-white/85">Pedidos por WhatsApp</span>
+            <span className="block font-display text-[1.5rem] font-extrabold tracking-tight whitespace-nowrap tabular-nums min-[360px]:text-[1.75rem]">{displayPhone(business.whatsapp)}</span>
+          </span>
+        </a>
+
+        <div className="mt-3 flex flex-wrap items-center gap-2">
           {business.order_types.map((t) => (
             <span key={t} className="ticket rounded-lg px-3 py-1 text-sm font-semibold">
               <span aria-hidden>{ORDER_TYPE_EMOJI[t]}</span> {ORDER_TYPE_LABEL[t]}
             </span>
           ))}
-          <a
-            href={waLink(business.whatsapp, `Hola ${business.name}, tengo una consulta.`)}
-            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line px-3 text-sm font-semibold"
-          >
-            <MessageCircle size={16} aria-hidden /> Escríbenos
-          </a>
         </div>
 
         <p className="mt-7 font-display text-2xl leading-tight font-extrabold tracking-tight">{EXPERIENCE.welcome}</p>

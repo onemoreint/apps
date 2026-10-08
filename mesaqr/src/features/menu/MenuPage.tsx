@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AtSign, MapPin } from 'lucide-react';
+import { AtSign, MapPin, MessageCircle } from 'lucide-react';
+import { waLink } from '@/shared/lib/whatsapp';
+import { displayPhone } from '@/shared/lib/phone';
 import type { CustomerInfo, MenuProduct } from '@/shared/types/menu';
 import { fetchMenu } from '@/shared/lib/rpc';
 import { ApiError, CUSTOMER_MESSAGES, toApiError } from '@/shared/lib/errors';
@@ -381,6 +383,9 @@ export default function MenuPage() {
         {current === 'ofertas' && <OffersView idx={idx} products={offerList} qtyInCart={qtyInCart} onOpen={open} onQuickAdd={(p) => quickAdd(p)} />}
 
         <footer className="mt-10 space-y-2 px-4 text-sm text-ink-2">
+          <a href={waLink(business.whatsapp, `Hola ${business.name}, tengo una consulta.`)} className="flex items-center gap-2 font-semibold text-send">
+            <MessageCircle size={16} aria-hidden /> WhatsApp {displayPhone(business.whatsapp)}
+          </a>
           {business.address && (
             <p className="flex items-center gap-2">
               <MapPin size={16} aria-hidden /> {business.address}

@@ -19,8 +19,8 @@ begin
     return;
   end if;
 
-  insert into public.businesses (slug, name, description, address, whatsapp, show_bs, exchange_rate, exchange_rate_updated_at, primary_color)
-  values ('lorenz-express', 'Lorenz Express', 'Comida rápida en Maracay.', 'Maracay, Aragua',
+  insert into public.businesses (slug, name, description, address, logo_url, whatsapp, show_bs, exchange_rate, exchange_rate_updated_at, primary_color)
+  values ('lorenz-express', 'Lorenz Express', 'Comida rápida en Maracay.', 'Maracay, Aragua', '/brand/lorenz-logo.webp',
           '+584243230113', true, 900.0000, now(), '#D62828')
   returning id into b;
 

@@ -1,0 +1,46 @@
+{
+  "name": "opticonsulta",
+  "version": "0.2.0",
+  "private": true,
+  "description": "OptiConsulta — gestión para ópticas con consultorio de optometría (Colombia)",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:db": "vitest run tests/integration",
+    "test:e2e": "playwright test",
+    "db:test:prepare": "node scripts/prepare-test-db.mjs",
+    "db:reset": "supabase db reset",
+    "db:types": "supabase gen types typescript --local > lib/supabase/database.types.ts"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "5.9.1",
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.117.3",
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-hook-form": "7.89.0",
+    "server-only": "0.0.1",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "22.20.5",
+    "@types/pg": "8.23.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "pg": "8.23.1",
+    "supabase": "2.120.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "6.0.3",
+    "vitest": "5.0.3"
+  }
+}

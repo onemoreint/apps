@@ -79,3 +79,13 @@ Las migraciones solo agregan; no se reescriben migraciones ya aplicadas.
 ## Anexo: aplicar las migraciones sin la CLI
 
 Si no puedes usar `npx supabase db push`, pega cada archivo de `supabase/migrations`, en orden, en Supabase → SQL Editor. `supabase/despliegue/completar-base.sql` reúne las migraciones 0005 (parte final) a 0012 en una sola transacción. Se generó para el proyecto inicial, donde 0001–0004 y las dos primeras partes de la 0005 ya se habían aplicado por la integración de Supabase, que cancela automáticamente las sentencias con `DELETE`. Las migraciones aplicadas desde el SQL Editor no aparecen en el historial de migraciones del proyecto.
+
+Alternativa sin copiar el archivo completo: en el SQL Editor, un bloque `DO` descarga `completar-base-cuerpo.sql` (la misma variante sin `BEGIN/COMMIT`) desde una versión fija del repositorio con la extensión `http`, comprueba su SHA-256 y lo ejecuta en una sola transacción.
+
+### Estado del proyecto inicial (10 de octubre de 2026)
+
+Proyecto `opticonsulta` (`edqlpytxpucixmuutayi`, región `sa-east-1`, plan gratuito): base completa. Verificado contra el esquema probado: huella idéntica de funciones (`96856b38…`) y de columnas (`19b79cb2…`), 48 tablas con RLS, ningún privilegio para `anon` salvo `login_guard` y `record_login_failure`, sin acceso al esquema `private`.
+
+Los avisos del asesor de seguridad de Supabase sobre funciones `SECURITY DEFINER` ejecutables por `authenticated` (y esas dos por `anon`) son intencionales: son las funciones RPC de la aplicación, y cada una verifica sesión y permiso por dentro (ver `tests/integration`).
+
+El plan gratuito no incluye respaldos diarios: usa el respaldo lógico de [respaldo-y-restauracion.md](respaldo-y-restauracion.md) o cambia de plan antes de cargar datos reales.

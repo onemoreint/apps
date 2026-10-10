@@ -1,0 +1,70 @@
+name: OptiConsulta · calidad
+
+# Solo verifica. No despliega: la app Next.js se publica en una plataforma con Node
+# y la base en Supabase (ver opticonsulta/docs/despliegue.md).
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'opticonsulta/**'
+      - '.github/workflows/opticonsulta-ci.yml'
+  pull_request:
+    paths:
+      - 'opticonsulta/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: opticonsulta
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      # Base desechable: las pruebas la borran y recrean (el nombre debe terminar en _test).
+      TEST_DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/opticonsulta_test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: opticonsulta/package-lock.json
+
+      - name: Cliente de PostgreSQL 16 (pg_dump/psql para la prueba de respaldo)
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -fsSL -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client-16
+          echo "/usr/lib/postgresql/16/bin" >> "$GITHUB_PATH"
+
+      - name: Instalar
+        run: npm ci
+
+      - name: Tipos (TypeScript estricto)
+        run: npm run typecheck
+
+      - name: Pruebas unitarias y de base de datos (RLS, permisos, clínica, comercio, respaldo)
+        run: npm test
+
+      - name: Build de producción
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://ejemplo.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: clave-publica-de-ejemplo-solo-para-compilar

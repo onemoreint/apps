@@ -127,6 +127,16 @@ export default async function PacientePage({ params }: { params: Promise<{ org: 
                 Registrar fórmula externa
               </Link>
             ) : null}
+            {can(ctx, "sales.manage") ? (
+              <Link href={`/${slug}/ventas/nueva?paciente=${id}`} className={linkButton}>
+                Nueva venta
+              </Link>
+            ) : null}
+            {can(ctx, "sales.manage") ? (
+              <Link href={`/${slug}/cotizaciones/nueva?paciente=${id}`} className={linkButton}>
+                Cotizar
+              </Link>
+            ) : null}
           </div>
         }
       />
@@ -141,7 +151,7 @@ export default async function PacientePage({ params }: { params: Promise<{ org: 
       ) : null}
 
       <div className="grid gap-6 xl:grid-cols-[1fr_400px]">
-        <div className="grid content-start gap-6">
+        <div className="grid min-w-0 content-start gap-6">
           {can(ctx, "clinical.write") ? (
             <Panel title="Atender" description={me ? `Consulta a nombre de ${me.full_name}.` : undefined}>
               {!me ? (
@@ -235,7 +245,7 @@ export default async function PacientePage({ params }: { params: Promise<{ org: 
           ) : null}
         </div>
 
-        <div className="grid content-start gap-6">
+        <div className="grid min-w-0 content-start gap-6">
           <Panel title="Autorizaciones">
             {consents.data?.length ? (
               <ul className="mb-5 grid gap-3">

@@ -182,7 +182,7 @@ export default async function ConsultaPage({ params }: { params: Promise<{ org: 
             catalogs={catalogs}
             defaults={toFormValues(e, va.data ?? [], rx.data ?? [], dx.data ?? [], px.data ?? [], labels)}
           />
-          <div className="grid content-start gap-6">
+          <div className="grid min-w-0 content-start gap-6">
             {rdaPanel}
             {prescriptionsPanel}
           </div>
@@ -215,7 +215,7 @@ export default async function ConsultaPage({ params }: { params: Promise<{ org: 
       ) : null}
 
       <div className="grid gap-6 2xl:grid-cols-[1fr_360px]">
-        <div className="grid content-start gap-6">
+        <div className="grid min-w-0 content-start gap-6">
           <Panel title="Atención">
             <dl className="grid gap-4 md:grid-cols-3">
               <Field label="Modalidad" value={lbl(labels, "modalidad", e.modality_code)} />
@@ -374,7 +374,7 @@ export default async function ConsultaPage({ params }: { params: Promise<{ org: 
             </Panel>
           ) : null}
         </div>
-        <div className="grid content-start gap-6">
+        <div className="grid min-w-0 content-start gap-6">
           {rdaPanel}
           {prescriptionsPanel}
         </div>

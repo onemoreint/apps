@@ -17,17 +17,27 @@ export default async function OrgLayout({
   const supabase = await createClient();
   const { data: profile } = await supabase.from("profiles").select("full_name, email").eq("id", ctx.userId).single();
 
-  // Solo módulos que ya funcionan y que el rol puede usar.
+  // Solo módulos que el rol puede usar. La base vuelve a verificar cada acción.
+  const canAny = (...perms: string[]) => perms.some((p) => can(ctx, p));
   const items: NavItem[] = [
     { href: `/${slug}/inicio`, label: "Inicio" },
-    ...(can(ctx, "agenda.read") ? [{ href: `/${slug}/agenda`, label: "Agenda" }] : []),
-    ...(can(ctx, "patients.read") ? [{ href: `/${slug}/pacientes`, label: "Pacientes" }] : []),
-    ...(can(ctx, "professionals.manage") ? [{ href: `/${slug}/profesionales`, label: "Profesionales" }] : []),
-    ...(can(ctx, "users.manage") ? [{ href: `/${slug}/usuarios`, label: "Equipo" }] : []),
-    ...(can(ctx, "privacy.manage") ? [{ href: `/${slug}/privacidad`, label: "Privacidad" }] : []),
-    ...(can(ctx, "clinical.configure") ? [{ href: `/${slug}/ajustes-clinicos`, label: "Ajustes clínicos" }] : []),
-    ...(can(ctx, "settings.manage") ? [{ href: `/${slug}/configuracion`, label: "Configuración" }] : []),
-    ...(can(ctx, "audit.read") ? [{ href: `/${slug}/auditoria`, label: "Auditoría" }] : []),
+    ...(canAny("agenda.read") ? [{ href: `/${slug}/agenda`, label: "Agenda" }] : []),
+    ...(canAny("patients.read") ? [{ href: `/${slug}/pacientes`, label: "Pacientes" }] : []),
+    ...(canAny("sales.read") ? [{ href: `/${slug}/ventas`, label: "Ventas" }, { href: `/${slug}/cotizaciones`, label: "Cotizaciones" }] : []),
+    ...(canAny("cash.operate", "cash.read_all") ? [{ href: `/${slug}/caja`, label: "Caja" }] : []),
+    ...(canAny("lab.read") ? [{ href: `/${slug}/laboratorio`, label: "Laboratorio" }] : []),
+    ...(canAny("warranty.read") ? [{ href: `/${slug}/garantias`, label: "Garantías" }] : []),
+    ...(canAny("inventory.read") ? [{ href: `/${slug}/inventario`, label: "Inventario" }] : []),
+    ...(canAny("inventory.read", "catalog.manage") ? [{ href: `/${slug}/productos`, label: "Productos" }] : []),
+    ...(canAny("reports.financial", "export.data") ? [{ href: `/${slug}/reportes`, label: "Reportes" }] : []),
+    ...(canAny("privacy.register", "privacy.manage") ? [{ href: `/${slug}/solicitudes`, label: "Solicitudes de titulares" }] : []),
+    ...(canAny("professionals.manage") ? [{ href: `/${slug}/profesionales`, label: "Profesionales" }] : []),
+    ...(canAny("users.manage") ? [{ href: `/${slug}/usuarios`, label: "Equipo" }] : []),
+    ...(canAny("roles.manage") ? [{ href: `/${slug}/roles`, label: "Roles y permisos" }] : []),
+    ...(canAny("privacy.manage") ? [{ href: `/${slug}/privacidad`, label: "Privacidad" }] : []),
+    ...(canAny("clinical.configure") ? [{ href: `/${slug}/ajustes-clinicos`, label: "Ajustes clínicos" }] : []),
+    ...(canAny("settings.manage") ? [{ href: `/${slug}/configuracion`, label: "Configuración" }] : []),
+    ...(canAny("audit.read") ? [{ href: `/${slug}/auditoria`, label: "Auditoría" }] : []),
   ];
 
   const userName = profile?.full_name || profile?.email || "Tu cuenta";

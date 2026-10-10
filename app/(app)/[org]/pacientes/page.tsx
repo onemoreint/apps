@@ -60,7 +60,7 @@ export default async function PacientesPage({
           name="q"
           defaultValue={q}
           placeholder="Nombre, apellido o número de documento"
-          className="min-h-10 flex-1 rounded-[var(--radius-control)] border border-linea bg-white px-3 text-[15px]"
+          className="min-h-10 min-w-0 flex-1 rounded-[var(--radius-control)] border border-linea bg-white px-3 text-[15px]"
         />
         <button type="submit" className="min-h-10 rounded-[var(--radius-control)] border border-linea bg-white px-4 text-sm font-semibold text-tinta hover:border-tinta-suave">
           Buscar

@@ -84,7 +84,7 @@ export default async function UsuariosPage({ params }: { params: Promise<{ org: 
           </ul>
         </Panel>
 
-        <div className="grid content-start gap-6">
+        <div className="grid min-w-0 content-start gap-6">
           <Panel
             title="Invitar a alguien"
             description="Genera un enlace personal. Entrégalo tú mismo: OptiConsulta todavía no envía correos."

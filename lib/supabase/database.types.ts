@@ -1,6 +1,7 @@
 // Tipos de la base de datos para @supabase/supabase-js.
 // Escritos a mano para la Fase B a partir de las migraciones; cuando el stack
 // local esté activo se regeneran con `npm run db:types` y deben coincidir.
+// Las tablas de las fases D–F se generan desde la base con scripts/gen-db-types.mjs.
 
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
@@ -126,9 +127,11 @@ export type PrescriptionRow = {
   updated_at: string;
 };
 
+import type { GeneratedEnums, GeneratedFunctions, GeneratedTables, GeneratedViews } from "./database.generated";
+
 export type Database = {
   public: {
-    Tables: {
+    Tables: GeneratedTables & {
       organizations: {
         Row: {
           id: string;
@@ -519,8 +522,8 @@ export type Database = {
         Relationships: [];
       };
     };
-    Views: Record<string, never>;
-    Functions: {
+    Views: GeneratedViews;
+    Functions: GeneratedFunctions & {
       create_organization: {
         Args: {
           p_trade_name: string;
@@ -576,7 +579,7 @@ export type Database = {
       new_prescription_version: { Args: { p_prescription: string; p_reason: string }; Returns: string };
       annul_prescription: { Args: { p_prescription: string; p_reason: string }; Returns: undefined };
     };
-    Enums: {
+    Enums: GeneratedEnums & {
       membership_role: MembershipRole;
       membership_status: MembershipStatus;
       appointment_status: AppointmentStatus;

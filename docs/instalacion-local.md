@@ -37,7 +37,7 @@ La primera vez descarga las imágenes (varios minutos). Al terminar imprime, ent
 cp .env.example .env.local
 ```
 
-Completa `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`. **No** copies la clave `service_role` en ninguna variable `NEXT_PUBLIC_`; la aplicación no la necesita en la Fase B.
+Completa `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`. **No** copies la clave `service_role` en ninguna variable `NEXT_PUBLIC_`; la aplicación no la usa (solo el script de demostración, ver README).
 
 ## 5. Ejecutar
 
@@ -49,11 +49,11 @@ Abre http://localhost:3000, crea una cuenta en «Crear una cuenta», confirma de
 
 ## 6. Regenerar los tipos de la base
 
-Los tipos de `lib/supabase/database.types.ts` se escribieron a mano en la Fase B. Con el stack activo, regénéralos y compara:
+`lib/supabase/database.types.ts` tiene los tipos de las fases B y C escritos a mano; los de las fases D a F están en `lib/supabase/database.generated.ts`, generado desde la base de pruebas migrada (Insert/Update según los privilegios reales por columna):
 
 ```bash
-npm run db:types
-git diff lib/supabase/database.types.ts
+npm run db:types                # reconstruye opticonsulta_test y regenera database.generated.ts
+npm run db:types:supabase       # con el stack de Docker: tipos oficiales en database.supabase.ts, para comparar
 ```
 
 ## 7. Pruebas de base de datos sin Supabase
@@ -71,7 +71,8 @@ La base indicada se **borra y recrea** en cada ejecución; por eso el script exi
 
 ```bash
 npx playwright install chromium   # una sola vez
-npm run test:e2e
+DEMO_PASSWORD=ClaveDemo2026 node --env-file=.env.local scripts/seed-demo.mjs
+DEMO_PASSWORD=ClaveDemo2026 npm run test:e2e
 ```
 
-Requiere el stack de Supabase y `npm run dev` (Playwright lo arranca si no está corriendo).
+Requiere el stack de Supabase y `npm run dev` (Playwright lo arranca si no está corriendo). Sin Docker: [pruebas-e2e.md](pruebas-e2e.md).

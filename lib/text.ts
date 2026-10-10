@@ -26,3 +26,16 @@ export const emptyToNull = (v: string | null | undefined): string | null => {
   const t = (v ?? "").trim();
   return t === "" ? null : t;
 };
+
+/**
+ * Palabras seguras para un filtro or() de PostgREST: solo letras, números,
+ * punto y guion (sin comas, paréntesis, comillas ni comodines de LIKE).
+ */
+export function filterTerms(q: string): string[] {
+  return q
+    .replace(/[^\p{L}\p{N} .\-]/gu, " ")
+    .split(/\s+/)
+    .filter((w) => w.length >= 2)
+    .slice(0, 5)
+    .map((w) => w.slice(0, 40));
+}

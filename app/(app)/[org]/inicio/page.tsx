@@ -4,6 +4,7 @@ import { can, getOrgContext } from "@/lib/authz";
 import { createClient } from "@/lib/supabase/server";
 import { PageHeader, Panel } from "@/components/ui/page-header";
 import { roleLabel } from "@/modules/memberships/schemas";
+import { formatCOP } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Inicio" };
 
@@ -12,13 +13,33 @@ export default async function InicioPage({ params }: { params: Promise<{ org: st
   const ctx = await getOrgContext(slug);
   const supabase = await createClient();
 
-  const [locations, members, permissions, professionals, consentTexts] = await Promise.all([
+  const [indicatorsRes, locations, members, permissions, professionals, consentTexts] = await Promise.all([
+    supabase.rpc("dashboard_indicators", { p_org: ctx.org.id }),
     supabase.from("locations").select("id", { count: "exact", head: true }).eq("organization_id", ctx.org.id).eq("is_active", true),
     supabase.from("memberships").select("id", { count: "exact", head: true }).eq("organization_id", ctx.org.id).eq("status", "activa"),
     supabase.from("permissions").select("code, area, description").order("area"),
     supabase.from("professionals").select("id, membership_id", { count: "exact" }).eq("organization_id", ctx.org.id).eq("is_active", true),
     supabase.from("consent_texts").select("id", { count: "exact", head: true }).eq("organization_id", ctx.org.id).eq("kind", "tratamiento_datos").eq("is_active", true),
   ]);
+  const ind = (indicatorsRes.data ?? {}) as Record<string, number | string | undefined>;
+  const n = (k: string) => Number(ind[k] ?? 0);
+  // Solo aparecen los indicadores que la base devolvió para este rol.
+  const cards = [
+    "appointments_today" in ind && { label: "Citas de hoy", value: String(n("appointments_today")), detail: `${n("appointments_pending_today")} por atender`, href: `/${slug}/agenda` },
+    "encounters_open" in ind && { label: "Consultas en borrador", value: String(n("encounters_open")), detail: `${n("encounters_finalized_today")} finalizadas hoy`, href: `/${slug}/pacientes` },
+    "sales_net_month" in ind && { label: "Venta neta del mes", value: formatCOP(n("sales_net_month")), detail: `Pagos netos ${formatCOP(n("payments_month"))}`, href: `/${slug}/reportes` },
+    "receivables" in ind && { label: "Saldo por cobrar", value: formatCOP(n("receivables")), detail: n("receivables_count") === 1 ? "1 venta con saldo" : `${n("receivables_count")} ventas con saldo`, href: `/${slug}/ventas?filtro=saldo` },
+    "lab_in_process" in ind && {
+      label: "Órdenes de laboratorio",
+      value: String(n("lab_in_process")),
+      detail: `${n("lab_ready")} para entregar · ${n("lab_delayed")} ${n("lab_delayed") === 1 ? "atrasada" : "atrasadas"}`,
+      href: `/${slug}/laboratorio`,
+      warn: n("lab_delayed") > 0,
+    },
+    "low_stock" in ind && { label: "Productos bajo mínimo", value: String(n("low_stock")), detail: "Existencias en o bajo el mínimo", href: `/${slug}/inventario?bajo=1`, warn: n("low_stock") > 0 },
+    "warranties_open" in ind && { label: "Garantías abiertas", value: String(n("warranties_open")), detail: "Casos sin cerrar", href: `/${slug}/garantias` },
+  ].filter(Boolean) as { label: string; value: string; detail: string; href: string; warn?: boolean }[];
+
   const linkedProfessionals = (professionals.data ?? []).filter((p) => p.membership_id).length;
 
   const mine = (permissions.data ?? []).filter((p) => ctx.permissions.has(p.code));
@@ -61,6 +82,18 @@ export default async function InicioPage({ params }: { params: Promise<{ org: st
           locations.count === 1 ? "sede activa" : "sedes activas"
         } y ${teamSize} ${teamSize === 1 ? "persona" : "personas"} en el equipo.`}
       />
+
+      {cards.length ? (
+        <section aria-label="Indicadores" className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {cards.map((c) => (
+            <Link key={c.label} href={c.href} className="rounded-[var(--radius-panel)] border border-linea bg-white p-5 hover:border-turquesa">
+              <p className="text-sm text-texto-suave">{c.label}</p>
+              <p className={`mt-1 text-2xl font-semibold tabular-nums ${c.warn ? "text-aviso" : "text-tinta"}`}>{c.value}</p>
+              <p className="mt-1 text-[13px] text-texto-suave">{c.detail}</p>
+            </Link>
+          ))}
+        </section>
+      ) : null}
 
       <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
         {setupSteps.length ? (
@@ -105,9 +138,6 @@ export default async function InicioPage({ params }: { params: Promise<{ org: st
         </Panel>
       </div>
 
-      <p className="mt-8 max-w-prose text-sm text-texto-suave">
-        Ventas, inventario, caja y laboratorio se habilitarán en las próximas fases del piloto.
-      </p>
     </>
   );
 }

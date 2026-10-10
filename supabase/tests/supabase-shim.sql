@@ -58,6 +58,11 @@ $$;
 
 grant execute on function auth.uid(), auth.role() to anon, authenticated, service_role;
 
+-- Supabase crea el esquema extensions y concede USAGE a los roles de la API
+-- (PostgREST lo necesita para resolver tipos como citext).
+create schema if not exists extensions;
+grant usage on schema extensions to anon, authenticated, service_role;
+
 -- Privilegios por defecto equivalentes a los de un proyecto Supabase.
 grant usage on schema public to anon, authenticated, service_role;
 alter default privileges in schema public grant all on tables    to anon, authenticated, service_role;

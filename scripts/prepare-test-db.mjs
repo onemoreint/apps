@@ -18,7 +18,15 @@ if (!/_test$/.test(dbName)) {
   process.exit(1);
 }
 
-export async function prepareTestDatabase() {
+export function prepareTestDatabase() {
+  return prepareDatabase(url.toString());
+}
+
+/** Igual que prepareTestDatabase, para otra base desechable (nombre terminado en _test). */
+export async function prepareDatabase(target) {
+  const url = new URL(target);
+  const dbName = url.pathname.replace(/^\//, "");
+  if (!/_test$/.test(dbName)) throw new Error(`Se rechaza preparar "${dbName}": el nombre debe terminar en _test.`);
   const adminUrl = new URL(url);
   adminUrl.pathname = "/postgres";
   const admin = new pg.Client({ connectionString: adminUrl.toString() });

@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/format";
 import { ageFrom, formatDiopter, LENS_TYPES, patientName } from "@/lib/clinical-labels";
 import { todayIn } from "@/lib/tz";
-import { PrintButton } from "./print-button";
+import { PrintButton } from "@/components/ui/print-button";
 
 export const metadata: Metadata = { title: "Fórmula para imprimir" };
 

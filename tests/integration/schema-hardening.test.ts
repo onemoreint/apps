@@ -90,7 +90,8 @@ describe("endurecimiento del esquema", () => {
     const res = await asAdmin<{ table_name: string }>(
       `select c.table_name
          from information_schema.columns c
-        where c.table_schema = 'public' and c.column_name = 'organization_id'
+         join information_schema.tables t on t.table_schema = c.table_schema and t.table_name = c.table_name
+        where c.table_schema = 'public' and c.column_name = 'organization_id' and t.table_type = 'BASE TABLE'
           and not exists (
             select 1 from pg_index i
               join pg_class t on t.oid = i.indrelid

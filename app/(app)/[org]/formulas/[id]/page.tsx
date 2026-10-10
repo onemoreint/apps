@@ -106,7 +106,7 @@ export default async function FormulaPage({ params }: { params: Promise<{ org: s
             defaults={prescriptionToForm(p, eyes ?? [])}
             cylinderConventionLabel={p.origin === "interna" && p.cylinder_convention ? `cilindro ${p.cylinder_convention}` : null}
           />
-          <div className="grid content-start gap-6">{history}</div>
+          <div className="grid min-w-0 content-start gap-6">{history}</div>
         </div>
       </>
     );
@@ -126,7 +126,7 @@ export default async function FormulaPage({ params }: { params: Promise<{ org: s
         </p>
       ) : null}
       <div className="grid gap-6 2xl:grid-cols-[1fr_340px]">
-        <div className="grid content-start gap-6">
+        <div className="grid min-w-0 content-start gap-6">
           <Panel title="Valores">
             <div className="overflow-x-auto">
               <table className="w-full min-w-[640px] text-sm">
@@ -198,7 +198,7 @@ export default async function FormulaPage({ params }: { params: Promise<{ org: s
             canAnnul={p.status === "validada" && (p.origin === "interna" ? can(ctx, "prescription.write") : can(ctx, "prescription.external"))}
           />
         </div>
-        <div className="grid content-start gap-6">{history}</div>
+        <div className="grid min-w-0 content-start gap-6">{history}</div>
       </div>
     </>
   );

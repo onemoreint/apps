@@ -8,7 +8,7 @@ import { requireUserId } from "@/lib/authz";
 import { serverEnv } from "@/lib/env";
 import { withOrgPermission } from "@/lib/org-action";
 import { dbErrorMessage, invalidInput, type ActionResult } from "@/lib/errors";
-import { inviteSchema, memberRoleSchema, memberStatusSchema } from "@/modules/memberships/schemas";
+import { inviteSchema, memberRoleSchema, memberStatusSchema, roleSchema } from "@/modules/memberships/schemas";
 
 /**
  * Crea una invitación y devuelve el enlace UNA sola vez. El MVP no envía
@@ -87,4 +87,22 @@ export async function acceptInvitation(token: string): Promise<ActionResult> {
 
   const { data: org } = await supabase.from("organizations").select("slug").eq("id", orgId).single();
   redirect(org ? `/${org.slug}/inicio` : "/");
+}
+
+export async function setRolePermission(slug: string, role: string, permission: string, granted: boolean): Promise<ActionResult> {
+  return withOrgPermission(slug, "roles.manage", async (ctx) => {
+    const parsedRole = roleSchema.safeParse(role);
+    if (!parsedRole.success || parsedRole.data === "propietario") return { ok: false, error: "Rol no válido." };
+    if (!/^[a-z_]+\.[a-z_]+$/.test(permission)) return { ok: false, error: "Permiso no válido." };
+    const supabase = await createClient();
+    const { error } = await supabase.rpc("set_role_permission", {
+      p_org: ctx.org.id,
+      p_role: parsedRole.data,
+      p_perm: permission,
+      p_granted: granted,
+    });
+    if (error) return { ok: false, error: dbErrorMessage(error) };
+    revalidatePath(`/${slug}/roles`);
+    return { ok: true };
+  });
 }

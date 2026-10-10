@@ -34,10 +34,13 @@ test("el formulario de acceso muestra errores útiles", async ({ page }) => {
   await page.getByLabel("Correo").fill("nadie@ejemplo.test");
   await page.getByLabel("Contraseña").fill("ClaveIncorrecta1");
   await page.getByRole("button", { name: "Entrar" }).click();
-  await expect(page.getByRole("alert")).toContainText("Correo o contraseña incorrectos");
+  // (Next.js añade su propio role=alert para anunciar rutas; se busca el texto.)
+  await expect(page.getByText("Correo o contraseña incorrectos")).toBeVisible();
 });
 
 test("registro, confirmación, configuración inicial y entrada a la óptica", async ({ page, request }) => {
+  // La pila sin Docker confirma cuentas automáticamente y no tiene Mailpit.
+  test.skip(Boolean(process.env.E2E_AUTOCONFIRM), "Requiere Mailpit (npx supabase start).");
   const stamp = Date.now();
   const email = `prueba-${stamp}@optica.test`;
   const slug = `optica-e2e-${stamp}`;

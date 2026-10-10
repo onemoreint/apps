@@ -17,7 +17,8 @@
     "test:e2e": "playwright test",
     "db:test:prepare": "node scripts/prepare-test-db.mjs",
     "db:reset": "supabase db reset",
-    "db:types": "supabase gen types typescript --local > lib/supabase/database.types.ts"
+    "db:types": "node scripts/prepare-test-db.mjs && node scripts/gen-db-types.mjs",
+    "db:types:supabase": "supabase gen types typescript --local > lib/supabase/database.supabase.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "5.9.1",

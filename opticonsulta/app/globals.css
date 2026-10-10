@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+/*
+ * Identidad provisional de OptiConsulta.
+ * Tinta: navegación y títulos. Turquesa: acción primaria (contraste AA sobre blanco).
+ * Agua: selección y realce suave. Fondo frío, nunca crema.
+ */
+@theme {
+  --color-tinta: #12304a;
+  --color-tinta-suave: #2b4a66;
+  --color-turquesa: #0b7a7a;
+  --color-turquesa-oscuro: #075f5f;
+  --color-agua: #e3f1f0;
+  --color-fondo: #f6f8f9;
+  --color-linea: #d4dde2;
+  --color-texto: #1b2733;
+  --color-texto-suave: #4f6070;
+  --color-error: #b42318;
+  --color-error-fondo: #fdf0ee;
+  --color-exito: #1f7a4d;
+  --color-exito-fondo: #ecf6f0;
+  --color-aviso: #8a5a00;
+  --color-aviso-fondo: #fdf6e7;
+
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --radius-control: 6px;
+  --radius-panel: 10px;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: var(--font-sans);
+    font-feature-settings: "tnum" 1;
+    line-height: 1.5;
+  }
+  h1, h2, h3 {
+    color: var(--color-tinta);
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-turquesa);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Columna de optotipos del acceso: cada fila más pequeña, como una carta de agudeza. */
+@layer components {
+  .optotipos {
+    display: grid;
+    gap: 0.35em;
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    color: var(--color-agua);
+    line-height: 1;
+    user-select: none;
+  }
+  .optotipos span:nth-child(1) { font-size: 5.5rem; }
+  .optotipos span:nth-child(2) { font-size: 3.6rem; }
+  .optotipos span:nth-child(3) { font-size: 2.4rem; }
+  .optotipos span:nth-child(4) { font-size: 1.6rem; }
+  .optotipos span:nth-child(5) { font-size: 1.1rem; }
+  .optotipos span:nth-child(6) { font-size: 0.8rem; opacity: 0.7; }
+}

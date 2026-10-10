@@ -10,6 +10,7 @@ import { dbErrorMessage, invalidInput, type ActionResult } from "@/lib/errors";
 import {
   locationSchema,
   onboardingSchema,
+  repsSchema,
   organizationUpdateSchema,
   settingsSchema,
 } from "@/modules/organizations/schemas";
@@ -70,7 +71,6 @@ export async function updateSettings(slug: string, input: unknown): Promise<Acti
       .from("org_settings")
       .update({
         discount_threshold_pct: Number(v.discountThresholdPct),
-        cylinder_convention: v.cylinderConvention,
         receipt_footer: v.receiptFooter,
       })
       .eq("organization_id", ctx.org.id)
@@ -89,7 +89,8 @@ export async function addLocation(slug: string, input: unknown): Promise<ActionR
     if (!parsed.success) return invalidInput(parsed.error);
 
     const supabase = await createClient();
-    const { error } = await supabase.from("locations").insert({ organization_id: ctx.org.id, ...parsed.data });
+    const { repsCode, ...rest } = parsed.data;
+    const { error } = await supabase.from("locations").insert({ organization_id: ctx.org.id, ...rest, reps_code: repsCode });
     if (error) return { ok: false, error: dbErrorMessage(error) };
 
     revalidatePath(`/${slug}/configuracion`);
@@ -116,5 +117,25 @@ export async function setLocationActive(slug: string, input: unknown): Promise<A
 
     revalidatePath(`/${slug}/configuracion`);
     return { ok: true, message: parsed.data.active ? "Sede activada." : "Sede desactivada." };
+  });
+}
+
+const locationRepsSchema = z.object({ locationId: z.uuid(), repsCode: repsSchema });
+
+export async function setLocationReps(slug: string, input: unknown): Promise<ActionResult> {
+  return withOrgPermission(slug, "settings.manage", async (ctx) => {
+    const parsed = locationRepsSchema.safeParse(input);
+    if (!parsed.success) return invalidInput(parsed.error);
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("locations")
+      .update({ reps_code: parsed.data.repsCode })
+      .eq("id", parsed.data.locationId)
+      .eq("organization_id", ctx.org.id)
+      .select("id");
+    if (error) return { ok: false, error: dbErrorMessage(error) };
+    if (!data?.length) return { ok: false, error: "Sede no encontrada." };
+    revalidatePath(`/${slug}/configuracion`);
+    return { ok: true, message: "Código REPS guardado." };
   });
 }

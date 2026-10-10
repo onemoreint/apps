@@ -12,11 +12,14 @@ export default async function InicioPage({ params }: { params: Promise<{ org: st
   const ctx = await getOrgContext(slug);
   const supabase = await createClient();
 
-  const [locations, members, permissions] = await Promise.all([
+  const [locations, members, permissions, professionals, consentTexts] = await Promise.all([
     supabase.from("locations").select("id", { count: "exact", head: true }).eq("organization_id", ctx.org.id).eq("is_active", true),
     supabase.from("memberships").select("id", { count: "exact", head: true }).eq("organization_id", ctx.org.id).eq("status", "activa"),
     supabase.from("permissions").select("code, area, description").order("area"),
+    supabase.from("professionals").select("id, membership_id", { count: "exact" }).eq("organization_id", ctx.org.id).eq("is_active", true),
+    supabase.from("consent_texts").select("id", { count: "exact", head: true }).eq("organization_id", ctx.org.id).eq("kind", "tratamiento_datos").eq("is_active", true),
   ]);
+  const linkedProfessionals = (professionals.data ?? []).filter((p) => p.membership_id).length;
 
   const mine = (permissions.data ?? []).filter((p) => ctx.permissions.has(p.code));
   const byArea = new Map<string, string[]>();
@@ -29,6 +32,18 @@ export default async function InicioPage({ params }: { params: Promise<{ org: st
       label: "Invita a tu equipo",
       detail: teamSize > 1 ? `${teamSize} personas con acceso` : "Solo tú tienes acceso por ahora",
       href: `/${slug}/usuarios`,
+    },
+    can(ctx, "privacy.manage") && {
+      done: (consentTexts.count ?? 0) > 0,
+      label: "Publica el texto de autorización de datos",
+      detail: (consentTexts.count ?? 0) > 0 ? "Texto vigente publicado" : "Sin él no se pueden iniciar consultas",
+      href: `/${slug}/privacidad`,
+    },
+    can(ctx, "professionals.manage") && {
+      done: linkedProfessionals > 0,
+      label: "Registra a los profesionales que atienden",
+      detail: linkedProfessionals > 0 ? `${linkedProfessionals} vinculados a su usuario` : "Nadie puede firmar consultas todavía",
+      href: `/${slug}/profesionales`,
     },
     can(ctx, "settings.manage") && {
       done: Boolean(ctx.org.nit),
@@ -91,7 +106,7 @@ export default async function InicioPage({ params }: { params: Promise<{ org: st
       </div>
 
       <p className="mt-8 max-w-prose text-sm text-texto-suave">
-        Agenda, pacientes, consultas, ventas y laboratorio se habilitarán en las próximas fases del piloto.
+        Ventas, inventario, caja y laboratorio se habilitarán en las próximas fases del piloto.
       </p>
     </>
   );

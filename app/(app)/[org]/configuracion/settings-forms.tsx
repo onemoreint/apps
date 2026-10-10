@@ -71,17 +71,6 @@ export function SettingsForm({ slug, defaults }: { slug: string; defaults: Setti
         registration={form.register("discountThresholdPct")}
         error={fieldError("discountThresholdPct")}
       />
-      <SelectField
-        label="Convención de cilindro en fórmulas"
-        registration={form.register("cylinderConvention")}
-        error={fieldError("cylinderConvention")}
-        hint="Defínela con tu optómetra. Se mostrará en cada fórmula impresa."
-        options={[
-          { value: "", label: "Sin definir" },
-          { value: "negativo", label: "Cilindro negativo" },
-          { value: "positivo", label: "Cilindro positivo" },
-        ]}
-      />
       <TextAreaField
         label="Pie del recibo interno"
         optional

@@ -37,7 +37,10 @@ describe("endurecimiento del esquema", () => {
       `select table_name, privilege_type from information_schema.role_table_grants
         where grantee = 'authenticated' and table_schema = 'public'
           and privilege_type in ('INSERT', 'DELETE', 'TRUNCATE')
-          and table_name in ('organizations','memberships','role_permissions','audit_logs','invitations','permissions','org_settings')`,
+          and table_name in ('organizations','memberships','role_permissions','audit_logs','invitations','permissions',
+                             'org_settings','ref_codes','consents','consent_texts','clinical_encounters',
+                             'encounter_visual_acuity','encounter_refractions','encounter_diagnoses',
+                             'encounter_procedures','encounter_amendments','prescriptions','prescription_eyes')`,
     );
     expect(res.rows).toEqual([]);
   });
@@ -63,6 +66,16 @@ describe("endurecimiento del esquema", () => {
     );
     const exposed = res.rows.map((r) => r.proname).filter((name) => !ANON_ALLOWED_FUNCTIONS.has(name));
     expect(exposed).toEqual([]);
+  });
+
+  it("authenticated no puede modificar directamente ninguna tabla clínica", async () => {
+    const res = await asAdmin<{ table_name: string; privilege_type: string }>(
+      `select distinct table_name, privilege_type from information_schema.column_privileges
+        where grantee = 'authenticated' and table_schema = 'public'
+          and privilege_type in ('INSERT', 'UPDATE')
+          and (table_name like 'encounter%' or table_name in ('clinical_encounters', 'prescriptions', 'prescription_eyes'))`,
+    );
+    expect(res.rows).toEqual([]);
   });
 
   it("las tablas internas del esquema private no son accesibles por authenticated", async () => {

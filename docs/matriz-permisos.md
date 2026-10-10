@@ -41,6 +41,8 @@ Fuente de verdad: `private.default_role_permissions` en `supabase/migrations/202
 | roles.manage | ✓ | | | | |
 | settings.manage | ✓ | ✓ | | | |
 | audit.read | ✓ | ✓ | | | |
+| clinical.configure | | | ✓ | | |
+| professionals.manage | ✓ | ✓ | | | |
 | privacy.manage | ✓ | ✓ | | | |
 | privacy.register | ✓ | ✓ | | ✓ | |
 
@@ -50,4 +52,5 @@ Reglas adicionales aplicadas en las funciones RPC:
 - Nadie puede cambiar su propio rol ni suspender su propia cuenta.
 - Toda organización conserva al menos un propietario activo.
 - Los permisos del rol propietario no se modifican.
+- Solo el profesional autor edita su borrador de consulta o de fórmula interna; solo quien transcribió una fórmula externa la confirma. Las adendas y las versiones nuevas quedan a nombre de quien las crea.
 - `export.clinical` no está asignado a ningún rol hasta definir con el asesor quién puede exportar historias clínicas.

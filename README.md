@@ -2,7 +2,7 @@
 
 Aplicación web para ópticas independientes con consultorio de optometría en Colombia: agenda, historia clínica optométrica, fórmulas, ventas, inventario, laboratorio y caja, con separación estricta de datos entre ópticas.
 
-**Estado: Fase B completada** — base del proyecto, autenticación, organizaciones, sedes, equipo, roles, permisos, RLS y auditoría. Los módulos de negocio llegan en las fases C a F. Ver [docs/fase-b.md](docs/fase-b.md).
+**Estado: Fase C completada** — además de la base (autenticación, organizaciones, roles, RLS, auditoría), ya funcionan agenda, pacientes, autorizaciones, profesionales, consulta optométrica y fórmulas con versiones, con el modelo de datos preparado para el RDA. Ventas, inventario, caja y laboratorio llegan en las fases D y E. Ver [docs/fase-c.md](docs/fase-c.md) y [docs/catalogos.md](docs/catalogos.md).
 
 > OptiConsulta no está certificado ni habilitado ante ninguna autoridad. Implementar controles técnicos no equivale a cumplimiento legal; ver la matriz de requisitos de la Fase A antes de cualquier piloto con datos reales.
 
@@ -32,14 +32,14 @@ cp .env.example .env.local    # pega la URL y la clave anon que imprime el coman
 npm run dev                   # http://localhost:3000
 ```
 
-Crea una cuenta en `/registro`; el correo de confirmación llega a Mailpit (http://127.0.0.1:54324). Guía completa: [docs/instalacion-local.md](docs/instalacion-local.md).
+Crea una cuenta en `/registro`; el correo de confirmación llega a Mailpit (http://127.0.0.1:54324). Antes de atender, importa los catálogos CIE-10 y SISPRO ([docs/catalogos.md](docs/catalogos.md)). Guía completa: [docs/instalacion-local.md](docs/instalacion-local.md).
 
 ## Pruebas
 
 ```bash
 npm run typecheck   # TypeScript estricto
 npm run test:unit   # validaciones y mensajes (sin base de datos)
-npm run test:db     # aislamiento, permisos y endurecimiento del esquema (PostgreSQL)
+npm run test:db     # aislamiento, permisos, clínica y endurecimiento del esquema (PostgreSQL)
 npm run test:e2e    # Playwright contra el stack local de Supabase
 ```
 

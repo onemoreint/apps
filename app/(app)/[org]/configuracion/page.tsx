@@ -3,8 +3,9 @@ import { can, getOrgContext } from "@/lib/authz";
 import { createClient } from "@/lib/supabase/server";
 import { Forbidden } from "@/components/ui/forbidden";
 import { PageHeader, Panel } from "@/components/ui/page-header";
+import { countCatalog, countProvisionalCatalogs } from "@/modules/catalogs/queries";
 import { OrganizationForm, SettingsForm } from "./settings-forms";
-import { LocationForm, LocationToggle } from "./location-forms";
+import { LocationForm, LocationRepsForm, LocationToggle } from "./location-forms";
 
 export const metadata: Metadata = { title: "Configuración" };
 
@@ -14,6 +15,27 @@ export default async function ConfiguracionPage({ params }: { params: Promise<{ 
   if (!can(ctx, "settings.manage")) return <Forbidden what="la configuración" />;
 
   const supabase = await createClient();
+  const catalogList = [
+    ["cie10", "CIE-10 (diagnósticos)"],
+    ["cups", "CUPS (procedimientos)"],
+    ["tipo_documento", "Tipos de documento"],
+    ["sexo_biologico", "Sexo biológico"],
+    ["pais", "Países"],
+    ["municipio", "Municipios (DIVIPOLA)"],
+    ["via_ingreso", "Vía de ingreso"],
+    ["causa_atencion", "Causa de la atención"],
+    ["condicion_destino", "Condición y destino"],
+  ] as const;
+  const [counts, provisional] = await Promise.all([
+    Promise.all(catalogList.map(([c]) => countCatalog(c))),
+    countProvisionalCatalogs(),
+  ]);
+  const catalogStatus = catalogList.map(([catalog, label], i) => ({
+    catalog,
+    label,
+    count: counts[i] ?? 0,
+    provisional: provisional.some((p) => p.catalog === catalog),
+  }));
   const [{ data: settings }, { data: locations }] = await Promise.all([
     supabase.from("org_settings").select("*").eq("organization_id", ctx.org.id).single(),
     supabase.from("locations").select("*").eq("organization_id", ctx.org.id).order("created_at"),
@@ -41,7 +63,6 @@ export default async function ConfiguracionPage({ params }: { params: Promise<{ 
             slug={slug}
             defaults={{
               discountThresholdPct: String(settings?.discount_threshold_pct ?? "10"),
-              cylinderConvention: settings?.cylinder_convention ?? "",
               receiptFooter: settings?.receipt_footer ?? "",
             }}
           />
@@ -59,6 +80,7 @@ export default async function ConfiguracionPage({ params }: { params: Promise<{ 
                   <p className="text-sm text-texto-suave">
                     {[loc.address, loc.city, loc.phone].filter(Boolean).join(" · ") || "Sin dirección registrada"}
                   </p>
+                  <LocationRepsForm slug={slug} locationId={loc.id} repsCode={loc.reps_code} />
                 </div>
                 <LocationToggle slug={slug} locationId={loc.id} active={loc.is_active} name={loc.name} />
               </li>
@@ -68,10 +90,26 @@ export default async function ConfiguracionPage({ params }: { params: Promise<{ 
           <LocationForm slug={slug} />
         </Panel>
 
-        <Panel title="Rangos clínicos" description="Validaciones de esfera, cilindro, eje, adición, prisma y distancia pupilar.">
-          <p className="text-sm text-texto-suave">
-            Se configuran en la fase de consultas, con los valores que apruebe el optómetra asesor. Mientras tanto, el
-            sistema no aplica rangos clínicos por defecto.
+        <Panel
+          title="Catálogos de referencia"
+          description="Tablas oficiales que usan pacientes y consultas. Las carga el administrador técnico con el importador (docs/catalogos.md)."
+        >
+          <ul className="grid gap-1.5 text-sm">
+            {catalogStatus.map((c) => (
+              <li key={c.catalog} className="flex items-center justify-between gap-2">
+                <span>{c.label}</span>
+                {c.count === 0 ? (
+                  <span className="font-medium text-aviso">Sin importar</span>
+                ) : c.provisional ? (
+                  <span className="font-medium text-aviso">{c.count} provisionales</span>
+                ) : (
+                  <span className="text-texto-suave">{c.count} códigos</span>
+                )}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-[13px] text-texto-suave">
+            Los rangos clínicos y la plantilla de consulta se configuran en «Ajustes clínicos» (rol optómetra).
           </p>
         </Panel>
       </div>

@@ -63,12 +63,18 @@ export const settingsSchema = z.object({
     .regex(/^\d{1,3}(?:[.,]\d{1,2})?$/, "Escribe un porcentaje entre 0 y 100, con hasta dos decimales")
     .transform((v) => v.replace(",", "."))
     .refine((v) => Number(v) >= 0 && Number(v) <= 100, "Escribe un porcentaje entre 0 y 100"),
-  cylinderConvention: z.enum(["", "negativo", "positivo"]).transform((v) => (v === "" ? null : v)),
   receiptFooter: optionalText(300, "Máximo 300 caracteres"),
 });
 
+export const repsSchema = z
+  .string()
+  .trim()
+  .refine((v) => v === "" || /^[0-9]{10,12}$/.test(v), "El código de habilitación REPS tiene de 10 a 12 dígitos")
+  .transform((v) => (v === "" ? null : v));
+
 export const locationSchema = z.object({
   name: z.string().trim().min(2, "Escribe el nombre de la sede").max(120, "Máximo 120 caracteres"),
+  repsCode: repsSchema,
   address: optionalText(200, "Máximo 200 caracteres"),
   city: optionalText(80, "Máximo 80 caracteres"),
   phone: z

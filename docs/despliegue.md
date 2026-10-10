@@ -75,3 +75,7 @@ Ubica la aplicación en una región cercana a la base para reducir la latencia.
 4. Recorre los módulos con un usuario de cada rol.
 
 Las migraciones solo agregan; no se reescriben migraciones ya aplicadas.
+
+## Anexo: aplicar las migraciones sin la CLI
+
+Si no puedes usar `npx supabase db push`, pega cada archivo de `supabase/migrations`, en orden, en Supabase → SQL Editor. `supabase/despliegue/completar-base.sql` reúne las migraciones 0005 (parte final) a 0012 en una sola transacción. Se generó para el proyecto inicial, donde 0001–0004 y las dos primeras partes de la 0005 ya se habían aplicado por la integración de Supabase, que cancela automáticamente las sentencias con `DELETE`. Las migraciones aplicadas desde el SQL Editor no aparecen en el historial de migraciones del proyecto.

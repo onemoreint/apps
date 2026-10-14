@@ -287,6 +287,152 @@
   .toast.error { background: var(--error); }
   .toast.saliendo { opacity: 0; }
   @keyframes entra { from { transform: translateY(-10px); opacity: 0; } }
+
+  /* =====================================================================
+     12. EFECTOS VISUALES
+     Todo lo de esta sección es decorativo: si se borra, la app sigue
+     funcionando igual. Si el teléfono tiene activado "reducir movimiento",
+     las animaciones se desactivan solas (ver el final de la sección).
+     ===================================================================== */
+
+  /* Fondo con puntitos sutiles */
+  body {
+    background:
+      radial-gradient(circle at 1px 1px, rgba(15, 23, 42, .07) 1px, transparent 0) 0 0 / 22px 22px,
+      var(--fondo);
+  }
+
+  /* Encabezado tipo "hero": degradado animado con los colores del negocio */
+  .encabezado {
+    position: relative; overflow: hidden; padding: 24px 16px 54px;
+    border-radius: 0 0 28px 28px;
+    background: var(--primario); /* respaldo para navegadores antiguos */
+    background: linear-gradient(125deg,
+      var(--primario) 0%,
+      color-mix(in srgb, var(--primario) 72%, var(--acento)) 50%,
+      color-mix(in srgb, var(--primario) 78%, #000) 100%);
+    background-size: 220% 220%;
+    animation: degradado 12s ease-in-out infinite alternate;
+  }
+  @keyframes degradado { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+
+  /* Burbujas decorativas que flotan */
+  .burbuja { position: absolute; border-radius: 50%; pointer-events: none; background: rgba(255, 255, 255, .13); animation: flotar 9s ease-in-out infinite; }
+  .b1 { width: 190px; height: 190px; top: -70px; right: -50px; }
+  .b2 { width: 120px; height: 120px; bottom: -40px; left: -35px; animation-duration: 11s; animation-delay: -3s; }
+  .b3 { width: 56px; height: 56px; bottom: 14px; right: 18%; animation-duration: 7s; animation-delay: -5s;
+        background: rgba(255, 255, 255, .18); background: color-mix(in srgb, var(--acento) 55%, transparent); }
+  @keyframes flotar {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-14px, 18px) scale(1.08); }
+  }
+  .encabezado-fila, .insignias { position: relative; z-index: 1; }
+
+  /* Logo que "respira" y textos que suben al cargar */
+  .logo {
+    width: 66px; height: 66px; font-size: 34px; border-radius: 18px;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, .35), 0 12px 26px rgba(0, 0, 0, .2);
+    animation: respirar 4.5s ease-in-out infinite;
+  }
+  @keyframes respirar { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-4px) rotate(-3deg); } }
+  .encabezado h1 { font-size: 1.45rem; letter-spacing: -.01em; animation: subir .6s .05s both; text-shadow: 0 2px 12px rgba(0, 0, 0, .15); }
+  .encabezado p { animation: subir .6s .15s both; }
+  @keyframes subir { from { opacity: 0; transform: translateY(14px); } }
+
+  /* Insignias de cristal (domicilio, WhatsApp...) */
+  .insignias { display: flex; gap: 8px; flex-wrap: wrap; max-width: 1100px; margin: 16px auto 0; }
+  .insignia {
+    padding: 7px 12px; border-radius: 999px; font-size: .8rem; font-weight: 700;
+    background: rgba(255, 255, 255, .18); border: 1px solid rgba(255, 255, 255, .28);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    animation: subir .6s both;
+  }
+  .insignia:nth-child(1) { animation-delay: .25s; }
+  .insignia:nth-child(2) { animation-delay: .38s; }
+  .insignia:nth-child(3) { animation-delay: .51s; }
+
+  /* Botón del carrito: se sacude cuando agregas algo */
+  .btn-carrito-sup { -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); transition: transform .2s; }
+  .btn-carrito-sup.sacudir { animation: sacudir .55s; }
+  @keyframes sacudir {
+    0%, 100% { transform: rotate(0); } 20% { transform: rotate(-14deg) scale(1.1); }
+    40% { transform: rotate(12deg); } 60% { transform: rotate(-7deg); } 80% { transform: rotate(4deg); }
+  }
+  .contador.salto { animation: salto .5s cubic-bezier(.3, 1.6, .5, 1); }
+  @keyframes salto { 0% { transform: scale(.3); } 60% { transform: scale(1.35); } 100% { transform: scale(1); } }
+
+  /* El buscador "flota" sobre el encabezado */
+  main { position: relative; z-index: 2; margin-top: -32px; }
+  .buscador input {
+    border-color: transparent; box-shadow: 0 12px 30px rgba(15, 23, 42, .14);
+    transition: box-shadow .25s, transform .25s;
+  }
+  .buscador input:focus { outline: none; transform: translateY(-2px); box-shadow: 0 0 0 3px var(--acento), 0 14px 34px rgba(15, 23, 42, .18); }
+
+  /* Categorías con transición suave */
+  .chip { transition: background .25s, color .25s, transform .15s, box-shadow .25s; }
+  .chip:active { transform: scale(.94); }
+  .chip.activo { box-shadow: 0 8px 18px rgba(15, 23, 42, .18); }
+
+  /* Tarjetas: aparecen en cascada, se elevan y la foto hace zoom */
+  .tarjeta { position: relative; transition: transform .25s ease, box-shadow .25s ease; }
+  .grid.entrada .tarjeta { animation: aparecer .55s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--i, 0) * 70ms); }
+  @keyframes aparecer { from { opacity: 0; transform: translateY(24px) scale(.96); } }
+  .foto {
+    overflow: hidden;
+    background: linear-gradient(145deg, #f3f6f5, #e2eae8);
+    background: linear-gradient(145deg, color-mix(in srgb, var(--primario) 6%, #fff), color-mix(in srgb, var(--primario) 16%, #fff));
+  }
+  .foto > img, .foto > .emoji { transition: transform .45s ease; }
+  .foto > .emoji { filter: drop-shadow(0 10px 10px rgba(0, 0, 0, .18)); }
+  @media (hover: hover) {
+    .tarjeta:hover { transform: translateY(-6px); box-shadow: 0 16px 32px rgba(15, 23, 42, .16); }
+    .tarjeta:hover .foto > img, .tarjeta:hover .foto > .emoji { transform: scale(1.1) rotate(-2deg); }
+  }
+  .tarjeta.recien { animation: pulso .55s ease; }
+  @keyframes pulso { 50% { transform: scale(1.04); box-shadow: 0 0 0 4px var(--acento), 0 14px 30px rgba(15, 23, 42, .18); } }
+  .etiqueta { box-shadow: 0 4px 10px rgba(0, 0, 0, .2); }
+  .precio { width: fit-content; background: linear-gradient(transparent 60%, rgba(245, 158, 11, .3) 0); background: linear-gradient(transparent 60%, color-mix(in srgb, var(--acento) 35%, transparent) 0); }
+
+  /* Botones: se hunden al tocarlos y los importantes tienen un brillo que pasa */
+  .btn { position: relative; overflow: hidden; transition: transform .15s, box-shadow .2s, filter .2s; }
+  .btn:active:not(:disabled):not([aria-disabled="true"]) { transform: scale(.96); }
+  .btn-primario, .btn-whatsapp { box-shadow: 0 6px 16px rgba(15, 23, 42, .16); }
+  @media (hover: hover) { .btn-primario:hover, .btn-whatsapp:hover { filter: brightness(1.08); } }
+  .stepper button { transition: transform .12s; }
+  .stepper button:active { transform: scale(.82); }
+  #btn-revisar::after, #btn-whatsapp::after, .barra-carrito::after {
+    content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%; pointer-events: none;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .38), transparent);
+    transform: skewX(-20deg); animation: brillo 3.6s ease-in-out infinite;
+  }
+  @keyframes brillo { 0%, 55% { left: -60%; } 100% { left: 130%; } }
+
+  /* Barra flotante del carrito: entra deslizándose y late al agregar */
+  .barra-carrito {
+    overflow: hidden;
+    background: linear-gradient(120deg, var(--primario), color-mix(in srgb, var(--primario) 75%, #000));
+    animation: deslizar .45s cubic-bezier(.2, 1.4, .4, 1);
+  }
+  .barra-carrito.salto { animation: latido .45s ease; }
+  @keyframes deslizar { from { transform: translateY(120%); opacity: 0; } }
+  @keyframes latido { 50% { transform: scale(1.04); } }
+
+  /* Paneles con rebote suave y fondo desenfocado */
+  .panel { -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+  .hoja { transform: translateY(60px); transition: transform .38s cubic-bezier(.2, 1.25, .4, 1); }
+
+  /* Avisos que caen con rebote */
+  .toast { animation: caer .4s cubic-bezier(.2, 1.4, .4, 1); }
+  @keyframes caer { from { transform: translateY(-24px) scale(.95); opacity: 0; } }
+
+  /* Respeta a quien desactiva las animaciones en su teléfono */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .01ms !important; animation-delay: 0s !important;
+      animation-iteration-count: 1 !important; transition-duration: .01ms !important;
+    }
+  }
 </style>
 </head>
 
@@ -298,6 +444,10 @@
 
 <!-- ======================= ENCABEZADO ======================= -->
 <header class="encabezado">
+  <!-- Burbujas decorativas (solo adorno) -->
+  <span class="burbuja b1" aria-hidden="true"></span>
+  <span class="burbuja b2" aria-hidden="true"></span>
+  <span class="burbuja b3" aria-hidden="true"></span>
   <div class="encabezado-fila">
     <div class="logo" id="logo" aria-hidden="true">🛍️</div>
     <div>
@@ -308,6 +458,8 @@
       🛒<span class="contador oculto" id="contador-carrito">0</span>
     </button>
   </div>
+  <!-- Insignias: se generan según la configuración (domicilio, recoger, WhatsApp) -->
+  <div class="insignias" id="insignias"></div>
 </header>
 
 <!-- ======================= CATÁLOGO ======================= -->
@@ -1088,6 +1240,13 @@ function renderEncabezado() {
   const desc = $('#descripcion-negocio');
   desc.textContent = n.descripcion;
   desc.classList.toggle('oculto', !n.descripcion);
+
+  // Insignias del encabezado según lo que ofrece el negocio
+  const insignias = [];
+  if (n.ofreceDomicilio) insignias.push(n.costoDomicilio > 0 ? '🚚 Domicilio en la unidad' : '🚚 Domicilio gratis en la unidad');
+  if (n.ofreceRecoger) insignias.push('🏪 Recoge tu pedido');
+  insignias.push('💬 Pide por WhatsApp');
+  $('#insignias').innerHTML = insignias.map((t) => `<span class="insignia">${esc(t)}</span>`).join('');
 }
 
 function stepperHtml(p, cant) {
@@ -1098,14 +1257,15 @@ function stepperHtml(p, cant) {
   </div>`;
 }
 
-function tarjetaProducto(p) {
+function tarjetaProducto(p, i) {
   const cant = cantidadEn(p.id);
   let acciones;
   if (!p.disponible) acciones = '<button class="btn btn-secundario btn-bloque" type="button" disabled>No disponible</button>';
   else if (cant === 0) acciones = `<button class="btn btn-primario btn-bloque" type="button" data-accion="agregar" data-id="${esc(p.id)}">Agregar</button>`;
   else acciones = stepperHtml(p, cant);
 
-  return `<article class="tarjeta${p.disponible ? '' : ' agotada'}">
+  // --i controla el retraso de la animación en cascada (máximo 10 pasos)
+  return `<article class="tarjeta${p.disponible ? '' : ' agotada'}" data-tarjeta="${esc(p.id)}" style="--i:${Math.min(i || 0, 10)}">
     <div class="foto">
       ${miniatura(p)}
       ${p.disponible ? '' : '<span class="etiqueta">Agotado</span>'}
@@ -1160,6 +1320,10 @@ function renderCatalogo() {
   } else {
     grid.innerHTML = visibles.map(tarjetaProducto).join('');
   }
+  // Animación en cascada solo al cargar o al cambiar de categoría,
+  // no cada vez que se suma una unidad
+  grid.classList.toggle('entrada', animarEntrada);
+  animarEntrada = false;
 }
 
 function renderResumenCarrito() {
@@ -1170,6 +1334,66 @@ function renderResumenCarrito() {
   $('#btn-carrito-sup').setAttribute('aria-label', 'Ver carrito, ' + unidades + ' productos');
   $('#barra-carrito').classList.toggle('oculto', unidades === 0);
   $('#barra-resumen').textContent = '🛒 ' + unidades + (unidades === 1 ? ' producto · ' : ' productos · ') + formatoPrecio(subtotal);
+
+  // Efecto: si aumentaron las unidades, el contador rebota y el carrito se sacude
+  if (unidades > unidadesAnteriores && unidadesAnteriores !== null) {
+    animarUnaVez(cont, 'salto');
+    animarUnaVez($('#btn-carrito-sup'), 'sacudir');
+    if (unidadesAnteriores > 0) animarUnaVez($('#barra-carrito'), 'salto');
+  }
+  unidadesAnteriores = unidades;
+}
+
+/* ---------- Efectos visuales (solo adorno) ---------- */
+let unidadesAnteriores = null; // null = aún no se ha dibujado el carrito
+let animarEntrada = true;      // true = las tarjetas aparecen en cascada en el próximo dibujo
+
+function reducirMovimiento() {
+  try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+  catch (e) { return false; }
+}
+// Pone una clase de animación y la quita al terminar (para poder repetirla)
+function animarUnaVez(el, clase) {
+  if (!el || reducirMovimiento()) return;
+  el.classList.remove(clase);
+  void el.offsetWidth; // reinicia la animación
+  el.classList.add(clase);
+  el.addEventListener('animationend', () => el.classList.remove(clase), { once: true });
+}
+// Copia la foto de la tarjeta ANTES de redibujar, para hacerla "volar"
+function prepararVuelo(tarjeta) {
+  const foto = tarjeta && tarjeta.querySelector('.foto');
+  if (!foto || reducirMovimiento() || typeof foto.animate !== 'function') return null;
+  const rect = foto.getBoundingClientRect();
+  if (!rect.width) return null;
+  const clon = foto.cloneNode(true);
+  clon.querySelectorAll('.etiqueta').forEach((e) => e.remove());
+  return { clon, rect };
+}
+// Hace volar la copia de la foto hasta el carrito
+function lanzarVuelo(vuelo) {
+  if (!vuelo) return;
+  const barra = $('#barra-carrito');
+  const destino = barra.classList.contains('oculto') ? $('#btn-carrito-sup') : barra;
+  const r2 = destino.getBoundingClientRect();
+  const { clon, rect: r1 } = vuelo;
+  Object.assign(clon.style, {
+    position: 'fixed', left: r1.left + 'px', top: r1.top + 'px', width: r1.width + 'px', height: r1.height + 'px',
+    margin: '0', zIndex: '90', pointerEvents: 'none', borderRadius: '18px',
+    boxShadow: '0 16px 40px rgba(0,0,0,.25)'
+  });
+  document.body.appendChild(clon);
+  const destinoX = destino === barra ? r2.left + 34 : r2.left + r2.width / 2;
+  const dx = destinoX - (r1.left + r1.width / 2);
+  const dy = (r2.top + r2.height / 2) - (r1.top + r1.height / 2);
+  const animacion = clon.animate([
+    { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+    { transform: `translate(${dx * 0.45}px, ${dy * 0.45 - 90}px) scale(.55) rotate(-8deg)`, opacity: 1, offset: 0.45 },
+    { transform: `translate(${dx}px, ${dy}px) scale(.1) rotate(10deg)`, opacity: 0.2 }
+  ], { duration: 750, easing: 'cubic-bezier(.45, 0, .55, 1)' });
+  const limpiar = () => clon.remove();
+  animacion.onfinish = limpiar;
+  setTimeout(limpiar, 1200); // por seguridad
 }
 
 function modalidadSeleccionada() {
@@ -1694,13 +1918,25 @@ function conectarEventos() {
   $('#buscar').addEventListener('input', (e) => { filtro.busqueda = e.target.value; renderCatalogo(); });
   $('#chips').addEventListener('click', (e) => {
     const b = e.target.closest('[data-categoria]');
-    if (b) { filtro.categoria = b.dataset.categoria; renderCatalogo(); }
+    if (b && b.dataset.categoria !== filtro.categoria) { filtro.categoria = b.dataset.categoria; animarEntrada = true; renderCatalogo(); }
   });
   $('#grid').addEventListener('click', (e) => {
     const b = e.target.closest('[data-accion]');
-    if (b) { manejarAccion(b.dataset.accion, b.dataset.id); restaurarFoco($('#grid'), b.dataset.id, b.dataset.accion); return; }
+    if (b) {
+      const id = b.dataset.id;
+      const antes = cantidadEn(id);
+      const vuelo = (b.dataset.accion === 'agregar' || b.dataset.accion === 'sumar') ? prepararVuelo(b.closest('.tarjeta')) : null;
+      manejarAccion(b.dataset.accion, id);
+      restaurarFoco($('#grid'), id, b.dataset.accion);
+      if (cantidadEn(id) > antes) {
+        lanzarVuelo(vuelo);
+        const idSeguro = (window.CSS && CSS.escape) ? CSS.escape(id) : id;
+        animarUnaVez($('#grid [data-tarjeta="' + idSeguro + '"]'), 'recien');
+      }
+      return;
+    }
     if (e.target.closest('[data-limpiar-filtros]')) {
-      filtro.categoria = 'Todas'; filtro.busqueda = ''; $('#buscar').value = ''; renderCatalogo();
+      filtro.categoria = 'Todas'; filtro.busqueda = ''; $('#buscar').value = ''; animarEntrada = true; renderCatalogo();
     }
   });
   $('#avisos-catalogo').addEventListener('click', (e) => { if (e.target.closest('[data-abrir-admin]')) abrirAdmin(); });

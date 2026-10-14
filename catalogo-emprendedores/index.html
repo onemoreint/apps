@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f766e">
+<meta name="description" content="Catálogo digital con pedidos por WhatsApp">
+<title>Catálogo digital</title>
+
+<!--
+  =====================================================================
+  MINIAPP COMERCIAL: CATÁLOGO + CARRITO + PEDIDOS POR WHATSAPP
+  =====================================================================
+  - Todo está en este único archivo: HTML (estructura), CSS (diseño)
+    y JavaScript (funcionamiento). No necesita instalar nada.
+  - Los datos de la tienda (negocio, categorías y productos) están en
+    el bloque <script id="datos-tienda"> casi al final del archivo.
+  - El panel "Administrar tienda" permite cambiarlos sin tocar código
+    y descargar un index.html nuevo con los cambios ya incluidos.
+  =====================================================================
+-->
+
+<style>
+  /* ---------- 1. VARIABLES DE DISEÑO (los colores se cambian desde el panel) ---------- */
+  :root {
+    --primario: #0f766e;        /* color principal del negocio */
+    --primario-texto: #ffffff;  /* color del texto sobre el principal (se calcula solo) */
+    --acento: #f59e0b;          /* color secundario/acento */
+    --acento-texto: #111827;
+    --fondo: #f4f6f8;
+    --superficie: #ffffff;
+    --texto: #1f2937;
+    --texto-suave: #6b7280;
+    --borde: #e5e7eb;
+    --error: #b91c1c;
+    --exito: #15803d;
+    --whatsapp: #128c4a;
+    --radio: 14px;
+    --sombra: 0 2px 10px rgba(0, 0, 0, .06);
+  }
+
+  /* ---------- 2. BASE ---------- */
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--fondo);
+    color: var(--texto);
+    line-height: 1.45;
+    padding-bottom: 100px; /* espacio para la barra flotante del carrito */
+  }
+  body.sin-scroll { overflow: hidden; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  img { max-width: 100%; display: block; }
+  h2, h3 { margin: 0; }
+  .oculto { display: none !important; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  :focus-visible { outline: 3px solid var(--acento); outline-offset: 2px; }
+
+  /* ---------- 3. ENCABEZADO DEL NEGOCIO ---------- */
+  .encabezado { background: var(--primario); color: var(--primario-texto); padding: 16px 16px 20px; }
+  .encabezado-fila { display: flex; align-items: center; gap: 12px; max-width: 1100px; margin: 0 auto; }
+  .logo {
+    width: 58px; height: 58px; border-radius: 14px; flex-shrink: 0; overflow: hidden;
+    background: rgba(255, 255, 255, .2); display: grid; place-items: center; font-size: 30px;
+  }
+  .logo img { width: 100%; height: 100%; object-fit: cover; }
+  .encabezado h1 { font-size: 1.25rem; margin: 0; line-height: 1.2; }
+  .encabezado p { margin: 4px 0 0; opacity: .92; font-size: .92rem; }
+  .btn-carrito-sup {
+    margin-left: auto; position: relative; flex-shrink: 0; width: 50px; height: 50px;
+    border: 0; border-radius: 12px; background: rgba(255, 255, 255, .2); color: inherit; font-size: 22px;
+  }
+  .contador {
+    position: absolute; top: -5px; right: -5px; min-width: 22px; height: 22px; padding: 0 5px;
+    border-radius: 11px; background: var(--acento); color: var(--acento-texto);
+    font-size: .75rem; font-weight: 800; display: grid; place-items: center;
+  }
+
+  /* ---------- 4. CATÁLOGO ---------- */
+  main { max-width: 1100px; margin: 0 auto; padding: 16px; }
+  .buscador input {
+    width: 100%; min-height: 48px; padding: 12px 14px; font-size: 16px;
+    border: 1px solid #d1d5db; border-radius: 12px; background: var(--superficie);
+  }
+  .chips { display: flex; gap: 8px; overflow-x: auto; padding: 12px 0 4px; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    border: 1px solid var(--borde); background: var(--superficie); padding: 8px 16px;
+    border-radius: 999px; white-space: nowrap; min-height: 42px; font-weight: 600;
+  }
+  .chip.activo { background: var(--primario); color: var(--primario-texto); border-color: var(--primario); }
+  .banda {
+    margin-top: 12px; padding: 12px 14px; border-radius: 12px; font-size: .9rem;
+    background: #eef6ff; border-left: 4px solid #2563eb;
+  }
+  .banda.alerta { background: #fffbeb; border-left-color: #d97706; }
+  .banda.demo { background: #f5f3ff; border-left-color: #7c3aed; }
+  .banda button { margin-top: 8px; }
+
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
+  @media (min-width: 640px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 960px) { .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .grid .vacio { grid-column: 1 / -1; }
+
+  .tarjeta {
+    background: var(--superficie); border-radius: var(--radio); box-shadow: var(--sombra);
+    overflow: hidden; display: flex; flex-direction: column;
+  }
+  .foto { aspect-ratio: 1 / 1; background: #eef2f1; display: grid; place-items: center; position: relative; }
+  .foto img { width: 100%; height: 100%; object-fit: cover; }
+  .emoji { font-size: 56px; line-height: 1; }
+  .tarjeta.agotada .foto > img, .tarjeta.agotada .foto > .emoji { filter: grayscale(1); opacity: .5; }
+  .etiqueta {
+    position: absolute; top: 8px; left: 8px; padding: 3px 8px; border-radius: 6px;
+    font-size: .7rem; font-weight: 800; color: #fff; background: var(--error);
+  }
+  .etiqueta.demo { left: auto; right: 8px; background: #7c3aed; }
+  .info { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .info h3 { font-size: .95rem; line-height: 1.25; }
+  .info p { margin: 0; font-size: .8rem; color: var(--texto-suave); }
+  .precio { font-weight: 800; font-size: 1.05rem; margin-top: auto; padding: 6px 0 4px; }
+
+  /* ---------- 5. BOTONES ---------- */
+  .btn {
+    border: 0; border-radius: 12px; min-height: 48px; padding: 10px 16px; font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    text-decoration: none; text-align: center;
+  }
+  .btn-primario { background: var(--primario); color: var(--primario-texto); }
+  .btn-secundario { background: #e9ecf0; color: var(--texto); }
+  .btn-peligro { background: #fee2e2; color: var(--error); }
+  .btn-whatsapp { background: var(--whatsapp); color: #fff; font-size: 1.05rem; }
+  .btn-bloque { width: 100%; }
+  .btn-chico { min-height: 40px; padding: 6px 12px; font-size: .85rem; }
+  .btn:disabled, .btn[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
+  .enlace { border: 0; background: none; color: var(--primario); font-weight: 700; text-decoration: underline; padding: 8px 4px; min-height: 40px; }
+  .btn-quitar { border: 0; background: none; color: var(--error); font-weight: 700; min-height: 40px; padding: 0 6px; }
+  .fila-botones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+
+  /* Selector de cantidad (−  2  +) */
+  .stepper {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #e9ecf0; border-radius: 12px; min-height: 48px;
+  }
+  .stepper button {
+    width: 48px; height: 48px; border: 0; background: transparent;
+    font-size: 1.4rem; font-weight: 800; color: var(--texto);
+  }
+  .stepper button:disabled { opacity: .35; }
+  .stepper span { font-weight: 800; min-width: 28px; text-align: center; }
+
+  /* ---------- 6. BARRA FLOTANTE DEL CARRITO ---------- */
+  .barra-carrito {
+    position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom));
+    max-width: 560px; margin: 0 auto; min-height: 58px; padding: 14px 18px; z-index: 20;
+    display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    border: 0; border-radius: 16px; background: var(--primario); color: var(--primario-texto);
+    font-weight: 800; box-shadow: 0 8px 24px rgba(0, 0, 0, .22);
+  }
+
+  /* ---------- 7. PANELES (hojas que suben desde abajo) ---------- */
+  .panel {
+    position: fixed; inset: 0; z-index: 50; background: rgba(17, 24, 39, .55);
+    display: flex; align-items: flex-end; justify-content: center;
+    opacity: 0; visibility: hidden; transition: opacity .2s, visibility .2s;
+  }
+  .panel.abierto { opacity: 1; visibility: visible; }
+  .hoja {
+    width: 100%; max-width: 620px; max-height: 92vh; max-height: 92dvh;
+    background: var(--fondo); border-radius: 20px 20px 0 0;
+    display: flex; flex-direction: column; overflow: hidden;
+    transform: translateY(30px); transition: transform .2s;
+  }
+  .panel.abierto .hoja { transform: none; }
+  .hoja-grande { max-width: 760px; }
+  @media (min-width: 700px) {
+    .panel { align-items: center; }
+    .hoja { border-radius: 20px; }
+  }
+  .hoja-cab {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 12px 16px; background: var(--superficie); border-bottom: 1px solid var(--borde);
+  }
+  .hoja-cab h2 { font-size: 1.15rem; }
+  .cerrar { width: 46px; height: 46px; border: 0; border-radius: 12px; background: #e9ecf0; font-size: 1.2rem; flex-shrink: 0; }
+  .hoja-cuerpo { padding: 16px; overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
+  .hoja-pie {
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: var(--superficie); border-top: 1px solid var(--borde);
+  }
+  .nota-pie { margin: 8px 0 0; font-size: .8rem; color: var(--texto-suave); text-align: center; }
+
+  /* ---------- 8. FORMULARIOS ---------- */
+  .campo { margin: 0 0 14px; border: 0; padding: 0; }
+  .campo > label, .etq { display: block; font-weight: 700; font-size: .9rem; margin-bottom: 6px; padding: 0; }
+  .campo input[type="text"], .campo input[type="tel"], .campo input[type="number"],
+  .campo input[type="url"], .campo select, .campo textarea {
+    width: 100%; min-height: 48px; padding: 12px; font-size: 16px; /* 16px evita el zoom en iPhone */
+    border: 1px solid #d1d5db; border-radius: 12px; background: #fff;
+  }
+  .campo textarea { resize: vertical; }
+  .ayuda { font-size: .8rem; color: var(--texto-suave); margin-top: 4px; }
+  .error { font-size: .85rem; color: var(--error); margin-top: 4px; font-weight: 700; }
+  .error:empty { display: none; }
+  [aria-invalid="true"] { border-color: var(--error) !important; background: #fff7f7 !important; }
+  .opciones { display: grid; gap: 8px; }
+  .opcion {
+    display: flex; gap: 10px; align-items: center; min-height: 52px; padding: 10px 12px;
+    background: #fff; border: 1px solid #d1d5db; border-radius: 12px; font-weight: 600;
+  }
+  .opcion small { display: block; font-weight: 400; color: var(--texto-suave); }
+  .opcion input { width: 22px; height: 22px; accent-color: var(--primario); flex-shrink: 0; }
+  .dos-columnas { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  input[type="color"] { width: 100%; height: 50px; padding: 4px; border: 1px solid #d1d5db; border-radius: 12px; background: #fff; }
+  .subtitulo { font-size: 1rem; margin: 18px 0 10px; }
+
+  /* ---------- 9. CARRITO ---------- */
+  .item { display: grid; grid-template-columns: 58px 1fr; gap: 10px; background: #fff; border-radius: 12px; padding: 10px; margin-bottom: 10px; }
+  .mini {
+    width: 58px; height: 58px; border-radius: 10px; background: #eef2f1; overflow: hidden;
+    display: grid; place-items: center;
+  }
+  .mini img { width: 100%; height: 100%; object-fit: cover; }
+  .mini .emoji { font-size: 30px; }
+  .item-nombre { font-weight: 700; }
+  .item-precio { font-size: .85rem; color: var(--texto-suave); }
+  .item-fila { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+  .item .stepper { min-height: 42px; width: 136px; }
+  .item .stepper button { width: 44px; height: 42px; }
+  .pill { display: inline-block; padding: 1px 7px; border-radius: 6px; font-size: .7rem; font-weight: 800; color: #fff; background: var(--error); vertical-align: middle; }
+  .pill.demo { background: #7c3aed; }
+  .pill.ok { background: var(--exito); }
+  .totales { background: #fff; border-radius: 12px; padding: 12px 14px; margin: 14px 0 0; }
+  .totales div { display: flex; justify-content: space-between; padding: 4px 0; }
+  .totales .total { font-weight: 800; font-size: 1.15rem; border-top: 1px dashed #cbd5e1; margin-top: 6px; padding-top: 10px; }
+  .form-pedido { margin-top: 18px; }
+  .vacio { text-align: center; padding: 36px 16px; color: var(--texto-suave); }
+  .vacio .icono { font-size: 50px; }
+  .vacio h3 { color: var(--texto); margin: 8px 0 4px; }
+  pre.mensaje {
+    white-space: pre-wrap; word-break: break-word; margin: 0;
+    background: #fff; border: 1px solid var(--borde); border-radius: 12px; padding: 14px;
+    font-family: inherit; font-size: .92rem;
+  }
+  .caja-info { background: #fff; border-left: 4px solid var(--primario); border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; font-size: .9rem; }
+  .caja-info.alerta { border-left-color: #d97706; background: #fffbeb; }
+  .caja-info ul { margin: 6px 0 0; padding-left: 18px; }
+  .caja-info p { margin: 6px 0 0; }
+
+  /* ---------- 10. ADMINISTRACIÓN ---------- */
+  .pestanas { display: flex; gap: 6px; overflow-x: auto; padding: 10px 16px; background: var(--superficie); border-bottom: 1px solid var(--borde); }
+  .pestana { border: 1px solid var(--borde); background: #fff; border-radius: 999px; padding: 8px 14px; min-height: 42px; white-space: nowrap; font-weight: 700; }
+  .pestana.activo { background: var(--texto); color: #fff; border-color: var(--texto); }
+  .adm-item { display: flex; gap: 10px; align-items: center; background: #fff; border-radius: 12px; padding: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .adm-info { flex: 1; min-width: 150px; }
+  .adm-info .sub { font-size: .82rem; color: var(--texto-suave); }
+  .adm-acciones { display: flex; gap: 6px; flex-wrap: wrap; }
+  .interruptor { display: inline-flex; align-items: center; gap: 8px; font-size: .88rem; font-weight: 600; min-height: 40px; }
+  .interruptor input { width: 20px; height: 20px; accent-color: var(--exito); }
+  .vista-imagen {
+    width: 100px; height: 100px; border-radius: 14px; background: #eef2f1; overflow: hidden;
+    display: grid; place-items: center; margin-bottom: 8px;
+  }
+  .vista-imagen img { width: 100%; height: 100%; object-fit: cover; }
+  .vista-imagen .emoji { font-size: 44px; }
+  .fila-carga { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .boton-archivo { position: relative; overflow: hidden; }
+  .boton-archivo input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .acciones-col { display: grid; gap: 10px; }
+
+  /* ---------- 11. PIE DE PÁGINA Y AVISOS ---------- */
+  .pie { max-width: 1100px; margin: 24px auto 0; padding: 0 16px 24px; font-size: .85rem; color: var(--texto-suave); text-align: center; }
+  .pie p { margin: 6px 0; }
+  .toasts {
+    position: fixed; top: calc(10px + env(safe-area-inset-top)); left: 12px; right: 12px; z-index: 100;
+    display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none;
+  }
+  .toast {
+    width: 100%; max-width: 480px; padding: 12px 16px; border-radius: 12px; font-weight: 700;
+    color: #fff; background: #1f2937; box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+    animation: entra .2s ease-out; transition: opacity .3s;
+  }
+  .toast.ok { background: var(--exito); }
+  .toast.error { background: var(--error); }
+  .toast.saliendo { opacity: 0; }
+  @keyframes entra { from { transform: translateY(-10px); opacity: 0; } }
+</style>
+</head>
+
+<body>
+
+<noscript>
+  <p style="padding:16px;background:#fee2e2">Esta página necesita JavaScript activado para mostrar el catálogo.</p>
+</noscript>
+
+<!-- ======================= ENCABEZADO ======================= -->
+<header class="encabezado">
+  <div class="encabezado-fila">
+    <div class="logo" id="logo" aria-hidden="true">🛍️</div>
+    <div>
+      <h1 id="nombre-negocio">Mi negocio</h1>
+      <p id="descripcion-negocio"></p>
+    </div>
+    <button class="btn-carrito-sup" id="btn-carrito-sup" type="button" aria-label="Ver carrito">
+      🛒<span class="contador oculto" id="contador-carrito">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- ======================= CATÁLOGO ======================= -->
+<main>
+  <div class="buscador">
+    <label for="buscar" class="sr">Buscar productos</label>
+    <input id="buscar" type="search" placeholder="🔎 Buscar productos..." autocomplete="off">
+  </div>
+  <nav class="chips" id="chips" aria-label="Categorías"></nav>
+  <div id="avisos-catalogo"></div>
+  <section class="grid" id="grid" aria-label="Productos"></section>
+</main>
+
+<footer class="pie">
+  <p>Pedidos por WhatsApp. El negocio confirma contigo la disponibilidad, la entrega y la forma de pago.</p>
+  <p>Tu nombre y tus datos de entrega no se guardan en esta página.
+    <button class="enlace" id="btn-privacidad" type="button">Privacidad</button></p>
+  <button class="enlace" id="btn-admin" type="button">⚙️ Administrar tienda (solo el dueño)</button>
+</footer>
+
+<!-- Barra flotante: aparece cuando hay productos en el carrito -->
+<button class="barra-carrito oculto" id="barra-carrito" type="button">
+  <span id="barra-resumen"></span><span>Ver pedido →</span>
+</button>
+
+<!-- ======================= PANEL: CARRITO ======================= -->
+<div class="panel" id="panel-carrito" role="dialog" aria-modal="true" aria-labelledby="titulo-carrito" aria-hidden="true">
+  <div class="hoja">
+    <div class="hoja-cab">
+      <h2 id="titulo-carrito">🛒 Tu pedido</h2>
+      <button class="cerrar" type="button" data-cerrar aria-label="Cerrar">✕</button>
+    </div>
+    <div class="hoja-cuerpo">
+      <!-- Estado vacío -->
+      <div class="vacio" id="carrito-vacio">
+        <div class="icono">🧺</div>
+        <h3>Tu carrito está vacío</h3>
+        <p>Agrega productos desde el catálogo para armar tu pedido.</p>
+        <button class="btn btn-primario" type="button" data-cerrar>Ver productos</button>
+      </div>
+
+      <!-- Contenido del carrito -->
+      <div id="carrito-contenido">
+        <div id="lista-carrito"></div>
+        <button class="btn-quitar" id="btn-vaciar" type="button">🗑️ Vaciar carrito</button>
+        <div class="totales" id="totales"></div>
+
+        <form class="form-pedido" id="form-pedido" novalidate>
+          <h3 class="subtitulo">Datos para el pedido</h3>
+          <div class="campo">
+            <label for="cliente-nombre">Tu nombre *</label>
+            <input id="cliente-nombre" type="text" maxlength="60" autocomplete="name" placeholder="Ej: Laura">
+            <div class="error" id="err-nombre" aria-live="polite"></div>
+          </div>
+          <fieldset class="campo">
+            <legend class="etq">¿Cómo quieres recibirlo? *</legend>
+            <div class="opciones" id="opciones-entrega"></div>
+            <div class="error" id="err-entrega" aria-live="polite"></div>
+          </fieldset>
+          <div class="campo" id="campo-ubicacion">
+            <label for="cliente-ubicacion">Torre / casa y apartamento *</label>
+            <input id="cliente-ubicacion" type="text" maxlength="80" placeholder="Ej: Torre 3, apto 402">
+            <div class="ayuda">Solo para saber dónde entregar dentro de la unidad.</div>
+            <div class="error" id="err-ubicacion" aria-live="polite"></div>
+          </div>
+          <div class="campo">
+            <label for="cliente-notas">Observaciones (opcional)</label>
+            <textarea id="cliente-notas" rows="3" maxlength="300" placeholder="Ej: sin cebolla, entregar después de las 6 p. m."></textarea>
+            <div class="ayuda"><span id="contador-notas">0</span>/300 caracteres</div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="hoja-pie" id="pie-carrito">
+      <button class="btn btn-primario btn-bloque" id="btn-revisar" type="button">Revisar pedido</button>
+      <p class="nota-pie">Todavía no se envía nada. Primero verás el mensaje.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= PANEL: VISTA PREVIA DEL PEDIDO ======================= -->
+<div class="panel" id="panel-pedido" role="dialog" aria-modal="true" aria-labelledby="titulo-pedido" aria-hidden="true">
+  <div class="hoja">
+    <div class="hoja-cab">
+      <h2 id="titulo-pedido">Revisa tu pedido</h2>
+      <button class="cerrar" type="button" data-cerrar aria-label="Cerrar">✕</button>
+    </div>
+    <div class="hoja-cuerpo">
+      <div class="caja-info">
+        Este es el mensaje que se abrirá en WhatsApp. <strong>El pedido solo se envía cuando tú pulses "Enviar" dentro de WhatsApp.</strong>
+      </div>
+      <div class="caja-info alerta oculto" id="aviso-sin-whatsapp">
+        ⚠️ El negocio todavía no ha configurado su número de WhatsApp, así que no se puede abrir el chat.
+        Puedes copiar el mensaje y enviarlo por otro medio.
+      </div>
+      <pre class="mensaje" id="mensaje-pedido"></pre>
+    </div>
+    <div class="hoja-pie">
+      <a class="btn btn-whatsapp btn-bloque" id="btn-whatsapp" href="#" target="_blank" rel="noopener">💬 Abrir WhatsApp con el pedido</a>
+      <div class="fila-botones">
+        <button class="btn btn-secundario" id="btn-copiar" type="button">📋 Copiar mensaje</button>
+        <button class="btn btn-secundario" type="button" data-cerrar>✏️ Editar</button>
+      </div>
+      <p class="nota-pie"><button class="btn-quitar" id="btn-ya-envie" type="button">Ya lo envié: vaciar carrito</button></p>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= PANEL: PRIVACIDAD ======================= -->
+<div class="panel" id="panel-privacidad" role="dialog" aria-modal="true" aria-labelledby="titulo-privacidad" aria-hidden="true">
+  <div class="hoja">
+    <div class="hoja-cab">
+      <h2 id="titulo-privacidad">🔒 Privacidad</h2>
+      <button class="cerrar" type="button" data-cerrar aria-label="Cerrar">✕</button>
+    </div>
+    <div class="hoja-cuerpo">
+      <div class="caja-info">
+        <strong>Lo que se guarda en este teléfono o computador</strong> (almacenamiento local del navegador):
+        <ul>
+          <li>Los productos de tu carrito (solo cuál producto y cuántas unidades), para que no se pierdan si recargas la página.</li>
+          <li>Si eres el dueño y editas la tienda aquí, la configuración del catálogo.</li>
+        </ul>
+      </div>
+      <div class="caja-info">
+        <strong>Lo que NO se guarda:</strong>
+        <ul>
+          <li>Tu nombre, torre/apartamento y observaciones. Solo se usan para armar el mensaje del pedido.</li>
+          <li>Ningún dato de pago. Esta página no cobra ni procesa pagos.</li>
+        </ul>
+      </div>
+      <div class="caja-info">
+        <strong>A dónde van tus datos:</strong>
+        <p>Esta página no envía tus datos a ningún servidor. El pedido solo sale cuando tú lo envías desde WhatsApp, y desde ese momento aplican las políticas de WhatsApp.
+          El sitio donde esté publicada la página (por ejemplo, GitHub Pages) puede registrar datos técnicos de visita, como cualquier sitio web.</p>
+      </div>
+      <div class="caja-info alerta">
+        Lo guardado en el navegador <strong>no se sincroniza</strong> entre dispositivos y se borra si limpias los datos del navegador.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= PANEL: ADMINISTRACIÓN ======================= -->
+<div class="panel" id="panel-admin" role="dialog" aria-modal="true" aria-labelledby="titulo-admin" aria-hidden="true">
+  <div class="hoja hoja-grande">
+    <div class="hoja-cab">
+      <h2 id="titulo-admin">⚙️ Administrar tienda</h2>
+      <button class="cerrar" type="button" data-cerrar aria-label="Cerrar">✕</button>
+    </div>
+    <div class="pestanas" role="tablist">
+      <button class="pestana activo" type="button" role="tab" data-pestana="negocio">Negocio</button>
+      <button class="pestana" type="button" role="tab" data-pestana="productos">Productos</button>
+      <button class="pestana" type="button" role="tab" data-pestana="categorias">Categorías</button>
+      <button class="pestana" type="button" role="tab" data-pestana="datos">Publicar y datos</button>
+    </div>
+    <div class="hoja-cuerpo" id="cuerpo-admin">
+
+      <div class="caja-info alerta">
+        Los cambios se guardan <strong>solo en este navegador</strong>. Para que tus clientes los vean, entra a
+        <strong>"Publicar y datos"</strong>, descarga el <code>index.html</code> actualizado y súbelo a tu sitio.
+      </div>
+
+      <!-- Pestaña: NEGOCIO -->
+      <section data-seccion="negocio" id="seccion-negocio">
+        <div class="campo">
+          <label for="cfg-nombre">Nombre del negocio *</label>
+          <input id="cfg-nombre" type="text" maxlength="60">
+          <div class="error" id="err-cfg-nombre"></div>
+        </div>
+        <div class="campo">
+          <label for="cfg-descripcion">Descripción comercial</label>
+          <textarea id="cfg-descripcion" rows="2" maxlength="200"></textarea>
+        </div>
+
+        <h3 class="subtitulo">Logo</h3>
+        <div class="vista-imagen" id="vista-logo"></div>
+        <div class="campo">
+          <label for="cfg-logo-texto">Logo con emoji o iniciales (si no subes imagen)</label>
+          <input id="cfg-logo-texto" type="text" maxlength="4" placeholder="Ej: 🍽️ o AC">
+        </div>
+        <div class="campo">
+          <span class="etq">Logo con imagen (opcional)</span>
+          <div class="fila-carga">
+            <span class="btn btn-secundario btn-chico boton-archivo">📷 Subir imagen
+              <input id="cfg-logo-archivo" type="file" accept="image/*" aria-label="Subir imagen del logo"></span>
+            <button class="btn btn-peligro btn-chico" id="btn-quitar-logo" type="button">Quitar imagen</button>
+          </div>
+          <label for="cfg-logo-url" class="ayuda">…o pega un enlace https:// a la imagen:</label>
+          <input id="cfg-logo-url" type="url" placeholder="https://...">
+          <div class="error" id="err-cfg-logo"></div>
+        </div>
+
+        <h3 class="subtitulo">Colores</h3>
+        <div class="dos-columnas">
+          <div class="campo"><label for="cfg-color-primario">Principal</label><input id="cfg-color-primario" type="color"></div>
+          <div class="campo"><label for="cfg-color-acento">Acento</label><input id="cfg-color-acento" type="color"></div>
+        </div>
+
+        <h3 class="subtitulo">WhatsApp y ventas</h3>
+        <div class="campo">
+          <label for="cfg-whatsapp">Número de WhatsApp que recibe los pedidos</label>
+          <input id="cfg-whatsapp" type="tel" inputmode="numeric" maxlength="20" placeholder="Ej: 573001234567">
+          <div class="ayuda">Con código de país, sin "+" ni espacios. Colombia: 57 + número (573001234567). Venezuela: 58 + número sin el 0 (584121234567).</div>
+          <div class="error" id="err-cfg-whatsapp"></div>
+          <button class="btn btn-secundario btn-chico" id="btn-probar-whatsapp" type="button" style="margin-top:8px">Probar número (abre el chat, no envía nada)</button>
+        </div>
+        <div class="campo">
+          <label for="cfg-moneda">Moneda</label>
+          <select id="cfg-moneda">
+            <option value="COP">Peso colombiano (COP)</option>
+            <option value="VES">Bolívar (VES)</option>
+            <option value="USD">Dólar (USD)</option>
+            <option value="EUR">Euro (EUR)</option>
+            <option value="MXN">Peso mexicano (MXN)</option>
+            <option value="PEN">Sol peruano (PEN)</option>
+          </select>
+        </div>
+        <fieldset class="campo">
+          <legend class="etq">Modalidades de entrega</legend>
+          <div class="opciones">
+            <label class="opcion"><input type="checkbox" id="cfg-domicilio"> Entrega a domicilio dentro de la unidad</label>
+            <label class="opcion"><input type="checkbox" id="cfg-recoger"> El cliente recoge en el punto de venta</label>
+          </div>
+          <div class="error" id="err-cfg-entrega"></div>
+        </fieldset>
+        <div class="campo">
+          <label for="cfg-costo-domicilio">Costo del domicilio (0 = sin costo)</label>
+          <input id="cfg-costo-domicilio" type="number" min="0" step="any" inputmode="decimal">
+          <div class="error" id="err-cfg-costo"></div>
+        </div>
+        <button class="btn btn-primario btn-bloque" id="btn-guardar-negocio" type="button">💾 Guardar cambios</button>
+      </section>
+
+      <!-- Pestaña: PRODUCTOS -->
+      <section data-seccion="productos" class="oculto">
+        <div class="acciones-col" style="margin-bottom:14px">
+          <button class="btn btn-primario" id="btn-nuevo-producto" type="button">➕ Nuevo producto</button>
+          <button class="btn btn-peligro oculto" id="btn-borrar-demo" type="button">Eliminar productos de demostración</button>
+        </div>
+        <div id="adm-lista-productos"></div>
+      </section>
+
+      <!-- Pestaña: CATEGORÍAS -->
+      <section data-seccion="categorias" class="oculto">
+        <div class="campo">
+          <label for="cat-nueva">Nueva categoría</label>
+          <div style="display:flex;gap:8px">
+            <input id="cat-nueva" type="text" maxlength="30" placeholder="Ej: Desayunos">
+            <button class="btn btn-primario" id="btn-agregar-categoria" type="button">Agregar</button>
+          </div>
+          <div class="error" id="err-cat"></div>
+        </div>
+        <div id="adm-lista-categorias"></div>
+      </section>
+
+      <!-- Pestaña: PUBLICAR Y DATOS -->
+      <section data-seccion="datos" class="oculto">
+        <div class="caja-info" id="estado-almacenamiento"></div>
+        <h3 class="subtitulo">Publicar cambios</h3>
+        <div class="acciones-col">
+          <button class="btn btn-primario" id="btn-descargar-html" type="button">⬇️ Descargar index.html con mis cambios</button>
+        </div>
+        <p class="ayuda">Este archivo ya incluye tus productos, precios y configuración. Reemplaza con él el index.html publicado (por ejemplo, en GitHub Pages).</p>
+
+        <h3 class="subtitulo">Copia de seguridad</h3>
+        <div class="acciones-col">
+          <button class="btn btn-secundario" id="btn-exportar-json" type="button">💾 Exportar respaldo (.json)</button>
+          <span class="btn btn-secundario boton-archivo">📂 Importar respaldo (.json)
+            <input id="inp-importar" type="file" accept="application/json,.json" aria-label="Importar respaldo"></span>
+          <button class="btn btn-peligro" id="btn-restablecer" type="button">↩️ Descartar cambios de este navegador</button>
+        </div>
+        <p class="ayuda">"Descartar" borra lo guardado en este navegador y vuelve a mostrar la versión incluida en el archivo publicado.</p>
+
+        <h3 class="subtitulo">Seguridad</h3>
+        <div class="caja-info">
+          Este panel no tiene contraseña porque la página es estática: cualquier persona que lo abra solo cambia su propia copia en su navegador.
+          Lo que ven tus clientes solo cambia cuando tú subes un nuevo index.html a tu sitio.
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= PANEL: FORMULARIO DE PRODUCTO ======================= -->
+<div class="panel" id="panel-producto" role="dialog" aria-modal="true" aria-labelledby="titulo-form-producto" aria-hidden="true">
+  <div class="hoja">
+    <div class="hoja-cab">
+      <h2 id="titulo-form-producto">Nuevo producto</h2>
+      <button class="cerrar" type="button" data-cerrar aria-label="Cerrar">✕</button>
+    </div>
+    <div class="hoja-cuerpo">
+      <div class="campo">
+        <label for="prod-nombre">Nombre *</label>
+        <input id="prod-nombre" type="text" maxlength="80">
+        <div class="error" id="err-prod-nombre"></div>
+      </div>
+      <div class="campo">
+        <label for="prod-descripcion">Descripción</label>
+        <textarea id="prod-descripcion" rows="2" maxlength="200"></textarea>
+      </div>
+      <div class="dos-columnas">
+        <div class="campo">
+          <label for="prod-precio">Precio *</label>
+          <input id="prod-precio" type="number" min="0" step="any" inputmode="decimal">
+          <div class="error" id="err-prod-precio"></div>
+        </div>
+        <div class="campo">
+          <label for="prod-categoria">Categoría *</label>
+          <select id="prod-categoria"></select>
+          <div class="error" id="err-prod-categoria"></div>
+        </div>
+      </div>
+      <span class="etq">Foto</span>
+      <div class="vista-imagen" id="vista-producto"></div>
+      <div class="campo">
+        <div class="fila-carga">
+          <span class="btn btn-secundario btn-chico boton-archivo">📷 Subir foto
+            <input id="prod-archivo" type="file" accept="image/*" aria-label="Subir foto del producto"></span>
+          <button class="btn btn-peligro btn-chico" id="btn-quitar-imagen" type="button">Quitar foto</button>
+        </div>
+        <label for="prod-url" class="ayuda">…o pega un enlace a la imagen (https://… o un archivo de tu sitio, ej: img/torta.jpg):</label>
+        <input id="prod-url" type="url" placeholder="https://...">
+        <div class="error" id="err-prod-imagen"></div>
+      </div>
+      <div class="campo">
+        <label for="prod-emoji">Emoji si no hay foto (opcional)</label>
+        <input id="prod-emoji" type="text" maxlength="4" placeholder="Ej: 🍰">
+      </div>
+      <div class="opciones">
+        <label class="opcion"><input type="checkbox" id="prod-disponible"> Disponible para la venta</label>
+        <label class="opcion"><input type="checkbox" id="prod-demo"> Es un producto de demostración (ficticio)</label>
+      </div>
+    </div>
+    <div class="hoja-pie">
+      <button class="btn btn-primario btn-bloque" id="btn-guardar-producto" type="button">💾 Guardar producto</button>
+    </div>
+  </div>
+</div>
+
+<!-- Contenedor de mensajes emergentes (toasts) -->
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<!--
+  =====================================================================
+  DATOS DE LA TIENDA (lo que ven los clientes)
+  - Puedes editarlos aquí a mano o, más fácil, desde "Administrar tienda"
+    y luego "Descargar index.html con mis cambios".
+  - Los productos marcados "demo": true son FICTICIOS.
+  =====================================================================
+-->
+<script id="datos-tienda" type="application/json">
+{
+  "version": 1,
+  "actualizado": "2026-10-14T00:00:00.000Z",
+  "negocio": {
+    "nombre": "Antojitos del Conjunto (DEMO)",
+    "descripcion": "Negocio ficticio de demostración: comida casera, postres y bebidas para los vecinos de la unidad.",
+    "logoTexto": "🍽️",
+    "logoImagen": "",
+    "colorPrimario": "#0f766e",
+    "colorAcento": "#f59e0b",
+    "whatsapp": "",
+    "moneda": "COP",
+    "ofreceDomicilio": true,
+    "ofreceRecoger": true,
+    "costoDomicilio": 0
+  },
+  "categorias": ["Comidas", "Postres", "Bebidas"],
+  "productos": [
+    { "id": "demo-1", "nombre": "Empanadas de carne x3 (DEMO)", "descripcion": "Producto ficticio de ejemplo. Crocantes, con ají casero.", "precio": 6000, "categoria": "Comidas", "emoji": "🥟", "imagen": "", "disponible": true, "demo": true },
+    { "id": "demo-2", "nombre": "Arepa rellena de queso (DEMO)", "descripcion": "Producto ficticio de ejemplo. Arepa asada con queso derretido.", "precio": 5500, "categoria": "Comidas", "emoji": "🧀", "imagen": "", "disponible": true, "demo": true },
+    { "id": "demo-3", "nombre": "Porción de torta de chocolate (DEMO)", "descripcion": "Producto ficticio de ejemplo. Húmeda y con cobertura.", "precio": 7000, "categoria": "Postres", "emoji": "🍰", "imagen": "", "disponible": true, "demo": true },
+    { "id": "demo-4", "nombre": "Galletas de avena x6 (DEMO)", "descripcion": "Producto ficticio de ejemplo. Horneadas en casa.", "precio": 8000, "categoria": "Postres", "emoji": "🍪", "imagen": "", "disponible": true, "demo": true },
+    { "id": "demo-5", "nombre": "Jugo natural de mora 500 ml (DEMO)", "descripcion": "Producto ficticio de ejemplo. Preparado al momento.", "precio": 4500, "categoria": "Bebidas", "emoji": "🥤", "imagen": "", "disponible": true, "demo": true },
+    { "id": "demo-6", "nombre": "Café frío 350 ml (DEMO)", "descripcion": "Producto ficticio de ejemplo. Muestra cómo se ve un producto agotado.", "precio": 6500, "categoria": "Bebidas", "emoji": "☕", "imagen": "", "disponible": false, "demo": true }
+  ]
+}
+</script>
+
+<script>
+'use strict';
+
+/* =====================================================================
+   0. COPIA DEL ARCHIVO ORIGINAL
+   Guardamos el HTML tal como llegó, ANTES de modificar la página.
+   Se usa para generar el "index.html con mis cambios".
+   ===================================================================== */
+const HTML_ORIGINAL = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+/* =====================================================================
+   1. CONSTANTES Y UTILIDADES
+   ===================================================================== */
+const CLAVE_TIENDA = 'miniapp_tienda_v1';   // configuración editada por el dueño
+const CLAVE_CARRITO = 'miniapp_carrito_v1'; // carrito: solo id de producto + cantidad
+const MAX_CANT = 99;                        // máximo de unidades por producto
+const MONEDAS = ['COP', 'VES', 'USD', 'EUR', 'MXN', 'PEN'];
+
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+
+// Evita que un texto escrito por el usuario se interprete como HTML
+function esc(valor) {
+  return String(valor == null ? '' : valor).replace(/[&<>"']/g, (c) => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+// Devuelve el texto limpio o un valor por defecto si viene vacío
+function texto(v, porDefecto) {
+  return (typeof v === 'string' && v.trim()) ? v.trim() : porDefecto;
+}
+function soloDigitos(v) { return String(v == null ? '' : v).replace(/\D/g, ''); }
+function esColor(v) { return typeof v === 'string' && /^#[0-9a-fA-F]{6}$/.test(v); }
+function numeroValido(v) {
+  if (v === '' || v === null || v === undefined) return false;
+  const n = Number(v);
+  return Number.isFinite(n) && n >= 0;
+}
+function redondear(n) { return Math.round(n * 100) / 100; }
+function nuevoId() { return 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+function whatsappValido(num) { return /^\d{11,15}$/.test(num); }
+// Quita símbolos que WhatsApp usa para dar formato (* _ ~ `)
+function sinFormato(s) { return String(s).replace(/[*_~`]/g, ''); }
+// Para buscar sin importar tildes ni mayúsculas
+function normalizarBusqueda(s) {
+  return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+// Solo se aceptan imágenes https://, imágenes subidas (data:image) o archivos del propio sitio
+function imagenSegura(v) {
+  if (typeof v !== 'string') return '';
+  v = v.trim();
+  if (/^https?:\/\/[^\s"'<>]+$/i.test(v)) return v;
+  if (/^data:image\/(png|jpe?g|gif|webp);base64,[a-z0-9+/=]+$/i.test(v)) return v;
+  if (/^[\w\-./]+\.(png|jpe?g|gif|webp|svg)$/i.test(v) && !v.startsWith('/')) return v;
+  return '';
+}
+
+/* ---------- Almacenamiento local (con protección de errores) ---------- */
+const almacen = {
+  leer(clave) {
+    try { const t = localStorage.getItem(clave); return t ? JSON.parse(t) : null; }
+    catch (e) { return null; }
+  },
+  guardar(clave, valor) {
+    try { localStorage.setItem(clave, JSON.stringify(valor)); return true; }
+    catch (e) { return false; }
+  },
+  borrar(clave) {
+    try { localStorage.removeItem(clave); } catch (e) { /* sin acceso */ }
+  }
+};
+function probarAlmacenamiento() {
+  try {
+    localStorage.setItem('__prueba__', '1');
+    localStorage.removeItem('__prueba__');
+    return true;
+  } catch (e) { return false; }
+}
+
+/* =====================================================================
+   2. DATOS DE LA TIENDA
+   ===================================================================== */
+function leerDatosIncrustados() {
+  try { return JSON.parse($('#datos-tienda').textContent); }
+  catch (e) { return null; }
+}
+
+// Revisa y completa un producto para que siempre tenga todos sus campos
+function normalizarProducto(p) {
+  return {
+    id: texto(p.id, '') || nuevoId(),
+    nombre: texto(p.nombre, 'Producto sin nombre').slice(0, 80),
+    descripcion: texto(p.descripcion, '').slice(0, 200),
+    precio: numeroValido(p.precio) ? redondear(Number(p.precio)) : 0,
+    categoria: texto(p.categoria, 'General').slice(0, 30),
+    emoji: texto(p.emoji, '').slice(0, 8),
+    imagen: imagenSegura(p.imagen),
+    disponible: p.disponible !== false,
+    demo: p.demo === true
+  };
+}
+
+// Revisa y completa toda la tienda (protege contra datos incompletos o dañados)
+function normalizarTienda(d) {
+  d = (d && typeof d === 'object') ? d : {};
+  const n = (d.negocio && typeof d.negocio === 'object') ? d.negocio : {};
+
+  const negocio = {
+    nombre: texto(n.nombre, 'Mi negocio').slice(0, 60),
+    descripcion: texto(n.descripcion, '').slice(0, 200),
+    logoTexto: texto(n.logoTexto, '🛍️').slice(0, 8),
+    logoImagen: imagenSegura(n.logoImagen),
+    colorPrimario: esColor(n.colorPrimario) ? n.colorPrimario : '#0f766e',
+    colorAcento: esColor(n.colorAcento) ? n.colorAcento : '#f59e0b',
+    whatsapp: soloDigitos(n.whatsapp),
+    moneda: MONEDAS.includes(n.moneda) ? n.moneda : 'COP',
+    ofreceDomicilio: n.ofreceDomicilio !== false,
+    ofreceRecoger: n.ofreceRecoger !== false,
+    costoDomicilio: numeroValido(n.costoDomicilio) ? redondear(Number(n.costoDomicilio)) : 0
+  };
+  if (!negocio.ofreceDomicilio && !negocio.ofreceRecoger) negocio.ofreceRecoger = true;
+
+  // Categorías sin repetir
+  const categorias = [];
+  const vistas = new Set();
+  (Array.isArray(d.categorias) ? d.categorias : []).forEach((c) => {
+    if (typeof c !== 'string') return;
+    const t = c.trim().slice(0, 30);
+    if (t && !vistas.has(t.toLowerCase())) { vistas.add(t.toLowerCase()); categorias.push(t); }
+  });
+
+  // Productos con id único; si su categoría no existe, se crea
+  const productos = [];
+  const ids = new Set();
+  (Array.isArray(d.productos) ? d.productos : []).forEach((p) => {
+    if (!p || typeof p !== 'object') return;
+    const np = normalizarProducto(p);
+    if (ids.has(np.id)) np.id = nuevoId();
+    ids.add(np.id);
+    const existente = categorias.find((c) => c.toLowerCase() === np.categoria.toLowerCase());
+    if (existente) np.categoria = existente;
+    else { categorias.push(np.categoria); vistas.add(np.categoria.toLowerCase()); }
+    productos.push(np);
+  });
+
+  return {
+    version: 1,
+    actualizado: typeof d.actualizado === 'string' ? d.actualizado : '',
+    negocio, categorias, productos
+  };
+}
+
+// Decide qué datos usar: los editados en este navegador (si son más recientes)
+// o los incluidos en el archivo publicado.
+function cargarTienda() {
+  const incrustada = normalizarTienda(leerDatosIncrustados());
+  const local = almacen.leer(CLAVE_TIENDA);
+  if (local && typeof local.actualizado === 'string' && local.actualizado >= incrustada.actualizado) {
+    return normalizarTienda(local);
+  }
+  return incrustada;
+}
+
+/* =====================================================================
+   3. ESTADO DE LA APLICACIÓN
+   ===================================================================== */
+const almacenamientoDisponible = probarAlmacenamiento();
+let tienda = cargarTienda();
+let carrito = cargarCarrito();                    // [{ id, cantidad }]
+const filtro = { categoria: 'Todas', busqueda: '' };
+
+/* =====================================================================
+   4. FORMATO DE PRECIOS Y TEMA VISUAL
+   ===================================================================== */
+function formatoPrecio(valor) {
+  const moneda = tienda.negocio.moneda;
+  const decimales = moneda === 'COP' ? 0 : 2;
+  try {
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency', currency: moneda,
+      minimumFractionDigits: decimales, maximumFractionDigits: decimales
+    }).format(valor);
+  } catch (e) {
+    return moneda + ' ' + Number(valor).toFixed(decimales);
+  }
+}
+
+// Elige texto blanco u oscuro según qué tan claro sea el color de fondo
+function textoContraste(hex) {
+  const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+  const luz = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luz > 0.62 ? '#111827' : '#ffffff';
+}
+
+function aplicarTema() {
+  const n = tienda.negocio;
+  const raiz = document.documentElement.style;
+  raiz.setProperty('--primario', n.colorPrimario);
+  raiz.setProperty('--primario-texto', textoContraste(n.colorPrimario));
+  raiz.setProperty('--acento', n.colorAcento);
+  raiz.setProperty('--acento-texto', textoContraste(n.colorAcento));
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', n.colorPrimario);
+  document.title = n.nombre + ' · Catálogo';
+}
+
+/* =====================================================================
+   5. IMÁGENES
+   ===================================================================== */
+// Devuelve la foto del producto o su emoji si no tiene foto
+function miniatura(p) {
+  const emoji = esc(p.emoji || '🛍️');
+  if (p.imagen) return `<img src="${esc(p.imagen)}" alt="" loading="lazy" data-respaldo="${emoji}">`;
+  return `<span class="emoji" aria-hidden="true">${emoji}</span>`;
+}
+// Si una imagen no carga (enlace roto), se reemplaza por el emoji
+function manejarErrorImagen(e) {
+  const img = e.target;
+  if (!img || img.tagName !== 'IMG' || img.dataset.respaldo === undefined) return;
+  const span = document.createElement('span');
+  span.className = 'emoji';
+  span.textContent = img.dataset.respaldo || '🛍️';
+  img.replaceWith(span);
+}
+// Reduce el tamaño de una foto subida para que no ocupe demasiado espacio
+function leerImagenRedimensionada(archivo, maxLado) {
+  return new Promise((resolver, rechazar) => {
+    if (!archivo.type || !archivo.type.startsWith('image/')) {
+      rechazar(new Error('El archivo elegido no es una imagen.')); return;
+    }
+    if (archivo.size > 15 * 1024 * 1024) {
+      rechazar(new Error('La imagen pesa más de 15 MB. Elige una más liviana.')); return;
+    }
+    const lector = new FileReader();
+    lector.onerror = () => rechazar(new Error('No se pudo leer la imagen.'));
+    lector.onload = () => {
+      const img = new Image();
+      img.onerror = () => rechazar(new Error('No se pudo abrir la imagen. Prueba con JPG o PNG.'));
+      img.onload = () => {
+        const escala = Math.min(1, maxLado / Math.max(img.width, img.height));
+        const lienzo = document.createElement('canvas');
+        lienzo.width = Math.max(1, Math.round(img.width * escala));
+        lienzo.height = Math.max(1, Math.round(img.height * escala));
+        const ctx = lienzo.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, lienzo.width, lienzo.height);
+        ctx.drawImage(img, 0, 0, lienzo.width, lienzo.height);
+        resolver(lienzo.toDataURL('image/jpeg', 0.8));
+      };
+      img.src = lector.result;
+    };
+    lector.readAsDataURL(archivo);
+  });
+}
+
+/* =====================================================================
+   6. AVISOS (toasts) Y PANELES
+   ===================================================================== */
+function aviso(mensaje, tipo) {
+  tipo = tipo || 'ok';
+  const t = document.createElement('div');
+  t.className = 'toast ' + tipo;
+  t.setAttribute('role', tipo === 'error' ? 'alert' : 'status');
+  t.textContent = mensaje;
+  $('#toasts').appendChild(t);
+  setTimeout(() => { t.classList.add('saliendo'); setTimeout(() => t.remove(), 350); }, tipo === 'error' ? 4500 : 3000);
+}
+
+const pilaPaneles = []; // paneles abiertos, el último es el visible
+function abrirPanel(id) {
+  const panel = document.getElementById(id);
+  if (!panel || panel.classList.contains('abierto')) return;
+  pilaPaneles.push({ id, retorno: document.activeElement });
+  panel.classList.add('abierto');
+  panel.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('sin-scroll');
+  setTimeout(() => { const b = panel.querySelector('.cerrar'); if (b) b.focus(); }, 50);
+}
+function cerrarPanel(id) {
+  const panel = document.getElementById(id);
+  if (!panel) return;
+  panel.classList.remove('abierto');
+  panel.setAttribute('aria-hidden', 'true');
+  const i = pilaPaneles.findIndex((p) => p.id === id);
+  if (i >= 0) {
+    const { retorno } = pilaPaneles[i];
+    pilaPaneles.splice(i, 1);
+    if (retorno && document.contains(retorno) && typeof retorno.focus === 'function') retorno.focus();
+  }
+  if (!pilaPaneles.length) document.body.classList.remove('sin-scroll');
+}
+function panelAbierto(id) { return document.getElementById(id).classList.contains('abierto'); }
+
+// Mensajes de error junto a los campos de formulario
+function marcarError(campoId, errorId, mensaje) {
+  const e = document.getElementById(errorId);
+  if (e) e.textContent = mensaje;
+  if (campoId) { const c = document.getElementById(campoId); if (c) c.setAttribute('aria-invalid', 'true'); }
+}
+function limpiarError(errorId, campoId) {
+  const e = document.getElementById(errorId);
+  if (e) e.textContent = '';
+  if (campoId) { const c = document.getElementById(campoId); if (c) c.removeAttribute('aria-invalid'); }
+}
+function limpiarErroresEn(selector) {
+  $$(selector + ' .error').forEach((e) => { e.textContent = ''; });
+  $$(selector + ' [aria-invalid]').forEach((c) => c.removeAttribute('aria-invalid'));
+}
+
+/* =====================================================================
+   7. CARRITO
+   ===================================================================== */
+function cargarCarrito() {
+  const guardado = almacen.leer(CLAVE_CARRITO);
+  if (!Array.isArray(guardado)) return [];
+  return guardado
+    .filter((i) => i && typeof i.id === 'string' && Number.isInteger(i.cantidad) && i.cantidad > 0)
+    .map((i) => ({ id: i.id, cantidad: Math.min(i.cantidad, MAX_CANT) }));
+}
+function guardarCarrito() { almacen.guardar(CLAVE_CARRITO, carrito); }
+
+function buscarProducto(id) { return tienda.productos.find((p) => p.id === id); }
+function cantidadEn(id) { const it = carrito.find((i) => i.id === id); return it ? it.cantidad : 0; }
+
+// Retira del carrito los productos que ya no existen o no están disponibles
+function sanearCarrito() {
+  const antes = carrito.length;
+  carrito = carrito.filter((i) => { const p = buscarProducto(i.id); return p && p.disponible; });
+  if (carrito.length !== antes) guardarCarrito();
+  return antes - carrito.length;
+}
+
+// Cambia la cantidad de un producto (0 = lo quita del carrito)
+function fijarCantidad(id, cantidad) {
+  const prod = buscarProducto(id);
+  if (!prod) { aviso('Este producto ya no existe.', 'error'); return false; }
+  cantidad = Math.floor(Number(cantidad) || 0);
+  if (!prod.disponible && cantidad > cantidadEn(id)) {
+    aviso('Este producto no está disponible en este momento.', 'error'); return false;
+  }
+  if (cantidad > MAX_CANT) { cantidad = MAX_CANT; aviso('Máximo ' + MAX_CANT + ' unidades por producto.', 'info'); }
+  const idx = carrito.findIndex((i) => i.id === id);
+  if (cantidad <= 0) { if (idx >= 0) carrito.splice(idx, 1); }
+  else if (idx >= 0) carrito[idx].cantidad = cantidad;
+  else carrito.push({ id, cantidad });
+  guardarCarrito();
+  actualizarTodo();
+  return true;
+}
+
+function lineasCarrito() {
+  return carrito.map((i) => {
+    const p = buscarProducto(i.id);
+    return p ? { producto: p, cantidad: i.cantidad, subtotal: redondear(p.precio * i.cantidad) } : null;
+  }).filter(Boolean);
+}
+function calcularTotales(modalidad) {
+  const lineas = lineasCarrito();
+  const subtotal = redondear(lineas.reduce((s, l) => s + l.subtotal, 0));
+  const domicilio = modalidad === 'domicilio' ? tienda.negocio.costoDomicilio : 0;
+  return {
+    lineas,
+    unidades: lineas.reduce((s, l) => s + l.cantidad, 0),
+    subtotal, domicilio,
+    total: redondear(subtotal + domicilio)
+  };
+}
+
+// Acciones de los botones Agregar / + / − / Quitar
+function manejarAccion(accion, id) {
+  const p = buscarProducto(id);
+  if (accion === 'agregar') { if (fijarCantidad(id, 1) && p) aviso('Agregado: ' + p.nombre); }
+  else if (accion === 'sumar') fijarCantidad(id, cantidadEn(id) + 1);
+  else if (accion === 'restar') {
+    const nueva = cantidadEn(id) - 1;
+    if (fijarCantidad(id, nueva) && nueva === 0) aviso('Producto retirado del carrito.', 'info');
+  } else if (accion === 'quitar') {
+    if (fijarCantidad(id, 0)) aviso('Producto retirado del carrito.', 'info');
+  }
+}
+// Después de redibujar, devuelve el foco al botón equivalente (útil con teclado)
+function restaurarFoco(contenedor, id, accion) {
+  const idSeguro = (window.CSS && CSS.escape) ? CSS.escape(id) : id;
+  const buscar = (a) => contenedor.querySelector('[data-id="' + idSeguro + '"][data-accion="' + a + '"]');
+  const destino = buscar(accion) || buscar('sumar') || buscar('agregar');
+  if (destino && !destino.disabled) destino.focus({ preventScroll: true });
+}
+
+/* =====================================================================
+   8. DIBUJAR LA PÁGINA
+   ===================================================================== */
+function renderEncabezado() {
+  const n = tienda.negocio;
+  const logo = $('#logo');
+  if (n.logoImagen) logo.innerHTML = `<img src="${esc(n.logoImagen)}" alt="" data-respaldo="${esc(n.logoTexto)}">`;
+  else logo.textContent = n.logoTexto;
+  $('#nombre-negocio').textContent = n.nombre;
+  const desc = $('#descripcion-negocio');
+  desc.textContent = n.descripcion;
+  desc.classList.toggle('oculto', !n.descripcion);
+}
+
+function stepperHtml(p, cant) {
+  return `<div class="stepper" role="group" aria-label="Cantidad de ${esc(p.nombre)}">
+    <button type="button" data-accion="restar" data-id="${esc(p.id)}" aria-label="Quitar una unidad de ${esc(p.nombre)}">−</button>
+    <span>${cant}</span>
+    <button type="button" data-accion="sumar" data-id="${esc(p.id)}" aria-label="Agregar una unidad de ${esc(p.nombre)}" ${cant >= MAX_CANT ? 'disabled' : ''}>+</button>
+  </div>`;
+}
+
+function tarjetaProducto(p) {
+  const cant = cantidadEn(p.id);
+  let acciones;
+  if (!p.disponible) acciones = '<button class="btn btn-secundario btn-bloque" type="button" disabled>No disponible</button>';
+  else if (cant === 0) acciones = `<button class="btn btn-primario btn-bloque" type="button" data-accion="agregar" data-id="${esc(p.id)}">Agregar</button>`;
+  else acciones = stepperHtml(p, cant);
+
+  return `<article class="tarjeta${p.disponible ? '' : ' agotada'}">
+    <div class="foto">
+      ${miniatura(p)}
+      ${p.disponible ? '' : '<span class="etiqueta">Agotado</span>'}
+      ${p.demo ? '<span class="etiqueta demo">DEMO</span>' : ''}
+    </div>
+    <div class="info">
+      <h3>${esc(p.nombre)}</h3>
+      ${p.descripcion ? `<p>${esc(p.descripcion)}</p>` : ''}
+      <div class="precio">${formatoPrecio(p.precio)}</div>
+      ${acciones}
+    </div>
+  </article>`;
+}
+
+function renderCatalogo() {
+  const productos = tienda.productos;
+
+  // Chips de categorías: solo las que tienen productos
+  const cats = tienda.categorias.filter((c) => productos.some((p) => p.categoria === c));
+  if (filtro.categoria !== 'Todas' && !cats.includes(filtro.categoria)) filtro.categoria = 'Todas';
+  const chips = $('#chips');
+  chips.classList.toggle('oculto', cats.length < 2);
+  chips.innerHTML = ['Todas'].concat(cats).map((c) =>
+    `<button class="chip${c === filtro.categoria ? ' activo' : ''}" type="button" data-categoria="${esc(c)}" aria-pressed="${c === filtro.categoria}">${esc(c)}</button>`
+  ).join('');
+
+  // Avisos superiores
+  const avisos = [];
+  if (!tienda.negocio.whatsapp) {
+    avisos.push('<div class="banda alerta">⚠️ Este catálogo todavía no tiene número de WhatsApp configurado, por eso no se pueden enviar pedidos. <br><button class="enlace" type="button" data-abrir-admin>Configurarlo (dueño)</button></div>');
+  }
+  if (productos.some((p) => p.demo)) {
+    avisos.push('<div class="banda demo">🧪 Catálogo de demostración: los productos marcados <strong>DEMO</strong> son ficticios.</div>');
+  }
+  if (productos.length && productos.every((p) => !p.disponible)) {
+    avisos.push('<div class="banda alerta">Por ahora no hay productos disponibles. Vuelve más tarde o escribe directamente al negocio.</div>');
+  }
+  $('#avisos-catalogo').innerHTML = avisos.join('');
+
+  // Productos filtrados por categoría y búsqueda (los disponibles primero)
+  const q = normalizarBusqueda(filtro.busqueda.trim());
+  const visibles = productos
+    .filter((p) => filtro.categoria === 'Todas' || p.categoria === filtro.categoria)
+    .filter((p) => !q || normalizarBusqueda(p.nombre + ' ' + p.descripcion + ' ' + p.categoria).includes(q))
+    .sort((a, b) => Number(b.disponible) - Number(a.disponible));
+
+  const grid = $('#grid');
+  if (!productos.length) {
+    grid.innerHTML = '<div class="vacio"><div class="icono">📦</div><h3>Aún no hay productos publicados</h3><p>El negocio está preparando su catálogo.</p></div>';
+  } else if (!visibles.length) {
+    grid.innerHTML = '<div class="vacio"><div class="icono">🔍</div><h3>No encontramos productos</h3><p>Prueba con otra palabra o categoría.</p><button class="btn btn-secundario" type="button" data-limpiar-filtros>Ver todos los productos</button></div>';
+  } else {
+    grid.innerHTML = visibles.map(tarjetaProducto).join('');
+  }
+}
+
+function renderResumenCarrito() {
+  const { unidades, subtotal } = calcularTotales('');
+  const cont = $('#contador-carrito');
+  cont.textContent = unidades;
+  cont.classList.toggle('oculto', unidades === 0);
+  $('#btn-carrito-sup').setAttribute('aria-label', 'Ver carrito, ' + unidades + ' productos');
+  $('#barra-carrito').classList.toggle('oculto', unidades === 0);
+  $('#barra-resumen').textContent = '🛒 ' + unidades + (unidades === 1 ? ' producto · ' : ' productos · ') + formatoPrecio(subtotal);
+}
+
+function modalidadSeleccionada() {
+  const r = document.querySelector('input[name="entrega"]:checked');
+  return r ? r.value : '';
+}
+function actualizarCampoUbicacion() {
+  $('#campo-ubicacion').classList.toggle('oculto', modalidadSeleccionada() !== 'domicilio');
+}
+function renderOpcionesEntrega() {
+  const n = tienda.negocio;
+  const actual = modalidadSeleccionada();
+  const opciones = [];
+  if (n.ofreceDomicilio) opciones.push({ v: 'domicilio', t: 'Entrega a domicilio', d: n.costoDomicilio > 0 ? 'Costo: ' + formatoPrecio(n.costoDomicilio) : 'Sin costo adicional' });
+  if (n.ofreceRecoger) opciones.push({ v: 'recoger', t: 'Recoger en el punto de venta', d: 'Sin costo' });
+  $('#opciones-entrega').innerHTML = opciones.map((o) =>
+    `<label class="opcion"><input type="radio" name="entrega" value="${o.v}" ${(o.v === actual || opciones.length === 1) ? 'checked' : ''}>
+      <span>${o.t}<small>${esc(o.d)}</small></span></label>`
+  ).join('');
+  actualizarCampoUbicacion();
+}
+
+function renderCarrito() {
+  const t = calcularTotales(modalidadSeleccionada());
+  const vacio = t.lineas.length === 0;
+  $('#carrito-vacio').classList.toggle('oculto', !vacio);
+  $('#carrito-contenido').classList.toggle('oculto', vacio);
+  $('#pie-carrito').classList.toggle('oculto', vacio);
+  if (vacio) { $('#lista-carrito').innerHTML = ''; $('#totales').innerHTML = ''; return; }
+
+  $('#lista-carrito').innerHTML = t.lineas.map((l) => `
+    <div class="item">
+      <div class="mini">${miniatura(l.producto)}</div>
+      <div>
+        <div class="item-nombre">${esc(l.producto.nombre)} ${l.producto.disponible ? '' : '<span class="pill">No disponible</span>'}</div>
+        <div class="item-precio">${formatoPrecio(l.producto.precio)} c/u</div>
+        <div class="item-fila">
+          ${stepperHtml(l.producto, l.cantidad)}
+          <strong>${formatoPrecio(l.subtotal)}</strong>
+        </div>
+        <button class="btn-quitar" type="button" data-accion="quitar" data-id="${esc(l.producto.id)}">Quitar</button>
+      </div>
+    </div>`).join('');
+
+  const modalidad = modalidadSeleccionada();
+  let html = `<div><span>Subtotal</span><span>${formatoPrecio(t.subtotal)}</span></div>`;
+  if (modalidad === 'domicilio') {
+    html += `<div><span>Domicilio</span><span>${t.domicilio > 0 ? formatoPrecio(t.domicilio) : 'Sin costo'}</span></div>`;
+  }
+  html += `<div class="total"><span>Total</span><span>${formatoPrecio(t.total)}</span></div>`;
+  $('#totales').innerHTML = html;
+}
+
+function actualizarTodo() {
+  renderCatalogo();
+  renderResumenCarrito();
+  renderCarrito();
+}
+
+function abrirCarrito() {
+  renderCarrito();
+  abrirPanel('panel-carrito');
+}
+
+/* =====================================================================
+   9. VALIDAR Y GENERAR EL PEDIDO PARA WHATSAPP
+   ===================================================================== */
+function validarPedido() {
+  limpiarErroresEn('#form-pedido');
+  const { lineas } = calcularTotales('');
+  if (!lineas.length) { aviso('Tu carrito está vacío.', 'error'); return null; }
+
+  const noDisponibles = lineas.filter((l) => !l.producto.disponible);
+  if (noDisponibles.length) {
+    aviso('Quita del carrito lo que ya no está disponible: ' + noDisponibles.map((l) => l.producto.nombre).join(', '), 'error');
+    return null;
+  }
+
+  const fallos = [];
+  const nombre = $('#cliente-nombre').value.trim().replace(/\s+/g, ' ');
+  if (nombre.length < 2) { marcarError('cliente-nombre', 'err-nombre', 'Escribe tu nombre (mínimo 2 letras).'); fallos.push('cliente-nombre'); }
+
+  const modalidad = modalidadSeleccionada();
+  if (!modalidad) { marcarError(null, 'err-entrega', 'Elige cómo quieres recibir el pedido.'); fallos.push('opciones-entrega'); }
+
+  let ubicacion = '';
+  if (modalidad === 'domicilio') {
+    ubicacion = $('#cliente-ubicacion').value.trim().replace(/\s+/g, ' ');
+    if (ubicacion.length < 2) { marcarError('cliente-ubicacion', 'err-ubicacion', 'Indica la torre/casa y el apartamento para la entrega.'); fallos.push('cliente-ubicacion'); }
+  }
+  const notas = $('#cliente-notas').value.trim().slice(0, 300);
+
+  if (fallos.length) {
+    aviso('Revisa los campos marcados en rojo.', 'error');
+    const primero = document.getElementById(fallos[0]);
+    const enfocable = primero.matches('input, textarea') ? primero : primero.querySelector('input');
+    if (enfocable) enfocable.focus();
+    return null;
+  }
+  return { nombre, modalidad, ubicacion, notas };
+}
+
+function construirMensaje(d) {
+  const t = calcularTotales(d.modalidad);
+  const n = tienda.negocio;
+  let fecha;
+  try { fecha = new Date().toLocaleString('es-CO', { dateStyle: 'short', timeStyle: 'short' }); }
+  catch (e) { fecha = new Date().toLocaleString(); }
+
+  const L = [];
+  L.push('*NUEVO PEDIDO - ' + sinFormato(n.nombre) + '*');
+  L.push('Fecha: ' + fecha);
+  L.push('');
+  L.push('*Cliente:* ' + sinFormato(d.nombre));
+  L.push(d.modalidad === 'domicilio'
+    ? '*Entrega:* A domicilio - ' + sinFormato(d.ubicacion)
+    : '*Entrega:* Recoge en el punto de venta');
+  L.push('');
+  L.push('*Productos:*');
+  t.lineas.forEach((l, i) => {
+    L.push((i + 1) + '. ' + sinFormato(l.producto.nombre));
+    L.push('   ' + l.cantidad + ' x ' + formatoPrecio(l.producto.precio) + ' = ' + formatoPrecio(l.subtotal));
+  });
+  L.push('');
+  L.push('Subtotal: ' + formatoPrecio(t.subtotal));
+  if (d.modalidad === 'domicilio') L.push('Domicilio: ' + (t.domicilio > 0 ? formatoPrecio(t.domicilio) : 'Sin costo'));
+  L.push('*TOTAL: ' + formatoPrecio(t.total) + '*');
+  if (d.notas) { L.push(''); L.push('*Observaciones:* ' + sinFormato(d.notas)); }
+  L.push('');
+  L.push('_Pedido generado desde el catálogo digital. Queda pendiente de confirmación por parte del negocio._');
+  return L.join('\n');
+}
+
+function enlaceWhatsApp(numero, mensaje) {
+  return 'https://wa.me/' + numero + (mensaje ? '?text=' + encodeURIComponent(mensaje) : '');
+}
+
+function revisarPedido() {
+  const datos = validarPedido();
+  if (!datos) return;
+  const mensaje = construirMensaje(datos);
+  $('#mensaje-pedido').textContent = mensaje;
+
+  const numero = tienda.negocio.whatsapp;
+  const boton = $('#btn-whatsapp');
+  if (whatsappValido(numero)) {
+    boton.href = enlaceWhatsApp(numero, mensaje);
+    boton.removeAttribute('aria-disabled');
+    $('#aviso-sin-whatsapp').classList.add('oculto');
+  } else {
+    boton.removeAttribute('href');
+    boton.setAttribute('aria-disabled', 'true');
+    $('#aviso-sin-whatsapp').classList.remove('oculto');
+  }
+  aviso('Pedido listo. Revisa el mensaje.');
+  abrirPanel('panel-pedido');
+}
+
+async function copiarTexto(t) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(t); return true; }
+  } catch (e) { /* se intenta el método alternativo */ }
+  try {
+    const area = document.createElement('textarea');
+    area.value = t; area.setAttribute('readonly', '');
+    area.style.position = 'fixed'; area.style.opacity = '0';
+    document.body.appendChild(area); area.select();
+    const ok = document.execCommand('copy');
+    area.remove();
+    return ok;
+  } catch (e) { return false; }
+}
+
+function vaciarTrasEnvio() {
+  if (!confirm('¿Vaciar el carrito? Hazlo solo si ya enviaste el mensaje en WhatsApp.')) return;
+  carrito = [];
+  guardarCarrito();
+  $('#form-pedido').reset();
+  $('#contador-notas').textContent = '0';
+  renderOpcionesEntrega();
+  cerrarPanel('panel-pedido');
+  cerrarPanel('panel-carrito');
+  actualizarTodo();
+  aviso('Carrito vaciado. ¡Gracias por tu pedido!');
+}
+
+/* =====================================================================
+   10. ADMINISTRACIÓN (solo cambia la copia de este navegador)
+   ===================================================================== */
+// Guarda la tienda en el navegador y avisa el resultado
+function persistir(mensajeOk) {
+  tienda.actualizado = new Date().toISOString();
+  const ok = almacen.guardar(CLAVE_TIENDA, tienda);
+  if (ok) aviso(mensajeOk + ' (en este navegador)');
+  else aviso('El cambio se aplicó, pero NO se pudo guardar en el navegador (espacio lleno o bloqueado). Descarga el index.html para no perderlo.', 'error');
+  return ok;
+}
+// Después de cambiar la tienda: redibuja todo lo afectado
+function refrescarTienda() {
+  sanearCarrito();
+  aplicarTema();
+  renderEncabezado();
+  renderOpcionesEntrega();
+  actualizarTodo();
+  if (panelAbierto('panel-admin')) {
+    renderAdminProductos();
+    renderAdminCategorias();
+    renderEstadoDatos();
+  }
+}
+
+function abrirAdmin() {
+  llenarFormNegocio();
+  renderAdminProductos();
+  renderAdminCategorias();
+  renderEstadoDatos();
+  mostrarPestana('negocio');
+  abrirPanel('panel-admin');
+}
+function mostrarPestana(nombre) {
+  $$('.pestana').forEach((b) => {
+    const activa = b.dataset.pestana === nombre;
+    b.classList.toggle('activo', activa);
+    b.setAttribute('aria-selected', String(activa));
+  });
+  $$('[data-seccion]').forEach((s) => s.classList.toggle('oculto', s.dataset.seccion !== nombre));
+  $('#cuerpo-admin').scrollTop = 0;
+}
+
+/* ----- Pestaña Negocio ----- */
+let logoTemporal = '';
+function vistaLogo() {
+  const v = $('#vista-logo');
+  if (logoTemporal) v.innerHTML = `<img src="${esc(logoTemporal)}" alt="Vista previa del logo" data-respaldo="${esc($('#cfg-logo-texto').value || '🛍️')}">`;
+  else v.innerHTML = `<span class="emoji">${esc($('#cfg-logo-texto').value.trim() || '🛍️')}</span>`;
+}
+function llenarFormNegocio() {
+  const n = tienda.negocio;
+  $('#cfg-nombre').value = n.nombre;
+  $('#cfg-descripcion').value = n.descripcion;
+  $('#cfg-logo-texto').value = n.logoTexto;
+  logoTemporal = n.logoImagen;
+  $('#cfg-logo-url').value = logoTemporal.startsWith('data:') ? '' : logoTemporal;
+  $('#cfg-color-primario').value = n.colorPrimario;
+  $('#cfg-color-acento').value = n.colorAcento;
+  $('#cfg-whatsapp').value = n.whatsapp;
+  $('#cfg-moneda').value = n.moneda;
+  $('#cfg-domicilio').checked = n.ofreceDomicilio;
+  $('#cfg-recoger').checked = n.ofreceRecoger;
+  $('#cfg-costo-domicilio').value = n.costoDomicilio;
+  vistaLogo();
+  limpiarErroresEn('#seccion-negocio');
+}
+function guardarNegocio() {
+  limpiarErroresEn('#seccion-negocio');
+  const errores = [];
+  const nombre = $('#cfg-nombre').value.trim();
+  if (nombre.length < 2) { marcarError('cfg-nombre', 'err-cfg-nombre', 'Escribe el nombre del negocio.'); errores.push('cfg-nombre'); }
+
+  const urlLogo = $('#cfg-logo-url').value.trim();
+  if (urlLogo && !imagenSegura(urlLogo)) { marcarError('cfg-logo-url', 'err-cfg-logo', 'El enlace debe empezar por https://'); errores.push('cfg-logo-url'); }
+
+  const wa = soloDigitos($('#cfg-whatsapp').value);
+  if (wa && !whatsappValido(wa)) {
+    marcarError('cfg-whatsapp', 'err-cfg-whatsapp', 'Número incompleto. Debe incluir el código de país (ej. 57 para Colombia o 58 para Venezuela) y tener entre 11 y 15 dígitos.');
+    errores.push('cfg-whatsapp');
+  }
+
+  const costo = $('#cfg-costo-domicilio').value;
+  if (costo !== '' && !numeroValido(costo)) { marcarError('cfg-costo-domicilio', 'err-cfg-costo', 'Escribe un valor igual o mayor a 0.'); errores.push('cfg-costo-domicilio'); }
+
+  const domicilio = $('#cfg-domicilio').checked, recoger = $('#cfg-recoger').checked;
+  if (!domicilio && !recoger) { marcarError(null, 'err-cfg-entrega', 'Activa al menos una modalidad de entrega.'); errores.push('cfg-domicilio'); }
+
+  if (errores.length) {
+    aviso('Revisa los campos marcados en rojo.', 'error');
+    document.getElementById(errores[0]).focus();
+    return;
+  }
+
+  Object.assign(tienda.negocio, {
+    nombre: nombre.slice(0, 60),
+    descripcion: $('#cfg-descripcion').value.trim().slice(0, 200),
+    logoTexto: ($('#cfg-logo-texto').value.trim() || '🛍️').slice(0, 8),
+    logoImagen: imagenSegura(logoTemporal),
+    colorPrimario: esColor($('#cfg-color-primario').value) ? $('#cfg-color-primario').value : tienda.negocio.colorPrimario,
+    colorAcento: esColor($('#cfg-color-acento').value) ? $('#cfg-color-acento').value : tienda.negocio.colorAcento,
+    whatsapp: wa,
+    moneda: MONEDAS.includes($('#cfg-moneda').value) ? $('#cfg-moneda').value : 'COP',
+    ofreceDomicilio: domicilio,
+    ofreceRecoger: recoger,
+    costoDomicilio: costo === '' ? 0 : redondear(Number(costo))
+  });
+  $('#cfg-whatsapp').value = wa;
+  persistir('Datos del negocio guardados');
+  if (!wa) aviso('Recuerda: sin número de WhatsApp los clientes no pueden enviar pedidos.', 'info');
+  refrescarTienda();
+}
+
+/* ----- Pestaña Productos ----- */
+function renderAdminProductos() {
+  $('#btn-borrar-demo').classList.toggle('oculto', !tienda.productos.some((p) => p.demo));
+  const cont = $('#adm-lista-productos');
+  if (!tienda.productos.length) {
+    cont.innerHTML = '<div class="vacio"><div class="icono">📦</div><h3>No hay productos</h3><p>Pulsa "Nuevo producto" para crear el primero.</p></div>';
+    return;
+  }
+  cont.innerHTML = tienda.productos.map((p) => `
+    <div class="adm-item">
+      <div class="mini">${miniatura(p)}</div>
+      <div class="adm-info">
+        <strong>${esc(p.nombre)}</strong> ${p.demo ? '<span class="pill demo">DEMO</span>' : ''}
+        <div class="sub">${esc(p.categoria)} · ${formatoPrecio(p.precio)}</div>
+        <label class="interruptor"><input type="checkbox" data-accion="disponible" data-id="${esc(p.id)}" ${p.disponible ? 'checked' : ''}> Disponible</label>
+      </div>
+      <div class="adm-acciones">
+        <button class="btn btn-secundario btn-chico" type="button" data-accion="editar" data-id="${esc(p.id)}">Editar</button>
+        <button class="btn btn-peligro btn-chico" type="button" data-accion="eliminar" data-id="${esc(p.id)}">Eliminar</button>
+      </div>
+    </div>`).join('');
+}
+
+let editandoId = null;
+let imagenTemporal = '';
+function vistaProducto() {
+  const v = $('#vista-producto');
+  const emoji = $('#prod-emoji').value.trim() || '🛍️';
+  if (imagenTemporal) v.innerHTML = `<img src="${esc(imagenTemporal)}" alt="Vista previa" data-respaldo="${esc(emoji)}">`;
+  else v.innerHTML = `<span class="emoji">${esc(emoji)}</span>`;
+}
+function abrirFormProducto(id) {
+  if (!tienda.categorias.length) {
+    aviso('Primero crea al menos una categoría.', 'error');
+    mostrarPestana('categorias');
+    return;
+  }
+  editandoId = id || null;
+  const p = id ? buscarProducto(id) : null;
+  $('#titulo-form-producto').textContent = p ? 'Editar producto' : 'Nuevo producto';
+  $('#prod-categoria').innerHTML = tienda.categorias.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+  $('#prod-nombre').value = p ? p.nombre : '';
+  $('#prod-descripcion').value = p ? p.descripcion : '';
+  $('#prod-precio').value = p ? p.precio : '';
+  $('#prod-categoria').value = p ? p.categoria : (filtro.categoria !== 'Todas' && tienda.categorias.includes(filtro.categoria) ? filtro.categoria : tienda.categorias[0]);
+  $('#prod-emoji').value = p ? p.emoji : '';
+  $('#prod-disponible').checked = p ? p.disponible : true;
+  $('#prod-demo').checked = p ? p.demo : false;
+  imagenTemporal = p ? p.imagen : '';
+  $('#prod-url').value = imagenTemporal.startsWith('data:') ? '' : imagenTemporal;
+  vistaProducto();
+  limpiarErroresEn('#panel-producto');
+  abrirPanel('panel-producto');
+}
+function guardarProducto() {
+  limpiarErroresEn('#panel-producto');
+  const errores = [];
+  const nombre = $('#prod-nombre').value.trim().replace(/\s+/g, ' ');
+  if (nombre.length < 2) { marcarError('prod-nombre', 'err-prod-nombre', 'Escribe el nombre del producto.'); errores.push('prod-nombre'); }
+  const precio = $('#prod-precio').value;
+  if (!numeroValido(precio)) { marcarError('prod-precio', 'err-prod-precio', 'Escribe un precio igual o mayor a 0.'); errores.push('prod-precio'); }
+  const categoria = $('#prod-categoria').value;
+  if (!tienda.categorias.includes(categoria)) { marcarError('prod-categoria', 'err-prod-categoria', 'Elige una categoría.'); errores.push('prod-categoria'); }
+  const url = $('#prod-url').value.trim();
+  if (url && !imagenSegura(url)) { marcarError('prod-url', 'err-prod-imagen', 'Usa un enlace https:// o una ruta como img/foto.jpg'); errores.push('prod-url'); }
+  if (errores.length) {
+    aviso('Revisa los campos marcados en rojo.', 'error');
+    document.getElementById(errores[0]).focus();
+    return;
+  }
+
+  const datos = {
+    nombre: nombre.slice(0, 80),
+    descripcion: $('#prod-descripcion').value.trim().slice(0, 200),
+    precio: redondear(Number(precio)),
+    categoria,
+    emoji: $('#prod-emoji').value.trim().slice(0, 8),
+    imagen: imagenSegura(imagenTemporal),
+    disponible: $('#prod-disponible').checked,
+    demo: $('#prod-demo').checked
+  };
+  const existente = editandoId ? buscarProducto(editandoId) : null;
+  if (existente) Object.assign(existente, datos);
+  else tienda.productos.push(normalizarProducto(Object.assign({ id: nuevoId() }, datos)));
+
+  persistir(existente ? 'Producto actualizado' : 'Producto creado');
+  cerrarPanel('panel-producto');
+  refrescarTienda();
+}
+function eliminarProducto(id) {
+  const p = buscarProducto(id);
+  if (!p || !confirm('¿Eliminar "' + p.nombre + '"? Esta acción no se puede deshacer.')) return;
+  tienda.productos = tienda.productos.filter((x) => x.id !== id);
+  persistir('Producto eliminado');
+  refrescarTienda();
+}
+
+/* ----- Pestaña Categorías ----- */
+function contarEnCategoria(c) { return tienda.productos.filter((p) => p.categoria === c).length; }
+function renderAdminCategorias() {
+  const cont = $('#adm-lista-categorias');
+  if (!tienda.categorias.length) { cont.innerHTML = '<p class="ayuda">No hay categorías. Crea la primera arriba.</p>'; return; }
+  cont.innerHTML = tienda.categorias.map((c, i) => `
+    <div class="adm-item">
+      <div class="adm-info"><strong>${esc(c)}</strong><div class="sub">${contarEnCategoria(c)} producto(s)</div></div>
+      <div class="adm-acciones">
+        <button class="btn btn-secundario btn-chico" type="button" data-accion="renombrar" data-indice="${i}">Renombrar</button>
+        <button class="btn btn-peligro btn-chico" type="button" data-accion="eliminar" data-indice="${i}">Eliminar</button>
+      </div>
+    </div>`).join('');
+}
+function validarNombreCategoria(nombre, excepto) {
+  if (nombre.length < 2) return 'El nombre debe tener al menos 2 letras.';
+  if (nombre.length > 30) return 'Máximo 30 caracteres.';
+  if (tienda.categorias.some((c) => c !== excepto && c.toLowerCase() === nombre.toLowerCase())) return 'Ya existe una categoría con ese nombre.';
+  return '';
+}
+function agregarCategoria() {
+  limpiarError('err-cat', 'cat-nueva');
+  const nombre = $('#cat-nueva').value.trim().replace(/\s+/g, ' ');
+  const problema = validarNombreCategoria(nombre, null);
+  if (problema) { marcarError('cat-nueva', 'err-cat', problema); return; }
+  tienda.categorias.push(nombre);
+  $('#cat-nueva').value = '';
+  persistir('Categoría creada');
+  refrescarTienda();
+}
+function renombrarCategoria(indice) {
+  const vieja = tienda.categorias[indice];
+  if (vieja === undefined) return;
+  const respuesta = prompt('Nuevo nombre para la categoría "' + vieja + '":', vieja);
+  if (respuesta === null) return;
+  const nueva = respuesta.trim().replace(/\s+/g, ' ');
+  if (nueva === vieja) return;
+  const problema = validarNombreCategoria(nueva, vieja);
+  if (problema) { aviso(problema, 'error'); return; }
+  tienda.categorias[indice] = nueva;
+  tienda.productos.forEach((p) => { if (p.categoria === vieja) p.categoria = nueva; });
+  if (filtro.categoria === vieja) filtro.categoria = nueva;
+  persistir('Categoría renombrada');
+  refrescarTienda();
+}
+function eliminarCategoria(indice) {
+  const c = tienda.categorias[indice];
+  if (c === undefined) return;
+  const cuantos = contarEnCategoria(c);
+  if (cuantos > 0) { aviso('No se puede eliminar "' + c + '": tiene ' + cuantos + ' producto(s). Cámbialos de categoría o elimínalos primero.', 'error'); return; }
+  if (!confirm('¿Eliminar la categoría "' + c + '"?')) return;
+  tienda.categorias.splice(indice, 1);
+  persistir('Categoría eliminada');
+  refrescarTienda();
+}
+
+/* ----- Pestaña Publicar y datos ----- */
+function renderEstadoDatos() {
+  const local = almacen.leer(CLAVE_TIENDA);
+  let html;
+  if (!almacenamientoDisponible) {
+    html = '⚠️ Este navegador no permite guardar datos locales (modo privado o bloqueo). Tus cambios se perderán al cerrar: descarga el index.html antes de salir.';
+  } else if (local) {
+    let fecha = local.actualizado;
+    try { fecha = new Date(local.actualizado).toLocaleString('es-CO'); } catch (e) { /* se deja el texto original */ }
+    html = '💾 Hay cambios guardados en este navegador (último: ' + esc(fecha) + '). Tus clientes NO los ven hasta que publiques el nuevo index.html.';
+  } else {
+    html = '✅ Estás viendo la versión incluida en el archivo publicado. No hay cambios locales.';
+  }
+  html += '<p>Lo guardado en el navegador no se sincroniza entre dispositivos.</p>';
+  $('#estado-almacenamiento').innerHTML = html;
+}
+
+function descargarArchivo(nombre, contenido, tipo) {
+  const blob = new Blob([contenido], { type: tipo });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = nombre;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+// Crea un index.html nuevo: el original con el bloque de datos reemplazado
+function generarHtmlActualizado() {
+  const json = JSON.stringify(tienda, null, 2).replace(/</g, '\\u003c');
+  const patron = /(<script id="datos-tienda" type="application\/json">)([\s\S]*?)(<\/script>)/;
+  if (!patron.test(HTML_ORIGINAL)) throw new Error('No se encontró el bloque de datos en el archivo.');
+  return HTML_ORIGINAL.replace(patron, (todo, apertura, contenido, cierre) => apertura + '\n' + json + '\n' + cierre);
+}
+
+function importarRespaldo(archivo) {
+  const lector = new FileReader();
+  lector.onerror = () => aviso('No se pudo leer el archivo.', 'error');
+  lector.onload = () => {
+    let datos;
+    try { datos = JSON.parse(lector.result); }
+    catch (e) { aviso('El archivo no es un respaldo válido (JSON dañado).', 'error'); return; }
+    if (!datos || typeof datos !== 'object' || !Array.isArray(datos.productos) || !datos.negocio) {
+      aviso('El archivo no tiene el formato de respaldo de esta tienda.', 'error'); return;
+    }
+    if (!confirm('¿Reemplazar la tienda actual por el respaldo? Se cargarán ' + datos.productos.length + ' producto(s).')) return;
+    tienda = normalizarTienda(datos);
+    persistir('Respaldo importado');
+    llenarFormNegocio();
+    refrescarTienda();
+  };
+  lector.readAsText(archivo);
+}
+
+function restablecer() {
+  if (!confirm('¿Descartar los cambios guardados en este navegador y volver a la versión publicada?')) return;
+  almacen.borrar(CLAVE_TIENDA);
+  tienda = normalizarTienda(leerDatosIncrustados());
+  llenarFormNegocio();
+  refrescarTienda();
+  aviso('Se restauró la versión publicada.');
+}
+
+/* =====================================================================
+   11. CONEXIÓN DE BOTONES Y EVENTOS
+   ===================================================================== */
+function conectarEventos() {
+  document.addEventListener('error', manejarErrorImagen, true);
+
+  // Catálogo
+  $('#buscar').addEventListener('input', (e) => { filtro.busqueda = e.target.value; renderCatalogo(); });
+  $('#chips').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-categoria]');
+    if (b) { filtro.categoria = b.dataset.categoria; renderCatalogo(); }
+  });
+  $('#grid').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-accion]');
+    if (b) { manejarAccion(b.dataset.accion, b.dataset.id); restaurarFoco($('#grid'), b.dataset.id, b.dataset.accion); return; }
+    if (e.target.closest('[data-limpiar-filtros]')) {
+      filtro.categoria = 'Todas'; filtro.busqueda = ''; $('#buscar').value = ''; renderCatalogo();
+    }
+  });
+  $('#avisos-catalogo').addEventListener('click', (e) => { if (e.target.closest('[data-abrir-admin]')) abrirAdmin(); });
+
+  // Carrito
+  $('#btn-carrito-sup').addEventListener('click', abrirCarrito);
+  $('#barra-carrito').addEventListener('click', abrirCarrito);
+  $('#lista-carrito').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-accion]');
+    if (b) { manejarAccion(b.dataset.accion, b.dataset.id); restaurarFoco($('#lista-carrito'), b.dataset.id, b.dataset.accion); }
+  });
+  $('#btn-vaciar').addEventListener('click', () => {
+    if (!confirm('¿Quitar todos los productos del carrito?')) return;
+    carrito = []; guardarCarrito(); actualizarTodo(); aviso('Carrito vaciado.', 'info');
+  });
+  $('#opciones-entrega').addEventListener('change', () => { limpiarError('err-entrega'); actualizarCampoUbicacion(); renderCarrito(); });
+  $('#cliente-nombre').addEventListener('input', () => limpiarError('err-nombre', 'cliente-nombre'));
+  $('#cliente-ubicacion').addEventListener('input', () => limpiarError('err-ubicacion', 'cliente-ubicacion'));
+  $('#cliente-notas').addEventListener('input', (e) => { $('#contador-notas').textContent = e.target.value.length; });
+  $('#form-pedido').addEventListener('submit', (e) => { e.preventDefault(); revisarPedido(); });
+  $('#btn-revisar').addEventListener('click', revisarPedido);
+
+  // Vista previa del pedido
+  $('#btn-whatsapp').addEventListener('click', (e) => {
+    if ($('#btn-whatsapp').getAttribute('aria-disabled') === 'true') {
+      e.preventDefault();
+      aviso('El negocio no ha configurado su WhatsApp. Copia el mensaje y envíalo por otro medio.', 'error');
+      return;
+    }
+    aviso('Abriendo WhatsApp… Revisa el mensaje y pulsa Enviar allí.', 'info');
+  });
+  $('#btn-copiar').addEventListener('click', async () => {
+    const ok = await copiarTexto($('#mensaje-pedido').textContent);
+    aviso(ok ? 'Mensaje copiado.' : 'No se pudo copiar automáticamente. Mantén pulsado el texto para copiarlo.', ok ? 'ok' : 'error');
+  });
+  $('#btn-ya-envie').addEventListener('click', vaciarTrasEnvio);
+
+  // Cerrar paneles: botón ✕, botones con data-cerrar o tocar fuera de la hoja
+  $$('.panel').forEach((panel) => {
+    panel.addEventListener('click', (e) => {
+      if (e.target === panel || e.target.closest('[data-cerrar]')) cerrarPanel(panel.id);
+    });
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && pilaPaneles.length) cerrarPanel(pilaPaneles[pilaPaneles.length - 1].id);
+  });
+
+  // Pie de página
+  $('#btn-privacidad').addEventListener('click', () => abrirPanel('panel-privacidad'));
+  $('#btn-admin').addEventListener('click', abrirAdmin);
+
+  // Administración: pestañas
+  $('.pestanas').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-pestana]');
+    if (b) mostrarPestana(b.dataset.pestana);
+  });
+
+  // Administración: negocio
+  $('#cfg-logo-texto').addEventListener('input', vistaLogo);
+  $('#cfg-logo-archivo').addEventListener('change', async (e) => {
+    const archivo = e.target.files[0];
+    e.target.value = '';
+    if (!archivo) return;
+    try {
+      logoTemporal = await leerImagenRedimensionada(archivo, 300);
+      $('#cfg-logo-url').value = '';
+      limpiarError('err-cfg-logo', 'cfg-logo-url');
+      vistaLogo();
+      aviso('Logo cargado. Pulsa "Guardar cambios".', 'info');
+    } catch (err) { aviso(err.message, 'error'); }
+  });
+  $('#cfg-logo-url').addEventListener('input', (e) => {
+    const v = e.target.value.trim();
+    limpiarError('err-cfg-logo', 'cfg-logo-url');
+    if (!v) { if (!logoTemporal.startsWith('data:')) logoTemporal = ''; }
+    else if (imagenSegura(v)) logoTemporal = v;
+    vistaLogo();
+  });
+  $('#btn-quitar-logo').addEventListener('click', () => { logoTemporal = ''; $('#cfg-logo-url').value = ''; vistaLogo(); });
+  $('#btn-probar-whatsapp').addEventListener('click', () => {
+    const num = soloDigitos($('#cfg-whatsapp').value);
+    if (!whatsappValido(num)) {
+      marcarError('cfg-whatsapp', 'err-cfg-whatsapp', 'Escribe primero un número completo con código de país (11 a 15 dígitos).');
+      return;
+    }
+    window.open(enlaceWhatsApp(num, ''), '_blank', 'noopener');
+  });
+  $('#cfg-whatsapp').addEventListener('input', () => limpiarError('err-cfg-whatsapp', 'cfg-whatsapp'));
+  $('#btn-guardar-negocio').addEventListener('click', guardarNegocio);
+
+  // Administración: productos
+  $('#btn-nuevo-producto').addEventListener('click', () => abrirFormProducto(null));
+  $('#btn-borrar-demo').addEventListener('click', () => {
+    const demos = tienda.productos.filter((p) => p.demo).length;
+    if (!demos || !confirm('¿Eliminar los ' + demos + ' productos de demostración?')) return;
+    tienda.productos = tienda.productos.filter((p) => !p.demo);
+    persistir('Productos de demostración eliminados');
+    refrescarTienda();
+  });
+  $('#adm-lista-productos').addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-accion]');
+    if (!b) return;
+    if (b.dataset.accion === 'editar') abrirFormProducto(b.dataset.id);
+    if (b.dataset.accion === 'eliminar') eliminarProducto(b.dataset.id);
+  });
+  $('#adm-lista-productos').addEventListener('change', (e) => {
+    const c = e.target.closest('input[data-accion="disponible"]');
+    if (!c) return;
+    const p = buscarProducto(c.dataset.id);
+    if (!p) return;
+    p.disponible = c.checked;
+    persistir(p.disponible ? 'Marcado como disponible' : 'Marcado como agotado');
+    refrescarTienda();
+  });
+
+  // Formulario de producto
+  $('#prod-emoji').addEventListener('input', vistaProducto);
+  $('#prod-archivo').addEventListener('change', async (e) => {
+    const archivo = e.target.files[0];
+    e.target.value = '';
+    if (!archivo) return;
+    try {
+      imagenTemporal = await leerImagenRedimensionada(archivo, 600);
+      $('#prod-url').value = '';
+      limpiarError('err-prod-imagen', 'prod-url');
+      vistaProducto();
+    } catch (err) { aviso(err.message, 'error'); }
+  });
+  $('#prod-url').addEventListener('input', (e) => {
+    const v = e.target.value.trim();
+    limpiarError('err-prod-imagen', 'prod-url');
+    if (!v) { if (!imagenTemporal.startsWith('data:')) imagenTemporal = ''; }
+    else if (imagenSegura(v)) imagenTemporal = v;
+    vistaProducto();
+  });
+  $('#btn-quitar-imagen').addEventListener('click', () => { imagenTemporal = ''; $('#prod-url').value = ''; vistaProducto(); });
+  $('#btn-guardar-producto').addEventListener('click', guardarProducto);
+
+  // Administración: categorías
+  $('#btn-agregar-categoria').addEventListener('click', agregarCategoria);
+  $('#cat-nueva').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); agregarCategoria(); } });
+  $('#adm-lista-categorias').addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-accion]');
+    if (!b) return;
+    const i = Number(b.dataset.indice);
+    if (b.dataset.accion === 'renombrar') renombrarCategoria(i);
+    if (b.dataset.accion === 'eliminar') eliminarCategoria(i);
+  });
+
+  // Administración: publicar y datos
+  $('#btn-descargar-html').addEventListener('click', () => {
+    try {
+      descargarArchivo('index.html', generarHtmlActualizado(), 'text/html;charset=utf-8');
+      aviso('Se descargó index.html. Súbelo a tu sitio para publicar los cambios.');
+    } catch (err) { aviso('No se pudo generar el archivo: ' + err.message, 'error'); }
+  });
+  $('#btn-exportar-json').addEventListener('click', () => {
+    const fecha = new Date().toISOString().slice(0, 10);
+    descargarArchivo('respaldo-catalogo-' + fecha + '.json', JSON.stringify(tienda, null, 2), 'application/json');
+    aviso('Respaldo descargado.');
+  });
+  $('#inp-importar').addEventListener('change', (e) => {
+    const archivo = e.target.files[0];
+    e.target.value = '';
+    if (archivo) importarRespaldo(archivo);
+  });
+  $('#btn-restablecer').addEventListener('click', restablecer);
+}
+
+/* =====================================================================
+   12. INICIO
+   ===================================================================== */
+function iniciar() {
+  aplicarTema();
+  renderEncabezado();
+  renderOpcionesEntrega();
+  const retirados = sanearCarrito();
+  actualizarTodo();
+  conectarEventos();
+  if (retirados) aviso('Algunos productos ya no están disponibles y se retiraron de tu carrito.', 'info');
+  if (!almacenamientoDisponible) aviso('Este navegador no permite guardar datos: el carrito se perderá al recargar.', 'info');
+  if (location.hash === '#admin') abrirAdmin();
+}
+iniciar();
+</script>
+</body>
+</html>

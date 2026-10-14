@@ -12,6 +12,13 @@
 <meta property="og:locale" content="es_CO">
 <meta property="og:image" content="https://images.unsplash.com/photo-1561758033-d89a9ad46330?auto=format&fit=crop&w=1200&h=630&q=75">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mini Apps">
+<link rel="canonical" href="https://onemoreint.github.io/apps/miniapps-emprendedores/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"Mini Apps para Emprendedores","serviceType":"Catálogo digital y pedidos por WhatsApp","provider":{"@type":"Person","name":"José Lugo","telephone":"+573126387467"},"areaServed":"Latinoamérica","offers":[{"@type":"Offer","name":"Mini App Básica","price":"100000","priceCurrency":"COP"},{"@type":"Offer","name":"Mini App Intermedia","price":"150000","priceCurrency":"COP"},{"@type":"Offer","name":"Mini App Avanzada","price":"200000","priceCurrency":"COP"}]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://images.unsplash.com">
@@ -127,6 +134,39 @@ details.faq p{margin:0 4px 22px;color:#45453F;line-height:1.6;font-size:16px;max
 .reveal.in{opacity:1;transform:none}
 .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:all .3s;z-index:60}
 .toast.show{opacity:1;transform:translateX(-50%)}
+.planbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:32px;background:#232321;border:1px solid #33332F;border-radius:20px;padding:6px;max-width:640px}
+.planbar button{min-height:56px;border:0;border-radius:15px;background:transparent;color:#C9C9BF;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:all .25s}
+.planbar .pn{font-weight:800;font-size:15px}.planbar .pp{font-size:12.5px;font-weight:600;opacity:.85}
+.planbar button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 10px 24px -12px rgba(0,0,0,.6)}
+.planbar button:hover:not([aria-pressed="true"]){color:#fff;background:#2E2E2B}
+.plan-note{margin-top:12px;color:#C9C9BF;font-size:15px;line-height:1.5;max-width:760px}
+.plan-note strong{color:#9EE6BC}
+.info-strip{display:flex;flex-wrap:wrap;gap:8px 18px;padding:14px 24px;border-bottom:1px solid #EEEDE6;font-size:13.5px;font-weight:600;color:#45453F}
+.info-strip span{display:inline-flex;align-items:center;gap:6px}
+.promo{display:flex;align-items:center;gap:14px;margin:16px 24px 0;padding:10px;border-radius:18px;background:#FFF4DC;border:1px solid #F0DFB8;flex-wrap:wrap}
+.promo img{width:64px;height:64px;border-radius:12px;object-fit:cover}
+.tools{display:flex;flex-wrap:wrap;gap:8px;padding:14px 24px 0}
+.tool{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border-radius:12px;border:1.5px dashed #C9C8BE;background:#fff;font:inherit;font-weight:700;font-size:14px;cursor:pointer;color:var(--ink)}
+.tool:hover{border-style:solid;border-color:var(--ink)}
+.tag-r{left:auto;right:10px;background:var(--g);color:#fff}
+.prod.sold .ph img{filter:grayscale(1) opacity(.65)}
+.cl{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px dashed #E1E0D8;font-size:15px}
+.qs{width:32px;height:32px;border-radius:9px;border:1.5px solid #D6D5CC;background:#fff;font:inherit;font-weight:800;cursor:pointer;display:grid;place-items:center;color:var(--ink)}
+.qs.plus{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tot{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;font-size:15px;font-weight:600}
+.tot.big{font-weight:700;font-size:16px}.tot.big .d{font-size:28px;font-weight:800}
+.modal{position:fixed;inset:0;z-index:80;background:rgba(21,21,21,.62);display:grid;place-items:center;padding:16px;animation:fade .2s}
+@keyframes fade{from{opacity:0}}
+.sheet{position:relative;background:#fff;color:var(--ink);border-radius:26px;width:100%;max-width:470px;max-height:92vh;overflow:auto;padding:22px;animation:rise .35s cubic-bezier(.2,.8,.2,1)}
+.xbtn{position:absolute;top:14px;right:14px;z-index:2;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.95);box-shadow:0 4px 14px rgba(0,0,0,.2);font-size:26px;line-height:1;cursor:pointer;color:var(--ink)}
+.og{border:0;padding:0;margin:18px 0 0}
+.og legend{font-weight:800;font-size:15px;margin-bottom:8px;padding:0;display:flex;gap:8px;align-items:center}
+.og legend span{font-size:11px;font-weight:800;letter-spacing:.06em;background:#F1F0EA;color:#45453F;padding:3px 8px;border-radius:999px;text-transform:uppercase}
+.oc{display:flex;align-items:center;gap:12px;min-height:48px;padding:6px 12px;border:1.5px solid #E6E5DD;border-radius:12px;margin-top:6px;cursor:pointer;font-weight:600}
+.oc:has(input:checked){border-color:var(--g);background:#F1F9F4}
+.oc input{width:20px;height:20px;accent-color:#0F7B45}
+.opr{font-size:13px;font-weight:700;color:#45453F}
+@media (max-width:560px){.modal{align-items:end;padding:0}.sheet{border-radius:26px 26px 0 0;max-height:94vh}.planbar .pp{font-size:11.5px}}
 @media (max-width:820px){.navl{display:none}.hide-sm{display:none}.phone{transform:none;width:280px}.wa-float span.txt{display:none}.wa-float{padding:0 16px}.nav-cta{display:none}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.hl{background-size:100% 100%}.reveal{opacity:1;transform:none}}
 </style>
@@ -233,36 +273,73 @@ Pensada para negocios desde casa, ventas por encargo y pequeños comercios.</p>
 <div class="reveal" style="max-width:820px">
 <span class="eyebrow" style="color:#B8B8AE"><span class="dot"></span>Demostración interactiva</span>
 <h2 class="d h2" style="color:#fff">Pruébala como si fueras tu cliente.</h2>
-<p class="lead" style="color:#C9C9BF">Agrega productos, cambia cantidades y prepara el pedido. Así se vería una mini app para un negocio de arepas y empanadas.</p>
-<p style="margin:14px 0 0;display:inline-flex;gap:8px;align-items:center;font-size:14px;color:#F3D9A4;font-weight:600"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>Negocio ficticio de ejemplo. Productos, fotos y precios ilustrativos.</p>
+<p class="lead" style="color:#C9C9BF">Elige un plan y mira exactamente qué recibe tu cliente en cada uno. Agrega productos, personaliza y prepara el pedido.</p>
+<p style="margin:14px 0 0;display:inline-flex;gap:8px;align-items:center;font-size:14px;color:#F3D9A4;font-weight:600"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>Negocio ficticio de ejemplo. Productos, fotos, zonas y precios ilustrativos.</p>
 </div>
 
-<div style="display:flex;flex-wrap:wrap;gap:28px;margin-top:40px;align-items:flex-start">
+<div class="planbar" role="group" aria-label="Ver la demo según el plan" id="planBar">
+<button type="button" data-plan="basica" aria-pressed="false"><span class="pn">Básica</span><span class="pp">$100.000</span></button>
+<button type="button" data-plan="intermedia" aria-pressed="false"><span class="pn">Intermedia</span><span class="pp">$150.000</span></button>
+<button type="button" data-plan="avanzada" aria-pressed="true"><span class="pn">Avanzada</span><span class="pp">$200.000</span></button>
+</div>
+<div id="planNote" class="plan-note" aria-live="polite"></div>
+
+<div style="display:flex;flex-wrap:wrap;gap:28px;margin-top:24px;align-items:flex-start">
 <div style="flex:999 1 520px;min-width:0;background:#FFFDF8;color:var(--ink);border-radius:28px;overflow:hidden;box-shadow:0 40px 80px -40px rgba(0,0,0,.7)">
 <div style="position:relative;height:150px;overflow:hidden">
 <img src="https://images.unsplash.com/photo-1619683909216-820c3bc64b67?auto=format&fit=crop&w=1200&h=300&q=70" alt="" style="width:100%;height:100%;object-fit:cover" loading="lazy">
-<div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(21,21,21,.85),rgba(21,21,21,.2))"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(21,21,21,.88),rgba(21,21,21,.2))"></div>
 <div style="position:absolute;left:24px;bottom:18px;right:24px;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:flex-end;color:#fff">
 <div><div style="font-size:12px;letter-spacing:.12em;font-weight:800;color:#F3D9A4">DEMO · NEGOCIO DE EJEMPLO</div><h3 class="d" style="margin:4px 0 0;font-size:clamp(20px,2.6vw,28px);font-weight:800">AREPAS Y EMPANADAS LA CASERITA</h3></div>
 <div id="cartBadge" style="display:flex;align-items:center;gap:8px;background:#fff;color:var(--ink);border-radius:999px;padding:8px 14px;font-weight:800;font-size:14px" aria-live="polite"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L5 3H2"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg><span id="cartCount">0</span>&nbsp;en el pedido</div>
 </div></div>
+
+<div class="info-strip">
+<span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Lun a sáb · 7:00 a. m. – 2:00 p. m.</span>
+<span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0119 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Domicilios y para recoger</span>
+<span id="payStrip" data-f="pay"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg>Efectivo · Nequi · Daviplata · Transferencia</span>
+</div>
+
+<div id="promo" data-f="promo" class="promo">
+<img src="https://images.unsplash.com/photo-1624128082309-35000879a89f?auto=format&fit=crop&w=240&h=240&q=70" alt="" loading="lazy">
+<div style="flex:1;min-width:0"><div style="font-size:11px;font-weight:800;letter-spacing:.12em;color:#8A5A00">PROMO DEL DÍA</div><div style="font-weight:800;font-size:16px;line-height:1.25">2 empanadas de carne + papelón con limón</div><div class="d" style="font-weight:800;font-size:18px" id="promoPrice"></div></div>
+<button type="button" class="btn btn-k btn-s" id="addPromo">Agregar promo</button>
+</div>
+
+<div id="tools" data-f="tools" class="tools">
+<button type="button" class="tool" id="btnInstall"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M12 8v7"/><path d="M9 12l3 3 3-3"/></svg>Instalar como app</button>
+<button type="button" class="tool" id="btnQr"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v7h-7"/></svg>Código QR del negocio</button>
+</div>
+
 <div role="group" aria-label="Categorías" id="cats" style="display:flex;gap:8px;padding:16px 24px;overflow-x:auto"></div>
 <div id="products" style="padding:4px 24px 24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:14px"></div>
 </div>
 
-<div style="flex:1 1 340px;min-width:0;background:#fff;color:var(--ink);border-radius:28px;padding:24px;position:sticky;top:92px;box-shadow:0 40px 80px -40px rgba(0,0,0,.7)">
+<div id="basicPanel" style="flex:1 1 340px;min-width:0;background:#fff;color:var(--ink);border-radius:28px;padding:24px;box-shadow:0 40px 80px -40px rgba(0,0,0,.7)">
+<h3 class="d" style="margin:0;font-size:24px;font-weight:800">Así funciona la Básica</h3>
+<p style="margin:12px 0 0;line-height:1.55;color:var(--muted)">Tu cliente ve el catálogo completo con fotos y precios, y con un toque te escribe a WhatsApp con el producto que le interesa. Tú cierras la venta en la conversación.</p>
+<ul class="tick" style="margin-top:12px" data-list="ok"><li>Ya no mandas fotos ni precios uno por uno.</li><li>Cada producto tiene su botón directo a tu WhatsApp.</li><li>Horario, entregas y contacto siempre visibles.</li></ul>
+<div style="margin-top:14px;background:#F6F5F0;border-radius:16px;padding:16px;font-size:14px;line-height:1.5"><strong>¿Quieres que el pedido te llegue armado?</strong> Con la Intermedia tu cliente elige cantidades y te llega el pedido completo con total y dirección.</div>
+<button type="button" class="btn btn-o btn-s" style="width:100%;margin-top:14px" data-goplan="intermedia">Ver la demo Intermedia</button>
+</div>
+
+<div id="orderPanel" style="flex:1 1 340px;min-width:0;background:#fff;color:var(--ink);border-radius:28px;padding:24px;position:sticky;top:92px;box-shadow:0 40px 80px -40px rgba(0,0,0,.7)">
 <h3 class="d" style="margin:0;font-size:24px;font-weight:800">Tu pedido</h3>
 <div id="cartEmpty" style="margin-top:16px;border:1.5px dashed #D6D5CC;border-radius:16px;padding:22px;text-align:center;color:#6A6A63"><p style="margin:0">Aún no agregas productos. Elige algo del menú.</p></div>
 <div id="cartFull" hidden>
-<ul id="cartLines" style="list-style:none;margin:14px 0 0;padding:0"></ul>
-<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:14px"><span style="font-weight:700">Subtotal</span><span class="d" id="subtotal" style="font-size:28px;font-weight:800" aria-live="polite">$0</span></div>
-<p style="margin:4px 0 0;font-size:12px;color:#6A6A63">Sin domicilio ni impuestos. Valores de demostración.</p>
+<ul id="cartLines" style="list-style:none;margin:10px 0 0;padding:0"></ul>
+<div class="tot"><span>Subtotal</span><span id="subtotal">$0</span></div>
+<div class="tot" id="feeRow" hidden><span>Domicilio</span><span id="feeVal">$0</span></div>
+<div class="tot big"><span>Total</span><span class="d" id="total" aria-live="polite">$0</span></div>
+<p style="margin:4px 0 0;font-size:12px;color:#6A6A63" id="totNote">Valores de demostración.</p>
 </div>
 <div style="display:flex;flex-direction:column;gap:14px;margin-top:20px">
 <div><label class="lbl" for="dName">Tu nombre</label><input id="dName" class="fld" type="text" autocomplete="off" placeholder="Ej.: María"></div>
 <div role="group" aria-label="Modalidad de entrega"><span class="lbl">¿Cómo lo recibes?</span>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button type="button" class="chip" data-mode="domicilio" aria-pressed="true">Domicilio</button><button type="button" class="chip" data-mode="recoger" aria-pressed="false">Recoger</button></div></div>
+<div id="zoneWrap" data-f="zones"><label class="lbl" for="dZone">Zona de entrega</label><select id="dZone" class="fld"></select></div>
 <div id="addrWrap"><label class="lbl" for="dAddr">Dirección de entrega</label><input id="dAddr" class="fld" type="text" autocomplete="off" placeholder="Barrio, calle, referencia"></div>
+<div id="payWrap" data-f="pay" role="group" aria-label="Medio de pago"><span class="lbl">¿Cómo pagas?</span><div id="payChips" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div><p id="payInfo" style="margin:8px 0 0;font-size:13px;color:#55554F;line-height:1.45"></p></div>
 <div><label class="lbl" for="dNotes">Observaciones <span style="font-weight:500;color:#6A6A63">(opcional)</span></label><textarea id="dNotes" class="fld" placeholder="Ej.: sin cebolla, salsa aparte"></textarea></div>
 <p class="err" id="orderErr" role="alert" style="margin:0"></p>
 <button type="button" class="btn btn-g" style="width:100%" id="prepareOrder"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l1.6-4.8A8.5 8.5 0 1112 20.5a8.4 8.4 0 01-4.2-1.1z"/></svg>PREPARAR PEDIDO POR WHATSAPP</button>
@@ -278,8 +355,54 @@ Pensada para negocios desde casa, ventas por encargo y pequeños comercios.</p>
 </div>
 </div>
 </div>
+
+<div style="margin-top:28px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:#232321;border:1px solid #33332F;border-radius:20px;padding:18px 22px">
+<p style="margin:0;color:#E6E5DD;font-weight:600" id="planCtaText"></p>
+<a class="btn btn-g btn-s" id="planCta" target="_blank" rel="noopener">Quiero este plan</a>
+</div>
 </div>
 </section>
+
+<!-- MODALES -->
+<div class="modal" id="optModal" hidden>
+<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="optTitle">
+<div style="position:relative;height:170px;border-radius:16px;overflow:hidden;margin-bottom:14px"><img id="optImg" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+<button type="button" class="xbtn" data-close aria-label="Cerrar">×</button>
+<h3 class="d" id="optTitle" style="margin:0;font-size:24px;font-weight:800"></h3>
+<p id="optDesc" style="margin:4px 0 0;color:var(--muted)"></p>
+<div id="optGroups"></div>
+<p class="err" id="optErr" role="alert"></p>
+<div style="display:flex;gap:10px;align-items:center;margin-top:16px">
+<div style="display:flex;align-items:center;gap:8px;background:#F1F0EA;border-radius:14px;padding:4px"><button type="button" class="qbtn" id="optDec" aria-label="Menos">−</button><span id="optQty" style="font-weight:800;min-width:20px;text-align:center">1</span><button type="button" class="qbtn plus" id="optInc" aria-label="Más">+</button></div>
+<button type="button" class="btn btn-g" style="flex:1" id="optAdd">Agregar</button>
+</div>
+</div>
+</div>
+
+<div class="modal" id="qrModal" hidden>
+<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="qrTitle" style="text-align:center">
+<button type="button" class="xbtn" data-close aria-label="Cerrar">×</button>
+<h3 class="d" id="qrTitle" style="margin:0;font-size:24px;font-weight:800">QR de La Caserita</h3>
+<p style="margin:6px 0 0;color:var(--muted);line-height:1.5">Imprímelo en tu local, empaques o volantes. Al escanearlo, tu cliente abre el catálogo.</p>
+<div id="qrBox" style="margin:18px auto 0;width:236px;min-height:236px;display:grid;place-items:center;background:#fff;border:1px solid var(--line);border-radius:18px;padding:8px"></div>
+<p id="qrStatus" style="margin:10px 0 0;font-size:13px;color:#6A6A63"></p>
+<button type="button" class="btn btn-k btn-s" id="qrDownload" style="margin-top:12px" disabled>Descargar QR (PNG)</button>
+</div>
+</div>
+
+<div class="modal" id="installModal" hidden>
+<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="instTitle">
+<button type="button" class="xbtn" data-close aria-label="Cerrar">×</button>
+<h3 class="d" id="instTitle" style="margin:0;font-size:24px;font-weight:800">Instálala como app</h3>
+<p style="margin:8px 0 0;color:var(--muted);line-height:1.5">Así tus clientes tienen tu negocio en la pantalla de inicio, con su propio ícono. Puedes probarlo ahora con esta página:</p>
+<ul class="tick" style="margin-top:10px">
+<li><strong>Android (Chrome):</strong>&nbsp;menú ⋮ → «Instalar aplicación» o «Agregar a la pantalla principal».</li>
+<li><strong>iPhone (Safari):</strong>&nbsp;botón Compartir → «Agregar a inicio».</li>
+<li><strong>Computador (Chrome o Edge):</strong>&nbsp;ícono de instalar en la barra de direcciones.</li>
+</ul>
+<p id="instStatus" style="margin:10px 0 0;font-size:13px;color:#6A6A63"></p>
+</div>
+</div>
 
 <!-- SOLUCIONES -->
 <section id="soluciones" style="padding:96px 0">
@@ -478,17 +601,17 @@ const CONFIG = {
   email: '',                          // opcional: si lo llenas, el canal "Correo" ofrecerá enviar por mail
   currency: 'COP', locale: 'es-CO',
   plans: [
-    { name: 'Mini App Básica', price: 100000, delivery: '3 a 5 días hábiles',
+    { key: 'basica', name: 'Mini App Básica', price: 100000, delivery: '3 a 5 días hábiles',
       hook: 'Deja de mandar fotos y precios uno por uno.',
       forWho: 'Para quien quiere mostrar su menú o catálogo con imagen profesional y recibir clientes directo en WhatsApp.',
       includes: ['Catálogo digital de hasta 20 productos con foto, descripción y precio', 'Hasta 3 categorías (ej.: arepas, empanadas, bebidas)', 'Tu logo, colores y nombre del negocio', 'Botón directo a tu WhatsApp con mensaje listo', 'Horario, zona de entrega y datos de contacto visibles', 'Diseño pensado para celular', 'Enlace propio para estados, grupos y redes, sin mensualidad', '1 ronda de ajustes antes de publicar'],
       excludes: ['Carrito con cantidades y subtotal', 'Formulario de entrega'] },
-    { name: 'Mini App Intermedia', featured: true, price: 150000, delivery: '5 a 8 días hábiles',
+    { key: 'intermedia', name: 'Mini App Intermedia', featured: true, price: 150000, delivery: '5 a 8 días hábiles',
       hook: 'Tu cliente arma el pedido solo y te llega completo.',
       forWho: 'Para negocios que reciben pedidos a diario y quieren que lleguen ordenados: productos, cantidades, total y dirección.',
       includes: ['Todo lo de la Básica', 'Hasta 40 productos y categorías ilimitadas', 'Carrito con cantidades y subtotal automático', 'Domicilio o recoger, dirección y observaciones', 'Pedido completo armado y enviado a tu WhatsApp', 'Marcar productos como agotados', '2 rondas de ajustes', '1 actualización de precios gratis en el primer mes'],
       excludes: ['Adicionales, sabores y tamaños con precio', 'Costo de domicilio por zona'] },
-    { name: 'Mini App Avanzada', price: 200000, delivery: '8 a 12 días hábiles',
+    { key: 'avanzada', name: 'Mini App Avanzada', price: 200000, delivery: '8 a 12 días hábiles',
       hook: 'Una experiencia de app completa para vender más ordenado.',
       forWho: 'Para negocios con menú variado, combos y domicilios que quieren la presentación más completa.',
       includes: ['Todo lo de la Intermedia', 'Hasta 80 productos', 'Adicionales, sabores, tamaños y combos con precio', 'Costo de domicilio por zona o barrio sumado al total', 'Medios de pago visibles (Nequi, Daviplata, transferencia)', 'Se instala como app en el celular del cliente', 'Código QR listo para imprimir en tu local o empaques', 'Banner de promoción del día', '3 rondas de ajustes y 2 actualizaciones en el primer mes', 'Capacitación de 30 minutos por videollamada'],
@@ -496,17 +619,6 @@ const CONFIG = {
   ]
 };
 const IMG = (id, w = 600, h) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}${h ? '&h=' + h : ''}&q=70`;
-const PRODUCTS = [
-  { id: 'a1', cat: 'arepas', name: 'Arepa reina pepiada', desc: 'Pollo desmechado con aguacate', price: 9000, img: '1644753787071-8933b5daed2d' },
-  { id: 'a2', cat: 'arepas', name: 'Arepa de pabellón', desc: 'Carne, caraotas, plátano y queso', price: 10000, img: '1619683909216-820c3bc64b67' },
-  { id: 'a3', cat: 'arepas', name: 'Arepa de queso', desc: 'Queso rallado o de mano', price: 7000, img: '1619683909099-03814b162136' },
-  { id: 'e1', cat: 'empanadas', name: 'Empanada de carne', desc: 'Masa de maíz, carne molida', price: 3500, img: '1624128082323-beb6b8b508db' },
-  { id: 'e2', cat: 'empanadas', name: 'Empanada de pollo', desc: 'Pollo guisado', price: 3500, img: '1624128082309-35000879a89f' },
-  { id: 'e3', cat: 'empanadas', name: 'Empanada de queso', desc: 'Queso blanco fundido', price: 3000, img: '1548228586-171fb0887ac0' },
-  { id: 'b1', cat: 'bebidas', name: 'Papelón con limón', desc: 'Vaso de 16 oz', price: 4000, img: '1623084921164-4a8c5c37a912' },
-  { id: 'b2', cat: 'bebidas', name: 'Limonada natural', desc: 'Con hierbabuena', price: 4500, img: '1507281549113-040fcfef650e' }
-];
-const CATS = [['todos', 'Todo'], ['arepas', 'Arepas'], ['empanadas', 'Empanadas'], ['bebidas', 'Bebidas']];
 const SOLUTIONS = [
   { key: 'Empanadas y arepas', title: 'Empanadas y arepas', text: 'Tu menú organizado, con sabores, precios y opciones para que el cliente prepare su pedido.', img: '1624128082319-2210acebc3c4' },
   { key: 'Comida rápida', title: 'Comida rápida', text: 'Combos, adicionales, bebidas y cantidades en una experiencia de pedido sencilla.', img: '1561758033-d89a9ad46330' },
@@ -603,77 +715,280 @@ $('#plans').innerHTML = CONFIG.plans.map(p => {
   <div style="flex:1"><div style="font-weight:800;font-size:13px;letter-spacing:.08em;margin-bottom:6px">NO INCLUYE</div>
   <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px">${p.excludes.map(i => `<li style="display:flex;gap:10px;line-height:1.4;color:${mut}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" style="flex:none;margin-top:2px"><path d="M6 6l12 12M18 6L6 18"/></svg>${esc(i)}</li>`).join('')}</ul></div>
   <a class="btn ${f ? 'btn-g' : 'btn-k'}" style="width:100%" data-wa="Hola José, me interesa la ${esc(p.name)} de ${esc(fmt(p.price))}. ¿Cómo empezamos?" data-ev="clic_solicitar_info" data-origin="${esc(p.name)}" target="_blank" rel="noopener">QUIERO LA ${esc(p.name.replace('Mini App ', '').toUpperCase())}</a>
+  <button type="button" class="btn btn-s" data-try="${p.key}" style="width:100%;background:transparent;color:${f ? '#fff' : '#151515'};border:1.5px solid ${f ? '#55554F' : '#D6D5CC'}">Probar la demo de este plan</button>
 </article>`;
 }).join('');
 
 /* ===================== DEMO ===================== */
-const state = { cat: 'todos', cart: {}, mode: 'domicilio' };
+// Datos ficticios del negocio de ejemplo
+const SIZE_AREPA = { name: 'Tamaño', type: 'single', choices: [['Normal', 0], ['Grande', 3000]] };
+const EXTRAS_AREPA = { name: 'Adicionales', type: 'multi', choices: [['Queso extra', 1500], ['Aguacate', 2000], ['Tocineta', 2500], ['Huevo', 1500]] };
+const SAUCE = { name: 'Salsa', type: 'single', choices: [['Guasacaca', 0], ['Picante', 0], ['Sin salsa', 0]] };
+const SIZE_DRINK = { name: 'Tamaño', type: 'single', choices: [['12 oz', 0], ['16 oz', 1000]] };
+const PRODUCTS = [
+  { id: 'a1', cat: 'arepas', name: 'Arepa reina pepiada', desc: 'Pollo desmechado con aguacate', price: 9000, img: '1644753787071-8933b5daed2d', options: [SIZE_AREPA, EXTRAS_AREPA] },
+  { id: 'a2', cat: 'arepas', name: 'Arepa de pabellón', desc: 'Carne, caraotas, plátano y queso', price: 10000, img: '1619683909216-820c3bc64b67', options: [SIZE_AREPA, EXTRAS_AREPA] },
+  { id: 'a3', cat: 'arepas', name: 'Arepa de queso', desc: 'Queso rallado o de mano', price: 7000, img: '1619683909099-03814b162136', options: [SIZE_AREPA, EXTRAS_AREPA] },
+  { id: 'e1', cat: 'empanadas', name: 'Empanada de carne', desc: 'Masa de maíz, carne molida', price: 3500, img: '1624128082323-beb6b8b508db', options: [SAUCE] },
+  { id: 'e2', cat: 'empanadas', name: 'Empanada de pollo', desc: 'Pollo guisado', price: 3500, img: '1624128082309-35000879a89f', options: [SAUCE] },
+  { id: 'e3', cat: 'empanadas', name: 'Empanada de queso', desc: 'Queso blanco fundido', price: 3000, img: '1548228586-171fb0887ac0', soldOut: true },
+  { id: 'b1', cat: 'bebidas', name: 'Papelón con limón', desc: 'Panela, limón y hielo', price: 4000, img: '1623084921164-4a8c5c37a912', options: [SIZE_DRINK] },
+  { id: 'b2', cat: 'bebidas', name: 'Limonada natural', desc: 'Con hierbabuena', price: 4500, img: '1507281549113-040fcfef650e', options: [SIZE_DRINK] },
+  { id: 'c1', cat: 'combos', name: 'Combo Caserita', desc: '1 arepa + 2 empanadas + bebida', price: 17500, img: '1619683909167-9a9336b7d86c',
+    options: [{ name: 'Arepa', type: 'single', choices: [['Reina pepiada', 0], ['Pabellón', 1000], ['Queso', 0]] }, { name: 'Empanadas', type: 'single', choices: [['Carne', 0], ['Pollo', 0], ['Una y una', 0]] }, { name: 'Bebida', type: 'single', choices: [['Papelón con limón', 0], ['Limonada natural', 500]] }] },
+  { id: 'c2', cat: 'combos', name: 'Combo familiar', desc: '4 arepas + 6 empanadas + 4 bebidas', price: 62000, img: '1644753787067-d62ae70f303d',
+    options: [{ name: 'Bebidas', type: 'single', choices: [['Papelón con limón', 0], ['Limonada natural', 2000], ['Mitad y mitad', 1000]] }] }
+];
+const PROMO = { id: 'promo', name: 'Promo del día: 2 empanadas de carne + papelón', price: 9900, img: '1624128082309-35000879a89f' };
+const ZONES = [['z1', 'La Estrella (centro)', 3000], ['z2', 'La Estrella (otras zonas)', 5000], ['z3', 'Sabaneta', 6000], ['z4', 'Itagüí', 7000]];
+const PAYMENTS = [['Efectivo', 'Pagas al recibir. Indica en observaciones si necesitas cambio.'], ['Nequi', 'Nequi del negocio: 300 000 0000 (ejemplo). Envía el comprobante por WhatsApp.'], ['Daviplata', 'Daviplata del negocio: 300 000 0000 (ejemplo). Envía el comprobante por WhatsApp.'], ['Transferencia', 'Los datos bancarios se envían al confirmar el pedido.']];
+const PLAN_F = {
+  basica: { cart: false, soldOut: false, options: false, zones: false, pay: false, promo: false, tools: false, combos: false },
+  intermedia: { cart: true, soldOut: true, options: false, zones: false, pay: false, promo: false, tools: false, combos: false },
+  avanzada: { cart: true, soldOut: true, options: true, zones: true, pay: true, promo: true, tools: true, combos: true }
+};
+const PLAN_TXT = {
+  basica: ['Mini App Básica · $100.000', 'Catálogo con fotos y precios, y un botón directo a WhatsApp en cada producto.'],
+  intermedia: ['Mini App Intermedia · $150.000', 'Carrito con cantidades y total, productos agotados y el pedido completo armado en WhatsApp.'],
+  avanzada: ['Mini App Avanzada · $200.000', 'Adicionales, sabores y combos con precio, domicilio por zona, medios de pago, promo del día, QR e instalación como app.']
+};
+
+const state = { plan: 'avanzada', cat: 'todos', lines: [], mode: 'domicilio', zone: '', pay: '' };
+const F = () => PLAN_F[state.plan];
+const prodById = id => id === 'promo' ? PROMO : PRODUCTS.find(p => p.id === id);
+const minPrice = p => p.price;
+const cartQty = pid => state.lines.filter(l => l.pid === pid).reduce((a, l) => a + l.qty, 0);
+
+function addLine(pid, opts, unit, qty = 1) {
+  const key = pid + '|' + opts.join(',');
+  const l = state.lines.find(x => x.key === key);
+  if (l) l.qty += qty; else state.lines.push({ key, pid, name: prodById(pid).name, opts, unit, qty });
+  afterCartChange(pid);
+}
+function changeLine(key, d) {
+  const l = state.lines.find(x => x.key === key); if (!l) return;
+  l.qty += d; if (l.qty <= 0) state.lines = state.lines.filter(x => x !== l);
+  afterCartChange(l.pid);
+}
+function afterCartChange(pid) {
+  $('#orderErr').textContent = ''; $('#orderOut').hidden = true;
+  if (pid) refreshProduct(pid);
+  renderCart();
+}
+
 function renderCats() {
-  $('#cats').innerHTML = CATS.map(([id, label]) => `<button type="button" class="chip" data-cat="${id}" aria-pressed="${state.cat === id}">${label}</button>`).join('');
+  const cats = [['todos', 'Todo'], ['arepas', 'Arepas'], ['empanadas', 'Empanadas'], ['bebidas', 'Bebidas']];
+  if (F().combos) cats.push(['combos', 'Combos']);
+  if (!cats.some(c => c[0] === state.cat)) state.cat = 'todos';
+  $('#cats').innerHTML = cats.map(([id, label]) => `<button type="button" class="chip" data-cat="${id}" aria-pressed="${state.cat === id}">${label}</button>`).join('');
 }
 function productCard(p) {
-  const q = state.cart[p.id] || 0;
-  const ctrl = q === 0
-    ? `<button type="button" class="btn btn-k btn-s" style="width:100%" data-add="${p.id}" aria-label="Agregar ${esc(p.name)}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Agregar</button>`
-    : `<div class="pop" style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:#E9F6EE;border-radius:14px;padding:4px"><button type="button" class="qbtn" data-dec="${p.id}" aria-label="Quitar una ${esc(p.name)}">−</button><span style="font-weight:800;font-size:17px">${q}</span><button type="button" class="qbtn plus" data-inc="${p.id}" aria-label="Sumar una ${esc(p.name)}">+</button></div>`;
-  return `<div class="prod" data-pid="${p.id}">
-    <div class="ph"><img src="${IMG(p.img, 500, 320)}" alt="${esc(p.name)}" loading="lazy"><span class="tag">FOTO DE MUESTRA</span></div>
-    <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><div style="min-width:0"><div style="font-weight:800;font-size:16px">${esc(p.name)}</div><div style="font-size:13px;color:#6A6A63;margin-top:2px;line-height:1.4">${esc(p.desc)}</div></div><div class="d" style="font-weight:800;font-size:17px;white-space:nowrap">${fmt(p.price)}</div></div>
+  const f = F(), q = cartQty(p.id), sold = p.soldOut && f.soldOut, custom = p.options && f.options;
+  let ctrl;
+  if (!f.cart) {
+    ctrl = `<a class="btn btn-g btn-s" style="width:100%" href="${wa(CONFIG.whatsappDemo, 'Hola, quiero pedir: ' + p.name + ' (demo La Caserita)')}" target="_blank" rel="noopener" data-ev="demo_producto" data-origin="basica_${p.id}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l1.6-4.8A8.5 8.5 0 1112 20.5a8.4 8.4 0 01-4.2-1.1z"/></svg>Pedir por WhatsApp</a>`;
+  } else if (sold) {
+    ctrl = `<button type="button" class="btn btn-s" style="width:100%;background:#F1F0EA;color:#6A6A63;cursor:not-allowed" disabled>Agotado por hoy</button>`;
+  } else if (custom) {
+    ctrl = `<button type="button" class="btn btn-k btn-s" style="width:100%" data-opt="${p.id}">${q ? `Agregar otra · ${q} en el pedido` : 'Elegir y agregar'}</button>`;
+  } else if (!q) {
+    ctrl = `<button type="button" class="btn btn-k btn-s" style="width:100%" data-add="${p.id}" aria-label="Agregar ${esc(p.name)}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Agregar</button>`;
+  } else {
+    ctrl = `<div class="pop" style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:#E9F6EE;border-radius:14px;padding:4px"><button type="button" class="qbtn" data-dec="${p.id}" aria-label="Quitar una ${esc(p.name)}">−</button><span style="font-weight:800;font-size:17px">${q}</span><button type="button" class="qbtn plus" data-inc="${p.id}" aria-label="Sumar una ${esc(p.name)}">+</button></div>`;
+  }
+  const badges = [];
+  if (sold) badges.push('<span class="tag" style="background:#151515;color:#fff">AGOTADO</span>');
+  else badges.push('<span class="tag">FOTO DE MUESTRA</span>');
+  if (custom) badges.push('<span class="tag tag-r">PERSONALIZABLE</span>');
+  return `<div class="prod${sold ? ' sold' : ''}" data-pid="${p.id}">
+    <div class="ph"><img src="${IMG(p.img, 500, 320)}" alt="${esc(p.name)}" loading="lazy">${badges.join('')}</div>
+    <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><div style="min-width:0"><div style="font-weight:800;font-size:16px">${esc(p.name)}</div><div style="font-size:13px;color:#6A6A63;margin-top:2px;line-height:1.4">${esc(p.desc)}</div></div><div class="d" style="font-weight:800;font-size:17px;white-space:nowrap;text-align:right">${custom ? '<span style="display:block;font-size:11px;font-weight:700;color:#6A6A63;font-family:Figtree,sans-serif">desde</span>' : ''}${fmt(minPrice(p))}</div></div>
     <div class="ctrl">${ctrl}</div></div>`;
 }
 function renderProducts() {
-  $('#products').innerHTML = PRODUCTS.filter(p => state.cat === 'todos' || p.cat === state.cat).map(productCard).join('');
+  const f = F();
+  $('#products').innerHTML = PRODUCTS.filter(p => (f.combos || p.cat !== 'combos') && (state.cat === 'todos' || p.cat === state.cat)).map(productCard).join('');
+  bindWa($('#products'));
 }
 function refreshProduct(id) {
-  const el = $(`[data-pid="${id}"]`);
-  if (el) { const p = PRODUCTS.find(x => x.id === id); el.outerHTML = productCard(p); }
+  const el = $(`[data-pid="${id}"]`), p = prodById(id);
+  if (el && p && id !== 'promo') { el.outerHTML = productCard(p); bindWa($('#products')); }
+}
+function totals() {
+  const sub = state.lines.reduce((a, l) => a + l.unit * l.qty, 0);
+  const z = ZONES.find(z => z[0] === state.zone);
+  const fee = F().zones && state.mode === 'domicilio' && z ? z[2] : 0;
+  return { sub, fee, total: sub + fee, count: state.lines.reduce((a, l) => a + l.qty, 0) };
 }
 function renderCart() {
-  const lines = PRODUCTS.filter(p => state.cart[p.id]);
-  let total = 0, count = 0;
-  $('#cartLines').innerHTML = lines.map(p => { const q = state.cart[p.id]; total += q * p.price; count += q; return `<li style="display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px dashed #E1E0D8;font-size:15px"><span><strong>${q} ×</strong> ${esc(p.name)}</span><span style="font-weight:700;white-space:nowrap">${fmt(q * p.price)}</span></li>`; }).join('');
-  $('#subtotal').textContent = fmt(total);
-  $('#cartCount').textContent = count;
-  $('#cartEmpty').hidden = count > 0; $('#cartFull').hidden = count === 0;
+  const t = totals();
+  $('#cartLines').innerHTML = state.lines.map(l => `<li class="cl"><div style="min-width:0;flex:1"><div style="font-weight:700">${esc(l.name)}</div>${l.opts.length ? `<div style="font-size:12.5px;color:#6A6A63;line-height:1.4">${esc(l.opts.join(' · '))}</div>` : ''}<div style="font-size:12.5px;color:#6A6A63">${fmt(l.unit)} c/u</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span style="font-weight:800;white-space:nowrap">${fmt(l.unit * l.qty)}</span><div style="display:flex;align-items:center;gap:6px"><button type="button" class="qs" data-lk="${esc(l.key)}" data-d="-1" aria-label="Quitar uno de ${esc(l.name)}">−</button><span style="font-weight:800;min-width:16px;text-align:center">${l.qty}</span><button type="button" class="qs plus" data-lk="${esc(l.key)}" data-d="1" aria-label="Sumar uno de ${esc(l.name)}">+</button></div></div></li>`).join('');
+  $('#subtotal').textContent = fmt(t.sub);
+  $('#feeRow').hidden = !t.fee; $('#feeVal').textContent = fmt(t.fee);
+  $('#total').textContent = fmt(t.total);
+  $('#totNote').textContent = F().zones && state.mode === 'domicilio' && !state.zone ? 'Elige tu zona para sumar el domicilio. Valores de demostración.' : (F().zones ? 'Valores de demostración.' : 'Sin domicilio ni impuestos. Valores de demostración.');
+  $('#cartCount').textContent = t.count;
+  $('#cartEmpty').hidden = t.count > 0; $('#cartFull').hidden = t.count === 0;
   const b = $('#cartBadge'); b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump');
 }
-function setQty(id, q) {
-  if (q <= 0) delete state.cart[id]; else state.cart[id] = q;
-  $('#orderErr').textContent = ''; $('#orderOut').hidden = true;
-  refreshProduct(id); renderCart();
+function renderPay() {
+  $('#payChips').innerHTML = PAYMENTS.map(([n]) => `<button type="button" class="chip" data-pay="${n}" aria-pressed="${state.pay === n}">${n}</button>`).join('');
+  const p = PAYMENTS.find(x => x[0] === state.pay); $('#payInfo').textContent = p ? p[1] : '';
 }
+function applyPlan() {
+  const f = F();
+  $$('[data-plan]').forEach(b => b.setAttribute('aria-pressed', b.dataset.plan === state.plan));
+  $$('[data-f]').forEach(el => { el.hidden = !f[el.dataset.f]; });
+  $('#orderPanel').hidden = !f.cart; $('#basicPanel').hidden = f.cart; $('#cartBadge').hidden = !f.cart;
+  $('#zoneWrap').hidden = !(f.zones && state.mode === 'domicilio');
+  const [title, desc] = PLAN_TXT[state.plan];
+  $('#planNote').innerHTML = `<strong>${esc(title)}:</strong> ${esc(desc)}`;
+  $('#planCtaText').textContent = `¿Te gusta lo que ves? ${title} para tu negocio.`;
+  $('#planCta').href = wa(CONFIG.whatsappSales, `Hola José, probé la demo y me interesa la ${title}. ¿Cómo empezamos?`);
+  renderCats(); renderProducts(); renderCart(); renderPay();
+}
+function setPlan(plan, announce) {
+  if (!PLAN_F[plan]) return;
+  state.plan = plan; state.lines = []; state.zone = ''; state.pay = ''; $('#dZone').value = '';
+  $('#orderOut').hidden = true; $('#orderErr').textContent = '';
+  applyPlan(); track('demo_plan', { plan });
+  if (announce) toast('Viendo la demo ' + PLAN_TXT[plan][0].split(' · ')[0].replace('Mini App ', ''));
+}
+
+$('#dZone').innerHTML = '<option value="">Elige tu zona</option>' + ZONES.map(([id, n, fee]) => `<option value="${id}">${esc(n)} · ${fmt(fee)}</option>`).join('');
+$('#dZone').addEventListener('change', e => { state.zone = e.target.value; renderCart(); $('#orderErr').textContent = ''; });
+$('#promoPrice').textContent = fmt(PROMO.price);
+$('#addPromo').addEventListener('click', () => { addLine('promo', [], PROMO.price); toast('Promo agregada al pedido'); track('demo_producto', { accion: 'promo' }); });
+$('#planBar').addEventListener('click', e => { const b = e.target.closest('[data-plan]'); if (b) setPlan(b.dataset.plan, true); });
+$$('[data-goplan]').forEach(b => b.addEventListener('click', () => setPlan(b.dataset.goplan, true)));
 $('#cats').addEventListener('click', e => { const b = e.target.closest('[data-cat]'); if (!b) return; state.cat = b.dataset.cat; renderCats(); renderProducts(); track('demo_categoria', { categoria: state.cat }); });
 $('#products').addEventListener('click', e => {
   const t = e.target.closest('button'); if (!t) return;
-  const { add, inc, dec } = t.dataset;
-  if (add) { setQty(add, 1); track('demo_producto', { accion: 'agregar', producto: add }); const n = $(`[data-inc="${add}"]`); n && n.focus(); }
-  if (inc) { setQty(inc, (state.cart[inc] || 0) + 1); track('demo_producto', { accion: 'sumar', producto: inc }); const n = $(`[data-inc="${inc}"]`); n && n.focus(); }
-  if (dec) { setQty(dec, (state.cart[dec] || 0) - 1); track('demo_producto', { accion: 'restar', producto: dec }); const n = $(`[data-dec="${dec}"]`) || $(`[data-add="${dec}"]`); n && n.focus(); }
+  const { add, inc, dec, opt } = t.dataset;
+  if (opt) { openOptions(opt, t); return; }
+  if (add) { addLine(add, [], prodById(add).price); track('demo_producto', { accion: 'agregar', producto: add }); const n = $(`[data-inc="${add}"]`); n && n.focus(); }
+  if (inc) { changeLine(inc + '|', 1); const n = $(`[data-inc="${inc}"]`); n && n.focus(); }
+  if (dec) { changeLine(dec + '|', -1); const n = $(`[data-dec="${dec}"]`) || $(`[data-add="${dec}"]`); n && n.focus(); }
 });
+$('#cartLines').addEventListener('click', e => { const b = e.target.closest('[data-lk]'); if (b) changeLine(b.dataset.lk, +b.dataset.d); });
 $$('[data-mode]').forEach(b => b.addEventListener('click', () => {
   state.mode = b.dataset.mode;
   $$('[data-mode]').forEach(x => x.setAttribute('aria-pressed', x.dataset.mode === state.mode));
-  $('#addrWrap').hidden = state.mode !== 'domicilio'; $('#orderErr').textContent = '';
+  $('#addrWrap').hidden = state.mode !== 'domicilio';
+  $('#zoneWrap').hidden = !(F().zones && state.mode === 'domicilio');
+  $('#orderErr').textContent = ''; renderCart();
 }));
+$('#payChips').addEventListener('click', e => { const b = e.target.closest('[data-pay]'); if (!b) return; state.pay = b.dataset.pay; renderPay(); $('#orderErr').textContent = ''; });
+
+/* Modal genérico */
+let lastFocus = null;
+function openModal(id, from) {
+  lastFocus = from || document.activeElement;
+  const m = $('#' + id); m.hidden = false; document.body.style.overflow = 'hidden';
+  const first = m.querySelector('input,button:not([data-close]),a'); (first || m.querySelector('[data-close]')).focus();
+}
+function closeModal(m) { m.hidden = true; document.body.style.overflow = ''; if (lastFocus && lastFocus.isConnected) lastFocus.focus(); }
+$$('.modal').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m || e.target.closest('[data-close]')) closeModal(m); });
+  m.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal(m);
+    if (e.key === 'Tab') {
+      const f = $$('button:not([disabled]),input,a[href],select', m).filter(x => x.offsetParent !== null || x === document.activeElement);
+      if (!f.length) return; const a = f[0], z = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); } else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+    }
+  });
+});
+
+/* Opciones y adicionales */
+let optP = null, optQty = 1;
+function optSelection() {
+  const opts = [], errs = []; let extra = 0;
+  optP.options.forEach((g, gi) => {
+    const chosen = $$(`[name="og${gi}"]:checked`, $('#optGroups'));
+    if (g.type === 'single' && !chosen.length) errs.push(g.name);
+    chosen.forEach(c => { const [n, pr] = g.choices[+c.value]; extra += pr; opts.push(g.type === 'single' && g.name !== 'Adicionales' ? `${g.name}: ${n}` : `+ ${n}`); });
+  });
+  return { opts, unit: optP.price + extra, errs };
+}
+function updateOptBtn() { const s = optSelection(); $('#optAdd').textContent = `Agregar · ${fmt(s.unit * optQty)}`; $('#optQty').textContent = optQty; }
+function openOptions(pid, from) {
+  optP = prodById(pid); optQty = 1; $('#optErr').textContent = '';
+  $('#optImg').src = IMG(optP.img, 700, 340); $('#optTitle').textContent = optP.name; $('#optDesc').textContent = optP.desc + ' · base ' + fmt(optP.price);
+  $('#optGroups').innerHTML = optP.options.map((g, gi) => `<fieldset class="og"><legend>${esc(g.name)} <span>${g.type === 'single' ? 'Elige 1' : 'Opcional'}</span></legend>${g.choices.map(([n, pr], ci) => `<label class="oc"><input type="${g.type === 'single' ? 'radio' : 'checkbox'}" name="og${gi}" value="${ci}"${g.type === 'single' && ci === 0 ? ' checked' : ''}><span style="flex:1">${esc(n)}</span><span class="opr">${pr ? '+' + fmt(pr) : (g.type === 'single' ? 'Incluido' : '')}</span></label>`).join('')}</fieldset>`).join('');
+  updateOptBtn(); openModal('optModal', from); track('demo_producto', { accion: 'opciones', producto: pid });
+}
+$('#optGroups').addEventListener('change', updateOptBtn);
+$('#optInc').addEventListener('click', () => { optQty++; updateOptBtn(); });
+$('#optDec').addEventListener('click', () => { if (optQty > 1) optQty--; updateOptBtn(); });
+$('#optAdd').addEventListener('click', () => {
+  const s = optSelection(); if (s.errs.length) { $('#optErr').textContent = 'Elige: ' + s.errs.join(', '); return; }
+  const pid = optP.id; addLine(pid, s.opts, s.unit, optQty); closeModal($('#optModal')); toast(`${optQty} × ${optP.name} agregado`);
+  track('demo_producto', { accion: 'agregar_personalizado', producto: pid });
+});
+
+/* Código QR (librería cargada solo al abrirlo) */
+const demoUrl = () => location.href.split('#')[0] + '#demo';
+function loadScript(src) { return new Promise((res, rej) => { if (window.QRCode) return res(); const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
+$('#btnQr').addEventListener('click', async e => {
+  openModal('qrModal', e.currentTarget); track('demo_qr', {});
+  const box = $('#qrBox'), st = $('#qrStatus'), dl = $('#qrDownload');
+  if (box.dataset.ok) return;
+  st.textContent = 'Generando QR…'; dl.disabled = true;
+  try {
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js');
+    box.innerHTML = ''; new QRCode(box, { text: demoUrl(), width: 216, height: 216, colorDark: '#151515', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+    box.dataset.ok = 1; st.textContent = 'Este QR abre esta demostración. El de tu negocio abrirá tu propio catálogo.'; dl.disabled = false;
+  } catch (err) { st.textContent = 'No se pudo generar el QR. Revisa tu conexión e inténtalo de nuevo.'; }
+});
+$('#qrDownload').addEventListener('click', () => {
+  const c = $('#qrBox canvas'), i = $('#qrBox img');
+  const url = c ? c.toDataURL('image/png') : (i && i.src); if (!url) return;
+  const a = document.createElement('a'); a.href = url; a.download = 'qr-la-caserita-demo.png'; document.body.appendChild(a); a.click(); a.remove();
+});
+
+/* Instalar como app (PWA) */
+let installEvt = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; });
+window.addEventListener('appinstalled', () => { toast('App instalada'); track('demo_instalada', {}); });
+$('#btnInstall').addEventListener('click', async e => {
+  track('demo_instalar', {});
+  if (installEvt) { installEvt.prompt(); try { await installEvt.userChoice; } catch (er) {} installEvt = null; return; }
+  const standalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+  $('#instStatus').textContent = standalone ? 'Ya la estás usando como app instalada.' : '';
+  openModal('installModal', e.currentTarget);
+});
+
+/* Preparar pedido */
 $('#prepareOrder').addEventListener('click', () => {
-  const err = $('#orderErr'), name = $('#dName').value.trim(), addr = $('#dAddr').value.trim(), notes = $('#dNotes').value.trim();
-  const lines = PRODUCTS.filter(p => state.cart[p.id]);
-  if (!lines.length) { err.textContent = 'Agrega al menos un producto para preparar el pedido.'; return; }
-  if (!name) { err.textContent = 'Escribe tu nombre para el pedido.'; $('#dName').focus(); return; }
-  if (state.mode === 'domicilio' && !addr) { err.textContent = 'Escribe la dirección de entrega o elige "Recoger".'; $('#dAddr').focus(); return; }
+  const f = F(), err = $('#orderErr'), name = $('#dName').value.trim(), addr = $('#dAddr').value.trim(), notes = $('#dNotes').value.trim();
+  const fail = (m, el) => { err.textContent = m; el && el.focus(); };
+  if (!state.lines.length) return fail('Agrega al menos un producto para preparar el pedido.');
+  if (!name) return fail('Escribe tu nombre para el pedido.', $('#dName'));
+  if (state.mode === 'domicilio' && f.zones && !state.zone) return fail('Elige tu zona de entrega.', $('#dZone'));
+  if (state.mode === 'domicilio' && !addr) return fail('Escribe la dirección de entrega o elige "Recoger".', $('#dAddr'));
+  if (f.pay && !state.pay) return fail('Elige cómo vas a pagar.', $('#payChips button'));
   err.textContent = '';
-  let total = 0;
-  const body = lines.map(p => { const t = p.price * state.cart[p.id]; total += t; return `• ${state.cart[p.id]} x ${p.name} — ${fmt(t)}`; }).join('\n');
-  const msg = `Hola, quiero hacer este pedido (DEMO La Caserita):\n\n${body}\n\nSubtotal: ${fmt(total)}\nCliente: ${name}\nEntrega: ${state.mode === 'domicilio' ? 'Domicilio — ' + addr : 'Recoger en el local'}${notes ? '\nObservaciones: ' + notes : ''}\n\n(Pedido de prueba desde la demostración de Mini Apps. Precios ilustrativos.)`;
+  const t = totals(), z = ZONES.find(x => x[0] === state.zone);
+  const body = state.lines.map(l => `• ${l.qty} x ${l.name} — ${fmt(l.unit * l.qty)}${l.opts.length ? '\n   ' + l.opts.join(' · ') : ''}`).join('\n');
+  let msg = `Hola, quiero hacer este pedido (DEMO La Caserita):\n\n${body}\n\nSubtotal: ${fmt(t.sub)}`;
+  if (t.fee) msg += `\nDomicilio (${z[1]}): ${fmt(t.fee)}\nTotal: ${fmt(t.total)}`;
+  msg += `\nCliente: ${name}\nEntrega: ${state.mode === 'domicilio' ? 'Domicilio — ' + addr : 'Recoger en el local'}`;
+  if (f.pay) msg += `\nPago: ${state.pay}`;
+  if (notes) msg += `\nObservaciones: ${notes}`;
+  msg += `\n\n(Pedido de prueba desde la demostración de Mini Apps, plan ${PLAN_TXT[state.plan][0].split(' · ')[0].replace('Mini App ', '')}. Precios ilustrativos.)`;
   $('#orderMsg').textContent = msg;
   const link = $('#orderWa'), note = $('#orderNote');
   if (digits(CONFIG.whatsappDemo)) { link.hidden = false; link.href = wa(CONFIG.whatsappDemo, msg); note.textContent = 'El pedido de prueba se enviará al WhatsApp de José Lugo para que veas cómo llegaría a tu negocio.'; }
   else { link.hidden = true; note.textContent = 'El WhatsApp de demostración no está configurado. Puedes copiar el resumen.'; }
   $('#orderOut').hidden = false;
-  track('pedido_prueba_generado', { lineas: lines.length });
+  track('pedido_prueba_generado', { lineas: state.lines.length, plan: state.plan });
 });
-$('#orderWa').addEventListener('click', () => track('inicio_whatsapp', { origen: 'demo' }));
+$('#orderWa').addEventListener('click', () => track('inicio_whatsapp', { origen: 'demo', plan: state.plan }));
 $('#copyOrder').addEventListener('click', e => copyText($('#orderMsg').textContent, e.currentTarget, 'Copiar resumen'));
+
+/* Botones "Probar la demo" en los planes */
+document.addEventListener('click', e => { const b = e.target.closest('[data-try]'); if (!b) return; e.preventDefault(); setPlan(b.dataset.try, false); $('#demo').scrollIntoView({ behavior: 'smooth' }); });
 
 /* ===================== FORMULARIO ===================== */
 let channel = 'whatsapp';
@@ -713,11 +1028,12 @@ $('#leadWa').addEventListener('click', () => track('inicio_whatsapp', { origen: 
 $('#copyLead').addEventListener('click', e => copyText($('#leadMsg').textContent, e.currentTarget, 'Copiar consulta'));
 
 /* Revelado al hacer scroll */
-renderCats(); renderProducts(); renderCart(); bindWa();
+bindWa(); applyPlan();
 if (typeof window.IntersectionObserver === 'function') {
   const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }), { threshold: .12 });
   $$('.reveal').forEach(el => io.observe(el));
 } else { $$('.reveal').forEach(el => el.classList.add('in')); }
+if ('serviceWorker' in navigator && location.protocol === 'https:') { window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {})); }
 </script>
 </body>
 </html>

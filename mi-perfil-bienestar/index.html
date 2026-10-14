@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex">
+  <title>Mi Perfil de Bienestar — José Lugo</title>
+  <meta name="description" content="Cuestionario de bienestar orientativo. Funciona sin conexión una vez instalado. Tus respuestas se procesan solo en tu dispositivo.">
+  <meta name="theme-color" content="#E67E22">
+  <meta name="color-scheme" content="light dark">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Mi Bienestar">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Saltar al contenido</a>
+
+  <header class="topbar">
+    <div class="brand">
+      <img src="./icons/icon-192.png" alt="" width="36" height="36">
+      <div>
+        <strong>Mi Perfil de Bienestar</strong>
+        <span>José Lugo · Asesor de bienestar</span>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span id="net-pill" class="pill" role="status" aria-live="polite">Comprobando…</span>
+      <button id="install-btn" class="btn btn-small btn-accent" type="button" hidden>Instalar</button>
+      <button id="privacy-btn" class="btn btn-small btn-ghost" type="button" aria-haspopup="dialog">Datos</button>
+    </div>
+  </header>
+
+  <div id="net-banner" class="banner banner-offline" role="status" aria-live="polite" hidden></div>
+  <div id="update-banner" class="banner banner-info" hidden>
+    <span>Hay una versión nueva de la app.</span>
+    <button id="update-btn" class="btn btn-small" type="button">Actualizar</button>
+  </div>
+
+  <main id="main" tabindex="-1">
+    <div class="progress" aria-hidden="true"><div id="progress-bar" class="progress-bar"></div></div>
+    <p id="step-label" class="step-label" aria-live="polite"></p>
+
+    <form id="form" novalidate autocomplete="off">
+
+      <!-- PASO 0: BIENVENIDA Y CONSENTIMIENTO -->
+      <section class="step card" data-step="0" data-title="Bienvenida">
+        <p class="eyebrow">Perfil orientativo · 5 minutos</p>
+        <h1>Conozcamos tu punto de partida</h1>
+        <p class="lead">Responde unas preguntas sobre tus hábitos y objetivos. Al final obtendrás un informe preliminar que podrás revisar y, si quieres, enviar a tu asesor por WhatsApp.</p>
+
+        <ul class="facts">
+          <li><b>Sin cuenta.</b> No necesitas registrarte.</li>
+          <li><b>Privado.</b> Tus respuestas se procesan solo en este dispositivo. La app no las envía a ningún servidor.</li>
+          <li><b>Tú decides.</b> Nada se envía al asesor sin que tú revises el mensaje y lo envíes desde WhatsApp.</li>
+          <li><b>No es un diagnóstico.</b> Es una guía para conversar; no sustituye la consulta médica.</li>
+        </ul>
+
+        <fieldset class="consent">
+          <legend>Antes de empezar</legend>
+          <label class="check"><input type="checkbox" name="acepto_orientativo" value="si" required>
+            <span>Entiendo que este perfil es orientativo y no es un diagnóstico ni una prescripción médica.</span></label>
+          <label class="check"><input type="checkbox" name="acepto_local" value="si" required>
+            <span>Acepto que mis respuestas se procesen en este dispositivo para generar mi informe.</span></label>
+        </fieldset>
+
+        <div class="draft-box">
+          <label class="check"><input type="checkbox" id="draft-toggle-inline">
+            <span><b>Guardar borrador temporal en este dispositivo</b> (opcional). Si cierras la app por accidente, podrás continuar.</span></label>
+          <p class="hint">Si no lo activas, tus respuestas existen solo mientras la app esté abierta. Más detalles en <button type="button" class="linklike" data-open-privacy>Datos</button>.</p>
+        </div>
+      </section>
+
+      <!-- PASO 1: SOBRE TI -->
+      <section class="step card" data-step="1" data-title="Sobre ti" hidden>
+        <h2>Sobre ti</h2>
+        <label class="field"><span>¿Cómo te llamas? <em>*</em></span>
+          <input type="text" name="nombre" maxlength="60" autocomplete="off" required placeholder="Tu nombre o como prefieras que te llamen">
+        </label>
+        <label class="field"><span>Ciudad y país</span>
+          <input type="text" name="ubicacion" maxlength="60" autocomplete="off" placeholder="Ej.: Medellín, Colombia">
+        </label>
+        <label class="field"><span>Rango de edad</span>
+          <select name="edad">
+            <option value="">Selecciona…</option>
+            <option>Menos de 18</option><option>18–24</option><option>25–34</option><option>35–44</option>
+            <option>45–54</option><option>55–64</option><option>65 o más</option><option>Prefiero no decirlo</option>
+          </select>
+        </label>
+        <p class="hint" id="minor-hint" hidden>Si eres menor de edad, completa este perfil con tu madre, padre o tutor.</p>
+        <label class="field"><span>¿Cómo es tu rutina principal?</span>
+          <select name="rutina">
+            <option value="">Selecciona…</option>
+            <option>Trabajo de oficina o frente a pantallas</option><option>Trabajo físico</option>
+            <option>Turnos u horarios variables</option><option>Hogar y familia</option>
+            <option>Estudio</option><option>Emprendimiento o trabajo independiente</option><option>Otra</option>
+          </select>
+        </label>
+      </section>
+
+      <!-- PASO 2: HÁBITOS -->
+      <section class="step card" data-step="2" data-title="Hábitos" hidden>
+        <h2>Tus hábitos</h2>
+        <fieldset class="group"><legend>¿Cuántas horas duermes normalmente?</legend>
+          <div class="chips">
+            <label><input type="radio" name="sueno_horas" value="Menos de 5"><span>Menos de 5</span></label>
+            <label><input type="radio" name="sueno_horas" value="5–6"><span>5–6</span></label>
+            <label><input type="radio" name="sueno_horas" value="6–7"><span>6–7</span></label>
+            <label><input type="radio" name="sueno_horas" value="7–8"><span>7–8</span></label>
+            <label><input type="radio" name="sueno_horas" value="Más de 8"><span>Más de 8</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="group scale" data-low="Muy mala" data-high="Excelente"><legend>¿Cómo calificas la calidad de tu sueño?</legend>
+          <div class="chips scale-chips" data-scale="sueno_calidad"></div>
+        </fieldset>
+        <fieldset class="group scale" data-low="Muy baja" data-high="Muy alta"><legend>¿Cómo está tu nivel de energía durante el día?</legend>
+          <div class="chips scale-chips" data-scale="energia"></div>
+        </fieldset>
+        <fieldset class="group scale" data-low="Muy bajo" data-high="Muy alto"><legend>¿Qué tanto estrés sientes en una semana normal?</legend>
+          <div class="chips scale-chips" data-scale="estres"></div>
+        </fieldset>
+        <fieldset class="group"><legend>Actividad física</legend>
+          <div class="chips">
+            <label><input type="radio" name="actividad" value="Casi nunca"><span>Casi nunca</span></label>
+            <label><input type="radio" name="actividad" value="1–2 días por semana"><span>1–2 días/sem</span></label>
+            <label><input type="radio" name="actividad" value="3–4 días por semana"><span>3–4 días/sem</span></label>
+            <label><input type="radio" name="actividad" value="5 o más días por semana"><span>5+ días/sem</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="group"><legend>¿Cuánta agua tomas al día?</legend>
+          <div class="chips">
+            <label><input type="radio" name="agua" value="Menos de 1 litro"><span>Menos de 1 L</span></label>
+            <label><input type="radio" name="agua" value="1 a 2 litros"><span>1 a 2 L</span></label>
+            <label><input type="radio" name="agua" value="Más de 2 litros"><span>Más de 2 L</span></label>
+            <label><input type="radio" name="agua" value="No lo sé"><span>No lo sé</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="group"><legend>Tu alimentación es…</legend>
+          <div class="chips">
+            <label><input type="radio" name="alimentacion" value="Mayormente procesada o rápida"><span>Mayormente procesada</span></label>
+            <label><input type="radio" name="alimentacion" value="Mixta"><span>Mixta</span></label>
+            <label><input type="radio" name="alimentacion" value="Mayormente natural o casera"><span>Mayormente natural</span></label>
+          </div>
+        </fieldset>
+      </section>
+
+      <!-- PASO 3: OBJETIVOS -->
+      <section class="step card" data-step="3" data-title="Objetivos" hidden>
+        <h2>Tus objetivos</h2>
+        <fieldset class="group"><legend>¿Qué te gustaría mejorar? <small>(elige los que quieras)</small></legend>
+          <div class="chips">
+            <label><input type="checkbox" name="objetivos" value="Más energía"><span>Más energía</span></label>
+            <label><input type="checkbox" name="objetivos" value="Dormir mejor"><span>Dormir mejor</span></label>
+            <label><input type="checkbox" name="objetivos" value="Control de peso"><span>Control de peso</span></label>
+            <label><input type="checkbox" name="objetivos" value="Piel y apariencia"><span>Piel y apariencia</span></label>
+            <label><input type="checkbox" name="objetivos" value="Concentración y enfoque"><span>Concentración</span></label>
+            <label><input type="checkbox" name="objetivos" value="Manejar el estrés"><span>Manejar el estrés</span></label>
+            <label><input type="checkbox" name="objetivos" value="Rendimiento físico"><span>Rendimiento físico</span></label>
+            <label><input type="checkbox" name="objetivos" value="Bienestar general"><span>Bienestar general</span></label>
+          </div>
+        </fieldset>
+        <label class="field"><span>¿Cuál es tu prioridad número uno?</span>
+          <select name="prioridad">
+            <option value="">Selecciona…</option>
+            <option>Más energía</option><option>Dormir mejor</option><option>Control de peso</option>
+            <option>Piel y apariencia</option><option>Concentración y enfoque</option><option>Manejar el estrés</option>
+            <option>Rendimiento físico</option><option>Bienestar general</option><option>Aún no lo sé</option>
+          </select>
+        </label>
+        <label class="field"><span>¿Qué te gustaría lograr en los próximos 90 días?</span>
+          <textarea name="meta90" rows="3" maxlength="400" placeholder="Ej.: levantarme con energía y no depender del café en la tarde"></textarea>
+        </label>
+        <fieldset class="group"><legend>¿Te interesa conocer también la oportunidad de negocio?</legend>
+          <div class="chips">
+            <label><input type="radio" name="negocio" value="Sí, quiero saber más"><span>Sí, quiero saber más</span></label>
+            <label><input type="radio" name="negocio" value="Tal vez más adelante"><span>Tal vez más adelante</span></label>
+            <label><input type="radio" name="negocio" value="No por ahora"><span>No por ahora</span></label>
+          </div>
+        </fieldset>
+      </section>
+
+      <!-- PASO 4: SALUD (OPCIONAL) -->
+      <section class="step card" data-step="4" data-title="Salud (opcional)" hidden>
+        <h2>Información de salud <small class="tag">Opcional</small></h2>
+        <p>Estas preguntas ayudan a tu asesor a orientarte con más cuidado. Puedes omitirlas todas y tratarlas directamente con él.</p>
+        <fieldset class="group">
+          <legend>¿Cómo prefieres manejar esta sección?</legend>
+          <div class="chips stack">
+            <label><input type="radio" name="salud_modo" value="asesor"><span>Prefiero tratar mi salud directamente con el asesor</span></label>
+            <label><input type="radio" name="salud_modo" value="responder"><span>Quiero responder las preguntas</span></label>
+          </div>
+        </fieldset>
+
+        <div id="health-questions" hidden>
+          <label class="check consent-sensitive"><input type="checkbox" name="acepto_salud" value="si">
+            <span>Doy mi consentimiento para registrar estas respuestas de salud en este dispositivo. Decidiré después si las comparto con el asesor.</span></label>
+
+          <div id="health-fields" hidden>
+            <fieldset class="group"><legend>¿Estás en embarazo o lactancia?</legend>
+              <div class="chips">
+                <label><input type="radio" name="embarazo" value="Sí"><span>Sí</span></label>
+                <label><input type="radio" name="embarazo" value="No"><span>No</span></label>
+                <label><input type="radio" name="embarazo" value="No aplica"><span>No aplica</span></label>
+                <label><input type="radio" name="embarazo" value="Prefiero hablarlo con el asesor"><span>Prefiero hablarlo</span></label>
+              </div>
+            </fieldset>
+            <fieldset class="group"><legend>¿Tomas medicamentos de forma regular?</legend>
+              <div class="chips">
+                <label><input type="radio" name="medicamentos" value="Sí"><span>Sí</span></label>
+                <label><input type="radio" name="medicamentos" value="No"><span>No</span></label>
+                <label><input type="radio" name="medicamentos" value="Prefiero hablarlo con el asesor"><span>Prefiero hablarlo</span></label>
+              </div>
+            </fieldset>
+            <fieldset class="group"><legend>¿Tienes alguna condición de salud diagnosticada?</legend>
+              <div class="chips">
+                <label><input type="radio" name="condicion" value="Sí"><span>Sí</span></label>
+                <label><input type="radio" name="condicion" value="No"><span>No</span></label>
+                <label><input type="radio" name="condicion" value="Prefiero hablarlo con el asesor"><span>Prefiero hablarlo</span></label>
+              </div>
+            </fieldset>
+            <fieldset class="group"><legend>¿Tienes piel sensible o reacción a adhesivos (curitas, parches)?</legend>
+              <div class="chips">
+                <label><input type="radio" name="piel_adhesivos" value="Sí"><span>Sí</span></label>
+                <label><input type="radio" name="piel_adhesivos" value="No"><span>No</span></label>
+                <label><input type="radio" name="piel_adhesivos" value="No lo sé"><span>No lo sé</span></label>
+                <label><input type="radio" name="piel_adhesivos" value="Prefiero hablarlo con el asesor"><span>Prefiero hablarlo</span></label>
+              </div>
+            </fieldset>
+            <label class="field"><span>¿Algo más que tu asesor deba saber? <small>(opcional)</small></span>
+              <textarea name="salud_notas" rows="3" maxlength="400" placeholder="Escribe solo lo que quieras compartir."></textarea>
+            </label>
+          </div>
+        </div>
+        <p id="health-error" class="error" role="alert" hidden></p>
+      </section>
+
+      <!-- PASO 5: REVISIÓN -->
+      <section class="step card" data-step="5" data-title="Revisión" hidden>
+        <h2>Revisa tus respuestas</h2>
+        <p>Puedes editar cualquier sección antes de generar tu informe.</p>
+        <div id="review"></div>
+      </section>
+
+      <!-- PASO 6: INFORME -->
+      <section class="step" data-step="6" data-title="Tu informe" hidden>
+        <div class="card">
+          <h2>Tu informe preliminar</h2>
+          <div id="send-status" class="status-box" role="status" aria-live="polite"></div>
+          <div id="score" class="score" hidden>
+            <div class="score-ring"><span id="score-value">–</span><small>/100</small></div>
+            <div><strong id="score-band"></strong><p id="score-note" class="hint"></p></div>
+          </div>
+          <pre id="report-text" class="report" tabindex="0"></pre>
+          <div class="actions">
+            <button type="button" id="copy-report" class="btn">Copiar informe</button>
+            <button type="button" id="download-report" class="btn btn-ghost">Descargar .txt</button>
+            <button type="button" id="share-report" class="btn btn-ghost" hidden>Compartir…</button>
+          </div>
+          <p id="copy-fallback" class="hint" hidden>Tu dispositivo no permitió copiar automáticamente. Mantén presionado el texto del informe y elige «Copiar».</p>
+        </div>
+
+        <div class="card">
+          <h3>Mensaje para tu asesor</h3>
+          <p class="hint">Revisa y edita el mensaje. Se enviará solo cuando tú lo envíes desde WhatsApp al +57 312 638 7467.</p>
+          <label class="check" id="include-health-wrap" hidden><input type="checkbox" id="include-health">
+            <span>Incluir mis respuestas de salud en el mensaje (información sensible; solo si estás de acuerdo).</span></label>
+          <label class="field"><span class="sr-only">Mensaje</span>
+            <textarea id="advisor-msg" rows="10" maxlength="4000"></textarea>
+          </label>
+          <div class="actions">
+            <button type="button" id="regen-msg" class="btn btn-ghost btn-small">Restablecer mensaje</button>
+            <button type="button" id="copy-msg" class="btn btn-ghost btn-small">Copiar mensaje</button>
+          </div>
+          <div id="offline-send-note" class="note-offline" role="alert" hidden>
+            Estás sin conexión. Tu informe está preparado, pero todavía no se ha enviado.
+          </div>
+          <div class="actions wa-actions">
+            <button type="button" id="wa-copy-open" class="btn btn-wa">Copiar mensaje y abrir WhatsApp</button>
+            <button type="button" id="wa-prefill" class="btn btn-ghost">Abrir WhatsApp con el mensaje escrito</button>
+          </div>
+          <p class="hint">«Copiar y abrir» es la opción más privada: el texto va al portapapeles y tú lo pegas en el chat. «Con el mensaje escrito» pasa el texto a WhatsApp dentro del enlace; es más cómodo, pero el texto puede quedar en el historial del navegador.</p>
+        </div>
+
+        <div class="card card-quiet">
+          <div class="actions">
+            <button type="button" id="edit-answers" class="btn btn-ghost">Editar respuestas</button>
+            <button type="button" class="btn btn-danger-ghost" data-open-delete>Borrar todo y empezar de nuevo</button>
+          </div>
+        </div>
+      </section>
+    </form>
+
+    <nav class="step-nav" id="step-nav">
+      <button type="button" id="prev-btn" class="btn btn-ghost">Atrás</button>
+      <button type="button" id="next-btn" class="btn btn-accent">Comenzar</button>
+    </nav>
+    <p id="step-error" class="error center" role="alert" hidden></p>
+    <p id="volatile-hint" class="hint center">Sin guardado activado: si cierras la app, tus respuestas se perderán.</p>
+  </main>
+
+  <!-- PRIVACIDAD Y DATOS -->
+  <dialog id="privacy-dialog" aria-labelledby="privacy-title">
+    <div class="dialog-head">
+      <h2 id="privacy-title">Privacidad, datos y modo sin conexión</h2>
+      <button type="button" class="btn btn-small btn-ghost" data-close>Cerrar</button>
+    </div>
+
+    <h3>Estado</h3>
+    <ul class="status-list">
+      <li>Conexión: <b id="st-net">—</b></li>
+      <li>Modo sin conexión: <b id="st-offline">—</b></li>
+      <li>Borrador guardado: <b id="st-draft">—</b></li>
+      <li>Versión: <b id="st-version">—</b></li>
+    </ul>
+
+    <h3>Borrador temporal</h3>
+    <label class="check"><input type="checkbox" id="draft-toggle">
+      <span>Guardar mis respuestas temporalmente en este dispositivo</span></label>
+    <label class="field inline"><span>Borrar automáticamente después de</span>
+      <select id="draft-ttl">
+        <option value="24">24 horas</option>
+        <option value="72" selected>3 días</option>
+        <option value="168">7 días</option>
+      </select>
+    </label>
+    <div class="warn">
+      <p><b>Ten en cuenta:</b></p>
+      <ul>
+        <li>Los datos quedan solo en este dispositivo y en este navegador (IndexedDB). No se envían a ningún servidor.</li>
+        <li>El almacenamiento local del navegador <b>no está cifrado automáticamente</b>.</li>
+        <li>Cualquier persona con acceso a este dispositivo podría ver el borrador.</li>
+        <li>Si desactivas esta opción, el borrador se elimina de inmediato.</li>
+      </ul>
+    </div>
+
+    <h3>Eliminar datos</h3>
+    <p>Borra el borrador, las respuestas en pantalla y cualquier dato que la app haya guardado en este dispositivo.</p>
+    <button type="button" class="btn btn-danger" data-open-delete>Eliminar todos mis datos</button>
+
+    <h3>Qué funciona sin conexión</h3>
+    <ul>
+      <li>Abrir la app (después de haberla abierto una vez con internet).</li>
+      <li>Completar, revisar y editar el cuestionario.</li>
+      <li>Generar el informe, copiarlo y preparar el mensaje.</li>
+      <li><b>Enviar por WhatsApp requiere internet.</b> Sin conexión el informe queda preparado, pero no enviado.</li>
+    </ul>
+
+    <h3>Instalar la app</h3>
+    <p id="install-help">Android (Chrome): menú ⋮ → «Instalar aplicación» o «Agregar a pantalla principal». iPhone (Safari): botón Compartir → «Agregar a inicio». Computador (Chrome o Edge): icono de instalar en la barra de direcciones.</p>
+  </dialog>
+
+  <!-- CONFIRMAR BORRADO -->
+  <dialog id="delete-dialog" aria-labelledby="delete-title">
+    <h2 id="delete-title">¿Eliminar todos tus datos?</h2>
+    <p>Se borrarán tus respuestas, el informe, el mensaje preparado y el borrador guardado en este dispositivo. No se puede deshacer.</p>
+    <label class="check"><input type="checkbox" id="delete-app-files">
+      <span>También eliminar los archivos de la app descargados. La app dejará de funcionar sin conexión hasta que la abras de nuevo con internet.</span></label>
+    <div class="actions end">
+      <button type="button" class="btn btn-ghost" data-close>Cancelar</button>
+      <button type="button" id="confirm-delete" class="btn btn-danger">Eliminar</button>
+    </div>
+  </dialog>
+
+  <!-- INSTALAR EN IPHONE -->
+  <dialog id="ios-dialog" aria-labelledby="ios-title">
+    <h2 id="ios-title">Instalar en iPhone o iPad</h2>
+    <ol>
+      <li>Abre este enlace en <b>Safari</b>.</li>
+      <li>Toca el botón <b>Compartir</b> (cuadro con flecha hacia arriba).</li>
+      <li>Elige <b>«Agregar a inicio»</b> y confirma.</li>
+      <li>Abre la app desde el icono una vez con internet para que quede lista sin conexión.</li>
+    </ol>
+    <div class="actions end"><button type="button" class="btn btn-accent" data-close>Entendido</button></div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <noscript><p class="card">Esta app necesita JavaScript activado para funcionar.</p></noscript>
+</body>
+</html>

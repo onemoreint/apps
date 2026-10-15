@@ -1,0 +1,52 @@
+name: Organizador de Finanzas · calidad
+
+# Solo verifica. La app publicada es organizador-finanzas/app/ (GitHub Pages desde main).
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'organizador-finanzas/**'
+      - '.github/workflows/organizador-finanzas-ci.yml'
+  pull_request:
+    paths:
+      - 'organizador-finanzas/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: organizador-finanzas
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: organizador-finanzas/package-lock.json
+
+      - name: Instalar
+        run: npm ci
+
+      - name: Tipos (TypeScript)
+        run: npm run typecheck
+
+      - name: Pruebas (cálculos y seguridad)
+        run: npm test
+
+      - name: Auditoría de dependencias
+        run: npm audit --omit=dev --audit-level=critical
+
+      - name: Build
+        run: npx vite build
+
+      - name: Verificar HTML autocontenido (un archivo, CSP, PWA, sin secretos ni eval)
+        run: npm run verify:bundle
+
+      - name: La app publicada en el repo coincide con el código
+        run: git diff --exit-code -- app/ || (echo "app/ está desactualizada: ejecuta npm run build y haz commit" && exit 1)

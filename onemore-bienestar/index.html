@@ -555,7 +555,7 @@ const P = [
  {id:"b12",name:"B12 Plus",cat:"Parches",c:["#C0392B","#F08A7E"],p:47,d:35,cv:14,qv:30,desc:"«¡Fortalécete con vitaminas!», en formato parche."},
  {id:"slim",name:"Slim Style",cat:"Parches",c:["#16A085","#7DD3C0"],p:43,d:32,cv:13,qv:25,desc:"«¡Alcanza tu forma ideal!». Funciona mejor junto a buena alimentación y actividad física."},
  {id:"dekamin",name:"Dekamin",cat:"Parches",c:["#D4A017","#F7DC6F"],p:43,d:32,cv:13,qv:25,desc:"«¡Siéntete bien con Dekamin!». Parche de la línea de bienestar diario."},
- {id:"omevia",name:"Omevia",cat:"Parches",c:["#2471A3","#85C1E9"],p:49,d:39,cv:17,qv:32,desc:"«¡Cuídate bien con Omevia!». Parche de la línea de bienestar."},
+ {id:"omevia",name:"Omevia",img:"https://www.onemoreinternational.com/wp-content/uploads/2026/03/omevia-kopya.jpg",cat:"Parches",c:["#2471A3","#85C1E9"],p:49,d:39,cv:17,qv:32,desc:"«¡Cuídate bien con Omevia!». Parche de la línea de bienestar."},
  {id:"glutanad",name:"GlutaNAD+",cat:"Parches",c:["#7D3C98","#D2B4DE"],p:79,d:67,cv:25,qv:50,desc:"De la línea premium. Pregúntame cómo se integra a tu rutina."},
  {id:"nladies",name:"Night Ladies",cat:"Parches",c:["#C2185B","#F48FB1"],p:79,d:59,cv:23,qv:45,desc:"Parche de bienestar íntimo para ella, de la línea Night."},
  {id:"ngent",name:"Night Gentlemen",cat:"Parches",c:["#263238","#78909C"],p:79,d:59,cv:23,qv:45,desc:"Parche de bienestar íntimo para él, de la línea Night."},
@@ -593,6 +593,9 @@ function art(p,size){
   return `<svg class="art" viewBox="0 0 300 300" ${size?`width="${size}" height="${size}"`:""} role="img" aria-label="${p.name}"><defs><linearGradient id="g${p.id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient><radialGradient id="bg${p.id}" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="${b}" stop-opacity=".35"/></radialGradient></defs><rect width="300" height="300" fill="url(#bg${p.id})"/><ellipse cx="150" cy="272" rx="90" ry="10" fill="#000" opacity=".08"/>${shape}${txt}<text x="150" y="${p.cat==="Parches"?236:248}" text-anchor="middle" font-family="Manrope,Arial" font-weight="800" font-size="9" letter-spacing="3" fill="#fff" opacity=".9">ONE MORE</text></svg>`;
 }
 
+/* Si una foto real no carga, se muestra la ilustración del producto */
+window.artFallback=(img,id,size)=>{const p=byId(id);if(p){p.img=null;img.outerHTML=art(p,size)}};
+
 /* ================= ESTADO ================= */
 const store={get(k,d){try{return JSON.parse(localStorage.getItem("om_"+k))??d}catch{return d}},set(k,v){try{localStorage.setItem("om_"+k,JSON.stringify(v))}catch{}}};
 let cart=store.get("cart",[]),mode=store.get("mode","cliente"),cat="Todos",q="";
@@ -626,7 +629,7 @@ function renderGrid(){
   if(!list.length){$("#grid").innerHTML=`<div class="empty">No encontré ese producto. Escríbeme y te cuento si está disponible.</div>`;return}
   $("#grid").innerHTML=list.map((p,i)=>`
   <article class="card" id="producto-${p.id}" style="animation-delay:${Math.min(i,10)*40}ms">
-    <div class="media" data-zoom>${p.star?`<span class="tag star">★ Estrella</span>`:p.p?"":`<span class="tag">Consultar</span>`}${p.img?`<img class="photo" src="${p.img}" alt="${p.name} ${p.sub||""}" loading="lazy">`:art(p)}</div>
+    <div class="media" data-zoom>${p.star?`<span class="tag star">★ Estrella</span>`:p.p?"":`<span class="tag">Consultar</span>`}${p.img?`<img class="photo" src="${p.img}" alt="${p.name} ${p.sub||""}" loading="lazy" referrerpolicy="no-referrer" onerror="artFallback(this,'${p.id}')">`:art(p)}</div>
     <div class="body">
       <span class="cat">${p.cat}</span>
       <h3>${p.name}${p.sub?` <span style="font-weight:600;color:var(--muted);font-size:13px">· ${p.sub}</span>`:""}</h3>
@@ -665,7 +668,7 @@ function render(){
   if(!cart.length){$("#dItems").innerHTML=`<div class="d-empty"><div style="font-size:48px">🧴</div><b>Tu pedido está vacío</b>Empieza con el paquete PNG o elige productos del catálogo.</div>`;$("#dFoot").style.display="none";return}
   $("#dFoot").style.display="";
   $("#dItems").innerHTML=cart.map(i=>{const p=byId(i.id),pr=mode==="socio"?p.d:p.p;return`
-    <div class="line">${p.img?`<img src="${p.img}" alt="" style="width:56px;height:56px;border-radius:14px;object-fit:cover">`:art(p,56)}<div><h5>${p.name}</h5><small>${usd(pr)} · ${p.qv} QV</small></div>
+    <div class="line">${p.img?`<img src="${p.img}" alt="" referrerpolicy="no-referrer" onerror="artFallback(this,'${p.id}',56)" style="width:56px;height:56px;border-radius:14px;object-fit:cover">`:art(p,56)}<div><h5>${p.name}</h5><small>${usd(pr)} · ${p.qv} QV</small></div>
     <div class="r"><b>${usd(pr*i.qty)}</b><div class="qty"><button data-q="${i.id}" data-d="-1" aria-label="Menos">−</button><span>${i.qty}</span><button data-q="${i.id}" data-d="1" aria-label="Más">+</button></div></div></div>`}).join("");
   $("#sSub").textContent=usd(t.sub);$("#sQV").textContent=t.qv+" QV";
   $("#sShip").textContent=t.ship?usd(t.ship):"Gratis";$("#sTot").textContent=usd(t.total);
@@ -695,7 +698,7 @@ function renderQuiz(){
   const id={energia:"png",descanso:"melatonin",figura:"slim",piel:"collagen",pareja:who==="m"?"ngent":"nladies"}[need];
   const p=byId(id),also=need==="energia"?byId("b12"):need==="descanso"?byId("png"):byId("png");
   c.innerHTML=`<span class="step">Te recomiendo preguntar por</span>
-   <div class="qres" style="margin-top:12px">${p.img?`<img src="${p.img}" alt="${p.name}" style="width:110px;height:110px;border-radius:16px;object-fit:cover">`:art(p,110)}<div><h3 style="margin:0 0 4px">${p.name}</h3><div style="color:var(--muted);font-size:14px">${p.desc}</div>
+   <div class="qres" style="margin-top:12px">${p.img?`<img src="${p.img}" alt="${p.name}" referrerpolicy="no-referrer" onerror="artFallback(this,'${p.id}',110)" style="width:110px;height:110px;border-radius:16px;object-fit:cover">`:art(p,110)}<div><h3 style="margin:0 0 4px">${p.name}</h3><div style="color:var(--muted);font-size:14px">${p.desc}</div>
    <div class="prices"><b>${usd(p.p)}</b><small>Socio ${usd(p.d)}</small></div>
    <div class="acts"><button class="btn btn-dark" data-add="${p.id}">Agregar</button><a class="btn btn-wa" href="${wa(`Hola José, usé el asesor de tu página: busco ${Q1.find(x=>x[2]===need)[1].toLowerCase()} (${Q2.find(x=>x[2]===who)[1].toLowerCase()}) y me recomendó *${p.name}*. ¿Me cuentas más?\n${pageUrl()}#producto-${p.id}`)}" target="_blank" rel="noopener">Preguntar a José</a><button class="btn btn-line" data-qr>Repetir</button></div>
    ${also.id!==p.id?`<p style="font-size:13px;color:var(--muted);margin-top:10px">También te puede interesar: <b>${also.name}</b>.</p>`:""}</div></div>`;

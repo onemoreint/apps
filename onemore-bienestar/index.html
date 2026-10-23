@@ -258,13 +258,15 @@ header{position:sticky;top:0;z-index:50;background:rgba(250,246,240,.88);backdro
 .terms span{font-size:12px;font-weight:800;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 9px}
 
 /* Sobre José */
-.about{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px;align-items:center}
-.portrait{aspect-ratio:4/5;border-radius:30px;background:linear-gradient(160deg,#2C2C2C,#161412);position:relative;overflow:hidden;display:grid;place-items:center}
+.about{display:grid;grid-template-columns:.8fr 1.2fr;gap:48px;align-items:center}
+.portrait{aspect-ratio:900/1599;width:100%;max-width:440px;justify-self:center;border-radius:30px;background:#161412;position:relative;overflow:hidden;box-shadow:0 40px 70px -30px rgba(230,126,34,.55),0 20px 40px -20px rgba(0,0,0,.5)}
+.portrait img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.portrait:hover img{transform:scale(1.04)}
 .portrait b{font-family:Sora;font-size:120px;color:rgba(255,255,255,.08);letter-spacing:-.05em}
 .portrait .sig{position:absolute;left:24px;bottom:24px;right:24px;color:#fff}
 .portrait .sig strong{font-family:Sora;font-size:26px;display:block}
 .portrait .sig span{opacity:.7;font-size:14px}
-.portrait::after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(230,126,34,.55),transparent 70%);right:-80px;top:-60px}
+.portrait::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);pointer-events:none}
 .about h2{font-size:clamp(32px,4vw,50px);line-height:1.02;margin:12px 0 16px}
 .about p{color:#544C46;line-height:1.7;font-size:16.5px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:26px 0}
@@ -346,7 +348,7 @@ footer li{list-style:none;margin-bottom:8px}
   .how{grid-template-columns:repeat(2,1fr)}
   .grid{grid-template-columns:repeat(2,1fr)}
   .search{margin-left:0;flex:1 1 100%}
-  .portrait{max-height:420px}
+  .portrait{max-width:360px}
   footer .cols{grid-template-columns:1fr}
 }
 @media (max-width:560px){
@@ -402,8 +404,8 @@ main,footer{position:relative;z-index:1}
 .flyer{position:fixed;z-index:300;width:64px;height:64px;border-radius:16px;overflow:hidden;pointer-events:none;box-shadow:0 10px 24px rgba(0,0,0,.3);background:#fff}
 .flyer img,.flyer svg{width:100%;height:100%;object-fit:cover;display:block}
 .burst{position:fixed;z-index:301;pointer-events:none;width:8px;height:8px;border-radius:50%}
-.portrait b{animation:floatJL 7s ease-in-out infinite}
-@keyframes floatJL{50%{transform:translateY(-12px) scale(1.04)}}
+.portrait{animation:floatJL 7s ease-in-out infinite}
+@keyframes floatJL{50%{translate:0 -10px}}
 .pack::after{content:"";position:absolute;inset:-2px;border-radius:36px;padding:2px;background:conic-gradient(from var(--ang,0deg),transparent 0 70%,var(--orange) 80%,var(--amber) 88%,transparent 95%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spinb 6s linear infinite;pointer-events:none}
 @property --ang{syntax:"<angle>";initial-value:0deg;inherits:false}
 @keyframes spinb{to{--ang:360deg}}
@@ -562,7 +564,7 @@ main,footer{position:relative;z-index:1}
 
   <section class="sec reveal" id="jose">
     <div class="about">
-      <div class="portrait"><b>JL</b><div class="sig"><strong>José Lugo</strong><span>Conferencista · Emprendedor digital · Distribuidor ONE MORE</span></div></div>
+      <div class="portrait" data-tilt3d><span class="glare"></span><img src="img/jose-lugo.jpg" alt="José Lugo junto a su esposa, líderes de ONE MORE International" loading="lazy"></div>
       <div>
         <span class="eyebrow">Tu asesor</span>
         <h2>Arquitecto de oportunidades, no solo distribuidor.</h2>

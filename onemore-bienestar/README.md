@@ -1,16 +1,17 @@
-# José Lugo · Bienestar ONE MORE
+# José Lugo · Bienestar ONE MORE (landing de embudo)
 
 Página de distribuidor independiente con productos ONE MORE International, en un solo `index.html`.
 
-**Incluye:**
-- Paquete PNG de $150 (2 PNG, cliente + socio).
-- Asesor en 2 pasos.
-- Catálogo con 23 productos y zoom al pasar el cursor.
-- Precios de cliente y de socio.
-- Pedido con QV y envío estimado según la tabla de QV.
-- Envío del pedido por WhatsApp a +57 312 638 7467.
-- Sección de oportunidad de negocio, perfil de José y preguntas frecuentes.
+**Embudo:** Atención (hero) → Problema → Cómo funciona → Oferta (paquete PNG $150) → Asesor rápido → Catálogo (12 productos con foto real y ficha) → Video → Elige tu camino (cliente o socio) + plan de carrera de 17 rangos → Sobre José → Preguntas → Llamado final.
 
-Las ilustraciones de empaque son representativas, sin fotos de la compañía.
+- La compra y la afiliación van a `STORE` (enlace de afiliado).
+- Los pedidos y las dudas van por WhatsApp a `WA`.
+- Fotos en `img/` (catálogo oficial ONE MORE).
 
-**Configurar:** en el `<script>`, `WA` (número), `SHIP` (envíos por QV) y el arreglo `P` (productos y precios).
+**Configurar:** al inicio del `<script>`:
+- `WA`
+- `STORE`
+- `VIDEO_ID`
+- `SHIP`
+- productos en `P`
+- rangos en `RANKS`

@@ -97,7 +97,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(250,246,240,.88);backdro
 .pack-photo{width:min(340px,80%);border-radius:26px;overflow:hidden;box-shadow:0 40px 60px -20px rgba(0,0,0,.7);transform:rotate(-3deg);transition:transform .5s;cursor:zoom-in}
 .pack-photo img{display:block;width:100%;transition:transform .5s}
 .pack-photo:hover{transform:rotate(0)}.pack-photo:hover img{transform:scale(1.35)}
-.media img.photo{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.media img.photo{width:100%;height:100%;object-fit:contain;background:#fff;display:block;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
 .media:hover img.photo{transform:scale(1.7)}
 .btn-store{background:#fff;color:var(--ink)}.btn-store:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
 .video-sec{display:grid;grid-template-columns:auto 1fr;gap:44px;align-items:center;background:linear-gradient(135deg,#1A1715,#3A2A1F);color:#F3EDE6;border-radius:34px;padding:44px}
@@ -186,6 +186,10 @@ header{position:sticky;top:0;z-index:50;background:rgba(250,246,240,.88);backdro
 .body .cat{font-size:11.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .body h3{font-size:18px;margin:4px 0 6px}
 .body p{font-size:14px;color:#655C55;line-height:1.5;flex:1}
+.ing{font-size:12.5px;color:#655C55;margin-top:8px;line-height:1.5}
+.ing summary{cursor:pointer;font-weight:800;color:var(--ink);list-style:none}
+.ing summary::before{content:"+ ";color:var(--orange)}
+.ing[open] summary::before{content:"− "}
 .prices{display:flex;align-items:baseline;gap:8px;margin-top:12px;flex-wrap:wrap}
 .prices b{font-family:Sora;font-size:24px}
 .prices small{font-size:12.5px;color:var(--sage);font-weight:800}
@@ -507,7 +511,7 @@ footer li{list-style:none;margin-bottom:8px}
       <div><h5>Contacto</h5><ul><li><a class="wa-general" target="_blank" rel="noopener">WhatsApp +57 312 638 7467</a></li><li><a href="https://www.tiktok.com/@joselugooficial" target="_blank" rel="noopener">TikTok @joselugooficial</a></li><li><a href="https://www.instagram.com/joselugoofficial" target="_blank" rel="noopener">Instagram @joselugoofficial</a></li></ul></div>
       <div><h5>Compañía</h5><ul><li><a href="https://www.onemoreinternational.com/" target="_blank" rel="noopener">Sitio oficial ONE MORE</a></li><li><a class="store-link" target="_blank" rel="noopener">Tienda y afiliación con José</a></li><li>Línea de soporte LATAM: +57 350 349 8018</li></ul></div>
     </div>
-    <p class="legal">Sitio de un distribuidor independiente; no es el sitio oficial de ONE MORE International. Las marcas y nombres de producto pertenecen a sus dueños. Las ilustraciones de empaque, salvo las fotos reales indicadas, son representativas. Los productos no son medicamentos y no buscan diagnosticar, tratar, curar ni prevenir enfermedades. Precios en USD de referencia, sujetos a cambios y a disponibilidad por país. Los ingresos como socio dependen del esfuerzo de cada persona y no están garantizados.</p>
+    <p class="legal">Sitio de un distribuidor independiente; no es el sitio oficial de ONE MORE International. Las marcas y nombres de producto pertenecen a sus dueños. Fotos de producto tomadas del catálogo de productos ONE MORE; las ilustraciones de los productos sin foto son representativas. Los productos no son medicamentos y no buscan diagnosticar, tratar, curar ni prevenir enfermedades. Precios en USD de referencia, sujetos a cambios y a disponibilidad por país. Los ingresos como socio dependen del esfuerzo de cada persona y no están garantizados.</p>
   </div>
 </footer>
 
@@ -550,19 +554,20 @@ const SHIP = [[0,12],[100,10],[150,8],[200,6],[300,0]];   // [QV desde, costo US
 /* ================= PRODUCTOS =================
    p = precio cliente, d = precio socio (USD). Sin precio → "Consultar". */
 const P = [
- {id:"png",name:"PNG",sub:"Painless Night Glu",img:"img/png-painless-night-glu.jpg",cat:"Parches",c:["#E67E22","#F6B04A"],p:79,d:64,cv:25,qv:50,star:1,desc:"El producto estrella. La compañía lo presenta como: «¡Reúne tu energía y vive con calidad!»"},
- {id:"melatonin",name:"Melatonin Plus",cat:"Parches",c:["#3D4C7A","#8E9BD1"],p:47,d:35,cv:14,qv:30,desc:"Parche de la línea de bienestar, pensado para acompañar tu rutina de descanso."},
- {id:"b12",name:"B12 Plus",cat:"Parches",c:["#C0392B","#F08A7E"],p:47,d:35,cv:14,qv:30,desc:"«¡Fortalécete con vitaminas!», en formato parche."},
- {id:"slim",name:"Slim Style",cat:"Parches",c:["#16A085","#7DD3C0"],p:43,d:32,cv:13,qv:25,desc:"«¡Alcanza tu forma ideal!». Funciona mejor junto a buena alimentación y actividad física."},
- {id:"dekamin",name:"Dekamin",cat:"Parches",c:["#D4A017","#F7DC6F"],p:43,d:32,cv:13,qv:25,desc:"«¡Siéntete bien con Dekamin!». Parche de la línea de bienestar diario."},
- {id:"omevia",name:"Omevia",img:"https://www.onemoreinternational.com/wp-content/uploads/2026/03/omevia-kopya.jpg",cat:"Parches",c:["#2471A3","#85C1E9"],p:49,d:39,cv:17,qv:32,desc:"«¡Cuídate bien con Omevia!». Parche de la línea de bienestar."},
+ {id:"png",img:"img/png-painless-night-glu.jpg",ing:"Glucosamina, ginseng rojo coreano, iones de plata, saponinas, germanio orgánico, calcio, potasio, magnesio",pres:"25 parches",name:"PNG",sub:"Painless Night Glu",cat:"Parches",c:["#E67E22","#F6B04A"],p:79,d:64,cv:25,qv:50,star:1,desc:"El producto estrella. La compañía lo presenta como: «¡Reúne tu energía y vive con calidad!»"},
+ {id:"melatonin",img:"img/melatonin.jpg",ing:"4,4 mg de melatonina, aceite esencial de lavanda, aceite esencial de rosas",pres:"24 parches",name:"Melatonin Plus",cat:"Parches",c:["#3D4C7A","#8E9BD1"],p:47,d:35,cv:14,qv:30,desc:"Parche de la línea de bienestar, pensado para acompañar tu rutina de descanso."},
+ {id:"b12",img:"img/b12.jpg",ing:"Vitaminas B1, B3, B12, ácido fólico, vitamina E, vitamina C, vitamina D",pres:"24 parches",name:"B12 Plus",cat:"Parches",c:["#C0392B","#F08A7E"],p:47,d:35,cv:14,qv:30,desc:"«¡Fortalécete con vitaminas!», en formato parche."},
+ {id:"slim",img:"img/slim.jpg",ing:"Espirulina, palmitoil tripéptido, L-carnitina, jengibre orgánico, té verde, guaraná, garcinia cambogia",pres:"30 parches",name:"Slim Style",cat:"Parches",c:["#16A085","#7DD3C0"],p:43,d:32,cv:13,qv:25,desc:"«¡Alcanza tu forma ideal!». Funciona mejor junto a buena alimentación y actividad física."},
+ {id:"dekamin",img:"img/dekamin.jpg",ing:"Vitamina D3, vitamina K12, vitamina C, magnesio",pres:"24 parches",name:"Dekamin",cat:"Parches",c:["#D4A017","#F7DC6F"],p:43,d:32,cv:13,qv:25,desc:"«¡Siéntete bien con Dekamin!». Parche de la línea de bienestar diario."},
+ {id:"omevia",img:"img/omevia.jpg",ing:"Omega 3, coenzima Q10, DHEA, pregnenolona",pres:"26 parches",name:"Omevia",cat:"Parches",c:["#2471A3","#85C1E9"],p:49,d:39,cv:17,qv:32,desc:"«¡Cuídate bien con Omevia!». Parche de la línea de bienestar."},
  {id:"glutanad",name:"GlutaNAD+",cat:"Parches",c:["#7D3C98","#D2B4DE"],p:79,d:67,cv:25,qv:50,desc:"De la línea premium. Pregúntame cómo se integra a tu rutina."},
- {id:"nladies",name:"Night Ladies",cat:"Parches",c:["#C2185B","#F48FB1"],p:79,d:59,cv:23,qv:45,desc:"Parche de bienestar íntimo para ella, de la línea Night."},
- {id:"ngent",name:"Night Gentlemen",cat:"Parches",c:["#263238","#78909C"],p:79,d:59,cv:23,qv:45,desc:"Parche de bienestar íntimo para él, de la línea Night."},
- {id:"collagen",name:"Collagen Patch",cat:"Belleza",c:["#E8A0A0","#FBE0D8"],p:79,d:59,cv:23,qv:45,desc:"«Colágeno práctico para tu piel», en formato parche."},
+ {id:"glutamore",img:"img/glutamore.jpg",name:"Glutamore",sub:"Glutathion Plus",cat:"Suplementos",c:["#7B1E3A","#D98BA3"],ing:"L-glutatión, vitamina C, taurina, arginina, L-valina",pres:"2 unidades de 20 ml",desc:"Gotas de L-glutatión, «¡Para tu mejor versión!»."},
+ {id:"nladies",img:"img/nladies.jpg",ing:"Omega 3, L-arginina, zinc, jengibre, ginseng, dioscorea bulbífera, trébol rojo",pres:"27 parches",name:"Night Ladies",cat:"Parches",c:["#C2185B","#F48FB1"],p:79,d:59,cv:23,qv:45,desc:"Parche de bienestar íntimo para ella, de la línea Night."},
+ {id:"ngent",img:"img/ngent.jpg",ing:"Omega 3, L-arginina, zinc, jengibre, ginseng, cornus officinalis, maca, eurycoma longifolia",pres:"27 parches",name:"Night Gentlemen",cat:"Parches",c:["#263238","#78909C"],p:79,d:59,cv:23,qv:45,desc:"Parche de bienestar íntimo para él, de la línea Night."},
+ {id:"collagen",img:"img/collagen.jpg",ing:"Colágeno, queratina hidrolizada, extracto de algas marinas, vitamina E, miel de acacia, coenzima Q10",pres:"27 parches",name:"Sornie Collagen Patch",sub:"by Lumière",cat:"Belleza",c:["#E8A0A0","#FBE0D8"],p:79,d:59,cv:23,qv:45,desc:"«Colágeno práctico para tu piel», en formato parche."},
  {id:"lumiere",name:"Lumière Beauty Set",cat:"Belleza",c:["#B9770E","#F5CBA7"],desc:"«Las necesidades de tu piel, en un solo set»."},
  {id:"sunscreen",name:"Lumière Sunscreen",cat:"Belleza",c:["#F39C12","#FDEBD0"],desc:"Protector solar de la línea Lumière."},
- {id:"antiaging",name:"Anti-Aging Mask",cat:"Belleza",c:["#6C3483","#E8DAEF"],desc:"Mascarilla facial de la línea de cuidado de la piel."},
+ {id:"antiaging",img:"img/antiaging.jpg",ing:"Colágeno, aloe vera, ácido hialurónico, ginseng, retinol A, lecitina, péptidos, aceites orgánicos",pres:"4 mascarillas",name:"Sornie Anti-Aging Mask",sub:"by Lumière",cat:"Belleza",c:["#6C3483","#E8DAEF"],desc:"Mascarilla facial de la línea de cuidado de la piel."},
  {id:"facelift",name:"Face Lifting Mask",cat:"Belleza",c:["#A04000","#F6DDCC"],desc:"«Un contorno facial definido». Mascarilla de la línea facial."},
  {id:"shampoo",name:"Hair Repair Shampoo",cat:"Cuidado personal",c:["#1E8449","#ABEBC6"],desc:"«¡Para un cabello deslumbrante!»."},
  {id:"hairmask",name:"Hair Repair Mask",cat:"Cuidado personal",c:["#196F3D","#D5F5E3"],desc:"Mascarilla capilar de la línea Hair Repair."},
@@ -574,7 +579,7 @@ const P = [
  {id:"omiclean",name:"Omiclean",sub:"Toallitas y polvo",cat:"Hogar y mascotas",c:["#5DADE2","#EBF5FB"],desc:"Línea de limpieza para el hogar."},
  {id:"pawsy",name:"Pawsy",sub:"Spray, toalla y toallitas",cat:"Hogar y mascotas",c:["#E59866","#FDF2E9"],desc:"«¡Mascotas felices con One More!». Cuidado para tus mascotas."}
 ];
-const CATS=["Todos","Parches","Belleza","Cuidado personal","Café","Hogar y mascotas"];
+const CATS=["Todos","Parches","Suplementos","Belleza","Cuidado personal","Café","Hogar y mascotas"];
 const byId=id=>P.find(p=>p.id===id);
 
 /* Ilustración del empaque (sin fotos externas) */
@@ -586,9 +591,10 @@ function art(p,size){
     "Belleza":`<rect x="105" y="50" width="90" height="34" rx="8" fill="${a}"/><rect x="85" y="80" width="130" height="180" rx="30" fill="url(#g${p.id})"/><rect x="100" y="120" width="100" height="80" rx="14" fill="#fff" opacity=".9"/>`,
     "Cuidado personal":`<rect x="120" y="40" width="60" height="40" rx="10" fill="${a}"/><path d="M95 80h110l10 170a14 14 0 0 1-14 14H99a14 14 0 0 1-14-14z" fill="url(#g${p.id})"/><rect x="104" y="130" width="92" height="76" rx="12" fill="#fff" opacity=".9"/>`,
     "Café":`<path d="M80 70h140l-10 190H90z" fill="url(#g${p.id})"/><rect x="80" y="60" width="140" height="22" rx="6" fill="${a}"/><circle cx="150" cy="170" r="44" fill="#fff" opacity=".9"/>`,
+    "Suplementos":`<rect x="80" y="70" width="140" height="190" rx="16" fill="url(#g${p.id})"/><rect x="100" y="120" width="100" height="80" rx="12" fill="#fff" opacity=".9"/>`,
     "Hogar y mascotas":`<rect x="75" y="75" width="150" height="180" rx="40" fill="url(#g${p.id})"/><rect x="95" y="125" width="110" height="80" rx="16" fill="#fff" opacity=".9"/>`
   }[p.cat];
-  const ty={"Parches":150,"Belleza":168,"Cuidado personal":176,"Café":178,"Hogar y mascotas":172}[p.cat];
+  const ty={"Suplementos":166,"Parches":150,"Belleza":168,"Cuidado personal":176,"Café":178,"Hogar y mascotas":172}[p.cat];
   const txt=lines.map((l,i)=>`<text x="150" y="${ty+(i-(lines.length-1)/2)*20}" text-anchor="middle" font-family="Sora,Arial" font-weight="800" font-size="${lines.length>1?16:l.length>5?17:22}" fill="${a}">${l}</text>`).join("");
   return `<svg class="art" viewBox="0 0 300 300" ${size?`width="${size}" height="${size}"`:""} role="img" aria-label="${p.name}"><defs><linearGradient id="g${p.id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient><radialGradient id="bg${p.id}" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="${b}" stop-opacity=".35"/></radialGradient></defs><rect width="300" height="300" fill="url(#bg${p.id})"/><ellipse cx="150" cy="272" rx="90" ry="10" fill="#000" opacity=".08"/>${shape}${txt}<text x="150" y="${p.cat==="Parches"?236:248}" text-anchor="middle" font-family="Manrope,Arial" font-weight="800" font-size="9" letter-spacing="3" fill="#fff" opacity=".9">ONE MORE</text></svg>`;
 }
@@ -634,7 +640,8 @@ function renderGrid(){
       <span class="cat">${p.cat}</span>
       <h3>${p.name}${p.sub?` <span style="font-weight:600;color:var(--muted);font-size:13px">· ${p.sub}</span>`:""}</h3>
       <p>${p.desc}</p>
-      ${p.p?`<div class="prices"><b>${usd(p.p)}</b><small>Socio ${usd(p.d)}</small></div><div class="qv">${p.qv} QV · ${p.cv} CV</div>`:`<div class="prices"><span class="ask">Precio según tu país</span></div>`}
+      ${p.ing?`<details class="ing"><summary>Ingredientes${p.pres?` · ${p.pres}`:""}</summary>${p.ing}</details>`:""}
+      ${p.p?`<div class="prices"><b>${usd(p.p)}</b><small>Socio ${usd(p.d)}</small></div><div class="qv">${p.qv} QV · ${p.cv} CV</div>`:`<div class="prices"><span class="ask">Consultar precio en tu país</span></div>`}
       <div class="actions">
         ${p.p?`<button class="btn btn-dark" data-add="${p.id}">Agregar</button>`:`<a class="btn btn-dark" href="${wa(`${WA_INTRO}: *${p.name}*. ¿Qué precio tiene en mi país?\n${pageUrl()}#producto-${p.id}`)}" target="_blank" rel="noopener">Consultar</a>`}
         <a class="wa-mini" href="${wa(`${WA_INTRO}: *${p.name}*${p.p?` (${usd(p.p)})`:""}\n${pageUrl()}#producto-${p.id}`)}" target="_blank" rel="noopener" aria-label="Preguntar por ${p.name} en WhatsApp"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg></a>

@@ -65,10 +65,10 @@ const RM=matchMedia("(prefers-reduced-motion:reduce)").matches,FINE=matchMedia("
 function toast(h,act){const t=$("#toast");t.innerHTML=h+(act?` <button>${act.l}</button>`:"");if(act)t.querySelector("button").onclick=act.f;t.classList.add("on");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("on"),2800)}
 
 $$(".store-link").forEach(a=>a.href=STORE);
-$$(".wa-general").forEach(a=>a.href=wa("Hola José, vengo de tu página web y quiero información sobre ONE MORE 😊"));
-$$(".wa-video").forEach(a=>a.href=wa("Hola José, vi tu video en la página web y quiero información para empezar con ONE MORE 🙌"));
-$("#packWa").href=wa(`Hola José, vengo de tu página web. Me interesa el paquete PNG de $150 (2 PNG, cliente + socio) y tengo unas dudas.\n${pageUrl()}#oferta`);
-$("#joinWa").href=wa("Hola José, vengo de tu página web y quiero conocer el negocio ONE MORE antes de afiliarme. ¿Cuándo podemos hablar?");
+$$(".wa-general").forEach(a=>a.href=wa("Hola José y Jaqueline, vengo de su página web y quiero información sobre ONE MORE 😊"));
+$$(".wa-video").forEach(a=>a.href=wa("Hola José y Jaqueline, vi su video en la página web y quiero información para empezar con ONE MORE 🙌"));
+$("#packWa").href=wa(`Hola José y Jaqueline, vengo de su página web. Me interesa el paquete PNG de $150 (2 PNG, cliente + socio) y tengo unas dudas.\n${pageUrl()}#oferta`);
+$("#joinWa").href=wa("Hola José y Jaqueline, vengo de su página web y quiero conocer el negocio ONE MORE antes de afiliarme. ¿Cuándo podemos hablar?");
 
 /* Cinta de personas */
 const REEL=[["png","Muévete"],["melatonin","Descansa"],["dekamin","Energía"],["collagen","Brilla"],["ngent","Vitalidad"],["b12","Equilibrio"],["slim","Tu forma"],["nladies","Para ella"],["omevia","Cuídate"],["antiaging","Luce"]];
@@ -82,7 +82,7 @@ function renderNeeds(){
   const m=$("#match");if(!need){m.classList.remove("on");return}
   const p=byId(need);
   m.innerHTML=`<div class="ph"><img class="l" src="${p.life}" alt="" style="object-position:${p.pos}"><img class="p" src="${p.img}" alt="${p.name}"></div><div><span class="cat" style="font-size:11px;font-weight:800;letter-spacing:.16em;color:var(--orange2)">TE RECOMIENDO</span><h4>${p.name}</h4><small>${p.desc} · ${p.pres}</small>
-    <div class="acts">${p.p?`<button class="btn btn-fire" data-add="${p.id}">Agregar · ${usd(p.p)}</button>`:""}<a class="btn btn-wa" target="_blank" rel="noopener" href="${wa(`Hola José, usé el asesor de tu página: quiero mejorar ${NEEDS.find(n=>n[2]===need)[1].toLowerCase()} y me recomendó *${p.name}*. ¿Me cuentas más?\n${pageUrl()}#producto-${p.id}`)}">Preguntar</a><a class="btn btn-ghost" href="#producto-${p.id}">Ver ficha</a></div></div>`;
+    <div class="acts">${p.p?`<button class="btn btn-fire" data-add="${p.id}">Agregar · ${usd(p.p)}</button>`:""}<a class="btn btn-wa" target="_blank" rel="noopener" href="${wa(`Hola José y Jaqueline, usé el asesor de su página: quiero mejorar ${NEEDS.find(n=>n[2]===need)[1].toLowerCase()} y me recomendó *${p.name}*. ¿Me cuentan más?\n${pageUrl()}#producto-${p.id}`)}">Preguntar</a><a class="btn btn-ghost" href="#producto-${p.id}">Ver ficha</a></div></div>`;
   m.classList.remove("on");void m.offsetWidth;m.classList.add("on");
 }
 
@@ -106,8 +106,8 @@ function renderGrid(){
       <div class="specs"><div><b>Presentación</b><span>${p.pres}</span></div><div><b>Ingredientes</b><span>${p.ing}</span></div></div>
       ${p.p?`<div class="prices"><b>${usd(p.p)}</b><small>Socio ${usd(p.d)}</small></div><div class="qv">${p.qv} QV · ${p.cv} CV</div>`:`<div class="prices"><span class="ask">Precio según tu país</span></div>`}
       <div class="actions">
-        ${p.p?`<button class="btn btn-fire" data-add="${p.id}">Agregar al pedido</button>`:`<a class="btn btn-ghost" target="_blank" rel="noopener" href="${wa(`Hola José, vengo de tu página web. ¿Qué precio tiene *${p.name}* en mi país?\n${pageUrl()}#producto-${p.id}`)}">Consultar precio</a>`}
-        <a class="wa-mini" target="_blank" rel="noopener" aria-label="Preguntar por ${p.name} en WhatsApp" href="${wa(`Hola José, vengo de tu página web y me interesa este producto ONE MORE: *${p.name}*${p.p?` (${usd(p.p)})`:""}\n${pageUrl()}#producto-${p.id}`)}"><span class="ic" data-i="wa" style="width:22px;height:22px;color:#04240F"></span></a>
+        ${p.p?`<button class="btn btn-fire" data-add="${p.id}">Agregar al pedido</button>`:`<a class="btn btn-ghost" target="_blank" rel="noopener" href="${wa(`Hola José y Jaqueline, vengo de su página web. ¿Qué precio tiene *${p.name}* en mi país?\n${pageUrl()}#producto-${p.id}`)}">Consultar precio</a>`}
+        <a class="wa-mini" target="_blank" rel="noopener" aria-label="Preguntar por ${p.name} en WhatsApp" href="${wa(`Hola José y Jaqueline, vengo de su página web y me interesa este producto ONE MORE: *${p.name}*${p.p?` (${usd(p.p)})`:""}\n${pageUrl()}#producto-${p.id}`)}"><span class="ic" data-i="wa" style="width:22px;height:22px;color:#04240F"></span></a>
       </div>
     </div>
   </article>`).join("");
@@ -137,7 +137,7 @@ function openCart(){$("#drawer").classList.add("on");$("#overlay").classList.add
 function closeCart(){$("#drawer").classList.remove("on");$("#overlay").classList.remove("on");document.body.style.overflow=""}
 function send(){const t=totals(),name=clean($("#fName").value,60);store.set("name",name);
   const lines=cart.map(i=>{const p=byId(i.id),pr=mode==="socio"?p.d:p.p;return`• ${i.qty} × *${p.name}* — ${usd(pr*i.qty)}`});
-  window.open(wa(`Hola José, vengo de tu página web y quiero hacer este pedido ONE MORE:\n\n${lines.join("\n")}\n\nPrecio: ${mode==="socio"?"socio":"cliente"}\nProductos: ${usd(t.sub)}\nVolumen: ${t.qv} QV\nEnvío estimado: ${t.ship?usd(t.ship):"Gratis"}\n*Total estimado: ${usd(t.total)}*\n\n👤 ${name||"(nombre)"}\n📍 ${$("#fCountry").value}\n\n¿Me ayudas a hacer la compra?`),"_blank","noopener,noreferrer")}
+  window.open(wa(`Hola José y Jaqueline, vengo de su página web y quiero hacer este pedido ONE MORE:\n\n${lines.join("\n")}\n\nPrecio: ${mode==="socio"?"socio":"cliente"}\nProductos: ${usd(t.sub)}\nVolumen: ${t.qv} QV\nEnvío estimado: ${t.ship?usd(t.ship):"Gratis"}\n*Total estimado: ${usd(t.total)}*\n\n👤 ${name||"(nombre)"}\n📍 ${$("#fCountry").value}\n\n¿Me ayudan a hacer la compra?`),"_blank","noopener,noreferrer")}
 $("#fName").value=clean(store.get("name",""),60);
 
 /* ================= RANGOS (Requisitos de calificación OM, marzo 2025) ================= */
@@ -171,7 +171,7 @@ function renderRanks(){
 
 /* ================= VIDEO ================= */
 const embedUrl=()=>{const o=/^https?:/.test(location.origin)?`&origin=${encodeURIComponent(location.origin)}`:"";return`https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&playsinline=1&rel=0&modestbranding=1${o}`};
-const makeFrame=()=>{const f=document.createElement("iframe");f.src=embedUrl();f.title="Video de José Lugo sobre ONE MORE";f.allow="autoplay; encrypted-media; picture-in-picture; fullscreen";f.referrerPolicy="strict-origin-when-cross-origin";return f};
+const makeFrame=()=>{const f=document.createElement("iframe");f.src=embedUrl();f.title="Video de José Lugo y Jaqueline Cataño sobre ONE MORE";f.allow="autoplay; encrypted-media; picture-in-picture; fullscreen";f.referrerPolicy="strict-origin-when-cross-origin";return f};
 $$("img[data-fallback]").forEach(im=>im.addEventListener("error",()=>{if(im.dataset.fallback){im.src=im.dataset.fallback;im.dataset.fallback=""}},{once:false}));
 const phoneHTML=$("#phone").innerHTML;
 const playInline=()=>{$("#phone").innerHTML="";$("#phone").appendChild(makeFrame())};
@@ -240,7 +240,7 @@ function validStep2(){
   const em=$("#lEmail").value.trim();const ok3=fieldErr("#fdEmail",!!em&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em));
   return ok1&&ok2&&ok3;
 }
-function leadText(d){return `Hola José, vengo de tu página web y quiero una asesoría 🙌\n\n👤 ${d.name}\n📱 ${d.whatsapp}${d.email?`\n✉️ ${d.email}`:""}\n🎯 Interés: ${d.interest}\n🕐 Mejor momento: ${d.time}`}
+function leadText(d){return `Hola José y Jaqueline, vengo de su página web y quiero una asesoría 🙌\n\n👤 ${d.name}\n📱 ${d.whatsapp}${d.email?`\n✉️ ${d.email}`:""}\n🎯 Interés: ${d.interest}\n🕐 Mejor momento: ${d.time}`}
 function canSend(){
   if(Date.now()-PAGE_T0<4000)return false;                       // los robots envían al instante
   const log=(store.get("leadlog",[])||[]).filter(t=>Date.now()-t<3600e3);

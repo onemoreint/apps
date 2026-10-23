@@ -221,11 +221,39 @@ header{position:sticky;top:0;z-index:50;background:rgba(250,246,240,.88);backdro
 .opp-card p{opacity:.78;line-height:1.65}
 .who{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 26px}
 .who span{border:1px solid rgba(255,255,255,.18);border-radius:99px;padding:8px 14px;font-size:13.5px;font-weight:700}
-.ranks{background:var(--paper);border:1px solid var(--line);border-radius:30px;padding:30px}
-.ranks h4{font-size:20px;margin-bottom:6px}
-.ladder{display:flex;flex-direction:column-reverse;gap:6px;margin-top:16px}
-.ladder div{height:34px;border-radius:10px;display:flex;align-items:center;padding:0 14px;font-weight:800;font-size:13.5px;color:#fff;transform-origin:left;transform:scaleX(0);transition:transform .7s cubic-bezier(.2,.8,.2,1)}
-.ladder.in div{transform:scaleX(1)}
+.ranks{background:var(--paper);border:1px solid var(--line);border-radius:30px;padding:34px;margin-top:22px}
+.rk-head{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap}
+.rk-head h3{font-size:clamp(26px,3vw,38px);margin:10px 0 8px}
+.rk-head p{color:var(--muted);line-height:1.6;max-width:560px}
+.rk-legend{display:flex;gap:16px;font-size:13px;font-weight:700;color:var(--muted)}
+.rk-legend i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:6px;vertical-align:-1px}
+.rk-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 14px}
+.rk-tabs button{height:40px;padding:0 16px;border-radius:99px;border:1px solid var(--line);font-weight:800;font-size:13.5px;background:var(--bg);transition:.2s}
+.rk-tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.rk-list{display:grid;gap:8px}
+.rk{border:1px solid var(--line);border-radius:16px;background:var(--bg);overflow:hidden;transition:box-shadow .3s,border-color .3s;opacity:0;transform:translateX(-14px);animation:rkin .45s forwards}
+@keyframes rkin{to{opacity:1;transform:none}}
+.rk.open{border-color:var(--orange);box-shadow:0 12px 26px -16px rgba(230,126,34,.7)}
+.rk>button{width:100%;display:grid;grid-template-columns:44px 1.3fr 1fr 1.4fr 24px;gap:14px;align-items:center;padding:12px 16px;text-align:left}
+.rk .gem{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-family:Sora;font-weight:800;font-size:13px;color:#fff;box-shadow:inset 0 -6px 12px rgba(0,0,0,.18)}
+.rk .nm b{display:block;font-family:Sora;font-size:16px}
+.rk .nm small{display:none;color:var(--muted);font-weight:700;font-size:12.5px}
+.rk .qv{font-weight:800;font-size:14px}
+.rk .qv small{display:block;color:var(--muted);font-size:11.5px;font-weight:700}
+.rk .money{display:flex;flex-direction:column;gap:5px}
+.bar{height:8px;border-radius:8px;background:var(--line);overflow:hidden;position:relative}
+.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:8px;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.money span{font-size:12px;font-weight:800;display:flex;justify-content:space-between;color:var(--muted)}
+.money span b{color:var(--ink)}
+.rk .chev{font-size:18px;color:var(--orange);transition:transform .3s;font-weight:800}
+.rk.open .chev{transform:rotate(45deg)}
+.rk .req{max-height:0;overflow:hidden;transition:max-height .35s ease;padding:0 16px}
+.rk.open .req{max-height:220px;padding-bottom:14px}
+.req p{font-size:13px;font-weight:800;color:var(--muted);margin-bottom:8px}
+.req .pills{display:flex;flex-wrap:wrap;gap:6px}
+.req .pills span{background:#fff;border:1px solid var(--line);border-radius:99px;padding:6px 12px;font-size:13px;font-weight:700}
+.rk-note{font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:16px}
+@media (max-width:700px){.ranks{padding:22px 16px}.rk>button{grid-template-columns:40px 1fr 20px;grid-template-areas:"gem nm chev" "money money money";gap:10px 12px}.rk .gem{grid-area:gem;width:40px;height:40px;font-size:12px}.rk .nm{grid-area:nm}.rk .nm small{display:block}.rk .qv{display:none}.rk .money{grid-area:money}.rk .chev{grid-area:chev}}
 .terms{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}
 .terms span{font-size:12px;font-weight:800;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 9px}
 
@@ -337,7 +365,7 @@ footer li{list-style:none;margin-bottom:8px}
   .cart-btn .t{display:none}
 }
 @media (hover:none){.media:hover svg.art{transform:none}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}.ladder div{transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}.rk{opacity:1;transform:none}}
 </style>
 </head>
 <body>
@@ -465,7 +493,7 @@ footer li{list-style:none;margin-bottom:8px}
       <div><span class="ic">📦</span><h4>Recíbelo y te acompaño</h4><p>Te explico cómo usar cada producto y hacemos seguimiento.</p></div>
     </div>
 
-    <div class="opp reveal" style="margin-top:22px">
+    <div class="opp reveal" style="margin-top:22px;grid-template-columns:1fr">
       <div class="opp-card">
         <span class="eyebrow" style="color:var(--amber)">La oportunidad</span>
         <h3>No solo uses el producto. Constrúyelo como negocio.</h3>
@@ -473,12 +501,17 @@ footer li{list-style:none;margin-bottom:8px}
         <div class="who"><span>👩‍👧 Mamás emprendedoras</span><span>💼 Profesionales</span><span>🚀 Emprendedores</span><span>🔁 Gente con experiencia en network</span></div>
         <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn-orange store-link" target="_blank" rel="noopener">Afiliarme ahora</a><a class="btn btn-line" style="color:#fff" id="joinWa" target="_blank" rel="noopener">Hablar antes con José</a></div>
       </div>
-      <div class="ranks">
-        <h4>Ruta de crecimiento</h4>
-        <p style="color:var(--muted);font-size:14px;line-height:1.55">El plan de ONE MORE avanza por rangos, de Gold hasta Royal Diamond, con bonos de recalificación mensual y Matching Bonus hasta 4 niveles.</p>
-        <div class="ladder" id="ladder"></div>
-        <div class="terms"><span>QV</span><span>CV</span><span>Binario</span><span>Bono 4×4</span><span>Bono 2+1</span><span>Plan 84 Días</span><span>Premium Office</span></div>
+    </div>
+
+    <div class="ranks reveal" id="rangos">
+      <div class="rk-head">
+        <div><span class="eyebrow">Plan de carrera One More</span><h3>Ruta de crecimiento: 17 rangos</h3>
+          <p>Según los requisitos oficiales de calificación (marzo 2025). Toca cualquier rango para ver qué se necesita para alcanzarlo.</p></div>
+        <div class="rk-legend"><span><i style="background:var(--orange)"></i>Bono semanal</span><span><i style="background:var(--ink)"></i>Flash Out</span></div>
       </div>
+      <div class="rk-tabs" id="rkTabs"></div>
+      <div class="rk-list" id="rkList"></div>
+      <p class="rk-note">Montos en USD tomados del documento oficial "Requisitos de calificación" de ONE MORE. El plan puede actualizarse; confirma la versión vigente conmigo o en tu Premium Office. Los ingresos dependen del trabajo de cada persona y no están garantizados.</p>
     </div>
   </section>
 
@@ -506,7 +539,7 @@ footer li{list-style:none;margin-bottom:8px}
       <details><summary>¿Qué incluye el paquete de $150?</summary><p>Dos unidades de PNG y el registro automático como cliente y socio, para que puedas comprar con precio de socio y, si quieres, empezar tu negocio.</p></details>
       <details><summary>¿Cuánto cuesta el envío?</summary><p>Depende del volumen (QV) del pedido: de 0 a 99 QV $12, de 100 a 149 QV $10, de 150 a 199 QV $8, de 200 a 299 QV $6 y desde 300 QV el envío es gratis. Lo confirmamos según tu país.</p></details>
       <details><summary>¿Los productos reemplazan un tratamiento médico?</summary><p>No. Son productos de bienestar, no medicamentos. Si tienes una condición de salud, estás embarazada o tomas medicamentos, consulta a tu médico antes de usarlos.</p></details>
-      <details><summary>¿Cuánto puedo ganar como socio?</summary><p>Depende de tu trabajo, tu constancia y las ventas de tu equipo; no hay ingresos garantizados. Te muestro el plan oficial completo en una llamada.</p></details>
+      <details><summary>¿Cuánto puedo ganar como socio?</summary><p>Depende de tu trabajo, tu constancia y las ventas de tu equipo; no hay ingresos garantizados. Arriba tienes los 17 rangos del plan de carrera; te explico cómo se calculan en una llamada.</p></details>
     </div>
   </section>
 </main>
@@ -726,12 +759,58 @@ function renderQuiz(){
 }
 
 /* ================= RANGOS Y EFECTOS ================= */
-const RANKS=[["Gold · primer rango","#C9A227"],["Rangos intermedios","#A2958A"],["Más rangos de liderazgo","#5D6D7E"],["Royal Diamond · rango máximo","#E67E22"]];
-$("#ladder").innerHTML=RANKS.map(([n,c],i)=>`<div style="background:${c};width:${55+i*15}%;transition-delay:${i*120}ms">${n}</div>`).join("");
+/* Plan de carrera oficial (Requisitos de calificación OM, marzo 2025). w = bono semanal, f = Flash Out (USD) */
+const RANKS=[
+ {n:"Starter",qv:100,w:0,f:250,r:"2 activos",g:"inicio",c:"#9FB4C7"},
+ {n:"Builder",qv:300,w:0,f:250,r:"2 activos",g:"inicio",c:"#7F9BB4"},
+ {n:"Bronze",qv:650,w:0,f:250,r:"1 Starter",g:"inicio",c:"#B0743C"},
+ {n:"Silver",qv:1000,w:100,f:500,r:"2 Starter",g:"lider",c:"#9EA7AD"},
+ {n:"Gold",qv:2000,w:200,f:750,r:"1 Starter · 1 Bronze",g:"lider",c:"#C9A227"},
+ {n:"Platinum",qv:3000,w:300,f:1000,r:"1 Builder · 1 Bronze",g:"lider",c:"#8E9AA6"},
+ {n:"Pearl",qv:4000,w:400,f:1500,r:"1 Bronze · 1 Silver",g:"lider",c:"#C8BBAE"},
+ {n:"Sapphire",qv:5000,w:500,f:2000,r:"1 Starter · 1 Builder · 1 Gold",g:"lider",c:"#2F5DA8"},
+ {n:"Ruby",qv:7500,w:750,f:3000,r:"1 Starter · 1 Bronze · 1 Platinum",g:"lider",c:"#B3263E"},
+ {n:"Emerald",qv:12500,w:1250,f:4000,r:"1 Starter · 1 Builder · 1 Gold · 1 Pearl",g:"lider",c:"#1E8A5A"},
+ {n:"Diamond",qv:20000,w:1500,f:7500,r:"1 Builder · 1 Silver · 1 Pearl · 1 Sapphire",g:"diamante",c:"#5DADE2"},
+ {n:"Double Diamond",qv:40000,w:3000,f:15000,r:"1 Bronze · 1 Gold · 1 Platinum · 1 Sapphire · 1 Ruby",g:"diamante",c:"#3E8EC9"},
+ {n:"Triple Diamond",qv:70000,w:5000,f:20000,r:"1 Builder · 1 Bronze · 1 Gold · 1 Sapphire · 1 Ruby · 1 Diamond",g:"diamante",c:"#2471A3"},
+ {n:"Imperial Diamond",qv:100000,w:7000,f:30000,r:"1 Builder · 1 Silver · 1 Pearl · 1 Sapphire · 1 Ruby · 1 Emerald · 1 Diamond",g:"diamante",c:"#6C3483"},
+ {n:"Imperial Blue Diamond",qv:300000,w:15000,f:50000,r:"1 Silver · 1 Platinum · 1 Sapphire · 1 Ruby · 1 Emerald · 1 Double Diamond · 1 Triple Diamond",g:"diamante",c:"#1B3A8A"},
+ {n:"Imperial Black Diamond",qv:650000,w:25000,f:60000,r:"1 Silver · 1 Platinum · 1 Ruby · 1 Emerald · 1 Diamond · 2 Double Diamond · 1 Imperial Diamond",g:"diamante",c:"#1A1715"},
+ {n:"Royal Diamond",qv:1000000,w:100000,f:100000,r:"2 Sapphire · 2 Ruby · 2 Emerald · 1 Double Diamond · 1 Triple Diamond · 1 Imperial Diamond · 1 Imperial Blue Diamond",g:"diamante",c:"#E67E22"}
+];
+const RK_GROUPS=[["todos","Todos"],["inicio","Inicio"],["lider","Liderazgo"],["diamante","Diamantes"]];
+let rkGroup="todos",rkOpen=null;
+const fmtN=n=>n.toLocaleString("es-CO");
+const logW=v=>v?Math.max(4,Math.log10(v)/5*100):0;   // escala logarítmica para que se vean todos
+function renderRanks(){
+  $("#rkTabs").innerHTML=RK_GROUPS.map(([k,t])=>`<button class="${k===rkGroup?"on":""}" data-rkg="${k}">${t}</button>`).join("");
+  const list=RANKS.map((r,i)=>({...r,i})).filter(r=>rkGroup==="todos"||r.g===rkGroup);
+  $("#rkList").innerHTML=list.map((r,k)=>`<div class="rk ${rkOpen===r.i?"open":""}" style="animation-delay:${k*45}ms">
+    <button data-rk="${r.i}" aria-expanded="${rkOpen===r.i}">
+      <span class="gem" style="background:${r.c}">${r.i+1}</span>
+      <span class="nm"><b>${r.n}</b><small>${fmtN(r.qv)} QV</small></span>
+      <span class="qv">${fmtN(r.qv)} QV<small>volumen requerido</small></span>
+      <span class="money">
+        <span>Bono semanal <b>${r.w?usd(r.w):"—"}</b></span><span class="bar"><i style="width:0;background:var(--orange)" data-w="${logW(r.w)}"></i></span>
+        <span>Flash Out <b>${usd(r.f)}</b></span><span class="bar"><i style="width:0;background:var(--ink)" data-w="${logW(r.f)}"></i></span>
+      </span>
+      <span class="chev">+</span>
+    </button>
+    <div class="req"><p>Requisitos de calificación</p><div class="pills">${r.r.split(" · ").map(x=>`<span>${x}</span>`).join("")}</div></div>
+  </div>`).join("");
+  requestAnimationFrame(()=>setTimeout(()=>$$("#rkList .bar i").forEach(b=>b.style.width=b.dataset.w+"%"),60));
+}
+renderRanks();
+document.addEventListener("click",e=>{
+  const g=e.target.closest("[data-rkg]");if(g){rkGroup=g.dataset.rkg;rkOpen=null;renderRanks();return}
+  const b=e.target.closest("[data-rk]");if(b){const i=+b.dataset.rk;rkOpen=rkOpen===i?null:i;
+    $$("#rkList .rk").forEach(el=>{const on=+el.querySelector("[data-rk]").dataset.rk===rkOpen;el.classList.toggle("open",on);el.querySelector("[data-rk]").setAttribute("aria-expanded",on)})}
+});
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add("in");
   e.target.querySelectorAll("[data-count]").forEach(el=>{const to=+el.dataset.count,pre=el.dataset.prefix||"";let t0=null;const st=t=>{t0??=t;const k=Math.min(1,(t-t0)/1500);el.textContent=pre+Math.round(to*(1-Math.pow(1-k,3))).toLocaleString("es-CO");if(k<1)requestAnimationFrame(st)};requestAnimationFrame(st)});
   io.unobserve(e.target)}),{threshold:.15});
-$$(".reveal,.proof,#ladder").forEach(e=>io.observe(e));
+$$(".reveal,.proof").forEach(e=>io.observe(e));
 
 /* ================= EVENTOS ================= */
 document.addEventListener("click",e=>{

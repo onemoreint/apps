@@ -15,3 +15,9 @@ Página de distribuidor independiente con productos ONE MORE International, en u
 - `SHIP`
 - productos en `P`
 - rangos en `RANKS`
+
+**Captura de leads:**
+- Formulario de 3 pasos en la sección `#asesoria` (después del video).
+- Pop-up de salida, que aparece una vez por sesión.
+- Cada lead llega por correo a través de FormSubmit (`LEAD_EMAIL_ENDPOINT`) y además se abre un mensaje de WhatsApp a `WA` con los datos.
+- La primera vez, FormSubmit envía un correo de activación que hay que confirmar.

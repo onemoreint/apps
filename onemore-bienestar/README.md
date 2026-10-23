@@ -1,6 +1,6 @@
 # José Lugo · Bienestar ONE MORE (landing de embudo)
 
-Página de distribuidor independiente con productos ONE MORE International, en un solo `index.html`.
+Página de distribuidor independiente con productos ONE MORE International, en un solo `index.html`. Estilo oscuro premium (negro y naranja) con fotos de estilo de vida del catálogo oficial.
 
 **Embudo:** Atención (hero) → Problema → Cómo funciona → Oferta (paquete PNG $150) → Asesor rápido → Catálogo (12 productos con foto real y ficha) → Video → Elige tu camino (cliente o socio) + plan de carrera de 17 rangos → Sobre José → Preguntas → Llamado final.
 

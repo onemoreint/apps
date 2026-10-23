@@ -21,3 +21,11 @@ Página de distribuidor independiente con productos ONE MORE International, en u
 - Pop-up de salida, que aparece una vez por sesión.
 - Cada lead llega por correo a través de FormSubmit (`LEAD_EMAIL_ENDPOINT`) y además se abre un mensaje de WhatsApp a `WA` con los datos.
 - La primera vez, FormSubmit envía un correo de activación que hay que confirmar.
+
+**Seguridad:**
+- Política de seguridad de contenido (CSP) estricta: solo se ejecutan los scripts propios (`js/app.js`, `js/intro.js`), sin código en línea, y solo se conecta a FormSubmit, YouTube y Google Fonts.
+- Protección contra clickjacking: la página no se deja mostrar dentro de marcos ajenos.
+- Lo que escribe el visitante se limpia antes de usarlo (sin etiquetas HTML ni caracteres raros, con largo máximo).
+- Anti-spam en los formularios: campo trampa, tiempo mínimo de 4 segundos, máximo un envío por minuto y 3 por hora, y lista de palabras bloqueadas en FormSubmit.
+- Enlaces externos con `noopener noreferrer`.
+- El correo de FormSubmit no aparece completo en el código. Tras activarlo, conviene reemplazarlo por el código aleatorio que entrega FormSubmit.

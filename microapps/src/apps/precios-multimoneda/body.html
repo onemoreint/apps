@@ -1,0 +1,67 @@
+<section class="panel" data-panel="lista">
+  <div class="kpis no-print" id="kpis" style="margin-bottom:16px"></div>
+  <div class="card">
+    <div class="row between no-print" style="margin-bottom:14px">
+      <div class="row" style="flex:1;min-width:240px">
+        <input class="input" id="buscar" type="search" placeholder="Buscar por nombre o código" style="max-width:320px">
+        <select class="input" id="filtro-cat" style="max-width:200px" aria-label="Categoría"></select>
+      </div>
+      <div class="row">
+        <button class="btn" id="btn-ajuste" type="button">Ajustar precios</button>
+        <button class="btn" id="btn-wa" type="button"></button>
+        <button class="btn primary" id="btn-nuevo" type="button"></button>
+      </div>
+    </div>
+    <div class="print-only" id="print-cap" style="margin-bottom:10px"></div>
+    <div id="tabla"></div>
+    <div class="row no-print" style="margin-top:12px">
+      <button class="btn ghost sm" id="btn-csv" type="button"></button>
+      <button class="btn ghost sm" id="btn-import" type="button"></button>
+      <button class="btn ghost sm" id="btn-print" type="button"></button>
+    </div>
+  </div>
+</section>
+
+<section class="panel" data-panel="tasas">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><div><h2>Moneda base</h2><p>La moneda en la que registras tus costos y precios.</p></div></div>
+      <div class="fields">
+        <label class="field"><span>Moneda base</span><select class="input" id="base"></select></label>
+        <label class="field"><span>Redondear precios hacia arriba a</span><select class="input" id="base-red"></select></label>
+        <label class="field" style="grid-column:1/-1"><span>Cómo calculas el precio</span>
+          <div class="seg" id="modo-margen">
+            <button type="button" data-v="margen">Margen sobre el precio</button>
+            <button type="button" data-v="recargo">Recargo sobre el costo</button>
+          </div>
+          <small class="hint" id="modo-hint"></small>
+        </label>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div><h2>Otras monedas</h2><p>Cuántas unidades de cada moneda equivalen a 1 de tu moneda base.</p></div>
+      </div>
+      <div id="monedas"></div>
+      <div class="row" style="margin-top:12px">
+        <select class="input" id="add-mon" style="max-width:240px" aria-label="Agregar moneda"></select>
+        <button class="btn sm" id="btn-add-mon" type="button">Agregar moneda</button>
+        <span class="spacer"></span>
+        <button class="btn primary sm" id="btn-hoy" type="button">Marcar tasas como actualizadas hoy</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="panel" data-panel="conv">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><div><h2>Convertir un valor</h2><p>Usa las tasas que guardaste en «Monedas y tasas».</p></div></div>
+      <div class="fields">
+        <label class="field"><span>Valor</span><input class="input num" id="conv-v" inputmode="decimal"></label>
+        <label class="field"><span>Moneda</span><select class="input" id="conv-m"></select></label>
+      </div>
+    </div>
+    <div class="ticket" id="conv-res"></div>
+  </div>
+</section>

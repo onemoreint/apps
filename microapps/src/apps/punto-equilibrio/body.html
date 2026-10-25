@@ -1,0 +1,72 @@
+<section class="grid-2">
+  <div class="stack">
+    <div class="card">
+      <div class="card-head">
+        <div><h2>Costos fijos del mes</h2><p>Lo que pagas vendas o no vendas: arriendo, sueldos, servicios, cuotas.</p></div>
+      </div>
+      <div class="table-wrap">
+        <table class="t t-edit">
+          <thead><tr><th>Concepto</th><th class="r" style="width:42%">Valor mensual</th><th style="width:44px"><span class="sr">Quitar</span></th></tr></thead>
+          <tbody id="fijos"></tbody>
+          <tfoot><tr><td>Total costos fijos</td><td class="r" id="fijos-total"></td><td></td></tr></tfoot>
+        </table>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn sm" id="add-fijo" type="button"></button>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="calc">
+      <div class="card">
+        <div class="card-head"><div><h2>Tu producto o servicio</h2><p>Usa valores por unidad vendida.</p></div></div>
+        <div class="fields">
+          <label class="field"><span>Precio de venta por unidad</span><input class="input num" id="precio" inputmode="decimal" autocomplete="off"></label>
+          <label class="field"><span>Costo variable por unidad</span><input class="input num" id="cv" inputmode="decimal" autocomplete="off">
+            <small class="hint">Materia prima, empaque, comisión o envío de cada unidad.</small></label>
+          <label class="field"><span>Utilidad que quieres ganar al mes</span><input class="input num" id="meta" inputmode="decimal" autocomplete="off" placeholder="Opcional"></label>
+          <label class="field"><span>Unidades que esperas vender al mes</span><input class="input num" id="esperadas" inputmode="decimal" autocomplete="off" placeholder="Opcional"></label>
+          <label class="field"><span>Días que trabajas al mes</span><input class="input num" id="dias" inputmode="numeric" autocomplete="off"></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="multi">
+      <div class="card">
+        <div class="card-head"><div><h2>Tus productos</h2><p>Escribe cuántas unidades vendes de cada uno al mes; con eso se calcula la mezcla de ventas.</p></div></div>
+        <div class="table-wrap">
+          <table class="t t-edit">
+            <thead><tr><th>Producto</th><th class="r">Precio</th><th class="r">Costo variable</th><th class="r">Unid./mes</th><th style="width:44px"><span class="sr">Quitar</span></th></tr></thead>
+            <tbody id="prods"></tbody>
+          </table>
+        </div>
+        <div class="row" style="margin-top:10px"><button class="btn sm" id="add-prod" type="button"></button></div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <div class="card-head"><div><h2>Equilibrio por producto</h2><p>Unidades mínimas de cada producto, manteniendo la misma mezcla.</p></div></div>
+        <div class="table-wrap"><table class="t">
+          <thead><tr><th>Producto</th><th class="r">Mezcla</th><th class="r">Margen unit.</th><th class="r">Unidades equilibrio</th><th class="r">Ventas equilibrio</th></tr></thead>
+          <tbody id="multi-tabla"></tbody><tfoot id="multi-foot"></tfoot>
+        </table></div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="esc">
+      <div class="card">
+        <div class="card-head"><div><h2>Escenarios guardados</h2><p>Compara precios y costos distintos. Toca «Abrir» para cargar uno.</p></div></div>
+        <div id="esc-lista"></div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="stack sticky">
+    <div class="ticket" id="ticket"></div>
+    <div class="card">
+      <div class="card-head"><div><h3>Ingresos contra costos</h3><p id="chart-cap">Donde se cruzan las líneas empiezas a ganar.</p></div></div>
+      <div id="chart"></div>
+    </div>
+    <div class="row no-print">
+      <button class="btn primary" id="guardar" type="button"></button>
+      <button class="btn" id="imprimir" type="button"></button>
+    </div>
+  </aside>
+</section>

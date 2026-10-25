@@ -1,0 +1,64 @@
+<section class="panel" data-panel="inv">
+  <div class="kpis" id="kpis" style="margin-bottom:16px"></div>
+  <div class="card">
+    <div class="row between no-print" style="margin-bottom:14px">
+      <div class="row" style="flex:1;min-width:240px">
+        <input class="input" id="q" type="search" placeholder="Buscar producto o código" style="max-width:300px">
+        <select class="input" id="f-estado" style="max-width:190px" aria-label="Estado">
+          <option value="">Todos los productos</option><option value="bajo">Bajo el mínimo</option><option value="agotado">Agotados</option></select>
+      </div>
+      <div class="row"><button class="btn ghost sm" id="btn-csv" type="button"></button><button class="btn primary" id="btn-nuevo" type="button"></button></div>
+    </div>
+    <div id="inventario"></div>
+  </div>
+</section>
+
+<section class="panel" data-panel="mov">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><div><h2>Registrar movimiento</h2><p>Compras, ventas, devoluciones o ajustes por conteo.</p></div></div>
+      <form id="f-mov" autocomplete="off">
+        <div class="seg" id="m-tipo" style="margin-bottom:14px"><button type="button" data-v="in">Entrada</button><button type="button" data-v="out">Salida</button><button type="button" data-v="aj">Ajuste</button></div>
+        <div class="fields">
+          <label class="field" style="grid-column:1/-1"><span>Producto</span><select class="input" id="m-prod" required></select></label>
+          <label class="field"><span>Fecha</span><input class="input" type="date" id="m-fecha"></label>
+          <label class="field"><span id="l-cant">Cantidad</span><input class="input num" id="m-cant" inputmode="decimal" required></label>
+          <label class="field" id="w-cu"><span>Costo unitario</span><input class="input num" id="m-cu" inputmode="decimal"></label>
+          <label class="field" id="w-pv"><span>Precio de venta unitario</span><input class="input num" id="m-pv" inputmode="decimal" placeholder="Opcional"></label>
+          <label class="field" style="grid-column:1/-1"><span>Referencia</span><input class="input" id="m-ref" placeholder="Factura, proveedor, cliente o motivo"></label>
+          <div class="field" style="grid-column:1/-1"><p class="hint" id="m-hint"></p><button class="btn primary" type="submit" id="m-btn">Registrar entrada</button></div>
+        </div>
+      </form>
+    </div>
+    <div class="card">
+      <div class="card-head"><div><h2>Últimos movimientos</h2><p id="mov-cap"></p></div>
+        <input class="input" type="month" id="mov-mes" style="max-width:170px" aria-label="Mes"></div>
+      <div id="movs"></div>
+    </div>
+  </div>
+</section>
+
+<section class="panel" data-panel="kardex">
+  <div class="card">
+    <div class="row between" style="margin-bottom:14px">
+      <div class="row no-print" style="flex:1">
+        <select class="input" id="k-prod" style="max-width:320px" aria-label="Producto"></select>
+        <label class="row small muted">Desde<input class="input" type="date" id="k-desde" style="max-width:160px"></label>
+        <label class="row small muted">Hasta<input class="input" type="date" id="k-hasta" style="max-width:160px"></label>
+      </div>
+      <div class="row no-print"><button class="btn ghost sm" id="k-csv" type="button"></button><button class="btn sm" id="k-print" type="button"></button></div>
+    </div>
+    <div id="k-head" style="margin-bottom:14px"></div>
+    <div id="k-tabla"></div>
+  </div>
+</section>
+
+<section class="panel" data-panel="config">
+  <div class="card" style="max-width:760px">
+    <div class="card-head"><div><h2>Método de valoración</h2><p>Define con qué costo salen las unidades del inventario. Al cambiarlo se recalcula todo el kardex.</p></div></div>
+    <div class="stack">
+      <label class="check" style="align-items:flex-start"><input type="radio" name="metodo" value="prom" style="margin-top:3px"> <span><b>Promedio ponderado</b><br><span class="muted small">Cada entrada actualiza el costo promedio; las salidas usan ese promedio. Es el más usado en comercio.</span></span></label>
+      <label class="check" style="align-items:flex-start"><input type="radio" name="metodo" value="peps" style="margin-top:3px"> <span><b>PEPS (primeras en entrar, primeras en salir)</b><br><span class="muted small">Las salidas toman primero el costo de las unidades más antiguas. Útil con productos perecederos o precios que suben.</span></span></label>
+    </div>
+  </div>
+</section>

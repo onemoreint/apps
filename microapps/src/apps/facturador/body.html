@@ -1,0 +1,110 @@
+<section class="panel" data-panel="nuevo">
+  <div class="grid-2">
+    <div class="stack">
+      <div class="card">
+        <div class="card-head" style="flex-wrap:wrap">
+          <div><h2 id="ed-title">Nuevo documento</h2><p id="ed-sub">Elige el tipo de documento.</p></div>
+          <button class="btn ghost sm" id="btn-limpiar" type="button">Empezar uno nuevo</button>
+        </div>
+        <div class="seg" id="tipo" style="margin-bottom:16px"></div>
+        <div class="fields">
+          <label class="field"><span>Número</span><input class="input" id="d-num"></label>
+          <label class="field"><span>Fecha</span><input class="input" type="date" id="d-fecha"></label>
+          <label class="field"><span id="l-vence">Vence</span><input class="input" type="date" id="d-vence"></label>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div><h2 id="l-cli">Cliente</h2><p>Escribe el nombre para buscar clientes guardados.</p></div></div>
+        <div class="fields">
+          <label class="field" style="grid-column:1/-1"><span>Nombre o razón social</span><input class="input" id="c-n" list="dl-cli" autocomplete="off"><datalist id="dl-cli"></datalist></label>
+          <label class="field"><span>NIT / Cédula / RIF</span><input class="input" id="c-doc"></label>
+          <label class="field"><span>Teléfono / WhatsApp</span><input class="input" id="c-tel" inputmode="tel"></label>
+          <label class="field"><span>Correo</span><input class="input" id="c-email" type="email"></label>
+          <label class="field"><span>Dirección</span><input class="input" id="c-dir"></label>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div><h2>Detalle</h2><p>Productos o servicios. Escribe para buscar en tu catálogo.</p></div></div>
+        <div class="table-wrap">
+          <table class="t t-edit" id="items-t">
+            <thead><tr><th style="min-width:200px">Descripción</th><th class="r" style="width:96px">Cant.</th><th class="r" style="width:130px">Precio unit.</th><th class="r" style="width:80px">Desc. %</th><th class="r col-iva" style="width:86px">IVA %</th><th class="r" style="width:120px">Total</th><th style="width:40px"></th></tr></thead>
+            <tbody id="items"></tbody>
+          </table>
+        </div>
+        <datalist id="dl-prod"></datalist>
+        <div class="row" style="margin-top:10px"><button class="btn sm" id="add-item" type="button"></button></div>
+      </div>
+
+      <div class="card">
+        <div class="fields">
+          <label class="field" style="grid-column:1/-1"><span>Notas para el cliente</span><textarea class="input" id="d-notas" rows="2"></textarea></label>
+          <label class="field" style="grid-column:1/-1"><span>Condiciones de pago o entrega</span><textarea class="input" id="d-cond" rows="2"></textarea></label>
+        </div>
+      </div>
+    </div>
+
+    <aside class="stack sticky">
+      <div class="ticket" id="totales"></div>
+      <div class="stack" style="gap:8px">
+        <button class="btn primary" id="btn-guardar" type="button">Guardar documento</button>
+        <div class="row" style="gap:8px">
+          <button class="btn" id="btn-ver" type="button" style="flex:1"></button>
+          <button class="btn" id="btn-wa" type="button" style="flex:1"></button>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="panel" data-panel="docs">
+  <div class="kpis" id="kpis" style="margin-bottom:16px"></div>
+  <div class="card">
+    <div class="row" style="margin-bottom:14px">
+      <input class="input" id="h-q" type="search" placeholder="Buscar cliente o número" style="max-width:280px">
+      <select class="input" id="h-tipo" style="max-width:190px" aria-label="Tipo"></select>
+      <select class="input" id="h-estado" style="max-width:170px" aria-label="Estado"></select>
+      <span class="spacer"></span>
+      <button class="btn ghost sm" id="h-csv" type="button"></button>
+    </div>
+    <div id="historial"></div>
+  </div>
+</section>
+
+<section class="panel" data-panel="clientes">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><div><h2>Clientes</h2><p>Se guardan solos al crear documentos. También puedes editarlos aquí.</p></div><button class="btn sm" id="add-cli" type="button">Agregar</button></div>
+      <div id="clientes-l"></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div><h2>Catálogo de productos y servicios</h2><p>Para llenar el detalle más rápido.</p></div><button class="btn sm" id="add-prod" type="button">Agregar</button></div>
+      <div id="prods-l"></div>
+    </div>
+  </div>
+</section>
+
+<section class="panel" data-panel="ajustes">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><div><h2>Numeración</h2><p>Prefijo y siguiente número de cada tipo de documento.</p></div></div>
+      <div class="table-wrap"><table class="t t-edit"><thead><tr><th>Documento</th><th>Prefijo</th><th class="r">Siguiente número</th></tr></thead><tbody id="numeracion"></tbody></table></div>
+      <div class="fields" style="margin-top:16px">
+        <label class="field"><span>IVA por defecto</span><div class="input-group"><input class="input num" id="iva-def" inputmode="decimal"><span class="addon">%</span></div></label>
+        <label class="field"><span>Días de validez o plazo</span><input class="input num" id="dias-def" inputmode="numeric"></label>
+        <label class="check" style="grid-column:1/-1"><input type="checkbox" id="usa-iva"> Cobro IVA (muestra la columna de IVA)</label>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div><h2>Textos fijos</h2><p>Aparecen en todos los documentos impresos.</p></div></div>
+      <div class="fields">
+        <label class="field" style="grid-column:1/-1"><span>Datos para pagos</span><textarea class="input" id="t-pagos" rows="3" placeholder="Ej: Bancolombia ahorros 000-000000-00, Nequi 300 000 0000"></textarea></label>
+        <label class="field" style="grid-column:1/-1"><span>Nota legal al pie</span><textarea class="input" id="t-legal" rows="3"></textarea></label>
+      </div>
+      <p class="hint" style="margin-top:8px">Recuerda completar el logo y los datos de tu negocio en el menú ⋯, opción «Datos del negocio».</p>
+    </div>
+  </div>
+</section>
+
+<div id="doc-print" class="print-only"></div>

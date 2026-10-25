@@ -1,0 +1,72 @@
+<div class="row between no-print" style="margin-bottom:16px">
+  <div class="row"><label class="small muted" for="mes">Mes</label><input class="input" type="month" id="mes" style="max-width:190px"></div>
+  <div class="row"><button class="btn ghost sm" id="btn-csv" type="button"></button></div>
+</div>
+
+<section class="panel" data-panel="ventas">
+  <div class="grid-2">
+    <div class="stack">
+      <div class="card">
+        <div class="card-head"><div><h2>Registrar una venta</h2><p>La comisión se calcula al cerrar el mes, según el esquema.</p></div></div>
+        <form id="f-venta" class="fields" autocomplete="off">
+          <label class="field"><span>Fecha</span><input class="input" type="date" id="v-fecha" required></label>
+          <label class="field"><span>Vendedor</span><select class="input" id="v-vend" required></select></label>
+          <label class="field"><span>Cliente</span><input class="input" id="v-cli" placeholder="Opcional"></label>
+          <label class="field"><span>Factura o pedido</span><input class="input" id="v-doc" placeholder="Opcional"></label>
+          <label class="field"><span>Valor de la venta</span><input class="input num" id="v-monto" inputmode="decimal" required></label>
+          <label class="field"><span>Costo de lo vendido</span><input class="input num" id="v-costo" inputmode="decimal" placeholder="Solo si pagas sobre margen"></label>
+          <div class="field" style="grid-column:1/-1"><button class="btn primary" type="submit" id="v-btn">Agregar venta</button></div>
+        </form>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h2>Ventas del mes</h2><p id="ventas-cap"></p></div>
+          <select class="input" id="filtro-vend" style="max-width:200px" aria-label="Filtrar por vendedor"></select></div>
+        <div id="ventas-lista"></div>
+      </div>
+    </div>
+    <aside class="stack sticky"><div class="ticket" id="resumen"></div></aside>
+  </div>
+</section>
+
+<section class="panel" data-panel="liq">
+  <div class="kpis" id="liq-kpis" style="margin-bottom:16px"></div>
+  <div class="card">
+    <div class="card-head"><div><h2>Liquidación por vendedor</h2><p id="liq-cap"></p></div>
+      <button class="btn no-print" id="btn-print" type="button"></button></div>
+    <div id="liq-tabla"></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="card-head"><div><h3>Ranking de ventas</h3><p>Quién vendió más este mes.</p></div></div>
+    <div class="bars" id="ranking"></div>
+  </div>
+</section>
+
+<section class="panel" data-panel="config">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><div><h2>Esquema de comisión</h2><p>Se aplica sobre el total del mes de cada vendedor.</p></div></div>
+      <div class="stack">
+        <div class="field"><span>Tipo de comisión</span>
+          <div class="seg" id="tipo"><button type="button" data-v="fijo">Porcentaje fijo</button><button type="button" data-v="tramos">Por tramos</button></div></div>
+        <div class="field"><span>Se calcula sobre</span>
+          <div class="seg" id="base"><button type="button" data-v="venta">Valor vendido</button><button type="button" data-v="margen">Margen (venta menos costo)</button></div></div>
+        <div id="cfg-fijo"><label class="field" style="max-width:220px"><span>Porcentaje de comisión</span><div class="input-group"><input class="input num" id="tasa" inputmode="decimal"><span class="addon">%</span></div></label></div>
+        <div id="cfg-tramos">
+          <div class="field" style="margin-bottom:10px"><span>Cómo se aplican los tramos</span>
+            <div class="seg" id="modo-tramo"><button type="button" data-v="total">Todo al % del tramo alcanzado</button><button type="button" data-v="escalonado">Cada parte a su %</button></div>
+            <small class="hint" id="tramo-hint"></small></div>
+          <div class="table-wrap"><table class="t t-edit"><thead><tr><th class="r">Desde</th><th class="r">Hasta</th><th class="r">%</th><th></th></tr></thead><tbody id="tramos"></tbody></table></div>
+          <div class="row" style="margin-top:10px"><button class="btn sm" id="add-tramo" type="button">Agregar tramo</button><small class="muted">Deja «Hasta» vacío en el último tramo.</small></div>
+        </div>
+        <div class="fields">
+          <label class="field"><span>Bono por cumplir la meta</span><input class="input num" id="bono" inputmode="decimal" placeholder="Opcional"></label>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div><h2>Vendedores</h2><p>La meta mensual es opcional y sirve para medir cumplimiento.</p></div></div>
+      <div class="table-wrap"><table class="t t-edit"><thead><tr><th>Nombre</th><th class="r">Meta mensual</th><th>WhatsApp</th><th></th></tr></thead><tbody id="vendedores"></tbody></table></div>
+      <div class="row" style="margin-top:10px"><button class="btn sm" id="add-vend" type="button">Agregar vendedor</button></div>
+    </div>
+  </div>
+</section>

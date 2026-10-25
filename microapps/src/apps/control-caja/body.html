@@ -1,0 +1,74 @@
+<section class="panel" data-panel="hoy">
+  <div class="row between" style="margin-bottom:16px">
+    <div class="row"><label class="small muted" for="dia">Día</label><input class="input" type="date" id="dia" style="max-width:180px"><span id="estado-dia"></span></div>
+    <div class="row no-print"><button class="btn" id="btn-print-dia" type="button"></button></div>
+  </div>
+  <div class="grid-2">
+    <div class="stack">
+      <div class="card" id="card-mov">
+        <div class="card-head"><div><h2>Registrar movimiento</h2><p>Cada entrada o salida de dinero del día.</p></div></div>
+        <form id="f-mov" autocomplete="off">
+          <div class="seg" id="tipo-mov" style="margin-bottom:14px"><button type="button" data-v="in">Entrada</button><button type="button" data-v="out">Salida</button></div>
+          <div class="fields">
+            <label class="field"><span>Valor</span><input class="input num" id="m-monto" inputmode="decimal" required></label>
+            <label class="field"><span>Medio de pago</span><select class="input" id="m-medio"></select></label>
+            <label class="field"><span>Categoría</span><select class="input" id="m-cat"></select></label>
+            <label class="field"><span>Concepto</span><input class="input" id="m-conc" placeholder="Ej: Venta mostrador"></label>
+            <div class="field" style="grid-column:1/-1"><button class="btn primary" type="submit" id="m-btn">Agregar entrada</button></div>
+          </div>
+        </form>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h2>Movimientos del día</h2><p id="mov-cap"></p></div></div>
+        <div id="movs"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h2>Arqueo y cierre</h2><p>Cuenta el efectivo que hay en la caja al final del día.</p></div></div>
+        <div id="arqueo"></div>
+      </div>
+    </div>
+    <aside class="stack sticky">
+      <div class="ticket" id="ticket"></div>
+    </aside>
+  </div>
+</section>
+
+<section class="panel" data-panel="hist">
+  <div class="card">
+    <div class="card-head"><div><h2>Días registrados</h2><p>Toca un día para abrirlo.</p></div></div>
+    <div id="historial"></div>
+  </div>
+</section>
+
+<section class="panel" data-panel="mes">
+  <div class="row between" style="margin-bottom:16px">
+    <div class="row"><label class="small muted" for="mes">Mes</label><input class="input" type="month" id="mes" style="max-width:190px"></div>
+    <button class="btn ghost sm no-print" id="btn-csv" type="button"></button>
+  </div>
+  <div class="kpis" id="mes-kpis" style="margin-bottom:16px"></div>
+  <div class="grid-2" style="align-items:start">
+    <div class="card"><div class="card-head"><div><h3>Entradas por categoría</h3></div></div><div class="bars" id="bar-in"></div></div>
+    <div class="card"><div class="card-head"><div><h3>Salidas por categoría</h3></div></div><div class="bars" id="bar-out"></div></div>
+  </div>
+  <div class="card" style="margin-top:16px"><div class="card-head"><div><h3>Por medio de pago</h3></div></div><div id="por-medio"></div></div>
+</section>
+
+<section class="panel" data-panel="config">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><div><h2>Categorías</h2><p>Una por línea.</p></div></div>
+      <div class="fields">
+        <label class="field"><span>De entradas</span><textarea class="input" id="cfg-in" rows="6"></textarea></label>
+        <label class="field"><span>De salidas</span><textarea class="input" id="cfg-out" rows="6"></textarea></label>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div><h2>Medios de pago y base</h2><p>El primero de la lista se trata como efectivo (va a la caja física).</p></div></div>
+      <div class="fields">
+        <label class="field" style="grid-column:1/-1"><span>Medios de pago, uno por línea</span><textarea class="input" id="cfg-medios" rows="6"></textarea></label>
+        <label class="field"><span>Base sugerida para abrir la caja</span><input class="input num" id="cfg-base" inputmode="decimal"></label>
+        <label class="field" style="grid-column:1/-1"><span>Billetes y monedas para el arqueo (separados por coma)</span><input class="input" id="cfg-denoms"><small class="hint" id="denom-hint"></small></label>
+      </div>
+    </div>
+  </div>
+</section>

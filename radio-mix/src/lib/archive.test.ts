@@ -25,6 +25,13 @@ describe('describeFile', () => {
   it('usa el patrón "Artista - NN - Título" del nombre', () => {
     expect(describeFile(files[0]!, 'Kevin MacLeod')).toEqual({ title: 'Autumn Day', artist: 'Kevin MacLeod' });
   });
+  it('quita la numeración aunque vaya en medio (formato Musopen)', () => {
+    expect(describeFile({ name: 'x.mp3', title: 'Franz Schubert - Sonata in A Minor, D. 959 - 01 - Allegro', creator: 'Paul Pitman' })).toEqual({
+      title: 'Sonata in A Minor, D. 959 - Allegro',
+      artist: 'Franz Schubert · Paul Pitman',
+    });
+    expect(describeFile({ name: 'x.mp3', title: 'Ludwig van Beethoven - Coriolan Overture' })).toEqual({ title: 'Coriolan Overture', artist: 'Ludwig van Beethoven' });
+  });
   it('prioriza metadatos del archivo y añade intérprete', () => {
     expect(describeFile(files[5]!)).toEqual({ title: 'Goldberg Variations - Aria', artist: 'Johann Sebastian Bach · Shelley Katz' });
   });

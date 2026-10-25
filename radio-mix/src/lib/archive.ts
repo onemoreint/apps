@@ -47,9 +47,10 @@ function cleanBase(fileName: string): string {
 export function describeFile(f: ArchiveFile, defaultArtist?: string): { title: string; artist: string } {
   const base = cleanBase(f.name.split('/').pop() ?? f.name);
   const source = (f.title ?? base).trim();
-  const m = /^(.+?)\s+-\s+\d{1,3}\s+-\s+(.+)$/.exec(source);
-  let title = m ? m[2]! : source;
-  let artist = m ? m[1]! : defaultArtist ?? '';
+  // Patrones habituales: "Artista - 01 - Título", "Compositor - Obra - 01 - Movimiento", "Compositor - Obra".
+  const parts = source.split(/\s+-\s+/).filter((p) => !/^\d{1,3}$/.test(p));
+  let artist = parts.length > 1 ? parts[0]! : defaultArtist ?? '';
+  let title = parts.length > 1 ? parts.slice(1).join(' - ') : parts[0] ?? source;
   if (f.creator && f.creator !== artist) artist = artist ? `${artist} · ${f.creator}` : f.creator;
   title = title.replace(/\s+/g, ' ');
   return { title, artist: artist || 'Artista no indicado' };
@@ -125,7 +126,7 @@ const memory = new Map<string, Promise<Track[]>>();
  * con CORS abierto) y arma la programación. Se guarda en caché local unos días.
  */
 export function loadProgram(stationId: string, src: ArchiveSource, fetcher: typeof fetch = fetch): Promise<Track[]> {
-  const key = `program:${stationId}:${src.identifier}:${src.folders.join('|')}`;
+  const key = `program:v2:${stationId}:${src.identifier}:${src.folders.join('|')}`;
   const cached = readJSON<{ at: number; tracks: Track[] } | null>(key, null);
   if (cached && Date.now() - cached.at < CACHE_DAYS * 864e5 && cached.tracks.length > 0) {
     return Promise.resolve(cached.tracks);

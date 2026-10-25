@@ -89,7 +89,7 @@ export function buildProgram(files: ArchiveFile[], src: ArchiveSource, seed: str
         url: downloadUrl(src.identifier, f.name),
         title,
         artist,
-        album: (k.split('/').pop() ?? '').replace(/_/g, ' ') || undefined,
+        album: (k.split('/').pop() ?? '').replace(/_/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2') || undefined,
         duration: parseLength(f.length),
       });
     }
@@ -126,7 +126,7 @@ const memory = new Map<string, Promise<Track[]>>();
  * con CORS abierto) y arma la programación. Se guarda en caché local unos días.
  */
 export function loadProgram(stationId: string, src: ArchiveSource, fetcher: typeof fetch = fetch): Promise<Track[]> {
-  const key = `program:v2:${stationId}:${src.identifier}:${src.folders.join('|')}`;
+  const key = `program:v3:${stationId}:${src.identifier}:${src.folders.join('|')}`;
   const cached = readJSON<{ at: number; tracks: Track[] } | null>(key, null);
   if (cached && Date.now() - cached.at < CACHE_DAYS * 864e5 && cached.tracks.length > 0) {
     return Promise.resolve(cached.tracks);

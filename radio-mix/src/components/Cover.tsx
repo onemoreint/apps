@@ -15,7 +15,7 @@ export function Cover({ category, image, label, className = '', vinyl = false }:
   const src = image || category?.image;
   return (
     <div
-      className={`relative overflow-hidden ${vinyl ? 'rounded-full' : 'rounded-2xl'} ${className}`}
+      className={`${/\b(absolute|fixed)\b/.test(className) ? '' : 'relative'} overflow-hidden ${vinyl ? 'rounded-full' : 'rounded-2xl'} ${className}`}
       style={{ background: `linear-gradient(135deg, ${c1}, ${c2})`, containerType: vinyl ? 'size' : undefined }}
       role="img"
       aria-label={label ?? category?.name ?? 'Portada'}

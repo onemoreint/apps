@@ -1,0 +1,1796 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JC — Mi Día en Equilibrio</title>
+<meta name="description" content="Organiza tu día, cumple tus metas y haz crecer tus sueños.">
+<meta name="theme-color" content="#845EC2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="JC Mi Día">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  --coral:#FF6B81;--morado:#845EC2;--rosa:#FBE4EC;--turq:#40C9A2;--amar:#FFD166;--dorado:#E8B86D;
+  --bg:#FFFCFA;--text:#293044;--verde:#2FBF71;--card:#FFFFFF;--muted:#6A7186;--line:#F1E6EA;--track:#F3ECF0;
+  --soft:#FFF5F7;--shadow:0 6px 20px rgba(132,94,194,.10),0 1px 3px rgba(41,48,68,.06);
+  --grad:linear-gradient(135deg,#FF6B81 0%,#845EC2 100%);
+  --r:18px;--rs:12px;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+:root[data-theme="dark"]{
+  --bg:#16131D;--text:#F3EEF6;--card:#221E2B;--muted:#A9A2B8;--line:#342D40;--track:#2E2839;--rosa:#3A2433;--soft:#2A2231;
+  --shadow:0 6px 20px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:16px;line-height:1.45;-webkit-text-size-adjust:100%}
+body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--morado)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+/* Header */
+.top{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+.top .wrap{display:flex;align-items:center;gap:10px;height:58px}
+.logo{width:38px;height:38px;border-radius:12px;background:var(--grad);color:#fff;font-weight:900;display:grid;place-items:center;letter-spacing:-.5px;box-shadow:0 4px 12px rgba(255,107,129,.35);flex:none;position:relative}
+.logo::after{content:"";position:absolute;right:5px;top:5px;width:6px;height:6px;border-radius:50%;background:var(--amar)}
+.brand{flex:1;min-width:0}
+.brand b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand small{color:var(--muted);font-size:12px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.savepill{font-size:12px;padding:4px 9px;border-radius:99px;background:var(--soft);color:var(--muted);white-space:nowrap}
+.savepill.ok::before{content:"✓ "; color:var(--verde)}
+.savepill.err{background:#ffe1e1;color:#b3261e}
+.iconbtn{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;cursor:pointer;flex:none}
+.iconbtn svg{width:22px;height:22px}
+/* Bottom nav */
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -4px 16px rgba(41,48,68,.06)}
+.nav .wrap{display:flex;justify-content:space-between;padding:0 4px}
+.nav button{flex:1;border:0;background:none;padding:8px 2px 9px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;color:var(--muted);cursor:pointer;min-height:62px}
+.nav button svg{width:24px;height:24px}
+.nav button.on{color:var(--morado);font-weight:700}
+.nav button.on svg{stroke:var(--morado)}
+/* Layout */
+main{padding:14px 0 30px}
+h1{font-size:26px;line-height:1.15;margin:4px 0 2px;letter-spacing:-.3px}
+h2{font-size:19px;margin:22px 0 10px;letter-spacing:-.2px}
+h3{font-size:16px;margin:0 0 8px}
+.muted{color:var(--muted)}
+.small{font-size:13.5px}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;margin:12px 0;border:1px solid var(--line)}
+.card.flat{box-shadow:none}
+.hero{background:var(--grad);color:#fff;border:0}
+.hero .muted{color:rgba(255,255,255,.85)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (min-width:620px){.grid-k{grid-template-columns:repeat(4,1fr)!important}}
+.row{display:flex;align-items:center;gap:10px}
+.row.wrapr{flex-wrap:wrap}
+.spacer{flex:1}
+.btn{border:0;border-radius:14px;padding:12px 16px;font-weight:700;cursor:pointer;background:var(--soft);color:var(--text);min-height:46px;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-align:center;transition:transform .12s ease, filter .12s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--grad);color:#fff;box-shadow:0 6px 16px rgba(255,107,129,.30)}
+.btn.turq{background:var(--turq);color:#fff}
+.btn.ghost{background:transparent;border:1.5px solid var(--line)}
+.btn.danger{background:#FFE3E6;color:#B3261E}
+:root[data-theme="dark"] .btn.danger{background:#4a2027;color:#ffb4b4}
+.grid2>.btn{font-size:14.5px;padding:12px 10px}
+.btn.big{width:100%;font-size:16px;padding:15px;letter-spacing:.3px}
+.btn.sm{min-height:36px;padding:7px 12px;font-size:14px;border-radius:11px}
+.btn[disabled]{opacity:.5;pointer-events:none}
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.quick button{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12.5px;cursor:pointer;color:var(--text)}
+.quick button span{font-size:22px}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:99px;font-size:12.5px;font-weight:600;background:var(--soft);white-space:nowrap}
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:600;padding:2px 8px;border-radius:8px}
+.st-pendiente{background:#EEF0F5;color:#4B5268}
+.st-en_curso{background:#FFF3D1;color:#8A6200}
+.st-completada{background:#DDF6E8;color:#17794A}
+.st-reprogramada{background:#EEE6FA;color:#5E3EA0}
+.st-cancelada{background:#F1F1F1;color:#777;text-decoration:line-through}
+:root[data-theme="dark"] .st-pendiente{background:#353a4a;color:#cfd3e2}
+:root[data-theme="dark"] .st-en_curso{background:#4a3d14;color:#ffe08a}
+:root[data-theme="dark"] .st-completada{background:#1c4a33;color:#9ff0c4}
+:root[data-theme="dark"] .st-reprogramada{background:#3c2d5c;color:#d7c4ff}
+:root[data-theme="dark"] .st-cancelada{background:#333;color:#aaa}
+.pr-alta{color:#C2334A}.pr-media{color:#9A6B00}.pr-baja{color:var(--muted)}
+/* Forms */
+label{display:block;font-size:14px;font-weight:600;margin:10px 0 0}
+input[type=text],input[type=number],input[type=date],input[type=time],input:not([type]),select,textarea{display:block;width:100%;margin-top:5px;padding:12px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);min-height:46px;font-size:16px}
+textarea{min-height:76px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--morado);box-shadow:0 0 0 3px rgba(132,94,194,.15)}
+.row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.check{display:flex;align-items:center;gap:10px;font-weight:500;margin-top:12px;cursor:pointer}
+.check input{width:22px;height:22px;accent-color:var(--morado);flex:none}
+.hint{font-size:13px;color:var(--muted);margin:6px 0 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chips label{margin:0;font-weight:500}
+.chips input{position:absolute;opacity:0;pointer-events:none}
+.chips span{display:inline-block;padding:9px 13px;border-radius:99px;border:1.5px solid var(--line);background:var(--card);font-size:14px;cursor:pointer;user-select:none}
+.chips input:checked+span{background:var(--morado);border-color:var(--morado);color:#fff}
+.chips input:focus-visible+span{outline:2px solid var(--coral)}
+.warn{background:#FFF4D6;color:#6B4E00;border-radius:12px;padding:12px;margin-top:12px;font-size:14px}
+:root[data-theme="dark"] .warn{background:#43381a;color:#ffe3a1}
+.info{background:var(--soft);border-radius:12px;padding:12px;font-size:14px}
+.segs{display:flex;background:var(--soft);border-radius:12px;padding:4px;gap:4px}
+.segs button{flex:1;border:0;background:none;padding:9px 6px;border-radius:9px;font-weight:600;font-size:14px;cursor:pointer;color:var(--muted)}
+.segs button.on{background:var(--card);color:var(--morado);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+/* Dashboard */
+.gaugebox{display:flex;align-items:center;gap:16px}
+.gaugebox .stats{flex:1;display:grid;gap:6px;font-size:14.5px}
+.stat-l{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed var(--line);padding-bottom:4px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:var(--shadow)}
+.kpi b{display:block;font-size:22px;letter-spacing:-.4px}
+.kpi span{font-size:13px;font-weight:700;overflow-wrap:anywhere}
+.kpi p{margin:3px 0 0;font-size:12px;color:var(--muted)}
+.empty{text-align:center;padding:22px 12px;color:var(--muted)}
+.empty .em{font-size:34px;display:block;margin-bottom:6px}
+/* Timeline */
+.daynav{display:flex;align-items:center;gap:8px;margin:6px 0 4px}
+.daynav .dtitle{flex:1;text-align:center;font-weight:800}
+.tl{position:relative;margin-top:12px;padding-left:62px}
+.tl::before{content:"";position:absolute;left:52px;top:4px;bottom:4px;width:2px;background:var(--line);border-radius:2px}
+.tl-item{position:relative;margin-bottom:10px}
+.tl-time{position:absolute;left:-62px;top:10px;width:48px;text-align:right;font-size:13px;font-weight:700;color:var(--muted)}
+.tl-dot{position:absolute;left:-15px;top:14px;width:12px;height:12px;border-radius:50%;border:3px solid var(--bg);box-shadow:0 0 0 1px var(--line)}
+.act{display:flex;gap:10px;align-items:stretch;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px 10px 10px 0;box-shadow:var(--shadow);cursor:pointer;overflow:hidden}
+.act .bar{width:5px;border-radius:0 4px 4px 0;flex:none}
+.act .body{flex:1;min-width:0}
+.act .ttl{font-weight:700;overflow-wrap:anywhere}
+.act.done .ttl{text-decoration:line-through;color:var(--muted)}
+.act .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12.5px;color:var(--muted);margin-top:4px}
+.act .acts{display:flex;flex-direction:column;gap:6px;justify-content:center}
+.circ{width:42px;height:42px;border-radius:50%;border:2px solid var(--line);background:var(--card);display:grid;place-items:center;cursor:pointer;font-size:18px;color:var(--muted)}
+.circ.ok{background:var(--verde);border-color:var(--verde);color:#fff}
+.gap{font-size:12.5px;color:var(--muted);margin:-2px 0 10px;padding:6px 10px;border:1.5px dashed var(--line);border-radius:12px}
+.conf{color:#9A5B00;font-weight:700}
+/* Progress bars */
+.pbar{height:12px;border-radius:99px;background:var(--track);overflow:hidden;position:relative}
+.pbar i{display:block;height:100%;border-radius:99px;background:var(--grad);transition:width .5s ease}
+.pbar.over i{background:linear-gradient(90deg,var(--verde),var(--turq))}
+.hb{display:grid;grid-template-columns:118px 1fr auto;gap:8px;align-items:center;font-size:13.5px;margin:8px 0}
+.hb .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hb .tracks{display:grid;gap:3px}
+.hb .trk{height:10px;border-radius:99px;background:var(--track);overflow:hidden}
+.hb .trk i{display:block;height:100%;border-radius:99px;transition:width .5s}
+.hb .val{font-weight:700;font-size:12.5px;text-align:right;white-space:nowrap}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-2px;margin-right:4px}
+details.tbl{margin-top:10px}
+details.tbl summary{cursor:pointer;font-size:13.5px;color:var(--morado);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+th,td{text-align:left;padding:6px 6px;border-bottom:1px solid var(--line)}
+th{font-size:12.5px;color:var(--muted)}
+.chart{width:100%;height:auto;display:block}
+.chart text{fill:var(--muted);font-size:10px;font-family:var(--font)}
+.chart .v{fill:var(--text);font-weight:700}
+.g-arc{transition:stroke-dasharray .7s ease}
+/* Sheet */
+.backdrop{position:fixed;inset:0;background:rgba(22,15,30,.45);z-index:60;opacity:0;transition:opacity .18s}
+.backdrop.show{opacity:1}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;background:var(--bg);border-radius:22px 22px 0 0;max-height:92vh;overflow:auto;transform:translateY(100%);transition:transform .22s ease;padding:0 0 calc(18px + env(safe-area-inset-bottom));box-shadow:0 -10px 40px rgba(0,0,0,.2)}
+.sheet.show{transform:none}
+.sheet .sh-head{position:sticky;top:0;background:var(--bg);display:flex;align-items:center;gap:8px;padding:14px 16px 10px;border-bottom:1px solid var(--line);z-index:2}
+.sheet .sh-head h3{flex:1;margin:0;font-size:18px}
+.sheet .sh-body{padding:4px 16px 10px;max-width:760px;margin:0 auto}
+@media (min-width:800px){.sheet{left:50%;width:720px;transform:translate(-50%,100%);bottom:auto;top:4vh;border-radius:22px;max-height:92vh}.sheet.show{transform:translate(-50%,0)}}
+/* Toast & banners */
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:#293044;color:#fff;padding:12px 16px;border-radius:14px;z-index:80;opacity:0;transition:all .2s;max-width:92vw;font-size:14.5px;display:flex;gap:12px;align-items:center;box-shadow:0 8px 24px rgba(0,0,0,.25);pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.toast button{pointer-events:auto;background:var(--amar);color:#293044;border:0;border-radius:10px;padding:7px 11px;font-weight:800;cursor:pointer}
+.banner{padding:10px 14px;font-size:13.5px;text-align:center}
+.banner.off{background:#293044;color:#fff}
+.banner.demo{background:var(--amar);color:#293044}
+.banner button{margin-left:8px;border:0;border-radius:8px;padding:4px 9px;font-weight:700;cursor:pointer;background:#fff;color:#293044}
+/* Welcome */
+.welcome{position:fixed;inset:0;z-index:90;background:var(--bg);overflow:auto}
+.welcome .hero-w{background:var(--grad);color:#fff;padding:calc(48px + env(safe-area-inset-top)) 24px 56px;text-align:center;border-radius:0 0 36px 36px;position:relative;overflow:hidden}
+.welcome .hero-w::before,.welcome .hero-w::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.10)}
+.welcome .hero-w::before{width:220px;height:220px;right:-70px;top:-60px}
+.welcome .hero-w::after{width:140px;height:140px;left:-40px;bottom:-50px;background:rgba(255,209,102,.25)}
+.biglogo{width:96px;height:96px;border-radius:28px;background:#fff;color:var(--morado);display:grid;place-items:center;margin:0 auto 18px;font-size:40px;font-weight:900;letter-spacing:-1px;box-shadow:0 12px 30px rgba(0,0,0,.18);position:relative;z-index:1}
+.biglogo em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.welcome h1{font-size:28px;position:relative;z-index:1}
+.welcome p{position:relative;z-index:1}
+.slogan{font-weight:700;color:var(--amar)}
+.badge{display:flex;gap:12px;align-items:center;padding:10px;border-radius:14px;border:1px solid var(--line);background:var(--card)}
+.badge .bi{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:24px;background:var(--soft);flex:none}
+.badge.locked{opacity:.55}
+.badge.locked .bi{filter:grayscale(1)}
+.list-item{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.list-item:last-child{border-bottom:0}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.sugg{display:flex;gap:10px;padding:10px;border:1px solid var(--line);border-radius:14px;margin:8px 0;background:var(--card)}
+.sugg.out{opacity:.75;border-style:dashed}
+.sugg input[type=checkbox]{width:24px;height:24px;accent-color:var(--morado);flex:none;margin-top:2px}
+.sugg .mini{display:flex;gap:6px;margin-top:6px}
+.sugg .mini input{min-height:38px;padding:6px 8px;font-size:15px;margin:0}
+.reason{font-size:12.5px;color:var(--muted);margin-top:3px}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:95;overflow:hidden}
+.confetti i{position:absolute;top:-12px;width:9px;height:14px;border-radius:2px;animation:fall 1.6s ease-in forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg);opacity:.2}}
+.fade{animation:fadein .22s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.only-print{display:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (max-width:380px){.quick{grid-template-columns:repeat(3,1fr)}.grid3{grid-template-columns:repeat(2,minmax(0,1fr))}.hb{grid-template-columns:92px 1fr auto}h1{font-size:23px}}
+@media print{
+  .top,.nav,.toast,.banner,.noprint,.backdrop,.sheet{display:none!important}
+  body{padding:0;background:#fff;color:#000}
+  .card{box-shadow:none;border:1px solid #ccc;break-inside:avoid}
+  .only-print{display:block!important}
+  details.tbl{display:block}details.tbl>*{display:block}
+}
+</style>
+</head>
+<body>
+<div id="banners"></div>
+<header class="top">
+  <div class="wrap">
+    <div class="logo" aria-hidden="true">JC</div>
+    <div class="brand"><b>JC — Mi Día en Equilibrio</b><small id="hdrSub">Organiza tu día, cumple tus metas</small></div>
+    <span id="savePill" class="savepill ok" role="status" aria-live="polite">Guardado</span>
+    <button class="iconbtn" data-act="menu" aria-label="Más opciones"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  </div>
+</header>
+<main class="wrap" id="view" tabindex="-1"></main>
+<nav class="nav" aria-label="Secciones">
+  <div class="wrap" id="navbar"></div>
+</nav>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<noscript><p style="padding:20px">JC — Mi Día en Equilibrio necesita JavaScript activado.</p></noscript>
+
+<script>
+'use strict';
+/* =========================================================
+   JC — Mi Día en Equilibrio · v1.0.0
+   Arquitectura: una sola página (SPA) + IndexedDB + SVG.
+   Capa de datos única (S) → todas las métricas y gráficos
+   se calculan desde S, nunca desde valores fijos.
+   ========================================================= */
+const APP_VERSION = '1.0.0';
+
+/* ---------- Utilidades ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const pad = n => String(n).padStart(2, '0');
+const ds = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const pd = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const today = () => ds(new Date());
+const addD = (s, n) => { const d = pd(s); d.setDate(d.getDate() + n); return ds(d); };
+const toMin = t => { if (!t || !/^\d{1,2}:\d{2}/.test(t)) return null; const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+const toHM = m => { m = ((Math.round(m) % 1440) + 1440) % 1440; return pad(Math.floor(m / 60)) + ':' + pad(m % 60); };
+/* Duración prevista: si la hora final es menor que la inicial, la actividad cruza la medianoche. */
+const durOf = (s, e) => { const a = toMin(s), b = toMin(e); if (a == null || b == null || a === b) return 0; let d = b - a; if (d < 0) d += 1440; return d; };
+const fmtDur = m => { if (m == null || isNaN(m)) return '—'; m = Math.round(m); const h = Math.floor(m / 60), r = m % 60; return h ? `${h} h${r ? ' ' + r + ' min' : ''}` : `${r} min`; };
+const nowMin = () => { const d = new Date(); return d.getHours() * 60 + d.getMinutes(); };
+const ceil5 = m => Math.ceil(m / 5) * 5;
+const pct = (a, b) => b ? (a / b) * 100 : null;
+const fmtPct = p => p == null ? '—' : `${Math.round(p)} %`;
+const fmtLong = s => new Intl.DateTimeFormat('es', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(pd(s));
+const fmtMed = s => cap0(new Intl.DateTimeFormat('es', { weekday: 'short', day: 'numeric', month: 'short' }).format(pd(s)));
+const cap0 = s => s.charAt(0).toUpperCase() + s.slice(1);
+const fmtShort = s => new Intl.DateTimeFormat('es', { day: 'numeric', month: 'short' }).format(pd(s));
+const wd = s => ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][pd(s).getDay()];
+const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+const money = n => { const c = S.prefs.currency || '$'; const v = Number(n) || 0; return `${c} ${v.toLocaleString('es', { maximumFractionDigits: 2 })}`; };
+const rangeDays = (from, to) => { const out = []; let d = from; let guard = 0; while (d <= to && guard++ < 800) { out.push(d); d = addD(d, 1); } return out; };
+const weekStart = s => { const d = pd(s); const dow = (d.getDay() + 6) % 7; d.setDate(d.getDate() - dow); return ds(d); }; // lunes
+const monthStart = s => s.slice(0, 8) + '01';
+const monthEnd = s => { const d = pd(s); return ds(new Date(d.getFullYear(), d.getMonth() + 1, 0)); };
+const PRIO = { alta: 0, media: 1, baja: 2 };
+const PRIO_L = { alta: '▲ Alta', media: '◆ Media', baja: '▽ Baja' };
+const ST = {
+  pendiente: { l: 'Pendiente', i: '⏳' }, en_curso: { l: 'En curso', i: '▶' }, completada: { l: 'Completada', i: '✓' },
+  reprogramada: { l: 'Reprogramada', i: '↪' }, cancelada: { l: 'Cancelada', i: '✕' }
+};
+const stTag = s => `<span class="tag st-${s}">${ST[s].i} ${ST[s].l}</span>`;
+
+/* ---------- Valores por defecto ---------- */
+const DEFAULT_CATS = [
+  { id: 'hogar', name: 'Hogar', icon: '🏠', color: '#FF8A5B' },
+  { id: 'familia', name: 'Familia', icon: '👨‍👩‍👧', color: '#FF6B81' },
+  { id: 'emprendimiento', name: 'Emprendimiento', icon: '🚀', color: '#845EC2' },
+  { id: 'ventas', name: 'Ventas y clientes', icon: '🤝', color: '#E8B86D' },
+  { id: 'aprendizaje', name: 'Aprendizaje', icon: '📚', color: '#4D8FE0' },
+  { id: 'bienestar', name: 'Bienestar personal', icon: '🌿', color: '#40C9A2' },
+  { id: 'espiritualidad', name: 'Espiritualidad', icon: '🕊️', color: '#B07CD8' },
+  { id: 'descanso', name: 'Descanso', icon: '☕', color: '#7FB3D5' },
+  { id: 'tramites', name: 'Trámites y asuntos personales', icon: '📄', color: '#8F96A8' },
+  { id: 'otras', name: 'Otras actividades', icon: '✨', color: '#C9A27E' }
+];
+/* Biblioteca de sugerencias (editable en Ajustes). slot: manana | tarde | noche | fin | any */
+const DEFAULT_LIBRARY = {
+  hogar: [
+    { t: 'Preparar el desayuno', d: 30, c: 'hogar', slot: 'manana' },
+    { t: 'Organizar la cocina', d: 30, c: 'hogar', slot: 'any' },
+    { t: 'Ordenar una zona de la casa', d: 30, c: 'hogar', slot: 'any' },
+    { t: 'Planificar comidas', d: 20, c: 'hogar', slot: 'manana' },
+    { t: 'Preparar una lista de compras', d: 15, c: 'hogar', slot: 'any' },
+    { t: 'Revisar tareas domésticas pendientes', d: 15, c: 'hogar', slot: 'manana' },
+    { t: 'Organizar documentos', d: 30, c: 'tramites', slot: 'tarde' },
+    { t: 'Preparar actividades del día siguiente', d: 20, c: 'hogar', slot: 'fin' }
+  ],
+  emprendimiento: [
+    { t: 'Revisar mensajes pendientes', d: 20, c: 'ventas', slot: 'manana' },
+    { t: 'Contactar prospectos', d: 45, c: 'ventas', slot: 'manana' },
+    { t: 'Dar seguimiento a clientes', d: 30, c: 'ventas', slot: 'manana' },
+    { t: 'Preparar cotizaciones', d: 30, c: 'ventas', slot: 'any' },
+    { t: 'Crear contenido para redes sociales', d: 45, c: 'emprendimiento', slot: 'any' },
+    { t: 'Publicar contenido comercial', d: 15, c: 'emprendimiento', slot: 'tarde' },
+    { t: 'Organizar pedidos', d: 30, c: 'emprendimiento', slot: 'any' },
+    { t: 'Planificar actividades de producción', d: 30, c: 'emprendimiento', slot: 'manana' },
+    { t: 'Revisar ventas', d: 20, c: 'ventas', slot: 'tarde' },
+    { t: 'Registrar gastos del negocio', d: 15, c: 'emprendimiento', slot: 'tarde' },
+    { t: 'Estudiar una estrategia comercial', d: 30, c: 'aprendizaje', slot: 'tarde' },
+    { t: 'Planificar objetivos semanales', d: 30, c: 'emprendimiento', slot: 'manana' }
+  ],
+  personal: [
+    { t: 'Lectura', d: 30, c: 'aprendizaje', slot: 'noche' },
+    { t: 'Formación', d: 45, c: 'aprendizaje', slot: 'tarde' },
+    { t: 'Reflexión personal', d: 15, c: 'espiritualidad', slot: 'manana' },
+    { t: 'Actividad recreativa', d: 45, c: 'bienestar', slot: 'tarde' },
+    { t: 'Tiempo de calidad con la familia', d: 60, c: 'familia', slot: 'noche' },
+    { t: 'Descanso', d: 20, c: 'descanso', slot: 'tarde' },
+    { t: 'Preparación del día siguiente', d: 15, c: 'otras', slot: 'fin' }
+  ]
+};
+const PHRASES = [
+  'Un paso a la vez también es avanzar.', 'Hoy eliges lo que importa.', 'La constancia vale más que la prisa.',
+  'Tu tiempo es valioso: úsalo con intención.', 'Descansar también es parte del plan.', 'Pequeñas acciones, grandes resultados.',
+  'Organiza tu día, cumple tus metas y haz crecer tus sueños.', 'Lo que se planifica, se puede mejorar.',
+  'Celebra cada avance, por pequeño que sea.', 'Tu emprendimiento crece con cada acción.',
+  'Hoy es una nueva oportunidad para avanzar.', 'Equilibrio es cuidar de todo lo que amas, incluida tú.',
+  'Enfócate en lo importante, suelta lo urgente que no lo es.', 'Haz lo mejor que puedas con lo que tienes hoy.'
+];
+const BIZ_TYPES = {
+  prospecto: { l: 'Prospecto contactado', s: 'Prospectos', i: '📞', g: 'actividad' },
+  seguimiento: { l: 'Seguimiento realizado', s: 'Seguimientos', i: '🔁', g: 'actividad' },
+  cotizacion: { l: 'Cotización enviada', s: 'Cotizaciones', i: '📝', g: 'oportunidad', money: true },
+  pedido: { l: 'Pedido registrado', s: 'Pedidos', i: '📦', g: 'pedido', money: true },
+  venta: { l: 'Venta confirmada', s: 'Ventas', i: '🎉', g: 'venta', money: true },
+  ingreso: { l: 'Ingreso registrado', s: 'Ingresos', i: '💰', g: 'economico', money: true, req: true },
+  gasto: { l: 'Gasto registrado', s: 'Gastos', i: '🧾', g: 'economico', money: true, req: true }
+};
+
+/* ---------- Estado (fuente única de datos) ---------- */
+const S = { profile: null, prefs: {}, cats: [], dayGoals: {}, library: null, activities: [], series: [], goals: [], biz: [], refl: {} };
+const UI = { view: 'hoy', date: today(), period: 7, rep: { type: 'semana', offset: 0, cat: '' }, bizPer: 'semana', goalFilter: 'activas', installEvt: null, swReg: null };
+const cat = id => S.cats.find(c => c.id === id) || S.cats.find(c => c.id === 'otras') || DEFAULT_CATS[9];
+
+/* ---------- Capa de almacenamiento: IndexedDB (con respaldo localStorage) ---------- */
+const STORES = ['kv', 'activities', 'series', 'goals', 'biz', 'reflections', 'history'];
+const KEYP = { kv: 'k', reflections: 'date', history: 'date' };
+const DB = {
+  mode: 'idb', db: null, mem: {},
+  open() {
+    return new Promise(res => {
+      const fallback = () => { try { localStorage.setItem('__jc', '1'); localStorage.removeItem('__jc'); this.mode = 'ls'; } catch (e) { this.mode = 'mem'; } res(); };
+      if (!('indexedDB' in window)) return fallback();
+      let req; try { req = indexedDB.open('jc-mi-dia', 1); } catch (e) { return fallback(); }
+      req.onupgradeneeded = () => { const db = req.result; STORES.forEach(s => { if (!db.objectStoreNames.contains(s)) db.createObjectStore(s, { keyPath: KEYP[s] || 'id' }); }); };
+      req.onsuccess = () => { this.db = req.result; this.mode = 'idb'; res(); };
+      req.onerror = () => fallback();
+      req.onblocked = () => fallback();
+    });
+  },
+  _ls() { try { return JSON.parse(localStorage.getItem('jc-mi-dia-db')) || {}; } catch (e) { return {}; } },
+  _lsw(o) { localStorage.setItem('jc-mi-dia-db', JSON.stringify(o)); },
+  _tx(store, mode, fn) {
+    return new Promise((res, rej) => { const tx = this.db.transaction(store, mode); const r = fn(tx.objectStore(store)); tx.oncomplete = () => res(r && r.result); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error); });
+  },
+  async getAll(s) {
+    if (this.mode === 'idb') return new Promise((res, rej) => { const r = this.db.transaction(s).objectStore(s).getAll(); r.onsuccess = () => res(r.result || []); r.onerror = () => rej(r.error); });
+    if (this.mode === 'ls') return Object.values(this._ls()[s] || {});
+    return Object.values(this.mem[s] || {});
+  },
+  async put(s, o) {
+    const k = o[KEYP[s] || 'id'];
+    if (this.mode === 'idb') return this._tx(s, 'readwrite', st => st.put(o));
+    if (this.mode === 'ls') { const all = this._ls(); (all[s] = all[s] || {})[k] = o; this._lsw(all); return; }
+    (this.mem[s] = this.mem[s] || {})[k] = o;
+  },
+  async del(s, k) {
+    if (this.mode === 'idb') return this._tx(s, 'readwrite', st => st.delete(k));
+    if (this.mode === 'ls') { const all = this._ls(); if (all[s]) delete all[s][k]; this._lsw(all); return; }
+    if (this.mem[s]) delete this.mem[s][k];
+  },
+  async clearAll() {
+    if (this.mode === 'idb') { for (const s of STORES) await this._tx(s, 'readwrite', st => st.clear()); return; }
+    if (this.mode === 'ls') { localStorage.removeItem('jc-mi-dia-db'); return; }
+    this.mem = {};
+  }
+};
+let pendingWrites = 0;
+function setSave(state) {
+  const p = $('#savePill'); if (!p) return;
+  p.className = 'savepill' + (state === 'ok' ? ' ok' : state === 'error' ? ' err' : '');
+  p.textContent = state === 'saving' ? 'Guardando…' : state === 'error' ? 'Error al guardar' : (DB.mode === 'mem' ? 'Sin guardado' : 'Guardado');
+}
+async function persist(fn) {
+  pendingWrites++; setSave('saving');
+  try { await fn(); pendingWrites--; if (!pendingWrites) setSave('ok'); }
+  catch (e) { console.error(e); pendingWrites--; setSave('error'); toast('No se pudo guardar el último cambio. Intenta de nuevo o exporta un respaldo.'); }
+}
+const clone = o => JSON.parse(JSON.stringify(o));
+const put = (s, o) => persist(() => DB.put(s, clone(o)));
+const del = (s, k) => persist(() => DB.del(s, k));
+const saveKV = k => put('kv', { k, v: S[k] });
+const putAct = a => { put('activities', a); snapshot(a.date); };
+async function loadAll() {
+  const kv = await DB.getAll('kv');
+  const g = k => (kv.find(x => x.k === k) || {}).v;
+  S.profile = g('profile') || null;
+  S.prefs = Object.assign({ theme: 'auto', currency: '$', gamification: true, biz: {}, balance: {} }, g('prefs') || {});
+  S.cats = g('cats') || clone(DEFAULT_CATS);
+  S.dayGoals = g('dayGoals') || {};
+  S.library = g('library') || clone(DEFAULT_LIBRARY);
+  S.activities = await DB.getAll('activities');
+  S.series = await DB.getAll('series');
+  S.goals = await DB.getAll('goals');
+  S.biz = await DB.getAll('biz');
+  S.refl = {}; (await DB.getAll('reflections')).forEach(r => S.refl[r.date] = r);
+}
+/* Historial de progreso: instantánea derivada (no es la fuente; se recalcula siempre desde actividades). */
+function snapshot(date) { const st = dayStats(date); put('history', { date, pct: st.pct, valid: st.valid.length, done: st.done.length, reprog: st.reprog.length, at: new Date().toISOString() }); }
+
+/* ---------- Actividades recurrentes ---------- */
+function seriesMatches(ser, d) {
+  if (d < ser.startDate || (ser.until && d > ser.until)) return false;
+  if ((ser.exceptions || []).includes(d)) return false;
+  if (ser.freq === 'daily') return true;
+  return (ser.weekdays || []).includes(pd(d).getDay());
+}
+/* Crea las ocurrencias concretas que falten (clave única: seriesId + occDate) → nunca duplica. */
+function materialize(from, to) {
+  let created = 0;
+  for (const ser of S.series) {
+    const s = from > ser.startDate ? from : ser.startDate;
+    const e = ser.until && ser.until < to ? ser.until : to;
+    if (s > e) continue;
+    for (const d of rangeDays(s, e)) {
+      if (!seriesMatches(ser, d)) continue;
+      if (S.activities.some(a => a.seriesId === ser.id && a.occDate === d)) continue;
+      const a = {
+        id: uid(), title: ser.title, cat: ser.cat, priority: ser.priority, date: d, occDate: d, start: ser.start, end: ser.end,
+        plannedMin: durOf(ser.start, ser.end), actualMin: null, status: 'pendiente', desc: ser.desc || '', notes: ser.notes || '', goalId: ser.goalId || '',
+        fixed: !!ser.fixed, seriesId: ser.id, createdAt: new Date().toISOString(), history: [{ at: new Date().toISOString(), to: 'pendiente', note: 'Creada (recurrente)' }], demo: ser.demo || undefined
+      };
+      S.activities.push(a); put('activities', a); created++;
+    }
+  }
+  return created;
+}
+
+/* ---------- Cálculos (reglas documentadas) ----------
+   · Válidas = actividades del día excepto Canceladas y Reprogramadas.
+   · Reprogramada: no cuenta en el día original; la nueva copia cuenta en su nueva fecha (sin doble conteo).
+   · Completada fuera de horario: cuenta como completada en su fecha planificada.
+   · Tiempo real: solo actividades completadas con duración real registrada. Si falta, se indica.
+   · Día sin actividades válidas = "Sin registro" (nunca 0 %). */
+function dayActs(d, catF) { return S.activities.filter(a => a.date === d && (!catF || a.cat === catF)); }
+function dayStats(d, catF) {
+  const acts = dayActs(d, catF);
+  const valid = acts.filter(a => a.status !== 'cancelada' && a.status !== 'reprogramada');
+  const done = valid.filter(a => a.status === 'completada');
+  const pending = valid.filter(a => a.status === 'pendiente' || a.status === 'en_curso');
+  const reprog = acts.filter(a => a.status === 'reprogramada');
+  const canc = acts.filter(a => a.status === 'cancelada');
+  const planned = valid.reduce((s, a) => s + (a.plannedMin || 0), 0);
+  const realActs = done.filter(a => a.actualMin != null && a.actualMin !== '');
+  const real = realActs.reduce((s, a) => s + Number(a.actualMin), 0);
+  return { acts, valid, done, pending, reprog, canc, planned, real, missingReal: done.length - realActs.length, pct: valid.length ? pct(done.length, valid.length) : null };
+}
+function rangeStats(from, to, catF) {
+  const days = rangeDays(from, to).map(d => ({ d, ...dayStats(d, catF) }));
+  const withData = days.filter(x => x.pct != null);
+  const avg = withData.length ? withData.reduce((s, x) => s + x.pct, 0) / withData.length : null;
+  let best = null; withData.forEach(x => { if (!best || x.pct > best.pct) best = x; });
+  const sum = k => days.reduce((s, x) => s + (Array.isArray(x[k]) ? x[k].length : x[k]), 0);
+  return { days, withData, avg, best, valid: sum('valid'), done: sum('done'), pending: sum('pending'), reprog: sum('reprog'), canc: sum('canc'), planned: sum('planned'), real: sum('real'), missingReal: sum('missingReal') };
+}
+function timeByCat(from, to) {
+  const m = {}; S.cats.forEach(c => m[c.id] = { cat: c, planned: 0, real: 0, missing: 0 });
+  S.activities.forEach(a => {
+    if (a.date < from || a.date > to || a.status === 'cancelada' || a.status === 'reprogramada') return;
+    const r = m[a.cat] || m.otras; r.planned += a.plannedMin || 0;
+    if (a.status === 'completada') { if (a.actualMin != null && a.actualMin !== '') r.real += Number(a.actualMin); else r.missing++; }
+  });
+  return Object.values(m);
+}
+function goalInfo(g) {
+  const t = today();
+  let p = null, done = false;
+  if (g.type === 'numerica') { p = Number(g.target) > 0 ? (Number(g.current) || 0) / Number(g.target) * 100 : null; done = p != null && p >= 100; }
+  else { done = g.qstatus === 'completada'; p = { no_iniciada: 0, en_progreso: 50, completada: 100, pausada: null }[g.qstatus || 'no_iniciada']; }
+  let state = 'progreso', label = '◐ En progreso';
+  if (done) { state = 'completada'; label = '✓ Completada'; }
+  else if (g.qstatus === 'pausada' && g.type !== 'numerica') { state = 'pausada'; label = '⏸ En pausa'; }
+  else if (g.dueDate && g.dueDate < t) { state = 'vencida'; label = '📅 Plazo cumplido'; }
+  else if (g.dueDate && g.dueDate <= addD(t, 3)) { state = 'proxima'; label = '⏰ Próxima a vencer'; }
+  return { p, done, state, label };
+}
+function bizIn(from, to, type) { return S.biz.filter(b => b.date >= from && b.date <= to && (!type || b.type === type)); }
+function bizSum(from, to) {
+  const o = {}; Object.keys(BIZ_TYPES).forEach(k => { const r = bizIn(from, to, k); o[k] = { n: r.length, amt: r.reduce((s, x) => s + (Number(x.amount) || 0), 0) }; });
+  o.neto = o.ingreso.amt - o.gasto.amt; return o;
+}
+const bizUsed = () => S.biz.length > 0 || Number(S.prefs.biz?.weeklyIncome) > 0 || Number(S.prefs.biz?.monthlyIncome) > 0;
+
+/* ---------- Gráficos SVG / HTML (sin dependencias, funcionan offline) ---------- */
+function gauge(p, size = 140, label = 'Cumplimiento') {
+  const sw = 14, r = (size - sw) / 2, c = 2 * Math.PI * r, v = p == null ? 0 : Math.max(0, Math.min(100, p));
+  const col = p == null ? 'var(--track)' : p >= 100 ? 'var(--verde)' : p >= 60 ? 'var(--turq)' : p >= 30 ? 'var(--amar)' : 'var(--morado)';
+  const txt = p == null ? '—' : Math.round(p) + '%';
+  return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img" aria-label="${esc(label)}: ${p == null ? 'sin datos' : Math.round(p) + ' por ciento'}" style="flex:none">
+    <circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="var(--track)" stroke-width="${sw}"/>
+    <circle class="g-arc" cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${(c * v / 100).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 ${size / 2} ${size / 2})"/>
+    <text x="50%" y="${p == null ? 52 : 50}%" text-anchor="middle" dominant-baseline="middle" style="font-size:${p == null ? size * .2 : size * .22}px;font-weight:800;fill:var(--text);font-family:var(--font)">${txt}</text>
+    ${p != null ? `<text x="50%" y="66%" text-anchor="middle" style="font-size:${size * .085}px;fill:var(--muted);font-family:var(--font)">${p >= 100 ? '¡Día completo!' : 'cumplido'}</text>` : ''}
+  </svg>`;
+}
+function barChart(items, { h = 170, max = 100, unit = '%', avg = null, color = 'url(#gb)', refLabel = 'prom.' } = {}) {
+  const n = items.length, W = 340, pl = 26, pr = 6, pt = 16, pb = 26, cw = (W - pl - pr) / n, bw = Math.max(4, Math.min(28, cw * .62));
+  const y = v => pt + (h - pt - pb) * (1 - Math.min(v, max) / max);
+  const showVal = n <= 14, step = n <= 14 ? 1 : n <= 21 ? 2 : 4;
+  let g = `<svg class="chart" viewBox="0 0 ${W} ${h}" role="img" aria-label="Gráfico de barras"><defs><linearGradient id="gb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF6B81"/><stop offset="1" stop-color="#845EC2"/></linearGradient></defs>`;
+  [0, 50, 100].forEach(t => { const yy = y(t * max / 100); g += `<line x1="${pl}" x2="${W - pr}" y1="${yy}" y2="${yy}" stroke="var(--line)" stroke-dasharray="3 3"/><text x="${pl - 4}" y="${yy + 3}" text-anchor="end">${Math.round(t * max / 100)}</text>`; });
+  items.forEach((it, i) => {
+    const x = pl + i * cw + (cw - bw) / 2;
+    if (it.v == null) g += `<rect x="${x}" y="${y(0) - 4}" width="${bw}" height="4" rx="2" fill="var(--track)"><title>${esc(it.full || it.l)}: Sin registro</title></rect>${showVal ? `<text x="${x + bw / 2}" y="${y(0) - 8}" text-anchor="middle" style="font-size:8px">s/r</text>` : ''}`;
+    else { const yy = y(it.v); g += `<rect x="${x}" y="${yy}" width="${bw}" height="${Math.max(2, y(0) - yy)}" rx="${Math.min(6, bw / 2)}" fill="${it.v >= max && unit === '%' ? 'var(--verde)' : color}"><title>${esc(it.full || it.l)}: ${Math.round(it.v)}${unit}</title></rect>${showVal ? `<text class="v" x="${x + bw / 2}" y="${yy - 4}" text-anchor="middle">${Math.round(it.v)}</text>` : ''}`; }
+    if (i % step === 0) g += `<text x="${x + bw / 2}" y="${h - 9}" text-anchor="middle">${esc(it.l)}</text>`;
+  });
+  if (avg != null) { const yy = y(avg); g += `<line x1="${pl}" x2="${W - pr}" y1="${yy}" y2="${yy}" stroke="var(--dorado)" stroke-width="2" stroke-dasharray="6 4"/><text x="${W - pr}" y="${yy - 4}" text-anchor="end" style="fill:#B8862F;font-weight:700">${refLabel} ${Math.round(avg).toLocaleString('es')}${unit}</text>`; }
+  return g + '</svg>';
+}
+function lineChart(items, { h = 170, avg = null } = {}) {
+  const n = items.length, W = 340, pl = 26, pr = 10, pt = 14, pb = 26;
+  const x = i => pl + (n === 1 ? (W - pl - pr) / 2 : i * (W - pl - pr) / (n - 1));
+  const y = v => pt + (h - pt - pb) * (1 - Math.min(v, 100) / 100);
+  let g = `<svg class="chart" viewBox="0 0 ${W} ${h}" role="img" aria-label="Tendencia del cumplimiento">`;
+  [0, 50, 100].forEach(t => g += `<line x1="${pl}" x2="${W - pr}" y1="${y(t)}" y2="${y(t)}" stroke="var(--line)" stroke-dasharray="3 3"/><text x="${pl - 4}" y="${y(t) + 3}" text-anchor="end">${t}</text>`);
+  let path = '', seg = false; const pts = [];
+  items.forEach((it, i) => { if (it.v == null) { seg = false; return; } path += (seg ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(it.v).toFixed(1); seg = true; pts.push([x(i), y(it.v), it]); });
+  if (avg != null) g += `<line x1="${pl}" x2="${W - pr}" y1="${y(avg)}" y2="${y(avg)}" stroke="var(--dorado)" stroke-width="2" stroke-dasharray="6 4"/>`;
+  g += `<path d="${path}" fill="none" stroke="var(--morado)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+  pts.forEach(([px, py, it]) => g += `<circle cx="${px}" cy="${py}" r="${it.flag ? 5 : 3.5}" fill="${it.flag ? 'var(--coral)' : 'var(--card)'}" stroke="var(--morado)" stroke-width="2"><title>${esc(it.full)}: ${Math.round(it.v)}%</title></circle>`);
+  const step = n <= 8 ? 1 : n <= 16 ? 2 : 5;
+  items.forEach((it, i) => { if (i % step === 0) g += `<text x="${x(i)}" y="${h - 9}" text-anchor="middle">${esc(it.l)}</text>`; });
+  return g + '</svg>';
+}
+function donut(items, size = 150) {
+  const tot = items.reduce((s, x) => s + x.v, 0); if (!tot) return '';
+  const sw = 22, r = (size - sw) / 2, c = 2 * Math.PI * r; let off = 0;
+  let g = `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img" aria-label="Distribución del tiempo real"><circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="var(--track)" stroke-width="${sw}"/>`;
+  items.filter(x => x.v > 0).forEach(it => { const len = c * it.v / tot; g += `<circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="${it.color}" stroke-width="${sw}" stroke-dasharray="${len.toFixed(2)} ${(c - len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 ${size / 2} ${size / 2})"><title>${esc(it.l)}: ${fmtDur(it.v)}</title></circle>`; off += len; });
+  return g + `<text x="50%" y="48%" text-anchor="middle" style="font-size:15px;font-weight:800;fill:var(--text);font-family:var(--font)">${fmtDur(tot)}</text><text x="50%" y="60%" text-anchor="middle" style="font-size:10px;fill:var(--muted);font-family:var(--font)">tiempo real</text></svg>`;
+}
+function pbar(p, label) { const v = p == null ? 0 : Math.min(100, Math.max(0, p)); return `<div class="pbar${p != null && p >= 100 ? ' over' : ''}" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(v)}" aria-label="${esc(label || 'Progreso')}"><i style="width:${v}%"></i></div>`; }
+function table(head, rows) { return `<details class="tbl"><summary>Ver como tabla</summary><table><thead><tr>${head.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></details>`; }
+
+/* ---------- Interfaz: utilidades ---------- */
+let toastT;
+function toast(msg, btn) {
+  const t = $('#toast'); t.innerHTML = `<span>${esc(msg)}</span>` + (btn ? `<button data-act="${btn.act}">${esc(btn.label)}</button>` : '');
+  t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), btn ? 12000 : 3200);
+}
+function openSheet(title, body, onOpen) {
+  closeSheet(true);
+  const b = document.createElement('div'); b.className = 'backdrop'; b.dataset.act = 'closeSheet';
+  const s = document.createElement('div'); s.className = 'sheet'; s.setAttribute('role', 'dialog'); s.setAttribute('aria-modal', 'true'); s.setAttribute('aria-label', title);
+  s.innerHTML = `<div class="sh-head"><h3>${esc(title)}</h3><button class="iconbtn" data-act="closeSheet" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div class="sh-body">${body}</div>`;
+  document.body.append(b, s); document.body.style.overflow = 'hidden';
+  requestAnimationFrame(() => { b.classList.add('show'); s.classList.add('show'); });
+  const f = s.querySelector('input:not([type=hidden]):not([type=checkbox]),select,textarea'); if (f && matchMedia('(min-width:800px)').matches) setTimeout(() => f.focus(), 250);
+  onOpen && onOpen(s); return s;
+}
+function closeSheet(instant) {
+  const s = $('.sheet'), b = $('.backdrop'); if (!s) return;
+  document.body.style.overflow = '';
+  if (instant) { s.remove(); b && b.remove(); return; }
+  s.classList.remove('show'); b && b.classList.remove('show'); setTimeout(() => { s.remove(); b && b.remove(); }, 220);
+}
+function confirmBox(msg, ok = 'Confirmar', danger = true) {
+  return new Promise(res => {
+    openSheet('Confirmar', `<p>${msg}</p><div class="grid2" style="margin-top:14px"><button class="btn ghost" id="cfNo">Volver</button><button class="btn ${danger ? 'danger' : 'primary'}" id="cfYes">${esc(ok)}</button></div>`, s => {
+      $('#cfNo', s).onclick = () => { closeSheet(); res(false); };
+      $('#cfYes', s).onclick = () => { closeSheet(); res(true); };
+    });
+  });
+}
+function choiceBox(title, msg, options) {
+  return new Promise(res => {
+    openSheet(title, `<p>${msg}</p><div style="display:grid;gap:10px;margin-top:12px">${options.map((o, i) => `<button class="btn ${o.cls || 'ghost'} big" data-i="${i}">${esc(o.label)}</button>`).join('')}<button class="btn sm ghost" data-i="-1">Volver</button></div>`, s => {
+      $$('[data-i]', s).forEach(b => b.onclick = () => { closeSheet(); res(+b.dataset.i < 0 ? null : options[+b.dataset.i].value); });
+    });
+  });
+}
+function celebrate() {
+  if (!S.prefs.gamification || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const c = document.createElement('div'); c.className = 'confetti';
+  const cols = ['#FF6B81', '#845EC2', '#40C9A2', '#FFD166', '#E8B86D'];
+  for (let i = 0; i < 40; i++) { const p = document.createElement('i'); p.style.left = Math.random() * 100 + '%'; p.style.background = cols[i % 5]; p.style.animationDelay = Math.random() * .5 + 's'; c.appendChild(p); }
+  document.body.appendChild(c); setTimeout(() => c.remove(), 2400);
+}
+const catOpts = sel => S.cats.map(c => `<option value="${c.id}"${c.id === sel ? ' selected' : ''}>${c.icon} ${esc(c.name)}</option>`).join('');
+const prioOpts = sel => ['alta', 'media', 'baja'].map(p => `<option value="${p}"${p === (sel || 'media') ? ' selected' : ''}>${PRIO_L[p]}</option>`).join('');
+const goalOpts = sel => `<option value="">— Ninguna —</option>` + S.goals.filter(g => !goalInfo(g).done || g.id === sel).map(g => `<option value="${g.id}"${g.id === sel ? ' selected' : ''}>${esc(g.name)}</option>`).join('');
+const name = () => (S.profile && S.profile.name) || 'Jaqueline';
+
+/* ---------- Navegación ---------- */
+const ICONS = {
+  hoy: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  agenda: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  metas: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>',
+  negocio: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  progreso: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>'
+};
+const NAV = [['hoy', 'Mi día'], ['agenda', 'Agenda'], ['metas', 'Mis metas'], ['negocio', 'Emprender'], ['progreso', 'Mi progreso']];
+function renderNav() {
+  $('#navbar').innerHTML = NAV.map(([k, l]) => `<button data-act="go" data-v="${k}" class="${UI.view === k ? 'on' : ''}" aria-current="${UI.view === k ? 'page' : 'false'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[k]}</svg>${l}</button>`).join('');
+}
+const VIEWS = {};
+function render() {
+  renderNav(); renderBanners();
+  const fn = VIEWS[UI.view] || VIEWS.hoy;
+  const y = window.scrollY; $('#view').innerHTML = `<div class="fade">${fn()}</div>`;
+  if (render.keep) window.scrollTo(0, y); render.keep = false;
+}
+function go(v, extra) { UI.view = v; Object.assign(UI, extra || {}); render(); window.scrollTo(0, 0); }
+function rerender() { render.keep = true; render(); }
+
+function renderBanners() {
+  let h = '';
+  if (!navigator.onLine) h += `<div class="banner off">📴 Sin conexión — tus datos siguen disponibles en este dispositivo.</div>`;
+  if (S.activities.some(a => a.demo) || S.goals.some(g => g.demo) || S.biz.some(b => b.demo)) h += `<div class="banner demo">Estás viendo datos de demostración.<button data-act="clearDemo">Borrarlos</button></div>`;
+  if (DB.mode === 'mem') h += `<div class="banner off">Este navegador no permite guardar datos. Exporta un respaldo antes de cerrar.</div>`;
+  $('#banners').innerHTML = h;
+}
+
+/* =========================================================
+   VISTA: MI DÍA (dashboard)
+   ========================================================= */
+VIEWS.hoy = () => {
+  const t = today(); materialize(t, t);
+  const st = dayStats(t);
+  const nm = nowMin();
+  const upcoming = st.valid.filter(a => a.status === 'en_curso' || (a.status === 'pendiente' && toMin(a.start) >= nm - 5)).sort((a, b) => (a.status === 'en_curso' ? -1 : 0) - (b.status === 'en_curso' ? -1 : 0) || toMin(a.start) - toMin(b.start))[0];
+  const phrase = PHRASES[(pd(t).getTime() / 864e5 | 0) % PHRASES.length];
+  const dayGoal = S.dayGoals[t] || '';
+  const active = S.goals.filter(g => !goalInfo(g).done).slice(0, 3);
+  const tb = timeByCat(t, t).filter(r => r.planned > 0 || r.real > 0);
+  const w = bizSum(weekStart(t), t);
+  return `
+  <div class="row" style="margin-top:6px"><div class="logo" style="width:46px;height:46px;font-size:18px" aria-hidden="true">JC</div>
+    <div><h1>¡Hola, ${esc(name())}!</h1><div class="muted">${cap(fmtLong(t))}</div></div></div>
+  <div class="card hero" style="margin-top:14px"><div class="small" style="opacity:.9">✨ Frase del día</div><div style="font-weight:700;font-size:17px;margin-top:2px">${esc(phrase)}</div></div>
+  <div class="card">
+    <div class="row"><h3 style="margin:0;flex:1">🎯 Objetivo principal del día</h3><button class="btn sm ghost" data-act="editDayGoal">${dayGoal ? 'Cambiar' : 'Definir'}</button></div>
+    <p style="margin:8px 0 0;${dayGoal ? 'font-weight:600' : ''}" class="${dayGoal ? '' : 'muted'}">${dayGoal ? esc(dayGoal) : (S.profile?.weekGoal ? 'Objetivo de la semana: ' + esc(S.profile.weekGoal) : '¿Qué es lo más importante que quieres lograr hoy?')}</p>
+  </div>
+  <div class="card">
+    <h3>Cumplimiento de hoy</h3>
+    ${st.valid.length ? `<div class="gaugebox">${gauge(st.pct, 132)}<div class="stats">
+      <div class="stat-l"><span>📋 Planificadas</span><b>${st.valid.length}</b></div>
+      <div class="stat-l"><span>✓ Completadas</span><b>${st.done.length}</b></div>
+      <div class="stat-l"><span>⏳ Pendientes</span><b>${st.pending.length}</b></div>
+      <div class="stat-l"><span>↪ Reprogramadas</span><b>${st.reprog.length}</b></div></div></div>`
+      : `<div class="empty"><span class="em">🌱</span><b>Planifica tu primera actividad</b><div class="small">Cuando agregues actividades verás aquí tu avance.</div></div>`}
+    <div class="grid2" style="margin-top:14px"><button class="btn primary" data-act="planner">PLANIFICAR MI DÍA</button><button class="btn turq" data-act="newAct">+ AÑADIR ACTIVIDAD</button></div>
+  </div>
+  <div class="card">
+    <h3>⏭ Próxima actividad</h3>
+    ${upcoming ? actCard(upcoming, true) : `<p class="muted small" style="margin:4px 0">${st.pending.length ? 'Tienes actividades pendientes de horas anteriores. Puedes reorganizar tu día.' : 'No hay más actividades programadas para hoy.'}</p>`}
+    ${st.pending.some(a => a.status === 'pendiente' && toMin(a.start) + (a.plannedMin || 0) < nm && !a.fixed) ? `<button class="btn sm ghost" style="margin-top:8px" data-act="reorg" data-d="${t}">🔄 Reorganizar mi día</button>` : ''}
+  </div>
+  <div class="quick"><button data-act="go" data-v="agenda"><span>🗓️</span>Agenda</button><button data-act="go" data-v="metas"><span>🎯</span>Metas</button><button data-act="go" data-v="progreso"><span>📈</span>Rendimiento</button><button data-act="go" data-v="informes"><span>📑</span>Informes</button></div>
+  <div class="card">
+    <div class="row"><h3 style="flex:1;margin:0">🎯 Progreso de mis metas</h3><button class="btn sm ghost" data-act="go" data-v="metas">Ver todas</button></div>
+    ${active.length ? active.map(g => { const gi = goalInfo(g); return `<div style="margin-top:12px"><div class="row small"><b style="flex:1">${esc(g.name)}</b><span>${g.type === 'numerica' ? fmtPct(gi.p) : gi.label}</span></div>${pbar(gi.p, g.name)}</div>`; }).join('') : `<p class="muted small">Aún no tienes metas activas. <a href="#" data-act="newGoal">Crear una meta</a></p>`}
+  </div>
+  <div class="card" data-act="go" data-v="negocio" style="cursor:pointer">
+    <div class="row"><span style="font-size:26px">🚀</span><div style="flex:1"><h3 style="margin:0">Mi emprendimiento</h3>
+    <div class="small muted">${bizUsed() ? `Esta semana: ${w.prospecto.n} prospectos · ${w.venta.n} ventas · ingresos ${money(w.ingreso.amt)}` : 'Registra prospectos, pedidos, ventas e ingresos.'}</div></div><span aria-hidden="true">›</span></div>
+  </div>
+  <div class="card">
+    <h3>⏱ Tiempo de hoy por categoría</h3>
+    ${tb.length ? tb.map(r => hbRow(r)).join('') + `<div class="legend"><span><i style="background:#845EC255"></i>Barra clara: planificado</span><span><i style="background:var(--morado)"></i>Barra intensa: real registrado</span></div>` + (st.missingReal ? `<p class="hint">ℹ️ ${st.missingReal} actividad(es) completada(s) sin duración real registrada.</p>` : '') : '<p class="muted small">Sin tiempo planificado todavía.</p>'}
+  </div>
+  <button class="btn ghost big" data-act="go" data-v="evaluacion" style="margin-top:6px">🌙 Cierre y evaluación del día</button>`;
+};
+function hbRow(r, maxV) {
+  const mx = maxV || Math.max(r.planned, r.real, 1);
+  return `<div class="hb"><span class="lbl">${r.cat.icon} ${esc(r.cat.name)}</span><span class="tracks"><span class="trk"><i style="width:${r.planned / mx * 100}%;background:${r.cat.color}55"></i></span><span class="trk"><i style="width:${r.real / mx * 100}%;background:${r.cat.color}"></i></span></span><span class="val">${fmtDur(r.real)}<br><span class="muted" style="font-weight:500">de ${fmtDur(r.planned)}</span></span></div>`;
+}
+
+/* ---------- Tarjeta de actividad ---------- */
+function actCard(a, compact) {
+  const c = cat(a.cat), done = a.status === 'completada';
+  const confl = conflictsOf(a);
+  return `<div class="act${done ? ' done' : ''}" data-act="openAct" data-id="${a.id}" style="${compact ? 'box-shadow:none' : ''}">
+    <span class="bar" style="background:${c.color}"></span>
+    <div class="body"><div class="ttl">${c.icon} ${esc(a.title)}</div>
+      <div class="meta"><span>🕒 ${a.start}–${a.end}${toMin(a.end) <= toMin(a.start) ? ' (+1 día)' : ''}</span><span>· ${fmtDur(a.plannedMin)}</span>${stTag(a.status)}<span class="pr-${a.priority}">${PRIO_L[a.priority]}</span>${a.fixed ? '<span>📌 Fijo</span>' : ''}${a.seriesId ? '<span>🔁</span>' : ''}${a.actualMin != null && a.actualMin !== '' ? `<span>⏱ real ${fmtDur(a.actualMin)}</span>` : ''}</div>
+      ${confl.length && !['cancelada', 'reprogramada'].includes(a.status) ? `<div class="meta conf">⚠ Se cruza con: ${confl.map(x => esc(x.title)).join(', ')}</div>` : ''}
+    </div>
+    ${['pendiente', 'en_curso'].includes(a.status) ? `<div class="acts"><button class="circ" data-act="complete" data-id="${a.id}" aria-label="Marcar como completada">✓</button></div>` : done ? `<div class="acts"><span class="circ ok" aria-hidden="true">✓</span></div>` : ''}
+  </div>`;
+}
+function interval(a, shift = 0) { const s = toMin(a.start); let e = s + (a.plannedMin || durOf(a.start, a.end)); return [s + shift, e + shift]; }
+function conflictsOf(a, pool) {
+  if (!a.start || !a.end) return [];
+  const [s, e] = interval(a);
+  const prev = addD(a.date, -1), next = addD(a.date, 1);
+  return (pool || S.activities).filter(b => b.id !== a.id && b.status !== 'cancelada' && b.status !== 'reprogramada' && (b.date === a.date || b.date === prev || b.date === next)).filter(b => {
+    const [bs, be] = interval(b, b.date === prev ? -1440 : b.date === next ? 1440 : 0);
+    return s < be && bs < e;
+  });
+}
+
+/* =========================================================
+   VISTA: AGENDA (línea de tiempo diaria)
+   ========================================================= */
+VIEWS.agenda = () => {
+  const d = UI.date; materialize(d, d);
+  const acts = dayActs(d).sort((a, b) => toMin(a.start) - toMin(b.start) || PRIO[a.priority] - PRIO[b.priority]);
+  const st = dayStats(d);
+  let h = `<div class="daynav"><button class="iconbtn" data-act="day" data-n="-1" aria-label="Día anterior">‹</button><div class="dtitle">${d === today() ? 'Hoy · ' : ''}${fmtMed(d)}</div><button class="iconbtn" data-act="day" data-n="1" aria-label="Día siguiente">›</button></div>
+  <div class="row" style="margin:8px 0"><input type="date" value="${d}" data-change="pickDate" aria-label="Elegir fecha" style="margin:0;flex:1">${d !== today() ? '<button class="btn sm ghost" data-act="day" data-n="0">Hoy</button>' : ''}</div>
+  <div class="grid2"><button class="btn primary" data-act="planner">PLANIFICAR MI DÍA</button><button class="btn turq" data-act="newAct">+ AÑADIR ACTIVIDAD</button></div>
+  <div class="row small muted" style="margin-top:12px"><span style="flex:1">${st.valid.length ? `${st.done.length}/${st.valid.length} completadas · ${fmtPct(st.pct)} · planificado ${fmtDur(st.planned)}` : 'Sin actividades válidas este día'}</span>${st.pending.length ? `<button class="btn sm ghost" data-act="reorg" data-d="${d}">🔄 Reorganizar</button>` : ''}</div>`;
+  if (!acts.length) return h + `<div class="card empty"><span class="em">🗓️</span><b>Planifica tu primera actividad</b><div class="small">Añádela manualmente o deja que te sugiera una agenda.</div></div>`;
+  h += '<div class="tl">';
+  let lastEnd = null;
+  acts.forEach(a => {
+    const [s, e] = interval(a);
+    const counts = a.status !== 'cancelada' && a.status !== 'reprogramada';
+    if (counts && lastEnd != null && s - lastEnd >= 20) h += `<div class="gap">🌤 Espacio libre · ${fmtDur(s - lastEnd)} (${toHM(lastEnd)}–${a.start})</div>`;
+    h += `<div class="tl-item"><span class="tl-time">${a.start}</span><span class="tl-dot" style="background:${cat(a.cat).color}"></span>${actCard(a)}</div>`;
+    if (counts) lastEnd = Math.max(lastEnd ?? 0, e);
+  });
+  return h + '</div>';
+};
+
+/* ---------- Detalle de actividad ---------- */
+function openAct(id) {
+  const a = S.activities.find(x => x.id === id); if (!a) return;
+  const c = cat(a.cat), g = S.goals.find(x => x.id === a.goalId);
+  const open = ['pendiente', 'en_curso'].includes(a.status);
+  openSheet(a.title, `
+    <div class="row wrapr" style="margin-top:8px">${stTag(a.status)}<span class="chip" style="background:${c.color}22">${c.icon} ${esc(c.name)}</span><span class="chip pr-${a.priority}">${PRIO_L[a.priority]}</span>${a.fixed ? '<span class="chip">📌 Compromiso fijo</span>' : ''}${a.seriesId ? '<span class="chip">🔁 Recurrente</span>' : ''}</div>
+    <div class="card flat" style="margin-top:12px">
+      <div class="stat-l"><span>📅 Fecha</span><b>${cap(fmtMed(a.date))}</b></div>
+      <div class="stat-l"><span>🕒 Horario</span><b>${a.start} – ${a.end}</b></div>
+      <div class="stat-l"><span>⏳ Duración prevista</span><b>${fmtDur(a.plannedMin)}</b></div>
+      <div class="stat-l"><span>⏱ Duración real</span><b>${a.actualMin != null && a.actualMin !== '' ? fmtDur(a.actualMin) : 'Sin registrar'}</b></div>
+      ${g ? `<div class="stat-l"><span>🎯 Meta</span><b>${esc(g.name)}</b></div>` : ''}
+      ${a.rescheduledFrom ? `<div class="stat-l"><span>↪ Origen</span><b>Reprogramada desde otro día</b></div>` : ''}
+    </div>
+    ${a.desc ? `<p><b>Descripción:</b> ${esc(a.desc)}</p>` : ''}${a.notes ? `<p><b>Notas:</b> ${esc(a.notes)}</p>` : ''}
+    <div class="grid2" style="margin-top:12px">
+      ${open ? `<button class="btn primary" data-act="complete" data-id="${a.id}">✓ Completar</button>` : `<button class="btn ghost" data-act="setStatus" data-s="pendiente" data-id="${a.id}">⏳ Volver a pendiente</button>`}
+      ${a.status === 'pendiente' ? `<button class="btn ghost" data-act="setStatus" data-s="en_curso" data-id="${a.id}">▶ Iniciar</button>` : `<button class="btn ghost" data-act="editAct" data-id="${a.id}">✏️ Editar</button>`}
+      ${a.status === 'pendiente' ? `<button class="btn ghost" data-act="editAct" data-id="${a.id}">✏️ Editar</button>` : ''}
+      ${open ? `<button class="btn ghost" data-act="reschedule" data-id="${a.id}">↪ Reprogramar</button>` : ''}
+      <button class="btn ghost" data-act="dupAct" data-id="${a.id}">⧉ Duplicar</button>
+      ${open ? `<button class="btn ghost" data-act="cancelAct" data-id="${a.id}">✕ Cancelar</button>` : ''}
+      <button class="btn danger" data-act="delAct" data-id="${a.id}">🗑 Eliminar</button>
+    </div>
+    <details class="tbl" style="margin-top:14px"><summary>Historial de cambios (${(a.history || []).length})</summary><table><tbody>${(a.history || []).slice().reverse().map(h => `<tr><td class="small">${new Date(h.at).toLocaleString('es', { dateStyle: 'short', timeStyle: 'short' })}</td><td>${h.from ? esc(ST[h.from]?.l || h.from) + ' → ' : ''}${h.to ? esc(ST[h.to]?.l || h.to) : ''}${h.note ? ' · ' + esc(h.note) : ''}</td></tr>`).join('')}</tbody></table></details>
+    <p class="hint">Creada: ${new Date(a.createdAt).toLocaleString('es', { dateStyle: 'medium', timeStyle: 'short' })}</p>`);
+}
+function setStatus(a, to, note) {
+  if (a.status === to && !note) return;
+  (a.history = a.history || []).push({ at: new Date().toISOString(), from: a.status, to, note });
+  a.status = to;
+  if (to === 'en_curso') a.startedAt = new Date().toISOString();
+  putAct(a);
+}
+
+/* ---------- Formulario de actividad ---------- */
+function actForm(a = {}, opts = {}) {
+  const isNew = !a.id;
+  const d = a.date || UI.date || today();
+  const nm = ceil5(d === today() ? nowMin() : toMin(S.profile?.dayStart || '08:00'));
+  const start = a.start || toHM(Math.min(nm, 23 * 60)), end = a.end || toHM(toMin(start) + 30);
+  return `<form data-form="act" data-id="${isNew ? '' : a.id}" data-scope="${opts.scope || ''}" novalidate>
+    <label>Nombre de la actividad<input type="text" name="title" required maxlength="90" value="${esc(a.title || '')}" placeholder="Ej.: Contactar prospectos"></label>
+    <div class="row2"><label>Categoría<select name="cat">${catOpts(a.cat || 'hogar')}</select></label><label>Prioridad<select name="priority">${prioOpts(a.priority)}</select></label></div>
+    <label>Fecha<input type="date" name="date" required value="${d}" ${opts.scope === 'future' ? 'disabled' : ''}></label>
+    <div class="row2"><label>Hora de inicio<input type="time" name="start" required value="${start}"></label><label>Hora de fin<input type="time" name="end" required value="${end}"></label></div>
+    <p class="hint" id="durHint">Duración prevista: <b>${fmtDur(durOf(start, end))}</b></p>
+    ${!isNew ? `<div class="row2"><label>Estado<select name="status">${Object.keys(ST).filter(k => k !== 'reprogramada' || a.status === 'reprogramada').map(k => `<option value="${k}"${a.status === k ? ' selected' : ''}>${ST[k].i} ${ST[k].l}</option>`).join('')}</select></label><label>Duración real (min)<input type="number" name="actualMin" min="0" max="1440" inputmode="numeric" value="${a.actualMin ?? ''}" placeholder="Opcional"></label></div>` : ''}
+    <label class="check"><input type="checkbox" name="fixed" ${a.fixed ? 'checked' : ''}> 📌 Compromiso fijo (no se mueve al reorganizar)</label>
+    ${isNew ? `<label>Repetir<select name="rec" data-change="recToggle"><option value="none">No se repite</option><option value="daily">Todos los días</option><option value="weekly">Semanalmente</option></select></label>
+      <div id="recBox" hidden><div class="chips" aria-label="Días">${['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'].map((x, i) => `<label><input type="checkbox" name="wd" value="${i}" ${i === pd(d).getDay() ? 'checked' : ''}><span>${x}</span></label>`).join('')}</div>
+      <label>Repetir hasta (opcional)<input type="date" name="until"></label></div>` : ''}
+    <label>Meta relacionada<select name="goalId">${goalOpts(a.goalId)}</select></label>
+    <label>Descripción (opcional)<textarea name="desc" maxlength="500">${esc(a.desc || '')}</textarea></label>
+    <label>Notas (opcional)<textarea name="notes" maxlength="500">${esc(a.notes || '')}</textarea></label>
+    <div id="formMsg"></div>
+    <button class="btn primary big" style="margin-top:16px" type="submit">Guardar actividad</button>
+  </form>`;
+}
+function newActSheet(prefill = {}) { openSheet(prefill.title ? 'Duplicar actividad' : 'Nueva actividad', actForm(prefill)); }
+async function editAct(id) {
+  const a = S.activities.find(x => x.id === id); if (!a) return;
+  let scope = '';
+  if (a.seriesId && S.series.find(s => s.id === a.seriesId)) {
+    scope = await choiceBox('Actividad recurrente', '¿Qué quieres modificar?', [{ label: 'Solo esta ocurrencia', value: 'one', cls: 'primary' }, { label: 'Esta y las siguientes', value: 'future' }]);
+    if (!scope) return;
+  }
+  openSheet('Editar actividad', actForm(a, { scope }));
+}
+async function submitAct(f) {
+  const fd = new FormData(f), id = f.dataset.id, scope = f.dataset.scope;
+  const old = id ? S.activities.find(x => x.id === id) : null;
+  const title = (fd.get('title') || '').trim();
+  const date = fd.get('date') || old?.date, start = fd.get('start'), end = fd.get('end');
+  const msg = $('#formMsg', f);
+  const err = t => { msg.innerHTML = `<div class="warn">⚠ ${t}</div>`; msg.scrollIntoView({ block: 'center' }); };
+  if (!title) return err('Escribe un nombre para la actividad.');
+  if (!date || !start || !end) return err('Completa la fecha y las horas.');
+  if (start === end) return err('La hora de fin debe ser diferente de la de inicio.');
+  const data = { title, cat: fd.get('cat'), priority: fd.get('priority'), date, start, end, plannedMin: durOf(start, end), fixed: !!fd.get('fixed'), goalId: fd.get('goalId') || '', desc: (fd.get('desc') || '').trim(), notes: (fd.get('notes') || '').trim() };
+  if (old) { const am = fd.get('actualMin'); data.actualMin = am === '' || am == null ? null : Math.max(0, Math.min(1440, Number(am))); }
+  const conf = conflictsOf({ ...data, id: id || '__new' });
+  if (conf.length && f.dataset.ok !== '1') {
+    msg.innerHTML = `<div class="warn">⚠ Este horario se cruza con: <b>${conf.map(c => `${esc(c.title)} (${c.start}–${c.end})`).join(', ')}</b>.<div class="row" style="margin-top:10px"><button type="button" class="btn sm" data-act="confirmConflict">Guardar de todos modos</button></div></div>`;
+    msg.scrollIntoView({ block: 'center' }); return;
+  }
+  const nowIso = new Date().toISOString();
+  if (!old) {
+    const rec = fd.get('rec');
+    if (rec && rec !== 'none') {
+      const wds = fd.getAll('wd').map(Number);
+      if (rec === 'weekly' && !wds.length) return err('Elige al menos un día de la semana.');
+      const until = fd.get('until') || null;
+      if (until && until < date) return err('La fecha "hasta" no puede ser anterior a la fecha de inicio.');
+      const ser = { id: uid(), ...data, freq: rec, weekdays: rec === 'weekly' ? wds : [], startDate: date, until, exceptions: [], createdAt: nowIso };
+      delete ser.date; S.series.push(ser); put('series', ser);
+      materialize(date, UI.date > date ? UI.date : date);
+      toast('Actividad recurrente creada 🔁');
+    } else {
+      const a = { id: uid(), ...data, actualMin: null, status: 'pendiente', createdAt: nowIso, history: [{ at: nowIso, to: 'pendiente', note: 'Creada' }] };
+      S.activities.push(a); putAct(a); toast('Actividad guardada ✓');
+    }
+  } else if (scope === 'future') {
+    const ser = S.series.find(s => s.id === old.seriesId);
+    const from = old.occDate || old.date;
+    const newSer = { ...clone(ser), id: uid(), title: data.title, cat: data.cat, priority: data.priority, start, end, plannedMin: data.plannedMin, fixed: data.fixed, goalId: data.goalId, desc: data.desc, notes: data.notes, startDate: from, exceptions: [], createdAt: nowIso };
+    ser.until = addD(from, -1);
+    // Elimina ocurrencias futuras pendientes y no modificadas de la serie anterior (evita duplicados)
+    S.activities.filter(a => a.seriesId === ser.id && (a.occDate || a.date) >= from && a.status === 'pendiente' && !a.detached).forEach(a => { S.activities.splice(S.activities.indexOf(a), 1); del('activities', a.id); });
+    if (ser.until < ser.startDate) { S.series.splice(S.series.indexOf(ser), 1); del('series', ser.id); } else put('series', ser);
+    S.series.push(newSer); put('series', newSer);
+    materialize(from, UI.date > from ? UI.date : from);
+    // Si la ocurrencia editada no era pendiente (p. ej. completada), aplica también los cambios en ella
+    const still = S.activities.find(x => x.id === old.id); if (still) { Object.assign(still, data); putAct(still); }
+    toast('Cambios aplicados a esta y las siguientes');
+  } else {
+    const prevStatus = old.status, newStatus = fd.get('status') || old.status;
+    const oldDate = old.date;
+    Object.assign(old, data);
+    if (oldDate !== date) snapshot(oldDate);
+    if (old.seriesId) old.detached = true;
+    if (newStatus !== prevStatus) setStatus(old, newStatus, 'Cambio manual'); else { (old.history = old.history || []).push({ at: nowIso, note: 'Editada' }); putAct(old); }
+    toast('Cambios guardados ✓');
+  }
+  closeSheet(); rerender(); checkBadges();
+}
+
+/* ---------- Completar / reprogramar / cancelar / eliminar ---------- */
+function completeSheet(id) {
+  const a = S.activities.find(x => x.id === id); if (!a) return;
+  let elapsed = null;
+  if (a.status === 'en_curso' && a.startedAt) { elapsed = Math.round((Date.now() - new Date(a.startedAt)) / 60000); if (elapsed < 1 || elapsed > 1440) elapsed = null; }
+  const g = S.goals.find(x => x.id === a.goalId && x.type === 'numerica');
+  openSheet('¡Bien hecho! ✓', `<p><b>${esc(a.title)}</b></p>
+    <form data-form="complete" data-id="${a.id}">
+      <label>¿Cuánto tiempo te tomó realmente? (min)<input type="number" name="actualMin" min="0" max="1440" inputmode="numeric" value="${elapsed ?? ''}" placeholder="Opcional · previsto ${a.plannedMin} min"></label>
+      <div class="row wrapr" style="margin-top:8px">${[...new Set([a.plannedMin, 15, 30, 45, 60])].filter(Boolean).map(m => `<button type="button" class="btn sm ghost" data-act="setMin" data-m="${m}">${m === a.plannedMin ? 'Lo previsto · ' : ''}${fmtDur(m)}</button>`).join('')}</div>
+      <p class="hint">Si lo dejas vacío, no se contará como tiempo real (solo como completada).</p>
+      ${g ? `<label class="check"><input type="checkbox" name="goalInc" checked> Sumar <input type="number" name="goalAmt" value="1" min="0" step="any" style="width:80px;display:inline-block;margin:0 6px;min-height:38px;padding:6px"> ${esc(g.unit || '')} a la meta «${esc(g.name)}»</label>` : ''}
+      <button class="btn primary big" style="margin-top:16px">Marcar como completada</button>
+    </form>`);
+}
+function submitComplete(f) {
+  const a = S.activities.find(x => x.id === f.dataset.id); if (!a) return;
+  const fd = new FormData(f); const am = fd.get('actualMin');
+  a.actualMin = am === '' || am == null ? null : Math.max(0, Math.min(1440, Number(am)));
+  const late = a.date === today() && nowMin() > toMin(a.start) + a.plannedMin;
+  setStatus(a, 'completada', late ? 'Completada después de su horario' : '');
+  if (fd.get('goalInc')) { const g = S.goals.find(x => x.id === a.goalId); if (g) goalAdd(g, Number(fd.get('goalAmt')) || 0, 'Desde actividad: ' + a.title); }
+  closeSheet(); rerender();
+  const st = dayStats(a.date);
+  if (st.pct === 100 && st.valid.length >= 2) { celebrate(); toast('¡Completaste todo lo planificado! 🎉'); } else toast('Actividad completada ✓');
+  checkBadges();
+}
+function rescheduleSheet(id) {
+  const a = S.activities.find(x => x.id === id); if (!a) return;
+  const nd = addD(a.date, 1);
+  openSheet('Reprogramar actividad', `<p><b>${esc(a.title)}</b> · ${a.start}–${a.end}</p>
+    <form data-form="resched" data-id="${a.id}">
+      <label>Nueva fecha<input type="date" name="date" value="${nd}" required></label>
+      <div class="row2"><label>Inicio<input type="time" name="start" value="${a.start}" required></label><label>Fin<input type="time" name="end" value="${a.end}" required></label></div>
+      <div class="info" style="margin-top:12px">ℹ️ Si cambias de día, esta actividad queda como <b>Reprogramada</b> (no cuenta en el cumplimiento de hoy) y se crea su copia en la nueva fecha. Si eliges el mismo día, solo se cambia la hora.</div>
+      <div id="formMsg"></div>
+      <button class="btn primary big" style="margin-top:14px">Reprogramar</button>
+    </form>`);
+}
+function submitResched(f) {
+  const a = S.activities.find(x => x.id === f.dataset.id); if (!a) return;
+  const fd = new FormData(f), date = fd.get('date'), start = fd.get('start'), end = fd.get('end');
+  if (!date || !start || !end || start === end) { $('#formMsg', f).innerHTML = '<div class="warn">Revisa la fecha y las horas.</div>'; return; }
+  const probe = { ...a, date, start, end, plannedMin: durOf(start, end) };
+  const conf = conflictsOf(probe);
+  if (conf.length && f.dataset.ok !== '1') { $('#formMsg', f).innerHTML = `<div class="warn">⚠ Se cruza con: <b>${conf.map(c => esc(c.title)).join(', ')}</b><div class="row" style="margin-top:8px"><button type="button" class="btn sm" data-act="confirmConflict">Reprogramar de todos modos</button></div></div>`; return; }
+  if (date === a.date) {
+    a.history.push({ at: new Date().toISOString(), note: `Hora cambiada: ${a.start}→${start}` });
+    Object.assign(a, { start, end, plannedMin: durOf(start, end) }); putAct(a);
+  } else {
+    const n = { ...clone(a), id: uid(), date, start, end, plannedMin: durOf(start, end), status: 'pendiente', actualMin: null, seriesId: undefined, occDate: undefined, rescheduledFrom: a.id, createdAt: new Date().toISOString(), history: [{ at: new Date().toISOString(), to: 'pendiente', note: 'Reprogramada desde ' + fmtShort(a.date) }] };
+    delete n.seriesId; delete n.occDate; delete n.startedAt;
+    a.rescheduledTo = n.id; setStatus(a, 'reprogramada', 'A ' + fmtShort(date) + ' ' + start);
+    S.activities.push(n); putAct(n);
+  }
+  closeSheet(); rerender(); toast('Actividad reprogramada ↪');
+}
+async function deleteAct(id) {
+  const a = S.activities.find(x => x.id === id); if (!a) return;
+  const ser = a.seriesId && S.series.find(s => s.id === a.seriesId);
+  let scope = 'one';
+  if (ser) { scope = await choiceBox('Eliminar actividad recurrente', '¿Qué quieres eliminar?', [{ label: 'Solo esta ocurrencia', value: 'one', cls: 'danger' }, { label: 'Esta y las siguientes', value: 'future', cls: 'danger' }]); if (!scope) return; }
+  else if (!(await confirmBox(`¿Eliminar «${esc(a.title)}»? Esta acción no se puede deshacer.`, 'Eliminar'))) return;
+  const rm = x => { const i = S.activities.indexOf(x); if (i >= 0) S.activities.splice(i, 1); del('activities', x.id); };
+  if (ser && scope === 'future') {
+    const from = a.occDate || a.date; ser.until = addD(from, -1);
+    S.activities.filter(x => x.seriesId === ser.id && (x.occDate || x.date) >= from && x.status !== 'completada').forEach(rm);
+    if (ser.until < ser.startDate) { S.series.splice(S.series.indexOf(ser), 1); del('series', ser.id); } else put('series', ser);
+  } else {
+    if (ser) { (ser.exceptions = ser.exceptions || []).push(a.occDate || a.date); put('series', ser); }
+    rm(a);
+  }
+  snapshot(a.date); closeSheet(); rerender(); toast('Actividad eliminada');
+}
+
+/* =========================================================
+   ASISTENTE DE PLANIFICACIÓN — "Jaqueline, organicemos tu día"
+   Reglas locales (sin API externa). Respeta compromisos fijos y
+   actividades existentes, deja ~20 % libre para imprevistos.
+   ========================================================= */
+let planState = null;
+function plannerSheet(date) {
+  const d = date || (UI.view === 'agenda' ? UI.date : today());
+  const P = S.profile || {};
+  const chip = (grp, it, i) => `<label><input type="checkbox" name="lib_${grp}" value="${i}"><span>${esc(it.t)} · ${it.d}′</span></label>`;
+  openSheet(`${name()}, organicemos tu día`, `
+  <form data-form="plan" id="planForm">
+    <label>¿Qué día planificamos?<input type="date" name="date" value="${d}"></label>
+    <div class="row2"><label>¿A qué hora deseas comenzar?<input type="time" name="start" value="${P.dayStart || '08:00'}"></label><label>¿A qué hora deseas terminar?<input type="time" name="end" value="${P.dayEnd || '20:00'}"></label></div>
+    <label>¿Cuánto tiempo tienes disponible? (horas, opcional)<input type="number" name="avail" min="0.5" max="18" step="0.5" inputmode="decimal" placeholder="Se calcula con tu horario libre"></label>
+    <h3 style="margin-top:18px">⭐ ¿Cuáles son tus tres prioridades?</h3>
+    ${[1, 2, 3].map(i => `<div class="row2" style="grid-template-columns:2fr 1fr"><input type="text" name="p${i}" placeholder="Prioridad ${i}" maxlength="80"><select name="pc${i}" aria-label="Categoría prioridad ${i}">${catOpts(i === 1 ? 'emprendimiento' : 'hogar')}</select></div><select name="pd${i}" aria-label="Duración prioridad ${i}" style="margin-bottom:6px">${[30, 45, 60, 90, 120].map(m => `<option value="${m}"${m === 45 ? ' selected' : ''}>Duración: ${fmtDur(m)}</option>`).join('')}</select>`).join('')}
+    <h3 style="margin-top:18px">🏠 ¿Qué tareas del hogar necesitas realizar?</h3>
+    <div class="chips">${S.library.hogar.map((it, i) => chip('hogar', it, i)).join('')}</div>
+    <h3 style="margin-top:18px">🚀 ¿Qué necesitas avanzar en tu emprendimiento?</h3>
+    <div class="chips">${S.library.emprendimiento.map((it, i) => chip('emprendimiento', it, i)).join('')}</div>
+    <h3 style="margin-top:18px">📌 ¿Tienes citas o compromisos fijos?</h3>
+    <p class="hint">Las actividades que ya tienes en la agenda de ese día también se respetan.</p>
+    <div id="fixedRows"></div><button type="button" class="btn sm ghost" data-act="addFixedRow">+ Añadir compromiso</button>
+    <h3 style="margin-top:18px">💛 ¿Quieres reservar tiempo para ti y tu familia?</h3>
+    <div class="chips">${S.library.personal.map((it, i) => chip('personal', it, i)).join('')}</div>
+    <h3 style="margin-top:18px">⏰ ¿Qué tareas tienen una fecha límite?</h3>
+    <textarea name="deadlines" placeholder="Una por línea. Ej.: Entregar pedido de la señora Ana"></textarea>
+    <div class="grid2" style="margin-top:16px"><button class="btn primary" type="submit">SUGERIR ACTIVIDADES</button><button type="button" class="btn ghost" data-act="planReset">VOLVER A EMPEZAR</button></div>
+    <div id="planOut"></div>
+  </form>`);
+}
+function fixedRowHtml() { return `<div class="row2 fixedrow" style="grid-template-columns:2fr 1fr 1fr;margin-bottom:6px"><input type="text" name="fx_t" placeholder="Ej.: Cita médica" maxlength="80"><input type="time" name="fx_s" aria-label="Inicio"><input type="time" name="fx_e" aria-label="Fin"></div>`; }
+function findSlot(busy, dur, from, to) {
+  const iv = busy.slice().sort((a, b) => a[0] - b[0]); let t = ceil5(from);
+  for (const [s, e] of iv) { if (e <= t) continue; if (s - t >= dur) break; t = ceil5(Math.max(t, e)); }
+  return t + dur <= to ? t : null;
+}
+function freeMinutes(ws, we, busy) {
+  const iv = busy.map(([s, e]) => [Math.max(s, ws), Math.min(e, we)]).filter(([s, e]) => e > s).sort((a, b) => a[0] - b[0]);
+  let occ = 0, cur = ws; iv.forEach(([s, e]) => { if (e <= cur) return; occ += e - Math.max(s, cur); cur = Math.max(cur, e); });
+  return Math.max(0, we - ws - occ);
+}
+function planDay(f) {
+  const fd = new FormData(f), date = fd.get('date');
+  let ws = toMin(fd.get('start') || '08:00'), we = toMin(fd.get('end') || '20:00'); if (we <= ws) we += 1440;
+  let note = '';
+  if (date === today() && nowMin() > ws) { ws = ceil5(nowMin()); note = `Como ya es más tarde, empecé desde las ${toHM(ws)}.`; }
+  const busy = [], out = [];
+  dayActs(date).filter(a => a.status !== 'cancelada' && a.status !== 'reprogramada').forEach(a => busy.push(interval(a)));
+  // Compromisos fijos nuevos
+  const ft = fd.getAll('fx_t'), fs = fd.getAll('fx_s'), fe = fd.getAll('fx_e');
+  ft.forEach((t, i) => { if (!t.trim() || !fs[i] || !fe[i] || fs[i] === fe[i]) return; const s = toMin(fs[i]); const e = s + durOf(fs[i], fe[i]); busy.push([s, e]); out.push({ title: t.trim(), cat: 'tramites', priority: 'alta', start: s, dur: e - s, fixed: true, checked: true, reason: 'Compromiso fijo: se respeta su horario.' }); });
+  const free = Math.max(0, we - ws <= 0 ? 0 : freeMinutes(ws, we, busy));
+  const avail = Number(fd.get('avail')) > 0 ? Math.min(Number(fd.get('avail')) * 60, free) : free;
+  const budget = Math.floor(avail * 0.8);
+  const tasks = [];
+  [1, 2, 3].forEach(i => { const t = (fd.get('p' + i) || '').trim(); if (t) tasks.push({ title: t, cat: fd.get('pc' + i), priority: 'alta', dur: Number(fd.get('pd' + i)) || 45, slot: 'manana', reason: 'Es una de tus tres prioridades: la ubico en tu mejor franja disponible.' }); });
+  (fd.get('deadlines') || '').split('\n').map(x => x.trim()).filter(Boolean).forEach(t => tasks.push({ title: t, cat: 'tramites', priority: 'alta', dur: 30, slot: 'manana', reason: 'Tiene fecha límite: conviene adelantarla.' }));
+  const lib = (grp, prio, why) => fd.getAll('lib_' + grp).forEach(i => { const it = S.library[grp][i]; if (it) tasks.push({ title: it.t, cat: it.c, priority: it.slot === 'manana' && grp === 'hogar' ? 'media' : prio, dur: it.d, slot: it.slot, reason: why(it) }); });
+  lib('emprendimiento', 'media', () => 'Avanza tu emprendimiento en un bloque enfocado.');
+  lib('hogar', 'media', it => it.slot === 'manana' ? 'Mejor temprano para empezar el día en orden.' : it.slot === 'fin' ? 'Cierra el día preparando el siguiente.' : 'Tarea del hogar en un espacio libre.');
+  lib('personal', 'media', it => it.c === 'familia' ? 'Reservaste tiempo de calidad con tu familia.' : it.c === 'descanso' ? 'Descansar también es parte del plan.' : 'Tiempo para ti: tu bienestar también cuenta.');
+  tasks.sort((a, b) => PRIO[a.priority] - PRIO[b.priority]);
+  const win = slot => ({ manana: [ws, Math.max(ws, 12 * 60)], tarde: [Math.max(ws, 12 * 60), Math.min(we, 18 * 60)], noche: [Math.max(ws, 18 * 60), we], fin: [Math.max(ws, we - 120), we] }[slot] || [ws, we]);
+  let used = 0; const GAP = 10;
+  tasks.forEach(t => {
+    if (used + t.dur > budget) { out.push({ ...t, checked: false, out: true, reason: 'No cabe hoy sin saturar tu agenda (dejo margen para imprevistos). Sugerencia: pásala a mañana.' }); return; }
+    const [a, b] = win(t.slot); let st = findSlot(busy, t.dur, a, b); if (st == null) st = findSlot(busy, t.dur, ws, we);
+    if (st == null) { out.push({ ...t, checked: false, out: true, reason: 'No hay un espacio libre suficiente. Sugerencia: reduce su duración o pásala a mañana.' }); return; }
+    busy.push([st, st + t.dur + GAP]); used += t.dur; out.push({ ...t, start: st, checked: true });
+  });
+  if (used >= 180) { const mid = ws + Math.floor((we - ws) / 2); let st = findSlot(busy, 20, mid - 60, we); if (st != null) { busy.push([st, st + 20]); out.push({ title: 'Pausa para recargar', cat: 'descanso', priority: 'media', start: st, dur: 20, checked: true, reason: 'Tienes varias horas de actividad: una pausa ayuda a sostener tu energía.' }); } }
+  out.sort((x, y) => (x.out ? 1 : 0) - (y.out ? 1 : 0) || (x.start ?? 9e9) - (y.start ?? 9e9));
+  planState = { date, items: out };
+  return { out, free, budget, used, note, avail };
+}
+function renderPlanOut(r) {
+  const box = $('#planOut'); if (!box) return;
+  if (!r.out.length) { box.innerHTML = `<div class="warn">Elige al menos una prioridad, tarea o compromiso para sugerirte una agenda.</div>`; box.scrollIntoView({ block: 'center' }); return; }
+  box.innerHTML = `<h2>Tu propuesta de agenda</h2>
+  <div class="info">Tiempo libre: <b>${fmtDur(r.free)}</b> · Planificado: <b>${fmtDur(r.used)}</b> · Margen para imprevistos: <b>${fmtDur(Math.max(0, r.avail - r.used))}</b>${r.note ? '<br>' + esc(r.note) : ''}<br><span class="small">Marca las que quieras aceptar. Puedes ajustar la hora y la duración.</span></div>
+  ${r.out.map((it, i) => { const c = cat(it.cat); return `<div class="sugg${it.out ? ' out' : ''}"><input type="checkbox" data-pi="${i}" ${it.checked ? 'checked' : ''} aria-label="Aceptar ${esc(it.title)}"><div style="flex:1;min-width:0"><b>${c.icon} ${esc(it.title)}</b> <span class="pr-${it.priority} small">${PRIO_L[it.priority]}</span>${it.fixed ? ' <span class="small">📌 Fijo</span>' : ''}
+    <div class="small muted">${esc(c.name)}${it.start != null ? ` · ${toHM(it.start)}–${toHM(it.start + it.dur)}` : ' · sin horario hoy'} · ${fmtDur(it.dur)}</div>
+    <div class="reason">💡 ${esc(it.reason)}</div>
+    <div class="mini"><input type="time" data-pt="${i}" value="${it.start != null ? toHM(it.start) : ''}" aria-label="Hora de inicio"><input type="number" data-pdur="${i}" value="${it.dur}" min="5" max="600" step="5" aria-label="Duración en minutos" style="max-width:90px"><span class="small muted" style="align-self:center">min</span></div></div></div>`; }).join('')}
+  <div class="grid2" style="margin-top:12px"><button type="button" class="btn primary" data-act="planAdd">AÑADIR SELECCIONADAS</button><button type="button" class="btn ghost" data-act="reorg" data-d="${planState.date}">REORGANIZAR MI DÍA</button></div>
+  <button type="button" class="btn ghost big" style="margin-top:8px" data-act="planReset">VOLVER A EMPEZAR</button>`;
+  box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function planAdd() {
+  if (!planState) return;
+  const nowIso = new Date().toISOString(); let n = 0, skipped = 0; const added = [];
+  planState.items.forEach((it, i) => {
+    if (!$(`[data-pi="${i}"]`)?.checked) return;
+    const t = $(`[data-pt="${i}"]`)?.value, dur = Math.max(5, Number($(`[data-pdur="${i}"]`)?.value) || it.dur);
+    if (!t) { skipped++; return; }
+    const a = { id: uid(), title: it.title, cat: it.cat, priority: it.priority, date: planState.date, start: t, end: toHM(toMin(t) + dur), plannedMin: dur, actualMin: null, status: 'pendiente', fixed: !!it.fixed, goalId: '', desc: '', notes: '', createdAt: nowIso, history: [{ at: nowIso, to: 'pendiente', note: 'Creada desde el asistente' }] };
+    // Evita duplicar si ya existe la misma actividad a la misma hora ese día
+    if (S.activities.some(x => x.date === a.date && x.title === a.title && x.start === a.start && x.status !== 'cancelada')) { skipped++; return; }
+    S.activities.push(a); putAct(a); added.push(a); n++;
+  });
+  const conf = added.filter(a => conflictsOf(a).length).length;
+  closeSheet(); UI.date = planState.date; go('agenda');
+  toast(`${n} actividad(es) añadida(s)${skipped ? ` · ${skipped} omitida(s)` : ''}${conf ? ` · ⚠ ${conf} con cruce de horario` : ''}`);
+  checkBadges();
+}
+
+/* ---------- Reorganización inteligente (requiere aprobación) ---------- */
+let reorgState = null;
+function reorgSheet(date) {
+  const d = date || today();
+  const isToday = d === today();
+  const ws = isToday ? ceil5(nowMin()) : toMin(S.profile?.dayStart || '08:00');
+  let we = toMin(S.profile?.dayEnd || '21:00'); if (we <= ws) we = ws;
+  const acts = dayActs(d).filter(a => a.status !== 'cancelada' && a.status !== 'reprogramada');
+  const movable = acts.filter(a => a.status === 'pendiente' && !a.fixed);
+  const busy = acts.filter(a => !movable.includes(a) && a.status !== 'completada').map(a => interval(a));
+  if (!movable.length) { openSheet('Reorganizar mi día', `<div class="empty"><span class="em">👌</span>No hay actividades pendientes que se puedan mover. Los compromisos fijos (📌) y las completadas no se mueven.</div>`); return; }
+  const order = movable.slice().sort((a, b) => PRIO[a.priority] - PRIO[b.priority] || toMin(a.start) - toMin(b.start));
+  const plan = [];
+  order.forEach(a => {
+    const st = findSlot(busy, a.plannedMin, ws, we);
+    if (st == null) plan.push({ a, fit: false });
+    else { busy.push([st, st + a.plannedMin + 10]); plan.push({ a, fit: true, ns: st }); }
+  });
+  reorgState = { date: d, plan, ws, we, busy };
+  const changed = plan.filter(p => p.fit && toHM(p.ns) !== p.a.start);
+  openSheet('Reorganizar mi día', `
+    <div class="info">Reorganizo las actividades pendientes desde las <b>${toHM(ws)}</b> hasta las <b>${toHM(we)}</b>, por prioridad, con pausas de 10 min. Los compromisos fijos 📌 se respetan. <b>No se cambia nada hasta que lo apruebes.</b></div>
+    <h3 style="margin-top:14px">Nueva distribución</h3>
+    ${plan.filter(p => p.fit).map(p => `<div class="list-item"><span class="dot" style="background:${cat(p.a.cat).color}"></span><div style="flex:1"><b>${esc(p.a.title)}</b><div class="small muted">${p.a.start} → <b style="color:var(--text)">${toHM(p.ns)}–${toHM(p.ns + p.a.plannedMin)}</b> ${toHM(p.ns) === p.a.start ? '(sin cambios)' : ''}</div></div><span class="small pr-${p.a.priority}">${PRIO_L[p.a.priority]}</span></div>`).join('') || '<p class="muted small">Ninguna cabe en el tiempo restante.</p>'}
+    ${plan.some(p => !p.fit) ? `<h3 style="margin-top:14px">⏳ No alcanza el tiempo para:</h3>${plan.filter(p => !p.fit).map(p => `<div class="card flat" style="padding:12px"><b>${esc(p.a.title)}</b> <span class="small muted">· ${fmtDur(p.a.plannedMin)}</span>
+      <select data-alt="${p.a.id}" aria-label="Alternativa para ${esc(p.a.title)}" style="margin-top:8px">
+        <option value="manana">↪ Reprogramar para mañana</option><option value="reducir">✂️ Reducir la duración estimada</option><option value="dividir">🧩 Dividir en dos pasos</option><option value="noprio">▽ Marcar como no prioritaria (queda pendiente)</option><option value="cancelar">✕ Cancelar (confirmaré antes)</option></select></div>`).join('')}` : ''}
+    <div class="grid2" style="margin-top:16px"><button class="btn ghost" data-act="closeSheet">No cambiar</button><button class="btn primary" data-act="reorgApply">Aplicar cambios</button></div>
+    <p class="hint">${changed.length} actividad(es) cambiarán de hora.</p>`);
+}
+async function reorgApply() {
+  if (!reorgState) return; const { plan, date } = reorgState; const nowIso = new Date().toISOString();
+  const alts = {}; $$('[data-alt]').forEach(s => alts[s.dataset.alt] = s.value);
+  if (Object.values(alts).includes('cancelar') && !(await confirmBox('Algunas actividades se cancelarán. ¿Confirmas?', 'Sí, cancelar'))) return;
+  const tomorrow = addD(date, 1);
+  const moveTomorrow = (a, title, dur) => {
+    const n = { ...clone(a), id: uid(), title: title || a.title, date: tomorrow, plannedMin: dur || a.plannedMin, end: toHM(toMin(a.start) + (dur || a.plannedMin)), status: 'pendiente', actualMin: null, rescheduledFrom: a.id, createdAt: nowIso, history: [{ at: nowIso, to: 'pendiente', note: 'Reprogramada desde ' + fmtShort(date) }] };
+    delete n.seriesId; delete n.occDate; delete n.startedAt; S.activities.push(n); putAct(n); return n;
+  };
+  plan.forEach(p => {
+    const a = p.a;
+    if (p.fit) { if (toHM(p.ns) !== a.start) { a.history.push({ at: nowIso, note: `Reorganizada: ${a.start}→${toHM(p.ns)}` }); a.start = toHM(p.ns); a.end = toHM(p.ns + a.plannedMin); putAct(a); } return; }
+    const alt = alts[a.id] || 'manana';
+    if (alt === 'manana') { const n = moveTomorrow(a); a.rescheduledTo = n.id; setStatus(a, 'reprogramada', 'A mañana (reorganización)'); }
+    else if (alt === 'reducir' || alt === 'dividir') {
+      const half = Math.max(5, Math.round(a.plannedMin / 2 / 5) * 5);
+      const want = alt === 'reducir' ? a.plannedMin : half;
+      let fitDur = 0, st = null; for (let d = want; d >= 15; d -= 5) { st = findSlot(reorgState.busy, d, reorgState.ws, reorgState.we); if (st != null) { fitDur = d; break; } }
+      if (alt === 'reducir') {
+        if (st != null) { reorgState.busy.push([st, st + fitDur + 10]); a.history.push({ at: nowIso, note: `Duración reducida ${a.plannedMin}→${fitDur} min` }); Object.assign(a, { start: toHM(st), end: toHM(st + fitDur), plannedMin: fitDur }); putAct(a); }
+        else { const n = moveTomorrow(a); a.rescheduledTo = n.id; setStatus(a, 'reprogramada', 'Sin espacio hoy: a mañana'); }
+      } else {
+        const rest = a.plannedMin - (st != null ? fitDur : 0);
+        if (st != null) { reorgState.busy.push([st, st + fitDur + 10]); a.history.push({ at: nowIso, note: 'Dividida en pasos' }); Object.assign(a, { title: a.title + ' (paso 1)', start: toHM(st), end: toHM(st + fitDur), plannedMin: fitDur }); putAct(a); moveTomorrow({ ...a, start: a.start }, a.title.replace(' (paso 1)', '') + ' (paso 2)', rest); }
+        else { const n = moveTomorrow(a); a.rescheduledTo = n.id; setStatus(a, 'reprogramada', 'Sin espacio hoy: a mañana'); }
+      }
+    } else if (alt === 'noprio') { a.priority = 'baja'; a.history.push({ at: nowIso, note: 'Marcada como no prioritaria' }); putAct(a); }
+    else if (alt === 'cancelar') setStatus(a, 'cancelada', 'Cancelada al reorganizar');
+  });
+  closeSheet(); UI.date = date; go('agenda'); toast('Tu día quedó reorganizado ✓');
+}
+
+/* =========================================================
+   VISTA: MIS METAS
+   ========================================================= */
+VIEWS.metas = () => {
+  const all = S.goals.map(g => ({ g, i: goalInfo(g) }));
+  const f = UI.goalFilter;
+  const list = all.filter(x => f === 'todas' || (f === 'completadas' ? x.i.done : !x.i.done)).sort((a, b) => (a.g.dueDate || '9') < (b.g.dueDate || '9') ? -1 : 1);
+  const cnt = s => all.filter(x => x.i.state === s).length;
+  const act = all.filter(x => !x.i.done);
+  return `<h1>Mis metas</h1><p class="muted">Define lo que quieres lograr y mide tu avance real.</p>
+  <button class="btn primary big" data-act="newGoal">+ NUEVA META</button>
+  ${all.length ? `<div class="grid-k grid2" style="margin-top:12px;grid-template-columns:repeat(2,1fr)">
+    <div class="kpi"><span>✓ Completadas</span><b>${cnt('completada')}</b></div><div class="kpi"><span>◐ En progreso</span><b>${cnt('progreso') + cnt('pausada')}</b></div>
+    <div class="kpi"><span>⏰ Próximas a vencer</span><b>${cnt('proxima')}</b></div><div class="kpi"><span>📅 Plazo cumplido</span><b>${cnt('vencida')}</b><p>Puedes ajustar su fecha</p></div></div>
+  ${act.length ? `<div class="card"><h3>Vista global de metas activas</h3>${act.map(({ g, i }) => `<div class="hb" style="grid-template-columns:120px 1fr 54px"><span class="lbl">${esc(g.name)}</span>${pbar(i.p, g.name)}<span class="val">${i.p == null ? '—' : fmtPct(i.p)}</span></div>`).join('')}
+    ${table(['Meta', 'Actual', 'Objetivo', '%', 'Estado'], act.map(({ g, i }) => [esc(g.name), g.type === 'numerica' ? (g.current || 0) + ' ' + esc(g.unit || '') : '—', g.type === 'numerica' ? g.target + ' ' + esc(g.unit || '') : 'Cualitativa', fmtPct(i.p), i.label]))}</div>` : ''}` : ''}
+  <div class="segs" style="margin-top:14px">${[['activas', 'Activas'], ['completadas', 'Completadas'], ['todas', 'Todas']].map(([k, l]) => `<button class="${f === k ? 'on' : ''}" data-act="goalFilter" data-f="${k}">${l}</button>`).join('')}</div>
+  ${list.length ? list.map(({ g, i }) => goalCard(g, i)).join('') : `<div class="card empty"><span class="em">🎯</span>${all.length ? 'No hay metas en esta vista.' : '<b>Crea tu primera meta</b><div class="small">Por ejemplo: «Contactar 20 prospectos esta semana».</div>'}</div>`}`;
+};
+function goalCard(g, i) {
+  const c = cat(g.cat); const rel = S.activities.filter(a => a.goalId === g.id);
+  const over = i.p != null && i.p > 100;
+  return `<div class="card">
+    <div class="row" style="align-items:flex-start"><span style="font-size:24px">${c.icon}</span><div style="flex:1;min-width:0"><b style="font-size:16.5px">${esc(g.name)}</b>
+      <div class="small muted">${cap(g.period)} · ${g.dueDate ? 'Límite: ' + fmtShort(g.dueDate) : 'Sin fecha límite'}</div></div><span class="chip">${i.label}</span></div>
+    ${g.desc ? `<p class="small" style="margin:8px 0 0">${esc(g.desc)}</p>` : ''}
+    <div style="margin-top:12px">${pbar(i.p, g.name)}</div>
+    <div class="row small" style="margin-top:6px"><span style="flex:1">${g.type === 'numerica' ? `<b>${g.current || 0}</b> de <b>${g.target}</b> ${esc(g.unit || '')}` : 'Meta cualitativa'}</span><b>${i.p == null ? '' : fmtPct(i.p)}${over ? ' · ¡superada! 🎉' : ''}</b></div>
+    ${g.expected ? `<p class="hint">Resultado esperado: ${esc(g.expected)}</p>` : ''}
+    <div class="row wrapr" style="margin-top:10px">
+      ${g.type === 'numerica' ? `<button class="btn sm turq" data-act="goalPlus" data-id="${g.id}">+1</button><button class="btn sm ghost" data-act="goalValue" data-id="${g.id}">Actualizar valor</button>` : `<select data-change="goalQ" data-id="${g.id}" style="width:auto;min-height:36px;padding:6px 10px;margin:0">${[['no_iniciada', 'No iniciada'], ['en_progreso', 'En progreso'], ['completada', 'Completada'], ['pausada', 'En pausa']].map(([k, l]) => `<option value="${k}"${(g.qstatus || 'no_iniciada') === k ? ' selected' : ''}>${l}</option>`).join('')}</select>`}
+      <button class="btn sm ghost" data-act="goalDetail" data-id="${g.id}">Detalle (${rel.length})</button>
+      <button class="btn sm ghost" data-act="editGoal" data-id="${g.id}">Editar</button>
+    </div></div>`;
+}
+function goalForm(g = {}) {
+  const t = today();
+  return `<form data-form="goal" data-id="${g.id || ''}">
+    <label>Nombre de la meta<input type="text" name="name" required maxlength="90" value="${esc(g.name || '')}" placeholder="Ej.: Contactar prospectos"></label>
+    <label>Descripción (opcional)<textarea name="desc" maxlength="400">${esc(g.desc || '')}</textarea></label>
+    <div class="row2"><label>Categoría<select name="cat">${catOpts(g.cat || 'emprendimiento')}</select></label><label>Periodo<select name="period">${['diaria', 'semanal', 'mensual', 'trimestral'].map(p => `<option value="${p}"${(g.period || 'semanal') === p ? ' selected' : ''}>${cap(p)}</option>`).join('')}</select></label></div>
+    <div class="row2"><label>Fecha de inicio<input type="date" name="startDate" value="${g.startDate || t}"></label><label>Fecha límite<input type="date" name="dueDate" value="${g.dueDate || addD(t, 6)}"></label></div>
+    <label>Resultado esperado (opcional)<input type="text" name="expected" maxlength="140" value="${esc(g.expected || '')}"></label>
+    <label>Tipo de medición<select name="type" data-change="goalType"><option value="numerica"${g.type !== 'cualitativa' ? ' selected' : ''}>Numérica (cantidad)</option><option value="cualitativa"${g.type === 'cualitativa' ? ' selected' : ''}>Cualitativa (estado)</option></select></label>
+    <div id="numBox" ${g.type === 'cualitativa' ? 'hidden' : ''}><div class="row2" style="grid-template-columns:1fr 1fr 1fr"><label>Unidad<input type="text" name="unit" maxlength="20" value="${esc(g.unit || '')}" placeholder="prospectos"></label><label>Objetivo<input type="number" name="target" min="0" step="any" value="${g.target ?? ''}"></label><label>Actual<input type="number" name="current" min="0" step="any" value="${g.current ?? 0}"></label></div></div>
+    <label>Notas (opcional)<textarea name="notes" maxlength="400">${esc(g.notes || '')}</textarea></label>
+    <div id="formMsg"></div>
+    <button class="btn primary big" style="margin-top:16px">Guardar meta</button>
+    ${g.id ? `<button type="button" class="btn danger big" style="margin-top:8px" data-act="delGoal" data-id="${g.id}">Eliminar meta</button>` : ''}
+  </form>`;
+}
+function submitGoal(f) {
+  const fd = new FormData(f), id = f.dataset.id;
+  const name = (fd.get('name') || '').trim(); const type = fd.get('type');
+  const msg = $('#formMsg', f);
+  if (!name) { msg.innerHTML = '<div class="warn">Escribe un nombre para la meta.</div>'; return; }
+  if (type === 'numerica' && !(Number(fd.get('target')) > 0)) { msg.innerHTML = '<div class="warn">Define un valor objetivo mayor que 0 (o elige meta cualitativa).</div>'; return; }
+  if (fd.get('dueDate') && fd.get('startDate') && fd.get('dueDate') < fd.get('startDate')) { msg.innerHTML = '<div class="warn">La fecha límite no puede ser anterior a la de inicio.</div>'; return; }
+  const data = { name, desc: fd.get('desc').trim(), cat: fd.get('cat'), period: fd.get('period'), startDate: fd.get('startDate'), dueDate: fd.get('dueDate'), expected: fd.get('expected').trim(), type, unit: (fd.get('unit') || '').trim(), target: type === 'numerica' ? Number(fd.get('target')) : null, current: type === 'numerica' ? Number(fd.get('current')) || 0 : null, notes: fd.get('notes').trim() };
+  let g = id && S.goals.find(x => x.id === id);
+  const wasDone = g && goalInfo(g).done;
+  if (g) { if (type === 'numerica' && g.current !== data.current) (g.log = g.log || []).push({ at: new Date().toISOString(), date: today(), value: data.current, note: 'Edición' }); Object.assign(g, data); }
+  else { g = { id: uid(), ...data, qstatus: 'no_iniciada', createdAt: new Date().toISOString(), log: [{ at: new Date().toISOString(), date: today(), value: data.current, note: 'Creada' }] }; S.goals.push(g); }
+  put('goals', g); closeSheet(); rerender(); toast('Meta guardada ✓');
+  if (!wasDone && goalInfo(g).done) { celebrate(); toast('¡Meta alcanzada! 🎉'); }
+  checkBadges();
+}
+function goalAdd(g, amt, note) {
+  const wasDone = goalInfo(g).done;
+  g.current = Math.round(((Number(g.current) || 0) + amt) * 100) / 100;
+  (g.log = g.log || []).push({ at: new Date().toISOString(), date: today(), value: g.current, delta: amt, note: note || '' });
+  put('goals', g);
+  if (!wasDone && goalInfo(g).done) { if (!g.completedAt) g.completedAt = today(); put('goals', g); celebrate(); setTimeout(() => toast('¡Meta alcanzada! 🎉'), 400); }
+}
+function goalDetail(id) {
+  const g = S.goals.find(x => x.id === id); if (!g) return; const i = goalInfo(g);
+  const rel = S.activities.filter(a => a.goalId === g.id).sort((a, b) => a.date < b.date ? 1 : -1);
+  const log = (g.log || []).filter(l => l.value != null);
+  openSheet(g.name, `<div class="row" style="gap:16px;margin-top:8px">${gauge(i.p == null ? null : i.p, 120, 'Avance de la meta')}<div class="small" style="flex:1">
+    <div class="stat-l"><span>Estado</span><b>${i.label}</b></div>${g.type === 'numerica' ? `<div class="stat-l"><span>Actual</span><b>${g.current || 0} ${esc(g.unit)}</b></div><div class="stat-l"><span>Objetivo</span><b>${g.target} ${esc(g.unit)}</b></div>` : ''}
+    <div class="stat-l"><span>Inicio</span><b>${g.startDate ? fmtShort(g.startDate) : '—'}</b></div><div class="stat-l"><span>Límite</span><b>${g.dueDate ? fmtShort(g.dueDate) : '—'}</b></div></div></div>
+    ${i.p != null && i.p > 100 ? `<p class="info">Superaste el objetivo: <b>${fmtPct(i.p)}</b> 🎉 (el medidor muestra 100 % como máximo).</p>` : ''}
+    ${log.length > 1 ? `<h3 style="margin-top:14px">Evolución</h3>${lineChart(log.slice(-15).map(l => ({ l: fmtShort(l.date || l.at.slice(0, 10)), full: fmtShort(l.date || l.at.slice(0, 10)), v: g.type === 'numerica' && g.target ? Math.min(100, l.value / g.target * 100) : 0 })))}${table(['Fecha', 'Valor', 'Nota'], log.slice().reverse().map(l => [fmtShort(l.date || l.at.slice(0, 10)), l.value, esc(l.note || '')]))}` : ''}
+    <h3 style="margin-top:14px">Actividades relacionadas (${rel.length})</h3>
+    ${rel.length ? rel.slice(0, 20).map(a => `<div class="list-item"><span class="dot" style="background:${cat(a.cat).color}"></span><span style="flex:1">${esc(a.title)}<br><span class="small muted">${fmtShort(a.date)} · ${a.start}</span></span>${stTag(a.status)}</div>`).join('') : '<p class="muted small">Vincula actividades a esta meta desde el formulario de actividad.</p>'}
+    ${g.notes ? `<p><b>Notas:</b> ${esc(g.notes)}</p>` : ''}
+    ${i.state === 'vencida' ? `<div class="info" style="margin-top:12px">El plazo de esta meta ya pasó. Puedes ampliar la fecha, marcarla como completada o dejarla como referencia: no pasa nada. <button class="btn sm ghost" data-act="editGoal" data-id="${g.id}" style="margin-top:8px">Ajustar fecha</button></div>` : ''}`);
+}
+
+/* =========================================================
+   VISTA: MI EMPRENDIMIENTO
+   ========================================================= */
+VIEWS.negocio = () => {
+  const t = today(); const per = UI.bizPer;
+  const from = per === 'semana' ? weekStart(t) : monthStart(t), to = t;
+  const pFrom = per === 'semana' ? addD(from, -7) : monthStart(addD(from, -1)), pTo = per === 'semana' ? addD(from, -1) : addD(from, -1);
+  const cur = bizSum(from, to), prev = bizSum(pFrom, pTo);
+  const bz = S.prefs.biz || {}; const tgt = Number(per === 'semana' ? bz.weeklyIncome : bz.monthlyIncome) || 0;
+  const tasks = S.activities.filter(a => (a.cat === 'emprendimiento' || a.cat === 'ventas') && ['pendiente', 'en_curso'].includes(a.status) && a.date >= t).sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : toMin(a.start) - toMin(b.start)).slice(0, 6);
+  const recent = S.biz.slice().sort((a, b) => (b.date + b.createdAt) < (a.date + a.createdAt) ? -1 : 1).slice(0, 12);
+  const cmp = k => { const d = cur[k].n - prev[k].n; return prev[k].n || cur[k].n ? `<p>${d === 0 ? 'Igual que' : d > 0 ? `+${d} vs` : `${d} vs`} ${per === 'semana' ? 'semana' : 'mes'} anterior</p>` : '<p>Sin registros aún</p>'; };
+  return `<h1>Mi emprendimiento</h1><p class="muted">Tus acciones comerciales y resultados, en un solo lugar.</p>
+  <div class="segs">${[['semana', 'Esta semana'], ['mes', 'Este mes']].map(([k, l]) => `<button class="${per === k ? 'on' : ''}" data-act="bizPer" data-p="${k}">${l}</button>`).join('')}</div>
+  <h2>Registrar</h2>
+  <div class="quick">${Object.entries(BIZ_TYPES).map(([k, v]) => `<button data-act="newBiz" data-t="${k}"><span>${v.i}</span>${v.s}</button>`).join('')}<button data-act="newAct" data-cat="ventas"><span>✅</span>Tarea</button></div>
+  <h2>1 · Actividades comerciales</h2>
+  <div class="grid3"><div class="kpi"><span>📞 Prospectos</span><b>${cur.prospecto.n}</b>${cmp('prospecto')}</div><div class="kpi"><span>🔁 Seguimientos</span><b>${cur.seguimiento.n}</b>${cmp('seguimiento')}</div><div class="kpi"><span>📝 Cotizaciones</span><b>${cur.cotizacion.n}</b><p>Oportunidades, no ventas</p></div></div>
+  <h2>2 · Pedidos y ventas</h2>
+  <div class="grid2"><div class="kpi"><span>📦 Pedidos</span><b>${cur.pedido.n}</b><p>${cur.pedido.amt ? money(cur.pedido.amt) + ' en pedidos' : 'Registrados'}</p></div><div class="kpi"><span>🎉 Ventas confirmadas</span><b>${cur.venta.n}</b><p>${cur.venta.amt ? money(cur.venta.amt) + ' vendidos' : 'Confirmadas'}</p></div></div>
+  <h2>3 · Resultados económicos</h2>
+  <div class="card">
+    <div class="stat-l"><span>💰 Ingresos registrados</span><b>${money(cur.ingreso.amt)}</b></div>
+    <div class="stat-l"><span>🧾 Gastos registrados</span><b>${money(cur.gasto.amt)}</b></div>
+    <div class="stat-l"><span>≈ Ingreso neto estimado</span><b style="color:${cur.neto >= 0 ? 'var(--verde)' : '#C2334A'}">${money(cur.neto)}</b></div>
+    <p class="hint">Estimación: ingresos registrados − gastos registrados. No reemplaza una contabilidad formal. Una venta o cotización no es un ingreso hasta que lo registras como cobrado.</p>
+    <h3 style="margin-top:14px">Meta comercial ${per === 'semana' ? 'semanal' : 'mensual'}</h3>
+    ${tgt ? `${pbar(pct(cur.ingreso.amt, tgt), 'Ingresos frente a la meta')}<div class="row small" style="margin-top:6px"><span style="flex:1">${money(cur.ingreso.amt)} de ${money(tgt)}</span><b>${fmtPct(pct(cur.ingreso.amt, tgt))}</b></div>` : `<p class="small muted">Sin meta definida. <a href="#" data-act="bizTargets">Definir meta de ingresos</a></p>`}
+  </div>
+  ${bizUsed() ? bizPanel() : ''}
+  <h2>Tareas comerciales pendientes</h2>
+  ${tasks.length ? tasks.map(a => `<div style="margin:8px 0">${actCard(a)}</div>`).join('') : `<div class="card empty small">Sin tareas comerciales pendientes. <a href="#" data-act="newAct" data-cat="ventas">Añadir una</a></div>`}
+  <h2>Registros recientes</h2>
+  <div class="card">${recent.length ? recent.map(b => `<div class="list-item"><span style="font-size:22px">${BIZ_TYPES[b.type].i}</span><div style="flex:1;min-width:0"><b>${BIZ_TYPES[b.type].l}</b><div class="small muted">${fmtShort(b.date)}${b.ref ? ' · ' + esc(b.ref) : ''}${b.note ? ' · ' + esc(b.note) : ''}</div></div>${b.amount ? `<b class="small">${money(b.amount)}</b>` : ''}<button class="btn sm ghost" data-act="editBiz" data-id="${b.id}" aria-label="Editar registro">✏️</button></div>`).join('') : '<div class="empty small">Aún no hay registros comerciales.</div>'}</div>
+  <button class="btn ghost big" data-act="bizTargets">⚙️ Metas comerciales y moneda</button>`;
+};
+function bizPanel() {
+  const t = today(); const weeks = [];
+  for (let i = 7; i >= 0; i--) { const ws = addD(weekStart(t), -7 * i); const we = i === 0 ? t : addD(ws, 6); weeks.push({ ws, we, s: bizSum(ws, we) }); }
+  const bz = S.prefs.biz || {}; const wt = Number(bz.weeklyIncome) || 0;
+  const maxInc = Math.max(1, ...weeks.map(w => w.s.ingreso.amt), wt);
+  const types = ['prospecto', 'seguimiento', 'cotizacion', 'pedido', 'venta'];
+  const curW = weeks[7].s, prevW = weeks[6].s, maxC = Math.max(1, ...types.map(k => Math.max(curW[k].n, prevW[k].n)));
+  return `<div class="card"><h3>📊 Panel comercial — semana actual vs anterior</h3>
+    ${types.map(k => `<div class="hb"><span class="lbl">${BIZ_TYPES[k].i} ${BIZ_TYPES[k].s}</span><span class="tracks"><span class="trk"><i style="width:${prevW[k].n / maxC * 100}%;background:#C9B6EA"></i></span><span class="trk"><i style="width:${curW[k].n / maxC * 100}%;background:var(--morado)"></i></span></span><span class="val">${curW[k].n} <span class="muted" style="font-weight:500">/ ${prevW[k].n}</span></span></div>`).join('')}
+    <div class="legend"><span><i style="background:#C9B6EA"></i>Semana anterior</span><span><i style="background:var(--morado)"></i>Esta semana</span></div>
+    ${table(['Indicador', 'Esta semana', 'Anterior'], types.map(k => [BIZ_TYPES[k].s, curW[k].n, prevW[k].n]))}
+    <h3 style="margin-top:16px">💰 Ingresos registrados por semana${wt ? ' frente a la meta' : ''}</h3>
+    ${barChart(weeks.map(w => ({ l: fmtShort(w.ws), full: 'Semana del ' + fmtShort(w.ws), v: w.s.ingreso.amt || (w.s.ingreso.n ? 0 : null) })), { max: maxInc, unit: '', avg: wt || null, color: 'var(--turq)', refLabel: 'meta' })}
+    ${wt ? '<p class="hint">La línea dorada marca tu meta semanal de ingresos.</p>' : ''}<p class="hint">«s/r» = semana sin ingresos registrados.</p>
+    ${table(['Semana', 'Ingresos', 'Gastos', 'Neto estimado', 'Ventas'], weeks.map(w => [fmtShort(w.ws), money(w.s.ingreso.amt), money(w.s.gasto.amt), money(w.s.neto), w.s.venta.n]))}
+  </div>`;
+}
+function bizForm(b = {}) {
+  const t = b.type || 'prospecto';
+  return `<form data-form="biz" data-id="${b.id || ''}">
+    <label>Tipo de registro<select name="type" data-change="bizType">${Object.entries(BIZ_TYPES).map(([k, v]) => `<option value="${k}"${k === t ? ' selected' : ''}>${v.i} ${v.l}</option>`).join('')}</select></label>
+    <label>Fecha<input type="date" name="date" value="${b.date || today()}" required></label>
+    <label>Cliente o referencia (opcional)<input type="text" name="ref" maxlength="80" value="${esc(b.ref || '')}" placeholder="Nombre o una referencia, p. ej. «Pedido #12»"></label>
+    <div id="amtBox" ${BIZ_TYPES[t].money ? '' : 'hidden'}><label>Monto (${esc(S.prefs.currency || '$')})${BIZ_TYPES[t].req ? '' : ' — opcional'}<input type="number" name="amount" min="0" step="any" inputmode="decimal" value="${b.amount ?? ''}"></label></div>
+    <div id="saleBox" ${t === 'venta' && !b.id ? '' : 'hidden'}><label class="check"><input type="checkbox" name="alsoIncome"> Ya la cobré: registrar también el ingreso</label></div>
+    <label>Nota (opcional)<input type="text" name="note" maxlength="140" value="${esc(b.note || '')}"></label>
+    <p class="hint">No necesitas guardar datos personales de tus clientes.</p>
+    <div id="formMsg"></div>
+    <button class="btn primary big" style="margin-top:14px">Guardar registro</button>
+    ${b.id ? `<button type="button" class="btn danger big" style="margin-top:8px" data-act="delBiz" data-id="${b.id}">Eliminar registro</button>` : ''}
+  </form>`;
+}
+function submitBiz(f) {
+  const fd = new FormData(f), type = fd.get('type'), id = f.dataset.id;
+  const amt = fd.get('amount'); const amount = amt === '' || amt == null ? null : Number(amt);
+  if (BIZ_TYPES[type].req && !(amount > 0)) { $('#formMsg', f).innerHTML = '<div class="warn">Escribe el monto (mayor que 0).</div>'; return; }
+  if (!fd.get('date')) { $('#formMsg', f).innerHTML = '<div class="warn">Elige la fecha.</div>'; return; }
+  const data = { type, date: fd.get('date'), ref: fd.get('ref').trim(), amount: BIZ_TYPES[type].money ? amount : null, note: fd.get('note').trim() };
+  let b = id && S.biz.find(x => x.id === id);
+  if (b) Object.assign(b, data); else { b = { id: uid(), ...data, createdAt: new Date().toISOString() }; S.biz.push(b); }
+  put('biz', b);
+  if (!id && type === 'venta' && fd.get('alsoIncome') && amount > 0) { const inc = { id: uid(), type: 'ingreso', date: data.date, ref: data.ref, amount, note: 'Cobro de venta', linkedTo: b.id, createdAt: new Date().toISOString() }; S.biz.push(inc); put('biz', inc); }
+  closeSheet(); rerender(); toast('Registro guardado ✓'); checkBadges();
+}
+
+/* =========================================================
+   VISTA: MI PROGRESO (dashboard visual)
+   ========================================================= */
+VIEWS.progreso = () => {
+  const t = today(), n = UI.period, from = addD(t, -(n - 1));
+  materialize(from, t);
+  const r = rangeStats(from, t), prev = rangeStats(addD(from, -n), addD(from, -1));
+  const td = dayStats(t);
+  const items = r.days.map(x => ({ l: n <= 7 ? wd(x.d) : String(pd(x.d).getDate()), full: fmtMed(x.d), v: x.pct }));
+  const canCmp = r.withData.length >= 3 && prev.withData.length >= 3;
+  const tb = timeByCat(from, t); const tbUsed = tb.filter(x => x.planned || x.real);
+  const maxT = Math.max(1, ...tbUsed.map(x => Math.max(x.planned, x.real)));
+  const goalsDone = S.goals.filter(g => goalInfo(g).done).length;
+  const bw = bizSum(weekStart(t), t);
+  // Cambios relevantes (≥ 25 puntos entre días con registro consecutivos)
+  const flags = []; let last = null; r.days.forEach((x, i) => { if (x.pct == null) return; if (last && Math.abs(x.pct - last.pct) >= 25) { flags.push(`${fmtMed(x.d)}: ${x.pct > last.pct ? 'subió' : 'bajó'} ${Math.round(Math.abs(x.pct - last.pct))} puntos`); items[i].flag = true; } last = x; });
+  const kpis = [
+    ['Cumplimiento de hoy', td.pct == null ? '—' : fmtPct(td.pct), td.pct == null ? 'Sin actividades válidas hoy' : `${td.done.length} de ${td.valid.length} completadas`],
+    [`Promedio ${n} días`, fmtPct(r.avg), r.withData.length ? `Sobre ${r.withData.length} día(s) con registro` : 'Sin días con registro'],
+    ['Metas alcanzadas', goalsDone, `De ${S.goals.length} meta(s) creadas`],
+    ['Tiempo real registrado', fmtDur(r.real), r.missingReal ? `${r.missingReal} completada(s) sin duración real` : `En ${n} días`],
+    ['Actividades completadas', r.done, `De ${r.valid} válidas en ${n} días`]
+  ];
+  if (bizUsed()) { const wt = Number(S.prefs.biz?.weeklyIncome) || 0; kpis.push(['Ventas registradas', bw.venta.n, 'Ventas confirmadas esta semana']); kpis.push(['Progreso comercial', wt ? fmtPct(pct(bw.ingreso.amt, wt)) : money(bw.ingreso.amt), wt ? 'Ingresos vs meta semanal' : 'Ingresos esta semana (sin meta)']); }
+  return `<h1>Mi progreso</h1><p class="muted">Todo se calcula con tus registros reales.</p>
+  <div class="segs">${[7, 14, 30].map(k => `<button class="${n === k ? 'on' : ''}" data-act="period" data-n="${k}">${k} días</button>`).join('')}</div>
+  <div class="grid2 grid-k" style="margin-top:12px">${kpis.map(([l, v, p]) => `<div class="kpi"><span>${esc(l)}</span><b>${v}</b><p>${esc(p)}</p></div>`).join('')}</div>
+  <div class="card"><h3>A · Cumplimiento de hoy</h3>
+    ${td.valid.length ? `<div class="gaugebox">${gauge(td.pct, 130)}<div class="stats"><div class="stat-l"><span>Planificadas</span><b>${td.valid.length}</b></div><div class="stat-l"><span>Completadas</span><b>${td.done.length}</b></div><div class="stat-l"><span>Pendientes</span><b>${td.pending.length}</b></div><div class="stat-l"><span>Reprogramadas</span><b>${td.reprog.length}</b></div></div></div>` : '<div class="empty"><span class="em">🌱</span>Planifica tu primera actividad</div>'}
+    <p class="hint">Fórmula: completadas ÷ válidas × 100. Las canceladas y reprogramadas no cuentan en el día original (la copia reprogramada cuenta en su nueva fecha).</p></div>
+  <div class="card"><h3>B · Rendimiento diario (${n} días)</h3>
+    ${r.withData.length ? barChart(items, { avg: r.avg }) + `<div class="row wrapr small" style="margin-top:8px;gap:14px"><span>📊 Promedio: <b>${fmtPct(r.avg)}</b></span><span>🏆 Mejor día: <b>${r.best ? fmtMed(r.best.d) + ' (' + fmtPct(r.best.pct) + ')' : '—'}</b></span><span>${canCmp ? `↕ Periodo anterior: <b>${fmtPct(prev.avg)}</b> (${r.avg - prev.avg >= 0 ? '+' : ''}${Math.round(r.avg - prev.avg)} pts)` : '↕ Aún no hay datos suficientes para comparar con el periodo anterior'}</span></div><p class="hint">«s/r» = sin registro (no se cuenta como 0 %).</p>` + table(['Día', 'Cumplimiento', 'Completadas', 'Válidas', 'Reprog.'], r.days.map(x => [fmtMed(x.d), x.pct == null ? 'Sin registro' : fmtPct(x.pct), x.done.length, x.valid.length, x.reprog.length])) : '<div class="empty small">Sin registros en este periodo.</div>'}</div>
+  <div class="card"><h3>F · Tendencia del cumplimiento</h3>
+    ${r.withData.length >= 2 ? lineChart(items, { avg: r.avg }) + `<div class="legend"><span><i style="background:var(--morado)"></i>Cumplimiento diario</span><span><i style="background:var(--dorado)"></i>Promedio del periodo</span><span><i style="background:var(--coral)"></i>Cambio relevante</span></div>${flags.length ? `<p class="small" style="margin-bottom:0"><b>Cambios relevantes:</b> ${flags.slice(0, 4).map(esc).join(' · ')}</p>` : ''}<p class="hint">Es una descripción de tus registros, no una predicción.</p>` : '<div class="empty small">Necesitas al menos 2 días con registro para ver la tendencia.</div>'}</div>
+  <div class="card"><h3>C · Distribución del tiempo</h3>
+    ${tbUsed.length ? `<div class="row wrapr" style="justify-content:center">${r.real ? donut(tbUsed.map(x => ({ l: x.cat.name, v: x.real, color: x.cat.color }))) : ''}</div>${tbUsed.sort((a, b) => b.real - a.real || b.planned - a.planned).map(x => hbRow(x, maxT)).join('')}<div class="legend"><span><i style="background:#845EC255"></i>Planificado</span><span><i style="background:var(--morado)"></i>Real registrado</span></div>
+      ${r.missingReal ? `<p class="hint">ℹ️ ${r.missingReal} actividad(es) completada(s) no tienen duración real: no se suman como tiempo real.</p>` : ''}
+      ${table(['Categoría', 'Planificado', 'Real', 'Sin duración real'], tbUsed.map(x => [esc(x.cat.name), fmtDur(x.planned), fmtDur(x.real), x.missing]))}` : '<div class="empty small">Sin tiempo registrado en este periodo.</div>'}</div>
+  ${balanceCard(from, t)}
+  <div class="card"><h3>D · Evolución de metas</h3>
+    ${S.goals.length ? S.goals.map(g => { const i = goalInfo(g); return `<div style="margin:10px 0"><div class="row small"><b style="flex:1">${esc(g.name)}</b><span class="chip">${i.label}</span></div>${pbar(i.p, g.name)}<div class="row small muted" style="margin-top:3px"><span style="flex:1">${g.type === 'numerica' ? `${g.current || 0} / ${g.target} ${esc(g.unit || '')}` : 'Cualitativa'}${g.dueDate ? ' · límite ' + fmtShort(g.dueDate) : ''}</span><b>${fmtPct(i.p)}</b></div></div>`; }).join('') + `<button class="btn sm ghost" data-act="go" data-v="metas">Ver detalle individual</button>` : '<div class="empty small">Aún no hay metas.</div>'}</div>
+  ${bizUsed() ? `<h2>E · Panel comercial</h2>${bizPanel()}` : ''}
+  ${S.prefs.gamification ? badgesCard() : ''}`;
+};
+function balanceCard(from, to) {
+  const tb = timeByCat(from, to); const g = id => tb.find(x => x.cat.id === id) || { real: 0 };
+  const groups = [['hogar', 'Hogar', ['hogar']], ['familia', 'Familia', ['familia']], ['emprendimiento', 'Emprendimiento y ventas', ['emprendimiento', 'ventas']], ['bienestar', 'Bienestar, descanso y espiritualidad', ['bienestar', 'descanso', 'espiritualidad']]];
+  const real = groups.map(([k, l, ids]) => ({ k, l, v: ids.reduce((s, id) => s + g(id).real, 0) }));
+  const tot = real.reduce((s, x) => s + x.v, 0); const tg = S.prefs.balance || {}; const hasT = groups.some(([k]) => Number(tg[k]) > 0);
+  return `<div class="card"><h3>G · Equilibrio de tu tiempo</h3>
+    <p class="small muted" style="margin-top:0">Compara cómo repartiste tu tiempo real con tus propias preferencias. No existe un reparto ideal universal.</p>
+    ${tot ? real.map(x => { const p = x.v / tot * 100; const t = Number(tg[x.k]) || 0; return `<div style="margin:10px 0"><div class="row small"><b style="flex:1">${esc(x.l)}</b><span>${fmtPct(p)} · ${fmtDur(x.v)}${t ? ` · tu preferencia ${t} %` : ''}</span></div><div class="pbar" style="position:relative"><i style="width:${p}%"></i>${t ? `<span title="Tu preferencia" style="position:absolute;top:-3px;bottom:-3px;left:calc(${Math.min(t, 100)}% - 1px);width:3px;background:var(--text);border-radius:2px"></span>` : ''}</div></div>`; }).join('') + (hasT ? '<p class="hint">La marca oscura indica tu preferencia personal.</p>' : '') + table(['Área', 'Tiempo real', '% real', 'Tu preferencia'], real.map(x => [esc(x.l), fmtDur(x.v), fmtPct(x.v / tot * 100), Number(tg[x.k]) ? tg[x.k] + ' %' : '—'])) : '<div class="empty small">Registra la duración real de tus actividades para ver tu equilibrio.</div>'}
+    <button class="btn sm ghost" data-act="balanceTargets" style="margin-top:8px">${hasT ? 'Ajustar' : 'Definir'} mis preferencias</button></div>`;
+}
+
+/* =========================================================
+   GAMIFICACIÓN POSITIVA (opcional, sin penalizaciones)
+   ========================================================= */
+function badgeList() {
+  const t0 = today(); const plannedDays = new Set(S.activities.filter(a => a.date <= t0 && a.status !== 'cancelada').map(a => a.date)).size;
+  const goalsDone = S.goals.filter(g => goalInfo(g).done).length;
+  const fullDays = [...new Set(S.activities.map(a => a.date))].filter(d => { const s = dayStats(d); return s.pct === 100 && s.valid.length >= 3; }).length;
+  const done = S.activities.filter(a => a.status === 'completada').length;
+  return [
+    { id: 'first', i: '🌱', t: 'Primer paso', d: 'Planificaste tu primer día', ok: plannedDays >= 1 },
+    { id: 'd7', i: '🗓️', t: '7 días planificados', d: 'En total, no hace falta que sean seguidos', ok: plannedDays >= 7 },
+    { id: 'd30', i: '🌟', t: '30 días planificados', d: 'Constancia que se nota', ok: plannedDays >= 30 },
+    { id: 'a25', i: '✅', t: '25 actividades completadas', d: 'Cada una cuenta', ok: done >= 25 },
+    { id: 'full', i: '🏅', t: 'Día completo', d: 'Completaste todo lo planificado (3 o más)', ok: fullDays >= 1 },
+    { id: 'g1', i: '🎯', t: 'Primera meta alcanzada', d: 'Lo que te propusiste, lo lograste', ok: goalsDone >= 1 },
+    { id: 'g5', i: '🏆', t: '5 metas alcanzadas', d: 'Tu progreso es real', ok: goalsDone >= 5 },
+    { id: 's1', i: '🎉', t: 'Primera venta registrada', d: 'Tu emprendimiento en marcha', ok: S.biz.some(b => b.type === 'venta') },
+    { id: 'r1', i: '📝', t: 'Primera reflexión', d: 'Te tomaste un momento para ti', ok: Object.keys(S.refl).length >= 1 }
+  ];
+}
+function badgesCard() {
+  const b = badgeList();
+  return `<div class="card"><h3>🏅 Mis logros</h3><p class="small muted" style="margin-top:0">Reconocimientos por avanzar. Descansar o no registrar un día nunca te quita nada.</p>
+    <div style="display:grid;gap:8px">${b.map(x => `<div class="badge${x.ok ? '' : ' locked'}"><div class="bi">${x.i}</div><div><b>${x.t}</b><div class="small muted">${x.d}${x.ok ? ' · ✓ Conseguido' : ''}</div></div></div>`).join('')}</div></div>`;
+}
+function checkBadges() {
+  if (!S.prefs.gamification) return;
+  const got = new Set(S.prefs.badges || []); const now = badgeList().filter(x => x.ok);
+  const fresh = now.filter(x => !got.has(x.id));
+  if (fresh.length) { S.prefs.badges = now.map(x => x.id); saveKV('prefs'); if (got.size || fresh.length) setTimeout(() => toast(`Nuevo logro: ${fresh[0].i} ${fresh[0].t}`), 900); }
+}
+
+/* =========================================================
+   EVALUACIÓN DIARIA
+   ========================================================= */
+VIEWS.evaluacion = () => {
+  const d = UI.evalDate || today(); const st = dayStats(d); const r = S.refl[d] || {};
+  const best = st.done.slice().sort((a, b) => PRIO[a.priority] - PRIO[b.priority])[0];
+  const goalsAdv = S.goals.filter(g => (g.log || []).some(l => (l.date || l.at.slice(0, 10)) === d && l.note !== 'Creada'));
+  const biz = bizSum(d, d);
+  const tmw = addD(d, 1);
+  const rec = dayActs(tmw).filter(a => a.status === 'pendiente').sort((a, b) => PRIO[a.priority] - PRIO[b.priority] || toMin(a.start) - toMin(b.start))[0]
+    || st.pending.slice().sort((a, b) => PRIO[a.priority] - PRIO[b.priority])[0];
+  const recGoal = !rec && S.goals.filter(g => !goalInfo(g).done && g.dueDate).sort((a, b) => a.dueDate < b.dueDate ? -1 : 1)[0];
+  const bizLine = ['prospecto', 'seguimiento', 'cotizacion', 'pedido', 'venta'].filter(k => biz[k].n).map(k => `${biz[k].n} ${BIZ_TYPES[k].s.toLowerCase()}`).join(' · ');
+  return `<div class="daynav"><button class="iconbtn" data-act="evalDay" data-n="-1" aria-label="Día anterior">‹</button><div class="dtitle">Cierre · ${fmtMed(d)}</div><button class="iconbtn" data-act="evalDay" data-n="1" aria-label="Día siguiente" ${d >= today() ? 'disabled' : ''}>›</button></div>
+  <div class="card">${st.valid.length || st.reprog.length ? `<div class="gaugebox">${gauge(st.pct, 120)}<div class="stats small">
+    <div class="stat-l"><span>Planificadas</span><b>${st.valid.length}</b></div><div class="stat-l"><span>Completadas</span><b>${st.done.length}</b></div><div class="stat-l"><span>Pendientes</span><b>${st.pending.length}</b></div><div class="stat-l"><span>Reprogramadas</span><b>${st.reprog.length}</b></div></div></div>
+    <div class="grid2" style="margin-top:12px"><div class="kpi"><span>Tiempo planificado</span><b>${fmtDur(st.planned)}</b></div><div class="kpi"><span>Tiempo real</span><b>${fmtDur(st.real)}</b><p>${st.missingReal ? st.missingReal + ' sin duración real' : 'Registrado'}</p></div></div>` : '<div class="empty"><span class="em">🌙</span>No hubo actividades planificadas este día. Descansar también está bien.</div>'}</div>
+  <div class="card"><div class="stat-l"><span>🌟 Principal logro</span><b style="text-align:right">${best ? esc(best.title) : '—'}</b></div>
+    <div class="stat-l"><span>🎯 Metas avanzadas</span><b style="text-align:right">${goalsAdv.length ? goalsAdv.map(g => esc(g.name)).join(', ') : '—'}</b></div>
+    <div class="stat-l"><span>🚀 Resultados comerciales</span><b style="text-align:right">${bizLine || '—'}${biz.ingreso.amt ? ` · ingresos ${money(biz.ingreso.amt)}` : ''}</b></div>
+    <div class="info" style="margin-top:10px"><b>Prioridad sugerida para mañana</b> <span class="small muted">(recomendación automática)</span><br>${rec ? `${esc(rec.title)}${rec.date === tmw ? ` · ${rec.start}` : ' · quedó pendiente hoy'}` : recGoal ? `Avanzar en «${esc(recGoal.name)}» (vence ${fmtShort(recGoal.dueDate)})` : 'Elige con calma lo más importante para ti.'}</div></div>
+  <form data-form="refl" data-date="${d}" class="card"><h3>Mi reflexión (opcional)</h3>
+    <label>¿Qué logré hoy?<textarea name="q1" maxlength="600">${esc(r.q1 || '')}</textarea></label>
+    <label>¿Qué puedo mejorar mañana?<textarea name="q2" maxlength="600">${esc(r.q2 || '')}</textarea></label>
+    <label>¿Qué agradezco de este día?<textarea name="q3" maxlength="600">${esc(r.q3 || '')}</textarea></label>
+    <label>Mi prioridad para mañana<input type="text" name="next" maxlength="120" value="${esc(r.next || '')}" placeholder="${rec ? esc(rec.title) : ''}"></label>
+    <button class="btn primary big" style="margin-top:14px">Guardar reflexión</button>
+    ${r.at ? `<p class="hint">Guardada ${new Date(r.at).toLocaleString('es', { dateStyle: 'short', timeStyle: 'short' })}</p>` : ''}
+  </form>`;
+};
+function submitRefl(f) {
+  const fd = new FormData(f), d = f.dataset.date;
+  const r = { date: d, q1: fd.get('q1').trim(), q2: fd.get('q2').trim(), q3: fd.get('q3').trim(), next: fd.get('next').trim(), at: new Date().toISOString() };
+  if (!r.q1 && !r.q2 && !r.q3 && !r.next) { if (S.refl[d]) { delete S.refl[d]; del('reflections', d); } toast('Reflexión vacía: nada que guardar'); rerender(); return; }
+  S.refl[d] = r; put('reflections', r);
+  if (r.next) { const tm = addD(d, 1); if (!S.dayGoals[tm]) { S.dayGoals[tm] = r.next; saveKV('dayGoals'); } }
+  toast('Reflexión guardada 💛'); rerender(); checkBadges();
+}
+
+/* =========================================================
+   INFORMES SEMANALES Y MENSUALES
+   ========================================================= */
+function repRange() {
+  const { type, offset } = UI.rep; const t = today();
+  if (type === 'semana') { const ws = addD(weekStart(t), 7 * offset); const we = addD(ws, 6); return { from: ws, to: we > t ? t : we, label: `Semana del ${fmtShort(ws)} al ${fmtShort(addD(ws, 6))}` }; }
+  const ref = pd(t); ref.setMonth(ref.getMonth() + offset, 1); const ms = ds(ref), me = monthEnd(ms);
+  return { from: ms, to: me > t ? t : me, label: cap(new Intl.DateTimeFormat('es', { month: 'long', year: 'numeric' }).format(ref)) };
+}
+function buildReport() {
+  const { from, to, label } = repRange(); const cf = UI.rep.cat;
+  if (to < from) return { from, to, label, empty: true };
+  materialize(from, to);
+  const r = rangeStats(from, to, cf); const tb = timeByCat(from, to).filter(x => (!cf || x.cat.id === cf) && (x.planned || x.real));
+  const acts = S.activities.filter(a => a.date >= from && a.date <= to && (!cf || a.cat === cf));
+  const rp = {}; acts.filter(a => a.status === 'reprogramada').forEach(a => rp[a.title] = (rp[a.title] || 0) + 1);
+  const freqR = Object.entries(rp).filter(([, n]) => n >= 2).sort((a, b) => b[1] - a[1]);
+  const biz = bizSum(from, to);
+  const goalsEvo = S.goals.filter(g => (!cf || g.cat === cf) && (g.log || []).some(l => { const d = l.date || l.at.slice(0, 10); return d >= from && d <= to; }));
+  const goalsDone = S.goals.filter(g => goalInfo(g).done && (!cf || g.cat === cf) && (g.completedAt ? g.completedAt >= from && g.completedAt <= to : true));
+  const highs = acts.filter(a => a.status === 'completada' && a.priority === 'alta');
+  const attention = [];
+  S.goals.filter(g => ['vencida', 'proxima'].includes(goalInfo(g).state)).forEach(g => attention.push(`Meta «${g.name}»: ${goalInfo(g).label.replace(/^\S+\s/, '').toLowerCase()}`));
+  freqR.forEach(([t, n]) => attention.push(`«${t}» se reprogramó ${n} veces`));
+  if (r.missingReal) attention.push(`${r.missingReal} actividad(es) completada(s) sin duración real registrada`);
+  const recs = [];
+  if (r.withData.length >= 2) {
+    if (freqR.length) recs.push(`Divide «${freqR[0][0]}» en pasos más pequeños o asígnale un horario con más margen.`);
+    if (r.avg != null && r.avg < 50) recs.push('Prueba planificar menos actividades por día y dejar más margen para imprevistos.');
+    if (r.avg != null && r.avg >= 85) recs.push('Tu planificación se ajusta bien a tu ritmo: mantenla y celebra tus avances.');
+    const best = tb.slice().sort((a, b) => b.real - a.real)[0]; if (best && best.real) recs.push(`El área con más tiempo real fue ${best.cat.name}. Revisa si coincide con tus prioridades.`);
+    if (bizUsed() && biz.prospecto.n && !biz.seguimiento.n) recs.push('Contactaste prospectos pero no registraste seguimientos: agenda un bloque para darles continuidad.');
+  }
+  return { from, to, label, r, tb, acts, freqR, biz, goalsEvo, goalsDone, highs, attention, recs, cf };
+}
+VIEWS.informes = () => {
+  const R = buildReport(); const { type } = UI.rep;
+  let h = `<h1>Informes</h1><p class="muted">Resúmenes con tus datos reales.</p>
+  <div class="segs noprint">${[['semana', 'Semanal'], ['mes', 'Mensual']].map(([k, l]) => `<button class="${type === k ? 'on' : ''}" data-act="repType" data-t="${k}">${l}</button>`).join('')}</div>
+  <div class="daynav noprint"><button class="iconbtn" data-act="repNav" data-n="-1" aria-label="Periodo anterior">‹</button><div class="dtitle">${esc(R.label)}</div><button class="iconbtn" data-act="repNav" data-n="1" aria-label="Periodo siguiente" ${UI.rep.offset >= 0 ? 'disabled' : ''}>›</button></div>
+  <label class="noprint">Filtrar por categoría<select data-change="repCat"><option value="">Todas las categorías</option>${catOpts(UI.rep.cat)}</select></label>
+  <div class="row noprint" style="margin-top:10px;gap:8px"><button class="btn sm ghost" data-act="csv">⬇ Exportar CSV</button><button class="btn sm ghost" data-act="print">🖨 Versión imprimible</button></div>
+  <h2 class="only-print">JC — Mi Día en Equilibrio · ${esc(R.label)}${R.cf ? ' · ' + esc(cat(R.cf).name) : ''}</h2>`;
+  if (R.empty || !R.r.withData.length) return h + `<div class="card empty"><span class="em">📑</span>No hay información suficiente en este periodo para generar estadísticas.</div>`;
+  const { r } = R;
+  h += `<div class="card"><h3>📌 Resultados reales</h3>
+    <div class="grid2 grid-k"><div class="kpi"><span>Cumplimiento promedio</span><b>${fmtPct(r.avg)}</b><p>${r.withData.length} día(s) con registro</p></div><div class="kpi"><span>Completadas</span><b>${r.done}</b><p>de ${r.valid} válidas</p></div><div class="kpi"><span>Reprogramadas</span><b>${r.reprog}</b><p>${r.canc} cancelada(s)</p></div><div class="kpi"><span>Tiempo real</span><b>${fmtDur(r.real)}</b><p>de ${fmtDur(r.planned)} planificado</p></div></div>
+    ${barChart(r.days.map(x => ({ l: UI.rep.type === 'semana' ? wd(x.d) : String(pd(x.d).getDate()), full: fmtMed(x.d), v: x.pct })), { avg: r.avg })}
+    ${table(['Día', 'Cumplimiento', 'Completadas/Válidas'], r.days.map(x => [fmtMed(x.d), x.pct == null ? 'Sin registro' : fmtPct(x.pct), `${x.done.length}/${x.valid.length}`]))}</div>
+  <div class="card"><h3>⏱ Tiempo invertido por categoría</h3>${R.tb.length ? R.tb.sort((a, b) => b.real - a.real).map(x => hbRow(x, Math.max(1, ...R.tb.map(y => Math.max(y.planned, y.real))))).join('') + table(['Categoría', 'Planificado', 'Real'], R.tb.map(x => [esc(x.cat.name), fmtDur(x.planned), fmtDur(x.real)])) : '<p class="muted small">Sin tiempo registrado.</p>'}</div>
+  <div class="card"><h3>🎯 Evolución de las metas</h3>${R.goalsEvo.length ? R.goalsEvo.map(g => { const i = goalInfo(g); return `<div style="margin:8px 0"><div class="row small"><b style="flex:1">${esc(g.name)}</b><span>${fmtPct(i.p)}</span></div>${pbar(i.p, g.name)}</div>`; }).join('') : '<p class="muted small">No hubo avances de metas registrados en este periodo.</p>'}</div>
+  ${bizUsed() && !R.cf ? `<div class="card"><h3>🚀 Evolución comercial</h3>
+    <div class="stat-l"><span>Prospectos / Seguimientos</span><b>${R.biz.prospecto.n} / ${R.biz.seguimiento.n}</b></div><div class="stat-l"><span>Cotizaciones enviadas</span><b>${R.biz.cotizacion.n}</b></div><div class="stat-l"><span>Pedidos</span><b>${R.biz.pedido.n}</b></div><div class="stat-l"><span>Ventas confirmadas</span><b>${R.biz.venta.n}${R.biz.venta.amt ? ' · ' + money(R.biz.venta.amt) : ''}</b></div>
+    <div class="stat-l"><span>Ingresos registrados</span><b>${money(R.biz.ingreso.amt)}</b></div><div class="stat-l"><span>Gastos registrados</span><b>${money(R.biz.gasto.amt)}</b></div><div class="stat-l"><span>Ingreso neto estimado*</span><b>${money(R.biz.neto)}</b></div><p class="hint">*Estimación, no reemplaza una contabilidad formal.</p></div>` : ''}
+  <div class="card"><h3>🌟 Principales logros</h3>${R.goalsDone.length || R.highs.length ? `<ul>${R.goalsDone.map(g => `<li>Meta alcanzada: <b>${esc(g.name)}</b></li>`).join('')}${R.highs.slice(0, 6).map(a => `<li>${esc(a.title)} <span class="muted small">(${fmtShort(a.date)})</span></li>`).join('')}</ul>` : '<p class="muted small">Completa actividades de prioridad alta o alcanza metas para verlas aquí.</p>'}</div>
+  <div class="card"><h3>🔎 Aspectos que requieren atención</h3>${R.attention.length ? `<ul>${R.attention.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '<p class="muted small">Nada que destacar. ¡Bien!</p>'}</div>
+  <div class="card" style="border-style:dashed"><h3>💡 Recomendaciones automáticas</h3><p class="hint" style="margin-top:0">Sugerencias generadas por reglas a partir de tus datos. No son resultados.</p>${R.recs.length ? `<ul>${R.recs.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '<p class="muted small">Aún no hay suficientes datos para recomendar.</p>'}</div>`;
+  return h;
+};
+function exportCSV() {
+  const R = buildReport(); if (R.empty) return toast('No hay datos en este periodo');
+  const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const rows = [['JC — Mi Día en Equilibrio', R.label], [], ['Resumen'], ['Cumplimiento promedio (%)', R.r.avg == null ? 'Sin registro' : Math.round(R.r.avg)], ['Días con registro', R.r.withData.length], ['Completadas', R.r.done], ['Válidas', R.r.valid], ['Reprogramadas', R.r.reprog], ['Canceladas', R.r.canc], ['Tiempo planificado (min)', R.r.planned], ['Tiempo real registrado (min)', R.r.real], [],
+    ['Cumplimiento diario'], ['Fecha', 'Cumplimiento (%)', 'Completadas', 'Válidas'], ...R.r.days.map(x => [x.d, x.pct == null ? 'Sin registro' : Math.round(x.pct), x.done.length, x.valid.length]), [],
+    ['Tiempo por categoría'], ['Categoría', 'Planificado (min)', 'Real (min)'], ...R.tb.map(x => [x.cat.name, x.planned, x.real]), [],
+    ['Actividades'], ['Fecha', 'Inicio', 'Fin', 'Actividad', 'Categoría', 'Prioridad', 'Estado', 'Prevista (min)', 'Real (min)'], ...R.acts.sort((a, b) => (a.date + a.start) < (b.date + b.start) ? -1 : 1).map(a => [a.date, a.start, a.end, a.title, cat(a.cat).name, a.priority, ST[a.status].l, a.plannedMin, a.actualMin ?? '']), []];
+  if (bizUsed()) rows.push(['Emprendimiento'], ['Tipo', 'Cantidad', 'Monto'], ...Object.entries(BIZ_TYPES).map(([k, v]) => [v.s, R.biz[k].n, R.biz[k].amt]), ['Ingreso neto estimado', '', R.biz.neto]);
+  const csv = '﻿' + rows.map(r => r.map(q).join(';')).join('\r\n');
+  download(`jc-informe-${R.from}_${R.to}.csv`, csv, 'text/csv;charset=utf-8');
+}
+function download(fname, content, type) {
+  const blob = new Blob([content], { type }); const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = fname; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+/* =========================================================
+   AJUSTES, DATOS Y PRIVACIDAD
+   ========================================================= */
+VIEWS.ajustes = () => {
+  const P = S.profile || {}; const bz = S.prefs.biz || {};
+  return `<h1>Ajustes</h1>
+  <form data-form="profile" class="card"><h3>👤 Mi perfil</h3>${profileFields(P)}<button class="btn primary big" style="margin-top:14px">Guardar perfil</button></form>
+  <div class="card"><h3>🎨 Apariencia</h3><div class="segs">${[['auto', 'Automático'], ['light', 'Claro'], ['dark', 'Oscuro']].map(([k, l]) => `<button class="${S.prefs.theme === k ? 'on' : ''}" data-act="theme" data-t="${k}">${l}</button>`).join('')}</div>
+    <label class="check"><input type="checkbox" data-change="gamif" ${S.prefs.gamification ? 'checked' : ''}> 🏅 Logros y celebraciones (opcional)</label></div>
+  <form data-form="cats" class="card"><h3>🏷️ Categorías</h3><p class="hint" style="margin-top:0">Personaliza nombres y colores. Se mantienen en toda la app.</p>
+    ${S.cats.map(c => `<div class="row" style="margin-top:8px"><input type="text" name="i_${c.id}" value="${esc(c.icon)}" maxlength="4" aria-label="Icono" style="width:58px;text-align:center;margin:0"><input type="text" name="n_${c.id}" value="${esc(c.name)}" maxlength="40" aria-label="Nombre" style="margin:0;flex:1"><input type="color" name="c_${c.id}" value="${c.color}" aria-label="Color" style="width:48px;height:46px;border:0;background:none;padding:0"></div>`).join('')}
+    <div class="grid2" style="margin-top:12px"><button class="btn primary">Guardar categorías</button><button type="button" class="btn ghost" data-act="resetCats">Restaurar</button></div></form>
+  <div class="card"><h3>🚀 Emprendimiento</h3><p class="small muted" style="margin-top:0">Moneda: <b>${esc(S.prefs.currency || '$')}</b> · Meta semanal: <b>${bz.weeklyIncome ? money(bz.weeklyIncome) : '—'}</b> · Meta mensual: <b>${bz.monthlyIncome ? money(bz.monthlyIncome) : '—'}</b></p><button class="btn sm ghost" data-act="bizTargets">Editar</button></div>
+  <div class="card"><h3>⚖️ Preferencias de equilibrio</h3><button class="btn sm ghost" data-act="balanceTargets">Editar mis preferencias de tiempo</button></div>
+  <div class="card"><h3>💡 Biblioteca de sugerencias</h3><p class="hint" style="margin-top:0">Ajusta nombres y duraciones orientativas que usa el asistente.</p><button class="btn sm ghost" data-act="editLibrary">Editar biblioteca</button></div>
+  <div class="card"><h3>📲 Instalar en mi teléfono</h3>${installInfo()}</div>
+  <div class="card"><h3>💾 Mis datos y privacidad</h3>
+    <p class="small">Tus datos se guardan <b>solo en este navegador y en este dispositivo</b> (${DB.mode === 'idb' ? 'IndexedDB' : DB.mode === 'ls' ? 'almacenamiento local' : 'memoria temporal'}). No se envían a ningún servidor y <b>no se sincronizan automáticamente</b> entre dispositivos. Usa el respaldo para pasarlos a otro teléfono o guardarlos.</p>
+    <div style="display:grid;gap:8px;margin-top:10px">
+      <button class="btn ghost" data-act="exportJSON">⬇ Exportar respaldo (JSON)</button>
+      <label class="btn ghost" style="margin:0;font-weight:700">⬆ Importar respaldo<input type="file" accept="application/json,.json" data-change="importJSON" class="sr"></label>
+      <button class="btn ghost" data-act="loadDemo">🧪 Cargar datos de demostración</button>
+      ${S.activities.some(a => a.demo) || S.goals.some(g => g.demo) || S.biz.some(b => b.demo) ? '<button class="btn ghost" data-act="clearDemo">🧹 Borrar datos de demostración</button>' : ''}
+      <button class="btn danger" data-act="wipe">🗑 Eliminar todos mis datos</button>
+    </div></div>
+  <p class="hint" style="text-align:center">JC — Mi Día en Equilibrio · versión ${APP_VERSION}${UI.swReg ? ' · funciona sin conexión' : ''}</p>`;
+};
+function profileFields(P) {
+  const days = P.days || [1, 2, 3, 4, 5, 6];
+  return `<label>Nombre<input type="text" name="name" maxlength="40" value="${esc(P.name || 'Jaqueline')}"></label>
+    <div class="row2"><label>Hora habitual de inicio<input type="time" name="dayStart" value="${P.dayStart || '07:00'}"></label><label>Hora habitual de fin<input type="time" name="dayEnd" value="${P.dayEnd || '21:00'}"></label></div>
+    <label>Días de actividad</label><div class="chips">${['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'].map((x, i) => `<label><input type="checkbox" name="days" value="${i}" ${days.includes(i) ? 'checked' : ''}><span>${x}</span></label>`).join('')}</div>
+    <label>Principales responsabilidades<textarea name="resp" maxlength="400" placeholder="Ej.: hogar, mis hijos, mi negocio…">${esc(P.resp || '')}</textarea></label>
+    <label>Áreas prioritarias</label><div class="chips">${S.cats.map(c => `<label><input type="checkbox" name="areas" value="${c.id}" ${(P.areas || []).includes(c.id) ? 'checked' : ''}><span>${c.icon} ${esc(c.name)}</span></label>`).join('')}</div>
+    <label>Objetivo principal de la semana<input type="text" name="weekGoal" maxlength="140" value="${esc(P.weekGoal || '')}"></label>`;
+}
+function submitProfile(f, fromWelcome) {
+  const fd = new FormData(f);
+  S.profile = { ...(S.profile || {}), name: (fd.get('name') || '').trim() || 'Jaqueline', dayStart: fd.get('dayStart') || '07:00', dayEnd: fd.get('dayEnd') || '21:00', days: fd.getAll('days').map(Number), resp: (fd.get('resp') || '').trim(), areas: fd.getAll('areas'), weekGoal: (fd.get('weekGoal') || '').trim(), createdAt: S.profile?.createdAt || new Date().toISOString() };
+  saveKV('profile');
+  if (fromWelcome) { $('.welcome')?.remove(); go('hoy'); toast(`¡Bienvenida, ${name()}! 💜`); } else { toast('Perfil guardado ✓'); rerender(); }
+}
+function installInfo() {
+  const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if (standalone) return '<p class="small">✅ Ya estás usando la app instalada.</p>';
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const https = location.protocol === 'https:' || ['localhost', '127.0.0.1'].includes(location.hostname);
+  return `${UI.installEvt ? '<button class="btn primary big" data-act="install">📲 Instalar JC Mi Día</button>' : ''}
+    ${!https ? '<div class="warn">Para instalarla, la app debe abrirse desde una dirección https:// (por ejemplo, GitHub Pages). Abierta como archivo local funciona como página web, pero no se instala.</div>' : ''}
+    <div class="info" style="margin-top:10px"><b>${ios ? '📱 En iPhone (Safari)' : '🤖 En Android (Chrome)'}</b><ol class="small" style="margin:6px 0 0;padding-left:18px">${ios ? '<li>Abre la app en <b>Safari</b>.</li><li>Toca el botón <b>Compartir</b> (cuadrado con flecha ↑).</li><li>Elige <b>Añadir a pantalla de inicio</b>.</li><li>Confirma el nombre «JC Mi Día» y toca <b>Añadir</b>.</li>' : '<li>Abre la app en <b>Chrome</b>.</li><li>Si aparece el botón «Instalar JC Mi Día», tócalo.</li><li>Si no, abre el menú <b>⋮</b> y elige <b>Instalar aplicación</b> o <b>Añadir a pantalla de inicio</b>.</li><li>Confirma con <b>Instalar</b>.</li>'}</ol></div>
+    <details class="tbl"><summary>${ios ? 'Ver instrucciones para Android' : 'Ver instrucciones para iPhone'}</summary><ol class="small" style="padding-left:18px">${ios ? '<li>Abre la app en Chrome.</li><li>Menú ⋮ → Instalar aplicación (o Añadir a pantalla de inicio).</li>' : '<li>Abre la app en Safari (no en otro navegador).</li><li>Compartir ↑ → Añadir a pantalla de inicio → Añadir.</li>'}</ol></details>`;
+}
+function exportJSON() {
+  const data = { app: 'jc-mi-dia', version: APP_VERSION, exportedAt: new Date().toISOString(), data: { profile: S.profile, prefs: S.prefs, cats: S.cats, dayGoals: S.dayGoals, library: S.library, activities: S.activities, series: S.series, goals: S.goals, biz: S.biz, reflections: Object.values(S.refl) } };
+  download(`jc-mi-dia-respaldo-${today()}.json`, JSON.stringify(data, null, 1), 'application/json');
+  S.prefs.lastBackup = new Date().toISOString(); saveKV('prefs'); toast('Respaldo descargado ✓');
+}
+function validateBackup(o) {
+  if (!o || o.app !== 'jc-mi-dia' || typeof o.data !== 'object') return 'El archivo no es un respaldo de JC — Mi Día.';
+  const d = o.data; const arr = k => d[k] == null || Array.isArray(d[k]);
+  if (!['activities', 'series', 'goals', 'biz', 'reflections'].every(arr)) return 'El respaldo está incompleto o dañado.';
+  const okDate = s => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s);
+  if ((d.activities || []).some(a => !a || typeof a.id !== 'string' || typeof a.title !== 'string' || !okDate(a.date) || !ST[a.status] || toMin(a.start) == null)) return 'Hay actividades con datos no válidos.';
+  if ((d.goals || []).some(g => !g || typeof g.id !== 'string' || typeof g.name !== 'string')) return 'Hay metas con datos no válidos.';
+  if ((d.biz || []).some(b => !b || typeof b.id !== 'string' || !BIZ_TYPES[b.type] || !okDate(b.date))) return 'Hay registros comerciales no válidos.';
+  if ((d.series || []).some(s => !s || typeof s.id !== 'string' || !okDate(s.startDate))) return 'Hay actividades recurrentes no válidas.';
+  return null;
+}
+async function importJSON(file) {
+  if (!file) return; let o;
+  try { o = JSON.parse(await file.text()); } catch (e) { return toast('No se pudo leer el archivo: no es un JSON válido.'); }
+  const err = validateBackup(o); if (err) return toast(err);
+  const d = o.data;
+  if (!(await confirmBox(`Se reemplazarán los datos actuales por el respaldo del ${o.exportedAt ? new Date(o.exportedAt).toLocaleDateString('es') : '—'} (${(d.activities || []).length} actividades, ${(d.goals || []).length} metas). ¿Continuar?`, 'Importar', false))) return;
+  await DB.clearAll();
+  Object.assign(S, { profile: d.profile || S.profile, prefs: Object.assign({ theme: 'auto', currency: '$', gamification: true, biz: {}, balance: {} }, d.prefs || {}), cats: d.cats || clone(DEFAULT_CATS), dayGoals: d.dayGoals || {}, library: d.library || clone(DEFAULT_LIBRARY), activities: d.activities || [], series: d.series || [], goals: d.goals || [], biz: d.biz || [], refl: {} });
+  (d.reflections || []).forEach(r => { if (r && r.date) S.refl[r.date] = r; });
+  await persistAll(); applyTheme(); toast('Respaldo importado ✓'); go('hoy');
+}
+async function persistAll() {
+  await persist(async () => {
+    for (const k of ['profile', 'prefs', 'cats', 'dayGoals', 'library']) if (S[k] != null) await DB.put('kv', clone({ k, v: S[k] }));
+    for (const a of S.activities) await DB.put('activities', clone(a));
+    for (const s of S.series) await DB.put('series', clone(s));
+    for (const g of S.goals) await DB.put('goals', clone(g));
+    for (const b of S.biz) await DB.put('biz', clone(b));
+    for (const r of Object.values(S.refl)) await DB.put('reflections', clone(r));
+  });
+}
+async function wipe() {
+  if (!(await confirmBox('Se eliminarán <b>todos</b> tus datos de este dispositivo: actividades, metas, registros, reflexiones y perfil. Te recomendamos exportar un respaldo antes. ¿Eliminar todo?', 'Eliminar todo'))) return;
+  await persist(() => DB.clearAll());
+  Object.assign(S, { profile: null, prefs: { theme: 'auto', currency: '$', gamification: true, biz: {}, balance: {} }, cats: clone(DEFAULT_CATS), dayGoals: {}, library: clone(DEFAULT_LIBRARY), activities: [], series: [], goals: [], biz: [], refl: {} });
+  applyTheme(); UI.view = 'hoy'; render(); showWelcome();
+}
+/* Datos de demostración: SIEMPRE marcados con demo:true y eliminables con un toque. */
+async function loadDemo() {
+  if (!(await confirmBox('Se agregarán actividades, metas y registros <b>de ejemplo</b> (marcados como demostración) para que explores la app. Podrás borrarlos con un toque sin afectar tus datos reales.', 'Cargar ejemplo', false))) return;
+  const t = today(), nowIso = new Date().toISOString();
+  const tpl = [['Preparar el desayuno', 'hogar', '07:00', '07:30', 'media'], ['Revisar mensajes pendientes', 'ventas', '08:00', '08:20', 'media'], ['Contactar prospectos', 'ventas', '09:00', '09:45', 'alta'], ['Crear contenido para redes sociales', 'emprendimiento', '10:30', '11:15', 'alta'], ['Ordenar una zona de la casa', 'hogar', '14:00', '14:30', 'baja'], ['Formación', 'aprendizaje', '16:00', '16:45', 'media'], ['Tiempo de calidad con la familia', 'familia', '19:00', '20:00', 'alta']];
+  const goal1 = { id: uid(), name: 'Contactar 20 prospectos', desc: 'Ejemplo de meta numérica', cat: 'ventas', period: 'semanal', startDate: addD(t, -6), dueDate: addD(t, 1), expected: 'Abrir nuevas conversaciones', type: 'numerica', unit: 'prospectos', target: 20, current: 0, notes: '', qstatus: 'no_iniciada', createdAt: nowIso, log: [], demo: true };
+  const goal2 = { id: uid(), name: 'Dedicar tiempo al aprendizaje', desc: 'Ejemplo de meta cualitativa', cat: 'aprendizaje', period: 'mensual', startDate: monthStart(t), dueDate: monthEnd(t), expected: '', type: 'cualitativa', unit: '', target: null, current: null, notes: '', qstatus: 'en_progreso', createdAt: nowIso, log: [], demo: true };
+  S.goals.push(goal1, goal2);
+  let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+  for (let i = 13; i >= 0; i--) {
+    const d = addD(t, -i); if (i % 6 === 3) continue; // días sin registro
+    tpl.forEach(([title, c, s, e, p], j) => {
+      const isToday = i === 0; let status = 'pendiente';
+      if (!isToday || toMin(e) < nowMin()) { const x = rnd(); status = x < .68 ? 'completada' : x < .8 ? 'reprogramada' : x < .87 ? 'cancelada' : 'pendiente'; }
+      if (isToday && j > 3) status = 'pendiente';
+      const pm = durOf(s, e);
+      const a = { id: uid(), title, cat: c, priority: p, date: d, start: s, end: e, plannedMin: pm, actualMin: status === 'completada' && rnd() > .15 ? Math.max(5, Math.round(pm * (.7 + rnd() * .6) / 5) * 5) : null, status, fixed: c === 'familia', goalId: title === 'Contactar prospectos' ? goal1.id : '', desc: '', notes: '', createdAt: nowIso, history: [{ at: nowIso, to: status, note: 'Demostración' }], demo: true };
+      S.activities.push(a);
+    });
+  }
+  ['prospecto', 'prospecto', 'seguimiento', 'cotizacion', 'pedido', 'venta', 'ingreso', 'gasto', 'prospecto', 'seguimiento', 'venta', 'ingreso'].forEach((k, i) => S.biz.push({ id: uid(), type: k, date: addD(t, -Math.floor(i * 1.1)), ref: 'Cliente de ejemplo', amount: BIZ_TYPES[k].money ? [0, 0, 0, 120, 80, 150, 150, 40, 0, 0, 90, 90][i] || 50 : null, note: 'Demostración', createdAt: nowIso, demo: true }));
+  goal1.current = S.biz.filter(b => b.demo && b.type === 'prospecto').length + 9; goal1.log = [{ at: nowIso, date: addD(t, -3), value: 6, note: 'Demostración' }, { at: nowIso, date: t, value: goal1.current, note: 'Demostración' }];
+  await persistAll(); toast('Datos de demostración cargados'); go('hoy');
+}
+async function clearDemo() {
+  if (!(await confirmBox('¿Borrar todos los datos de demostración? Tus datos reales no se tocan.', 'Borrar demo'))) return;
+  for (const a of S.activities.filter(x => x.demo)) del('activities', a.id);
+  for (const g of S.goals.filter(x => x.demo)) del('goals', g.id);
+  for (const b of S.biz.filter(x => x.demo)) del('biz', b.id);
+  S.activities = S.activities.filter(x => !x.demo); S.goals = S.goals.filter(x => !x.demo); S.biz = S.biz.filter(x => !x.demo);
+  S.activities.forEach(a => { if (a.goalId && !S.goals.find(g => g.id === a.goalId)) { a.goalId = ''; put('activities', a); } });
+  toast('Datos de demostración eliminados'); rerender();
+}
+
+/* ---------- Bienvenida ---------- */
+function showWelcome() {
+  const w = document.createElement('div'); w.className = 'welcome'; w.setAttribute('role', 'dialog'); w.setAttribute('aria-label', 'Bienvenida');
+  w.innerHTML = `<div class="hero-w"><div class="biglogo"><em>JC</em></div><h1>Bienvenida a tu espacio, Jaqueline</h1>
+    <p style="font-size:17px;max-width:460px;margin:10px auto 0;opacity:.95">Este es tu lugar para organizar tu tiempo, cuidar de lo que importa y avanzar hacia tus objetivos, un día a la vez.</p>
+    <p class="slogan" style="margin-top:14px">Organiza tu día, cumple tus metas y haz crecer tus sueños</p></div>
+    <div class="wrap" style="padding-top:22px;padding-bottom:40px" id="wStep"><button class="btn primary big" data-act="wStart">COMENZAR</button>
+    <p class="hint" style="text-align:center;margin-top:14px">No necesitas crear una cuenta. Tus datos se quedan en este dispositivo.</p></div>`;
+  document.body.appendChild(w);
+}
+function welcomeStep2() {
+  $('#wStep').innerHTML = `<h2 style="margin-top:0">Personaliza tu espacio</h2><p class="muted small">Todo es opcional y lo puedes cambiar después en Ajustes.</p>
+  <form data-form="welcome">${profileFields({ name: 'Jaqueline' })}<button class="btn primary big" style="margin-top:18px">GUARDAR Y EMPEZAR</button><button type="button" class="btn ghost big" style="margin-top:8px" data-act="wSkip">Omitir por ahora</button></form>`;
+  $('#wStep').scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ---------- Menú "Más" ---------- */
+function menuSheet() {
+  const it = (act, v, i, l, d) => `<button class="list-item" style="width:100%;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;cursor:pointer;color:var(--text)" data-act="${act}" ${v ? `data-v="${v}"` : ''}><span style="font-size:22px">${i}</span><span style="flex:1"><b>${l}</b><br><span class="small muted">${d}</span></span><span aria-hidden="true">›</span></button>`;
+  openSheet('Más opciones', `${it('goM', 'evaluacion', '🌙', 'Cierre del día', 'Resumen, reflexión y prioridad para mañana')}${it('goM', 'informes', '📑', 'Informes', 'Semanales y mensuales · CSV e impresión')}${it('goM', 'negocio', '🚀', 'Mi emprendimiento', 'Prospectos, pedidos, ventas e ingresos')}${it('planner', '', '🪄', 'Asistente de planificación', 'Te sugiero una agenda equilibrada')}${it('goM', 'ajustes', '⚙️', 'Ajustes', 'Perfil, categorías, tema, respaldo e instalación')}${UI.installEvt ? it('install', '', '📲', 'Instalar la app', 'Añádela a tu pantalla de inicio') : ''}`);
+}
+
+/* ---------- Tema ---------- */
+function applyTheme() {
+  const t = S.prefs.theme; const dark = t === 'dark' || (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  $('meta[name=theme-color]').content = dark ? '#16131D' : '#845EC2';
+}
+
+/* =========================================================
+   EVENTOS (delegación)
+   ========================================================= */
+const ACTIONS = {
+  go: el => { closeSheet(true); if (el.dataset.v === 'evaluacion') UI.evalDate = today(); go(el.dataset.v); },
+  goM: el => { closeSheet(true); if (el.dataset.v === 'evaluacion') UI.evalDate = today(); go(el.dataset.v); },
+  menu: () => menuSheet(),
+  closeSheet: () => closeSheet(),
+  newAct: el => { closeSheet(true); openSheet('Nueva actividad', actForm(el.dataset.cat ? { cat: el.dataset.cat, date: today() } : {})); },
+  openAct: el => openAct(el.dataset.id),
+  editAct: el => { closeSheet(true); editAct(el.dataset.id); },
+  dupAct: el => { const a = S.activities.find(x => x.id === el.dataset.id); if (!a) return; closeSheet(true); const s = toMin(a.start) + a.plannedMin; newActSheet({ title: a.title, cat: a.cat, priority: a.priority, date: a.date, start: toHM(s), end: toHM(s + a.plannedMin), desc: a.desc, notes: a.notes, goalId: a.goalId, fixed: a.fixed }); },
+  complete: el => { closeSheet(true); completeSheet(el.dataset.id); },
+  setMin: el => { const f = el.closest('form'); f.actualMin.value = el.dataset.m; },
+  setStatus: el => { const a = S.activities.find(x => x.id === el.dataset.id); if (!a) return; setStatus(a, el.dataset.s); closeSheet(); rerender(); toast(el.dataset.s === 'en_curso' ? '¡Adelante! ▶' : 'Estado actualizado'); },
+  reschedule: el => { closeSheet(true); rescheduleSheet(el.dataset.id); },
+  cancelAct: async el => { const a = S.activities.find(x => x.id === el.dataset.id); if (!a) return; if (!(await confirmBox(`¿Cancelar «${esc(a.title)}»? No contará en tu cumplimiento.`, 'Sí, cancelar'))) return; setStatus(a, 'cancelada'); rerender(); toast('Actividad cancelada'); },
+  delAct: el => { closeSheet(true); deleteAct(el.dataset.id); },
+  confirmConflict: el => { const f = el.closest('form'); f.dataset.ok = '1'; f.requestSubmit(); },
+  day: el => { const n = +el.dataset.n; UI.date = n === 0 ? today() : addD(UI.date, n); render(); },
+  planner: () => { closeSheet(true); plannerSheet(); },
+  addFixedRow: () => $('#fixedRows').insertAdjacentHTML('beforeend', fixedRowHtml()),
+  planReset: () => { planState = null; const d = $('#planForm')?.date?.value; closeSheet(true); plannerSheet(d); },
+  planAdd: () => planAdd(),
+  reorg: el => { closeSheet(true); reorgSheet(el.dataset.d); },
+  reorgApply: () => reorgApply(),
+  editDayGoal: () => { const t = today(); openSheet('Objetivo principal del día', `<form data-form="dayGoal"><label>¿Qué es lo más importante que quieres lograr hoy?<input type="text" name="g" maxlength="140" value="${esc(S.dayGoals[t] || '')}"></label><button class="btn primary big" style="margin-top:14px">Guardar</button></form>`); },
+  newGoal: () => { closeSheet(true); openSheet('Nueva meta', goalForm()); },
+  editGoal: el => { closeSheet(true); openSheet('Editar meta', goalForm(S.goals.find(g => g.id === el.dataset.id))); },
+  delGoal: async el => { const g = S.goals.find(x => x.id === el.dataset.id); if (!g) return; if (!(await confirmBox(`¿Eliminar la meta «${esc(g.name)}»? Las actividades vinculadas se conservan.`, 'Eliminar'))) return; S.goals.splice(S.goals.indexOf(g), 1); del('goals', g.id); S.activities.filter(a => a.goalId === g.id).forEach(a => { a.goalId = ''; put('activities', a); }); rerender(); toast('Meta eliminada'); },
+  goalPlus: el => { const g = S.goals.find(x => x.id === el.dataset.id); if (g) { goalAdd(g, 1, '+1'); rerender(); checkBadges(); } },
+  goalValue: el => { const g = S.goals.find(x => x.id === el.dataset.id); if (!g) return; openSheet('Actualizar valor', `<form data-form="goalValue" data-id="${g.id}"><p><b>${esc(g.name)}</b> · objetivo ${g.target} ${esc(g.unit)}</p><label>Valor actual<input type="number" name="v" min="0" step="any" value="${g.current || 0}" required></label><button class="btn primary big" style="margin-top:14px">Guardar</button></form>`); },
+  goalDetail: el => goalDetail(el.dataset.id),
+  goalFilter: el => { UI.goalFilter = el.dataset.f; rerender(); },
+  newBiz: el => openSheet('Nuevo registro', bizForm({ type: el.dataset.t })),
+  editBiz: el => openSheet('Editar registro', bizForm(S.biz.find(b => b.id === el.dataset.id))),
+  delBiz: async el => { const b = S.biz.find(x => x.id === el.dataset.id); if (!b) return; closeSheet(true); if (!(await confirmBox('¿Eliminar este registro comercial?', 'Eliminar'))) return; S.biz.splice(S.biz.indexOf(b), 1); del('biz', b.id); rerender(); toast('Registro eliminado'); },
+  bizPer: el => { UI.bizPer = el.dataset.p; rerender(); },
+  bizTargets: () => { const bz = S.prefs.biz || {}; openSheet('Metas comerciales', `<form data-form="bizTargets"><label>Símbolo de moneda<input type="text" name="cur" maxlength="5" value="${esc(S.prefs.currency || '$')}"></label><label>Meta semanal de ingresos<input type="number" name="w" min="0" step="any" value="${bz.weeklyIncome || ''}" placeholder="Opcional"></label><label>Meta mensual de ingresos<input type="number" name="m" min="0" step="any" value="${bz.monthlyIncome || ''}" placeholder="Opcional"></label><p class="hint">Para metas de cantidad (prospectos, seguimientos) crea una meta numérica en «Mis metas».</p><button class="btn primary big" style="margin-top:14px">Guardar</button></form>`); },
+  balanceTargets: () => { const b = S.prefs.balance || {}; openSheet('Mis preferencias de tiempo', `<form data-form="balance"><p class="small muted">¿Qué porcentaje de tu tiempo te gustaría dedicar a cada área? Es solo una guía personal; no tiene que sumar 100.</p>${[['hogar', '🏠 Hogar'], ['familia', '👨‍👩‍👧 Familia'], ['emprendimiento', '🚀 Emprendimiento y ventas'], ['bienestar', '🌿 Bienestar, descanso y espiritualidad']].map(([k, l]) => `<label>${l} (%)<input type="number" name="${k}" min="0" max="100" value="${b[k] || ''}"></label>`).join('')}<button class="btn primary big" style="margin-top:14px">Guardar</button></form>`); },
+  period: el => { UI.period = +el.dataset.n; rerender(); },
+  repType: el => { UI.rep.type = el.dataset.t; UI.rep.offset = 0; rerender(); },
+  repNav: el => { UI.rep.offset = Math.min(0, UI.rep.offset + +el.dataset.n); rerender(); },
+  csv: () => exportCSV(),
+  print: () => window.print(),
+  evalDay: el => { UI.evalDate = addD(UI.evalDate || today(), +el.dataset.n); if (UI.evalDate > today()) UI.evalDate = today(); rerender(); },
+  theme: el => { S.prefs.theme = el.dataset.t; saveKV('prefs'); applyTheme(); rerender(); },
+  resetCats: async () => { if (!(await confirmBox('¿Restaurar nombres y colores originales de las categorías?', 'Restaurar', false))) return; S.cats = clone(DEFAULT_CATS); saveKV('cats'); rerender(); },
+  editLibrary: () => { openSheet('Biblioteca de sugerencias', `<form data-form="library">${[['hogar', '🏠 Hogar'], ['emprendimiento', '🚀 Emprendimiento'], ['personal', '💛 Personal']].map(([g, l]) => `<h3 style="margin-top:14px">${l}</h3>${S.library[g].map((it, i) => `<div class="row" style="margin-top:6px"><input type="text" name="${g}_t_${i}" value="${esc(it.t)}" maxlength="60" style="margin:0;flex:1" aria-label="Nombre"><input type="number" name="${g}_d_${i}" value="${it.d}" min="5" max="240" step="5" style="margin:0;width:80px" aria-label="Minutos"></div>`).join('')}<div class="row" style="margin-top:6px"><input type="text" name="${g}_t_new" placeholder="+ Nueva sugerencia" maxlength="60" style="margin:0;flex:1"><input type="number" name="${g}_d_new" value="30" min="5" max="240" step="5" style="margin:0;width:80px" aria-label="Minutos"></div>`).join('')}<p class="hint">Deja un nombre vacío para quitar esa sugerencia.</p><div class="grid2" style="margin-top:14px"><button type="button" class="btn ghost" data-act="resetLibrary">Restaurar</button><button class="btn primary">Guardar</button></div></form>`); },
+  resetLibrary: () => { S.library = clone(DEFAULT_LIBRARY); saveKV('library'); closeSheet(); toast('Biblioteca restaurada'); },
+  exportJSON: () => exportJSON(),
+  loadDemo: () => loadDemo(),
+  clearDemo: () => clearDemo(),
+  wipe: () => wipe(),
+  install: async () => { closeSheet(true); if (!UI.installEvt) return go('ajustes'); UI.installEvt.prompt(); const r = await UI.installEvt.userChoice; UI.installEvt = null; toast(r.outcome === 'accepted' ? '¡Instalada! Búscala en tu pantalla de inicio 💜' : 'Puedes instalarla más tarde desde Ajustes'); rerender(); },
+  update: () => { const w = UI.swReg && UI.swReg.waiting; if (w) w.postMessage('SKIP_WAITING'); },
+  wStart: () => welcomeStep2(),
+  wSkip: () => { S.profile = { name: 'Jaqueline', dayStart: '07:00', dayEnd: '21:00', days: [1, 2, 3, 4, 5, 6], areas: [], createdAt: new Date().toISOString() }; saveKV('profile'); $('.welcome')?.remove(); go('hoy'); }
+};
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const fn = ACTIONS[el.dataset.act]; if (!fn) return;
+  if (el.tagName === 'A' || el.tagName === 'BUTTON') e.preventDefault();
+  if (el.classList.contains('act') && e.target.closest('button')) return; // botones internos
+  e.stopPropagation(); fn(el);
+});
+const FORMS = {
+  act: f => submitAct(f), complete: f => submitComplete(f), resched: f => submitResched(f), goal: f => submitGoal(f), biz: f => submitBiz(f), refl: f => submitRefl(f),
+  profile: f => submitProfile(f), welcome: f => submitProfile(f, true),
+  plan: f => renderPlanOut(planDay(f)),
+  dayGoal: f => { const v = new FormData(f).get('g').trim(); const t = today(); if (v) S.dayGoals[t] = v; else delete S.dayGoals[t]; saveKV('dayGoals'); closeSheet(); rerender(); },
+  goalValue: f => { const g = S.goals.find(x => x.id === f.dataset.id); const v = Number(new FormData(f).get('v')); if (g && v >= 0) { goalAdd(g, v - (Number(g.current) || 0), 'Valor actualizado'); closeSheet(); rerender(); checkBadges(); } },
+  bizTargets: f => { const fd = new FormData(f); S.prefs.currency = fd.get('cur').trim() || '$'; S.prefs.biz = { ...(S.prefs.biz || {}), weeklyIncome: Number(fd.get('w')) || 0, monthlyIncome: Number(fd.get('m')) || 0 }; saveKV('prefs'); closeSheet(); rerender(); toast('Metas comerciales guardadas ✓'); },
+  balance: f => { const fd = new FormData(f); S.prefs.balance = {}; ['hogar', 'familia', 'emprendimiento', 'bienestar'].forEach(k => { const v = Number(fd.get(k)); if (v > 0) S.prefs.balance[k] = Math.min(100, v); }); saveKV('prefs'); closeSheet(); rerender(); },
+  cats: f => { const fd = new FormData(f); S.cats.forEach(c => { c.name = (fd.get('n_' + c.id) || '').trim() || c.name; c.icon = (fd.get('i_' + c.id) || '').trim() || c.icon; c.color = fd.get('c_' + c.id) || c.color; }); saveKV('cats'); rerender(); toast('Categorías guardadas ✓'); },
+  library: f => { const fd = new FormData(f); ['hogar', 'emprendimiento', 'personal'].forEach(g => { const nl = []; S.library[g].forEach((it, i) => { const t = (fd.get(`${g}_t_${i}`) || '').trim(); if (t) nl.push({ ...it, t, d: Math.max(5, Number(fd.get(`${g}_d_${i}`)) || it.d) }); }); const nt = (fd.get(`${g}_t_new`) || '').trim(); if (nt) nl.push({ t: nt, d: Math.max(5, Number(fd.get(`${g}_d_new`)) || 30), c: g === 'hogar' ? 'hogar' : g === 'personal' ? 'bienestar' : 'emprendimiento', slot: 'any' }); S.library[g] = nl; }); saveKV('library'); closeSheet(); toast('Biblioteca guardada ✓'); }
+};
+document.addEventListener('submit', e => { const f = e.target.closest('form[data-form]'); if (!f) return; e.preventDefault(); try { FORMS[f.dataset.form](f); } catch (err) { console.error(err); toast('Ocurrió un error inesperado. Tus datos anteriores siguen a salvo.'); } });
+const CHANGES = {
+  pickDate: el => { if (el.value) { UI.date = el.value; render(); } },
+  recToggle: el => { const b = $('#recBox'); if (b) b.hidden = el.value !== 'weekly' && el.value !== 'daily'; if (b) $$('.chips', b).forEach(c => c.hidden = el.value !== 'weekly'); },
+  goalType: el => { $('#numBox').hidden = el.value !== 'numerica'; },
+  goalQ: el => { const g = S.goals.find(x => x.id === el.dataset.id); if (!g) return; const was = goalInfo(g).done; g.qstatus = el.value; (g.log = g.log || []).push({ at: new Date().toISOString(), date: today(), value: null, note: 'Estado: ' + el.value }); if (el.value === 'completada') g.completedAt = today(); put('goals', g); if (!was && goalInfo(g).done) { celebrate(); toast('¡Meta alcanzada! 🎉'); } rerender(); checkBadges(); },
+  bizType: el => { const t = BIZ_TYPES[el.value]; $('#amtBox').hidden = !t.money; const sb = $('#saleBox'); if (sb && !el.closest('form').dataset.id) sb.hidden = el.value !== 'venta'; },
+  repCat: el => { UI.rep.cat = el.value; rerender(); },
+  gamif: el => { S.prefs.gamification = el.checked; saveKV('prefs'); rerender(); },
+  importJSON: el => { importJSON(el.files[0]); el.value = ''; }
+};
+document.addEventListener('change', e => { const el = e.target.closest('[data-change]'); if (el && CHANGES[el.dataset.change]) CHANGES[el.dataset.change](el); });
+document.addEventListener('input', e => {
+  const f = e.target.form; if (!f) return;
+  if (f.dataset.form === 'act' && (e.target.name === 'start' || e.target.name === 'end')) { const d = durOf(f.start.value, f.end.value); const h = $('#durHint', f); if (h) h.innerHTML = d ? `Duración prevista: <b>${fmtDur(d)}</b>${toMin(f.end.value) < toMin(f.start.value) ? ' (termina al día siguiente)' : ''}` : '<span class="conf">La hora de fin debe ser distinta de la de inicio.</span>'; f.dataset.ok = ''; }
+  if (f.dataset.form === 'act' || f.dataset.form === 'resched') f.dataset.ok = f.dataset.ok && e.target.type !== 'time' && e.target.type !== 'date' ? f.dataset.ok : '';
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('.sheet')) closeSheet(); });
+window.addEventListener('online', renderBanners);
+window.addEventListener('offline', renderBanners);
+matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', applyTheme);
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); UI.installEvt = e; if (UI.view === 'ajustes') rerender(); });
+window.addEventListener('appinstalled', () => { UI.installEvt = null; toast('¡JC Mi Día quedó instalada! 💜'); });
+window.addEventListener('error', e => { console.error(e.error || e.message); });
+window.addEventListener('unhandledrejection', e => { console.error(e.reason); });
+/* Al volver a la app otro día, refrescar fecha "hoy" */
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && UI.view !== 'agenda') rerender(); });
+
+/* ---------- Service worker: actualización controlada ---------- */
+function registerSW() {
+  if (!('serviceWorker' in navigator)) return;
+  const ok = location.protocol === 'https:' || ['localhost', '127.0.0.1'].includes(location.hostname);
+  if (!ok) return;
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    UI.swReg = reg;
+    const notify = () => toast('Hay una nueva versión de JC Mi Día', { act: 'update', label: 'Actualizar' });
+    if (reg.waiting && navigator.serviceWorker.controller) notify();
+    reg.addEventListener('updatefound', () => { const w = reg.installing; w && w.addEventListener('statechange', () => { if (w.state === 'installed' && navigator.serviceWorker.controller) notify(); }); });
+    setInterval(() => reg.update().catch(() => {}), 60 * 60 * 1000);
+  }).catch(err => console.warn('SW no registrado:', err));
+  let reloaded = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (reloaded) return; reloaded = true; location.reload(); });
+}
+
+/* ---------- Inicio ---------- */
+(async function init() {
+  await DB.open();
+  try { await loadAll(); } catch (e) { console.error(e); toast('No se pudieron leer los datos guardados.'); }
+  applyTheme(); setSave('ok');
+  try { materialize(addD(today(), -45), addD(today(), 1)); } catch (e) { console.error(e); }
+  render();
+  if (!S.profile) showWelcome();
+  registerSW();
+  window.JC = { S, UI, dayStats, rangeStats, timeByCat, goalInfo, bizSum, durOf, materialize, planDay, findSlot, conflictsOf, validateBackup, APP_VERSION }; // para pruebas
+})();
+</script>
+</body>
+</html>

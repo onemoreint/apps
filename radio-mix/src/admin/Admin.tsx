@@ -712,6 +712,11 @@ function PublishTab({
               onChange={async (e) => {
                 const f = e.target.files?.[0];
                 if (!f) return;
+                if (f.size > 1_000_000) {
+                  setMsg('No se pudo importar: el archivo supera 1 MB.');
+                  e.target.value = '';
+                  return;
+                }
                 try {
                   setWork(parseCatalog(JSON.parse(await f.text())));
                   setMsg('Catálogo importado. Revisa y guarda el borrador.');

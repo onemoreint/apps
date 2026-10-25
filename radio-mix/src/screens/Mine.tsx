@@ -1,4 +1,4 @@
-import { ChevronRight, FileText, Info, ListMusic, Mail, MessageCircle, Settings, Shield, Trash2 } from 'lucide-react';
+import { ChevronRight, Info, ListMusic, Mail, MessageCircle, Settings, Shield, Trash2 } from 'lucide-react';
 import { brand } from '@/config/brand';
 import { useCatalog } from '@/state/catalog';
 import { useLibrary } from '@/state/library';
@@ -17,8 +17,7 @@ export function Mine() {
   const links = [
     { icon: ListMusic, label: 'Playlists de Spotify', to: '/spotify' },
     { icon: Info, label: 'Fuentes y licencias', to: '/fuentes' },
-    { icon: Shield, label: 'Política de privacidad', to: '/privacidad' },
-    { icon: FileText, label: 'Condiciones de uso', to: '/condiciones' },
+    { icon: Shield, label: 'Legal y seguridad', to: '/legal' },
     { icon: Settings, label: 'Panel de administración', to: '/admin' },
   ];
 

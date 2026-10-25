@@ -12,7 +12,8 @@ export type Route =
   | { name: 'favorites' }
   | { name: 'mine' }
   | { name: 'spotify' }
-  | { name: 'legal'; doc: 'privacidad' | 'condiciones' | 'fuentes' }
+  | { name: 'legal'; doc: 'privacidad' | 'condiciones' | 'fuentes' | 'seguridad' | 'cookies' | 'derechos' }
+  | { name: 'legalHub' }
   | { name: 'admin' };
 
 export function parseHash(hash: string): Route {
@@ -38,7 +39,12 @@ export function parseHash(hash: string): Route {
     case 'privacidad':
     case 'condiciones':
     case 'fuentes':
+    case 'seguridad':
+    case 'cookies':
+    case 'derechos':
       return { name: 'legal', doc: parts[0] };
+    case 'legal':
+      return { name: 'legalHub' };
     case 'admin':
       return { name: 'admin' };
     default:

@@ -72,7 +72,7 @@ Configuración:
 cd radio-mix
 npm install
 npm run dev          # http://localhost:5173
-npm test             # 50 pruebas (Vitest)
+npm test             # 56 pruebas (Vitest)
 npm run typecheck
 npm run icons        # regenera iconos tras cambiar colores en brand.ts
 ```
@@ -103,13 +103,21 @@ Al no haber servidor, los cambios son un **borrador local**: nadie más los ve. 
 
 Nombre, logotipo y colores: `src/config/brand.ts` (+ `npm run icons`).
 
-## 8. Limitaciones reales
+## 8. Seguridad y políticas
+
+- **Políticas en la app** (enlazadas desde el pie y «Mi radio → Legal y seguridad», `#/legal`): privacidad y tratamiento de datos (Ley 1581 de 2012), seguridad, cookies y almacenamiento, términos y condiciones (uso aceptable), derechos de autor y retirada de contenido, fuentes y licencias. Fecha de vigencia en `brand.legalUpdated`.
+- **CSP y cabeceras**: fuente única en `src/config/security.ts`. El build inserta la CSP como `<meta>` y genera `app/_headers`; `npm run headers` regenera `vercel.json`. En GitHub Pages las cabeceras HSTS/anti-clickjacking no se pueden fijar: con dominio propio en Netlify/Vercel/Cloudflare se aplican todas.
+- **Reporte de vulnerabilidades**: `SECURITY.md`, `app/.well-known/security.txt` (caduca el 25-oct-2027; renuévalo antes) y `#/seguridad`.
+- **Dependabot** semanal (`.github/dependabot.yml`) y `npm audit` en CI.
+- Recomendado en tu cuenta de GitHub: verificación en dos pasos y protección de la rama `main`.
+
+## 9. Limitaciones reales
 
 - **iPhone/iPad:** el audio de una app web puede pausarse al bloquear la pantalla o cambiar de app durante un rato, y el volumen solo se controla con los botones físicos.
 - **Android:** suele seguir sonando en segundo plano (Chrome); el ahorro de batería agresivo de algunas marcas puede cortarlo.
 - **Sin conexión** se abre la interfaz, pero no hay audio: no se ofrece escucha offline.
 - Los programas de Internet Archive dependen de su ancho de banda; para muchos oyentes simultáneos conviene un servidor de streaming propio.
 
-## 9. Pruebas
+## 10. Pruebas
 
-`npm test` cubre: validación de URLs (solo https, sin hosts locales ni credenciales), catálogo publicado (19 categorías, licencias y atribuciones), programación en vivo (posición exacta, determinismo, vuelta al final), lectura de Internet Archive y de metadatos Icecast/AzuraCast, motor de audio (desbloqueo en el gesto, salto al segundo en vivo, pista siguiente, reintento y error claro, fuente caída a los 20 s, no reproducir sin licencia, un solo elemento de audio, volumen, bloqueo de autoplay), favoritos persistentes tras recargar y la interfaz (categorías pendientes sin botón de reproducir, búsqueda sin tildes, panel).
+`npm test` cubre: validación de URLs (solo https, sin hosts locales ni credenciales), catálogo publicado (19 categorías, licencias y atribuciones), programación en vivo (posición exacta, determinismo, vuelta al final), lectura de Internet Archive y de metadatos Icecast/AzuraCast, motor de audio (desbloqueo en el gesto, salto al segundo en vivo, pista siguiente, reintento y error claro, fuente caída a los 20 s, no reproducir sin licencia, un solo elemento de audio, volumen, bloqueo de autoplay), favoritos persistentes tras recargar, la interfaz (categorías pendientes sin botón de reproducir, búsqueda sin tildes, panel) y la seguridad (CSP sin `eval` ni scripts externos, cabeceras sincronizadas, `security.txt` vigente). Además, `e2e/` ejecuta 35 comprobaciones en Chromium tamaño celular, todas con la CSP activa.

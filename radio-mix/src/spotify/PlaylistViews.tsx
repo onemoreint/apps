@@ -29,8 +29,7 @@ export function usePlaylistMeta(ref: SpotifyPlaylistRef): Meta | null {
         if (e.name !== 'AbortError') setMeta({ title: 'Playlist de Spotify', error: e.message });
       });
     return () => ac.abort();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ref.id]);
+      }, [ref.id]);
   return meta;
 }
 
@@ -103,6 +102,9 @@ export function SpotifyEmbedSheet() {
           height="452"
           className="rounded-2xl"
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          // Aislamiento: el reproductor de Spotify no puede navegar ni tocar la app.
+          sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-presentation allow-storage-access-by-user-activation"
+          referrerPolicy="strict-origin-when-cross-origin"
           loading="lazy"
         />
         <p className="mt-3 text-xs leading-relaxed text-muted">

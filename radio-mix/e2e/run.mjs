@@ -59,6 +59,8 @@ await ctx.addInitScript(() => {
   };
   window.Audio.prototype = Native.prototype;
   window.__errors = [];
+  window.__csp = [];
+  document.addEventListener('securitypolicyviolation', (e) => window.__csp.push(`${e.violatedDirective} ${e.blockedURI}`));
   window.addEventListener('error', (e) => window.__errors.push(String(e.message)));
 });
 
@@ -243,6 +245,29 @@ const bundle = await page.evaluate(async () => {
   return { secret: /client_secret|sb_secret|service_role/i.test(txt), size: txt.length };
 });
 check('Sin secretos en el código del cliente', !bundle.secret);
+
+// 11. Políticas y seguridad
+await page.goto(BASE);
+const cspMeta = await page.evaluate(() => document.querySelector('meta[http-equiv="Content-Security-Policy"]')?.content ?? '');
+check('CSP activa en la página', cspMeta.includes("script-src 'self'") && cspMeta.includes("object-src 'none'"));
+const sec = await page.evaluate(async () => {
+  const r = await fetch('.well-known/security.txt');
+  return { status: r.status, txt: await r.text() };
+});
+check('security.txt publicado (RFC 9116)', sec.status === 200 && /^Contact: mailto:/m.test(sec.txt) && /^Expires:/m.test(sec.txt));
+const docs = { privacidad: 'Política de privacidad y tratamiento de datos', seguridad: 'Política de seguridad', cookies: 'Política de cookies y almacenamiento', condiciones: 'Términos y condiciones de uso', derechos: 'Derechos de autor y retirada de contenido', fuentes: 'Fuentes y licencias' };
+let okDocs = 0;
+for (const [path, title] of Object.entries(docs)) {
+  await page.goto(`${BASE}#/${path}`);
+  if (await page.getByRole('heading', { level: 1, name: title }).count()) okDocs++;
+}
+await page.goto(`${BASE}#/legal`);
+const hub = await page.locator('nav[aria-label="Políticas"] button').count();
+check('Las 6 políticas se muestran y están enlazadas desde «Legal y seguridad»', okDocs === 6 && hub === 6, `${okDocs} páginas, ${hub} enlaces`);
+await page.goto(`${BASE}#/seguridad`);
+await page.screenshot({ path: 'shots/6-seguridad.png' });
+const csp = await page.evaluate(() => window.__csp);
+check('Ninguna violación de la CSP durante toda la prueba', csp.length === 0, csp.slice(0, 3).join(' | '));
 
 const realErrors = consoleErrors.filter((e) => !/spotify|ERR_FAILED|caida\.radio|ERR_CONNECTION_REFUSED|ERR_INTERNET_DISCONNECTED|net::/i.test(e));
 check('Sin errores de JavaScript en consola', realErrors.length === 0, realErrors.slice(0, 3).join(' | '));

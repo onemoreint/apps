@@ -13,6 +13,7 @@ import { Home } from '@/screens/Home';
 import { Categories, CategoryDetail, Favorites, Search } from '@/screens/Browse';
 import { Mine } from '@/screens/Mine';
 import { Legal } from '@/screens/Legal';
+import { LegalHub } from '@/screens/legalDocs';
 import { SpotifyScreen } from '@/screens/SpotifyScreen';
 
 const Admin = lazy(() => import('@/admin/Admin'));
@@ -27,7 +28,7 @@ const NAV: Array<{ key: Route['name']; to: string; label: string; icon: typeof H
 
 function navActive(route: Route, key: Route['name']) {
   if (key === 'categories') return route.name === 'categories' || route.name === 'category';
-  if (key === 'mine') return ['mine', 'legal', 'admin', 'spotify'].includes(route.name);
+  if (key === 'mine') return ['mine', 'legal', 'legalHub', 'admin', 'spotify'].includes(route.name);
   return route.name === key;
 }
 
@@ -49,6 +50,8 @@ function Screen({ route }: { route: Route }) {
       return <SpotifyScreen />;
     case 'legal':
       return <Legal doc={route.doc} />;
+    case 'legalHub':
+      return <LegalHub />;
     case 'admin':
       return (
         <Suspense
@@ -82,7 +85,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const titles: Partial<Record<Route['name'], string>> = { categories: 'Categorías', search: 'Buscar', favorites: 'Favoritos', mine: 'Mi radio', admin: 'Administración', spotify: 'Spotify' };
+    const titles: Partial<Record<Route['name'], string>> = { categories: 'Categorías', search: 'Buscar', favorites: 'Favoritos', mine: 'Mi radio', admin: 'Administración', spotify: 'Spotify', legalHub: 'Legal y seguridad' };
     const t = titles[route.name];
     document.title = t ? `${t} · ${brand.name}` : brand.name;
   }, [route.name]);
@@ -164,6 +167,15 @@ export default function App() {
           </a>
           <a href="#/condiciones" className="hover:text-white">
             Condiciones
+          </a>
+          <a href="#/cookies" className="hover:text-white">
+            Cookies
+          </a>
+          <a href="#/seguridad" className="hover:text-white">
+            Seguridad
+          </a>
+          <a href="#/derechos" className="hover:text-white">
+            Derechos de autor
           </a>
         </footer>
         </div>

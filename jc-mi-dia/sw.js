@@ -5,7 +5,7 @@
    - Para publicar una versión nueva se cambia VERSION: el navegador detecta el sw.js nuevo,
      descarga la versión nueva en una caché aparte y la app muestra «Actualizar».
    - Actualización controlada: la nueva versión espera hasta que la usuaria toca «Actualizar». */
-const VERSION = 'jc-mi-dia-v1.0.0';
+const VERSION = 'jc-mi-dia-v1.1.0';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-512-maskable.png'];
 
 self.addEventListener('install', e => {
@@ -47,4 +47,13 @@ self.addEventListener('fetch', e => {
       return cached || net;
     })
   );
+});
+
+/* Al tocar una notificación (proverbio o recordatorio), abre o enfoca la app */
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(cs => {
+    for (const c of cs) if ('focus' in c) return c.focus();
+    return self.clients.openWindow('./index.html');
+  }));
 });

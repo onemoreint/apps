@@ -36,6 +36,28 @@ Todos los archivos deben estar **en la misma carpeta**. No se necesita instalar 
 | **Informes** | Semanales y mensuales con filtro por categoría, exportación CSV y versión imprimible |
 | **Ajustes** | Perfil, tema claro/oscuro, categorías (nombre, icono, color), biblioteca de sugerencias, respaldo JSON, datos de demostración, borrar todo, instrucciones de instalación |
 
+## 2.1 Novedades de la versión 1.1.0
+
+**📖 Proverbio diario**
+- Cada día aparece una ventana con un proverbio bíblico (35 citas de Proverbios, **Reina-Valera 1909**, dominio público) y una frase práctica «Para hoy».
+- Se muestra una vez al día, a la **hora programada** (por defecto 07:00). Si abres la app después de esa hora, aparece al abrirla.
+- Botones: **Amén** (cerrar), **Otro** (ver otro proverbio), **Copiar** y **⏰ Hora** (cambiar la hora).
+- También aparece como tarjeta en *Mi día*. Se programa o desactiva en **Ajustes → Proverbio diario y alarmas**.
+
+**🔔 Recordatorios con alarma**
+- Cada actividad puede tener recordatorio: al empezar, 5, 10, 15, 30 o 60 minutos antes (por defecto, 10 min; se cambia en Ajustes).
+- A la hora del recordatorio suena una alarma, vibra y aparece un aviso con **Empezar ahora**, **En 5 min** (posponer) y **Entendido**.
+- Las actividades recurrentes conservan su recordatorio en cada repetición.
+- **Activar notificaciones** permite avisos del sistema cuando la app está en segundo plano.
+
+**📅 Alarmas garantizadas con la app cerrada**
+Una app web no puede sonar por sí sola si está cerrada (es una limitación de Android y iPhone). Por eso la app permite añadir las alarmas al **calendario del teléfono**, que sí suena siempre:
+- *Ajustes → Añadir proverbios de 30 días al calendario*: 30 eventos diarios con el texto del proverbio y su alarma.
+- *Ajustes → Añadir recordatorios de los próximos 7 días*.
+- En cada actividad: *Añadir alarma al calendario del teléfono* (incluye su repetición si es recurrente).
+
+Se descarga un archivo `.ics`: en iPhone se abre y se toca **Añadir todo**; en Android se abre con la app de Calendario (Google Calendar).
+
 ## 3. Reglas de cálculo
 
 - **Cumplimiento del día** = completadas ÷ actividades válidas × 100.
@@ -93,13 +115,13 @@ La app aparece con el icono **JC** y se abre a pantalla completa, como una app n
 ## 8. Publicar una actualización
 
 1. Modifica los archivos que necesites.
-2. Abre `sw.js` y cambia la versión, por ejemplo `jc-mi-dia-v1.0.0` → `jc-mi-dia-v1.0.1`. **Este paso es obligatorio**: así los teléfonos detectan la versión nueva.
+2. Abre `sw.js` y cambia la versión, por ejemplo `jc-mi-dia-v1.1.0` → `jc-mi-dia-v1.1.1`. **Este paso es obligatorio**: así los teléfonos detectan la versión nueva.
 3. Sube los archivos modificados al repositorio (Add file → Upload files → Commit).
 4. Cuando Jaqueline abra la app, verá el aviso **«Hay una nueva versión — Actualizar»**. Al tocarlo, se recarga con la versión nueva. Sus datos **no se pierden** al actualizar.
 
 ## 9. Pruebas realizadas
 
-Se ejecutaron 87 pruebas automáticas en Chromium (pantalla de teléfono 390 px, también 320 y 360 px) sobre `localhost`, todas superadas:
+Se ejecutaron 87 pruebas automáticas de la versión base y 27 de la versión 1.1.0 (proverbio, programación, alarmas, posponer, recurrentes y archivos de calendario) en Chromium (pantalla de teléfono 390 px, también 320 y 360 px) sobre `localhost`, todas superadas:
 
 - Bienvenida, perfil y vistas vacías sin «NaN» ni 0 % engañoso
 - Crear, editar (sin duplicar), duplicar, completar con tiempo real, reprogramar, cancelar y eliminar

@@ -215,6 +215,19 @@ th{font-size:12.5px;color:var(--muted)}
 @keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .only-print{display:none}
+/* Proverbio diario y alarmas */
+.ovl{position:fixed;inset:0;z-index:85;background:rgba(22,15,30,.55);display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));animation:fadein .2s ease}
+.ovl .box{background:var(--card);color:var(--text);border-radius:24px;max-width:440px;width:100%;max-height:88vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.prov-top{background:var(--grad);color:#fff;padding:22px 22px 20px;border-radius:24px 24px 0 0;position:relative;overflow:hidden}
+.prov-top::after{content:"";position:absolute;right:-40px;top:-40px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.10)}
+.prov-top small{font-weight:800;letter-spacing:.7px;text-transform:uppercase;font-size:12px;opacity:.92}
+.prov-verse{font-family:Georgia,"Times New Roman",serif;font-size:21px;line-height:1.45;margin:12px 0 10px;position:relative;z-index:1;text-wrap:pretty}
+.prov-ref{font-weight:800;color:var(--amar);position:relative;z-index:1}
+.box .inner{padding:16px 20px 20px}
+.prov-card{cursor:pointer;border-left:5px solid var(--dorado)}
+.prov-card .q{font-family:Georgia,"Times New Roman",serif;font-size:17px;line-height:1.4;margin:6px 0 4px}
+.bell{font-size:52px;display:inline-block;animation:ring 1.2s ease-in-out infinite;transform-origin:50% 10%}
+@keyframes ring{0%,100%{transform:rotate(0)}15%{transform:rotate(16deg)}30%{transform:rotate(-14deg)}45%{transform:rotate(10deg)}60%{transform:rotate(-6deg)}75%{transform:rotate(0)}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 @media (max-width:380px){.quick{grid-template-columns:repeat(3,1fr)}.grid3{grid-template-columns:repeat(2,minmax(0,1fr))}.hb{grid-template-columns:92px 1fr auto}h1{font-size:23px}}
 @media print{
@@ -246,12 +259,12 @@ th{font-size:12.5px;color:var(--muted)}
 <script>
 'use strict';
 /* =========================================================
-   JC — Mi Día en Equilibrio · v1.0.0
+   JC — Mi Día en Equilibrio · v1.1.0
    Arquitectura: una sola página (SPA) + IndexedDB + SVG.
    Capa de datos única (S) → todas las métricas y gráficos
    se calculan desde S, nunca desde valores fijos.
    ========================================================= */
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.1.0';
 
 /* ---------- Utilidades ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -358,8 +371,58 @@ const BIZ_TYPES = {
   gasto: { l: 'Gasto registrado', s: 'Gastos', i: '🧾', g: 'economico', money: true, req: true }
 };
 
+/* ---------- Proverbios diarios: Reina-Valera 1909 (dominio público) ----------
+   Texto tomado de la RV1909; solo se moderniza la tilde de la preposición «á» → «a». */
+const PROVERBS = [
+  { r: 'Proverbios 3:5-6', t: 'Fíate de Jehová de todo tu corazón, y no estribes en tu prudencia. Reconócelo en todos tus caminos, y él enderezará tus veredas.', h: 'Pon en manos de Dios tus planes de hoy y da el primer paso con confianza.' },
+  { r: 'Proverbios 16:3', t: 'Encomienda a Jehová tus obras, y tus pensamientos serán afirmados.', h: 'Antes de empezar tu agenda, entrega cada tarea con un propósito.' },
+  { r: 'Proverbios 31:25', t: 'Fortaleza y honor son su vestidura; y en el día postrero reirá.', h: 'Vístete hoy de fortaleza: lo que construyes tiene futuro.' },
+  { r: 'Proverbios 4:18', t: 'Mas la senda de los justos es como la luz de la aurora, que va en aumento hasta que el día es perfecto.', h: 'Tu progreso es como el amanecer: cada día un poco más de luz.' },
+  { r: 'Proverbios 14:1', t: 'La mujer sabia edifica su casa: mas la necia con sus manos la derriba.', h: 'Cada pequeña acción de hoy edifica tu hogar y tu sueño.' },
+  { r: 'Proverbios 10:22', t: 'La bendición de Jehová es la que enriquece, y no añade tristeza con ella.', h: 'Trabaja con paz: la verdadera prosperidad no roba tu alegría.' },
+  { r: 'Proverbios 12:24', t: 'La mano de los diligentes se enseñoreará: mas la negligencia será tributaria.', h: 'La constancia de hoy es el liderazgo de mañana.' },
+  { r: 'Proverbios 21:5', t: 'Los pensamientos del solícito ciertamente van a abundancia; mas todo presuroso, indefectiblemente a pobreza.', h: 'Planificar con calma rinde más que correr sin rumbo.' },
+  { r: 'Proverbios 14:23', t: 'En toda labor hay fruto: mas la palabra de los labios solamente empobrece.', h: 'Hoy, menos intención y más acción: cada tarea da fruto.' },
+  { r: 'Proverbios 24:16', t: 'Porque siete veces cae el justo, y se torna a levantar; mas los impíos caerán en el mal.', h: 'Si ayer no salió como esperabas, hoy te levantas otra vez.' },
+  { r: 'Proverbios 23:18', t: 'Porque ciertamente hay fin, y tu esperanza no será cortada.', h: 'Lo que esperas tiene un final feliz. Sigue adelante.' },
+  { r: 'Proverbios 16:9', t: 'El corazón del hombre piensa su camino: mas Jehová endereza sus pasos.', h: 'Haz tu plan con amor y deja espacio para que Dios lo ajuste.' },
+  { r: 'Proverbios 4:23', t: 'Sobre toda cosa guardada guarda tu corazón; porque de él mana la vida.', h: 'Cuida hoy tus pensamientos y tu descanso: de ahí nace todo lo demás.' },
+  { r: 'Proverbios 17:22', t: 'El corazón alegre produce buena disposición: mas el espíritu triste seca los huesos.', h: 'Busca hoy un motivo para sonreír; la alegría también es fuerza.' },
+  { r: 'Proverbios 31:17', t: 'Ciñó sus lomos de fortaleza, y esforzó sus brazos.', h: 'Tienes la fuerza para lo que hoy te toca hacer.' },
+  { r: 'Proverbios 13:4', t: 'Desea, y nada alcanza el alma del perezoso: mas el alma de los diligentes será engordada.', h: 'Convierte un deseo en una acción concreta antes del mediodía.' },
+  { r: 'Proverbios 22:29', t: '¿Has visto hombre solícito en su obra? delante de los reyes estará; no estará delante de los de baja suerte.', h: 'El trabajo bien hecho abre puertas que hoy no imaginas.' },
+  { r: 'Proverbios 18:10', t: 'Torre fuerte es el nombre de Jehová: a él correrá el justo, y será levantado.', h: 'Si el día se complica, recuerda dónde está tu refugio.' },
+  { r: 'Proverbios 19:21', t: 'Muchos pensamientos hay en el corazón del hombre; mas el consejo de Jehová permanecerá.', h: 'Enfócate en lo esencial: lo que viene de Dios permanece.' },
+  { r: 'Proverbios 24:3-4', t: 'Con sabiduría se edificará la casa, y con prudencia se afirmará. Y con ciencia se henchirán las cámaras de todo bien preciado y agradable.', h: 'Aprende algo nuevo hoy: el conocimiento llena tu casa de bien.' },
+  { r: 'Proverbios 16:20', t: 'El entendido en la palabra, hallará el bien: y el que confía en Jehová, él es bienaventurado.', h: 'Confía y avanza: la bendición acompaña a quien confía.' },
+  { r: 'Proverbios 13:12', t: 'La esperanza que se prolonga, es tormento del corazón: mas árbol de vida es el deseo cumplido.', h: 'Celebra hoy cada meta cumplida, por pequeña que sea.' },
+  { r: 'Proverbios 4:26', t: 'Examina la senda de tus pies, y todos tus caminos sean ordenados.', h: 'Revisa tu agenda: un camino ordenado hace el día más liviano.' },
+  { r: 'Proverbios 16:24', t: 'Panal de miel son los dichos suaves: suavidad al alma y medicina a los huesos.', h: 'Hoy regala una palabra amable en casa y en tu negocio.' },
+  { r: 'Proverbios 10:9', t: 'El que camina en integridad, anda confiado: mas el que pervierte sus caminos, será quebrantado.', h: 'La honestidad con tus clientes es tu mejor carta de presentación.' },
+  { r: 'Proverbios 31:10', t: 'Mujer fuerte, ¿quién la hallará? porque su estima sobrepuja largamente a la de piedras preciosas.', h: 'Tu valor no depende de lo que logres hoy: ya eres valiosa.' },
+  { r: 'Proverbios 22:1', t: 'De más estima es la buena fama que las muchas riquezas; y la buena gracia más que la plata y el oro.', h: 'Cuida tu nombre y tus relaciones: valen más que cualquier venta.' },
+  { r: 'Proverbios 12:25', t: 'El cuidado congojoso en el corazón del hombre, lo abate; mas la buena palabra lo alegra.', h: 'Suelta la preocupación y quédate con la buena palabra de hoy.' },
+  { r: 'Proverbios 14:26', t: 'En el temor de Jehová está la fuerte confianza; y esperanza tendrán sus hijos.', h: 'Lo que siembras hoy también bendice a tu familia.' },
+  { r: 'Proverbios 3:24', t: 'Cuando te acostares, no tendrás temor; antes te acostarás, y tu sueño será suave.', h: 'Al terminar el día, descansa en paz: hiciste lo que podías.' },
+  { r: 'Proverbios 13:20', t: 'El que anda con los sabios, sabio será; mas el que se allega a los necios, será quebrantado.', h: 'Rodéate hoy de personas que te impulsen a crecer.' },
+  { r: 'Proverbios 19:20', t: 'Escucha el consejo, y recibe la corrección, para que seas sabio en tu vejez.', h: 'Pide un consejo hoy: aprender de otros acelera tu camino.' },
+  { r: 'Proverbios 3:27', t: 'No detengas el bien de sus dueños, cuando tuvieres poder para hacerlo.', h: 'Si hoy puedes ayudar a alguien, hazlo sin esperar.' },
+  { r: 'Proverbios 31:30', t: 'Engañosa es la gracia, y vana la hermosura: la mujer que teme a Jehová, ésa será alabada.', h: 'Lo que más brilla en ti es tu fe y tu manera de amar.' },
+  { r: 'Proverbios 1:5', t: 'Oirá el sabio, y aumentará el saber; y el entendido adquirirá consejo;', h: 'Dedica unos minutos a aprender algo para tu emprendimiento.' }
+];
+const dayOfYear = d => { const x = pd(d); return Math.round((x - new Date(x.getFullYear(), 0, 0)) / 864e5); };
+const provIndex = (d, off = 0) => ((dayOfYear(d) + pd(d).getFullYear() * 7 + off) % PROVERBS.length + PROVERBS.length) % PROVERBS.length;
+const REM_OPTS = [['', 'Sin recordatorio'], ['0', 'Al empezar'], ['5', '5 min antes'], ['10', '10 min antes'], ['15', '15 min antes'], ['30', '30 min antes'], ['60', '1 hora antes']];
+const remLabel = r => r == null || r === '' ? '' : Number(r) === 0 ? 'al empezar' : Number(r) >= 60 ? `${Number(r) / 60} h antes` : `${r} min antes`;
+const remDefault = () => (S.prefs.remDef === '' || S.prefs.remDef == null) ? null : Number(S.prefs.remDef);
+function normPrefs() {
+  S.prefs.proverb = Object.assign({ enabled: true, time: '07:00' }, S.prefs.proverb || {});
+  if (S.prefs.alarmSound === undefined) S.prefs.alarmSound = true;
+  if (S.prefs.remDef === undefined) S.prefs.remDef = '10';
+}
+
 /* ---------- Estado (fuente única de datos) ---------- */
-const S = { profile: null, prefs: {}, cats: [], dayGoals: {}, library: null, activities: [], series: [], goals: [], biz: [], refl: {} };
+const S = { profile: null, prefs: {}, cats: [], dayGoals: {}, library: null, activities: [], series: [], goals: [], biz: [], refl: {}, alarms: { date: '', fired: {}, snooze: {} } };
 const UI = { view: 'hoy', date: today(), period: 7, rep: { type: 'semana', offset: 0, cat: '' }, bizPer: 'semana', goalFilter: 'activas', installEvt: null, swReg: null };
 const cat = id => S.cats.find(c => c.id === id) || S.cats.find(c => c.id === 'otras') || DEFAULT_CATS[9];
 
@@ -430,6 +493,8 @@ async function loadAll() {
   S.cats = g('cats') || clone(DEFAULT_CATS);
   S.dayGoals = g('dayGoals') || {};
   S.library = g('library') || clone(DEFAULT_LIBRARY);
+  S.alarms = Object.assign({ date: '', fired: {}, snooze: {} }, g('alarms') || {});
+  normPrefs();
   S.activities = await DB.getAll('activities');
   S.series = await DB.getAll('series');
   S.goals = await DB.getAll('goals');
@@ -459,7 +524,7 @@ function materialize(from, to) {
       const a = {
         id: uid(), title: ser.title, cat: ser.cat, priority: ser.priority, date: d, occDate: d, start: ser.start, end: ser.end,
         plannedMin: durOf(ser.start, ser.end), actualMin: null, status: 'pendiente', desc: ser.desc || '', notes: ser.notes || '', goalId: ser.goalId || '',
-        fixed: !!ser.fixed, seriesId: ser.id, createdAt: new Date().toISOString(), history: [{ at: new Date().toISOString(), to: 'pendiente', note: 'Creada (recurrente)' }], demo: ser.demo || undefined
+        fixed: !!ser.fixed, reminder: ser.reminder ?? null, seriesId: ser.id, createdAt: new Date().toISOString(), history: [{ at: new Date().toISOString(), to: 'pendiente', note: 'Creada (recurrente)' }], demo: ser.demo || undefined
       };
       S.activities.push(a); put('activities', a); created++;
     }
@@ -670,6 +735,7 @@ VIEWS.hoy = () => {
   <div class="row" style="margin-top:6px"><div class="logo" style="width:46px;height:46px;font-size:18px" aria-hidden="true">JC</div>
     <div><h1>¡Hola, ${esc(name())}!</h1><div class="muted">${cap(fmtLong(t))}</div></div></div>
   <div class="card hero" style="margin-top:14px"><div class="small" style="opacity:.9">✨ Frase del día</div><div style="font-weight:700;font-size:17px;margin-top:2px">${esc(phrase)}</div></div>
+  ${S.prefs.proverb.enabled ? (() => { const pv = PROVERBS[provIndex(t)]; return `<div class="card prov-card" data-act="showProv" role="button" tabindex="0" aria-label="Abrir el proverbio del día"><div class="row small"><b style="flex:1;color:var(--dorado)">📖 PROVERBIO DEL DÍA</b><span class="muted">🔔 ${esc(S.prefs.proverb.time)}</span></div><div class="q">«${esc(pv.t.length > 120 ? pv.t.slice(0, 118).replace(/\s+\S*$/, '') + '…' : pv.t)}»</div><div class="small"><b>${esc(pv.r)}</b></div></div>`; })() : ''}
   <div class="card">
     <div class="row"><h3 style="margin:0;flex:1">🎯 Objetivo principal del día</h3><button class="btn sm ghost" data-act="editDayGoal">${dayGoal ? 'Cambiar' : 'Definir'}</button></div>
     <p style="margin:8px 0 0;${dayGoal ? 'font-weight:600' : ''}" class="${dayGoal ? '' : 'muted'}">${dayGoal ? esc(dayGoal) : (S.profile?.weekGoal ? 'Objetivo de la semana: ' + esc(S.profile.weekGoal) : '¿Qué es lo más importante que quieres lograr hoy?')}</p>
@@ -716,7 +782,7 @@ function actCard(a, compact) {
   return `<div class="act${done ? ' done' : ''}" data-act="openAct" data-id="${a.id}" style="${compact ? 'box-shadow:none' : ''}">
     <span class="bar" style="background:${c.color}"></span>
     <div class="body"><div class="ttl">${c.icon} ${esc(a.title)}</div>
-      <div class="meta"><span>🕒 ${a.start}–${a.end}${toMin(a.end) <= toMin(a.start) ? ' (+1 día)' : ''}</span><span>· ${fmtDur(a.plannedMin)}</span>${stTag(a.status)}<span class="pr-${a.priority}">${PRIO_L[a.priority]}</span>${a.fixed ? '<span>📌 Fijo</span>' : ''}${a.seriesId ? '<span>🔁</span>' : ''}${a.actualMin != null && a.actualMin !== '' ? `<span>⏱ real ${fmtDur(a.actualMin)}</span>` : ''}</div>
+      <div class="meta"><span>🕒 ${a.start}–${a.end}${toMin(a.end) <= toMin(a.start) ? ' (+1 día)' : ''}</span><span>· ${fmtDur(a.plannedMin)}</span>${stTag(a.status)}<span class="pr-${a.priority}">${PRIO_L[a.priority]}</span>${a.fixed ? '<span>📌 Fijo</span>' : ''}${a.seriesId ? '<span>🔁</span>' : ''}${a.reminder != null && a.reminder !== '' ? `<span title="Recordatorio ${remLabel(a.reminder)}">🔔 ${remLabel(a.reminder)}</span>` : ''}${a.actualMin != null && a.actualMin !== '' ? `<span>⏱ real ${fmtDur(a.actualMin)}</span>` : ''}</div>
       ${confl.length && !['cancelada', 'reprogramada'].includes(a.status) ? `<div class="meta conf">⚠ Se cruza con: ${confl.map(x => esc(x.title)).join(', ')}</div>` : ''}
     </div>
     ${['pendiente', 'en_curso'].includes(a.status) ? `<div class="acts"><button class="circ" data-act="complete" data-id="${a.id}" aria-label="Marcar como completada">✓</button></div>` : done ? `<div class="acts"><span class="circ ok" aria-hidden="true">✓</span></div>` : ''}
@@ -769,6 +835,7 @@ function openAct(id) {
       <div class="stat-l"><span>🕒 Horario</span><b>${a.start} – ${a.end}</b></div>
       <div class="stat-l"><span>⏳ Duración prevista</span><b>${fmtDur(a.plannedMin)}</b></div>
       <div class="stat-l"><span>⏱ Duración real</span><b>${a.actualMin != null && a.actualMin !== '' ? fmtDur(a.actualMin) : 'Sin registrar'}</b></div>
+      <div class="stat-l"><span>🔔 Recordatorio</span><b>${a.reminder != null && a.reminder !== '' ? cap(remLabel(a.reminder)) : 'Sin recordatorio'}</b></div>
       ${g ? `<div class="stat-l"><span>🎯 Meta</span><b>${esc(g.name)}</b></div>` : ''}
       ${a.rescheduledFrom ? `<div class="stat-l"><span>↪ Origen</span><b>Reprogramada desde otro día</b></div>` : ''}
     </div>
@@ -782,6 +849,7 @@ function openAct(id) {
       ${open ? `<button class="btn ghost" data-act="cancelAct" data-id="${a.id}">✕ Cancelar</button>` : ''}
       <button class="btn danger" data-act="delAct" data-id="${a.id}">🗑 Eliminar</button>
     </div>
+    ${open ? `<button class="btn ghost big" style="margin-top:10px" data-act="icsAct" data-id="${a.id}">📅 Añadir alarma al calendario del teléfono</button><p class="hint">El calendario de tu teléfono te avisará aunque la app esté cerrada${a.seriesId ? ' (se añade con su repetición)' : ''}.</p>` : ''}
     <details class="tbl" style="margin-top:14px"><summary>Historial de cambios (${(a.history || []).length})</summary><table><tbody>${(a.history || []).slice().reverse().map(h => `<tr><td class="small">${new Date(h.at).toLocaleString('es', { dateStyle: 'short', timeStyle: 'short' })}</td><td>${h.from ? esc(ST[h.from]?.l || h.from) + ' → ' : ''}${h.to ? esc(ST[h.to]?.l || h.to) : ''}${h.note ? ' · ' + esc(h.note) : ''}</td></tr>`).join('')}</tbody></table></details>
     <p class="hint">Creada: ${new Date(a.createdAt).toLocaleString('es', { dateStyle: 'medium', timeStyle: 'short' })}</p>`);
 }
@@ -806,6 +874,7 @@ function actForm(a = {}, opts = {}) {
     <div class="row2"><label>Hora de inicio<input type="time" name="start" required value="${start}"></label><label>Hora de fin<input type="time" name="end" required value="${end}"></label></div>
     <p class="hint" id="durHint">Duración prevista: <b>${fmtDur(durOf(start, end))}</b></p>
     ${!isNew ? `<div class="row2"><label>Estado<select name="status">${Object.keys(ST).filter(k => k !== 'reprogramada' || a.status === 'reprogramada').map(k => `<option value="${k}"${a.status === k ? ' selected' : ''}>${ST[k].i} ${ST[k].l}</option>`).join('')}</select></label><label>Duración real (min)<input type="number" name="actualMin" min="0" max="1440" inputmode="numeric" value="${a.actualMin ?? ''}" placeholder="Opcional"></label></div>` : ''}
+    <label>🔔 Recordatorio con alarma<select name="reminder">${REM_OPTS.map(([v, l]) => `<option value="${v}"${String(isNew ? (S.prefs.remDef ?? '') : (a.reminder ?? '')) === v ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
     <label class="check"><input type="checkbox" name="fixed" ${a.fixed ? 'checked' : ''}> 📌 Compromiso fijo (no se mueve al reorganizar)</label>
     ${isNew ? `<label>Repetir<select name="rec" data-change="recToggle"><option value="none">No se repite</option><option value="daily">Todos los días</option><option value="weekly">Semanalmente</option></select></label>
       <div id="recBox" hidden><div class="chips" aria-label="Días">${['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'].map((x, i) => `<label><input type="checkbox" name="wd" value="${i}" ${i === pd(d).getDay() ? 'checked' : ''}><span>${x}</span></label>`).join('')}</div>
@@ -837,7 +906,7 @@ async function submitAct(f) {
   if (!title) return err('Escribe un nombre para la actividad.');
   if (!date || !start || !end) return err('Completa la fecha y las horas.');
   if (start === end) return err('La hora de fin debe ser diferente de la de inicio.');
-  const data = { title, cat: fd.get('cat'), priority: fd.get('priority'), date, start, end, plannedMin: durOf(start, end), fixed: !!fd.get('fixed'), goalId: fd.get('goalId') || '', desc: (fd.get('desc') || '').trim(), notes: (fd.get('notes') || '').trim() };
+  const data = { title, cat: fd.get('cat'), priority: fd.get('priority'), date, start, end, plannedMin: durOf(start, end), fixed: !!fd.get('fixed'), reminder: fd.get('reminder') === '' || fd.get('reminder') == null ? null : Number(fd.get('reminder')), goalId: fd.get('goalId') || '', desc: (fd.get('desc') || '').trim(), notes: (fd.get('notes') || '').trim() };
   if (old) { const am = fd.get('actualMin'); data.actualMin = am === '' || am == null ? null : Math.max(0, Math.min(1440, Number(am))); }
   const conf = conflictsOf({ ...data, id: id || '__new' });
   if (conf.length && f.dataset.ok !== '1') {
@@ -863,7 +932,7 @@ async function submitAct(f) {
   } else if (scope === 'future') {
     const ser = S.series.find(s => s.id === old.seriesId);
     const from = old.occDate || old.date;
-    const newSer = { ...clone(ser), id: uid(), title: data.title, cat: data.cat, priority: data.priority, start, end, plannedMin: data.plannedMin, fixed: data.fixed, goalId: data.goalId, desc: data.desc, notes: data.notes, startDate: from, exceptions: [], createdAt: nowIso };
+    const newSer = { ...clone(ser), id: uid(), title: data.title, cat: data.cat, priority: data.priority, start, end, plannedMin: data.plannedMin, fixed: data.fixed, reminder: data.reminder, goalId: data.goalId, desc: data.desc, notes: data.notes, startDate: from, exceptions: [], createdAt: nowIso };
     ser.until = addD(from, -1);
     // Elimina ocurrencias futuras pendientes y no modificadas de la serie anterior (evita duplicados)
     S.activities.filter(a => a.seriesId === ser.id && (a.occDate || a.date) >= from && a.status === 'pendiente' && !a.detached).forEach(a => { S.activities.splice(S.activities.indexOf(a), 1); del('activities', a.id); });
@@ -875,6 +944,7 @@ async function submitAct(f) {
     toast('Cambios aplicados a esta y las siguientes');
   } else {
     const prevStatus = old.status, newStatus = fd.get('status') || old.status;
+    resetAlarm(old.id);
     const oldDate = old.date;
     Object.assign(old, data);
     if (oldDate !== date) snapshot(oldDate);
@@ -933,7 +1003,7 @@ function submitResched(f) {
   if (conf.length && f.dataset.ok !== '1') { $('#formMsg', f).innerHTML = `<div class="warn">⚠ Se cruza con: <b>${conf.map(c => esc(c.title)).join(', ')}</b><div class="row" style="margin-top:8px"><button type="button" class="btn sm" data-act="confirmConflict">Reprogramar de todos modos</button></div></div>`; return; }
   if (date === a.date) {
     a.history.push({ at: new Date().toISOString(), note: `Hora cambiada: ${a.start}→${start}` });
-    Object.assign(a, { start, end, plannedMin: durOf(start, end) }); putAct(a);
+    Object.assign(a, { start, end, plannedMin: durOf(start, end) }); putAct(a); resetAlarm(a.id);
   } else {
     const n = { ...clone(a), id: uid(), date, start, end, plannedMin: durOf(start, end), status: 'pendiente', actualMin: null, seriesId: undefined, occDate: undefined, rescheduledFrom: a.id, createdAt: new Date().toISOString(), history: [{ at: new Date().toISOString(), to: 'pendiente', note: 'Reprogramada desde ' + fmtShort(a.date) }] };
     delete n.seriesId; delete n.occDate; delete n.startedAt;
@@ -1057,7 +1127,7 @@ function planAdd() {
     if (!$(`[data-pi="${i}"]`)?.checked) return;
     const t = $(`[data-pt="${i}"]`)?.value, dur = Math.max(5, Number($(`[data-pdur="${i}"]`)?.value) || it.dur);
     if (!t) { skipped++; return; }
-    const a = { id: uid(), title: it.title, cat: it.cat, priority: it.priority, date: planState.date, start: t, end: toHM(toMin(t) + dur), plannedMin: dur, actualMin: null, status: 'pendiente', fixed: !!it.fixed, goalId: '', desc: '', notes: '', createdAt: nowIso, history: [{ at: nowIso, to: 'pendiente', note: 'Creada desde el asistente' }] };
+    const a = { id: uid(), title: it.title, cat: it.cat, priority: it.priority, date: planState.date, start: t, end: toHM(toMin(t) + dur), plannedMin: dur, actualMin: null, status: 'pendiente', fixed: !!it.fixed, reminder: remDefault(), goalId: '', desc: '', notes: '', createdAt: nowIso, history: [{ at: nowIso, to: 'pendiente', note: 'Creada desde el asistente' }] };
     // Evita duplicar si ya existe la misma actividad a la misma hora ese día
     if (S.activities.some(x => x.date === a.date && x.title === a.title && x.start === a.start && x.status !== 'cancelada')) { skipped++; return; }
     S.activities.push(a); putAct(a); added.push(a); n++;
@@ -1513,6 +1583,18 @@ VIEWS.ajustes = () => {
   <form data-form="cats" class="card"><h3>🏷️ Categorías</h3><p class="hint" style="margin-top:0">Personaliza nombres y colores. Se mantienen en toda la app.</p>
     ${S.cats.map(c => `<div class="row" style="margin-top:8px"><input type="text" name="i_${c.id}" value="${esc(c.icon)}" maxlength="4" aria-label="Icono" style="width:58px;text-align:center;margin:0"><input type="text" name="n_${c.id}" value="${esc(c.name)}" maxlength="40" aria-label="Nombre" style="margin:0;flex:1"><input type="color" name="c_${c.id}" value="${c.color}" aria-label="Color" style="width:48px;height:46px;border:0;background:none;padding:0"></div>`).join('')}
     <div class="grid2" style="margin-top:12px"><button class="btn primary">Guardar categorías</button><button type="button" class="btn ghost" data-act="resetCats">Restaurar</button></div></form>
+  <form data-form="alarms" class="card" id="alarmas"><h3>📖 Proverbio diario y alarmas</h3>
+    <label class="check"><input type="checkbox" name="enabled" ${S.prefs.proverb.enabled ? 'checked' : ''}> Mostrar un proverbio bíblico cada día</label>
+    <label>Hora del proverbio diario<input type="time" name="time" value="${esc(S.prefs.proverb.time)}"></label>
+    <label class="check"><input type="checkbox" name="sound" ${S.prefs.alarmSound ? 'checked' : ''}> 🔊 Sonido de alarma y vibración</label>
+    <label>Recordatorio para actividades nuevas<select name="remDef">${REM_OPTS.map(([v, l]) => `<option value="${v}"${String(S.prefs.remDef ?? '') === v ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
+    <button class="btn primary big" style="margin-top:14px">Guardar programación</button>
+    <div class="grid2" style="margin-top:10px"><button type="button" class="btn ghost" data-act="showProv">📖 Ver proverbio</button><button type="button" class="btn ghost" data-act="testAlarm">🔔 Probar alarma</button></div>
+    <button type="button" class="btn ghost big" style="margin-top:8px" data-act="notifPerm">${notifState()}</button>
+    <div class="info" style="margin-top:12px"><b>¿Cuándo suena la alarma?</b><br>Con la app abierta suena, vibra y aparece el aviso a la hora programada. Con notificaciones activadas también puede avisarte si la app quedó en segundo plano, pero el teléfono puede pausarla. <b>Con la app cerrada, una app web no puede sonar por sí sola</b>: para una alarma garantizada, añade tus recordatorios al calendario del teléfono.</div>
+    <div style="display:grid;gap:8px;margin-top:10px"><button type="button" class="btn ghost" data-act="icsProv">📅 Añadir proverbios de 30 días al calendario</button><button type="button" class="btn ghost" data-act="icsWeek">📅 Añadir recordatorios de los próximos 7 días</button></div>
+    <p class="hint">Se descarga un archivo .ics: en iPhone toca «Añadir todo»; en Android ábrelo con tu app de calendario.</p>
+  </form>
   <div class="card"><h3>🚀 Emprendimiento</h3><p class="small muted" style="margin-top:0">Moneda: <b>${esc(S.prefs.currency || '$')}</b> · Meta semanal: <b>${bz.weeklyIncome ? money(bz.weeklyIncome) : '—'}</b> · Meta mensual: <b>${bz.monthlyIncome ? money(bz.monthlyIncome) : '—'}</b></p><button class="btn sm ghost" data-act="bizTargets">Editar</button></div>
   <div class="card"><h3>⚖️ Preferencias de equilibrio</h3><button class="btn sm ghost" data-act="balanceTargets">Editar mis preferencias de tiempo</button></div>
   <div class="card"><h3>💡 Biblioteca de sugerencias</h3><p class="hint" style="margin-top:0">Ajusta nombres y duraciones orientativas que usa el asistente.</p><button class="btn sm ghost" data-act="editLibrary">Editar biblioteca</button></div>
@@ -1541,7 +1623,7 @@ function submitProfile(f, fromWelcome) {
   const fd = new FormData(f);
   S.profile = { ...(S.profile || {}), name: (fd.get('name') || '').trim() || 'Jaqueline', dayStart: fd.get('dayStart') || '07:00', dayEnd: fd.get('dayEnd') || '21:00', days: fd.getAll('days').map(Number), resp: (fd.get('resp') || '').trim(), areas: fd.getAll('areas'), weekGoal: (fd.get('weekGoal') || '').trim(), createdAt: S.profile?.createdAt || new Date().toISOString() };
   saveKV('profile');
-  if (fromWelcome) { $('.welcome')?.remove(); go('hoy'); toast(`¡Bienvenida, ${name()}! 💜`); } else { toast('Perfil guardado ✓'); rerender(); }
+  if (fromWelcome) { $('.welcome')?.remove(); go('hoy'); toast(`¡Bienvenida, ${name()}! 💜`); setTimeout(tick, 700); } else { toast('Perfil guardado ✓'); rerender(); }
 }
 function installInfo() {
   const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
@@ -1578,6 +1660,7 @@ async function importJSON(file) {
   await DB.clearAll();
   Object.assign(S, { profile: d.profile || S.profile, prefs: Object.assign({ theme: 'auto', currency: '$', gamification: true, biz: {}, balance: {} }, d.prefs || {}), cats: d.cats || clone(DEFAULT_CATS), dayGoals: d.dayGoals || {}, library: d.library || clone(DEFAULT_LIBRARY), activities: d.activities || [], series: d.series || [], goals: d.goals || [], biz: d.biz || [], refl: {} });
   (d.reflections || []).forEach(r => { if (r && r.date) S.refl[r.date] = r; });
+  normPrefs();
   await persistAll(); applyTheme(); toast('Respaldo importado ✓'); go('hoy');
 }
 async function persistAll() {
@@ -1594,6 +1677,7 @@ async function wipe() {
   if (!(await confirmBox('Se eliminarán <b>todos</b> tus datos de este dispositivo: actividades, metas, registros, reflexiones y perfil. Te recomendamos exportar un respaldo antes. ¿Eliminar todo?', 'Eliminar todo'))) return;
   await persist(() => DB.clearAll());
   Object.assign(S, { profile: null, prefs: { theme: 'auto', currency: '$', gamification: true, biz: {}, balance: {} }, cats: clone(DEFAULT_CATS), dayGoals: {}, library: clone(DEFAULT_LIBRARY), activities: [], series: [], goals: [], biz: [], refl: {} });
+  S.alarms = { date: '', fired: {}, snooze: {} }; normPrefs();
   applyTheme(); UI.view = 'hoy'; render(); showWelcome();
 }
 /* Datos de demostración: SIEMPRE marcados con demo:true y eliminables con un toque. */
@@ -1670,7 +1754,7 @@ const ACTIONS = {
   newAct: el => { closeSheet(true); openSheet('Nueva actividad', actForm(el.dataset.cat ? { cat: el.dataset.cat, date: today() } : {})); },
   openAct: el => openAct(el.dataset.id),
   editAct: el => { closeSheet(true); editAct(el.dataset.id); },
-  dupAct: el => { const a = S.activities.find(x => x.id === el.dataset.id); if (!a) return; closeSheet(true); const s = toMin(a.start) + a.plannedMin; newActSheet({ title: a.title, cat: a.cat, priority: a.priority, date: a.date, start: toHM(s), end: toHM(s + a.plannedMin), desc: a.desc, notes: a.notes, goalId: a.goalId, fixed: a.fixed }); },
+  dupAct: el => { const a = S.activities.find(x => x.id === el.dataset.id); if (!a) return; closeSheet(true); const s = toMin(a.start) + a.plannedMin; newActSheet({ title: a.title, cat: a.cat, priority: a.priority, date: a.date, start: toHM(s), end: toHM(s + a.plannedMin), desc: a.desc, notes: a.notes, goalId: a.goalId, fixed: a.fixed, reminder: a.reminder, id: undefined }); },
   complete: el => { closeSheet(true); completeSheet(el.dataset.id); },
   setMin: el => { const f = el.closest('form'); f.actualMin.value = el.dataset.m; },
   setStatus: el => { const a = S.activities.find(x => x.id === el.dataset.id); if (!a) return; setStatus(a, el.dataset.s); closeSheet(); rerender(); toast(el.dataset.s === 'en_curso' ? '¡Adelante! ▶' : 'Estado actualizado'); },
@@ -1716,7 +1800,20 @@ const ACTIONS = {
   install: async () => { closeSheet(true); if (!UI.installEvt) return go('ajustes'); UI.installEvt.prompt(); const r = await UI.installEvt.userChoice; UI.installEvt = null; toast(r.outcome === 'accepted' ? '¡Instalada! Búscala en tu pantalla de inicio 💜' : 'Puedes instalarla más tarde desde Ajustes'); rerender(); },
   update: () => { const w = UI.swReg && UI.swReg.waiting; if (w) w.postMessage('SKIP_WAITING'); },
   wStart: () => welcomeStep2(),
-  wSkip: () => { S.profile = { name: 'Jaqueline', dayStart: '07:00', dayEnd: '21:00', days: [1, 2, 3, 4, 5, 6], areas: [], createdAt: new Date().toISOString() }; saveKV('profile'); $('.welcome')?.remove(); go('hoy'); }
+  wSkip: () => { S.profile = { name: 'Jaqueline', dayStart: '07:00', dayEnd: '21:00', days: [1, 2, 3, 4, 5, 6], areas: [], createdAt: new Date().toISOString() }; saveKV('profile'); $('.welcome')?.remove(); go('hoy'); setTimeout(tick, 700); },
+  showProv: () => { closeSheet(true); showProverb(); },
+  provNext: el => showProverb(today(), +el.dataset.o + 1),
+  provClose: () => { closeOvl('ovlProv'); },
+  provCopy: async el => { const pv = PROVERBS[+el.dataset.i]; const txt = `«${pv.t}» ${pv.r} (RV1909)`; try { await navigator.clipboard.writeText(txt); toast('Proverbio copiado ✓'); } catch (e) { toast('No se pudo copiar en este navegador'); } },
+  provSchedule: () => { closeOvl('ovlProv'); go('ajustes'); setTimeout(() => $('#alarmas')?.scrollIntoView({ behavior: 'smooth' }), 120); },
+  testAlarm: () => { startRing(); openAlarm({ id: '__test', title: 'Prueba de alarma', start: toHM(nowMin()), end: toHM(nowMin() + 30), cat: 'otras', test: true }); },
+  alarmStart: el => { const a = S.activities.find(x => x.id === el.dataset.id); closeOvl('alarm-' + el.dataset.id); stopRing(); if (a && a.status === 'pendiente') { setStatus(a, 'en_curso'); rerender(); toast('¡Adelante! ▶'); } },
+  alarmSnooze: el => { const id = el.dataset.id; closeOvl('alarm-' + id); stopRing(); if (id === '__test') return; S.alarms.snooze[id] = Date.now() + 5 * 60000; S.alarms.fired[id] = 0; saveKV('alarms'); toast('Te recuerdo en 5 minutos ⏰'); },
+  alarmOk: el => { closeOvl('alarm-' + el.dataset.id); stopRing(); },
+  notifPerm: async () => { if (!('Notification' in window)) return toast('Este navegador no permite notificaciones. En iPhone, instala la app primero.'); if (Notification.permission === 'denied') return toast('Las notificaciones están bloqueadas: actívalas en los ajustes del navegador.'); const r = await Notification.requestPermission(); toast(r === 'granted' ? 'Notificaciones activadas 🔔' : 'No se activaron las notificaciones'); rerender(); if (r === 'granted') notify('JC Mi Día', 'Así se verán tus recordatorios 💜', 'jc-test'); },
+  icsAct: el => { const a = S.activities.find(x => x.id === el.dataset.id); if (a) exportIcsActs([a], `jc-${a.title.toLowerCase().replace(/[^a-z0-9áéíóúñ]+/gi, '-').slice(0, 30)}.ics`); },
+  icsWeek: () => { const t = today(), to = addD(t, 6); materialize(t, to); const acts = S.activities.filter(a => a.date >= t && a.date <= to && ['pendiente', 'en_curso'].includes(a.status) && a.reminder != null && a.reminder !== ''); if (!acts.length) return toast('No hay actividades con recordatorio en los próximos 7 días'); exportIcsActs(acts.map(a => ({ ...a, seriesId: undefined })), `jc-recordatorios-${t}.ics`); },
+  icsProv: () => exportIcsProverbs()
 };
 document.addEventListener('click', e => {
   const el = e.target.closest('[data-act]'); if (!el) return;
@@ -1729,6 +1826,7 @@ const FORMS = {
   act: f => submitAct(f), complete: f => submitComplete(f), resched: f => submitResched(f), goal: f => submitGoal(f), biz: f => submitBiz(f), refl: f => submitRefl(f),
   profile: f => submitProfile(f), welcome: f => submitProfile(f, true),
   plan: f => renderPlanOut(planDay(f)),
+  alarms: f => { const fd = new FormData(f); const tm = fd.get('time') || '07:00'; if (tm !== S.prefs.proverb.time) S.alarms.fired.prov = 0; S.prefs.proverb = { enabled: !!fd.get('enabled'), time: tm }; S.prefs.alarmSound = !!fd.get('sound'); S.prefs.remDef = fd.get('remDef'); saveKV('prefs'); saveKV('alarms'); rerender(); toast(S.prefs.proverb.enabled ? `Proverbio programado a las ${tm} ⏰` : 'Programación guardada ✓'); },
   dayGoal: f => { const v = new FormData(f).get('g').trim(); const t = today(); if (v) S.dayGoals[t] = v; else delete S.dayGoals[t]; saveKV('dayGoals'); closeSheet(); rerender(); },
   goalValue: f => { const g = S.goals.find(x => x.id === f.dataset.id); const v = Number(new FormData(f).get('v')); if (g && v >= 0) { goalAdd(g, v - (Number(g.current) || 0), 'Valor actualizado'); closeSheet(); rerender(); checkBadges(); } },
   bizTargets: f => { const fd = new FormData(f); S.prefs.currency = fd.get('cur').trim() || '$'; S.prefs.biz = { ...(S.prefs.biz || {}), weeklyIncome: Number(fd.get('w')) || 0, monthlyIncome: Number(fd.get('m')) || 0 }; saveKV('prefs'); closeSheet(); rerender(); toast('Metas comerciales guardadas ✓'); },
@@ -1753,7 +1851,9 @@ document.addEventListener('input', e => {
   if (f.dataset.form === 'act' && (e.target.name === 'start' || e.target.name === 'end')) { const d = durOf(f.start.value, f.end.value); const h = $('#durHint', f); if (h) h.innerHTML = d ? `Duración prevista: <b>${fmtDur(d)}</b>${toMin(f.end.value) < toMin(f.start.value) ? ' (termina al día siguiente)' : ''}` : '<span class="conf">La hora de fin debe ser distinta de la de inicio.</span>'; f.dataset.ok = ''; }
   if (f.dataset.form === 'act' || f.dataset.form === 'resched') f.dataset.ok = f.dataset.ok && e.target.type !== 'time' && e.target.type !== 'date' ? f.dataset.ok : '';
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('.sheet')) closeSheet(); });
+document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; const o = $$('.ovl').pop(); if (o) { o.querySelector('[data-act=provClose],[data-act=alarmOk]')?.click(); return; } if ($('.sheet')) closeSheet(); if (e.target.closest && e.target.closest('[role=button][data-act]') && e.key === 'Enter') e.target.click(); });
+document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('[role=button][data-act]')) { e.preventDefault(); e.target.click(); } });
+document.addEventListener('pointerdown', () => audio(), { once: true, capture: true });
 window.addEventListener('online', renderBanners);
 window.addEventListener('offline', renderBanners);
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', applyTheme);
@@ -1762,7 +1862,109 @@ window.addEventListener('appinstalled', () => { UI.installEvt = null; toast('¡J
 window.addEventListener('error', e => { console.error(e.error || e.message); });
 window.addEventListener('unhandledrejection', e => { console.error(e.reason); });
 /* Al volver a la app otro día, refrescar fecha "hoy" */
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && UI.view !== 'agenda') rerender(); });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { if (UI.view !== 'agenda' && !$('.sheet')) rerender(); } tick(); });
+
+/* =========================================================
+   PROVERBIO DIARIO, RECORDATORIOS Y ALARMAS
+   · Con la app abierta: aviso emergente + sonido + vibración a la hora programada.
+   · En segundo plano: notificación del sistema (si se activó); el navegador puede pausarla.
+   · App cerrada: el navegador no permite alarmas; se ofrece exportarlas al calendario (.ics con VALARM).
+   ========================================================= */
+let actx = null, ringT = null;
+function audio() { try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === 'suspended') actx.resume(); return actx; } catch (e) { return null; } }
+function chime(kind) {
+  if (!S.prefs.alarmSound) return; const c = audio(); if (!c) return;
+  const notes = kind === 'alarm' ? [880, 1175, 880, 1175] : [659, 784, 988, 1319];
+  notes.forEach((f, i) => { const o = c.createOscillator(), g = c.createGain(); o.type = 'sine'; o.frequency.value = f; const t = c.currentTime + i * .22; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.22, t + .02); g.gain.exponentialRampToValueAtTime(.001, t + .55); o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + .6); });
+}
+const vib = p => { try { if (S.prefs.alarmSound && navigator.vibrate) navigator.vibrate(p); } catch (e) { } };
+function startRing() { stopRing(); let n = 0; const f = () => { chime('alarm'); vib([300, 150, 300]); if (++n < 30) ringT = setTimeout(f, 2000); }; f(); }
+function stopRing() { clearTimeout(ringT); ringT = null; try { navigator.vibrate && navigator.vibrate(0); } catch (e) { } }
+function notifState() { if (!('Notification' in window)) return '🔕 Notificaciones no disponibles aquí'; return Notification.permission === 'granted' ? '🔔 Notificaciones activadas' : Notification.permission === 'denied' ? '🔕 Notificaciones bloqueadas' : '🔔 Activar notificaciones'; }
+async function notify(title, body, tag) {
+  try {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return false;
+    const opts = { body, icon: 'icon-192.png', badge: 'icon-192.png', tag, renotify: true, requireInteraction: true, vibrate: [300, 150, 300] };
+    const reg = UI.swReg || (navigator.serviceWorker && await navigator.serviceWorker.getRegistration());
+    if (reg && reg.showNotification) await reg.showNotification(title, opts); else new Notification(title, opts);
+    return true;
+  } catch (e) { return false; }
+}
+function openOvl(id, html, role = 'dialog') { closeOvl(id); const o = document.createElement('div'); o.className = 'ovl'; o.id = id; o.setAttribute('role', role); o.setAttribute('aria-modal', 'true'); o.innerHTML = `<div class="box">${html}</div>`; document.body.appendChild(o); setTimeout(() => o.querySelector('button')?.focus(), 60); return o; }
+function closeOvl(id) { const o = document.getElementById(id); if (o) o.remove(); }
+function showProverb(d = today(), off = 0) {
+  const i = provIndex(d, off), pv = PROVERBS[i];
+  const tm = S.prefs.proverb;
+  openOvl('ovlProv', `<div class="prov-top"><small>📖 Proverbio del día${off ? ' · otro proverbio' : ''}</small><div class="prov-verse">«${esc(pv.t)}»</div><div class="prov-ref">${esc(pv.r)}</div></div>
+    <div class="inner"><p style="margin:0"><b>Para hoy:</b> ${esc(pv.h)}</p>
+    <p class="hint">Reina-Valera 1909 · ${tm.enabled ? `Programado cada día a las ${esc(tm.time)}` : 'Proverbio diario desactivado'}</p>
+    <button class="btn primary big" style="margin-top:12px" data-act="provClose">Amén 💜</button>
+    <div class="grid3" style="margin-top:8px"><button class="btn sm ghost" data-act="provNext" data-o="${off}">Otro</button><button class="btn sm ghost" data-act="provCopy" data-i="${i}">Copiar</button><button class="btn sm ghost" data-act="provSchedule">⏰ Hora</button></div></div>`);
+}
+function openAlarm(a) {
+  const c = cat(a.cat), nm = nowMin(), st = toMin(a.start), diff = st - nm;
+  const when = a.test ? 'Así sonará tu recordatorio' : diff > 0 ? `Empieza en ${fmtDur(diff)} · ${a.start}–${a.end}` : diff === 0 ? `Empieza ahora · ${a.start}–${a.end}` : `Empezó a las ${a.start} · termina ${a.end}`;
+  openOvl('alarm-' + a.id, `<div class="inner" style="text-align:center;padding-top:22px"><div class="bell" aria-hidden="true">🔔</div>
+    <div class="small" style="font-weight:800;letter-spacing:.6px;color:var(--morado);margin-top:6px">RECORDATORIO</div>
+    <h2 style="margin:6px 0 4px">${c.icon} ${esc(a.title)}</h2><p class="muted" style="margin:0">${esc(when)}</p>
+    <div style="display:grid;gap:8px;margin-top:16px">${a.test || a.status !== 'pendiente' ? '' : `<button class="btn primary big" data-act="alarmStart" data-id="${a.id}">▶ Empezar ahora</button>`}
+    <div class="grid2"><button class="btn ghost" data-act="alarmSnooze" data-id="${a.id}">⏰ En 5 min</button><button class="btn ghost" data-act="alarmOk" data-id="${a.id}">Entendido</button></div></div></div>`, 'alertdialog');
+}
+function resetAlarm(id) { if (S.alarms.fired[id] || S.alarms.snooze[id]) { delete S.alarms.fired[id]; delete S.alarms.snooze[id]; saveKV('alarms'); } }
+function tick() {
+  if (!S.profile || $('.welcome')) return;
+  const t = today(); let dirty = false;
+  if (S.alarms.date !== t) { S.alarms = { date: t, fired: {}, snooze: {} }; dirty = true; }
+  const nm = nowMin(), visible = document.visibilityState === 'visible';
+  // Proverbio diario
+  const P = S.prefs.proverb;
+  if (P.enabled && S.alarms.fired.prov !== 1 && nm >= (toMin(P.time) ?? 420)) {
+    if (visible && !$('.sheet') && !$('.ovl')) { S.alarms.fired.prov = 1; dirty = true; chime('soft'); vib(200); showProverb(); }
+    else if (!visible && !S.alarms.fired.provN) { S.alarms.fired.provN = 1; dirty = true; const pv = PROVERBS[provIndex(t)]; notify('📖 Proverbio del día', `«${pv.t}» ${pv.r}`, 'jc-prov'); }
+  }
+  // Recordatorios de actividades
+  materialize(t, t);
+  dayActs(t).forEach(a => {
+    if (!['pendiente', 'en_curso'].includes(a.status) || a.reminder == null || a.reminder === '') return;
+    if (S.alarms.fired[a.id] === 1 || document.getElementById('alarm-' + a.id)) return;
+    const st = toMin(a.start), sn = S.alarms.snooze[a.id];
+    const due = sn ? Date.now() >= sn : nm >= st - Number(a.reminder);
+    if (!due || nm >= st + (a.plannedMin || 0)) return;
+    S.alarms.fired[a.id] = 1; delete S.alarms.snooze[a.id]; dirty = true;
+    openAlarm(a); startRing();
+    if (!visible) notify(`🔔 ${a.title}`, `${a.start}–${a.end} · ${cat(a.cat).name}`, 'jc-' + a.id);
+  });
+  if (dirty) saveKV('alarms');
+}
+/* Exportación al calendario del teléfono (.ics con alarma) */
+const icsDT = (d, hm) => d.replace(/-/g, '') + 'T' + hm.replace(':', '') + '00';
+const icsEsc = s => String(s ?? '').replace(/\\/g, '\\\\').replace(/;/g, '\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
+function icsFold(line) {
+  const enc = new TextEncoder(); const out = []; let cur = '', bytes = 0;
+  for (const ch of line) { const b = enc.encode(ch).length; if (bytes + b > (out.length ? 73 : 74)) { out.push(cur); cur = ''; bytes = 0; } cur += ch; bytes += b; }
+  out.push(cur); return out.join('\r\n ');
+}
+function icsEvent({ uid: id, date, start, end, summary, desc, alarm, rrule }) {
+  const endDate = toMin(end) <= toMin(start) ? addD(date, 1) : date;
+  const stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  const trig = Number(alarm) > 0 ? `-PT${Number(alarm)}M` : 'PT0M';
+  return ['BEGIN:VEVENT', `UID:${id}@jc-mi-dia`, `DTSTAMP:${stamp}`, `DTSTART:${icsDT(date, start)}`, `DTEND:${icsDT(endDate, end)}`, `SUMMARY:${icsEsc(summary)}`, desc ? `DESCRIPTION:${icsEsc(desc)}` : null, rrule ? `RRULE:${rrule}` : null,
+    'BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${icsEsc(summary)}`, `TRIGGER:${trig}`, 'END:VALARM', 'END:VEVENT'].filter(Boolean);
+}
+function icsFile(events) { return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//JC Mi Dia en Equilibrio//ES', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'X-WR-CALNAME:JC Mi Día', ...events.flat(), 'END:VCALENDAR'].map(icsFold).join('\r\n') + '\r\n'; }
+function exportIcsActs(acts, fname) {
+  const ev = acts.map(a => {
+    let rrule = null; const ser = a.seriesId && S.series.find(s => s.id === a.seriesId);
+    if (ser) { const BY = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA']; rrule = ser.freq === 'daily' ? 'FREQ=DAILY' : `FREQ=WEEKLY;BYDAY=${(ser.weekdays || []).map(i => BY[i]).join(',')}`; if (ser.until) rrule += `;UNTIL=${ser.until.replace(/-/g, '')}T235959`; }
+    return icsEvent({ uid: (ser ? ser.id + '-' + a.date : a.id), date: a.date, start: a.start, end: a.end, summary: `${cat(a.cat).icon} ${a.title}`, desc: [a.desc, a.notes, 'JC — Mi Día en Equilibrio'].filter(Boolean).join('\n'), alarm: a.reminder ?? 0, rrule });
+  });
+  download(fname, icsFile(ev), 'text/calendar;charset=utf-8'); toast('Archivo de calendario descargado 📅');
+}
+function exportIcsProverbs() {
+  const t = today(), tm = S.prefs.proverb.time || '07:00';
+  const ev = rangeDays(t, addD(t, 29)).map(d => { const pv = PROVERBS[provIndex(d)]; return icsEvent({ uid: 'prov-' + d, date: d, start: tm, end: toHM(toMin(tm) + 10), summary: '📖 Proverbio del día', desc: `«${pv.t}»\n${pv.r} (Reina-Valera 1909)\n\nPara hoy: ${pv.h}`, alarm: 0 }); });
+  download(`jc-proverbios-${t}.ics`, icsFile(ev), 'text/calendar;charset=utf-8'); toast('Proverbios de 30 días listos para tu calendario 📅');
+}
 
 /* ---------- Service worker: actualización controlada ---------- */
 function registerSW() {
@@ -1789,7 +1991,8 @@ function registerSW() {
   render();
   if (!S.profile) showWelcome();
   registerSW();
-  window.JC = { S, UI, dayStats, rangeStats, timeByCat, goalInfo, bizSum, durOf, materialize, planDay, findSlot, conflictsOf, validateBackup, APP_VERSION }; // para pruebas
+  setTimeout(tick, 900); setInterval(tick, 20000);
+  window.JC = { S, UI, dayStats, rangeStats, timeByCat, goalInfo, bizSum, durOf, materialize, planDay, findSlot, conflictsOf, validateBackup, APP_VERSION, tick, PROVERBS, provIndex, icsFile, icsEvent, exportIcsActs }; // para pruebas
 })();
 </script>
 </body>

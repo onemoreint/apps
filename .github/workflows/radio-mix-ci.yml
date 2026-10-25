@@ -1,0 +1,39 @@
+name: Radio Mix Online · pruebas
+
+# Solo verifica. La app se publica tal cual desde radio-mix/app/ con GitHub Pages.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'radio-mix/**'
+      - '.github/workflows/radio-mix-ci.yml'
+  pull_request:
+    paths:
+      - 'radio-mix/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: radio-mix
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: radio-mix/package-lock.json
+      - run: npm ci
+      - name: Tipos
+        run: npm run typecheck
+      - name: Pruebas
+        run: npm test
+      - name: Auditoría de dependencias
+        run: npm audit --omit=dev --audit-level=high
+      - name: Build
+        run: npx vite build --outDir dist

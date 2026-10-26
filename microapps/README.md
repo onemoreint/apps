@@ -35,5 +35,14 @@ El perfil del negocio (nombre, logo, NIT, moneda) se comparte entre todas las mi
 
 Los valores legales de nómina y horas extra (Colombia y Venezuela) están en `src/apps/nomina/app.js` y `src/apps/horas-extras/app.js`, vigentes a octubre de 2026, y cada usuario puede editarlos desde la app.
 
+## Seguridad y normativa
+
+- **Política de privacidad** (Ley 1581 de 2012 de Colombia y art. 28 de la Constitución de Venezuela): `privacidad/`. **Términos de uso**: `terminos/`. Se generan desde `src/legal.py` y se enlazan desde la landing y la firma de cada app.
+- **Content-Security-Policy** en cada página con hash SHA-256 de cada script en línea (`src/seguridad.py`): solo se ejecuta el código propio; sin `eval` ni scripts de terceros.
+- **Sin peticiones a terceros**: las fuentes (licencia OFL) se sirven desde `fonts/`. No hay cookies, analítica ni rastreadores; los datos del usuario quedan en su dispositivo.
+- **Referrer-Policy** estricta y enlaces externos con `rel="noopener noreferrer"`.
+- **Exportación CSV protegida** contra inyección de fórmulas en Excel.
+- Límite de GitHub Pages: no admite cabeceras HTTP propias (HSTS, X-Frame-Options); para eso habría que servir el sitio detrás de un proxy como Cloudflare o Netlify.
+
 ---
 Diseño y desarrollo: **José Lugo**, WhatsApp +57 312 638 7467, jose.lugocdv@gmail.com

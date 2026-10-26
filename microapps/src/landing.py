@@ -3,6 +3,8 @@
 La genera build.py en microapps/index.html con todas las apps disponibles.
 """
 import html
+from seguridad import fuentes_css, endurecer
+from legal import build_legal
 
 A = 'fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"'
 F = 'fill="currentColor" fill-opacity=".14"'
@@ -147,6 +149,7 @@ def build_landing(metas, out_path, base_url, fonts_unused=None):
                      for i, s in enumerate(mosaic_ids) if s in by)
     chips = '<button type="button" class="chip" data-f="all" aria-pressed="true">Todas</button>' + "".join(
         f'<button type="button" class="chip" data-f="{k}" aria-pressed="false">{t(v)} <small>{sum(1 for m in metas if INFO[m["id"]][0]==k)}</small></button>' for k, v in CATS)
+    FUENTES = fuentes_css("fonts/")
     wa_msg = html.escape("Hola José, vi tus microapps y quiero más información.")
     page = f'''<!doctype html>
 <html lang="es" class="nojs">
@@ -165,8 +168,7 @@ def build_landing(metas, out_path, base_url, fonts_unused=None):
 <meta property="og:url" content="{base_url}">
 <meta property="og:image" content="{base_url}facturador/icon-512.png">
 <link rel="icon" href="logo.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500..800;1,6..96,500&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet">
+{FUENTES}
 <style>
 :root{{--bg:#000;--s1:#0d0d0f;--s2:#151518;--line:#26262b;--line2:#34343a;--tx:#f3f1ec;--tx2:#b9b6ae;--tx3:#85827b;--gold:#D9C08A;--gold2:#b89a5c;
   --serif:"Bodoni Moda",Didot,"Times New Roman",serif;--sans:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:dark}}
@@ -290,6 +292,11 @@ p{{margin:0}}
 .contact a:hover{{border-color:var(--gold);color:var(--gold)}}
 .contact svg{{width:17px;height:17px}}
 @media(max-width:520px){{.hero{{padding-top:44px}}.mosaic{{gap:10px}}.tile{{border-radius:16px}}.tile span{{display:none}}.sec{{padding:56px 0}}.final .box{{padding:34px 20px}}}}
+.legal a{{color:var(--tx2);text-underline-offset:3px}}.legal a:hover{{color:var(--gold)}}
+.aviso{{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;max-width:720px;margin:0 auto;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  background:rgba(13,13,15,.96);border:1px solid var(--line2);border-radius:16px;padding:14px 16px;box-shadow:0 20px 50px -20px rgba(0,0,0,.8);backdrop-filter:blur(8px)}}
+.aviso[hidden]{{display:none}}.aviso p{{font-size:.9rem;color:var(--tx2);flex:1;min-width:220px}}.aviso a{{color:var(--gold)}}
+.aviso button{{font:inherit;font-weight:650;font-size:.9rem;background:var(--gold);color:#111;border:0;border-radius:999px;padding:9px 18px;cursor:pointer}}
 /* Bienvenida */
 .splash{{display:none}}
 .js .splash{{position:fixed;inset:0;z-index:100;background:radial-gradient(70% 55% at 50% 42%,#101016 0%,#000 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;overflow:hidden;transition:opacity .6s ease,visibility .6s}}
@@ -394,13 +401,14 @@ p{{margin:0}}
 
 <footer class="foot"><div class="wrap">
   <div class="sig"><span class="mono" aria-hidden="true">JL</span><div><small>Diseño y desarrollo</small><strong>José Lugo</strong><em>Soluciones digitales para emprendedores y empresas</em></div></div>
-  <p class="legal">© <span id="y">2026</span> José Lugo. Todos los derechos reservados.</p>
+  <p class="legal">© <span id="y">2026</span> José Lugo. Todos los derechos reservados.<br><a href="privacidad/">Política de privacidad</a> <span aria-hidden="true">|</span> <a href="terminos/">Términos de uso</a></p>
   <div class="contact">
     <a href="https://wa.me/{WA}?text={wa_msg}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="#1FA855" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3z"/></svg>+57 312 638 7467</a>
     <a href="mailto:{MAIL}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>{MAIL}</a>
   </div>
 </div></footer>
 
+<div class="aviso" id="aviso" hidden role="region" aria-label="Aviso de privacidad"><p>Este sitio no usa cookies de rastreo. Lo que registras en las aplicaciones se guarda solo en tu dispositivo. <a href="privacidad/">Leer la política de privacidad</a></p><button type="button" id="aviso-ok">Entendido</button></div>
 <script>
 (function(){{
   var sp = document.getElementById('splash'), body = document.body, t0 = Date.now(), done = false;
@@ -419,6 +427,8 @@ p{{margin:0}}
 </script>
 <script>
 document.getElementById('y').textContent = new Date().getFullYear();
+(function(){{ var a = document.getElementById('aviso'), ok = false; try {{ ok = localStorage.getItem('ma:aviso-privacidad') === '1'; }} catch(e){{}}
+  if (!ok && a){{ setTimeout(function(){{ a.hidden = false; }}, 3200); document.getElementById('aviso-ok').addEventListener('click', function(){{ a.hidden = true; try {{ localStorage.setItem('ma:aviso-privacidad', '1'); }} catch(e){{}} }}); }} }})();
 const chips = document.querySelectorAll('.chip'), apps = document.querySelectorAll('.app');
 chips.forEach(c => c.addEventListener('click', () => {{
   chips.forEach(x => x.setAttribute('aria-pressed', x === c ? 'true' : 'false'));
@@ -428,6 +438,7 @@ chips.forEach(c => c.addEventListener('click', () => {{
 </body>
 </html>
 '''
-    out_path.write_text(page, encoding="utf-8")
+    out_path.write_text(endurecer(page), encoding="utf-8")
+    build_legal(out_path.parent, logo_mark, fuentes_css("../fonts/"), endurecer)
     (out_path.parent / "logo.svg").write_text(logo_mark("f", 512).replace('aria-hidden="true"', 'xmlns="http://www.w3.org/2000/svg"'), encoding="utf-8")
     print("ok landing", n, "apps")

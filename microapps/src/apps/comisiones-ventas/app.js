@@ -146,8 +146,8 @@ function imprimirDetalle(x){
     <table><tbody><tr><td>Total vendido</td><td class="r">${money(x.vendido)}</td></tr>${S.esquema.base==='margen'?`<tr><td>Margen</td><td class="r">${money(x.margen)}</td></tr>`:''}<tr><td>Porcentaje aplicado</td><td class="r">${pct(x.tasa,2)}</td></tr><tr><td>Comisión</td><td class="r">${money(x.com)}</td></tr><tr><td>Bono por meta</td><td class="r">${money(x.bono)}</td></tr><tr class="tot"><td>Total a pagar</td><td class="r">${money(x.total)}</td></tr></tbody></table>
     <div class="sig"><div>Firma de quien paga</div><div>Firma del vendedor</div></div>
     <div class="foot">Generado con Comisiones de Venta, desarrollada por José Lugo. WhatsApp +57 312 638 7467, jose.lugocdv@gmail.com</div>
-    <script>window.onload=()=>{window.print()}<\/script></body></html>`);
-  w.document.close();
+    </body></html>`);
+  w.document.close(); MA.imprimirVentana(w);
 }
 $('#btn-print').onclick = () => window.print();
 $('#btn-csv').onclick = () => {

@@ -145,9 +145,15 @@ function download(name, content, mime='text/plain'){
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
   document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();}, 500);
 }
+/* Exporta CSV para Excel. Neutraliza celdas que Excel interpretaría como fórmula (inyección CSV). */
+function celdaSegura(c){
+  let s = String(c ?? '');
+  if (/^[=+\-@\t\r]/.test(s) && !/^[-+]?[\d.,\s]+%?$/.test(s)) s = "'" + s;
+  return /[";\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
 function csv(name, rows){
-  const body = rows.map(r => r.map(c => { const s = String(c ?? ''); return /[";\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s; }).join(';')).join('\r\n');
-  download(name.endsWith('.csv')?name:name+'.csv', '﻿'+body, 'text/csv');
+  const body = rows.map(r => r.map(celdaSegura).join(';')).join('\r\n');
+  download(name.endsWith('.csv')?name:name+'.csv', '\ufeff'+body, 'text/csv');
 }
 function copiar(texto){
   if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(texto).then(()=>toast('Copiado'),()=>fallback());
@@ -261,6 +267,12 @@ function renderPrintHead(){
 
 
 /* ---------- Documento imprimible en ventana aparte ---------- */
+/* Imprime una ventana creada con window.open sin scripts dentro (compatible con la política de seguridad). */
+function imprimirVentana(w){
+  const go = () => { try { w.focus(); w.print(); } catch(e){} };
+  const imgs = Array.from(w.document.images || []);
+  Promise.all(imgs.map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r; }))).then(() => setTimeout(go, 200));
+}
 function imprimirDoc(titulo, cuerpo, sub=''){
   const w = window.open('', '_blank'); if (!w){ toast('Permite las ventanas emergentes para imprimir.', true); return; }
   const n = negocio(); const acc = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#1D4F91';
@@ -280,8 +292,8 @@ function imprimirDoc(titulo, cuerpo, sub=''){
     <div style="text-align:right"><h1>${esc(titulo)}</h1><div class="sub">${sub?esc(sub)+'<br>':''}Emitido el ${fechaLarga(today())}</div></div></div>
     ${cuerpo}
     <div class="foot">Generado con ${esc(CFG.name)}, desarrollada por ${AUTOR.nombre}. WhatsApp ${AUTOR.tel}, ${AUTOR.email}</div>
-    <script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script></body></html>`);
-  w.document.close();
+    </body></html>`);
+  w.document.close(); imprimirVentana(w);
 }
 
 /* ---------- Festivos de Colombia y Venezuela ---------- */
@@ -339,7 +351,7 @@ function montar(){
     f.innerHTML = `<div class="firma-in">
       <div class="firma-id"><div class="firma-mono" aria-hidden="true">JL</div>
         <div class="firma-txt"><small>Diseño y desarrollo</small><strong>${AUTOR.nombre}</strong><em>Soluciones digitales para emprendedores y empresas</em></div></div>
-      <p class="firma-legal">© ${new Date().getFullYear()} ${AUTOR.nombre}. Todos los derechos reservados.<br>Tus datos se guardan solo en este dispositivo.</p>
+      <p class="firma-legal">© ${new Date().getFullYear()} ${AUTOR.nombre}. Todos los derechos reservados.<br>Tus datos se guardan solo en este dispositivo.<br><a href="../privacidad/">Política de privacidad</a> <span aria-hidden="true">|</span> <a href="../terminos/">Términos de uso</a></p>
       <div class="firma-links">
         <a class="wa" href="https://wa.me/${AUTOR.telRaw}?text=${encodeURIComponent('Hola José, vi tu app «'+CFG.name+'» y quiero más información.')}" target="_blank" rel="noopener">${I.wa}${AUTOR.tel}</a>
         <a href="mailto:${AUTOR.email}?subject=${encodeURIComponent('Microapp '+CFG.name)}">${I.mail}${AUTOR.email}</a>
@@ -353,6 +365,6 @@ function montar(){
 }
 
 window.MA = {CFG, AUTOR, I, $, $$, esc, uid, today, monthKey, round, num, money, moneyK, bindNum, fmt, pct, MONEDAS, monedaOptions, fechaLarga, fechaCorta, mesNombre,
-  store, negocio, setNegocio, toast, dialog, confirmar, download, csv, copiar, whatsapp, backup, restaurar, editarNegocio, tabs, montar, renderPrintHead, imprimirDoc, festivos, esFestivo};
+  store, negocio, setNegocio, toast, dialog, confirmar, download, csv, copiar, whatsapp, backup, restaurar, editarNegocio, tabs, montar, renderPrintHead, imprimirDoc, imprimirVentana, festivos, esFestivo};
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', montar); else montar();
 })();

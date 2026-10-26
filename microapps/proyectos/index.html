@@ -2,6 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-BeW+ocbQJhGm+QRLqj/lm+fTpXtTHI5CdSkf2q0C5K4=' 'sha256-JH20WbPrhptPV9VSbMTdWQ7SeNyoSzpiZlRDi7gI0lQ=' 'sha256-SRzkLtZk2Trk35DoybVZWqd2mOAj+rcUTvqf8RoghuQ=' 'sha256-vg1W4lVidhTc0DdtIpiPg5hiQTMrRePpxfEONrmfA6M='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; media-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Proyectos Gantt y Kanban | Microapps José Lugo</title>
 <meta name="description" content="Organiza proyectos con tablero Kanban, cronograma Gantt, dependencias, hitos y avance. Incluye plantillas para abrir un restaurante, lanzar un producto, campañas, eventos, remodelaciones y contratación.">
@@ -19,7 +21,7 @@
 <meta property="og:url" content="https://onemoreint.github.io/apps/microapps/proyectos/">
 <meta property="og:image" content="https://onemoreint.github.io/apps/microapps/proyectos/icon-512.png">
 <meta property="og:locale" content="es_CO">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet">
+<style>@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-display:swap;font-weight:200 800;src:url(../fonts/bricolage-grotesque.woff2) format('woff2-variations'),url(../fonts/bricolage-grotesque.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}@font-face{font-family:'Instrument Sans';font-style:normal;font-display:swap;font-weight:400 700;src:url(../fonts/instrument-sans.woff2) format('woff2-variations'),url(../fonts/instrument-sans.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}@font-face{font-family:'Bodoni Moda';font-style:normal;font-display:swap;font-weight:400 900;src:url(../fonts/bodoni-moda.woff2) format('woff2-variations'),url(../fonts/bodoni-moda.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}</style>
 <script>try{var t=localStorage.getItem('ma:tema');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <style>/* ===== Microapps José Lugo — núcleo visual compartido ===== */
 :root{
@@ -247,6 +249,7 @@ dialog.dlg.wide{width:min(860px,calc(100vw - 24px))}
 .firma-txt strong{display:block;font-family:var(--f-head);font-size:1.15rem;font-weight:700;letter-spacing:-.01em}
 .firma-txt em{display:block;font-style:normal;color:var(--ink-2);font-size:.86rem}
 .firma-legal{color:var(--ink-3);font-size:.8rem;line-height:1.5}
+.firma-legal a{color:var(--ink-2);text-underline-offset:2px}
 @media(min-width:820px){.firma-legal{text-align:center;padding:0 12px}}
 .firma-links{display:flex;flex-wrap:wrap;gap:8px}
 .firma-links a{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border:1px solid var(--line-2);border-radius:999px;
@@ -366,7 +369,7 @@ dialog.dlg.wide{width:min(860px,calc(100vw - 24px))}
 
 </main>
 <footer id="firma"></footer>
-<script>window.MA_APP={"id": "proyectos", "name": "Proyectos Gantt y Kanban", "version": "1.0.0"};</script>
+<script>window.MA_APP={"id": "proyectos", "name": "Proyectos Gantt y Kanban", "version": "1.1.0"};</script>
 <script>/* ===== Microapps José Lugo — núcleo compartido ===== */
 (function(){
 'use strict';
@@ -514,9 +517,15 @@ function download(name, content, mime='text/plain'){
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
   document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();}, 500);
 }
+/* Exporta CSV para Excel. Neutraliza celdas que Excel interpretaría como fórmula (inyección CSV). */
+function celdaSegura(c){
+  let s = String(c ?? '');
+  if (/^[=+\-@\t\r]/.test(s) && !/^[-+]?[\d.,\s]+%?$/.test(s)) s = "'" + s;
+  return /[";\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
 function csv(name, rows){
-  const body = rows.map(r => r.map(c => { const s = String(c ?? ''); return /[";\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s; }).join(';')).join('\r\n');
-  download(name.endsWith('.csv')?name:name+'.csv', '﻿'+body, 'text/csv');
+  const body = rows.map(r => r.map(celdaSegura).join(';')).join('\r\n');
+  download(name.endsWith('.csv')?name:name+'.csv', '\ufeff'+body, 'text/csv');
 }
 function copiar(texto){
   if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(texto).then(()=>toast('Copiado'),()=>fallback());
@@ -630,6 +639,12 @@ function renderPrintHead(){
 
 
 /* ---------- Documento imprimible en ventana aparte ---------- */
+/* Imprime una ventana creada con window.open sin scripts dentro (compatible con la política de seguridad). */
+function imprimirVentana(w){
+  const go = () => { try { w.focus(); w.print(); } catch(e){} };
+  const imgs = Array.from(w.document.images || []);
+  Promise.all(imgs.map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r; }))).then(() => setTimeout(go, 200));
+}
 function imprimirDoc(titulo, cuerpo, sub=''){
   const w = window.open('', '_blank'); if (!w){ toast('Permite las ventanas emergentes para imprimir.', true); return; }
   const n = negocio(); const acc = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#1D4F91';
@@ -649,8 +664,8 @@ function imprimirDoc(titulo, cuerpo, sub=''){
     <div style="text-align:right"><h1>${esc(titulo)}</h1><div class="sub">${sub?esc(sub)+'<br>':''}Emitido el ${fechaLarga(today())}</div></div></div>
     ${cuerpo}
     <div class="foot">Generado con ${esc(CFG.name)}, desarrollada por ${AUTOR.nombre}. WhatsApp ${AUTOR.tel}, ${AUTOR.email}</div>
-    <script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script></body></html>`);
-  w.document.close();
+    </body></html>`);
+  w.document.close(); imprimirVentana(w);
 }
 
 /* ---------- Festivos de Colombia y Venezuela ---------- */
@@ -708,9 +723,9 @@ function montar(){
     f.innerHTML = `<div class="firma-in">
       <div class="firma-id"><div class="firma-mono" aria-hidden="true">JL</div>
         <div class="firma-txt"><small>Diseño y desarrollo</small><strong>${AUTOR.nombre}</strong><em>Soluciones digitales para emprendedores y empresas</em></div></div>
-      <p class="firma-legal">© ${new Date().getFullYear()} ${AUTOR.nombre}. Todos los derechos reservados.<br>Tus datos se guardan solo en este dispositivo.</p>
+      <p class="firma-legal">© ${new Date().getFullYear()} ${AUTOR.nombre}. Todos los derechos reservados.<br>Tus datos se guardan solo en este dispositivo.<br><a href="../privacidad/">Política de privacidad</a> <span aria-hidden="true">|</span> <a href="../terminos/">Términos de uso</a></p>
       <div class="firma-links">
-        <a class="wa" href="https://wa.me/${AUTOR.telRaw}?text=${encodeURIComponent('Hola José, vi tu app «'+CFG.name+'» y quiero más información.')}" target="_blank" rel="noopener">${I.wa}${AUTOR.tel}</a>
+        <a class="wa" href="https://wa.me/${AUTOR.telRaw}?text=${encodeURIComponent('Hola José, vi tu app «'+CFG.name+'» y quiero más información.')}" target="_blank" rel="noopener noreferrer">${I.wa}${AUTOR.tel}</a>
         <a href="mailto:${AUTOR.email}?subject=${encodeURIComponent('Microapp '+CFG.name)}">${I.mail}${AUTOR.email}</a>
       </div></div>`;
     const ps = document.createElement('div'); ps.className = 'print-only print-sign';
@@ -722,7 +737,7 @@ function montar(){
 }
 
 window.MA = {CFG, AUTOR, I, $, $$, esc, uid, today, monthKey, round, num, money, moneyK, bindNum, fmt, pct, MONEDAS, monedaOptions, fechaLarga, fechaCorta, mesNombre,
-  store, negocio, setNegocio, toast, dialog, confirmar, download, csv, copiar, whatsapp, backup, restaurar, editarNegocio, tabs, montar, renderPrintHead, imprimirDoc, festivos, esFestivo};
+  store, negocio, setNegocio, toast, dialog, confirmar, download, csv, copiar, whatsapp, backup, restaurar, editarNegocio, tabs, montar, renderPrintHead, imprimirDoc, imprimirVentana, festivos, esFestivo};
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', montar); else montar();
 })();
 </script>

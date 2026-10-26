@@ -6,17 +6,18 @@ Cada app vive en src/apps/<slug>/ con meta.json, body.html, app.js y app.css (op
 """
 import json, sys, html
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from seguridad import fuentes_css, endurecer
 
 SRC = Path(__file__).resolve().parent
 OUT = SRC.parent
 BASE_URL = "https://onemoreint.github.io/apps/microapps/"
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 
 CORE_CSS = (SRC / "core/core.css").read_text(encoding="utf-8")
 CORE_JS = (SRC / "core/core.js").read_text(encoding="utf-8")
 
-FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
-         '<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet">')
+FONTS = fuentes_css("../fonts/")  # fuentes alojadas en microapps/fonts/
 
 
 def icon_svg(m, size=512, rounded=True):
@@ -89,7 +90,7 @@ def build(slug):
 </body>
 </html>
 """
-    (out / "index.html").write_text(page, encoding="utf-8")
+    (out / "index.html").write_text(endurecer(page), encoding="utf-8")
     (out / "icon.svg").write_text(icon_svg(m), encoding="utf-8")
     manifest = {
         "name": m["name"] + " | José Lugo", "short_name": m["short"], "description": m["desc"],
@@ -102,7 +103,7 @@ def build(slug):
     (out / "manifest.webmanifest").write_text(json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
     sw = f"""// Service worker: abre la app sin conexión y se actualiza sola cuando hay internet.
 const CACHE = '{slug}-v{VERSION}';
-const CORE = ['./', './index.html', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png'];
+const CORE = ['./', './index.html', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png', '../fonts/bricolage-grotesque.woff2', '../fonts/instrument-sans.woff2'];
 self.addEventListener('install', e => {{ e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); }});
 self.addEventListener('activate', e => {{ e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith('{slug}-') && k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); }});
 self.addEventListener('fetch', e => {{
@@ -111,8 +112,6 @@ self.addEventListener('fetch', e => {{
   if (url.origin === location.origin) {{
     e.respondWith(fetch(req).then(r => {{ const c = r.clone(); caches.open(CACHE).then(x => x.put(req, c)); return r; }})
       .catch(() => caches.match(req).then(r => r || caches.match('./index.html'))));
-  }} else if (url.hostname.endsWith('gstatic.com') || url.hostname === 'fonts.googleapis.com') {{
-    e.respondWith(caches.match(req).then(r => r || fetch(req).then(res => {{ const c = res.clone(); caches.open(CACHE).then(x => x.put(req, c)); return res; }})));
   }}
 }});
 """

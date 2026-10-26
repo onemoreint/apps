@@ -221,4 +221,5 @@ ORDER = ["punto-equilibrio", "precios-multimoneda", "comisiones-ventas", "factur
          "proyectos", "ingenieria-civil"]
 if __name__ == "__main__":
     allm = {p.name: json.loads((SRC / "apps" / p.name / "meta.json").read_text(encoding="utf-8")) for p in (SRC / "apps").iterdir() if p.is_dir()}
-    build_hub([allm[s] for s in ORDER if s in allm] + [m for s, m in sorted(allm.items()) if s not in ORDER])
+    from landing import build_landing
+    build_landing([allm[s] for s in ORDER if s in allm] + [m for s, m in sorted(allm.items()) if s not in ORDER], OUT / "index.html", BASE_URL)

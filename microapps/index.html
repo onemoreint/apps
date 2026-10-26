@@ -4,721 +4,384 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Microapps para Negocios | José Lugo</title>
-<meta name="description" content="Herramientas web para emprendedores y pymes: precios, facturación, caja, inventario, cartera, flujo de caja, estados financieros, plan de negocio, nómina, horas extra, asistencia, recetas, proyectos e ingeniería civil. Funcionan sin internet y se instalan en el celular.">
+<meta name="description" content="Dieciséis aplicaciones web para emprendedores y pymes de Colombia y Venezuela: facturación, caja, inventario, nómina, finanzas, recetas, proyectos e ingeniería civil.">
 <meta name="author" content="José Lugo">
-<meta name="theme-color" content="#17212B">
+<meta name="theme-color" content="#000000">
 <link rel="canonical" href="https://onemoreint.github.io/apps/microapps/">
 <meta property="og:title" content="Microapps para Negocios de José Lugo">
-<meta property="og:description" content="Herramientas prácticas para vender, cobrar y controlar tu negocio desde el celular.">
+<meta property="og:description" content="Dieciséis herramientas para vender, cobrar, pagar nómina y controlar tu negocio desde el celular.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://onemoreint.github.io/apps/microapps/">
-<meta property="og:image" content="https://onemoreint.github.io/apps/microapps/punto-equilibrio/icon-512.png">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%231B2836'/%3E%3Ctext x='32' y='41' font-family='Arial' font-weight='700' font-size='24' text-anchor='middle' fill='%23E9D9A6'%3EJL%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet">
-<script>try{var t=localStorage.getItem('ma:tema');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
-<style>/* ===== Microapps José Lugo — núcleo visual compartido ===== */
-:root{
-  --canvas:#F3F6F8; --paper:#FFFFFF; --ink:#17212B; --ink-2:#4A5866; --ink-3:#7B8794;
-  --line:#E2E7ED; --line-2:#CFD7E0; --pos:#15784A; --neg:#BF3A2B; --warn:#A86A12;
-  --accent:#1D4F91; --accent-ink:#163C6E; --on-accent:#fff;
-  --accent-soft:color-mix(in srgb,var(--accent) 10%,var(--paper));
-  --accent-line:color-mix(in srgb,var(--accent) 28%,var(--paper));
-  --shadow:0 1px 2px rgba(23,33,43,.06),0 6px 18px -8px rgba(23,33,43,.16);
-  --r-s:8px; --r:12px; --r-l:18px;
-  --f-head:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
-  --f-body:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-  color-scheme:light;
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --canvas:#0E151C; --paper:#16202A; --ink:#E6ECF2; --ink-2:#AAB6C2; --ink-3:#7D8B99;
-    --line:#26333F; --line-2:#344453; --pos:#3DBA7E; --neg:#F07A68; --warn:#E3A845;
-    --accent:var(--accent-dark,#6FA2E8); --accent-ink:var(--accent-dark,#6FA2E8); --on-accent:#0E151C;
-    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 22px -10px rgba(0,0,0,.5);
-    color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
-  --canvas:#0E151C; --paper:#16202A; --ink:#E6ECF2; --ink-2:#AAB6C2; --ink-3:#7D8B99;
-  --line:#26333F; --line-2:#344453; --pos:#3DBA7E; --neg:#F07A68; --warn:#E3A845;
-  --accent:var(--accent-dark,#6FA2E8); --accent-ink:var(--accent-dark,#6FA2E8); --on-accent:#0E151C;
-  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 22px -10px rgba(0,0,0,.5);
-  color-scheme:dark;
-}
+<meta property="og:image" content="https://onemoreint.github.io/apps/microapps/facturador/icon-512.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%23000'/%3E%3Ccircle cx='32' cy='32' r='29' fill='none' stroke='%23D9C08A' stroke-width='2'/%3E%3Ctext x='32' y='41' font-family='Georgia' font-size='24' text-anchor='middle' fill='%23D9C08A'%3EJL%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500..800;1,6..96,500&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--s1:#0d0d0f;--s2:#151518;--line:#26262b;--line2:#34343a;--tx:#f3f1ec;--tx2:#b9b6ae;--tx3:#85827b;--gold:#D9C08A;--gold2:#b89a5c;
+  --serif:"Bodoni Moda",Didot,"Times New Roman",serif;--sans:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:dark}
 *,*::before,*::after{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--canvas);color:var(--ink);font:15px/1.5 var(--f-body);
-  font-variant-numeric:tabular-nums;min-height:100vh;display:flex;flex-direction:column}
-h1,h2,h3,h4{font-family:var(--f-head);line-height:1.15;margin:0;letter-spacing:-.01em}
-h2{font-size:1.25rem;font-weight:650}
-h3{font-size:1.05rem;font-weight:650}
-p{margin:0}
-a{color:var(--accent-ink)}
-button,input,select,textarea{font:inherit;color:inherit}
-:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px;border-radius:6px}
-[hidden]{display:none!important}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 var(--sans);overflow-x:hidden}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.01em;margin:0}
+p{margin:0}
 
-/* ---- Barra superior ---- */
-.app-bar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--paper) 88%,transparent);
-  backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
-.app-bar-in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
-.app-mark{width:38px;height:38px;flex:none;border-radius:11px;display:grid;place-items:center;background:var(--accent);color:var(--on-accent)}
-.app-mark svg{width:22px;height:22px}
-.app-title{min-width:0;flex:1}
-.app-title h1{font-size:1.12rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.app-title p{font-size:.8rem;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.app-home{color:var(--ink-3);text-decoration:none;font-size:.82rem;display:none}
-@media(min-width:760px){.app-home{display:inline}}
-.app-home:hover{color:var(--accent-ink)}
+/* Barra */
+.top{position:sticky;top:0;z-index:20;background:rgba(0,0,0,.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(217,192,138,.12)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.mono{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--gold);color:var(--gold);font-family:var(--serif);font-weight:600;font-size:1rem;letter-spacing:.02em}
+.brand b{display:block;font-weight:600;font-size:.98rem}
+.brand small{display:block;color:var(--tx3);font-size:.78rem;margin-top:-2px}
+.top nav{display:flex;gap:6px;align-items:center}
+.top nav a{text-decoration:none;color:var(--tx2);font-size:.9rem;padding:8px 12px;border-radius:999px}
+.top nav a:hover{color:var(--tx)}
+.top nav a.wa{border:1px solid var(--line2);color:var(--tx)}
+@media(max-width:640px){.top nav a:not(.wa){display:none}}
 
-/* ---- Pestañas ---- */
-.tabs{position:relative;max-width:1180px;margin:0 auto;padding:0 16px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{border:0;background:none;padding:10px 12px 11px;color:var(--ink-2);font-weight:550;cursor:pointer;white-space:nowrap;
-  border-bottom:2.5px solid transparent;margin-bottom:-1px}
-.tab:hover{color:var(--ink)}
-.tab[aria-selected="true"]{color:var(--accent-ink);border-bottom-color:var(--accent)}
-.panel[hidden]{display:none!important}
-
-/* ---- Estructura ---- */
-.app-main{flex:1;width:100%;max-width:1180px;margin:0 auto;padding:20px 16px 32px}
-.grid-2{display:grid;gap:20px}
-@media(min-width:900px){.grid-2{grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);align-items:start}
-  .sticky{position:sticky;top:120px}}
-.stack{display:grid;gap:16px;min-width:0}
-.grid-2>*,.stack>*,.panel{min-width:0}
-html,body{overflow-x:clip}
-.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.row.between{justify-content:space-between}
-.spacer{flex:1}
-
-.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-l);padding:18px;box-shadow:var(--shadow)}
-.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
-.card-head p{color:var(--ink-3);font-size:.86rem;margin-top:3px}
-.muted{color:var(--ink-3)}
-.small{font-size:.84rem}
-.hint{font-size:.82rem;color:var(--ink-3);margin-top:4px}
-
-/* ---- Formularios ---- */
-.fields{display:grid;gap:12px 14px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));align-items:start}
-.field{display:grid;gap:5px;min-width:0;align-content:start}
-.field>span{min-height:1.3em}
-.field>span{font-size:.84rem;font-weight:550;color:var(--ink-2)}
-.input,select.input,textarea.input{width:100%;background:var(--paper);border:1px solid var(--line-2);border-radius:var(--r-s);
-  padding:9px 11px;min-height:40px;transition:border-color .15s,box-shadow .15s}
-textarea.input{min-height:72px;resize:vertical}
-.input:hover{border-color:var(--ink-3)}
-.input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
-.input.num{text-align:right}
-.input-group{display:flex;align-items:stretch}
-.input-group .input{border-radius:var(--r-s) 0 0 var(--r-s)}
-.input-group .addon{display:grid;place-items:center;padding:0 10px;border:1px solid var(--line-2);border-left:0;
-  border-radius:0 var(--r-s) var(--r-s) 0;background:var(--canvas);color:var(--ink-2);font-size:.85rem}
-.check{display:flex;gap:8px;align-items:center;cursor:pointer;font-size:.9rem}
-.check input{accent-color:var(--accent);width:17px;height:17px}
-
-.seg{display:inline-flex;background:var(--canvas);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
-.seg button{border:0;background:none;padding:6px 12px;border-radius:7px;cursor:pointer;color:var(--ink-2);font-weight:550;font-size:.88rem}
-.seg button[aria-pressed="true"]{background:var(--paper);color:var(--accent-ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
-
-/* ---- Botones ---- */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line-2);background:var(--paper);
-  color:var(--ink);padding:8px 14px;min-height:40px;border-radius:10px;font-weight:600;cursor:pointer;text-decoration:none;
-  transition:background .15s,border-color .15s,transform .05s;white-space:nowrap}
-.btn:hover{border-color:var(--ink-3)}
+/* Portada */
+.hero{position:relative;padding:72px 0 64px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-20% -10% auto auto;width:720px;height:720px;background:radial-gradient(closest-side,rgba(217,192,138,.13),transparent 70%);pointer-events:none}
+.hero .wrap{display:grid;gap:48px;align-items:center}
+@media(min-width:960px){.hero .wrap{grid-template-columns:1.05fr .95fr}}
+.hero h1{font-size:clamp(2.6rem,6.4vw,4.9rem);line-height:1.02;font-weight:600;max-width:12ch}
+.hero h1 em{font-style:italic;font-weight:500;color:var(--gold)}
+.lead{color:var(--tx2);font-size:1.12rem;max-width:52ch;margin-top:22px}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.btn{display:inline-flex;align-items:center;gap:9px;text-decoration:none;font-weight:650;border-radius:999px;padding:14px 24px;font-size:1rem;transition:background .2s,color .2s,border-color .2s,transform .1s}
 .btn:active{transform:translateY(1px)}
-.btn svg{width:17px;height:17px;flex:none}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
-.btn.primary:hover{background:var(--accent-ink);border-color:var(--accent-ink)}
-.btn.ghost{border-color:transparent;background:none;color:var(--ink-2)}
-.btn.ghost:hover{background:var(--canvas);color:var(--ink)}
-.btn.danger{color:var(--neg)}
-.btn.sm{min-height:32px;padding:4px 10px;font-size:.85rem;border-radius:8px}
-.btn.icon{padding:0;width:40px}
-.btn.sm.icon{width:32px}
-.btn[disabled]{opacity:.45;pointer-events:none}
-
-/* ---- Tablas ---- */
-.table-wrap{position:relative;overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--paper)}
-table.t{width:100%;border-collapse:collapse;font-size:.9rem}
-.t th{text-align:left;font-weight:600;color:var(--ink-2);background:var(--canvas);padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap;font-size:.82rem}
-.t td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
-.t tr:last-child td{border-bottom:0}
-.t .r{text-align:right}
-.t .c{text-align:center}
-.t tfoot td{font-weight:700;background:var(--canvas);border-top:1px solid var(--line-2)}
-.t tbody tr:hover{background:color-mix(in srgb,var(--accent) 4%,transparent)}
-.t td .input{min-height:34px;padding:6px 8px}
-.t-edit td{padding:5px 6px}
-
-.pos{color:var(--pos)} .neg{color:var(--neg)} .warn{color:var(--warn)}
-.pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 9px;font-size:.78rem;font-weight:600;
-  background:var(--canvas);color:var(--ink-2);border:1px solid var(--line);white-space:nowrap}
-.pill.ok{background:color-mix(in srgb,var(--pos) 12%,var(--paper));color:var(--pos);border-color:color-mix(in srgb,var(--pos) 30%,var(--paper))}
-.pill.bad{background:color-mix(in srgb,var(--neg) 12%,var(--paper));color:var(--neg);border-color:color-mix(in srgb,var(--neg) 30%,var(--paper))}
-.pill.mid{background:color-mix(in srgb,var(--warn) 14%,var(--paper));color:var(--warn);border-color:color-mix(in srgb,var(--warn) 30%,var(--paper))}
-.pill.acc{background:var(--accent-soft);color:var(--accent-ink);border-color:var(--accent-line)}
-
-/* ---- Indicadores ---- */
-.kpis{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
-.kpi{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
-.kpi span{display:block;font-size:.82rem;color:var(--ink-3);font-weight:550}
-.kpi strong{display:block;font-family:var(--f-head);font-size:1.45rem;font-weight:700;margin-top:2px;letter-spacing:-.02em;overflow-wrap:anywhere}
-.kpi small{color:var(--ink-3);font-size:.8rem}
-.kpi.accent{border-color:var(--accent-line);background:var(--accent-soft)}
-.kpi.accent strong{color:var(--accent-ink)}
-
-/* ---- Tiquete (elemento distintivo) ---- */
-.ticket{position:relative;background:var(--paper);border:1px solid var(--line);border-bottom:0;border-radius:var(--r-l) var(--r-l) 0 0;
-  padding:20px 20px 16px;box-shadow:var(--shadow);margin-bottom:12px}
-.ticket::after{content:"";position:absolute;left:-1px;right:-1px;bottom:-11px;height:12px;
-  background:radial-gradient(circle at 7px 12px,transparent 6.5px,var(--paper) 7px) repeat-x;background-size:14px 12px;
-  filter:drop-shadow(0 2px 1px rgba(23,33,43,.06))}
-.ticket-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding-bottom:12px;border-bottom:1.5px dashed var(--line-2);margin-bottom:12px}
-.ticket-top h3{font-size:1rem}
-.ticket-top span{font-size:.8rem;color:var(--ink-3)}
-.ticket-hero{padding:6px 0 14px}
-.ticket-hero span{font-size:.86rem;color:var(--ink-2)}
-.ticket-hero strong{display:block;font-family:var(--f-head);font-weight:750;font-size:clamp(2rem,6vw,2.6rem);letter-spacing:-.03em;
-  color:var(--accent-ink);line-height:1.05;margin-top:2px;overflow-wrap:anywhere}
-.ticket-hero small{display:block;color:var(--ink-3);margin-top:4px;font-size:.84rem}
-.ticket-lines{display:grid;gap:7px;padding-top:12px;border-top:1.5px dashed var(--line-2)}
-.ticket-line{display:flex;justify-content:space-between;gap:12px;font-size:.92rem}
-.ticket-line span{color:var(--ink-2)}
-.ticket-line b{font-weight:650;text-align:right}
-.ticket-line.total{font-size:1.02rem;padding-top:7px;border-top:1px solid var(--line)}
-.ticket-line.total b{font-family:var(--f-head);font-size:1.15rem}
-
-/* ---- Estados vacíos ---- */
-.empty{text-align:center;padding:34px 16px;color:var(--ink-3);border:1.5px dashed var(--line-2);border-radius:var(--r)}
-.empty strong{display:block;color:var(--ink);font-family:var(--f-head);font-size:1.05rem;margin-bottom:4px}
-.empty .btn{margin-top:12px}
-
-/* ---- Barras simples ---- */
-.bars{display:grid;gap:9px}
-.bar-row{display:grid;grid-template-columns:minmax(80px,140px) 1fr auto;gap:10px;align-items:center;font-size:.86rem}
-.bar-row .track{height:10px;background:var(--canvas);border-radius:6px;overflow:hidden}
-.bar-row .fill{height:100%;background:var(--accent);border-radius:6px}
-.bar-row .lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink-2)}
-
-/* ---- Menú, diálogos, avisos ---- */
-.menu{position:absolute;right:16px;top:58px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);
-  box-shadow:0 16px 40px -12px rgba(23,33,43,.35);padding:6px;min-width:250px;z-index:40}
-.menu[hidden]{display:none}
-.menu button,.menu a{display:flex;width:100%;gap:10px;align-items:center;border:0;background:none;padding:9px 10px;border-radius:8px;
-  cursor:pointer;text-align:left;color:var(--ink);text-decoration:none;font-size:.92rem}
-.menu button:hover,.menu a:hover{background:var(--canvas)}
-.menu svg{width:18px;height:18px;color:var(--ink-3);flex:none}
-.menu hr{border:0;border-top:1px solid var(--line);margin:5px 4px}
-
-dialog.dlg{border:0;padding:0;border-radius:var(--r-l);background:var(--paper);color:var(--ink);width:min(560px,calc(100vw - 24px));
-  max-height:calc(100vh - 40px);box-shadow:0 30px 80px -20px rgba(0,0,0,.5)}
-dialog.dlg::backdrop{background:rgba(14,21,28,.5);backdrop-filter:blur(2px)}
-.dlg-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line)}
-.dlg-body{padding:18px;overflow:auto;max-height:calc(100vh - 190px)}
-.dlg-foot{display:flex;gap:8px;justify-content:flex-end;padding:12px 18px;border-top:1px solid var(--line);background:var(--canvas);border-radius:0 0 var(--r-l) var(--r-l)}
-dialog.dlg.wide{width:min(860px,calc(100vw - 24px))}
-
-.toasts{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:grid;gap:8px;z-index:60;pointer-events:none;width:max-content;max-width:calc(100vw - 32px)}
-.toast{background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:10px;font-size:.9rem;font-weight:550;
-  box-shadow:0 10px 30px -8px rgba(0,0,0,.4);animation:toastIn .22s ease-out}
-.toast.err{background:var(--neg);color:#fff}
-@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-
-.logo-prev{width:64px;height:64px;border-radius:12px;border:1px dashed var(--line-2);display:grid;place-items:center;overflow:hidden;background:var(--canvas);color:var(--ink-3);font-size:.75rem;text-align:center}
-.logo-prev img{width:100%;height:100%;object-fit:contain}
-
-/* ---- Firma José Lugo ---- */
-.firma{margin-top:auto;padding:28px 16px 30px;border-top:1px solid var(--line);background:var(--paper)}
-.firma-in{max-width:1180px;margin:0 auto;display:grid;gap:18px;align-items:center}
-@media(min-width:820px){.firma-in{grid-template-columns:auto 1fr auto}}
-.firma-id{display:flex;gap:14px;align-items:center}
-.firma-mono{width:52px;height:52px;flex:none;border-radius:50%;display:grid;place-items:center;
-  background:linear-gradient(145deg,#1B2836,#2C3E50);color:#E9D9A6;font-family:var(--f-head);font-weight:700;font-size:1.15rem;
-  letter-spacing:.02em;box-shadow:inset 0 0 0 2px rgba(233,217,166,.45),0 4px 14px -6px rgba(0,0,0,.5)}
-.firma-txt small{display:block;color:var(--ink-3);font-size:.78rem}
-.firma-txt strong{display:block;font-family:var(--f-head);font-size:1.15rem;font-weight:700;letter-spacing:-.01em}
-.firma-txt em{display:block;font-style:normal;color:var(--ink-2);font-size:.86rem}
-.firma-legal{color:var(--ink-3);font-size:.8rem;line-height:1.5}
-@media(min-width:820px){.firma-legal{text-align:center;padding:0 12px}}
-.firma-links{display:flex;flex-wrap:wrap;gap:8px}
-.firma-links a{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border:1px solid var(--line-2);border-radius:999px;
-  text-decoration:none;color:var(--ink);font-size:.86rem;font-weight:600;background:var(--paper)}
-.firma-links a:hover{border-color:var(--ink-3)}
-.firma-links svg{width:16px;height:16px}
-.firma-links a.wa svg{color:#1FA855}
-.print-only{display:none}
-
-/* ---- Impresión ---- */
-@media print{
-  @page{margin:14mm 12mm}
-  body{background:#fff;color:#000;font-size:11.5pt}
-  .app-bar,.tabs,.no-print,.firma,.toasts,.menu,.btn{display:none!important}
-  .print-only{display:block!important}
-  .app-main{padding:0;max-width:none}
-  .card,.ticket,.kpi,.table-wrap{box-shadow:none!important;border-color:#ccc!important;break-inside:avoid}
-  .ticket::after{display:none}
-  .panel[hidden]{display:none!important}
-  .print-sign{margin-top:18px;padding-top:8px;border-top:1px solid #bbb;font-size:8.5pt;color:#555;text-align:center}
-  a{color:#000;text-decoration:none}
+.btn.gold{background:var(--gold);color:#111}
+.btn.gold:hover{background:#e8d3a3}
+.btn.line{border:1px solid var(--line2);color:var(--tx)}
+.btn.line:hover{border-color:var(--gold);color:var(--gold)}
+.btn svg{width:19px;height:19px}
+.facts{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:38px;padding-top:24px;border-top:1px solid var(--line);color:var(--tx2);font-size:.92rem}
+.facts b{display:block;font-family:var(--serif);font-size:1.6rem;color:var(--tx);font-weight:600;line-height:1.1}
+.mosaic{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;position:relative}
+.tile{aspect-ratio:1;border-radius:22px;background:radial-gradient(120% 90% at 30% 20%,color-mix(in srgb,var(--c) 20%,transparent),transparent 65%),var(--s1);
+  border:1px solid var(--line);color:var(--c);display:grid;place-items:center;text-decoration:none;position:relative;transition:border-color .25s,transform .25s}
+.tile svg{width:62%;height:62%}
+.tile span{position:absolute;left:12px;bottom:10px;font-size:.74rem;color:var(--tx3)}
+.tile:hover{border-color:color-mix(in srgb,var(--c) 55%,var(--line));transform:translateY(-3px)}
+.tile.t1,.tile.t4{transform:translateY(22px)}
+.tile.t1:hover,.tile.t4:hover{transform:translateY(19px)}
+@media(prefers-reduced-motion:no-preference){
+  .tile{opacity:0;animation:aparece .7s cubic-bezier(.2,.7,.2,1) forwards}
+  .t0{animation-delay:.05s}.t1{animation-delay:.15s}.t2{animation-delay:.25s}.t3{animation-delay:.35s}.t4{animation-delay:.45s}.t5{animation-delay:.55s}
+  @keyframes aparece{from{opacity:0;translate:0 14px}to{opacity:1;translate:0 0}}
 }
 
-.hub-top{background:linear-gradient(160deg,#1B2836,#22344A);color:#EEF2F6;padding:44px 16px 64px}
-.hub-top-in{max-width:1080px;margin:0 auto;display:grid;gap:22px}
-.hub-brand{display:flex;gap:14px;align-items:center}
-.hub-brand .firma-mono{width:46px;height:46px;font-size:1rem}
-.hub-brand small{display:block;color:#AFC0D2;font-size:.85rem}
-.hub-brand strong{font-family:var(--f-head);font-size:1.1rem}
-.hub-top h1{font-size:clamp(2rem,5.4vw,3.3rem);font-weight:750;letter-spacing:-.03em;max-width:15ch;line-height:1.02}
-.hub-top p.lead{max-width:58ch;color:#C9D5E1;font-size:1.05rem}
-.hub-facts{display:flex;flex-wrap:wrap;gap:8px}
-.hub-facts span{border:1px solid rgba(233,217,166,.35);color:#E9D9A6;border-radius:999px;padding:5px 12px;font-size:.85rem}
-.hub-main{max-width:1080px;margin:-36px auto 0;padding:0 16px 40px;width:100%;flex:1}
-.hub-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
-.hub-card{display:grid;grid-template-columns:auto 1fr;gap:14px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-l);
-  padding:18px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow);border-top:4px solid var(--c);transition:transform .15s,box-shadow .15s}
-.hub-card:hover{transform:translateY(-2px);box-shadow:0 14px 34px -14px rgba(23,33,43,.35)}
-.hub-ic{width:46px;height:46px;border-radius:13px;background:var(--c);color:#fff;display:grid;place-items:center}
-.hub-ic svg{width:25px;height:25px}
-.hub-tx b{display:block;font-family:var(--f-head);font-size:1.12rem;margin-bottom:4px}
-.hub-tx span{color:var(--ink-2);font-size:.9rem;line-height:1.45}
-.hub-go{grid-column:2;justify-self:start;font-weight:650;font-size:.9rem;color:var(--c);margin-top:4px}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hub-go{color:var(--cd)}}
-:root[data-theme="dark"] .hub-go{color:var(--cd)}
-.hub-sec{margin:38px 0 14px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
-.hub-soon{list-style:none;margin:0;padding:0;display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
-.hub-soon li{border:1.5px dashed var(--line-2);border-radius:var(--r);padding:14px 16px;display:grid;gap:2px}
-.hub-soon b{font-family:var(--f-head);font-size:1rem}
-.hub-soon span{color:var(--ink-3);font-size:.88rem}
-.hub-soon em{font-style:normal;font-size:.78rem;color:var(--ink-3);margin-top:4px}
-.hub-cta{margin-top:38px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-l);padding:22px;display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-.hub-cta h2{font-size:1.3rem;margin-bottom:4px}
-.hub-cta p{color:var(--ink-2);max-width:60ch}
+/* Catálogo */
+.sec{padding:72px 0}
+.sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:28px}
+.sec-head h2{font-size:clamp(2rem,4.2vw,3.1rem);line-height:1.05;max-width:16ch}
+.sec-head p{color:var(--tx2);max-width:44ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.chip{font:inherit;font-size:.92rem;font-weight:600;color:var(--tx2);background:transparent;border:1px solid var(--line2);border-radius:999px;padding:9px 16px;cursor:pointer;transition:all .2s}
+.chip small{color:var(--tx3);font-weight:500;margin-left:4px}
+.chip:hover{color:var(--tx);border-color:var(--tx3)}
+.chip[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#111}
+.chip[aria-pressed="true"] small{color:#3a3322}
+.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+.app{background:var(--s1);border:1px solid var(--line);border-radius:24px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .3s,transform .3s}
+.app:hover{border-color:color-mix(in srgb,var(--c) 45%,var(--line));transform:translateY(-4px)}
+.app[hidden]{display:none}
+.app-ill{display:grid;place-items:center;height:210px;color:var(--c);position:relative;
+  background:radial-gradient(60% 75% at 50% 45%,color-mix(in srgb,var(--c) 22%,transparent),transparent 72%),
+             linear-gradient(180deg,color-mix(in srgb,var(--c2) 18%,#000),#000 90%);border-bottom:1px solid var(--line)}
+.app-ill svg{width:132px;height:132px;filter:drop-shadow(0 0 18px color-mix(in srgb,var(--c) 35%,transparent));transition:transform .4s cubic-bezier(.2,.7,.2,1)}
+.app:hover .app-ill svg{transform:scale(1.06)}
+.app-body{padding:22px 22px 24px;display:flex;flex-direction:column;flex:1}
+.app-cat{font-size:.8rem;color:var(--c);font-weight:600}
+.app h3{font-size:1.55rem;line-height:1.12;margin:6px 0 8px}
+.app p{color:var(--tx2);font-size:.96rem}
+.app ul{list-style:none;margin:16px 0 22px;padding:0;display:grid;gap:7px;font-size:.9rem;color:var(--tx2)}
+.app li{display:flex;gap:10px;align-items:baseline}
+.app li::before{content:"";width:12px;height:1px;background:var(--gold);flex:none;transform:translateY(-4px)}
+.btn-app{margin-top:auto;display:flex;justify-content:center;align-items:center;text-decoration:none;font-weight:650;border-radius:14px;padding:13px 16px;
+  border:1px solid var(--gold2);color:var(--gold);transition:background .2s,color .2s}
+.btn-app:hover{background:var(--gold);color:#111;border-color:var(--gold)}
+
+/* Por qué */
+.why{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--s1)}
+.why .wrap{display:grid;gap:28px;padding-top:60px;padding-bottom:60px}
+@media(min-width:820px){.why .wrap{grid-template-columns:1fr 1fr 1fr 1fr}}
+.why h2{font-size:2rem;line-height:1.1}
+.why .it svg{width:34px;height:34px;color:var(--gold)}
+.why .it h3{font-family:var(--sans);font-size:1.05rem;font-weight:650;margin:10px 0 6px}
+.why .it p{color:var(--tx2);font-size:.94rem}
+
+/* Llamado */
+.final{padding:84px 0}
+.final .box{border:1px solid rgba(217,192,138,.35);border-radius:28px;padding:44px 32px;text-align:center;
+  background:radial-gradient(80% 120% at 50% 0%,rgba(217,192,138,.12),transparent 60%),var(--s1)}
+.final h2{font-size:clamp(2rem,4.6vw,3.2rem);line-height:1.08;max-width:20ch;margin:0 auto}
+.final p{color:var(--tx2);max-width:56ch;margin:16px auto 0}
+.final .cta{justify-content:center}
+
+/* Firma */
+.foot{border-top:1px solid var(--line);padding:40px 0 48px}
+.foot .wrap{display:grid;gap:24px;align-items:center}
+@media(min-width:860px){.foot .wrap{grid-template-columns:auto 1fr auto}}
+.sig{display:flex;gap:16px;align-items:center}
+.sig .mono{width:58px;height:58px;font-size:1.25rem;box-shadow:0 0 0 6px rgba(217,192,138,.07)}
+.sig small{display:block;color:var(--tx3);font-size:.8rem}
+.sig strong{display:block;font-family:var(--serif);font-size:1.5rem;font-weight:600;line-height:1.1}
+.sig em{display:block;font-style:normal;color:var(--tx2);font-size:.9rem}
+.legal{color:var(--tx3);font-size:.84rem}
+@media(min-width:860px){.legal{text-align:center}}
+.contact{display:flex;flex-wrap:wrap;gap:10px}
+.contact a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;border:1px solid var(--line2);border-radius:999px;padding:10px 16px;font-size:.92rem;font-weight:600}
+.contact a:hover{border-color:var(--gold);color:var(--gold)}
+.contact svg{width:17px;height:17px}
+@media(max-width:520px){.hero{padding-top:44px}.mosaic{gap:10px}.tile{border-radius:16px}.tile span{display:none}.sec{padding:56px 0}.final .box{padding:34px 20px}}
 </style>
 </head>
 <body>
-<header class="hub-top"><div class="hub-top-in">
-  <div class="hub-brand"><div class="firma-mono" aria-hidden="true">JL</div><div><small>Microapps para negocios</small><strong>José Lugo</strong></div></div>
-  <h1>Herramientas para vender, cobrar y controlar tu negocio</h1>
-  <p class="lead">Cada app resuelve una tarea concreta del día a día. Abren en el celular o el computador, funcionan sin internet y tus datos se quedan en tu dispositivo.</p>
-  <div class="hub-facts"><span>Sin registro</span><span>Se instalan como app</span><span>Exportan a Excel y PDF</span><span>Pesos, dólares y bolívares</span><span>Colombia y Venezuela</span></div>
+<header class="top"><div class="wrap">
+  <a class="brand" href="#inicio"><span class="mono" aria-hidden="true">JL</span><span><b>José Lugo</b><small>Microapps para negocios</small></span></a>
+  <nav aria-label="Secciones"><a href="#apps">Aplicaciones</a><a href="#por-que">Cómo funcionan</a>
+    <a class="wa" href="https://wa.me/573126387467?text=Hola José, vi tus microapps y quiero más información." target="_blank" rel="noopener">WhatsApp</a></nav>
 </div></header>
-<main class="hub-main">
-  <div class="hub-grid"><a class="hub-card" href="punto-equilibrio/" style="--c:#3D4FD1;--cd:#93A0FF">
-      <span class="hub-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M3 13h18" stroke-dasharray="2 2.5"/><path d="M3 21L21 5"/><circle cx="12" cy="13" r="2.2"/></svg></span>
-      <span class="hub-tx"><b>Punto de Equilibrio</b><span>Calcula el punto de equilibrio de tu negocio en unidades y en dinero, con uno o varios productos, meta de utilidad, margen de seguridad y gráfico.</span></span>
-      <span class="hub-go">Abrir</span></a><a class="hub-card" href="precios-multimoneda/" style="--c:#0E7C86;--cd:#4FD1DB">
-      <span class="hub-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14"/><path d="M15 4.5L18.5 8 15 11.5"/><path d="M20 16H6"/><path d="M9 12.5L5.5 16 9 19.5"/></svg></span>
-      <span class="hub-tx"><b>Precios Multimoneda</b><span>Lista de precios con costo y margen, convertida a varias monedas con tus propias tasas y redondeo. Compártela por WhatsApp, imprímela o exporta a Excel.</span></span>
-      <span class="hub-go">Abrir</span></a><a class="hub-card" href="comisiones-ventas/" style="--c:#7A3FC4;--cd:#C3A0F5">
-      <span class="hub-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/><path d="M19 5L5 19"/></svg></span>
-      <span class="hub-tx"><b>Comisiones de Venta</b><span>Registra ventas por vendedor y liquida comisiones con porcentaje fijo o por tramos, sobre venta o sobre margen, con metas, bonos y ranking del mes.</span></span>
-      <span class="hub-go">Abrir</span></a><a class="hub-card" href="facturador/" style="--c:#1D4F91;--cd:#7FAEF0">
-      <span class="hub-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M9 12h7M9 16h5"/></svg></span>
-      <span class="hub-tx"><b>Cotizador y Facturador</b><span>Crea cotizaciones, facturas, cuentas de cobro, recibos y remisiones con tu logo, IVA y descuentos. Imprime en PDF, envía por WhatsApp y controla qué está pagado.</span></span>
-      <span class="hub-go">Abrir</span></a><a class="hub-card" href="control-caja/" style="--c:#18794E;--cd:#5DD39E">
-      <span class="hub-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6.5 9.5v5M17.5 9.5v5"/></svg></span>
-      <span class="hub-tx"><b>Control de Caja</b><span>Registra la base, las entradas y salidas del día por medio de pago, haz el arqueo por billetes y monedas y conoce al instante si sobra o falta dinero.</span></span>
-      <span class="hub-go">Abrir</span></a><a class="hub-card" href="kardex-inventario/" style="--c:#A15C0B;--cd:#F0B35A">
-      <span class="hub-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8l9-5 9 5-9 5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg></span>
-      <span class="hub-tx"><b>Kardex de Inventario</b><span>Controla entradas, salidas y ajustes de inventario con kardex valorizado por promedio ponderado o PEPS, alertas de stock mínimo y utilidad bruta por venta.</span></span>
-      <span class="hub-go">Abrir</span></a><a class="hub-card" href="cuentas-cobrar-pagar/" style="--c:#B4235A;--cd:#F287B0">
-      <span class="hub-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h7"/><path d="M16.5 14.5l3 2.5-3 2.5"/></svg></span>
-      <span class="hub-tx"><b>Cuentas por Cobrar y Pagar</b><span>Controla facturas por cobrar y por pagar con abonos, días de mora, antigüedad de cartera, estados de cuenta por cliente o proveedor y recordatorios por WhatsApp.</span></span>
-      <span class="hub-go">Abrir</span></a><a class="hub-card" href="flujo-caja/" style="--c:#557A1A;--cd:#B6DA6A">
-      <span class="hub-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l5-5 4 3 8-8"/><path d="M15 7h5v5"/><path d="M3 21h18"/></svg></span>
-      <span class="hub-tx"><b>Flujo de Caja a 12 Meses</b><span>Proyecta ingresos y egresos mes a mes durante un año, mira tu saldo acumulado, detecta los meses en rojo y calcula cuánto financiamiento necesitas.</span></span>
-      <span class="hub-go">Abrir</span></a><a class="hub-card" href="estados-financieros/" style="--c:#3E5C76;--cd:#9CC0E0">
-      <span class="hub-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7"/><path d="M2 20h20"/><path d="M19 8l2-2"/></svg></span>
-      <span class="hub-tx"><b>Estado de Resultados y Balance</b><span>Arma el estado de resultados y el balance general comparando dos periodos, con análisis vertical, variaciones e indicadores de liquidez, endeudamiento y rentabilidad.</span></span>
-      <span class="hub-go">Abrir</span></a><a class="hub-card" href="plan-negocio/" style="--c:#2F6F5E;--cd:#7FD3BA">
-      <span class="hub-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h12l-2.5 4.5L17 13H5"/></svg></span>
-      <span class="hub-tx"><b>Plan de Negocio Express</b><span>Calcula la inversión inicial, proyecta 5 años de resultados y flujo de caja, incluye crédito y evalúa tu proyecto con VPN, TIR, relación beneficio costo y periodo de recuperación.</span></span>
-      <span class="hub-go">Abrir</span></a><a class="hub-card" href="nomina/" style="--c:#B4531A;--cd:#F5A46E">
-      <span class="hub-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19.5a5.5 5.5 0 0 1 11 0"/><path d="M18 7v10"/><path d="M20 9.2c0-.9-.9-1.6-2-1.6s-2 .6-2 1.5.9 1.3 2 1.6 2 .7 2 1.7-.9 1.6-2 1.6-2-.7-2-1.6"/></svg></span>
-      <span class="hub-tx"><b>Nómina Colombia y Venezuela</b><span>Nómina mensual o quincenal para Colombia y Venezuela con valores legales vigentes: horas extra y recargos, seguridad social, aportes patronales, provisiones, prestaciones sociales y comprobantes de pago.</span></span>
-      <span class="hub-go">Abrir</span></a><a class="hub-card" href="horas-extras/" style="--c:#9C2F8F;--cd:#EE8FE0">
-      <span class="hub-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9 2h6"/><path d="M19 5l1.5-1.5"/></svg></span>
-      <span class="hub-tx"><b>Horas Extras y Recargos</b><span>Registra entradas y salidas y calcula automáticamente horas extra, recargos nocturnos, dominicales y festivos para Colombia o Venezuela, con los festivos de cada país.</span></span>
-      <span class="hub-go">Abrir</span></a><a class="hub-card" href="asistencia-vacaciones/" style="--c:#0B7BB8;--cd:#6CC4F2">
-      <span class="hub-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M9 15.5l2 2 4-4"/></svg></span>
-      <span class="hub-tx"><b>Asistencia y Vacaciones</b><span>Marca asistencia, faltas, retardos, permisos, incapacidades y vacaciones en un calendario por empleado, con festivos de Colombia o Venezuela y saldo de vacaciones según la ley.</span></span>
-      <span class="hub-go">Abrir</span></a><a class="hub-card" href="costo-receta/" style="--c:#7A4B2A;--cd:#E0A97E">
-      <span class="hub-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16a8 8 0 0 1-16 0z"/><path d="M8 7.5c0-1.5 1-2 1-3.5M12 7.5c0-1.5 1-2 1-3.5M16 7.5c0-1.5 1-2 1-3.5"/></svg></span>
-      <span class="hub-tx"><b>Costo de Receta</b><span>Costea recetas con el precio real de tus insumos, la merma y los costos indirectos. Obtén costo por porción, precio sugerido con impuesto, ficha técnica y análisis de rentabilidad del menú.</span></span>
-      <span class="hub-go">Abrir</span></a><a class="hub-card" href="proyectos/" style="--c:#9A7600;--cd:#F2C94C">
-      <span class="hub-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h9M7 10h10M10 15h8M5 20h6"/><path d="M3 3v18"/></svg></span>
-      <span class="hub-tx"><b>Proyectos Gantt y Kanban</b><span>Organiza proyectos con tablero Kanban, cronograma Gantt, dependencias, hitos y avance. Incluye plantillas para abrir un restaurante, lanzar un producto, campañas, eventos, remodelaciones y contratación.</span></span>
-      <span class="hub-go">Abrir</span></a><a class="hub-card" href="ingenieria-civil/" style="--c:#4A4E57;--cd:#C3C9D4">
-      <span class="hub-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/><path d="M9 11h6"/></svg></span>
-      <span class="hub-tx"><b>Calculadoras de Ingeniería Civil</b><span>Calcula concreto por resistencia, muros y mortero, acero de refuerzo, zapatas, columnas y excavación. Suma todo en una lista de materiales con costos para presupuestar la obra.</span></span>
-      <span class="hub-go">Abrir</span></a></div>
 
-  <div class="hub-cta"><div><h2>¿Necesitas una app a la medida de tu negocio?</h2><p>Adapto estas herramientas con tu marca, tus procesos y acceso para tu equipo.</p></div>
-    <a class="btn primary" style="--accent:#1FA855;--accent-ink:#178A45" href="https://wa.me/573126387467?text=Hola José, quiero una microapp para mi negocio." target="_blank" rel="noopener">Escribir por WhatsApp</a></div>
-</main>
-<footer id="firma"></footer>
-<script>window.MA_APP={"id":"hub","name":"Microapps para Negocios"};</script>
-<script>/* ===== Microapps José Lugo — núcleo compartido ===== */
-(function(){
-'use strict';
-const CFG = window.MA_APP || {id:'app',name:'Microapp'};
-const PREFIX = 'ma:' + CFG.id + ':';
-const AUTOR = {nombre:'José Lugo', tel:'+57 312 638 7467', telRaw:'573126387467', email:'jose.lugocdv@gmail.com'};
-
-/* ---------- Iconos ---------- */
-const I = {
-  more:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>',
-  store:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M3 9h18a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0"/><path d="M10 20v-5h4v5"/></svg>',
-  down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>',
-  up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 19h16"/></svg>',
-  print:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></svg>',
-  moon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
-  install:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M12 8v6M9 11l3 3 3-3"/></svg>',
-  grid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
-  trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
-  edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>',
-  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
-  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
-  wa:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3z"/></svg>',
-  mail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>',
-  csv:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h8"/></svg>',
-  copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>'
-};
-
-/* ---------- Utilidades ---------- */
-const $ = (s, r=document) => r.querySelector(s);
-const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
-const pad = n => String(n).padStart(2,'0');
-const today = () => { const d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); };
-const monthKey = (iso) => (iso||today()).slice(0,7);
-const round = (n, d=2) => { const f=Math.pow(10,d); return Math.round((+n||0)*f)/f; };
-
-/* Convierte "1.500.000,50", "1,500,000.50", "1500000.5" o "1.500" en número */
-function num(v){
-  if (typeof v === 'number') return isFinite(v) ? v : 0;
-  let s = String(v ?? '').trim().replace(/\s|\$|[A-Za-z]/g,'');
-  if (!s) return 0;
-  const neg = /^-/.test(s) || /^\(.*\)$/.test(s); s = s.replace(/[-()]/g,'');
-  const hasDot = s.includes('.'), hasCom = s.includes(',');
-  if (hasDot && hasCom){
-    if (s.lastIndexOf(',') > s.lastIndexOf('.')) s = s.replace(/\./g,'').replace(',', '.');
-    else s = s.replace(/,/g,'');
-  } else if (hasCom){
-    const parts = s.split(',');
-    if (parts.length === 2 && parts[1].length !== 3) s = parts[0] + '.' + parts[1];
-    else s = s.replace(/,/g,'');
-  } else if (hasDot){
-    const parts = s.split('.');
-    if (parts.length > 2 || (parts.length === 2 && parts[1].length === 3 && parts[0].length <= 3 && parts[0] !== '0')) s = s.replace(/\./g,'');
-  }
-  const n = parseFloat(s);
-  return isFinite(n) ? (neg ? -n : n) : 0;
-}
-
-/* ---------- Monedas ---------- */
-const MONEDAS = {
-  COP:{n:'Peso colombiano', s:'$', d:0, loc:'es-CO'},
-  USD:{n:'Dólar estadounidense', s:'US$', d:2, loc:'es-CO'},
-  VES:{n:'Bolívar venezolano', s:'Bs', d:2, loc:'es-VE'},
-  EUR:{n:'Euro', s:'€', d:2, loc:'es-ES'},
-  MXN:{n:'Peso mexicano', s:'MX$', d:2, loc:'es-MX'},
-  PEN:{n:'Sol peruano', s:'S/', d:2, loc:'es-PE'},
-  CLP:{n:'Peso chileno', s:'CLP$', d:0, loc:'es-CL'},
-  ARS:{n:'Peso argentino', s:'AR$', d:2, loc:'es-AR'},
-  DOP:{n:'Peso dominicano', s:'RD$', d:2, loc:'es-DO'},
-  GTQ:{n:'Quetzal', s:'Q', d:2, loc:'es-GT'},
-  BOB:{n:'Boliviano', s:'Bs.', d:2, loc:'es-BO'}
-};
-function money(n, cur){
-  cur = cur || negocio().moneda || 'COP';
-  const m = MONEDAS[cur] || {s:cur+' ', d:2};
-  const v = +n || 0;
-  const s = Math.abs(v).toLocaleString('es-CO', {minimumFractionDigits:m.d, maximumFractionDigits:m.d});
-  return (v < 0 ? '-' : '') + m.s + (m.s.length>1 && /[A-Za-z.]$/.test(m.s) ? ' ' : '') + s;
-}
-function moneyK(n, cur){
-  const m = MONEDAS[cur || negocio().moneda || 'COP'] || {s:''}; const v = Math.abs(+n||0); const sg = n < 0 ? '-' : '';
-  const s = v >= 1e9 ? fmt(v/1e9,1)+' mil M' : v >= 1e6 ? fmt(v/1e6,1)+' M' : v >= 1e3 ? fmt(v/1e3,1)+' k' : fmt(v,0);
-  return sg + m.s + s;
-}
-/* Campo numérico: acepta puntos y comas, muestra el número formateado al salir del campo */
-function bindNum(el, value, onChange, dec=2){
-  if (!el) return;
-  const show = v => { el.value = (v === '' || v == null || (v === 0 && el.dataset.blank0 !== undefined)) ? '' : fmt(v, dec); };
-  show(value);
-  el.addEventListener('input', () => onChange(el.value.trim() === '' ? 0 : num(el.value)));
-  el.addEventListener('blur', () => show(el.value.trim() === '' ? '' : num(el.value)));
-  el.addEventListener('focus', () => { setTimeout(() => { try { el.select(); } catch(e){} }, 0); });
-}
-function fmt(n, d=2){ return (+n||0).toLocaleString('es-CO',{minimumFractionDigits:0, maximumFractionDigits:d}); }
-function pct(n, d=1){ return (isFinite(n) ? (+n||0) : 0).toLocaleString('es-CO',{minimumFractionDigits:0, maximumFractionDigits:d}) + '%'; }
-function monedaOptions(sel){ return Object.entries(MONEDAS).map(([k,v]) => `<option value="${k}" ${k===sel?'selected':''}>${k} (${v.n})</option>`).join(''); }
-function fechaLarga(iso){ if(!iso) return ''; const [y,m,d]=iso.split('-').map(Number); return new Date(y,m-1,d).toLocaleDateString('es-CO',{day:'numeric',month:'long',year:'numeric'}); }
-function fechaCorta(iso){ if(!iso) return ''; const [y,m,d]=iso.split('-'); return d+'/'+m+'/'+y; }
-function mesNombre(key){ const [y,m]=key.split('-').map(Number); const s=new Date(y,m-1,1).toLocaleDateString('es-CO',{month:'long',year:'numeric'}); return s.charAt(0).toUpperCase()+s.slice(1); }
-
-/* ---------- Almacenamiento ---------- */
-const store = {
-  get(k, def){ try { const v = localStorage.getItem(PREFIX+k); return v == null ? def : JSON.parse(v); } catch(e){ return def; } },
-  set(k, v){ try { localStorage.setItem(PREFIX+k, JSON.stringify(v)); return true; } catch(e){ toast('No se pudo guardar: el almacenamiento del navegador está lleno o bloqueado.', true); return false; } },
-  del(k){ try { localStorage.removeItem(PREFIX+k); } catch(e){} },
-  keys(){ try { return Object.keys(localStorage).filter(k => k.startsWith(PREFIX)); } catch(e){ return []; } }
-};
-/* Perfil del negocio: compartido entre todas las microapps */
-const NEG_KEY = 'ma:negocio';
-function negocio(){ try { return Object.assign({nombre:'',doc:'',tel:'',email:'',dir:'',ciudad:'',moneda:'COP',logo:''}, JSON.parse(localStorage.getItem(NEG_KEY)||'{}')); } catch(e){ return {moneda:'COP'}; } }
-function setNegocio(o){ try { localStorage.setItem(NEG_KEY, JSON.stringify(o)); } catch(e){ toast('No se pudo guardar el logo: prueba con una imagen más liviana.', true); } }
-
-/* ---------- Avisos y diálogos ---------- */
-function toast(msg, err){
-  let box = $('.toasts'); if(!box){ box = document.createElement('div'); box.className='toasts'; box.setAttribute('role','status'); document.body.appendChild(box); }
-  const t = document.createElement('div'); t.className = 'toast' + (err?' err':''); t.textContent = msg; box.appendChild(t);
-  setTimeout(() => t.remove(), 3200);
-}
-function dialog({title, body, actions=[], wide=false, onOpen}){
-  const d = document.createElement('dialog'); d.className = 'dlg' + (wide?' wide':'');
-  d.innerHTML = `<div class="dlg-head"><h3>${esc(title)}</h3><button class="btn ghost sm icon" data-x aria-label="Cerrar">${I.x}</button></div>
-    <div class="dlg-body">${body}</div>${actions.length?'<div class="dlg-foot"></div>':''}`;
-  const foot = $('.dlg-foot', d);
-  actions.forEach(a => { const b=document.createElement('button'); b.className='btn '+(a.cls||''); b.textContent=a.label;
-    b.onclick = async () => { const r = a.onClick ? await a.onClick(d) : true; if (r !== false) close(); }; foot.appendChild(b); });
-  function close(){ d.close(); d.remove(); }
-  $('[data-x]', d).onclick = close;
-  d.addEventListener('cancel', e => { e.preventDefault(); close(); });
-  document.body.appendChild(d); d.showModal(); if(onOpen) onOpen(d);
-  return {el:d, close};
-}
-function confirmar(msg, okLabel='Eliminar', danger=true){
-  return new Promise(res => {
-    dialog({title:'Confirmar', body:`<p>${esc(msg)}</p>`, actions:[
-      {label:'Cancelar', cls:'ghost', onClick:()=>{res(false);}},
-      {label:okLabel, cls: danger?'primary':'primary', onClick:()=>{res(true);}}
-    ]});
-  });
-}
-
-/* ---------- Archivos ---------- */
-function download(name, content, mime='text/plain'){
-  const blob = content instanceof Blob ? content : new Blob([content], {type:mime+';charset=utf-8'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
-  document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();}, 500);
-}
-function csv(name, rows){
-  const body = rows.map(r => r.map(c => { const s = String(c ?? ''); return /[";\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s; }).join(';')).join('\r\n');
-  download(name.endsWith('.csv')?name:name+'.csv', '﻿'+body, 'text/csv');
-}
-function copiar(texto){
-  if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(texto).then(()=>toast('Copiado'),()=>fallback());
-  fallback();
-  function fallback(){ const t=document.createElement('textarea'); t.value=texto; document.body.appendChild(t); t.select(); try{document.execCommand('copy'); toast('Copiado');}catch(e){toast('No se pudo copiar',true);} t.remove(); }
-}
-function whatsapp(texto, tel){ const n = String(tel||'').replace(/\D/g,''); window.open('https://wa.me/'+(n||'')+'?text='+encodeURIComponent(texto), '_blank', 'noopener'); }
-
-function backup(){
-  const data = {app:CFG.id, nombre:CFG.name, fecha:new Date().toISOString(), negocio:negocio(), datos:{}};
-  store.keys().forEach(k => { try { data.datos[k.slice(PREFIX.length)] = JSON.parse(localStorage.getItem(k)); } catch(e){} });
-  download(CFG.id+'-respaldo-'+today()+'.json', JSON.stringify(data, null, 1), 'application/json');
-  toast('Copia de seguridad descargada');
-}
-function restaurar(){
-  const inp = document.createElement('input'); inp.type='file'; inp.accept='.json,application/json';
-  inp.onchange = () => { const f = inp.files[0]; if(!f) return; const rd = new FileReader();
-    rd.onload = async () => { try {
-        const data = JSON.parse(rd.result);
-        if (data.app !== CFG.id) { toast('Este archivo es de otra app ('+(data.nombre||data.app)+').', true); return; }
-        if (!(await confirmar('Se reemplazarán los datos actuales de esta app por los del respaldo del '+fechaCorta((data.fecha||'').slice(0,10))+'.', 'Restaurar', false))) return;
-        store.keys().forEach(k => localStorage.removeItem(k));
-        Object.entries(data.datos||{}).forEach(([k,v]) => store.set(k, v));
-        if (data.negocio && data.negocio.nombre && !negocio().nombre) setNegocio(data.negocio);
-        toast('Datos restaurados'); setTimeout(()=>location.reload(), 600);
-      } catch(e){ toast('El archivo no es un respaldo válido.', true); } };
-    rd.readAsText(f); };
-  inp.click();
-}
-
-/* ---------- Perfil del negocio ---------- */
-function editarNegocio(){
-  const n = negocio();
-  const body = `<p class="muted small" style="margin-bottom:14px">Estos datos aparecen en tus documentos e impresiones. Se comparten con todas las microapps de este dispositivo.</p>
-  <div class="row" style="align-items:center;margin-bottom:14px">
-    <div class="logo-prev" id="ma-logo-prev">${n.logo?`<img src="${n.logo}" alt="Logo">`:'Sin logo'}</div>
-    <div class="stack" style="gap:6px"><label class="btn sm">Subir logo<input type="file" accept="image/*" id="ma-logo" hidden></label>
-    <button class="btn ghost sm" id="ma-logo-del" type="button">Quitar logo</button></div>
+<main id="inicio">
+<section class="hero"><div class="wrap">
+  <div>
+    <h1>Tu negocio en orden, desde el celular</h1>
+    <p class="lead">Dieciséis aplicaciones para cotizar, facturar, cobrar, pagar la nómina, controlar inventario y planear tu crecimiento. Se abren con un enlace, funcionan sin internet y tus datos se quedan en tu dispositivo.</p>
+    <div class="cta"><a class="btn gold" href="#apps">Ver las aplicaciones</a>
+      <a class="btn line" href="https://wa.me/573126387467?text=Hola José, vi tus microapps y quiero más información." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3z"/></svg>Escribir por WhatsApp</a></div>
+    <div class="facts"><span><b>16</b>aplicaciones</span><span><b>2</b>países: Colombia y Venezuela</span><span><b>0</b>registros ni contraseñas</span></div>
   </div>
-  <div class="fields">
-    <label class="field" style="grid-column:1/-1"><span>Nombre del negocio</span><input class="input" id="ma-n" value="${esc(n.nombre)}" placeholder="Ej: Distribuidora La Estrella"></label>
-    <label class="field"><span>NIT / RIF / Documento</span><input class="input" id="ma-d" value="${esc(n.doc)}"></label>
-    <label class="field"><span>Teléfono / WhatsApp</span><input class="input" id="ma-t" value="${esc(n.tel)}" inputmode="tel"></label>
-    <label class="field"><span>Correo</span><input class="input" id="ma-e" value="${esc(n.email)}" type="email"></label>
-    <label class="field"><span>Ciudad</span><input class="input" id="ma-c" value="${esc(n.ciudad)}"></label>
-    <label class="field" style="grid-column:1/-1"><span>Dirección</span><input class="input" id="ma-a" value="${esc(n.dir)}"></label>
-    <label class="field" style="grid-column:1/-1"><span>Moneda principal</span><select class="input" id="ma-m">${monedaOptions(n.moneda)}</select></label>
-  </div>`;
-  let logo = n.logo;
-  dialog({title:'Datos del negocio', body, actions:[
-    {label:'Cancelar', cls:'ghost'},
-    {label:'Guardar datos', cls:'primary', onClick:(d)=>{
-      setNegocio({nombre:$('#ma-n',d).value.trim(), doc:$('#ma-d',d).value.trim(), tel:$('#ma-t',d).value.trim(), email:$('#ma-e',d).value.trim(),
-        ciudad:$('#ma-c',d).value.trim(), dir:$('#ma-a',d).value.trim(), moneda:$('#ma-m',d).value, logo});
-      toast('Datos del negocio guardados'); document.dispatchEvent(new CustomEvent('ma:negocio')); renderPrintHead();
-    }}
-  ], onOpen:(d)=>{
-    $('#ma-logo',d).onchange = e => { const f=e.target.files[0]; if(!f) return; const rd=new FileReader();
-      rd.onload = () => { const img = new Image(); img.onload = () => { const max=320, k=Math.min(1,max/Math.max(img.width,img.height));
-        const c=document.createElement('canvas'); c.width=Math.round(img.width*k); c.height=Math.round(img.height*k);
-        c.getContext('2d').drawImage(img,0,0,c.width,c.height); logo=c.toDataURL('image/png');
-        $('#ma-logo-prev',d).innerHTML=`<img src="${logo}" alt="Logo">`; }; img.src=rd.result; }; rd.readAsDataURL(f); };
-    $('#ma-logo-del',d).onclick = () => { logo=''; $('#ma-logo-prev',d).textContent='Sin logo'; };
-  }});
-}
+  <div class="mosaic" aria-label="Algunas aplicaciones"><a class="tile t0" href="facturador/" style="--c:#7FAEF0" aria-label="Cotizador y Facturador"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M30 12h42l18 18v74a5 5 0 0 1-5 5H30a5 5 0 0 1-5-5V17a5 5 0 0 1 5-5z" fill="currentColor" fill-opacity=".14"/><path d="M72 12v18h18"/>
+<path d="M36 44h28M36 54h38M36 64h32" opacity=".7"/><path d="M36 80h20" stroke-width="4"/><path d="M62 80h14"/>
+<circle cx="88" cy="94" r="15" fill="#000" stroke="currentColor"/><circle cx="88" cy="94" r="15" fill="currentColor" fill-opacity=".14"/><path d="M81 94l5 5 9-10"/></svg><span>Facturador</span></a><a class="tile t1" href="nomina/" style="--c:#F5A46E" aria-label="Nómina Colombia y Venezuela"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="12" y="26" width="64" height="46" rx="7" fill="currentColor" fill-opacity=".14"/><circle cx="31" cy="44" r="7.5"/><path d="M20 63a11 11 0 0 1 22 0"/><path d="M50 42h18M50 52h13" opacity=".7"/>
+<rect x="52" y="56" width="56" height="42" rx="7" fill="#000"/><rect x="52" y="56" width="56" height="42" rx="7" fill="currentColor" fill-opacity=".14"/><path d="M80 64v4M80 86v4M86 71c-1.5-3-12-4-12 1.5 0 6 12 3 12 9.5 0 5-10.5 5-12 1"/></svg><span>Nómina</span></a><a class="tile t2" href="plan-negocio/" style="--c:#7FD3BA" aria-label="Plan de Negocio Express"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M60 12c15 11 21 30 19 49l-8 12H49l-8-12c-2-19 4-38 19-49z" fill="currentColor" fill-opacity=".14"/><circle cx="60" cy="43" r="7.5"/>
+<path d="M41 58L29 74l14 2M79 58l12 16-14 2"/><path d="M52 75c0 11 8 21 8 28 0-7 8-17 8-28" fill="currentColor" fill-opacity=".32" stroke="none"/>
+<path d="M18 28h4M20 26v4M100 40h4M102 38v4M96 96h3M14 86h3" stroke-width="2"/></svg><span>Plan de negocio</span></a><a class="tile t3" href="costo-receta/" style="--c:#E0A97E" aria-label="Costo de Receta"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M42 50c-4-6 4-10 0-17M60 50c-4-6 4-10 0-17M78 50c-4-6 4-10 0-17" opacity=".75"/><path d="M18 62h84"/><path d="M54 56h12" stroke-width="4"/>
+<path d="M22 62h76v22a16 16 0 0 1-16 16H38a16 16 0 0 1-16-16z" fill="currentColor" fill-opacity=".14"/><path d="M22 70h-9M98 70h9"/><path d="M40 78h40" opacity=".4"/></svg><span>Recetas</span></a><a class="tile t4" href="ingenieria-civil/" style="--c:#C3C9D4" aria-label="Calculadoras de Ingeniería Civil"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 104h104"/><path d="M28 104V24"/><path d="M28 32l9 8-9 8 9 8-9 8 9 8-9 8 9 8" opacity=".6"/><path d="M37 24v80"/>
+<path d="M18 24h80"/><path d="M28 24l9-10 9 10" /><path d="M84 24v28"/><rect x="77" y="52" width="14" height="10" rx="2" fill="currentColor" fill-opacity=".32" stroke="none"/>
+<rect x="58" y="70" width="44" height="34" rx="2" fill="currentColor" fill-opacity=".14"/><path d="M66 80h9M85 80h9M66 92h9M85 92h9"/></svg><span>Ing. civil</span></a><a class="tile t5" href="estados-financieros/" style="--c:#9CC0E0" aria-label="Estado de Resultados y Balance"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M60 22v74"/><path d="M40 100h40"/><path d="M22 34h76"/><circle cx="60" cy="22" r="4.5" fill="currentColor"/>
+<path d="M22 34l-11 28M22 34l11 28"/><path d="M9 62h26a13 13 0 0 1-26 0z" fill="currentColor" fill-opacity=".14"/><path d="M98 34l-11 28M98 34l11 28"/><path d="M85 62h26a13 13 0 0 1-26 0z" fill="currentColor" fill-opacity=".14"/>
+<path d="M16 58v-6M22 58v-10M28 58v-4" stroke-width="2"/><circle cx="98" cy="54" r="4" stroke-width="2"/></svg><span>Estados financieros</span></a></div>
+</div></section>
 
-/* ---------- Tema ---------- */
-function aplicarTema(){ const t = localStorage.getItem('ma:tema'); if (t) document.documentElement.dataset.theme = t; else delete document.documentElement.dataset.theme; }
-function alternarTema(){
-  const dark = document.documentElement.dataset.theme === 'dark' || (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
-  try { localStorage.setItem('ma:tema', dark ? 'light' : 'dark'); } catch(e){}
-  aplicarTema();
-}
+<section class="sec" id="apps"><div class="wrap">
+  <div class="sec-head"><h2>Elige la herramienta que necesitas</h2><p>Cada aplicación resuelve una tarea concreta del día a día. Ábrela y empieza con datos de ejemplo.</p></div>
+  <div class="chips" role="group" aria-label="Filtrar por categoría"><button type="button" class="chip" data-f="all" aria-pressed="true">Todas</button><button type="button" class="chip" data-f="ventas" aria-pressed="false">Ventas y precios <small>4</small></button><button type="button" class="chip" data-f="finanzas" aria-pressed="false">Dinero y finanzas <small>6</small></button><button type="button" class="chip" data-f="personal" aria-pressed="false">Personal <small>3</small></button><button type="button" class="chip" data-f="operacion" aria-pressed="false">Operación y obra <small>3</small></button></div>
+  <div class="grid" id="grid"><article class="app" data-cat="finanzas" style="--c:#93A0FF;--c2:#3D4FD1">
+  <a class="app-ill" href="punto-equilibrio/" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M26 92V26M26 92h74"/>
+<path d="M26 66h72" stroke-dasharray="4 5" opacity=".5"/><path d="M26 66L98 44" opacity=".6"/><path d="M71.5 52L98 30L98 44Z" fill="currentColor" fill-opacity=".32" stroke="none"/>
+<path d="M26 90L98 30"/><circle cx="71.5" cy="52" r="10" opacity=".35"/><circle cx="71.5" cy="52" r="4.5" fill="currentColor"/></svg></a>
+  <div class="app-body">
+    <span class="app-cat">Dinero y finanzas</span>
+    <h3>Punto de Equilibrio</h3>
+    <p>Cuánto vender para no perder dinero.</p>
+    <ul><li>Uno o varios productos</li><li>Meta de utilidad y margen de seguridad</li><li>Gráfico y escenarios guardados</li></ul>
+    <a class="btn-app" href="punto-equilibrio/">Abrir aplicación<span class="sr"> Punto de Equilibrio</span></a>
+  </div>
+</article><article class="app" data-cat="ventas" style="--c:#4FD1DB;--c2:#0E7C86">
+  <a class="app-ill" href="precios-multimoneda/" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 58L54 22h32a6 6 0 0 1 6 6v32L56 96a6 6 0 0 1-8.5 0L18 66.5a6 6 0 0 1 0-8.5z" fill="currentColor" fill-opacity=".14"/><circle cx="78" cy="36" r="5"/>
+<path d="M58 46v4M58 74v4M64 54c-1.5-3-10-4-10 1.5 0 6 11 3 11 9.5 0 5.5-9 5-11 1"/>
+<circle cx="90" cy="88" r="15" fill="currentColor" fill-opacity=".14"/><path d="M95 82a7 7 0 1 0 0 12M82 86h9M82 90h9"/><circle cx="104" cy="66" r="10" fill="currentColor" fill-opacity=".14"/><path d="M101 62v8h3a2 2 0 0 0 0-4h-3 3a2 2 0 0 0 0-4z" stroke-width="1.8"/></svg></a>
+  <div class="app-body">
+    <span class="app-cat">Ventas y precios</span>
+    <h3>Precios Multimoneda</h3>
+    <p>Tu lista de precios en pesos, dólares y bolívares.</p>
+    <ul><li>Tasas y redondeo propios</li><li>Margen o recargo por producto</li><li>Lista lista para WhatsApp</li></ul>
+    <a class="btn-app" href="precios-multimoneda/">Abrir aplicación<span class="sr"> Precios Multimoneda</span></a>
+  </div>
+</article><article class="app" data-cat="ventas" style="--c:#C3A0F5;--c2:#7A3FC4">
+  <a class="app-ill" href="comisiones-ventas/" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="16" y="68" width="27" height="32" rx="3"/><rect x="46.5" y="50" width="27" height="50" rx="3" fill="currentColor" fill-opacity=".14"/><rect x="77" y="76" width="27" height="24" rx="3"/>
+<path d="M60 18l4.5 9 10 1.4-7.2 7 1.7 9.9L60 40.6l-9 4.7 1.7-9.9-7.2-7 10-1.4z" fill="currentColor" fill-opacity=".32" stroke="none"/><path d="M60 18l4.5 9 10 1.4-7.2 7 1.7 9.9L60 40.6l-9 4.7 1.7-9.9-7.2-7 10-1.4z"/>
+<circle cx="55" cy="66" r="3"/><circle cx="65" cy="80" r="3"/><path d="M67 64L53 82"/><path d="M10 100h100"/></svg></a>
+  <div class="app-body">
+    <span class="app-cat">Ventas y precios</span>
+    <h3>Comisiones de Venta</h3>
+    <p>Liquida comisiones por vendedor sin hacer cuentas.</p>
+    <ul><li>Porcentaje fijo o por tramos</li><li>Metas, bonos y ranking</li><li>Liquidación imprimible</li></ul>
+    <a class="btn-app" href="comisiones-ventas/">Abrir aplicación<span class="sr"> Comisiones de Venta</span></a>
+  </div>
+</article><article class="app" data-cat="ventas" style="--c:#7FAEF0;--c2:#1D4F91">
+  <a class="app-ill" href="facturador/" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M30 12h42l18 18v74a5 5 0 0 1-5 5H30a5 5 0 0 1-5-5V17a5 5 0 0 1 5-5z" fill="currentColor" fill-opacity=".14"/><path d="M72 12v18h18"/>
+<path d="M36 44h28M36 54h38M36 64h32" opacity=".7"/><path d="M36 80h20" stroke-width="4"/><path d="M62 80h14"/>
+<circle cx="88" cy="94" r="15" fill="#000" stroke="currentColor"/><circle cx="88" cy="94" r="15" fill="currentColor" fill-opacity=".14"/><path d="M81 94l5 5 9-10"/></svg></a>
+  <div class="app-body">
+    <span class="app-cat">Ventas y precios</span>
+    <h3>Cotizador y Facturador</h3>
+    <p>Cotizaciones, facturas y recibos con tu logo.</p>
+    <ul><li>IVA, descuentos y valor en letras</li><li>PDF y envío por WhatsApp</li><li>Control de pagados y vencidos</li></ul>
+    <a class="btn-app" href="facturador/">Abrir aplicación<span class="sr"> Cotizador y Facturador</span></a>
+  </div>
+</article><article class="app" data-cat="finanzas" style="--c:#5DD39E;--c2:#18794E">
+  <a class="app-ill" href="control-caja/" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M30 60V40a5 5 0 0 1 5-5h50a5 5 0 0 1 5 5v20"/><rect x="40" y="43" width="40" height="10" rx="2" fill="currentColor" fill-opacity=".32" stroke="none"/>
+<path d="M44 35V18h32v17" fill="currentColor" fill-opacity=".14"/><circle cx="60" cy="26" r="4"/><path d="M16 60h88v36a6 6 0 0 1-6 6H22a6 6 0 0 1-6-6z" fill="currentColor" fill-opacity=".14"/>
+<path d="M16 80h88"/><path d="M52 91h16" stroke-width="4"/><path d="M30 68h4M42 68h4M54 68h4M66 68h4M78 68h4M90 68h4" opacity=".6"/></svg></a>
+  <div class="app-body">
+    <span class="app-cat">Dinero y finanzas</span>
+    <h3>Control de Caja</h3>
+    <p>Apertura, movimientos y cierre de caja.</p>
+    <ul><li>Medios de pago separados</li><li>Arqueo por billetes y monedas</li><li>Resumen mensual por categoría</li></ul>
+    <a class="btn-app" href="control-caja/">Abrir aplicación<span class="sr"> Control de Caja</span></a>
+  </div>
+</article><article class="app" data-cat="operacion" style="--c:#F0B35A;--c2:#A15C0B">
+  <a class="app-ill" href="kardex-inventario/" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="22" y="62" width="34" height="32" rx="3" fill="currentColor" fill-opacity=".14"/><rect x="60" y="62" width="34" height="32" rx="3"/><rect x="41" y="27" width="34" height="32" rx="3" fill="currentColor" fill-opacity=".14"/>
+<path d="M39 62v10M77 62v10M58 27v10"/><path d="M12 98h96"/><path d="M4 44h14M12 38l6 6-6 6" opacity=".8"/><path d="M98 44h16M108 38l6 6-6 6" opacity=".8"/></svg></a>
+  <div class="app-body">
+    <span class="app-cat">Operación y obra</span>
+    <h3>Kardex de Inventario</h3>
+    <p>Existencias valorizadas y alertas de reorden.</p>
+    <ul><li>Promedio ponderado o PEPS</li><li>Alertas de stock mínimo</li><li>Utilidad bruta por venta</li></ul>
+    <a class="btn-app" href="kardex-inventario/">Abrir aplicación<span class="sr"> Kardex de Inventario</span></a>
+  </div>
+</article><article class="app" data-cat="finanzas" style="--c:#F287B0;--c2:#B4235A">
+  <a class="app-ill" href="cuentas-cobrar-pagar/" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="60" cy="60" r="22" fill="currentColor" fill-opacity=".14"/><path d="M60 47v4M60 69v4M66 54c-1.5-3-12-4-12 1.5 0 6.5 13 3.5 13 10 0 5.5-11 5.5-13 1.5"/>
+<path d="M22 48a40 40 0 0 1 60-27"/><path d="M76 13l8 8-11 3"/><path d="M98 72a40 40 0 0 1-60 27"/><path d="M44 107l-8-8 11-3"/></svg></a>
+  <div class="app-body">
+    <span class="app-cat">Dinero y finanzas</span>
+    <h3>Cuentas por Cobrar y Pagar</h3>
+    <p>Quién te debe, a quién le debes y desde cuándo.</p>
+    <ul><li>Abonos y días de mora</li><li>Antigüedad de cartera</li><li>Estados de cuenta por WhatsApp</li></ul>
+    <a class="btn-app" href="cuentas-cobrar-pagar/">Abrir aplicación<span class="sr"> Cuentas por Cobrar y Pagar</span></a>
+  </div>
+</article><article class="app" data-cat="finanzas" style="--c:#B6DA6A;--c2:#557A1A">
+  <a class="app-ill" href="flujo-caja/" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 80h96" opacity=".5"/><rect x="18" y="62" width="12" height="18" rx="2" fill="currentColor" fill-opacity=".32" stroke="none"/><rect x="36" y="50" width="12" height="30" rx="2" fill="currentColor" fill-opacity=".32" stroke="none"/>
+<rect x="54" y="80" width="12" height="16" rx="2" fill="currentColor" fill-opacity=".14"/><rect x="72" y="56" width="12" height="24" rx="2" fill="currentColor" fill-opacity=".32" stroke="none"/><rect x="90" y="38" width="12" height="42" rx="2" fill="currentColor" fill-opacity=".32" stroke="none"/>
+<path d="M24 46C36 38 42 30 48 32s10 26 18 24 14-18 20-22 10-12 14-16"/><circle cx="24" cy="46" r="3" fill="currentColor"/><circle cx="100" cy="18" r="3" fill="currentColor"/></svg></a>
+  <div class="app-body">
+    <span class="app-cat">Dinero y finanzas</span>
+    <h3>Flujo de Caja a 12 Meses</h3>
+    <p>Anticipa los meses en que te va a faltar dinero.</p>
+    <ul><li>Proyección de 12 meses</li><li>Saldo mínimo y meses en rojo</li><li>Financiamiento sugerido</li></ul>
+    <a class="btn-app" href="flujo-caja/">Abrir aplicación<span class="sr"> Flujo de Caja a 12 Meses</span></a>
+  </div>
+</article><article class="app" data-cat="finanzas" style="--c:#9CC0E0;--c2:#3E5C76">
+  <a class="app-ill" href="estados-financieros/" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M60 22v74"/><path d="M40 100h40"/><path d="M22 34h76"/><circle cx="60" cy="22" r="4.5" fill="currentColor"/>
+<path d="M22 34l-11 28M22 34l11 28"/><path d="M9 62h26a13 13 0 0 1-26 0z" fill="currentColor" fill-opacity=".14"/><path d="M98 34l-11 28M98 34l11 28"/><path d="M85 62h26a13 13 0 0 1-26 0z" fill="currentColor" fill-opacity=".14"/>
+<path d="M16 58v-6M22 58v-10M28 58v-4" stroke-width="2"/><circle cx="98" cy="54" r="4" stroke-width="2"/></svg></a>
+  <div class="app-body">
+    <span class="app-cat">Dinero y finanzas</span>
+    <h3>Estado de Resultados y Balance</h3>
+    <p>Estado de resultados, balance e indicadores.</p>
+    <ul><li>Dos periodos comparados</li><li>Balance que se verifica solo</li><li>12 indicadores financieros</li></ul>
+    <a class="btn-app" href="estados-financieros/">Abrir aplicación<span class="sr"> Estado de Resultados y Balance</span></a>
+  </div>
+</article><article class="app" data-cat="finanzas" style="--c:#7FD3BA;--c2:#2F6F5E">
+  <a class="app-ill" href="plan-negocio/" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M60 12c15 11 21 30 19 49l-8 12H49l-8-12c-2-19 4-38 19-49z" fill="currentColor" fill-opacity=".14"/><circle cx="60" cy="43" r="7.5"/>
+<path d="M41 58L29 74l14 2M79 58l12 16-14 2"/><path d="M52 75c0 11 8 21 8 28 0-7 8-17 8-28" fill="currentColor" fill-opacity=".32" stroke="none"/>
+<path d="M18 28h4M20 26v4M100 40h4M102 38v4M96 96h3M14 86h3" stroke-width="2"/></svg></a>
+  <div class="app-body">
+    <span class="app-cat">Dinero y finanzas</span>
+    <h3>Plan de Negocio Express</h3>
+    <p>Saber si tu idea es rentable antes de invertir.</p>
+    <ul><li>Inversión y crédito</li><li>VPN, TIR y recuperación</li><li>Escenarios de ventas y costos</li></ul>
+    <a class="btn-app" href="plan-negocio/">Abrir aplicación<span class="sr"> Plan de Negocio Express</span></a>
+  </div>
+</article><article class="app" data-cat="personal" style="--c:#F5A46E;--c2:#B4531A">
+  <a class="app-ill" href="nomina/" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="12" y="26" width="64" height="46" rx="7" fill="currentColor" fill-opacity=".14"/><circle cx="31" cy="44" r="7.5"/><path d="M20 63a11 11 0 0 1 22 0"/><path d="M50 42h18M50 52h13" opacity=".7"/>
+<rect x="52" y="56" width="56" height="42" rx="7" fill="#000"/><rect x="52" y="56" width="56" height="42" rx="7" fill="currentColor" fill-opacity=".14"/><path d="M80 64v4M80 86v4M86 71c-1.5-3-12-4-12 1.5 0 6 12 3 12 9.5 0 5-10.5 5-12 1"/></svg></a>
+  <div class="app-body">
+    <span class="app-cat">Personal</span>
+    <h3>Nómina Colombia y Venezuela</h3>
+    <p>Nómina para Colombia y Venezuela.</p>
+    <ul><li>Seguridad social y aportes</li><li>Prestaciones sociales</li><li>Comprobantes de pago</li></ul>
+    <a class="btn-app" href="nomina/">Abrir aplicación<span class="sr"> Nómina Colombia y Venezuela</span></a>
+  </div>
+</article><article class="app" data-cat="personal" style="--c:#EE8FE0;--c2:#9C2F8F">
+  <a class="app-ill" href="horas-extras/" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="54" cy="64" r="37" fill="currentColor" fill-opacity=".14"/><path d="M54 40v24l15 10"/><circle cx="54" cy="64" r="3.5" fill="currentColor"/>
+<path d="M54 31v5M54 92v5M21 64h5M82 64h5" opacity=".7"/><path d="M99 14a13 13 0 1 0 8 23 15 15 0 0 1-8-23z" fill="currentColor" fill-opacity=".32" stroke="none"/><path d="M99 14a13 13 0 1 0 8 23 15 15 0 0 1-8-23z"/>
+<path d="M14 22h8M18 18v8" stroke-width="2"/></svg></a>
+  <div class="app-body">
+    <span class="app-cat">Personal</span>
+    <h3>Horas Extras y Recargos</h3>
+    <p>De la hora de entrada y salida al valor a pagar.</p>
+    <ul><li>Clasificación automática</li><li>Nocturnas, dominicales y festivos</li><li>Alertas de límites legales</li></ul>
+    <a class="btn-app" href="horas-extras/">Abrir aplicación<span class="sr"> Horas Extras y Recargos</span></a>
+  </div>
+</article><article class="app" data-cat="personal" style="--c:#6CC4F2;--c2:#0B7BB8">
+  <a class="app-ill" href="asistencia-vacaciones/" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="14" y="22" width="92" height="82" rx="9" fill="currentColor" fill-opacity=".14"/><path d="M14 42h92"/><path d="M38 14v16M82 14v16"/>
+<path d="M26 56l4 4 7-8M51 56l4 4 7-8M76 56l4 4 7-8M26 76l4 4 7-8M76 76l4 4 7-8"/><rect x="49" y="70" width="16" height="14" rx="3" fill="currentColor" fill-opacity=".32" stroke="none"/>
+<path d="M26 96h10M51 96h10" opacity=".5"/></svg></a>
+  <div class="app-body">
+    <span class="app-cat">Personal</span>
+    <h3>Asistencia y Vacaciones</h3>
+    <p>Asistencia diaria y saldo de vacaciones.</p>
+    <ul><li>Calendario por empleado</li><li>Faltas, permisos e incapacidades</li><li>Programación de vacaciones</li></ul>
+    <a class="btn-app" href="asistencia-vacaciones/">Abrir aplicación<span class="sr"> Asistencia y Vacaciones</span></a>
+  </div>
+</article><article class="app" data-cat="ventas" style="--c:#E0A97E;--c2:#7A4B2A">
+  <a class="app-ill" href="costo-receta/" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M42 50c-4-6 4-10 0-17M60 50c-4-6 4-10 0-17M78 50c-4-6 4-10 0-17" opacity=".75"/><path d="M18 62h84"/><path d="M54 56h12" stroke-width="4"/>
+<path d="M22 62h76v22a16 16 0 0 1-16 16H38a16 16 0 0 1-16-16z" fill="currentColor" fill-opacity=".14"/><path d="M22 70h-9M98 70h9"/><path d="M40 78h40" opacity=".4"/></svg></a>
+  <div class="app-body">
+    <span class="app-cat">Ventas y precios</span>
+    <h3>Costo de Receta</h3>
+    <p>Cuánto cuesta cada plato y a cuánto venderlo.</p>
+    <ul><li>Insumos con merma</li><li>Precio sugerido con impuesto</li><li>Ficha técnica y análisis del menú</li></ul>
+    <a class="btn-app" href="costo-receta/">Abrir aplicación<span class="sr"> Costo de Receta</span></a>
+  </div>
+</article><article class="app" data-cat="operacion" style="--c:#F2C94C;--c2:#9A7600">
+  <a class="app-ill" href="proyectos/" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="10" y="18" width="100" height="86" rx="9" fill="currentColor" fill-opacity=".14"/><path d="M43 18v86M77 18v86" opacity=".5"/>
+<rect x="16" y="30" width="22" height="14" rx="3" fill="currentColor" fill-opacity=".32" stroke="none"/><rect x="16" y="50" width="22" height="14" rx="3"/><rect x="49" y="30" width="22" height="14" rx="3" fill="currentColor" fill-opacity=".32" stroke="none"/>
+<rect x="82" y="30" width="22" height="14" rx="3"/><rect x="82" y="50" width="22" height="14" rx="3"/><path d="M86 57l3 3 6-6M86 37l3 3 6-6"/>
+<path d="M16 84h30M30 94h40M58 84h30" stroke-width="5" opacity=".75"/></svg></a>
+  <div class="app-body">
+    <span class="app-cat">Operación y obra</span>
+    <h3>Proyectos Gantt y Kanban</h3>
+    <p>Tareas, responsables y fechas bajo control.</p>
+    <ul><li>Tablero Kanban</li><li>Cronograma Gantt con dependencias</li><li>Plantillas listas para usar</li></ul>
+    <a class="btn-app" href="proyectos/">Abrir aplicación<span class="sr"> Proyectos Gantt y Kanban</span></a>
+  </div>
+</article><article class="app" data-cat="operacion" style="--c:#C3C9D4;--c2:#4A4E57">
+  <a class="app-ill" href="ingenieria-civil/" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 104h104"/><path d="M28 104V24"/><path d="M28 32l9 8-9 8 9 8-9 8 9 8-9 8 9 8" opacity=".6"/><path d="M37 24v80"/>
+<path d="M18 24h80"/><path d="M28 24l9-10 9 10" /><path d="M84 24v28"/><rect x="77" y="52" width="14" height="10" rx="2" fill="currentColor" fill-opacity=".32" stroke="none"/>
+<rect x="58" y="70" width="44" height="34" rx="2" fill="currentColor" fill-opacity=".14"/><path d="M66 80h9M85 80h9M66 92h9M85 92h9"/></svg></a>
+  <div class="app-body">
+    <span class="app-cat">Operación y obra</span>
+    <h3>Calculadoras de Ingeniería Civil</h3>
+    <p>Materiales de obra y predimensionamiento.</p>
+    <ul><li>Concreto, muros y acero</li><li>Zapatas, columnas y excavación</li><li>Lista de materiales con costos</li></ul>
+    <a class="btn-app" href="ingenieria-civil/">Abrir aplicación<span class="sr"> Calculadoras de Ingeniería Civil</span></a>
+  </div>
+</article></div>
+</div></section>
 
-/* ---------- Pestañas ---------- */
-function tabs(onChange){
-  const btns = $$('.tab[data-tab]');
-  const sel = (id, save=true) => {
-    btns.forEach(b => b.setAttribute('aria-selected', b.dataset.tab === id ? 'true':'false'));
-    $$('.panel[data-panel]').forEach(p => p.hidden = p.dataset.panel !== id);
-    if (save) store.set('_tab', id);
-    if (onChange) onChange(id);
-  };
-  btns.forEach(b => b.addEventListener('click', () => sel(b.dataset.tab)));
-  const saved = store.get('_tab'); const first = btns[0] && btns[0].dataset.tab;
-  sel(btns.some(b => b.dataset.tab === saved) ? saved : first, false);
-  return sel;
-}
+<section class="why" id="por-que"><div class="wrap">
+  <h2>Hechas para el día a día de un negocio real</h2>
+  <div class="it"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18h4"/></svg>
+    <h3>Se instalan en el celular</h3><p>Ábrelas desde el enlace y agrégalas a la pantalla de inicio. Después funcionan sin internet.</p></div>
+  <div class="it"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+    <h3>Tus datos son tuyos</h3><p>Todo se guarda en tu dispositivo. Descarga una copia de seguridad cuando quieras.</p></div>
+  <div class="it"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 14h8M8 18h5"/></svg>
+    <h3>PDF, Excel y WhatsApp</h3><p>Imprime con tu logo, exporta a Excel y envía documentos a tus clientes en segundos.</p></div>
+</div></section>
 
-/* ---------- Instalación PWA ---------- */
-let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; });
-function instalar(){
-  if (deferredPrompt){ deferredPrompt.prompt(); deferredPrompt = null; return; }
-  dialog({title:'Instalar en tu dispositivo', body:`<div class="stack small">
-    <p><b>Android (Chrome):</b> abre el menú ⋮ y elige «Instalar aplicación» o «Agregar a la pantalla principal».</p>
-    <p><b>iPhone (Safari):</b> toca el botón Compartir y luego «Agregar a inicio».</p>
-    <p><b>Computador:</b> en Chrome o Edge, usa el ícono de instalar en la barra de direcciones.</p>
-    <p class="muted">Una vez instalada funciona sin internet.</p></div>`, actions:[{label:'Entendido', cls:'primary'}]});
-}
+<section class="final"><div class="wrap"><div class="box">
+  <h2>¿Necesitas una aplicación a la medida de tu negocio?</h2>
+  <p>Adapto estas herramientas con tu marca, tus procesos y acceso para todo tu equipo. Cuéntame qué necesitas y te propongo una solución.</p>
+  <div class="cta"><a class="btn gold" href="https://wa.me/573126387467?text=Hola José, quiero una aplicación a la medida para mi negocio." target="_blank" rel="noopener">Hablar con José por WhatsApp</a>
+    <a class="btn line" href="mailto:jose.lugocdv@gmail.com?subject=Aplicación a la medida">Escribir un correo</a></div>
+</div></div></section>
+</main>
 
-/* ---------- Encabezado de impresión ---------- */
-function renderPrintHead(){
-  const ph = $('#ma-print-head'); if(!ph) return; const n = negocio();
-  ph.innerHTML = `<div style="display:flex;gap:14px;align-items:center;border-bottom:2px solid #222;padding-bottom:10px;margin-bottom:14px">
-    ${n.logo?`<img src="${n.logo}" style="width:58px;height:58px;object-fit:contain">`:''}
-    <div style="flex:1"><div style="font-size:15pt;font-weight:700">${esc(n.nombre||CFG.name)}</div>
-    <div style="font-size:9pt;color:#444">${[n.doc, n.tel, n.email, [n.dir,n.ciudad].filter(Boolean).join(', ')].filter(Boolean).map(esc).join('  |  ')}</div></div>
-    <div style="text-align:right;font-size:9pt;color:#444"><div style="font-weight:700;color:#000">${esc(CFG.name)}</div>${fechaLarga(today())}</div></div>`;
-}
+<footer class="foot"><div class="wrap">
+  <div class="sig"><span class="mono" aria-hidden="true">JL</span><div><small>Diseño y desarrollo</small><strong>José Lugo</strong><em>Soluciones digitales para emprendedores y empresas</em></div></div>
+  <p class="legal">© <span id="y">2026</span> José Lugo. Todos los derechos reservados.</p>
+  <div class="contact">
+    <a href="https://wa.me/573126387467?text=Hola José, vi tus microapps y quiero más información." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="#1FA855" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3z"/></svg>+57 312 638 7467</a>
+    <a href="mailto:jose.lugocdv@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>jose.lugocdv@gmail.com</a>
+  </div>
+</div></footer>
 
-
-/* ---------- Documento imprimible en ventana aparte ---------- */
-function imprimirDoc(titulo, cuerpo, sub=''){
-  const w = window.open('', '_blank'); if (!w){ toast('Permite las ventanas emergentes para imprimir.', true); return; }
-  const n = negocio(); const acc = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#1D4F91';
-  w.document.write(`<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${esc(titulo)}</title><style>
-    body{font:10.5pt/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;margin:26px 30px;color:#1a1a1a}
-    .h{display:flex;justify-content:space-between;gap:18px;align-items:center;border-bottom:3px solid ${acc};padding-bottom:12px;margin-bottom:16px}
-    .h img{height:58px;max-width:120px;object-fit:contain}.h b{font-size:14pt}.h small{display:block;color:#555;font-size:8.5pt}
-    h1{font-size:16pt;margin:0;color:${acc}}h2{font-size:12pt;margin:18px 0 6px}.sub{color:#555;font-size:9.5pt}
-    table{width:100%;border-collapse:collapse;margin-top:8px;font-size:9.5pt}th{background:#f0f2f5;text-align:left;padding:6px 8px;border-bottom:1.5px solid ${acc}}
-    td{padding:6px 8px;border-bottom:1px solid #e3e3e3;vertical-align:top}.r{text-align:right}.neg{color:#b3261e}.pos{color:#15784a}
-    tfoot td,.tot td{font-weight:700;border-top:2px solid #1a1a1a}.kp{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
-    .kp div{border:1px solid #ddd;border-radius:8px;padding:8px 12px;flex:1;min-width:120px}.kp span{display:block;font-size:8.5pt;color:#666}.kp b{font-size:12pt}
-    .sig{margin-top:56px;display:flex;gap:60px}.sig div{flex:1;border-top:1px solid #111;padding-top:6px;font-size:9pt}
-    .foot{margin-top:28px;font-size:8pt;color:#777;text-align:center;border-top:1px solid #ddd;padding-top:8px}
-    th,.kp div{-webkit-print-color-adjust:exact;print-color-adjust:exact}</style></head><body>
-    <div class="h"><div style="display:flex;gap:12px;align-items:center">${n.logo?`<img src="${n.logo}" alt="">`:''}<div><b>${esc(n.nombre||'')}</b><small>${[n.doc,n.tel,n.email,[n.dir,n.ciudad].filter(Boolean).join(', ')].filter(Boolean).map(esc).join('  |  ')}</small></div></div>
-    <div style="text-align:right"><h1>${esc(titulo)}</h1><div class="sub">${sub?esc(sub)+'<br>':''}Emitido el ${fechaLarga(today())}</div></div></div>
-    ${cuerpo}
-    <div class="foot">Generado con ${esc(CFG.name)}, desarrollada por ${AUTOR.nombre}. WhatsApp ${AUTOR.tel}, ${AUTOR.email}</div>
-    <script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script></body></html>`);
-  w.document.close();
-}
-
-/* ---------- Festivos de Colombia y Venezuela ---------- */
-function pascua(y){ const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),mes=Math.floor((h+l-7*m+114)/31),dia=((h+l-7*m+114)%31)+1; return new Date(y,mes-1,dia); }
-const isoD = d => d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
-const _fest = {};
-function festivos(pais, y){
-  const key = pais+y; if (_fest[key]) return _fest[key];
-  const F = {}, add = (d, n) => F[isoD(d)] = n, D = (m, d) => new Date(y, m-1, d), E = pascua(y), mas = n => new Date(E.getFullYear(), E.getMonth(), E.getDate()+n);
-  const lunes = d => { const w = d.getDay(); return w === 1 ? d : new Date(d.getFullYear(), d.getMonth(), d.getDate() + ((8 - w) % 7)); };
-  if (pais === 'VE'){
-    add(D(1,1),'Año Nuevo'); add(mas(-48),'Lunes de Carnaval'); add(mas(-47),'Martes de Carnaval'); add(mas(-3),'Jueves Santo'); add(mas(-2),'Viernes Santo');
-    add(D(4,19),'Declaración de la Independencia'); add(D(5,1),'Día del Trabajador'); add(D(6,24),'Batalla de Carabobo'); add(D(7,5),'Día de la Independencia');
-    add(D(7,24),'Natalicio del Libertador'); add(D(10,12),'Día de la Resistencia Indígena'); add(D(12,24),'Nochebuena'); add(D(12,25),'Navidad'); add(D(12,31),'Fin de año');
-  } else {
-    add(D(1,1),'Año Nuevo'); add(lunes(D(1,6)),'Reyes Magos'); add(lunes(D(3,19)),'San José'); add(mas(-3),'Jueves Santo'); add(mas(-2),'Viernes Santo');
-    add(D(5,1),'Día del Trabajo'); add(mas(43),'Ascensión del Señor'); add(mas(64),'Corpus Christi'); add(mas(71),'Sagrado Corazón');
-    add(lunes(D(6,29)),'San Pedro y San Pablo'); add(D(7,20),'Independencia'); add(D(8,7),'Batalla de Boyacá'); add(lunes(D(8,15)),'Asunción de la Virgen');
-    add(lunes(D(10,12)),'Día de la Raza'); add(lunes(D(11,1)),'Todos los Santos'); add(lunes(D(11,11)),'Independencia de Cartagena'); add(D(12,8),'Inmaculada Concepción'); add(D(12,25),'Navidad');
-  }
-  return (_fest[key] = F);
-}
-const esFestivo = (pais, iso) => festivos(pais, +iso.slice(0,4))[iso] || '';
-
-/* ---------- Montaje de la interfaz común ---------- */
-function montar(){
-  aplicarTema();
-  // menú
-  const bar = $('.app-bar-in');
-  if (bar){
-    const btn = document.createElement('button'); btn.className='btn ghost icon'; btn.setAttribute('aria-label','Más opciones'); btn.setAttribute('aria-haspopup','true'); btn.innerHTML = I.more;
-    const menu = document.createElement('div'); menu.className='menu'; menu.hidden = true; menu.setAttribute('role','menu');
-    menu.innerHTML = `<button data-a="neg">${I.store}Datos del negocio</button>
-      <button data-a="print">${I.print}Imprimir o guardar PDF</button>
-      <hr><button data-a="bk">${I.down}Descargar copia de seguridad</button>
-      <button data-a="rs">${I.up}Restaurar copia de seguridad</button>
-      <hr><button data-a="inst">${I.install}Instalar en el dispositivo</button>
-      <button data-a="tema">${I.moon}Cambiar modo claro / oscuro</button>
-      <a href="../">${I.grid}Ver todas las microapps</a>`;
-    bar.appendChild(btn); document.querySelector('.app-bar').appendChild(menu);
-    btn.onclick = e => { e.stopPropagation(); menu.hidden = !menu.hidden; };
-    document.addEventListener('click', e => { if(!menu.contains(e.target)) menu.hidden = true; });
-    document.addEventListener('keydown', e => { if(e.key==='Escape') menu.hidden = true; });
-    menu.onclick = e => { const a = e.target.closest('[data-a]'); if(!a) return; menu.hidden = true;
-      ({neg:editarNegocio, print:()=>window.print(), bk:backup, rs:restaurar, inst:instalar, tema:alternarTema})[a.dataset.a](); };
-  }
-  // encabezado de impresión
-  const main = $('.app-main');
-  if (main && !$('#ma-print-head')){ const ph=document.createElement('div'); ph.id='ma-print-head'; ph.className='print-only'; main.prepend(ph); }
-  renderPrintHead();
-  // firma
-  const f = $('#firma');
-  if (f){
-    f.className = 'firma';
-    f.innerHTML = `<div class="firma-in">
-      <div class="firma-id"><div class="firma-mono" aria-hidden="true">JL</div>
-        <div class="firma-txt"><small>Diseño y desarrollo</small><strong>${AUTOR.nombre}</strong><em>Soluciones digitales para emprendedores y empresas</em></div></div>
-      <p class="firma-legal">© ${new Date().getFullYear()} ${AUTOR.nombre}. Todos los derechos reservados.<br>Tus datos se guardan solo en este dispositivo.</p>
-      <div class="firma-links">
-        <a class="wa" href="https://wa.me/${AUTOR.telRaw}?text=${encodeURIComponent('Hola José, vi tu app «'+CFG.name+'» y quiero más información.')}" target="_blank" rel="noopener">${I.wa}${AUTOR.tel}</a>
-        <a href="mailto:${AUTOR.email}?subject=${encodeURIComponent('Microapp '+CFG.name)}">${I.mail}${AUTOR.email}</a>
-      </div></div>`;
-    const ps = document.createElement('div'); ps.className = 'print-only print-sign';
-    ps.textContent = `Generado con ${CFG.name}, desarrollada por ${AUTOR.nombre}. WhatsApp ${AUTOR.tel}, ${AUTOR.email}`;
-    main && main.appendChild(ps);
-  }
-  // service worker
-  if (CFG.id !== 'hub' && 'serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(()=>{});
-}
-
-window.MA = {CFG, AUTOR, I, $, $$, esc, uid, today, monthKey, round, num, money, moneyK, bindNum, fmt, pct, MONEDAS, monedaOptions, fechaLarga, fechaCorta, mesNombre,
-  store, negocio, setNegocio, toast, dialog, confirmar, download, csv, copiar, whatsapp, backup, restaurar, editarNegocio, tabs, montar, renderPrintHead, imprimirDoc, festivos, esFestivo};
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', montar); else montar();
-})();
+<script>
+document.getElementById('y').textContent = new Date().getFullYear();
+const chips = document.querySelectorAll('.chip'), apps = document.querySelectorAll('.app');
+chips.forEach(c => c.addEventListener('click', () => {
+  chips.forEach(x => x.setAttribute('aria-pressed', x === c ? 'true' : 'false'));
+  apps.forEach(a => a.hidden = !(c.dataset.f === 'all' || a.dataset.cat === c.dataset.f));
+}));
 </script>
 </body>
 </html>

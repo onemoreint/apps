@@ -2,7 +2,7 @@
 
 Herramientas web para emprendedores y pymes. Cada una es una página autocontenida (PWA): funciona sin internet, se instala en el celular y guarda los datos solo en el dispositivo.
 
-Índice: https://onemoreint.github.io/apps/microapps/
+Vitrina (landing negra con todas las apps): https://onemoreint.github.io/apps/microapps/ . Se genera desde `src/landing.py`.
 
 | Microapp | Enlace |
 |---|---|

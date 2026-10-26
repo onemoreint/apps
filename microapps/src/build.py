@@ -129,8 +129,6 @@ if __name__ == "__main__":
 
 
 ROADMAP = [
-    ("Proyectos Gantt y Kanban", "Tareas, responsables y cronograma en un solo tablero.", 4),
-    ("Calculadoras de Ingeniería Civil", "Mezclas de concreto, zapatas y columnas.", 4),
 ]
 
 
@@ -141,13 +139,14 @@ def build_hub(metas):
       <span class="hub-tx"><b>{t(m['name'])}</b><span>{t(m['desc'])}</span></span>
       <span class="hub-go">Abrir</span></a>""" for m in metas)
     soon = "".join(f"""<li><b>{t(n)}</b><span>{t(d)}</span><em>Oleada {w}</em></li>""" for n, d, w in ROADMAP)
+    soon_html = (f'<div class="hub-sec"><h2>En construcción</h2><span class="muted small">Próximas microapps, en orden de lanzamiento</span></div><ul class="hub-soon">{soon}</ul>' if ROADMAP else '')
     page = f"""<!doctype html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Microapps para Negocios | José Lugo</title>
-<meta name="description" content="Herramientas web para emprendedores y pymes: precios, facturación, caja, inventario, cartera, flujo de caja, estados financieros, plan de negocio, nómina, horas extra, asistencia y costeo de recetas. Funcionan sin internet y se instalan en el celular.">
+<meta name="description" content="Herramientas web para emprendedores y pymes: precios, facturación, caja, inventario, cartera, flujo de caja, estados financieros, plan de negocio, nómina, horas extra, asistencia, recetas, proyectos e ingeniería civil. Funcionan sin internet y se instalan en el celular.">
 <meta name="author" content="José Lugo">
 <meta name="theme-color" content="#17212B">
 <link rel="canonical" href="{BASE_URL}">
@@ -202,8 +201,7 @@ def build_hub(metas):
 </div></header>
 <main class="hub-main">
   <div class="hub-grid">{cards}</div>
-  <div class="hub-sec"><h2>En construcción</h2><span class="muted small">Próximas microapps, en orden de lanzamiento</span></div>
-  <ul class="hub-soon">{soon}</ul>
+{soon_html}
   <div class="hub-cta"><div><h2>¿Necesitas una app a la medida de tu negocio?</h2><p>Adapto estas herramientas con tu marca, tus procesos y acceso para tu equipo.</p></div>
     <a class="btn primary" style="--accent:#1FA855;--accent-ink:#178A45" href="https://wa.me/573126387467?text={html.escape('Hola José, quiero una microapp para mi negocio.')}" target="_blank" rel="noopener">Escribir por WhatsApp</a></div>
 </main>
@@ -219,7 +217,8 @@ def build_hub(metas):
 
 ORDER = ["punto-equilibrio", "precios-multimoneda", "comisiones-ventas", "facturador", "control-caja", "kardex-inventario",
          "cuentas-cobrar-pagar", "flujo-caja", "estados-financieros", "plan-negocio",
-         "nomina", "horas-extras", "asistencia-vacaciones", "costo-receta"]
+         "nomina", "horas-extras", "asistencia-vacaciones", "costo-receta",
+         "proyectos", "ingenieria-civil"]
 if __name__ == "__main__":
     allm = {p.name: json.loads((SRC / "apps" / p.name / "meta.json").read_text(encoding="utf-8")) for p in (SRC / "apps").iterdir() if p.is_dir()}
     build_hub([allm[s] for s in ORDER if s in allm] + [m for s, m in sorted(allm.items()) if s not in ORDER])

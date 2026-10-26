@@ -1,0 +1,39 @@
+<div class="card no-print" style="margin-bottom:16px">
+  <div class="row between">
+    <div class="row" style="flex:1;min-width:260px">
+      <select class="input" id="sel-proy" style="max-width:340px" aria-label="Proyecto"></select>
+      <button class="btn" id="btn-nuevo" type="button"></button>
+      <button class="btn ghost sm" id="btn-editp" type="button">Editar proyecto</button>
+    </div>
+    <div class="row"><button class="btn ghost sm" id="btn-csv" type="button"></button><button class="btn ghost sm" id="btn-print" type="button"></button></div>
+  </div>
+  <div class="proy-meta" id="proy-meta"></div>
+</div>
+
+<section class="panel" data-panel="kanban">
+  <div class="kanban" id="kanban"></div>
+</section>
+
+<section class="panel" data-panel="gantt">
+  <div class="card">
+    <div class="card-head" style="flex-wrap:wrap"><div><h2>Cronograma</h2><p>Barras por tarea con su avance. La línea vertical marca hoy.</p></div>
+      <div class="row no-print"><div class="seg" id="zoom"><button type="button" data-v="d">Días</button><button type="button" data-v="w">Semanas</button></div>
+        <button class="btn sm" id="btn-dep" type="button">Ajustar fechas por dependencias</button></div></div>
+    <div class="gantt-wrap" id="gantt"></div>
+  </div>
+</section>
+
+<section class="panel" data-panel="lista">
+  <div class="card">
+    <div class="card-head"><div><h2>Tareas</h2><p>Toca una tarea para editarla. Ordenadas por fecha de inicio.</p></div><button class="btn primary" id="btn-tarea" type="button"></button></div>
+    <div id="lista"></div>
+  </div>
+</section>
+
+<section class="panel" data-panel="res">
+  <div class="kpis" id="kpis" style="margin-bottom:16px"></div>
+  <div class="grid-2" style="align-items:start">
+    <div class="card"><div class="card-head"><div><h3>Atrasadas y próximas a vencer</h3><p>Lo que necesita atención esta semana.</p></div></div><div id="alertas"></div></div>
+    <div class="card"><div class="card-head"><div><h3>Carga por responsable</h3><p>Tareas abiertas de cada persona.</p></div></div><div class="bars" id="carga"></div></div>
+  </div>
+</section>

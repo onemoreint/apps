@@ -20,6 +20,8 @@ Herramientas web para emprendedores y pymes. Cada una es una página autoconteni
 | Horas Extras y Recargos | https://onemoreint.github.io/apps/microapps/horas-extras/ |
 | Asistencia y Vacaciones | https://onemoreint.github.io/apps/microapps/asistencia-vacaciones/ |
 | Costo de Receta | https://onemoreint.github.io/apps/microapps/costo-receta/ |
+| Proyectos Gantt y Kanban | https://onemoreint.github.io/apps/microapps/proyectos/ |
+| Calculadoras de Ingeniería Civil | https://onemoreint.github.io/apps/microapps/ingenieria-civil/ |
 
 ## Cómo está organizado
 

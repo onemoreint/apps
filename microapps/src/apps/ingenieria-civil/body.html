@@ -1,0 +1,129 @@
+<section class="panel" data-panel="conc">
+  <div class="grid-2">
+    <div class="stack">
+      <div class="card">
+        <div class="card-head"><div><h2>Elementos a fundir</h2><p>Agrega losas, vigas, columnas, zapatas o cilindros. Medidas en metros.</p></div></div>
+        <div id="elems"></div>
+        <div class="row" style="margin-top:10px"><select class="input" id="el-tipo" style="max-width:200px" aria-label="Tipo de elemento"></select><button class="btn sm" id="add-el" type="button">Agregar elemento</button></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h2>Mezcla</h2><p>Dosificación en volumen (cemento : arena : grava) por metro cúbico.</p></div></div>
+        <div class="fields">
+          <label class="field" style="grid-column:1/-1"><span>Resistencia o uso</span><select class="input" id="mezcla"></select></label>
+          <label class="field"><span>Desperdicio</span><div class="input-group"><input class="input num" id="c-desp" inputmode="decimal"><span class="addon">%</span></div></label>
+        </div>
+        <p class="hint" style="margin-top:10px" id="mezcla-nota"></p>
+      </div>
+    </div>
+    <aside class="stack sticky"><div class="ticket" id="t-conc"></div><button class="btn primary no-print" id="lst-conc" type="button">Agregar a la lista de materiales</button></aside>
+  </div>
+</section>
+
+<section class="panel" data-panel="muro">
+  <div class="grid-2">
+    <div class="stack">
+      <div class="card">
+        <div class="card-head"><div><h2>Muro</h2><p>Área neta: descuenta puertas y ventanas.</p></div></div>
+        <div class="fields">
+          <label class="field"><span>Largo del muro</span><div class="input-group"><input class="input num" id="m-l" inputmode="decimal"><span class="addon">m</span></div></label>
+          <label class="field"><span>Alto del muro</span><div class="input-group"><input class="input num" id="m-h" inputmode="decimal"><span class="addon">m</span></div></label>
+          <label class="field"><span>Vanos a descontar</span><div class="input-group"><input class="input num" id="m-v" inputmode="decimal"><span class="addon">m²</span></div></label>
+          <label class="field" style="grid-column:1/-1"><span>Unidad de mampostería</span><select class="input" id="m-u"></select></label>
+          <label class="field"><span>Largo de la unidad</span><div class="input-group"><input class="input num" id="m-ul" inputmode="decimal"><span class="addon">cm</span></div></label>
+          <label class="field"><span>Alto de la unidad</span><div class="input-group"><input class="input num" id="m-uh" inputmode="decimal"><span class="addon">cm</span></div></label>
+          <label class="field"><span>Espesor (ancho) de la unidad</span><div class="input-group"><input class="input num" id="m-ue" inputmode="decimal"><span class="addon">cm</span></div></label>
+          <label class="field"><span>Espesor de la junta</span><div class="input-group"><input class="input num" id="m-j" inputmode="decimal"><span class="addon">cm</span></div></label>
+          <label class="field"><span>Mortero de pega</span><select class="input" id="m-mort"></select></label>
+          <label class="field"><span>Desperdicio de unidades</span><div class="input-group"><input class="input num" id="m-du" inputmode="decimal"><span class="addon">%</span></div></label>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h2>Pañete o revoque</h2><p>Opcional: recubrimiento de una o ambas caras.</p></div></div>
+        <div class="fields">
+          <label class="field"><span>Caras a pañetar</span><select class="input" id="p-caras"><option value="0">Ninguna</option><option value="1">Una cara</option><option value="2">Dos caras</option></select></label>
+          <label class="field"><span>Espesor del pañete</span><div class="input-group"><input class="input num" id="p-e" inputmode="decimal"><span class="addon">cm</span></div></label>
+          <label class="field"><span>Mortero de pañete</span><select class="input" id="p-mort"></select></label>
+        </div>
+      </div>
+    </div>
+    <aside class="stack sticky"><div class="ticket" id="t-muro"></div><button class="btn primary no-print" id="lst-muro" type="button">Agregar a la lista de materiales</button></aside>
+  </div>
+</section>
+
+<section class="panel" data-panel="acero">
+  <div class="grid-2">
+    <div class="stack">
+      <div class="card">
+        <div class="card-head"><div><h2>Refuerzo</h2><p>Elige qué vas a calcular.</p></div></div>
+        <div class="seg" id="a-modo" style="margin-bottom:14px"><button type="button" data-v="malla">Malla de losa o placa</button><button type="button" data-v="long">Varillas por longitud</button><button type="button" data-v="estr">Estribos</button></div>
+        <div class="fields" id="a-campos"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h3>Tabla de varillas corrugadas</h3><p>Masa nominal según ASTM A615 / NTC 2289.</p></div></div>
+        <div id="a-tabla"></div>
+      </div>
+    </div>
+    <aside class="stack sticky"><div class="ticket" id="t-acero"></div><button class="btn primary no-print" id="lst-acero" type="button">Agregar a la lista de materiales</button></aside>
+  </div>
+</section>
+
+<section class="panel" data-panel="cim">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><div><h2>Zapata aislada</h2><p>Área de la base para la carga de servicio y la capacidad del suelo.</p></div></div>
+      <div class="fields">
+        <label class="field"><span>Carga de servicio (P)</span><div class="input-group"><input class="input num" id="z-p" inputmode="decimal"><span class="addon">ton</span></div></label>
+        <label class="field"><span>Capacidad admisible del suelo</span><div class="input-group"><input class="input num" id="z-q" inputmode="decimal"><span class="addon">kg/cm²</span></div><small class="hint">Del estudio de suelos.</small></label>
+        <label class="field"><span>Peso propio y relleno</span><div class="input-group"><input class="input num" id="z-f" inputmode="decimal"><span class="addon">% de P</span></div></label>
+        <label class="field"><span>Relación largo / ancho</span><input class="input num" id="z-r" inputmode="decimal"><small class="hint">1 para zapata cuadrada.</small></label>
+      </div>
+      <div class="ticket" style="margin-top:18px" id="t-zap"></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div><h2>Columna</h2><p>Predimensionamiento de la sección por carga axial.</p></div></div>
+      <div class="fields">
+        <label class="field"><span>Área tributaria</span><div class="input-group"><input class="input num" id="c-at" inputmode="decimal"><span class="addon">m²</span></div></label>
+        <label class="field"><span>Número de pisos</span><input class="input num" id="c-n" inputmode="numeric"></label>
+        <label class="field"><span>Carga por piso</span><div class="input-group"><input class="input num" id="c-w" inputmode="decimal"><span class="addon">ton/m²</span></div><small class="hint">Vivienda y oficinas: alrededor de 1 ton/m².</small></label>
+        <label class="field"><span>Resistencia del concreto (f'c)</span><div class="input-group"><input class="input num" id="c-fc" inputmode="decimal"><span class="addon">kg/cm²</span></div></label>
+        <label class="field" style="grid-column:1/-1"><span>Ubicación</span><select class="input" id="c-tipo"><option value="int">Interior (n = 0,45; P × 1,10)</option><option value="ext">Exterior o de borde (n = 0,35; P × 1,25)</option><option value="esq">Esquina (n = 0,35; P × 1,50)</option></select></label>
+      </div>
+      <div class="ticket" style="margin-top:18px" id="t-col"></div>
+    </div>
+  </div>
+  <p class="hint" style="margin-top:14px">El predimensionamiento es una primera aproximación para cotizar y planear. El diseño estructural definitivo lo debe hacer y firmar un ingeniero según la norma vigente (NSR-10 en Colombia, COVENIN 1753 en Venezuela).</p>
+</section>
+
+<section class="panel" data-panel="exc">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><div><h2>Excavación y relleno</h2><p>Volumen en banco, volumen suelto para transportar y relleno compactado.</p></div></div>
+      <div class="fields">
+        <label class="field"><span>Cantidad</span><input class="input num" id="e-n" inputmode="numeric"><small class="hint">Por ejemplo, número de zapatas iguales.</small></label>
+        <label class="field"><span>Largo</span><div class="input-group"><input class="input num" id="e-l" inputmode="decimal"><span class="addon">m</span></div></label>
+        <label class="field"><span>Ancho</span><div class="input-group"><input class="input num" id="e-a" inputmode="decimal"><span class="addon">m</span></div></label>
+        <label class="field"><span>Profundidad</span><div class="input-group"><input class="input num" id="e-p" inputmode="decimal"><span class="addon">m</span></div></label>
+        <label class="field"><span>Expansión del suelo al excavar</span><div class="input-group"><input class="input num" id="e-ab" inputmode="decimal"><span class="addon">%</span></div><small class="hint">Tierra común 25%, arcilla 30% a 40%, roca 50% o más.</small></label>
+        <label class="field"><span>Capacidad de la volqueta</span><div class="input-group"><input class="input num" id="e-vq" inputmode="decimal"><span class="addon">m³</span></div></label>
+        <label class="field"><span>Volumen ocupado por la estructura</span><div class="input-group"><input class="input num" id="e-est" inputmode="decimal"><span class="addon">m³</span></div><small class="hint">Concreto que queda enterrado.</small></label>
+        <label class="field"><span>Factor de compactación del relleno</span><input class="input num" id="e-fc" inputmode="decimal"><small class="hint">Material suelto necesario por m³ compactado.</small></label>
+      </div>
+    </div>
+    <aside class="stack sticky"><div class="ticket" id="t-exc"></div><button class="btn primary no-print" id="lst-exc" type="button">Agregar a la lista de materiales</button></aside>
+  </div>
+</section>
+
+<section class="panel" data-panel="lista">
+  <div class="card">
+    <div class="card-head" style="flex-wrap:wrap"><div><h2>Lista de materiales</h2><p>Suma de todo lo que agregaste desde las calculadoras, con los precios de la pestaña «Precios».</p></div>
+      <div class="row no-print"><input class="input" id="obra" placeholder="Nombre de la obra" style="max-width:240px"><button class="btn ghost sm" id="btn-csv" type="button"></button><button class="btn sm" id="btn-print" type="button"></button><button class="btn ghost sm danger" id="btn-vaciar" type="button">Vaciar lista</button></div></div>
+    <div id="lista"></div>
+  </div>
+</section>
+
+<section class="panel" data-panel="precios">
+  <div class="card" style="max-width:900px">
+    <div class="card-head"><div><h2>Precios de materiales</h2><p>Precios unitarios de tu zona, en tu moneda. Se usan para valorar la lista de materiales.</p></div></div>
+    <div class="fields" id="precios"></div>
+  </div>
+</section>

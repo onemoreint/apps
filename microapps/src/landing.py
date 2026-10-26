@@ -86,6 +86,42 @@ def svg(slug, size=None):
     return f'<svg viewBox="0 0 120 120"{sz} {A} aria-hidden="true">{body}</svg>'
 
 
+def logo_mark(uid="a", size=40):
+    """Logo JL Microapps: ícono de app con borde degradado (turquesa, violeta, rosa) e iniciales en dorado."""
+    return (f'<svg viewBox="0 0 64 64" width="{size}" height="{size}" aria-hidden="true">'
+            f'<defs><linearGradient id="lg{uid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22D3B6"/><stop offset=".55" stop-color="#8B5CF6"/><stop offset="1" stop-color="#F472B6"/></linearGradient>'
+            f'<radialGradient id="rg{uid}" cx=".5" cy=".35" r=".7"><stop offset="0" stop-color="#1b1b22"/><stop offset="1" stop-color="#08080a"/></radialGradient></defs>'
+            f'<rect x="3" y="3" width="58" height="58" rx="17" fill="url(#rg{uid})" stroke="url(#lg{uid})" stroke-width="2.6"/>'
+            f'<rect x="11" y="11" width="15" height="9" rx="3" fill="url(#lg{uid})"/><circle cx="49.5" cy="15.5" r="3.2" fill="#22D3B6"/>'
+            f'<text x="32" y="45.5" font-family="Bodoni Moda, Didot, Georgia, serif" font-size="25" font-weight="700" text-anchor="middle" fill="#D9C08A">JL</text></svg>')
+
+
+def splash_html():
+    W = 'fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"'
+    def mini(slug):
+        return f'<svg viewBox="0 0 120 120" {W} aria-hidden="true">{ILL[slug]}</svg>'
+    return f"""<div class="splash" id="splash" role="status" aria-live="polite" aria-label="Cargando Microapps de José Lugo">
+  <div class="stage">
+
+    <div class="phone"><div class="screen"><div class="scr-in">{logo_mark("s", 74)}<b>Microapps</b><span><i></i><i></i><i></i></span></div></div></div>
+    <svg class="links" viewBox="0 0 340 440" aria-hidden="true">
+      <path d="M150 268 C126 268 112 262 100 246"/><path d="M188 150 C198 150 198 122 208 120"/><path d="M160 336 C164 360 180 364 196 360"/>
+      <path d="M128 298 C102 298 80 294 58 288"/><path d="M216 50 C216 70 204 78 196 96"/>
+      <circle cx="150" cy="268" r="3.2"/><circle cx="188" cy="150" r="3.2"/><circle cx="160" cy="336" r="3.2"/><circle cx="128" cy="298" r="3.2"/><circle cx="196" cy="96" r="3.2"/>
+    </svg>
+    <div class="search"><span id="sp-txt"></span><svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></div>
+    <div class="fc c1"><i class="dots"></i>{mini("facturador")}</div>
+    <div class="fc c2">{mini("nomina")}<i class="ln"></i></div>
+    <div class="fc c3"><div class="row-i">{mini("proyectos")}</div><i class="ln"></i><i class="ln s"></i></div>
+    <div class="fc c4 sm">{mini("precios-multimoneda")}</div>
+    <div class="fc c5 sm">{mini("plan-negocio")}</div>
+  </div>
+  <div class="sp-brand">{logo_mark("b", 46)}<div><strong>JL Microapps</strong><small>Herramientas para tu negocio, por José Lugo</small></div></div>
+  <div class="sp-bar"><i></i></div>
+  <button class="sp-skip" type="button" id="sp-skip">Saltar</button>
+</div>"""
+
+
 def build_landing(metas, out_path, base_url, fonts_unused=None):
     t = html.escape
     metas = [m for m in metas if m["id"] in INFO]
@@ -113,8 +149,9 @@ def build_landing(metas, out_path, base_url, fonts_unused=None):
         f'<button type="button" class="chip" data-f="{k}" aria-pressed="false">{t(v)} <small>{sum(1 for m in metas if INFO[m["id"]][0]==k)}</small></button>' for k, v in CATS)
     wa_msg = html.escape("Hola José, vi tus microapps y quiero más información.")
     page = f'''<!doctype html>
-<html lang="es">
+<html lang="es" class="nojs">
 <head>
+<script>document.documentElement.className="js"</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Microapps para Negocios | José Lugo</title>
@@ -127,7 +164,7 @@ def build_landing(metas, out_path, base_url, fonts_unused=None):
 <meta property="og:type" content="website">
 <meta property="og:url" content="{base_url}">
 <meta property="og:image" content="{base_url}facturador/icon-512.png">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%23000'/%3E%3Ccircle cx='32' cy='32' r='29' fill='none' stroke='%23D9C08A' stroke-width='2'/%3E%3Ctext x='32' y='41' font-family='Georgia' font-size='24' text-anchor='middle' fill='%23D9C08A'%3EJL%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500..800;1,6..96,500&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet">
 <style>
@@ -183,7 +220,8 @@ p{{margin:0}}
 .tile.t1,.tile.t4{{transform:translateY(22px)}}
 .tile.t1:hover,.tile.t4:hover{{transform:translateY(19px)}}
 @media(prefers-reduced-motion:no-preference){{
-  .tile{{opacity:0;animation:aparece .7s cubic-bezier(.2,.7,.2,1) forwards}}
+  .js .tile{{opacity:0}}
+  .js.ready .tile{{animation:aparece .7s cubic-bezier(.2,.7,.2,1) forwards}}
   .t0{{animation-delay:.05s}}.t1{{animation-delay:.15s}}.t2{{animation-delay:.25s}}.t3{{animation-delay:.35s}}.t4{{animation-delay:.45s}}.t5{{animation-delay:.55s}}
   @keyframes aparece{{from{{opacity:0;translate:0 14px}}to{{opacity:1;translate:0 0}}}}
 }}
@@ -252,11 +290,68 @@ p{{margin:0}}
 .contact a:hover{{border-color:var(--gold);color:var(--gold)}}
 .contact svg{{width:17px;height:17px}}
 @media(max-width:520px){{.hero{{padding-top:44px}}.mosaic{{gap:10px}}.tile{{border-radius:16px}}.tile span{{display:none}}.sec{{padding:56px 0}}.final .box{{padding:34px 20px}}}}
+/* Bienvenida */
+.splash{{display:none}}
+.js .splash{{position:fixed;inset:0;z-index:100;background:radial-gradient(70% 55% at 50% 42%,#101016 0%,#000 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;overflow:hidden;transition:opacity .6s ease,visibility .6s}}
+.js .splash.out{{opacity:0;visibility:hidden}}
+.js body.lock{{overflow:hidden}}
+.stage{{position:relative;width:340px;height:440px;flex:none}}
+@media(max-height:700px){{.stage{{transform:scale(.8);margin:-44px 0}}}}
+@media(max-width:350px){{.stage{{transform:scale(.86)}}}}
+.links{{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:1;filter:drop-shadow(0 0 4px rgba(255,255,255,.5))}}
+.links path{{fill:none;stroke:rgba(255,255,255,.75);stroke-width:1.6;stroke-dasharray:120;stroke-dashoffset:120;animation:traza .6s ease-out .95s forwards}}
+.links circle{{fill:#fff;opacity:0;animation:fade .3s ease 1.4s forwards}}
+.phone{{position:absolute;left:85px;top:62px;width:170px;height:330px;border-radius:30px;background:#0b0b0e;padding:7px;transform:rotate(-9deg);
+  box-shadow:0 0 0 1.5px #2b2b33,0 30px 80px -20px rgba(34,211,182,.45),0 0 120px -30px rgba(139,92,246,.6);opacity:0;animation:sube .6s cubic-bezier(.2,.8,.2,1) .05s forwards}}
+.screen{{width:100%;height:100%;border-radius:24px;background:linear-gradient(165deg,#22D3B6 0%,#14b894 42%,#8fbd5c 78%,#e7ae5b 100%);display:grid;place-items:center;overflow:hidden;position:relative}}
+.screen::after{{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.28) 45%,transparent 60%);transform:translateX(-120%);animation:brillo 1.4s ease-in-out 1.3s forwards}}
+.scr-in{{display:grid;justify-items:center;gap:8px;transform:rotate(9deg);opacity:0;animation:fade .5s ease .35s forwards}}
+.scr-in svg{{filter:drop-shadow(0 8px 18px rgba(0,0,0,.35))}}
+.scr-in b{{font-family:var(--serif);color:#fff;font-size:1.25rem;letter-spacing:.02em;text-shadow:0 2px 10px rgba(0,0,0,.25)}}
+.scr-in span{{display:flex;gap:5px}}
+.scr-in span i{{width:7px;height:7px;border-radius:50%;background:#fff;opacity:.35;animation:punto 1s ease-in-out infinite}}
+.scr-in span i:nth-child(2){{animation-delay:.15s}}.scr-in span i:nth-child(3){{animation-delay:.3s}}
+.search{{position:absolute;z-index:2;left:118px;top:14px;width:196px;height:36px;border-radius:999px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 16px;
+  color:#1f2937;font-size:.88rem;font-weight:600;box-shadow:0 10px 30px -10px rgba(255,255,255,.35);opacity:0;animation:pop .55s cubic-bezier(.3,1.4,.5,1) .45s forwards;--dx:-45px;--dy:190px}}
+.search svg{{width:18px;height:18px}}
+.search span::after{{content:"";display:inline-block;width:1.5px;height:1em;background:#1f2937;margin-left:2px;vertical-align:-2px;animation:cursor .8s steps(1) infinite}}
+.fc{{position:absolute;z-index:2;border-radius:16px;background:var(--g);display:grid;place-items:center;opacity:0;animation:pop .65s cubic-bezier(.3,1.5,.5,1) var(--t) forwards,flota 3.2s ease-in-out calc(var(--t) + .7s) infinite;
+  box-shadow:0 0 0 1px rgba(255,255,255,.25) inset,0 14px 36px -8px var(--sh),0 0 40px -6px var(--sh)}}
+.fc svg{{width:58%;height:58%}}
+.fc .ln{{position:absolute;left:14%;right:30%;bottom:16%;height:5px;border-radius:3px;background:rgba(255,255,255,.55)}}
+.fc .ln.s{{bottom:9%;right:48%;opacity:.7}}
+.fc .dots{{position:absolute;left:10px;top:9px;width:22px;height:5px;background:radial-gradient(circle,rgba(255,255,255,.8) 2px,transparent 2.5px) 0 0/8px 5px repeat-x}}
+.c1{{left:0;top:150px;width:132px;height:94px;--g:linear-gradient(135deg,#FF9A6B,#F0627A);--sh:rgba(240,98,122,.7);--t:.6s;--dx:105px;--dy:34px}}
+.c2{{left:208px;top:66px;width:104px;height:114px;--g:linear-gradient(150deg,#B794F6,#7C3AED);--sh:rgba(124,58,237,.75);--t:.75s;--dx:-92px;--dy:104px}}
+.c2 svg,.c3 svg{{width:54%;height:54%;margin-bottom:12%}}
+.c3{{left:196px;top:220px;width:142px;height:152px;--g:linear-gradient(160deg,#FBB6DD,#EC4899);--sh:rgba(236,72,153,.75);--t:.9s;--dx:-96px;--dy:-65px}}
+.c4{{left:16px;top:262px;width:42px;height:42px;border-radius:12px;--g:linear-gradient(135deg,#5EEAD4,#22B8CF);--sh:rgba(34,184,207,.8);--t:1s;--dx:132px;--dy:-52px}}
+.c5{{left:66px;top:282px;width:42px;height:42px;border-radius:12px;--g:linear-gradient(135deg,#F9A8D4,#DB2777);--sh:rgba(219,39,119,.8);--t:1.1s;--dx:84px;--dy:-70px}}
+.fc.sm svg{{width:70%;height:70%}}
+.sp-brand{{display:flex;align-items:center;gap:14px;opacity:0;animation:sube .6s ease 1.3s forwards}}
+.sp-brand strong{{display:block;font-family:var(--serif);font-size:1.6rem;font-weight:600;line-height:1.05;color:var(--tx)}}
+.sp-brand small{{display:block;color:var(--tx2);font-size:.86rem}}
+.sp-bar{{width:min(240px,60vw);height:3px;border-radius:3px;background:#1f1f25;overflow:hidden}}
+.sp-bar i{{display:block;height:100%;width:100%;background:linear-gradient(90deg,#22D3B6,#8B5CF6,#F472B6,#D9C08A);transform-origin:left;transform:scaleX(0);animation:carga 2.5s cubic-bezier(.4,.1,.2,1) .1s forwards}}
+.sp-skip{{position:absolute;right:18px;bottom:18px;font:inherit;font-size:.86rem;color:var(--tx3);background:none;border:1px solid var(--line2);border-radius:999px;padding:7px 14px;cursor:pointer}}
+.sp-skip:hover{{color:var(--tx);border-color:var(--tx3)}}
+@keyframes sube{{from{{opacity:0;translate:0 18px}}to{{opacity:1;translate:0 0}}}}
+@keyframes fade{{to{{opacity:1}}}}
+@keyframes pop{{0%{{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.15)}}60%{{opacity:1}}100%{{opacity:1;transform:translate(0,0) scale(1)}}}}
+@keyframes flota{{0%,100%{{translate:0 0}}50%{{translate:0 -6px}}}}
+@keyframes traza{{to{{stroke-dashoffset:0}}}}
+@keyframes brillo{{to{{transform:translateX(120%)}}}}
+@keyframes punto{{0%,100%{{opacity:.35}}50%{{opacity:1}}}}
+@keyframes carga{{to{{transform:scaleX(1)}}}}
+@keyframes cursor{{50%{{opacity:0}}}}
+@media(prefers-reduced-motion:reduce){{.splash *,.splash *::after{{animation:none!important;opacity:1!important;stroke-dashoffset:0!important}}.sp-bar i{{transform:scaleX(1)}}.screen::after{{display:none}}}}
+.brand .lm{{display:block;filter:drop-shadow(0 4px 14px rgba(139,92,246,.35))}}
 </style>
 </head>
-<body>
+<body class="lock">
+{splash_html()}
 <header class="top"><div class="wrap">
-  <a class="brand" href="#inicio"><span class="mono" aria-hidden="true">JL</span><span><b>José Lugo</b><small>Microapps para negocios</small></span></a>
+  <a class="brand" href="#inicio"><span class="lm">{logo_mark("h", 42)}</span><span><b>JL Microapps</b><small>por José Lugo</small></span></a>
   <nav aria-label="Secciones"><a href="#apps">Aplicaciones</a><a href="#por-que">Cómo funcionan</a>
     <a class="wa" href="https://wa.me/{WA}?text={wa_msg}" target="_blank" rel="noopener">WhatsApp</a></nav>
 </div></header>
@@ -307,6 +402,22 @@ p{{margin:0}}
 </div></footer>
 
 <script>
+(function(){{
+  var sp = document.getElementById('splash'), body = document.body, t0 = Date.now(), done = false;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var txt = 'Microapps', el = document.getElementById('sp-txt'), i = 0;
+  if (el){{ if (reduce) el.textContent = txt; else setTimeout(function tipo(){{ el.textContent = txt.slice(0, ++i); if (i < txt.length) setTimeout(tipo, 70); }}, 650); }}
+  function salir(){{ if (done || !sp) return; done = true; sp.classList.add('out'); body.classList.remove('lock'); document.documentElement.classList.add('ready');
+    setTimeout(function(){{ sp.remove(); }}, 650); }}
+  var minimo = reduce ? 900 : 2750;
+  function alCargar(){{ setTimeout(salir, Math.max(0, minimo - (Date.now() - t0))); }}
+  if (document.readyState === 'complete') alCargar(); else window.addEventListener('load', alCargar);
+  setTimeout(salir, 5000);
+  var b = document.getElementById('sp-skip'); if (b) b.addEventListener('click', salir);
+  document.addEventListener('keydown', function(e){{ if (e.key === 'Escape') salir(); }});
+}})();
+</script>
+<script>
 document.getElementById('y').textContent = new Date().getFullYear();
 const chips = document.querySelectorAll('.chip'), apps = document.querySelectorAll('.app');
 chips.forEach(c => c.addEventListener('click', () => {{
@@ -318,4 +429,5 @@ chips.forEach(c => c.addEventListener('click', () => {{
 </html>
 '''
     out_path.write_text(page, encoding="utf-8")
+    (out_path.parent / "logo.svg").write_text(logo_mark("f", 512).replace('aria-hidden="true"', 'xmlns="http://www.w3.org/2000/svg"'), encoding="utf-8")
     print("ok landing", n, "apps")

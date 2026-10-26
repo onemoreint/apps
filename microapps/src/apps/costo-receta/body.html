@@ -1,0 +1,60 @@
+<section class="panel" data-panel="rec">
+  <div class="row no-print" style="margin-bottom:16px">
+    <select class="input" id="sel-rec" style="max-width:320px" aria-label="Receta"></select>
+    <button class="btn" id="btn-nueva" type="button"></button>
+    <button class="btn ghost sm" id="btn-dup" type="button">Duplicar</button>
+    <button class="btn ghost sm danger" id="btn-del" type="button">Eliminar</button>
+  </div>
+  <div class="grid-2">
+    <div class="stack">
+      <div class="card">
+        <div class="fields">
+          <label class="field" style="grid-column:1/-1"><span>Nombre del plato o producto</span><input class="input" id="r-n"></label>
+          <label class="field"><span>Categoría</span><input class="input" id="r-cat" list="dl-cat"><datalist id="dl-cat"></datalist></label>
+          <label class="field"><span>La receta rinde</span><div class="input-group"><input class="input num" id="r-porc" inputmode="decimal"><span class="addon">porciones</span></div></label>
+          <label class="field"><span>Precio de venta actual</span><input class="input num" id="r-precio" inputmode="decimal" placeholder="Opcional"><small class="hint">Con impuesto incluido, como aparece en la carta.</small></label>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h2>Ingredientes</h2><p>Cantidades para toda la receta. El costo ya incluye la merma de cada insumo.</p></div></div>
+        <div class="table-wrap"><table class="t t-edit"><thead><tr><th style="min-width:170px">Insumo</th><th class="r" style="width:110px">Cantidad</th><th style="width:96px">Unidad</th><th class="r">Costo</th><th class="r">%</th><th></th></tr></thead><tbody id="items"></tbody></table></div>
+        <div class="row" style="margin-top:10px"><button class="btn sm" id="add-item" type="button"></button><button class="btn ghost sm" id="add-ins" type="button">Crear insumo nuevo</button></div>
+      </div>
+      <div class="card">
+        <label class="field"><span>Preparación</span><textarea class="input" id="r-prep" rows="4" placeholder="Pasos, tiempos, presentación. Aparece en la ficha técnica."></textarea></label>
+      </div>
+    </div>
+    <aside class="stack sticky"><div class="ticket" id="ticket"></div>
+      <button class="btn no-print" id="btn-ficha" type="button"></button></aside>
+  </div>
+</section>
+
+<section class="panel" data-panel="ins">
+  <div class="card">
+    <div class="card-head" style="flex-wrap:wrap"><div><h2>Insumos</h2><p>Precio de compra y merma. Si cambia un precio aquí, se actualizan todas las recetas que lo usan.</p></div>
+      <div class="row"><input class="input" id="q-ins" type="search" placeholder="Buscar insumo" style="max-width:220px"><button class="btn primary" id="btn-ins" type="button"></button></div></div>
+    <div id="insumos"></div>
+  </div>
+</section>
+
+<section class="panel" data-panel="menu">
+  <div class="kpis" id="menu-kpis" style="margin-bottom:16px"></div>
+  <div class="card">
+    <div class="card-head" style="flex-wrap:wrap"><div><h2>Rentabilidad del menú</h2><p>Escribe cuántas unidades vendes al mes de cada plato para clasificarlos por popularidad y ganancia.</p></div>
+      <div class="row no-print"><button class="btn ghost sm" id="btn-csv" type="button"></button><button class="btn sm" id="btn-print" type="button"></button></div></div>
+    <div id="menu"></div>
+    <div class="stack small muted" style="margin-top:14px" id="menu-leyenda"></div>
+  </div>
+</section>
+
+<section class="panel" data-panel="cfg">
+  <div class="card" style="max-width:820px">
+    <div class="card-head"><div><h2>Cómo se calcula el precio sugerido</h2><p>Se aplica a todas las recetas.</p></div></div>
+    <div class="fields">
+      <label class="field"><span>Costo de alimentos objetivo</span><div class="input-group"><input class="input num" id="c-fc" inputmode="decimal"><span class="addon">% del precio</span></div><small class="hint">Restaurantes suelen trabajar entre 25% y 35%.</small></label>
+      <label class="field"><span>Costos indirectos</span><div class="input-group"><input class="input num" id="c-ind" inputmode="decimal"><span class="addon">% del costo</span></div><small class="hint">Gas, condimentos, servilletas, desechables.</small></label>
+      <label class="field"><span>Impuesto en el precio de venta</span><div class="input-group"><input class="input num" id="c-imp" inputmode="decimal"><span class="addon">%</span></div><small class="hint">Colombia: impuesto al consumo 8%. Venezuela: IVA 16%. Pon 0 si no aplica.</small></label>
+      <label class="field"><span>Redondear el precio hacia arriba a</span><select class="input" id="c-red"><option value="0">Sin redondeo</option><option value="0.5">0,50</option><option value="1">1</option><option value="50">50</option><option value="100">100</option><option value="500">500</option><option value="1000">1.000</option></select></label>
+    </div>
+  </div>
+</section>

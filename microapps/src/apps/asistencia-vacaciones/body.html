@@ -1,0 +1,44 @@
+<div class="row between no-print" style="margin-bottom:16px">
+  <div class="row" style="flex:1">
+    <div class="seg" id="pais"><button type="button" data-v="CO">Colombia</button><button type="button" data-v="VE">Venezuela</button></div>
+    <label class="row small muted" id="mes-w">Mes<input class="input" type="month" id="mes" style="max-width:180px"></label>
+  </div>
+</div>
+
+<section class="panel" data-panel="cal">
+  <div class="card">
+    <div class="card-head" style="flex-wrap:wrap"><div><h2>Calendario de asistencia</h2><p>Elige una marca y toca o arrastra sobre los días.</p></div>
+      <button class="btn sm no-print" id="btn-todos" type="button">Marcar días hábiles como presentes</button></div>
+    <div class="marcas no-print" id="marcas" role="radiogroup" aria-label="Marca"></div>
+    <div class="table-wrap cal-wrap"><table class="cal" id="cal"></table></div>
+    <p class="hint" style="margin-top:8px" id="cal-nota"></p>
+  </div>
+</section>
+
+<section class="panel" data-panel="vac">
+  <div class="card">
+    <div class="card-head" style="flex-wrap:wrap"><div><h2>Saldo de vacaciones</h2><p id="vac-cap"></p></div>
+      <button class="btn primary no-print" id="btn-prog" type="button">Programar vacaciones</button></div>
+    <div id="vacaciones"></div>
+  </div>
+</section>
+
+<section class="panel" data-panel="res">
+  <div class="kpis" id="res-kpis" style="margin-bottom:16px"></div>
+  <div class="card">
+    <div class="card-head"><div><h2>Resumen por empleado</h2><p id="res-cap"></p></div>
+      <div class="row no-print"><button class="btn ghost sm" id="btn-csv" type="button"></button><button class="btn sm" id="btn-print" type="button"></button></div></div>
+    <div id="resumen"></div>
+  </div>
+</section>
+
+<section class="panel" data-panel="emp">
+  <div class="card">
+    <div class="card-head"><div><h2>Empleados</h2><p>Fecha de ingreso para calcular las vacaciones. Si ya disfrutaron días antes de usar la app, escríbelos en «Días ya tomados».</p></div>
+      <button class="btn primary" id="btn-emp" type="button"></button></div>
+    <div id="empleados"></div>
+    <div class="fields" style="margin-top:16px;max-width:420px">
+      <label class="field"><span>Día de descanso semanal</span><select class="input" id="c-desc"><option value="0">Domingo</option><option value="6">Sábado y domingo</option></select></label>
+    </div>
+  </div>
+</section>

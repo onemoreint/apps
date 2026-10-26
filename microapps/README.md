@@ -16,6 +16,10 @@ Herramientas web para emprendedores y pymes. Cada una es una página autoconteni
 | Flujo de Caja a 12 Meses | https://onemoreint.github.io/apps/microapps/flujo-caja/ |
 | Estado de Resultados y Balance | https://onemoreint.github.io/apps/microapps/estados-financieros/ |
 | Plan de Negocio Express | https://onemoreint.github.io/apps/microapps/plan-negocio/ |
+| Nómina Colombia y Venezuela | https://onemoreint.github.io/apps/microapps/nomina/ |
+| Horas Extras y Recargos | https://onemoreint.github.io/apps/microapps/horas-extras/ |
+| Asistencia y Vacaciones | https://onemoreint.github.io/apps/microapps/asistencia-vacaciones/ |
+| Costo de Receta | https://onemoreint.github.io/apps/microapps/costo-receta/ |
 
 ## Cómo está organizado
 
@@ -26,6 +30,8 @@ Herramientas web para emprendedores y pymes. Cada una es una página autoconteni
 Para regenerar después de un cambio: `python3 microapps/src/build.py`
 
 El perfil del negocio (nombre, logo, NIT, moneda) se comparte entre todas las microapps del mismo dispositivo.
+
+Los valores legales de nómina y horas extra (Colombia y Venezuela) están en `src/apps/nomina/app.js` y `src/apps/horas-extras/app.js`, vigentes a octubre de 2026, y cada usuario puede editarlos desde la app.
 
 ---
 Diseño y desarrollo: **José Lugo**, WhatsApp +57 312 638 7467, jose.lugocdv@gmail.com

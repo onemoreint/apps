@@ -1,0 +1,50 @@
+<div class="pais-bar no-print">
+  <div class="seg" id="pais" role="group" aria-label="País"><button type="button" data-v="CO">Colombia</button><button type="button" data-v="VE">Venezuela</button></div>
+  <p class="small muted" id="pais-nota"></p>
+</div>
+
+<section class="panel" data-panel="liq">
+  <div class="row between no-print" style="margin-bottom:16px">
+    <div class="row" style="flex:1">
+      <label class="small muted" for="mes">Mes</label><input class="input" type="month" id="mes" style="max-width:180px">
+      <select class="input" id="frec" style="max-width:170px" aria-label="Frecuencia de pago"><option value="m">Pago mensual</option><option value="q">Pago quincenal</option></select>
+      <span id="tasa-bcv-w" class="row"><label class="small muted" for="tasa-bcv">Tasa BCV</label><input class="input num" id="tasa-bcv" inputmode="decimal" style="max-width:120px"><span class="small muted">Bs por USD</span></span>
+    </div>
+    <div class="row"><button class="btn ghost sm" id="btn-csv" type="button"></button><button class="btn" id="btn-planilla" type="button"></button></div>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-head"><div><h2>Novedades del mes</h2><p>Días trabajados, horas extra, bonificaciones y descuentos de cada empleado.</p></div></div>
+    <div id="novedades"></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><div><h2>Planilla detallada</h2><p id="planilla-cap"></p></div></div>
+      <div class="table-wrap"><table class="t planilla" id="planilla"></table></div>
+    </div>
+    <aside class="stack sticky"><div class="ticket" id="resumen"></div></aside>
+  </div>
+</section>
+
+<section class="panel" data-panel="emp">
+  <div class="card">
+    <div class="card-head"><div><h2>Empleados</h2><p id="emp-cap"></p></div><button class="btn primary" id="btn-emp" type="button"></button></div>
+    <div id="empleados"></div>
+  </div>
+</section>
+
+<section class="panel" data-panel="prest">
+  <div class="card">
+    <div class="card-head" style="flex-wrap:wrap"><div><h2 id="prest-tit">Prestaciones sociales</h2><p id="prest-cap"></p></div>
+      <div class="row no-print"><label class="small muted" for="corte">Fecha de corte</label><input class="input" type="date" id="corte" style="max-width:170px"></div></div>
+    <div id="prestaciones"></div>
+  </div>
+</section>
+
+<section class="panel" data-panel="param">
+  <div class="card">
+    <div class="card-head"><div><h2 id="param-tit">Valores legales</h2><p>Valores vigentes cargados por defecto. Revísalos cuando cambie la ley o el salario mínimo; puedes editarlos.</p></div>
+      <button class="btn ghost sm" id="btn-reset-param" type="button">Restaurar valores por defecto</button></div>
+    <div id="params"></div>
+    <div id="fuentes" class="small muted" style="margin-top:16px"></div>
+  </div>
+</section>

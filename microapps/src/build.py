@@ -129,10 +129,6 @@ if __name__ == "__main__":
 
 
 ROADMAP = [
-    ("Nómina Colombia", "Salarios, prestaciones y seguridad social del mes.", 3),
-    ("Horas Extras y Recargos", "Diurnas, nocturnas, dominicales y festivos.", 3),
-    ("Asistencia y Vacaciones", "Control de asistencia, permisos y días de vacaciones.", 3),
-    ("Costo de Receta", "Costo por plato y precio sugerido para restaurantes.", 3),
     ("Proyectos Gantt y Kanban", "Tareas, responsables y cronograma en un solo tablero.", 4),
     ("Calculadoras de Ingeniería Civil", "Mezclas de concreto, zapatas y columnas.", 4),
 ]
@@ -151,7 +147,7 @@ def build_hub(metas):
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Microapps para Negocios | José Lugo</title>
-<meta name="description" content="Herramientas web para emprendedores y pymes: precios, facturación, caja, inventario, cartera, flujo de caja, estados financieros y plan de negocio. Funcionan sin internet y se instalan en el celular.">
+<meta name="description" content="Herramientas web para emprendedores y pymes: precios, facturación, caja, inventario, cartera, flujo de caja, estados financieros, plan de negocio, nómina, horas extra, asistencia y costeo de recetas. Funcionan sin internet y se instalan en el celular.">
 <meta name="author" content="José Lugo">
 <meta name="theme-color" content="#17212B">
 <link rel="canonical" href="{BASE_URL}">
@@ -202,7 +198,7 @@ def build_hub(metas):
   <div class="hub-brand"><div class="firma-mono" aria-hidden="true">JL</div><div><small>Microapps para negocios</small><strong>José Lugo</strong></div></div>
   <h1>Herramientas para vender, cobrar y controlar tu negocio</h1>
   <p class="lead">Cada app resuelve una tarea concreta del día a día. Abren en el celular o el computador, funcionan sin internet y tus datos se quedan en tu dispositivo.</p>
-  <div class="hub-facts"><span>Sin registro</span><span>Se instalan como app</span><span>Exportan a Excel y PDF</span><span>Pesos, dólares y bolívares</span></div>
+  <div class="hub-facts"><span>Sin registro</span><span>Se instalan como app</span><span>Exportan a Excel y PDF</span><span>Pesos, dólares y bolívares</span><span>Colombia y Venezuela</span></div>
 </div></header>
 <main class="hub-main">
   <div class="hub-grid">{cards}</div>
@@ -222,7 +218,8 @@ def build_hub(metas):
 
 
 ORDER = ["punto-equilibrio", "precios-multimoneda", "comisiones-ventas", "facturador", "control-caja", "kardex-inventario",
-         "cuentas-cobrar-pagar", "flujo-caja", "estados-financieros", "plan-negocio"]
+         "cuentas-cobrar-pagar", "flujo-caja", "estados-financieros", "plan-negocio",
+         "nomina", "horas-extras", "asistencia-vacaciones", "costo-receta"]
 if __name__ == "__main__":
     allm = {p.name: json.loads((SRC / "apps" / p.name / "meta.json").read_text(encoding="utf-8")) for p in (SRC / "apps").iterdir() if p.is_dir()}
     build_hub([allm[s] for s in ORDER if s in allm] + [m for s, m in sorted(allm.items()) if s not in ORDER])

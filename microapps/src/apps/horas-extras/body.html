@@ -1,0 +1,61 @@
+<div class="row between no-print" style="margin-bottom:16px">
+  <div class="row" style="flex:1">
+    <div class="seg" id="pais"><button type="button" data-v="CO">Colombia</button><button type="button" data-v="VE">Venezuela</button></div>
+    <label class="row small muted">Desde<input class="input" type="date" id="desde" style="max-width:165px"></label>
+    <label class="row small muted">Hasta<input class="input" type="date" id="hasta" style="max-width:165px"></label>
+  </div>
+</div>
+
+<section class="panel" data-panel="reg">
+  <div class="grid-2">
+    <div class="stack">
+      <div class="card">
+        <div class="card-head"><div><h2>Registrar turno</h2><p>Si la salida es antes que la entrada, se entiende que terminó al día siguiente.</p></div></div>
+        <form id="f-turno" class="fields" autocomplete="off">
+          <label class="field"><span>Fecha de entrada</span><input class="input" type="date" id="t-fecha" required></label>
+          <label class="field"><span>Hora de entrada</span><input class="input" type="time" id="t-ent" value="08:00" required></label>
+          <label class="field"><span>Hora de salida</span><input class="input" type="time" id="t-sal" value="18:00" required></label>
+          <label class="field"><span>Descanso sin pago</span><div class="input-group"><input class="input num" id="t-desc" inputmode="numeric" value="60"><span class="addon">min</span></div></label>
+          <label class="field" style="grid-column:1/-1"><span>Nota</span><input class="input" id="t-nota" placeholder="Opcional: inventario, evento, reemplazo"></label>
+          <div class="field" style="grid-column:1/-1"><button class="btn primary" type="submit">Agregar turno</button></div>
+        </form>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h2>Turnos del periodo</h2><p id="turnos-cap"></p></div></div>
+        <div id="turnos"></div>
+      </div>
+    </div>
+    <aside class="stack sticky"><div class="ticket" id="ticket"></div></aside>
+  </div>
+</section>
+
+<section class="panel" data-panel="res">
+  <div class="card">
+    <div class="card-head" style="flex-wrap:wrap"><div><h2>Liquidación de horas extra y recargos</h2><p id="res-cap"></p></div>
+      <div class="row no-print"><button class="btn ghost sm" id="btn-csv" type="button"></button><button class="btn" id="btn-print" type="button"></button></div></div>
+    <div id="resumen"></div>
+  </div>
+</section>
+
+<section class="panel" data-panel="cfg">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><div><h2>Trabajador y salario</h2><p>El valor de la hora sale del salario mensual.</p></div></div>
+      <div class="fields">
+        <label class="field" style="grid-column:1/-1"><span>Nombre del trabajador</span><input class="input" id="c-nombre"></label>
+        <label class="field"><span>Salario mensual</span><input class="input num" id="c-sal" inputmode="decimal"></label>
+        <label class="field"><span>Horas ordinarias al mes</span><input class="input num" id="c-div" inputmode="numeric"></label>
+        <label class="field"><span>Horas ordinarias por día</span><input class="input num" id="c-hdia" inputmode="decimal"><small class="hint">Lo que pase de aquí en un turno es hora extra.</small></label>
+        <label class="field"><span>Inicio del horario nocturno</span><input class="input" type="time" id="c-nini"></label>
+        <label class="field"><span>Fin del horario nocturno</span><input class="input" type="time" id="c-nfin"></label>
+        <label class="field"><span>Día de descanso semanal</span><select class="input" id="c-desc"><option value="0">Domingo</option><option value="6">Sábado</option><option value="-1">Ninguno fijo</option></select></label>
+      </div>
+      <div class="row" style="margin-top:14px"><button class="btn ghost sm" id="btn-def" type="button">Usar valores legales del país</button></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div><h2>Porcentajes que se pagan</h2><p>Porcentaje del valor de la hora ordinaria por cada hora.</p></div></div>
+      <div id="recs" class="fields"></div>
+      <p class="hint" style="margin-top:10px" id="rec-nota"></p>
+    </div>
+  </div>
+</section>

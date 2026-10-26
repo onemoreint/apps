@@ -12,6 +12,10 @@ Herramientas web para emprendedores y pymes. Cada una es una página autoconteni
 | Cotizador y Facturador | https://onemoreint.github.io/apps/microapps/facturador/ |
 | Control de Caja | https://onemoreint.github.io/apps/microapps/control-caja/ |
 | Kardex de Inventario | https://onemoreint.github.io/apps/microapps/kardex-inventario/ |
+| Cuentas por Cobrar y Pagar | https://onemoreint.github.io/apps/microapps/cuentas-cobrar-pagar/ |
+| Flujo de Caja a 12 Meses | https://onemoreint.github.io/apps/microapps/flujo-caja/ |
+| Estado de Resultados y Balance | https://onemoreint.github.io/apps/microapps/estados-financieros/ |
+| Plan de Negocio Express | https://onemoreint.github.io/apps/microapps/plan-negocio/ |
 
 ## Cómo está organizado
 

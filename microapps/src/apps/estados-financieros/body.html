@@ -1,0 +1,39 @@
+<div class="card no-print" style="margin-bottom:16px">
+  <div class="fields">
+    <label class="field"><span>Nombre del periodo actual</span><input class="input" id="pa" placeholder="Ej: 2026"></label>
+    <label class="field"><span>Nombre del periodo anterior</span><input class="input" id="pb" placeholder="Ej: 2025"></label>
+    <label class="field"><span>Tarifa de impuesto de renta</span><div class="input-group"><input class="input num" id="tasa" inputmode="decimal"><span class="addon">%</span></div></label>
+  </div>
+</div>
+
+<section class="panel" data-panel="er">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><div><h2>Estado de resultados</h2><p>Escribe los valores de cada cuenta. Los subtotales se calculan solos.</p></div></div>
+      <div class="table-wrap"><table class="t t-edit ef" id="er"></table></div>
+    </div>
+    <aside class="stack sticky"><div class="ticket" id="er-ticket"></div>
+      <div class="row no-print"><button class="btn" id="er-print" type="button"></button><button class="btn ghost sm" id="er-csv" type="button"></button></div></aside>
+  </div>
+</section>
+
+<section class="panel" data-panel="bg">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head"><div><h2>Balance general</h2><p>Lo que tiene el negocio, lo que debe y lo que es de los dueños.</p></div></div>
+      <div class="table-wrap"><table class="t t-edit ef" id="bg"></table></div>
+      <label class="check no-print" style="margin-top:12px"><input type="checkbox" id="auto-util"> Tomar la utilidad del ejercicio del estado de resultados</label>
+      <p class="hint">Las cuentas que tengan la palabra «inventario» se descuentan para la prueba ácida.</p>
+    </div>
+    <aside class="stack sticky"><div class="ticket" id="bg-ticket"></div>
+      <div class="row no-print"><button class="btn" id="bg-print" type="button"></button></div></aside>
+  </div>
+</section>
+
+<section class="panel" data-panel="ind">
+  <div class="card">
+    <div class="card-head"><div><h2>Indicadores financieros</h2><p>Calculados con el estado de resultados y el balance. El color indica una lectura general, no una regla fija para todo negocio.</p></div>
+      <button class="btn no-print" id="ind-print" type="button"></button></div>
+    <div id="ind"></div>
+  </div>
+</section>

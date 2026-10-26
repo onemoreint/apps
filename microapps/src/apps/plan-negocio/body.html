@@ -1,0 +1,68 @@
+<section class="panel" data-panel="inv">
+  <div class="grid-2">
+    <div class="stack">
+      <div class="card">
+        <div class="card-head"><div><h2>Tu proyecto</h2><p>Aparece en el resumen imprimible.</p></div></div>
+        <div class="fields">
+          <label class="field" style="grid-column:1/-1"><span>Nombre del proyecto</span><input class="input" id="p-nombre"></label>
+          <label class="field" style="grid-column:1/-1"><span>En una frase, qué vendes y a quién</span><textarea class="input" id="p-desc" rows="2"></textarea></label>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h2>Inversión inicial</h2><p>Todo lo que necesitas antes de abrir. Los activos fijos se deprecian; el capital de trabajo se recupera al final.</p></div></div>
+        <div class="table-wrap"><table class="t t-edit"><thead><tr><th>Concepto</th><th>Tipo</th><th class="r">Valor</th><th></th></tr></thead><tbody id="inv"></tbody>
+          <tfoot><tr><td colspan="2">Inversión total</td><td class="r" id="inv-total"></td><td></td></tr></tfoot></table></div>
+        <div class="row" style="margin-top:10px"><button class="btn sm" id="add-inv" type="button"></button></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h2>Financiación</h2><p>Si pides un crédito, escribe el monto. Lo demás lo aportas tú.</p></div></div>
+        <div class="fields">
+          <label class="field"><span>Monto del crédito</span><input class="input num" id="cr-monto" inputmode="decimal"></label>
+          <label class="field"><span>Tasa de interés efectiva anual</span><div class="input-group"><input class="input num" id="cr-tasa" inputmode="decimal"><span class="addon">%</span></div></label>
+          <label class="field"><span>Plazo en años</span><input class="input num" id="cr-plazo" inputmode="numeric"></label>
+        </div>
+        <div id="cr-tabla" style="margin-top:14px"></div>
+      </div>
+    </div>
+    <aside class="stack sticky"><div class="ticket" id="inv-ticket"></div></aside>
+  </div>
+</section>
+
+<section class="panel" data-panel="sup">
+  <div class="card" style="max-width:900px">
+    <div class="card-head"><div><h2>Supuestos de la proyección</h2><p>Valores del primer año y cómo crecen. Sé prudente: es mejor sorprenderse para bien.</p></div></div>
+    <div class="fields">
+      <label class="field"><span>Ventas del primer año</span><input class="input num" id="s-ventas" inputmode="decimal"><small class="hint">Unidades al año por precio promedio.</small></label>
+      <label class="field"><span>Crecimiento anual de ventas</span><div class="input-group"><input class="input num" id="s-gv" inputmode="decimal"><span class="addon">%</span></div></label>
+      <label class="field"><span>Costo variable</span><div class="input-group"><input class="input num" id="s-cv" inputmode="decimal"><span class="addon">% de ventas</span></div><small class="hint">Materia prima, mercancía, comisiones.</small></label>
+      <label class="field"><span>Gastos fijos del primer año</span><input class="input num" id="s-gf" inputmode="decimal"><small class="hint">Arriendo, nómina, servicios, publicidad.</small></label>
+      <label class="field"><span>Aumento anual de gastos fijos</span><div class="input-group"><input class="input num" id="s-inf" inputmode="decimal"><span class="addon">%</span></div><small class="hint">Usa la inflación esperada.</small></label>
+      <label class="field"><span>Vida útil de los activos fijos</span><div class="input-group"><input class="input num" id="s-vida" inputmode="numeric"><span class="addon">años</span></div></label>
+      <label class="field"><span>Impuesto de renta</span><div class="input-group"><input class="input num" id="s-tax" inputmode="decimal"><span class="addon">%</span></div></label>
+      <label class="field"><span>Rentabilidad mínima que esperas (TIO)</span><div class="input-group"><input class="input num" id="s-tio" inputmode="decimal"><span class="addon">% anual</span></div><small class="hint">Lo que ganarías en otra inversión con riesgo parecido.</small></label>
+    </div>
+  </div>
+</section>
+
+<section class="panel" data-panel="proy">
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-head"><div><h2>Estado de resultados proyectado</h2></div></div>
+    <div class="table-wrap"><table class="t pn" id="t-er"></table></div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div><h2>Flujo de caja del proyecto</h2><p>Año 0 es la inversión. El último año suma el capital de trabajo y el valor que les queda a los activos.</p></div></div>
+    <div class="table-wrap"><table class="t pn" id="t-fc"></table></div>
+  </div>
+</section>
+
+<section class="panel" data-panel="eval">
+  <div class="grid-2">
+    <div class="stack">
+      <div class="kpis" id="kpis"></div>
+      <div class="card"><div class="card-head"><div><h3>Flujo de caja acumulado</h3><p>Cuando la línea cruza cero, recuperas lo invertido.</p></div></div><div id="chart"></div></div>
+      <div class="card"><div class="card-head"><div><h3>Qué pasa si…</h3><p>VPN del proyecto con cambios en ventas y costos.</p></div></div><div id="sens"></div></div>
+    </div>
+    <aside class="stack sticky"><div class="ticket" id="eval-ticket"></div>
+      <button class="btn primary no-print" id="btn-print" type="button"></button></aside>
+  </div>
+</section>

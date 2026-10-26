@@ -1,0 +1,867 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Plan de Negocio Express | Microapps José Lugo</title>
+<meta name="description" content="Calcula la inversión inicial, proyecta 5 años de resultados y flujo de caja, incluye crédito y evalúa tu proyecto con VPN, TIR, relación beneficio costo y periodo de recuperación.">
+<meta name="author" content="José Lugo">
+<meta name="theme-color" content="#2F6F5E">
+<link rel="canonical" href="https://onemoreint.github.io/apps/microapps/plan-negocio/">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Plan de negocio">
+<meta property="og:title" content="Plan de Negocio Express: Saber si tu idea es rentable antes de invertir">
+<meta property="og:description" content="Calcula la inversión inicial, proyecta 5 años de resultados y flujo de caja, incluye crédito y evalúa tu proyecto con VPN, TIR, relación beneficio costo y periodo de recuperación.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://onemoreint.github.io/apps/microapps/plan-negocio/">
+<meta property="og:image" content="https://onemoreint.github.io/apps/microapps/plan-negocio/icon-512.png">
+<meta property="og:locale" content="es_CO">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet">
+<script>try{var t=localStorage.getItem('ma:tema');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<style>/* ===== Microapps José Lugo — núcleo visual compartido ===== */
+:root{
+  --canvas:#F3F6F8; --paper:#FFFFFF; --ink:#17212B; --ink-2:#4A5866; --ink-3:#7B8794;
+  --line:#E2E7ED; --line-2:#CFD7E0; --pos:#15784A; --neg:#BF3A2B; --warn:#A86A12;
+  --accent:#1D4F91; --accent-ink:#163C6E; --on-accent:#fff;
+  --accent-soft:color-mix(in srgb,var(--accent) 10%,var(--paper));
+  --accent-line:color-mix(in srgb,var(--accent) 28%,var(--paper));
+  --shadow:0 1px 2px rgba(23,33,43,.06),0 6px 18px -8px rgba(23,33,43,.16);
+  --r-s:8px; --r:12px; --r-l:18px;
+  --f-head:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --canvas:#0E151C; --paper:#16202A; --ink:#E6ECF2; --ink-2:#AAB6C2; --ink-3:#7D8B99;
+    --line:#26333F; --line-2:#344453; --pos:#3DBA7E; --neg:#F07A68; --warn:#E3A845;
+    --accent:var(--accent-dark,#6FA2E8); --accent-ink:var(--accent-dark,#6FA2E8); --on-accent:#0E151C;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 22px -10px rgba(0,0,0,.5);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --canvas:#0E151C; --paper:#16202A; --ink:#E6ECF2; --ink-2:#AAB6C2; --ink-3:#7D8B99;
+  --line:#26333F; --line-2:#344453; --pos:#3DBA7E; --neg:#F07A68; --warn:#E3A845;
+  --accent:var(--accent-dark,#6FA2E8); --accent-ink:var(--accent-dark,#6FA2E8); --on-accent:#0E151C;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 22px -10px rgba(0,0,0,.5);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--canvas);color:var(--ink);font:15px/1.5 var(--f-body);
+  font-variant-numeric:tabular-nums;min-height:100vh;display:flex;flex-direction:column}
+h1,h2,h3,h4{font-family:var(--f-head);line-height:1.15;margin:0;letter-spacing:-.01em}
+h2{font-size:1.25rem;font-weight:650}
+h3{font-size:1.05rem;font-weight:650}
+p{margin:0}
+a{color:var(--accent-ink)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px;border-radius:6px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---- Barra superior ---- */
+.app-bar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
+.app-bar-in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.app-mark{width:38px;height:38px;flex:none;border-radius:11px;display:grid;place-items:center;background:var(--accent);color:var(--on-accent)}
+.app-mark svg{width:22px;height:22px}
+.app-title{min-width:0;flex:1}
+.app-title h1{font-size:1.12rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.app-title p{font-size:.8rem;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.app-home{color:var(--ink-3);text-decoration:none;font-size:.82rem;display:none}
+@media(min-width:760px){.app-home{display:inline}}
+.app-home:hover{color:var(--accent-ink)}
+
+/* ---- Pestañas ---- */
+.tabs{position:relative;max-width:1180px;margin:0 auto;padding:0 16px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{border:0;background:none;padding:10px 12px 11px;color:var(--ink-2);font-weight:550;cursor:pointer;white-space:nowrap;
+  border-bottom:2.5px solid transparent;margin-bottom:-1px}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--accent-ink);border-bottom-color:var(--accent)}
+.panel[hidden]{display:none!important}
+
+/* ---- Estructura ---- */
+.app-main{flex:1;width:100%;max-width:1180px;margin:0 auto;padding:20px 16px 32px}
+.grid-2{display:grid;gap:20px}
+@media(min-width:900px){.grid-2{grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);align-items:start}
+  .sticky{position:sticky;top:120px}}
+.stack{display:grid;gap:16px;min-width:0}
+.grid-2>*,.stack>*,.panel{min-width:0}
+html,body{overflow-x:clip}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.row.between{justify-content:space-between}
+.spacer{flex:1}
+
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-l);padding:18px;box-shadow:var(--shadow)}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.card-head p{color:var(--ink-3);font-size:.86rem;margin-top:3px}
+.muted{color:var(--ink-3)}
+.small{font-size:.84rem}
+.hint{font-size:.82rem;color:var(--ink-3);margin-top:4px}
+
+/* ---- Formularios ---- */
+.fields{display:grid;gap:12px 14px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));align-items:start}
+.field{display:grid;gap:5px;min-width:0;align-content:start}
+.field>span{min-height:1.3em}
+.field>span{font-size:.84rem;font-weight:550;color:var(--ink-2)}
+.input,select.input,textarea.input{width:100%;background:var(--paper);border:1px solid var(--line-2);border-radius:var(--r-s);
+  padding:9px 11px;min-height:40px;transition:border-color .15s,box-shadow .15s}
+textarea.input{min-height:72px;resize:vertical}
+.input:hover{border-color:var(--ink-3)}
+.input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
+.input.num{text-align:right}
+.input-group{display:flex;align-items:stretch}
+.input-group .input{border-radius:var(--r-s) 0 0 var(--r-s)}
+.input-group .addon{display:grid;place-items:center;padding:0 10px;border:1px solid var(--line-2);border-left:0;
+  border-radius:0 var(--r-s) var(--r-s) 0;background:var(--canvas);color:var(--ink-2);font-size:.85rem}
+.check{display:flex;gap:8px;align-items:center;cursor:pointer;font-size:.9rem}
+.check input{accent-color:var(--accent);width:17px;height:17px}
+
+.seg{display:inline-flex;background:var(--canvas);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:none;padding:6px 12px;border-radius:7px;cursor:pointer;color:var(--ink-2);font-weight:550;font-size:.88rem}
+.seg button[aria-pressed="true"]{background:var(--paper);color:var(--accent-ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+
+/* ---- Botones ---- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line-2);background:var(--paper);
+  color:var(--ink);padding:8px 14px;min-height:40px;border-radius:10px;font-weight:600;cursor:pointer;text-decoration:none;
+  transition:background .15s,border-color .15s,transform .05s;white-space:nowrap}
+.btn:hover{border-color:var(--ink-3)}
+.btn:active{transform:translateY(1px)}
+.btn svg{width:17px;height:17px;flex:none}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.primary:hover{background:var(--accent-ink);border-color:var(--accent-ink)}
+.btn.ghost{border-color:transparent;background:none;color:var(--ink-2)}
+.btn.ghost:hover{background:var(--canvas);color:var(--ink)}
+.btn.danger{color:var(--neg)}
+.btn.sm{min-height:32px;padding:4px 10px;font-size:.85rem;border-radius:8px}
+.btn.icon{padding:0;width:40px}
+.btn.sm.icon{width:32px}
+.btn[disabled]{opacity:.45;pointer-events:none}
+
+/* ---- Tablas ---- */
+.table-wrap{position:relative;overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--paper)}
+table.t{width:100%;border-collapse:collapse;font-size:.9rem}
+.t th{text-align:left;font-weight:600;color:var(--ink-2);background:var(--canvas);padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap;font-size:.82rem}
+.t td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.t tr:last-child td{border-bottom:0}
+.t .r{text-align:right}
+.t .c{text-align:center}
+.t tfoot td{font-weight:700;background:var(--canvas);border-top:1px solid var(--line-2)}
+.t tbody tr:hover{background:color-mix(in srgb,var(--accent) 4%,transparent)}
+.t td .input{min-height:34px;padding:6px 8px}
+.t-edit td{padding:5px 6px}
+
+.pos{color:var(--pos)} .neg{color:var(--neg)} .warn{color:var(--warn)}
+.pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 9px;font-size:.78rem;font-weight:600;
+  background:var(--canvas);color:var(--ink-2);border:1px solid var(--line);white-space:nowrap}
+.pill.ok{background:color-mix(in srgb,var(--pos) 12%,var(--paper));color:var(--pos);border-color:color-mix(in srgb,var(--pos) 30%,var(--paper))}
+.pill.bad{background:color-mix(in srgb,var(--neg) 12%,var(--paper));color:var(--neg);border-color:color-mix(in srgb,var(--neg) 30%,var(--paper))}
+.pill.mid{background:color-mix(in srgb,var(--warn) 14%,var(--paper));color:var(--warn);border-color:color-mix(in srgb,var(--warn) 30%,var(--paper))}
+.pill.acc{background:var(--accent-soft);color:var(--accent-ink);border-color:var(--accent-line)}
+
+/* ---- Indicadores ---- */
+.kpis{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.kpi{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.kpi span{display:block;font-size:.82rem;color:var(--ink-3);font-weight:550}
+.kpi strong{display:block;font-family:var(--f-head);font-size:1.45rem;font-weight:700;margin-top:2px;letter-spacing:-.02em;overflow-wrap:anywhere}
+.kpi small{color:var(--ink-3);font-size:.8rem}
+.kpi.accent{border-color:var(--accent-line);background:var(--accent-soft)}
+.kpi.accent strong{color:var(--accent-ink)}
+
+/* ---- Tiquete (elemento distintivo) ---- */
+.ticket{position:relative;background:var(--paper);border:1px solid var(--line);border-bottom:0;border-radius:var(--r-l) var(--r-l) 0 0;
+  padding:20px 20px 16px;box-shadow:var(--shadow);margin-bottom:12px}
+.ticket::after{content:"";position:absolute;left:-1px;right:-1px;bottom:-11px;height:12px;
+  background:radial-gradient(circle at 7px 12px,transparent 6.5px,var(--paper) 7px) repeat-x;background-size:14px 12px;
+  filter:drop-shadow(0 2px 1px rgba(23,33,43,.06))}
+.ticket-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding-bottom:12px;border-bottom:1.5px dashed var(--line-2);margin-bottom:12px}
+.ticket-top h3{font-size:1rem}
+.ticket-top span{font-size:.8rem;color:var(--ink-3)}
+.ticket-hero{padding:6px 0 14px}
+.ticket-hero span{font-size:.86rem;color:var(--ink-2)}
+.ticket-hero strong{display:block;font-family:var(--f-head);font-weight:750;font-size:clamp(2rem,6vw,2.6rem);letter-spacing:-.03em;
+  color:var(--accent-ink);line-height:1.05;margin-top:2px;overflow-wrap:anywhere}
+.ticket-hero small{display:block;color:var(--ink-3);margin-top:4px;font-size:.84rem}
+.ticket-lines{display:grid;gap:7px;padding-top:12px;border-top:1.5px dashed var(--line-2)}
+.ticket-line{display:flex;justify-content:space-between;gap:12px;font-size:.92rem}
+.ticket-line span{color:var(--ink-2)}
+.ticket-line b{font-weight:650;text-align:right}
+.ticket-line.total{font-size:1.02rem;padding-top:7px;border-top:1px solid var(--line)}
+.ticket-line.total b{font-family:var(--f-head);font-size:1.15rem}
+
+/* ---- Estados vacíos ---- */
+.empty{text-align:center;padding:34px 16px;color:var(--ink-3);border:1.5px dashed var(--line-2);border-radius:var(--r)}
+.empty strong{display:block;color:var(--ink);font-family:var(--f-head);font-size:1.05rem;margin-bottom:4px}
+.empty .btn{margin-top:12px}
+
+/* ---- Barras simples ---- */
+.bars{display:grid;gap:9px}
+.bar-row{display:grid;grid-template-columns:minmax(80px,140px) 1fr auto;gap:10px;align-items:center;font-size:.86rem}
+.bar-row .track{height:10px;background:var(--canvas);border-radius:6px;overflow:hidden}
+.bar-row .fill{height:100%;background:var(--accent);border-radius:6px}
+.bar-row .lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink-2)}
+
+/* ---- Menú, diálogos, avisos ---- */
+.menu{position:absolute;right:16px;top:58px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:0 16px 40px -12px rgba(23,33,43,.35);padding:6px;min-width:250px;z-index:40}
+.menu[hidden]{display:none}
+.menu button,.menu a{display:flex;width:100%;gap:10px;align-items:center;border:0;background:none;padding:9px 10px;border-radius:8px;
+  cursor:pointer;text-align:left;color:var(--ink);text-decoration:none;font-size:.92rem}
+.menu button:hover,.menu a:hover{background:var(--canvas)}
+.menu svg{width:18px;height:18px;color:var(--ink-3);flex:none}
+.menu hr{border:0;border-top:1px solid var(--line);margin:5px 4px}
+
+dialog.dlg{border:0;padding:0;border-radius:var(--r-l);background:var(--paper);color:var(--ink);width:min(560px,calc(100vw - 24px));
+  max-height:calc(100vh - 40px);box-shadow:0 30px 80px -20px rgba(0,0,0,.5)}
+dialog.dlg::backdrop{background:rgba(14,21,28,.5);backdrop-filter:blur(2px)}
+.dlg-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line)}
+.dlg-body{padding:18px;overflow:auto;max-height:calc(100vh - 190px)}
+.dlg-foot{display:flex;gap:8px;justify-content:flex-end;padding:12px 18px;border-top:1px solid var(--line);background:var(--canvas);border-radius:0 0 var(--r-l) var(--r-l)}
+dialog.dlg.wide{width:min(860px,calc(100vw - 24px))}
+
+.toasts{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:grid;gap:8px;z-index:60;pointer-events:none;width:max-content;max-width:calc(100vw - 32px)}
+.toast{background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:10px;font-size:.9rem;font-weight:550;
+  box-shadow:0 10px 30px -8px rgba(0,0,0,.4);animation:toastIn .22s ease-out}
+.toast.err{background:var(--neg);color:#fff}
+@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.logo-prev{width:64px;height:64px;border-radius:12px;border:1px dashed var(--line-2);display:grid;place-items:center;overflow:hidden;background:var(--canvas);color:var(--ink-3);font-size:.75rem;text-align:center}
+.logo-prev img{width:100%;height:100%;object-fit:contain}
+
+/* ---- Firma José Lugo ---- */
+.firma{margin-top:auto;padding:28px 16px 30px;border-top:1px solid var(--line);background:var(--paper)}
+.firma-in{max-width:1180px;margin:0 auto;display:grid;gap:18px;align-items:center}
+@media(min-width:820px){.firma-in{grid-template-columns:auto 1fr auto}}
+.firma-id{display:flex;gap:14px;align-items:center}
+.firma-mono{width:52px;height:52px;flex:none;border-radius:50%;display:grid;place-items:center;
+  background:linear-gradient(145deg,#1B2836,#2C3E50);color:#E9D9A6;font-family:var(--f-head);font-weight:700;font-size:1.15rem;
+  letter-spacing:.02em;box-shadow:inset 0 0 0 2px rgba(233,217,166,.45),0 4px 14px -6px rgba(0,0,0,.5)}
+.firma-txt small{display:block;color:var(--ink-3);font-size:.78rem}
+.firma-txt strong{display:block;font-family:var(--f-head);font-size:1.15rem;font-weight:700;letter-spacing:-.01em}
+.firma-txt em{display:block;font-style:normal;color:var(--ink-2);font-size:.86rem}
+.firma-legal{color:var(--ink-3);font-size:.8rem;line-height:1.5}
+@media(min-width:820px){.firma-legal{text-align:center;padding:0 12px}}
+.firma-links{display:flex;flex-wrap:wrap;gap:8px}
+.firma-links a{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border:1px solid var(--line-2);border-radius:999px;
+  text-decoration:none;color:var(--ink);font-size:.86rem;font-weight:600;background:var(--paper)}
+.firma-links a:hover{border-color:var(--ink-3)}
+.firma-links svg{width:16px;height:16px}
+.firma-links a.wa svg{color:#1FA855}
+.print-only{display:none}
+
+/* ---- Impresión ---- */
+@media print{
+  @page{margin:14mm 12mm}
+  body{background:#fff;color:#000;font-size:11.5pt}
+  .app-bar,.tabs,.no-print,.firma,.toasts,.menu,.btn{display:none!important}
+  .print-only{display:block!important}
+  .app-main{padding:0;max-width:none}
+  .card,.ticket,.kpi,.table-wrap{box-shadow:none!important;border-color:#ccc!important;break-inside:avoid}
+  .ticket::after{display:none}
+  .panel[hidden]{display:none!important}
+  .print-sign{margin-top:18px;padding-top:8px;border-top:1px solid #bbb;font-size:8.5pt;color:#555;text-align:center}
+  a{color:#000;text-decoration:none}
+}
+
+:root{--accent:#2F6F5E;--accent-ink:#22544A;--accent-dark:#7FD3BA}
+.pn{font-size:.86rem}
+.pn th,.pn td{white-space:nowrap}
+.pn td:first-child,.pn th:first-child{position:sticky;left:0;background:var(--paper);min-width:200px;box-shadow:1px 0 0 var(--line)}
+.pn thead th:first-child{background:var(--canvas)}
+.pn .tot td{font-weight:700;background:color-mix(in srgb,var(--accent) 6%,var(--paper))}
+.pn .big td{font-weight:800;border-top:2px solid var(--ink-3);background:color-mix(in srgb,var(--accent) 10%,var(--paper))}
+.sens td.c{text-align:center;font-weight:650}
+@media(min-width:600px){#kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<header class="app-bar">
+  <div class="app-bar-in">
+    <div class="app-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h12l-2.5 4.5L17 13H5"/></svg></div>
+    <div class="app-title"><h1>Plan de Negocio Express</h1><p>Saber si tu idea es rentable antes de invertir</p></div>
+    <a class="app-home" href="../">Todas las microapps</a>
+  </div>
+  <nav class="tabs" role="tablist" aria-label="Secciones"><button class="tab" role="tab" data-tab="inv">Inversión</button><button class="tab" role="tab" data-tab="sup">Supuestos</button><button class="tab" role="tab" data-tab="proy">Proyección</button><button class="tab" role="tab" data-tab="eval">Evaluación</button></nav>
+</header>
+<main class="app-main" id="app">
+<section class="panel" data-panel="inv">
+  <div class="grid-2">
+    <div class="stack">
+      <div class="card">
+        <div class="card-head"><div><h2>Tu proyecto</h2><p>Aparece en el resumen imprimible.</p></div></div>
+        <div class="fields">
+          <label class="field" style="grid-column:1/-1"><span>Nombre del proyecto</span><input class="input" id="p-nombre"></label>
+          <label class="field" style="grid-column:1/-1"><span>En una frase, qué vendes y a quién</span><textarea class="input" id="p-desc" rows="2"></textarea></label>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h2>Inversión inicial</h2><p>Todo lo que necesitas antes de abrir. Los activos fijos se deprecian; el capital de trabajo se recupera al final.</p></div></div>
+        <div class="table-wrap"><table class="t t-edit"><thead><tr><th>Concepto</th><th>Tipo</th><th class="r">Valor</th><th></th></tr></thead><tbody id="inv"></tbody>
+          <tfoot><tr><td colspan="2">Inversión total</td><td class="r" id="inv-total"></td><td></td></tr></tfoot></table></div>
+        <div class="row" style="margin-top:10px"><button class="btn sm" id="add-inv" type="button"></button></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h2>Financiación</h2><p>Si pides un crédito, escribe el monto. Lo demás lo aportas tú.</p></div></div>
+        <div class="fields">
+          <label class="field"><span>Monto del crédito</span><input class="input num" id="cr-monto" inputmode="decimal"></label>
+          <label class="field"><span>Tasa de interés efectiva anual</span><div class="input-group"><input class="input num" id="cr-tasa" inputmode="decimal"><span class="addon">%</span></div></label>
+          <label class="field"><span>Plazo en años</span><input class="input num" id="cr-plazo" inputmode="numeric"></label>
+        </div>
+        <div id="cr-tabla" style="margin-top:14px"></div>
+      </div>
+    </div>
+    <aside class="stack sticky"><div class="ticket" id="inv-ticket"></div></aside>
+  </div>
+</section>
+
+<section class="panel" data-panel="sup">
+  <div class="card" style="max-width:900px">
+    <div class="card-head"><div><h2>Supuestos de la proyección</h2><p>Valores del primer año y cómo crecen. Sé prudente: es mejor sorprenderse para bien.</p></div></div>
+    <div class="fields">
+      <label class="field"><span>Ventas del primer año</span><input class="input num" id="s-ventas" inputmode="decimal"><small class="hint">Unidades al año por precio promedio.</small></label>
+      <label class="field"><span>Crecimiento anual de ventas</span><div class="input-group"><input class="input num" id="s-gv" inputmode="decimal"><span class="addon">%</span></div></label>
+      <label class="field"><span>Costo variable</span><div class="input-group"><input class="input num" id="s-cv" inputmode="decimal"><span class="addon">% de ventas</span></div><small class="hint">Materia prima, mercancía, comisiones.</small></label>
+      <label class="field"><span>Gastos fijos del primer año</span><input class="input num" id="s-gf" inputmode="decimal"><small class="hint">Arriendo, nómina, servicios, publicidad.</small></label>
+      <label class="field"><span>Aumento anual de gastos fijos</span><div class="input-group"><input class="input num" id="s-inf" inputmode="decimal"><span class="addon">%</span></div><small class="hint">Usa la inflación esperada.</small></label>
+      <label class="field"><span>Vida útil de los activos fijos</span><div class="input-group"><input class="input num" id="s-vida" inputmode="numeric"><span class="addon">años</span></div></label>
+      <label class="field"><span>Impuesto de renta</span><div class="input-group"><input class="input num" id="s-tax" inputmode="decimal"><span class="addon">%</span></div></label>
+      <label class="field"><span>Rentabilidad mínima que esperas (TIO)</span><div class="input-group"><input class="input num" id="s-tio" inputmode="decimal"><span class="addon">% anual</span></div><small class="hint">Lo que ganarías en otra inversión con riesgo parecido.</small></label>
+    </div>
+  </div>
+</section>
+
+<section class="panel" data-panel="proy">
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-head"><div><h2>Estado de resultados proyectado</h2></div></div>
+    <div class="table-wrap"><table class="t pn" id="t-er"></table></div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div><h2>Flujo de caja del proyecto</h2><p>Año 0 es la inversión. El último año suma el capital de trabajo y el valor que les queda a los activos.</p></div></div>
+    <div class="table-wrap"><table class="t pn" id="t-fc"></table></div>
+  </div>
+</section>
+
+<section class="panel" data-panel="eval">
+  <div class="grid-2">
+    <div class="stack">
+      <div class="kpis" id="kpis"></div>
+      <div class="card"><div class="card-head"><div><h3>Flujo de caja acumulado</h3><p>Cuando la línea cruza cero, recuperas lo invertido.</p></div></div><div id="chart"></div></div>
+      <div class="card"><div class="card-head"><div><h3>Qué pasa si…</h3><p>VPN del proyecto con cambios en ventas y costos.</p></div></div><div id="sens"></div></div>
+    </div>
+    <aside class="stack sticky"><div class="ticket" id="eval-ticket"></div>
+      <button class="btn primary no-print" id="btn-print" type="button"></button></aside>
+  </div>
+</section>
+
+</main>
+<footer id="firma"></footer>
+<script>window.MA_APP={"id": "plan-negocio", "name": "Plan de Negocio Express", "version": "1.0.0"};</script>
+<script>/* ===== Microapps José Lugo — núcleo compartido ===== */
+(function(){
+'use strict';
+const CFG = window.MA_APP || {id:'app',name:'Microapp'};
+const PREFIX = 'ma:' + CFG.id + ':';
+const AUTOR = {nombre:'José Lugo', tel:'+57 312 638 7467', telRaw:'573126387467', email:'jose.lugocdv@gmail.com'};
+
+/* ---------- Iconos ---------- */
+const I = {
+  more:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>',
+  store:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M3 9h18a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0"/><path d="M10 20v-5h4v5"/></svg>',
+  down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>',
+  up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 19h16"/></svg>',
+  print:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></svg>',
+  moon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
+  install:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M12 8v6M9 11l3 3 3-3"/></svg>',
+  grid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
+  trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
+  edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  wa:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3z"/></svg>',
+  mail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>',
+  csv:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h8"/></svg>',
+  copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>'
+};
+
+/* ---------- Utilidades ---------- */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const pad = n => String(n).padStart(2,'0');
+const today = () => { const d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); };
+const monthKey = (iso) => (iso||today()).slice(0,7);
+const round = (n, d=2) => { const f=Math.pow(10,d); return Math.round((+n||0)*f)/f; };
+
+/* Convierte "1.500.000,50", "1,500,000.50", "1500000.5" o "1.500" en número */
+function num(v){
+  if (typeof v === 'number') return isFinite(v) ? v : 0;
+  let s = String(v ?? '').trim().replace(/\s|\$|[A-Za-z]/g,'');
+  if (!s) return 0;
+  const neg = /^-/.test(s) || /^\(.*\)$/.test(s); s = s.replace(/[-()]/g,'');
+  const hasDot = s.includes('.'), hasCom = s.includes(',');
+  if (hasDot && hasCom){
+    if (s.lastIndexOf(',') > s.lastIndexOf('.')) s = s.replace(/\./g,'').replace(',', '.');
+    else s = s.replace(/,/g,'');
+  } else if (hasCom){
+    const parts = s.split(',');
+    if (parts.length === 2 && parts[1].length !== 3) s = parts[0] + '.' + parts[1];
+    else s = s.replace(/,/g,'');
+  } else if (hasDot){
+    const parts = s.split('.');
+    if (parts.length > 2 || (parts.length === 2 && parts[1].length === 3 && parts[0].length <= 3 && parts[0] !== '0')) s = s.replace(/\./g,'');
+  }
+  const n = parseFloat(s);
+  return isFinite(n) ? (neg ? -n : n) : 0;
+}
+
+/* ---------- Monedas ---------- */
+const MONEDAS = {
+  COP:{n:'Peso colombiano', s:'$', d:0, loc:'es-CO'},
+  USD:{n:'Dólar estadounidense', s:'US$', d:2, loc:'es-CO'},
+  VES:{n:'Bolívar venezolano', s:'Bs', d:2, loc:'es-VE'},
+  EUR:{n:'Euro', s:'€', d:2, loc:'es-ES'},
+  MXN:{n:'Peso mexicano', s:'MX$', d:2, loc:'es-MX'},
+  PEN:{n:'Sol peruano', s:'S/', d:2, loc:'es-PE'},
+  CLP:{n:'Peso chileno', s:'CLP$', d:0, loc:'es-CL'},
+  ARS:{n:'Peso argentino', s:'AR$', d:2, loc:'es-AR'},
+  DOP:{n:'Peso dominicano', s:'RD$', d:2, loc:'es-DO'},
+  GTQ:{n:'Quetzal', s:'Q', d:2, loc:'es-GT'},
+  BOB:{n:'Boliviano', s:'Bs.', d:2, loc:'es-BO'}
+};
+function money(n, cur){
+  cur = cur || negocio().moneda || 'COP';
+  const m = MONEDAS[cur] || {s:cur+' ', d:2};
+  const v = +n || 0;
+  const s = Math.abs(v).toLocaleString('es-CO', {minimumFractionDigits:m.d, maximumFractionDigits:m.d});
+  return (v < 0 ? '-' : '') + m.s + (m.s.length>1 && /[A-Za-z.]$/.test(m.s) ? ' ' : '') + s;
+}
+function moneyK(n, cur){
+  const m = MONEDAS[cur || negocio().moneda || 'COP'] || {s:''}; const v = Math.abs(+n||0); const sg = n < 0 ? '-' : '';
+  const s = v >= 1e9 ? fmt(v/1e9,1)+' mil M' : v >= 1e6 ? fmt(v/1e6,1)+' M' : v >= 1e3 ? fmt(v/1e3,1)+' k' : fmt(v,0);
+  return sg + m.s + s;
+}
+/* Campo numérico: acepta puntos y comas, muestra el número formateado al salir del campo */
+function bindNum(el, value, onChange, dec=2){
+  if (!el) return;
+  const show = v => { el.value = (v === '' || v == null || (v === 0 && el.dataset.blank0 !== undefined)) ? '' : fmt(v, dec); };
+  show(value);
+  el.addEventListener('input', () => onChange(el.value.trim() === '' ? 0 : num(el.value)));
+  el.addEventListener('blur', () => show(el.value.trim() === '' ? '' : num(el.value)));
+  el.addEventListener('focus', () => { setTimeout(() => { try { el.select(); } catch(e){} }, 0); });
+}
+function fmt(n, d=2){ return (+n||0).toLocaleString('es-CO',{minimumFractionDigits:0, maximumFractionDigits:d}); }
+function pct(n, d=1){ return (isFinite(n) ? (+n||0) : 0).toLocaleString('es-CO',{minimumFractionDigits:0, maximumFractionDigits:d}) + '%'; }
+function monedaOptions(sel){ return Object.entries(MONEDAS).map(([k,v]) => `<option value="${k}" ${k===sel?'selected':''}>${k} (${v.n})</option>`).join(''); }
+function fechaLarga(iso){ if(!iso) return ''; const [y,m,d]=iso.split('-').map(Number); return new Date(y,m-1,d).toLocaleDateString('es-CO',{day:'numeric',month:'long',year:'numeric'}); }
+function fechaCorta(iso){ if(!iso) return ''; const [y,m,d]=iso.split('-'); return d+'/'+m+'/'+y; }
+function mesNombre(key){ const [y,m]=key.split('-').map(Number); const s=new Date(y,m-1,1).toLocaleDateString('es-CO',{month:'long',year:'numeric'}); return s.charAt(0).toUpperCase()+s.slice(1); }
+
+/* ---------- Almacenamiento ---------- */
+const store = {
+  get(k, def){ try { const v = localStorage.getItem(PREFIX+k); return v == null ? def : JSON.parse(v); } catch(e){ return def; } },
+  set(k, v){ try { localStorage.setItem(PREFIX+k, JSON.stringify(v)); return true; } catch(e){ toast('No se pudo guardar: el almacenamiento del navegador está lleno o bloqueado.', true); return false; } },
+  del(k){ try { localStorage.removeItem(PREFIX+k); } catch(e){} },
+  keys(){ try { return Object.keys(localStorage).filter(k => k.startsWith(PREFIX)); } catch(e){ return []; } }
+};
+/* Perfil del negocio: compartido entre todas las microapps */
+const NEG_KEY = 'ma:negocio';
+function negocio(){ try { return Object.assign({nombre:'',doc:'',tel:'',email:'',dir:'',ciudad:'',moneda:'COP',logo:''}, JSON.parse(localStorage.getItem(NEG_KEY)||'{}')); } catch(e){ return {moneda:'COP'}; } }
+function setNegocio(o){ try { localStorage.setItem(NEG_KEY, JSON.stringify(o)); } catch(e){ toast('No se pudo guardar el logo: prueba con una imagen más liviana.', true); } }
+
+/* ---------- Avisos y diálogos ---------- */
+function toast(msg, err){
+  let box = $('.toasts'); if(!box){ box = document.createElement('div'); box.className='toasts'; box.setAttribute('role','status'); document.body.appendChild(box); }
+  const t = document.createElement('div'); t.className = 'toast' + (err?' err':''); t.textContent = msg; box.appendChild(t);
+  setTimeout(() => t.remove(), 3200);
+}
+function dialog({title, body, actions=[], wide=false, onOpen}){
+  const d = document.createElement('dialog'); d.className = 'dlg' + (wide?' wide':'');
+  d.innerHTML = `<div class="dlg-head"><h3>${esc(title)}</h3><button class="btn ghost sm icon" data-x aria-label="Cerrar">${I.x}</button></div>
+    <div class="dlg-body">${body}</div>${actions.length?'<div class="dlg-foot"></div>':''}`;
+  const foot = $('.dlg-foot', d);
+  actions.forEach(a => { const b=document.createElement('button'); b.className='btn '+(a.cls||''); b.textContent=a.label;
+    b.onclick = async () => { const r = a.onClick ? await a.onClick(d) : true; if (r !== false) close(); }; foot.appendChild(b); });
+  function close(){ d.close(); d.remove(); }
+  $('[data-x]', d).onclick = close;
+  d.addEventListener('cancel', e => { e.preventDefault(); close(); });
+  document.body.appendChild(d); d.showModal(); if(onOpen) onOpen(d);
+  return {el:d, close};
+}
+function confirmar(msg, okLabel='Eliminar', danger=true){
+  return new Promise(res => {
+    dialog({title:'Confirmar', body:`<p>${esc(msg)}</p>`, actions:[
+      {label:'Cancelar', cls:'ghost', onClick:()=>{res(false);}},
+      {label:okLabel, cls: danger?'primary':'primary', onClick:()=>{res(true);}}
+    ]});
+  });
+}
+
+/* ---------- Archivos ---------- */
+function download(name, content, mime='text/plain'){
+  const blob = content instanceof Blob ? content : new Blob([content], {type:mime+';charset=utf-8'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();}, 500);
+}
+function csv(name, rows){
+  const body = rows.map(r => r.map(c => { const s = String(c ?? ''); return /[";\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s; }).join(';')).join('\r\n');
+  download(name.endsWith('.csv')?name:name+'.csv', '﻿'+body, 'text/csv');
+}
+function copiar(texto){
+  if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(texto).then(()=>toast('Copiado'),()=>fallback());
+  fallback();
+  function fallback(){ const t=document.createElement('textarea'); t.value=texto; document.body.appendChild(t); t.select(); try{document.execCommand('copy'); toast('Copiado');}catch(e){toast('No se pudo copiar',true);} t.remove(); }
+}
+function whatsapp(texto, tel){ const n = String(tel||'').replace(/\D/g,''); window.open('https://wa.me/'+(n||'')+'?text='+encodeURIComponent(texto), '_blank', 'noopener'); }
+
+function backup(){
+  const data = {app:CFG.id, nombre:CFG.name, fecha:new Date().toISOString(), negocio:negocio(), datos:{}};
+  store.keys().forEach(k => { try { data.datos[k.slice(PREFIX.length)] = JSON.parse(localStorage.getItem(k)); } catch(e){} });
+  download(CFG.id+'-respaldo-'+today()+'.json', JSON.stringify(data, null, 1), 'application/json');
+  toast('Copia de seguridad descargada');
+}
+function restaurar(){
+  const inp = document.createElement('input'); inp.type='file'; inp.accept='.json,application/json';
+  inp.onchange = () => { const f = inp.files[0]; if(!f) return; const rd = new FileReader();
+    rd.onload = async () => { try {
+        const data = JSON.parse(rd.result);
+        if (data.app !== CFG.id) { toast('Este archivo es de otra app ('+(data.nombre||data.app)+').', true); return; }
+        if (!(await confirmar('Se reemplazarán los datos actuales de esta app por los del respaldo del '+fechaCorta((data.fecha||'').slice(0,10))+'.', 'Restaurar', false))) return;
+        store.keys().forEach(k => localStorage.removeItem(k));
+        Object.entries(data.datos||{}).forEach(([k,v]) => store.set(k, v));
+        if (data.negocio && data.negocio.nombre && !negocio().nombre) setNegocio(data.negocio);
+        toast('Datos restaurados'); setTimeout(()=>location.reload(), 600);
+      } catch(e){ toast('El archivo no es un respaldo válido.', true); } };
+    rd.readAsText(f); };
+  inp.click();
+}
+
+/* ---------- Perfil del negocio ---------- */
+function editarNegocio(){
+  const n = negocio();
+  const body = `<p class="muted small" style="margin-bottom:14px">Estos datos aparecen en tus documentos e impresiones. Se comparten con todas las microapps de este dispositivo.</p>
+  <div class="row" style="align-items:center;margin-bottom:14px">
+    <div class="logo-prev" id="ma-logo-prev">${n.logo?`<img src="${n.logo}" alt="Logo">`:'Sin logo'}</div>
+    <div class="stack" style="gap:6px"><label class="btn sm">Subir logo<input type="file" accept="image/*" id="ma-logo" hidden></label>
+    <button class="btn ghost sm" id="ma-logo-del" type="button">Quitar logo</button></div>
+  </div>
+  <div class="fields">
+    <label class="field" style="grid-column:1/-1"><span>Nombre del negocio</span><input class="input" id="ma-n" value="${esc(n.nombre)}" placeholder="Ej: Distribuidora La Estrella"></label>
+    <label class="field"><span>NIT / RIF / Documento</span><input class="input" id="ma-d" value="${esc(n.doc)}"></label>
+    <label class="field"><span>Teléfono / WhatsApp</span><input class="input" id="ma-t" value="${esc(n.tel)}" inputmode="tel"></label>
+    <label class="field"><span>Correo</span><input class="input" id="ma-e" value="${esc(n.email)}" type="email"></label>
+    <label class="field"><span>Ciudad</span><input class="input" id="ma-c" value="${esc(n.ciudad)}"></label>
+    <label class="field" style="grid-column:1/-1"><span>Dirección</span><input class="input" id="ma-a" value="${esc(n.dir)}"></label>
+    <label class="field" style="grid-column:1/-1"><span>Moneda principal</span><select class="input" id="ma-m">${monedaOptions(n.moneda)}</select></label>
+  </div>`;
+  let logo = n.logo;
+  dialog({title:'Datos del negocio', body, actions:[
+    {label:'Cancelar', cls:'ghost'},
+    {label:'Guardar datos', cls:'primary', onClick:(d)=>{
+      setNegocio({nombre:$('#ma-n',d).value.trim(), doc:$('#ma-d',d).value.trim(), tel:$('#ma-t',d).value.trim(), email:$('#ma-e',d).value.trim(),
+        ciudad:$('#ma-c',d).value.trim(), dir:$('#ma-a',d).value.trim(), moneda:$('#ma-m',d).value, logo});
+      toast('Datos del negocio guardados'); document.dispatchEvent(new CustomEvent('ma:negocio')); renderPrintHead();
+    }}
+  ], onOpen:(d)=>{
+    $('#ma-logo',d).onchange = e => { const f=e.target.files[0]; if(!f) return; const rd=new FileReader();
+      rd.onload = () => { const img = new Image(); img.onload = () => { const max=320, k=Math.min(1,max/Math.max(img.width,img.height));
+        const c=document.createElement('canvas'); c.width=Math.round(img.width*k); c.height=Math.round(img.height*k);
+        c.getContext('2d').drawImage(img,0,0,c.width,c.height); logo=c.toDataURL('image/png');
+        $('#ma-logo-prev',d).innerHTML=`<img src="${logo}" alt="Logo">`; }; img.src=rd.result; }; rd.readAsDataURL(f); };
+    $('#ma-logo-del',d).onclick = () => { logo=''; $('#ma-logo-prev',d).textContent='Sin logo'; };
+  }});
+}
+
+/* ---------- Tema ---------- */
+function aplicarTema(){ const t = localStorage.getItem('ma:tema'); if (t) document.documentElement.dataset.theme = t; else delete document.documentElement.dataset.theme; }
+function alternarTema(){
+  const dark = document.documentElement.dataset.theme === 'dark' || (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
+  try { localStorage.setItem('ma:tema', dark ? 'light' : 'dark'); } catch(e){}
+  aplicarTema();
+}
+
+/* ---------- Pestañas ---------- */
+function tabs(onChange){
+  const btns = $$('.tab[data-tab]');
+  const sel = (id, save=true) => {
+    btns.forEach(b => b.setAttribute('aria-selected', b.dataset.tab === id ? 'true':'false'));
+    $$('.panel[data-panel]').forEach(p => p.hidden = p.dataset.panel !== id);
+    if (save) store.set('_tab', id);
+    if (onChange) onChange(id);
+  };
+  btns.forEach(b => b.addEventListener('click', () => sel(b.dataset.tab)));
+  const saved = store.get('_tab'); const first = btns[0] && btns[0].dataset.tab;
+  sel(btns.some(b => b.dataset.tab === saved) ? saved : first, false);
+  return sel;
+}
+
+/* ---------- Instalación PWA ---------- */
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; });
+function instalar(){
+  if (deferredPrompt){ deferredPrompt.prompt(); deferredPrompt = null; return; }
+  dialog({title:'Instalar en tu dispositivo', body:`<div class="stack small">
+    <p><b>Android (Chrome):</b> abre el menú ⋮ y elige «Instalar aplicación» o «Agregar a la pantalla principal».</p>
+    <p><b>iPhone (Safari):</b> toca el botón Compartir y luego «Agregar a inicio».</p>
+    <p><b>Computador:</b> en Chrome o Edge, usa el ícono de instalar en la barra de direcciones.</p>
+    <p class="muted">Una vez instalada funciona sin internet.</p></div>`, actions:[{label:'Entendido', cls:'primary'}]});
+}
+
+/* ---------- Encabezado de impresión ---------- */
+function renderPrintHead(){
+  const ph = $('#ma-print-head'); if(!ph) return; const n = negocio();
+  ph.innerHTML = `<div style="display:flex;gap:14px;align-items:center;border-bottom:2px solid #222;padding-bottom:10px;margin-bottom:14px">
+    ${n.logo?`<img src="${n.logo}" style="width:58px;height:58px;object-fit:contain">`:''}
+    <div style="flex:1"><div style="font-size:15pt;font-weight:700">${esc(n.nombre||CFG.name)}</div>
+    <div style="font-size:9pt;color:#444">${[n.doc, n.tel, n.email, [n.dir,n.ciudad].filter(Boolean).join(', ')].filter(Boolean).map(esc).join('  |  ')}</div></div>
+    <div style="text-align:right;font-size:9pt;color:#444"><div style="font-weight:700;color:#000">${esc(CFG.name)}</div>${fechaLarga(today())}</div></div>`;
+}
+
+
+/* ---------- Documento imprimible en ventana aparte ---------- */
+function imprimirDoc(titulo, cuerpo, sub=''){
+  const w = window.open('', '_blank'); if (!w){ toast('Permite las ventanas emergentes para imprimir.', true); return; }
+  const n = negocio(); const acc = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#1D4F91';
+  w.document.write(`<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${esc(titulo)}</title><style>
+    body{font:10.5pt/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;margin:26px 30px;color:#1a1a1a}
+    .h{display:flex;justify-content:space-between;gap:18px;align-items:center;border-bottom:3px solid ${acc};padding-bottom:12px;margin-bottom:16px}
+    .h img{height:58px;max-width:120px;object-fit:contain}.h b{font-size:14pt}.h small{display:block;color:#555;font-size:8.5pt}
+    h1{font-size:16pt;margin:0;color:${acc}}h2{font-size:12pt;margin:18px 0 6px}.sub{color:#555;font-size:9.5pt}
+    table{width:100%;border-collapse:collapse;margin-top:8px;font-size:9.5pt}th{background:#f0f2f5;text-align:left;padding:6px 8px;border-bottom:1.5px solid ${acc}}
+    td{padding:6px 8px;border-bottom:1px solid #e3e3e3;vertical-align:top}.r{text-align:right}.neg{color:#b3261e}.pos{color:#15784a}
+    tfoot td,.tot td{font-weight:700;border-top:2px solid #1a1a1a}.kp{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+    .kp div{border:1px solid #ddd;border-radius:8px;padding:8px 12px;flex:1;min-width:120px}.kp span{display:block;font-size:8.5pt;color:#666}.kp b{font-size:12pt}
+    .sig{margin-top:56px;display:flex;gap:60px}.sig div{flex:1;border-top:1px solid #111;padding-top:6px;font-size:9pt}
+    .foot{margin-top:28px;font-size:8pt;color:#777;text-align:center;border-top:1px solid #ddd;padding-top:8px}
+    th,.kp div{-webkit-print-color-adjust:exact;print-color-adjust:exact}</style></head><body>
+    <div class="h"><div style="display:flex;gap:12px;align-items:center">${n.logo?`<img src="${n.logo}" alt="">`:''}<div><b>${esc(n.nombre||'')}</b><small>${[n.doc,n.tel,n.email,[n.dir,n.ciudad].filter(Boolean).join(', ')].filter(Boolean).map(esc).join('  |  ')}</small></div></div>
+    <div style="text-align:right"><h1>${esc(titulo)}</h1><div class="sub">${sub?esc(sub)+'<br>':''}Emitido el ${fechaLarga(today())}</div></div></div>
+    ${cuerpo}
+    <div class="foot">Generado con ${esc(CFG.name)}, desarrollada por ${AUTOR.nombre}. WhatsApp ${AUTOR.tel}, ${AUTOR.email}</div>
+    <script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script></body></html>`);
+  w.document.close();
+}
+
+/* ---------- Montaje de la interfaz común ---------- */
+function montar(){
+  aplicarTema();
+  // menú
+  const bar = $('.app-bar-in');
+  if (bar){
+    const btn = document.createElement('button'); btn.className='btn ghost icon'; btn.setAttribute('aria-label','Más opciones'); btn.setAttribute('aria-haspopup','true'); btn.innerHTML = I.more;
+    const menu = document.createElement('div'); menu.className='menu'; menu.hidden = true; menu.setAttribute('role','menu');
+    menu.innerHTML = `<button data-a="neg">${I.store}Datos del negocio</button>
+      <button data-a="print">${I.print}Imprimir o guardar PDF</button>
+      <hr><button data-a="bk">${I.down}Descargar copia de seguridad</button>
+      <button data-a="rs">${I.up}Restaurar copia de seguridad</button>
+      <hr><button data-a="inst">${I.install}Instalar en el dispositivo</button>
+      <button data-a="tema">${I.moon}Cambiar modo claro / oscuro</button>
+      <a href="../">${I.grid}Ver todas las microapps</a>`;
+    bar.appendChild(btn); document.querySelector('.app-bar').appendChild(menu);
+    btn.onclick = e => { e.stopPropagation(); menu.hidden = !menu.hidden; };
+    document.addEventListener('click', e => { if(!menu.contains(e.target)) menu.hidden = true; });
+    document.addEventListener('keydown', e => { if(e.key==='Escape') menu.hidden = true; });
+    menu.onclick = e => { const a = e.target.closest('[data-a]'); if(!a) return; menu.hidden = true;
+      ({neg:editarNegocio, print:()=>window.print(), bk:backup, rs:restaurar, inst:instalar, tema:alternarTema})[a.dataset.a](); };
+  }
+  // encabezado de impresión
+  const main = $('.app-main');
+  if (main && !$('#ma-print-head')){ const ph=document.createElement('div'); ph.id='ma-print-head'; ph.className='print-only'; main.prepend(ph); }
+  renderPrintHead();
+  // firma
+  const f = $('#firma');
+  if (f){
+    f.className = 'firma';
+    f.innerHTML = `<div class="firma-in">
+      <div class="firma-id"><div class="firma-mono" aria-hidden="true">JL</div>
+        <div class="firma-txt"><small>Diseño y desarrollo</small><strong>${AUTOR.nombre}</strong><em>Soluciones digitales para emprendedores y empresas</em></div></div>
+      <p class="firma-legal">© ${new Date().getFullYear()} ${AUTOR.nombre}. Todos los derechos reservados.<br>Tus datos se guardan solo en este dispositivo.</p>
+      <div class="firma-links">
+        <a class="wa" href="https://wa.me/${AUTOR.telRaw}?text=${encodeURIComponent('Hola José, vi tu app «'+CFG.name+'» y quiero más información.')}" target="_blank" rel="noopener">${I.wa}${AUTOR.tel}</a>
+        <a href="mailto:${AUTOR.email}?subject=${encodeURIComponent('Microapp '+CFG.name)}">${I.mail}${AUTOR.email}</a>
+      </div></div>`;
+    const ps = document.createElement('div'); ps.className = 'print-only print-sign';
+    ps.textContent = `Generado con ${CFG.name}, desarrollada por ${AUTOR.nombre}. WhatsApp ${AUTOR.tel}, ${AUTOR.email}`;
+    main && main.appendChild(ps);
+  }
+  // service worker
+  if (CFG.id !== 'hub' && 'serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+
+window.MA = {CFG, AUTOR, I, $, $$, esc, uid, today, monthKey, round, num, money, moneyK, bindNum, fmt, pct, MONEDAS, monedaOptions, fechaLarga, fechaCorta, mesNombre,
+  store, negocio, setNegocio, toast, dialog, confirmar, download, csv, copiar, whatsapp, backup, restaurar, editarNegocio, tabs, montar, renderPrintHead, imprimirDoc};
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', montar); else montar();
+})();
+</script>
+<script>(function(){
+const {$, $$, esc, uid, num, money, moneyK, fmt, pct, bindNum, store, toast, tabs, I, negocio, imprimirDoc} = MA;
+
+const cur = () => negocio().moneda || 'COP';
+const TIPOS = {af:'Activo fijo', ct:'Capital de trabajo', pre:'Gasto de apertura'};
+const DEF = {
+  nombre:'Cafetería de especialidad', desc:'Café de origen, panadería y bebidas frías para oficinistas y estudiantes del sector.',
+  inv:[{id:uid(), n:'Máquina de espresso y molino', t:'af', v:18000000},{id:uid(), n:'Mobiliario y adecuaciones', t:'af', v:14000000},
+       {id:uid(), n:'Neveras, horno y menaje', t:'af', v:9500000},{id:uid(), n:'Permisos, marca y registro', t:'pre', v:2500000},
+       {id:uid(), n:'Publicidad de lanzamiento', t:'pre', v:3000000},{id:uid(), n:'Inventario inicial y caja (capital de trabajo)', t:'ct', v:8000000}],
+  cr:{monto:25000000, tasa:24, plazo:4},
+  s:{ventas:216000000, gv:8, cv:38, gf:98000000, inf:5, vida:5, tax:35, tio:20}
+};
+let S = store.get('estado', null) || JSON.parse(JSON.stringify(DEF));
+S.cr = Object.assign({}, DEF.cr, S.cr); S.s = Object.assign({}, DEF.s, S.s);
+const save = () => store.set('estado', S);
+const N = 5;
+
+/* ---------- Motor ---------- */
+function credito(){
+  const P = +S.cr.monto||0, i = (+S.cr.tasa||0)/100, n = Math.max(0, Math.round(+S.cr.plazo||0));
+  const rows = []; if (!P || !n) return {rows, cuota:0};
+  const cuota = i ? P * i / (1 - Math.pow(1+i, -n)) : P / n; let saldo = P;
+  for (let t=1; t<=N; t++){ if (t > n || saldo <= 0.5){ rows.push({t, ini:0, int:0, cap:0, cuota:0, fin:0}); continue; }
+    const int = saldo * i, cap = cuota - int; rows.push({t, ini:saldo, int, cap, cuota, fin:saldo - cap}); saldo -= cap; }
+  return {rows, cuota};
+}
+function modelo(ov = {}){
+  const s = Object.assign({}, S.s, ov);
+  const inv = S.inv.reduce((a,x) => a + (+x.v||0), 0), af = S.inv.filter(x => x.t === 'af').reduce((a,x) => a + (+x.v||0), 0);
+  const ct = S.inv.filter(x => x.t === 'ct').reduce((a,x) => a + (+x.v||0), 0), pre = inv - af - ct;
+  const vida = Math.max(1, +s.vida||1), tax = (+s.tax||0)/100, cr = credito();
+  const years = [];
+  for (let t=1; t<=N; t++){
+    const ventas = s.ventas * Math.pow(1 + s.gv/100, t-1), cv = ventas * s.cv/100, gf = s.gf * Math.pow(1 + s.inf/100, t-1);
+    const dep = t <= vida ? af / vida : 0, amort = t === 1 ? pre : 0; // gastos de apertura se reconocen en el año 1
+    const ebit = ventas - cv - gf - dep - amort, int = cr.rows[t-1] ? cr.rows[t-1].int : 0;
+    const ebt = ebit - int, imp = Math.max(0, ebt) * tax, un = ebt - imp;
+    const impOp = Math.max(0, ebit) * tax; // impuesto como si no hubiera deuda
+    const residual = t === N ? ct + Math.max(0, af - af/vida*Math.min(N, vida)) : 0;
+    const fcp = ebit - impOp + dep + amort + residual;                       // flujo del proyecto
+    const fci = un + dep + amort - (cr.rows[t-1] ? cr.rows[t-1].cap : 0) + residual; // flujo del inversionista
+    years.push({t, ventas, cv, gf, dep, amort, ebit, int, ebt, imp, un, residual, fcp, fci});
+  }
+  const fp = [-inv, ...years.map(y => y.fcp)], fi = [-(inv - (+S.cr.monto||0)), ...years.map(y => y.fci)];
+  const tio = s.tio/100;
+  return {inv, af, ct, pre, years, fp, fi, cr, tio, vpn:vpn(fp, tio), tir:tir(fp), vpnI:vpn(fi, tio), tirI:tir(fi),
+    pay:payback(fp), payD:payback(fp.map((v,t) => v / Math.pow(1+tio, t))), bc: inv ? fp.slice(1).reduce((a,v,t) => a + v/Math.pow(1+tio,t+1), 0) / inv : 0,
+    pe: s.cv < 100 ? s.gf / (1 - s.cv/100) : null};
+}
+function vpn(f, i){ return f.reduce((a,v,t) => a + v / Math.pow(1+i, t), 0); }
+function tir(f){
+  if (!(f[0] < 0) || !f.slice(1).some(v => v > 0)) return null;
+  let lo = -0.99, hi = 10; const g = r => vpn(f, r);
+  if (g(lo) * g(hi) > 0) return null;
+  for (let k=0; k<200; k++){ const mid = (lo+hi)/2; if (g(lo) * g(mid) <= 0) hi = mid; else lo = mid; }
+  return (lo+hi)/2;
+}
+function payback(f){ let acc = f[0]; for (let t=1; t<f.length; t++){ const prev = acc; acc += f[t]; if (acc >= 0) return t - 1 + (f[t] ? -prev / f[t] : 0); } return null; }
+const anios = x => { if (x === null) return 'No se recupera en 5 años'; let a = Math.floor(x), m = Math.round((x - a) * 12); if (m === 12){ a++; m = 0; } return (a ? a + (a===1?' año':' años') : '') + (m ? (a?' y ':'') + m + (m===1?' mes':' meses') : '') || 'Inmediato'; };
+
+/* ---------- Inversión ---------- */
+$('#add-inv').innerHTML = I.plus + 'Agregar concepto';
+$('#p-nombre').value = S.nombre; $('#p-desc').value = S.desc;
+$('#p-nombre').oninput = e => { S.nombre = e.target.value; save(); };
+$('#p-desc').oninput = e => { S.desc = e.target.value; save(); };
+function renderInv(){
+  $('#inv').innerHTML = S.inv.map(x => `<tr data-id="${x.id}"><td><input class="input" data-k="n" value="${esc(x.n)}" aria-label="Concepto" style="min-width:160px"></td>
+    <td><select class="input" data-k="t" aria-label="Tipo">${Object.entries(TIPOS).map(([k,v]) => `<option value="${k}" ${k===x.t?'selected':''}>${v}</option>`).join('')}</select></td>
+    <td><input class="input num" data-k="v" inputmode="decimal" aria-label="Valor" style="min-width:110px"></td><td><button class="btn ghost sm icon" data-del aria-label="Quitar">${I.trash}</button></td></tr>`).join('');
+  $$('#inv tr').forEach(tr => { const x = S.inv.find(i => i.id === tr.dataset.id);
+    tr.querySelector('[data-k=n]').oninput = e => { x.n = e.target.value; save(); };
+    tr.querySelector('[data-k=t]').onchange = e => { x.t = e.target.value; save(); update(); };
+    bindNum(tr.querySelector('[data-k=v]'), x.v, v => { x.v = v; save(); update(); }, 0);
+    tr.querySelector('[data-del]').onclick = () => { S.inv = S.inv.filter(i => i !== x); save(); renderInv(); update(); }; });
+}
+$('#add-inv').onclick = () => { S.inv.push({id:uid(), n:'', t:'af', v:0}); save(); renderInv(); update(); const ins = $$('#inv tr:last-child input'); ins[0] && ins[0].focus(); };
+bindNum($('#cr-monto'), S.cr.monto, v => { S.cr.monto = v; save(); update(); }, 0);
+bindNum($('#cr-tasa'), S.cr.tasa, v => { S.cr.tasa = v; save(); update(); });
+bindNum($('#cr-plazo'), S.cr.plazo, v => { S.cr.plazo = Math.min(N, Math.max(0, Math.round(v))); save(); update(); }, 0);
+
+/* ---------- Supuestos ---------- */
+[['ventas',0],['gv',2],['cv',2],['gf',0],['inf',2],['vida',0],['tax',2],['tio',2]].forEach(([k,d]) => bindNum($('#s-'+k), S.s[k], v => { S.s[k] = v; save(); update(); }, d));
+
+/* ---------- Render ---------- */
+function update(){
+  const M = modelo(), c = cur();
+  $('#inv-total').textContent = money(M.inv, c);
+  const propio = M.inv - (+S.cr.monto||0);
+  $('#inv-ticket').innerHTML = `<div class="ticket-top"><h3>Inversión inicial</h3><span>Año 0</span></div>
+    <div class="ticket-hero"><span>Necesitas</span><strong>${money(M.inv,c)}</strong><small>${propio<0?'El crédito supera la inversión: revisa el monto.':'Aporte propio '+money(propio,c)+(M.inv?' ('+pct(propio/M.inv*100,0)+')':'')}</small></div>
+    <div class="ticket-lines"><div class="ticket-line"><span>Activos fijos</span><b>${money(M.af,c)}</b></div><div class="ticket-line"><span>Capital de trabajo</span><b>${money(M.ct,c)}</b></div>
+      <div class="ticket-line"><span>Gastos de apertura</span><b>${money(M.pre,c)}</b></div><div class="ticket-line total"><span>Crédito</span><b>${money(+S.cr.monto||0,c)}</b></div>
+      ${M.cr.cuota?`<div class="ticket-line"><span>Cuota anual del crédito</span><b>${money(M.cr.cuota,c)}</b></div>`:''}</div>`;
+  $('#cr-tabla').innerHTML = M.cr.cuota ? `<div class="table-wrap"><table class="t"><thead><tr><th>Año</th><th class="r">Saldo inicial</th><th class="r">Intereses</th><th class="r">Abono a capital</th><th class="r">Cuota</th><th class="r">Saldo final</th></tr></thead><tbody>
+    ${M.cr.rows.filter(r => r.cuota).map(r => `<tr><td>${r.t}</td><td class="r">${money(r.ini,c)}</td><td class="r">${money(r.int,c)}</td><td class="r">${money(r.cap,c)}</td><td class="r"><b>${money(r.cuota,c)}</b></td><td class="r">${money(Math.max(0,r.fin),c)}</td></tr>`).join('')}</tbody></table></div>` : '<p class="muted small">Sin crédito: el proyecto se financia con aporte propio.</p>';
+  const th = `<thead><tr><th>Concepto</th>${M.years.map(y => `<th class="r">Año ${y.t}</th>`).join('')}</tr></thead>`;
+  const fila = (l, k, cls='', neg=false) => `<tr class="${cls}"><td>${l}</td>${M.years.map(y => `<td class="r ${y[k]<0?'neg':''}">${neg&&y[k]?'-':''}${money(y[k],c)}</td>`).join('')}</tr>`;
+  $('#t-er').innerHTML = th + `<tbody>${fila('Ventas','ventas')}${fila('Costo variable','cv','',true)}${fila('Gastos fijos','gf','',true)}${fila('Depreciación','dep','',true)}${M.pre?fila('Gastos de apertura','amort','',true):''}
+    ${fila('Utilidad operacional','ebit','tot')}${fila('Intereses del crédito','int','',true)}${fila('Utilidad antes de impuestos','ebt','tot')}${fila('Impuesto de renta','imp','',true)}${fila('Utilidad neta','un','big')}</tbody>`;
+  $('#t-fc').innerHTML = `<thead><tr><th>Concepto</th><th class="r">Año 0</th>${M.years.map(y => `<th class="r">Año ${y.t}</th>`).join('')}</tr></thead><tbody>
+    <tr><td>Inversión</td><td class="r neg">-${money(M.inv,c)}</td>${M.years.map(() => '<td></td>').join('')}</tr>
+    <tr><td>Recuperación al final</td><td></td>${M.years.map(y => `<td class="r">${y.residual?money(y.residual,c):''}</td>`).join('')}</tr>
+    <tr class="big"><td>Flujo del proyecto</td>${M.fp.map(v => `<td class="r ${v<0?'neg':''}">${money(v,c)}</td>`).join('')}</tr>
+    <tr class="tot"><td>Flujo del inversionista (con crédito)</td>${M.fi.map(v => `<td class="r ${v<0?'neg':''}">${money(v,c)}</td>`).join('')}</tr>
+    <tr><td>Flujo acumulado del proyecto</td>${M.fp.map((v,t) => { const a = M.fp.slice(0,t+1).reduce((x,y)=>x+y,0); return `<td class="r ${a<0?'neg':'pos'}">${money(a,c)}</td>`; }).join('')}</tr></tbody>`;
+  renderEval(M);
+}
+function veredicto(M){
+  if (M.vpn > 0 && M.tir !== null) return {ok:true, t:'El proyecto es viable', d:`Rinde más que tu rentabilidad mínima del ${pct(S.s.tio)}: genera ${money(M.vpn,cur())} adicionales en valor de hoy.`};
+  if (M.vpn > -0.05*M.inv) return {ok:null, t:'Viabilidad ajustada', d:'Está muy cerca de tu rentabilidad mínima. Revisa precios, costos o el tamaño de la inversión.'};
+  return {ok:false, t:'No alcanza la rentabilidad esperada', d:`Con estos supuestos destruye ${money(-M.vpn,cur())} de valor frente a tu rentabilidad mínima.`};
+}
+function renderEval(M){
+  const c = cur(), V = veredicto(M);
+  $('#kpis').innerHTML = `<div class="kpi ${M.vpn>=0?'accent':''}"><span>Valor presente neto (VPN)</span><strong class="${M.vpn<0?'neg':''}">${money(M.vpn,c)}</strong><small>Descontado al ${pct(S.s.tio)}</small></div>
+    <div class="kpi"><span>Tasa interna de retorno (TIR)</span><strong class="${M.tir!==null&&M.tir*100<S.s.tio?'neg':''}">${M.tir===null?'No existe':pct(M.tir*100)}</strong><small>Frente a tu TIO del ${pct(S.s.tio)}</small></div>
+    <div class="kpi"><span>Recuperas la inversión en</span><strong style="font-size:1.15rem;margin-top:5px">${anios(M.pay)}</strong><small>Descontado: ${anios(M.payD)}</small></div>
+    <div class="kpi"><span>Relación beneficio costo</span><strong>${fmt(M.bc,2)}</strong><small>${M.bc>=1?'Por cada peso invertido regresan '+fmt(M.bc,2):'Menor que 1: no se recupera en valor de hoy'}</small></div>`;
+  $('#eval-ticket').innerHTML = `<div class="ticket-top"><h3>Veredicto</h3><span>${esc(S.nombre||'Proyecto')}</span></div>
+    <div class="ticket-hero"><span>Resultado</span><strong style="font-size:1.6rem;${V.ok===false?'color:var(--neg)':V.ok===null?'color:var(--warn)':''}">${V.t}</strong><small>${V.d}</small></div>
+    <div class="ticket-lines"><div class="ticket-line"><span>Inversión</span><b>${money(M.inv,c)}</b></div>
+      <div class="ticket-line"><span>Ventas año 1</span><b>${money(S.s.ventas,c)}</b></div>
+      <div class="ticket-line"><span>Ventas de equilibrio año 1</span><b>${M.pe===null?'-':money(M.pe,c)}</b></div>
+      <div class="ticket-line"><span>Utilidad neta año 1</span><b class="${M.years[0].un<0?'neg':''}">${money(M.years[0].un,c)}</b></div>
+      <div class="ticket-line total"><span>VPN con crédito (inversionista)</span><b class="${M.vpnI<0?'neg':''}">${money(M.vpnI,c)}</b></div>
+      <div class="ticket-line"><span>TIR del inversionista</span><b>${M.tirI===null?'No existe':pct(M.tirI*100)}</b></div></div>`;
+  // gráfico acumulado
+  const acc = M.fp.map((_,t) => M.fp.slice(0,t+1).reduce((a,b)=>a+b,0));
+  const W=600, H=240, L=66, Rr=16, T=14, B=30, mx = Math.max(...acc, 0), mn = Math.min(...acc, 0), pad = (mx-mn)*.08||1;
+  const X = t => L + t/N*(W-L-Rr), Y = v => T + (mx+pad - v)/(mx-mn+2*pad)*(H-T-B);
+  let g = ''; for (let i=0;i<=4;i++){ const v = mn-pad + (mx-mn+2*pad)*i/4; g += `<line x1="${L}" x2="${W-Rr}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${L-8}" y="${Y(v)+4}" font-size="12" text-anchor="end" fill="var(--ink-3)">${moneyK(v,c)}</text>`; }
+  $('#chart').innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Flujo acumulado del proyecto" style="display:block">${g}
+    <line x1="${L}" x2="${W-Rr}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--ink-3)"/>
+    <polyline points="${acc.map((v,t) => X(t)+','+Y(v)).join(' ')}" fill="none" stroke="var(--accent)" stroke-width="3"/>
+    ${acc.map((v,t) => `<circle cx="${X(t)}" cy="${Y(v)}" r="5" fill="${v<0?'var(--neg)':'var(--pos)'}"><title>Año ${t}: ${money(v,c)}</title></circle><text x="${X(t)}" y="${H-8}" font-size="12" text-anchor="middle" fill="var(--ink-3)">Año ${t}</text>`).join('')}</svg>`;
+  // sensibilidad
+  const vs = [-20,-10,0,10], cs = [-5,0,5];
+  $('#sens').innerHTML = `<div class="table-wrap"><table class="t sens"><thead><tr><th>Ventas \\ Costo variable</th>${cs.map(d => `<th class="c">${d>0?'+':''}${d} pts</th>`).join('')}</tr></thead><tbody>
+    ${vs.map(dv => `<tr><td><b>${dv>0?'+':''}${dv}% ventas</b></td>${cs.map(dc => { const v = modelo({ventas:S.s.ventas*(1+dv/100), cv:S.s.cv+dc}).vpn; return `<td class="c ${v<0?'neg':'pos'}" ${dv===0&&dc===0?'style="outline:2px solid var(--accent);outline-offset:-3px"':''}>${moneyK(v,c)}</td>`; }).join('')}</tr>`).join('')}
+    </tbody></table></div><p class="hint" style="margin-top:8px">La celda marcada es tu escenario actual. Verde: VPN positivo.</p>`;
+}
+
+$('#btn-print').innerHTML = I.print + 'Imprimir resumen del plan';
+$('#btn-print').onclick = () => {
+  const M = modelo(), c = cur(), V = veredicto(M);
+  const yrs = M.years.map(y => `<th class="r">Año ${y.t}</th>`).join('');
+  const fila = (l,k,cls='') => `<tr class="${cls}"><td>${l}</td>${M.years.map(y => `<td class="r ${y[k]<0?'neg':''}">${money(y[k],c)}</td>`).join('')}</tr>`;
+  imprimirDoc('Plan de negocio', `<h2 style="margin-top:0">${esc(S.nombre)}</h2><p>${esc(S.desc)}</p>
+    <div class="kp"><div><span>Inversión</span><b>${money(M.inv,c)}</b></div><div><span>VPN al ${pct(S.s.tio)}</span><b>${money(M.vpn,c)}</b></div><div><span>TIR</span><b>${M.tir===null?'No existe':pct(M.tir*100)}</b></div><div><span>Recuperación</span><b>${anios(M.pay)}</b></div></div>
+    <p><b>${V.t}.</b> ${V.d}</p>
+    <h2>Inversión inicial</h2><table><thead><tr><th>Concepto</th><th>Tipo</th><th class="r">Valor</th></tr></thead><tbody>${S.inv.map(x => `<tr><td>${esc(x.n)}</td><td>${TIPOS[x.t]}</td><td class="r">${money(x.v,c)}</td></tr>`).join('')}</tbody><tfoot><tr><td colspan="2">Total</td><td class="r">${money(M.inv,c)}</td></tr></tfoot></table>
+    ${S.cr.monto?`<p>Financiación: crédito de ${money(S.cr.monto,c)} al ${pct(S.cr.tasa)} anual a ${S.cr.plazo} años (cuota anual ${money(M.cr.cuota,c)}); aporte propio de ${money(M.inv-S.cr.monto,c)}.</p>`:''}
+    <h2>Supuestos</h2><p>Ventas año 1: ${money(S.s.ventas,c)}, crecimiento ${pct(S.s.gv)} anual. Costo variable ${pct(S.s.cv)} de las ventas. Gastos fijos año 1: ${money(S.s.gf,c)}, aumento ${pct(S.s.inf)} anual. Vida útil de activos ${S.s.vida} años. Impuesto ${pct(S.s.tax)}. Rentabilidad mínima esperada ${pct(S.s.tio)}.</p>
+    <h2>Estado de resultados proyectado</h2><table><thead><tr><th>Concepto</th>${yrs}</tr></thead><tbody>${fila('Ventas','ventas')}${fila('Costo variable','cv')}${fila('Gastos fijos','gf')}${fila('Depreciación','dep')}${fila('Utilidad operacional','ebit','tot')}${fila('Intereses','int')}${fila('Impuesto','imp')}${fila('Utilidad neta','un','tot')}</tbody></table>
+    <h2>Flujo de caja del proyecto</h2><table><thead><tr><th>Concepto</th><th class="r">Año 0</th>${yrs}</tr></thead><tbody><tr class="tot"><td>Flujo del proyecto</td>${M.fp.map(v => `<td class="r ${v<0?'neg':''}">${money(v,c)}</td>`).join('')}</tr><tr><td>Flujo del inversionista</td>${M.fi.map(v => `<td class="r ${v<0?'neg':''}">${money(v,c)}</td>`).join('')}</tr></tbody></table>`, 'Evaluación a 5 años');
+};
+
+function renderAll(){ renderInv(); update(); }
+tabs(() => update());
+renderAll();
+document.addEventListener('ma:negocio', update);
+})();
+</script>
+</body>
+</html>

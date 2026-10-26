@@ -1,0 +1,24 @@
+<section class="panel" data-panel="plan">
+  <div class="card" style="margin-bottom:16px">
+    <div class="fields">
+      <label class="field"><span>Mes de inicio</span><input class="input" type="month" id="inicio"></label>
+      <label class="field"><span>Saldo inicial en caja y bancos</span><input class="input num" id="saldo0" inputmode="decimal"></label>
+      <label class="field"><span>Saldo mínimo que quieres mantener</span><input class="input num" id="minimo" inputmode="decimal"></label>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head" style="flex-wrap:wrap"><div><h2>Proyección mensual</h2><p>Escribe los valores en cada mes. Usa «Llenar» para repetir un valor o aplicar crecimiento.</p></div>
+      <div class="row no-print"><button class="btn sm" id="add-in" type="button">Agregar ingreso</button><button class="btn sm" id="add-out" type="button">Agregar egreso</button></div></div>
+    <div class="table-wrap"><table class="t t-edit flujo" id="grid"></table></div>
+    <div class="row no-print" style="margin-top:12px"><button class="btn ghost sm" id="btn-csv" type="button"></button><button class="btn ghost sm" id="btn-print" type="button"></button><span class="spacer"></span><button class="btn ghost sm danger" id="btn-reset" type="button">Empezar en blanco</button></div>
+  </div>
+</section>
+
+<section class="panel" data-panel="res">
+  <div class="kpis" id="kpis" style="margin-bottom:16px"></div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-head"><div><h2>Flujo neto y saldo acumulado</h2><p>Barras: lo que entra menos lo que sale cada mes. Línea: el dinero disponible al cierre del mes.</p></div></div>
+    <div id="chart"></div>
+  </div>
+  <div class="card"><div class="card-head"><div><h3>Lectura del año</h3></div></div><div id="lectura" class="stack small"></div></div>
+</section>

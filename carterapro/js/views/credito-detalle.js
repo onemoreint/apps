@@ -1,7 +1,12 @@
 import { html, montar, acciones } from '../ui/html.js';
 import { icono } from '../ui/icons.js';
 import { encabezado, badge, progreso, seccion, avatar, botonWhatsApp } from '../ui/componentes.js';
-import { confirmar, pedirTexto, toast } from '../ui/dialogos.js';
+import { confirmar, pedirTexto, toast, formularioDialogo } from '../ui/dialogos.js';
+import { campo } from '../ui/componentes.js';
+import * as cobradores from '../services/cobradores.js';
+import * as multasSrv from '../services/multas.js';
+import { TIPOS_MULTA, multasSugeridas, normalizarPolitica, pendienteCargo } from '../domain/multas.js';
+import { aMinimo, aTextoInput, getMoneda } from '../core/money.js';
 import { obtener } from '../services/datos.js';
 import * as creditos from '../services/creditos.js';
 import * as pagosSrv from '../services/pagos.js';
@@ -19,7 +24,14 @@ export async function render(el, { id }) {
   const { analisis, datos, hoy } = await obtener();
   const info = analisis.creditos.get(id);
   if (!info) { ir('/creditos', { reemplazar: true }); return; }
-  const { credito: k, cliente, cuotas, resumen: r } = info;
+  const { credito: k, cliente, cuotas, resumen: r, cargos = [], multasPendientes = 0 } = info;
+  const sugeridas = multasSugeridas(k, cuotas, cargos, hoy);
+  const totalSugerido = sugeridas.reduce((s, x) => s + x.monto, 0);
+  const politica = normalizarPolitica(k.multa);
+  const equipo = cobradores.lista();
+  const anterior = k.renovadoDe ? analisis.creditos.get(k.renovadoDe)?.credito : null;
+  const siguiente = k.renovadoPor ? analisis.creditos.get(k.renovadoPor)?.credito : null;
+  const puedeRenovar = !k.cancelado && !k.renovadoPor;
   const pagos = datos.pagos.filter(p => p.creditoId === id).sort((a, b) => b.fecha.localeCompare(a.fecha) || b.numeroRecibo.localeCompare(a.numeroRecibo));
   const t = TIPOS_INTERES[k.tipoInteres];
   const activo = !k.cancelado && r.saldoTotal > 0;
@@ -38,10 +50,13 @@ export async function render(el, { id }) {
         ${progreso(r.progreso, r.visual === 'VENCIDO' ? 'rojo' : 'verde')}
         <small>${r.cuotasPagadas} de ${r.totalCuotas} cuotas pagadas · ${Math.round(r.progreso * 100)}%</small>
       </div>
-      ${activo ? html`<div class="credito-acciones">
-        <a class="btn btn-pri btn-lg" href="#/pagos/nuevo?credito=${k.id}">${icono('dinero')}<span>Registrar pago</span></a>
-        ${r.proxima ? botonWhatsApp(cliente, wa.generar(r.vencidas ? 'vencido' : 'recordatorio', { cliente, valor: r.vencidas ? r.montoVencido : saldoCuota(r.proxima), fecha: r.proxima.fechaVencimiento, cuota: r.proxima.numero }), 'Recordar') : ''}
+      ${activo || puedeRenovar ? html`<div class="credito-acciones">
+        ${activo ? html`<a class="btn btn-pri btn-lg" href="#/pagos/nuevo?credito=${k.id}">${icono('dinero')}<span>Registrar pago</span></a>` : ''}
+        ${activo && r.proxima ? botonWhatsApp(cliente, wa.generar(r.vencidas ? 'vencido' : 'recordatorio', { cliente, valor: r.vencidas ? r.montoVencido : saldoCuota(r.proxima), fecha: r.proxima.fechaVencimiento, cuota: r.proxima.numero }), 'Recordar') : ''}
+        ${puedeRenovar ? html`<a class="btn btn-sec" href="#/creditos/nuevo?renovar=${k.id}">${icono('renovar')}<span>Renovar</span></a>` : ''}
       </div>` : ''}
+      ${anterior ? html`<p class="aviso aviso-azul">${icono('renovar')} <span>Renovación del crédito <a href="#/creditos/${anterior.id}">${creditos.formatoNumero(anterior.numero)}</a>: se trasladó un saldo de ${dinero(k.saldoRenovado || 0)} y se entregaron ${dinero(k.desembolso ?? k.montoPrestado)} en efectivo.</span></p>` : ''}
+      ${siguiente ? html`<p class="aviso aviso-azul">${icono('renovar')} <span>Este crédito se renovó en el <a href="#/creditos/${siguiente.id}">${creditos.formatoNumero(siguiente.numero)}</a>.</span></p>` : ''}
       ${k.cancelado ? html`<p class="aviso aviso-gris">Cancelado${k.motivoCancelacion ? `: ${k.motivoCancelacion}` : ''}. No cuenta en la cartera.</p>` : ''}
       ${r.vencidas && !k.cancelado ? html`<p class="aviso aviso-rojo">${icono('alerta')} ${r.vencidas} ${r.vencidas === 1 ? 'cuota vencida' : 'cuotas vencidas'} por ${dinero(r.montoVencido)} · ${r.maxAtraso} días de atraso máximo.</p>` : ''}
     </section>
@@ -59,12 +74,63 @@ export async function render(el, { id }) {
       <div>${seccion('Cuotas', html`<ol class="cuotas">${cuotas.map(c => filaCuota(c, k, hoy, activo, c.numero === r.proxima?.numero))}</ol>`, { contador: cuotas.length })}</div>
       <div>
         ${seccion('Pagos recibidos', pagos.length ? html`<ul class="pagos-lista">${pagos.map(p => filaPago(p))}</ul>` : html`<p class="vacio-mini">Aún no hay pagos registrados.</p>`, { contador: pagos.filter(p => !p.anulado).length })}
+        ${seccion('Cobro y mora', html`<div class="tarjeta cobro-mora">
+          ${equipo.length ? html`<div class="rend-fila"><span>Cobrador</span><strong>${cobradores.nombre(k.cobradorId)}</strong>
+            ${!k.cancelado ? html`<button type="button" class="btn-link" data-accion="cobrador">Cambiar</button>` : ''}</div>` : ''}
+          <div class="rend-fila"><span>Multa por atraso</span><strong>${textoPolitica(politica)}</strong>
+            ${!k.cancelado ? html`<button type="button" class="btn-link" data-accion="politica">Cambiar</button>` : ''}</div>
+          ${totalSugerido > 0 ? html`<p class="aviso aviso-naranja">${icono('multa')} <span>Corresponde una multa de <strong class="dinero">${dinero(totalSugerido)}</strong> por ${sugeridas.length} ${sugeridas.length === 1 ? 'cuota vencida' : 'cuotas vencidas'}.</span>
+            <button type="button" class="btn btn-sec btn-xs" data-accion="aplicarMultas">Aplicar</button></p>` : ''}
+          ${cargos.length ? html`<ul class="multas">${cargos.map(c => html`<li class="${c.anulado ? 'anulado' : ''}">
+            <span>Cuota ${c.cuotaNumero} · ${fecha(c.fecha)}${c.dias ? ` · ${c.dias} días` : ''}${c.anulado ? ' · perdonada' : c.perdonado ? ` · perdonado ${dinero(c.perdonado)}` : ''}</span>
+            <span class="dinero">${pendienteCargo(c) > 0 ? html`debe ${dinero(pendienteCargo(c))} de ${dinero(c.monto)}` : c.anulado ? dinero(0) : html`pagada ${dinero(c.monto)}`}</span>
+            ${pendienteCargo(c) > 0 ? html`<button type="button" class="btn-link" data-accion="perdonar" data-id="${c.id}">Perdonar</button>` : ''}
+          </li>`)}</ul>` : ''}
+          ${multasPendientes > 0 && !k.cancelado ? html`<a class="btn btn-sec btn-sm" href="#/pagos/nuevo?credito=${k.id}">${icono('dinero')}<span>Cobrar multa (${dinero(multasPendientes)})</span></a>` : ''}
+        </div>`)}
         ${k.notas ? seccion('Notas', html`<p class="tarjeta pre">${k.notas}</p>`) : ''}
         ${!k.cancelado && r.saldoTotal > 0 ? html`<button type="button" class="btn btn-texto-peligro" data-accion="cancelar">${icono('anular')}<span>Cancelar crédito</span></button>` : ''}
       </div>
     </div>`);
 
   return acciones(el, {
+    async aplicarMultas() {
+      const total = await intentar(() => multasSrv.aplicarSugeridas(id), 'aplicar las multas');
+      toast(total ? `Multa de ${dinero(total, { ocultable: false })} aplicada.` : 'No había multas por aplicar.');
+      recargar();
+    },
+    async perdonar(btn) {
+      const motivo = await pedirTexto({ titulo: '¿Perdonar esta multa?', mensaje: 'Lo que falta por pagar de esta multa se elimina. Lo ya cobrado se conserva.', etiqueta: 'Motivo (opcional)', aceptar: 'Perdonar' });
+      if (motivo === null) return;
+      await intentar(() => multasSrv.perdonar(btn.dataset.id, motivo), 'perdonar la multa');
+      toast('Multa perdonada.');
+      recargar();
+    },
+    async cobrador() {
+      const res = await formularioDialogo({
+        titulo: 'Cobrador del crédito', aceptar: 'Guardar',
+        cuerpo: campo({ etiqueta: 'Cobrador', nombre: 'cobradorId', valor: k.cobradorId || '', opciones: cobradores.opciones(k.cobradorId || '') }),
+      });
+      if (!res) return;
+      await intentar(() => creditos.actualizarOperacion(id, { cobradorId: res.cobradorId }), 'cambiar el cobrador');
+      toast('Cobrador actualizado.');
+      recargar();
+    },
+    async politica() {
+      const s = getMoneda().simbolo;
+      const res = await formularioDialogo({
+        titulo: 'Multa por atraso', aceptar: 'Guardar',
+        mensaje: 'Se usa para calcular las multas desde hoy. Las multas ya aplicadas no cambian.',
+        cuerpo: html`${campo({ etiqueta: 'Tipo', nombre: 'tipo', valor: politica.tipo, opciones: Object.entries(TIPOS_MULTA).map(([v, t]) => ({ valor: v, texto: t.nombre })) })}
+          ${campo({ etiqueta: `Valor (${s})`, nombre: 'valor', valor: politica.valor ? aTextoInput(politica.valor) : '', attrs: 'inputmode="decimal"' })}
+          ${campo({ etiqueta: `Tope por cuota (${s}) · solo multa diaria`, nombre: 'tope', valor: politica.tope ? aTextoInput(politica.tope) : '', attrs: 'inputmode="decimal"' })}`,
+        validar: d => (d.tipo !== 'NINGUNA' && !(aMinimo(d.valor) > 0) ? { valor: 'Escribe el valor de la multa.' } : {}),
+      });
+      if (!res) return;
+      await intentar(() => creditos.actualizarOperacion(id, { multa: { tipo: res.tipo, valor: res.tipo === 'NINGUNA' ? 0 : aMinimo(res.valor), tope: res.tope ? aMinimo(res.tope) || 0 : 0 } }), 'guardar la multa');
+      toast('Política de multa actualizada.');
+      recargar();
+    },
     async cancelar() {
       const motivo = await pedirTexto({
         titulo: '¿Cancelar este crédito?',
@@ -113,15 +179,21 @@ function filaCuota(c, k, hoy, activo, esProxima) {
   </li>`;
 }
 
+function textoPolitica(p) {
+  if (p.tipo === 'FIJA') return `${dinero(p.valor)} por cuota vencida`;
+  if (p.tipo === 'DIARIA') return `${dinero(p.valor)} por día${p.tope ? ` (tope ${dinero(p.tope)})` : ''}`;
+  return 'Sin multa';
+}
+
 function filaPago(p) {
   const cuotas = p.aplicaciones.map(a => a.numeroCuota);
-  const rango = cuotas.length > 1 ? `Cuotas ${cuotas[0]}–${cuotas.at(-1)}` : `Cuota ${cuotas[0]}`;
+  const rango = !cuotas.length ? 'Solo multa' : cuotas.length > 1 ? `Cuotas ${cuotas[0]}–${cuotas.at(-1)}` : `Cuota ${cuotas[0]}`;
   return html`<li class="pago ${p.anulado ? 'anulado' : ''}">
     <span class="pago-ico">${icono(p.anulado ? 'anular' : 'recibo')}</span>
     <a class="pago-texto" href="#/recibos/${p.id}"><strong>${p.numeroRecibo} · ${fecha(p.fecha)}</strong>
-      <small>${rango} · ${p.metodoPago}${p.anulado ? ` · ANULADO${p.motivoAnulacion ? ': ' + p.motivoAnulacion : ''}` : ''}</small>
+      <small>${rango} · ${p.metodoPago}${p.multa ? ` · multa ${dinero(p.multa)}` : ''}${p.anulado ? ` · ANULADO${p.motivoAnulacion ? ': ' + p.motivoAnulacion : ''}` : ''}</small>
       ${p.observacion ? html`<small>${p.observacion}</small>` : ''}</a>
-    <span class="pago-fin"><strong class="dinero">${dinero(p.monto)}</strong>
-      ${!p.anulado ? html`<button type="button" class="btn-link" data-accion="anular" data-id="${p.id}">Anular</button>` : ''}</span>
+    <span class="pago-fin"><strong class="dinero">${dinero(p.monto + (p.multa || 0))}</strong>
+      ${!p.anulado && p.tipo !== 'RENOVACION' ? html`<button type="button" class="btn-link" data-accion="anular" data-id="${p.id}">Anular</button>` : ''}</span>
   </li>`;
 }

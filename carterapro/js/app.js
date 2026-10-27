@@ -10,19 +10,24 @@ import { toast } from './ui/dialogos.js';
 import { t } from './core/i18n.js';
 import { bloquear, instalarAutobloqueo } from './ui/bloqueo.js';
 import * as instalacion from './services/instalacion.js';
+import { ocultarSplash } from './ui/splash.js';
 
 const NAV = [
   { href: '#/', clave: 'nav.inicio', ico: 'inicio', seccion: 'inicio' },
+  { href: '#/ruta', clave: 'nav.ruta', ico: 'ruta', seccion: 'ruta' },
   { href: '#/clientes', clave: 'nav.clientes', ico: 'clientes', seccion: 'clientes' },
   { href: '#/creditos', clave: 'nav.creditos', ico: 'creditos', seccion: 'creditos' },
-  { href: '#/pagos', clave: 'nav.pagos', ico: 'pagos', seccion: 'pagos' },
   { href: '#/mas', clave: 'nav.mas', ico: 'mas', seccion: 'mas' },
 ];
 
 const NAV_EXTRA = [
+  { href: '#/pagos', clave: 'nav.pagos', ico: 'pagos', seccion: 'pagos' },
+  { href: '#/caja', clave: 'nav.caja', ico: 'caja', seccion: 'caja' },
+  { href: '#/gastos', clave: 'nav.gastos', ico: 'gasto', seccion: 'gastos' },
   { href: '#/cobranzas', clave: 'nav.cobranzas', ico: 'cobranza', seccion: 'cobranzas' },
   { href: '#/calendario', clave: 'nav.calendario', ico: 'calendario', seccion: 'calendario' },
   { href: '#/reportes', clave: 'nav.reportes', ico: 'tendencia', seccion: 'reportes' },
+  { href: '#/cobradores', clave: 'nav.cobradores', ico: 'usuario', seccion: 'cobradores' },
   { href: '#/copia', clave: 'nav.copia', ico: 'copia', seccion: 'copia' },
   { href: '#/configuracion', clave: 'nav.configuracion', ico: 'config', seccion: 'configuracion' },
 ];
@@ -43,6 +48,10 @@ function definirRutas() {
   router.ruta('/pagos/nuevo', v('pago-form'), { seccion: 'pagos' });
   router.ruta('/recibos/:id', v('recibo'), { seccion: 'pagos' });
   router.ruta('/cobranzas', v('cobranzas'), { seccion: 'cobranzas' });
+  router.ruta('/ruta', v('ruta'), { seccion: 'ruta' });
+  router.ruta('/caja', v('caja'), { seccion: 'caja' });
+  router.ruta('/gastos', v('gastos'), { seccion: 'gastos' });
+  router.ruta('/cobradores', v('cobradores'), { seccion: 'cobradores' });
   router.ruta('/calendario', v('calendario'), { seccion: 'calendario' });
   router.ruta('/reportes', v('reportes'), { seccion: 'reportes' });
   router.ruta('/buscar', v('buscar'), { seccion: 'buscar' });
@@ -65,7 +74,7 @@ function pintarNavegacion() {
   document.querySelector('.indicador-offline').textContent = t('barra.sinConexion');
 }
 
-const EN_MAS = ['cobranzas', 'calendario', 'reportes', 'configuracion', 'copia', 'seguridad', 'instalar', 'analista', 'ayuda'];
+const EN_MAS = ['pagos', 'caja', 'gastos', 'cobradores', 'cobranzas', 'calendario', 'reportes', 'configuracion', 'copia', 'seguridad', 'instalar', 'analista', 'ayuda'];
 
 function marcarActivo({ seccion }) {
   document.body.dataset.seccion = seccion || '';
@@ -117,9 +126,11 @@ async function iniciar() {
     await abrir();
     await config.cargar();
   } catch (e) {
+    ocultarSplash();
     errorDeVista(e, main);
     return;
   }
+  ocultarSplash();
   definirRutas();
   pintarNavegacion();
   pintarCabecera();

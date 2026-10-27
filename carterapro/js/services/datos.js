@@ -4,6 +4,9 @@ import { analizarCartera } from '../domain/metricas.js';
 import { hoy } from '../core/dates.js';
 import { emit } from '../core/events.js';
 
+/** Todas las tablas del negocio que se leen juntas para analizar. */
+export const TABLAS_DATOS = ['clientes', 'creditos', 'cuotas', 'pagos', 'gastos', 'caja', 'cierres', 'visitas', 'cargos'];
+
 let cache = null;
 
 export function cambio(tipo, detalle) {
@@ -15,9 +18,9 @@ export function cambio(tipo, detalle) {
 export function obtener() {
   const fecha = hoy();
   if (cache && cache.hoy === fecha) return cache.promesa;
-  const promesa = Promise.all(['clientes', 'creditos', 'cuotas', 'pagos'].map(todos))
-    .then(([clientes, creditos, cuotas, pagos]) => {
-      const datos = { clientes, creditos, cuotas, pagos };
+  const promesa = Promise.all(TABLAS_DATOS.map(todos))
+    .then(lista => {
+      const datos = Object.fromEntries(TABLAS_DATOS.map((t, i) => [t, lista[i]]));
       return { datos, analisis: analizarCartera(datos, fecha), hoy: fecha };
     });
   cache = { hoy: fecha, promesa };

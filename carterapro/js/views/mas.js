@@ -16,8 +16,12 @@ export async function render(el) {
   montar(el, html`
     ${encabezado('Más opciones')}
     <div class="lista">
-      ${item('#/analista', 'ia', 'Analista IA', 'Diagnóstico automático de tu cartera')}
+      ${item('#/pagos', 'pagos', 'Pagos', 'Historial de pagos y recibos')}
+      ${item('#/caja', 'caja', 'Caja y liquidación', 'Base, cierre del día, aportes y retiros')}
+      ${item('#/gastos', 'gasto', 'Gastos', 'Gasolina, almuerzos, papelería y más')}
+      ${item('#/cobradores', 'usuario', 'Cobradores', 'Tu equipo de cobro y su cartera')}
       ${item('#/cobranzas', 'cobranza', 'Cobranzas', 'Cobrar hoy, vencidos y próximos')}
+      ${item('#/analista', 'ia', 'Analista IA', 'Diagnóstico automático de tu cartera')}
       ${item('#/calendario', 'calendario', 'Calendario de cobros', 'Vencimientos día por día')}
       ${item('#/reportes', 'tendencia', 'Reportes', 'Cobros, cartera, mora y exportación CSV')}
       ${item('#/buscar', 'buscar', 'Buscar', 'Clientes, créditos y recibos')}
@@ -40,7 +44,7 @@ export async function render(el) {
 
     <div class="lista lista-sep">${item('#/ayuda', 'ayuda', 'Ayuda y aviso legal', 'Cómo se calculan intereses, pagos y estados')}</div>
 
-    <p class="version">CarteraPro · versión 1.0 (MVP) · Los datos se guardan solo en este dispositivo.</p>`);
+    <p class="version">CarteraPro · versión 2.0 · Los datos se guardan solo en este dispositivo.</p>`);
 
   return acciones(el, {
     async cargarDemo(btn) {

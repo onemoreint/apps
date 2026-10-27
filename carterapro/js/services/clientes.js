@@ -13,6 +13,7 @@ function limpiar(d) {
     whatsapp: t(d.whatsapp) || t(d.telefono),
     direccion: t(d.direccion),
     ciudad: t(d.ciudad),
+    sector: t(d.sector),
     referencia: t(d.referencia),
     notas: t(d.notas),
     foto: d.foto || null,
@@ -54,3 +55,15 @@ export async function eliminar(id) {
 }
 
 export const numeroWhatsApp = c => soloDigitos(c?.whatsapp || c?.telefono);
+
+/** Guarda el orden de visita de la ruta: ids en el orden deseado. */
+export async function ordenarRuta(ids) {
+  const ahora = new Date().toISOString();
+  await transaccion(['clientes'], async api => {
+    for (const [i, id] of ids.entries()) {
+      const c = await api.get('clientes', id);
+      if (c) await api.put('clientes', { ...c, ordenRuta: (i + 1) * 10, actualizadoEn: ahora });
+    }
+  });
+  cambio('ruta:ordenada', { n: ids.length });
+}

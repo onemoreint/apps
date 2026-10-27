@@ -27,7 +27,7 @@ export const DEFECTO = {
   moneda: { codigo: 'COP' },
   formatoFecha: 'DD/MM/YYYY',
   tema: 'auto',
-  colorPrincipal: '#0E7C66',
+  colorPrincipal: '#163761',
   diasGracia: 0,
   metodosPago: PAISES.CO.metodos,
   ocultarValores: false,
@@ -36,6 +36,10 @@ export const DEFECTO = {
   pinActivo: false,
   bloqueoMinutos: 5,
   ultimoBackup: null,
+  cobradores: [],
+  /** Tope de interés en % efectivo anual (p. ej. la tasa de usura vigente). Vacío = sin alerta. */
+  tasaUsura: '',
+  multaDefecto: { tipo: 'NINGUNA', valor: 0, tope: 0 },
 };
 
 let actual = { ...DEFECTO };

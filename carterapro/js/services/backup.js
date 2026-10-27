@@ -1,6 +1,6 @@
 // Copias de seguridad completas, restauración (con copia automática previa) e importación de clientes.
 import { todos, uno, transaccion, uid } from '../data/db.js';
-import { construirCopia, validarCopia, TABLAS, CONFIG_LOCAL, clientesDesdeCsv, leerCsv } from '../domain/copia.js';
+import { construirCopia, validarCopia, normalizarDatos, TABLAS, CONFIG_LOCAL, clientesDesdeCsv, leerCsv } from '../domain/copia.js';
 import { validarCliente, buscarDuplicados } from '../domain/validaciones.js';
 import { ErrorNegocio } from '../domain/errores.js';
 import { hoy } from '../core/dates.js';
@@ -8,8 +8,9 @@ import * as config from './config.js';
 import { cambio } from './datos.js';
 
 async function leerTodo() {
-  const [clientes, creditos, cuotas, pagos, contadores] = await Promise.all([...TABLAS, 'contadores'].map(todos));
-  return { clientes, creditos, cuotas, pagos, contadores, config: await uno('config', 'principal') };
+  const lista = await Promise.all([...TABLAS, 'contadores'].map(todos));
+  const todo = Object.fromEntries([...TABLAS, 'contadores'].map((t, i) => [t, lista[i]]));
+  return { ...todo, config: await uno('config', 'principal') };
 }
 
 export async function generarCopia() {
@@ -51,7 +52,8 @@ function contadoresSeguros(datos) {
   ];
 }
 
-async function reemplazarTodo(datos, { guardarPrevio }) {
+async function reemplazarTodo(datosCopia, { guardarPrevio }) {
+  const datos = normalizarDatos(datosCopia);
   const previo = guardarPrevio ? construirCopia(await leerTodo()) : null;
   const cfgActual = config.get();
   const local = Object.fromEntries(CONFIG_LOCAL.map(k => [k, cfgActual[k]]).filter(([, v]) => v !== undefined));
@@ -123,7 +125,7 @@ export async function importarClientes(aceptados) {
       const { fila, id, ...datos } = c;
       await api.put('clientes', {
         nombreCompleto: datos.nombreCompleto.replace(/\s+/g, ' '), documento: datos.documento || '', telefono: datos.telefono,
-        whatsapp: datos.whatsapp || datos.telefono, direccion: datos.direccion || '', ciudad: datos.ciudad || '',
+        whatsapp: datos.whatsapp || datos.telefono, direccion: datos.direccion || '', ciudad: datos.ciudad || '', sector: datos.sector || '',
         referencia: datos.referencia || '', notas: datos.notas || '', foto: null,
         id: uid(), fechaRegistro: hoy(), activo: true, esDemo: false, creadoEn: ahora, actualizadoEn: ahora,
       });

@@ -5,7 +5,10 @@ import { confirmar, toast } from '../ui/dialogos.js';
 import { obtener } from '../services/datos.js';
 import * as creditos from '../services/creditos.js';
 import * as config from '../services/config.js';
-import { TIPOS_INTERES, porcentajeABp } from '../domain/interes.js';
+import { TIPOS_INTERES, porcentajeABp, bpATexto } from '../domain/interes.js';
+import { TIPOS_MULTA } from '../domain/multas.js';
+import { tasaEfectivaAnual, evaluarUsura } from '../domain/usura.js';
+import * as cobradores from '../services/cobradores.js';
 import { FRECUENCIAS, primerVencimientoSugerido } from '../domain/cuotas.js';
 import { aMinimo, aTextoInput, formatear as dinero, getMoneda } from '../core/money.js';
 import { hoy as fechaHoy, formatear as fecha } from '../core/dates.js';
@@ -13,7 +16,7 @@ import { ir } from '../core/router.js';
 import { intentar } from '../core/errors.js';
 
 export async function render(el, _p, query) {
-  const { datos } = await obtener();
+  const { datos, analisis } = await obtener();
   const lista = [...datos.clientes].sort((a, b) => a.nombreCompleto.localeCompare(b.nombreCompleto, 'es'));
   const inicio = query.inicio === '1';
   const hoy = fechaHoy();
@@ -25,36 +28,50 @@ export async function render(el, _p, query) {
     return;
   }
 
-  const clienteInicial = lista.find(c => c.id === query.cliente)?.id || '';
-  const atras = clienteInicial && !inicio ? `#/clientes/${clienteInicial}` : '#/creditos';
+  // Renovación: se parte de un crédito existente del mismo cliente.
+  const ant = query.renovar ? analisis.creditos.get(query.renovar) : null;
+  const renovando = !!ant && !ant.credito.cancelado && !ant.credito.renovadoPor;
+  const base = renovando ? ant.credito : null;
+  const saldoAnterior = renovando ? ant.resumen.saldoTotal : 0;
+  const clienteInicial = (renovando ? base.clienteId : lista.find(c => c.id === query.cliente)?.id) || '';
+  const atras = renovando ? `#/creditos/${base.id}` : clienteInicial && !inicio ? `#/clientes/${clienteInicial}` : '#/creditos';
   const simbolo = getMoneda().simbolo;
+  const equipo = cobradores.lista();
+  const multa0 = base?.multa || cfg.multaDefecto || { tipo: 'NINGUNA', valor: 0, tope: 0 };
+  const tipo0 = base?.tipoInteres || 'PCT_CAPITAL';
+  const frec0 = base?.frecuencia || 'DIARIA';
 
   montar(el, html`
-    ${encabezado('Nuevo crédito', { atras, subtitulo: inicio ? 'Paso 3 de 3 · Registra el primer préstamo' : '' })}
+    ${encabezado(renovando ? 'Renovar crédito' : 'Nuevo crédito', { atras, subtitulo: inicio ? 'Paso 3 de 3 · Registra el primer préstamo' : renovando ? `${ant.cliente?.nombreCompleto} · crédito ${creditos.formatoNumero(base.numero)}` : '' })}
     <form class="formulario formulario-credito" novalidate>
       <div class="form-principal">
-        <fieldset class="tarjeta">
+        ${renovando ? html`<div class="tarjeta tarjeta-renovacion">
+          <h2 class="tarjeta-titulo">${icono('renovar')} Renovación</h2>
+          <p>El saldo pendiente del crédito ${creditos.formatoNumero(base.numero)} (<strong class="dinero">${dinero(saldoAnterior, { ocultable: false })}</strong>) se descuenta del nuevo préstamo y ese crédito queda pagado. Al cliente solo se le entrega la diferencia.</p>
+          <input type="hidden" name="clienteId" value="${base.clienteId}">
+        </div>` : html`<fieldset class="tarjeta">
           <legend>¿A quién le prestas?</legend>
           ${campo({ etiqueta: 'Cliente', nombre: 'clienteId', valor: clienteInicial, requerido: true,
             opciones: [{ valor: '', texto: 'Selecciona un cliente…' }, ...lista.map(c => ({ valor: c.id, texto: `${c.nombreCompleto} · ${c.telefono}` }))] })}
           <a class="enlace" href="#/clientes/nuevo?volver=credito">${icono('mas_circulo')} Crear un cliente nuevo</a>
-        </fieldset>
+        </fieldset>`}
 
         <fieldset class="tarjeta">
           <legend>Préstamo e interés</legend>
-          ${campo({ etiqueta: `Monto prestado (${simbolo})`, nombre: 'monto', requerido: true, attrs: 'inputmode="decimal" autocomplete="off" placeholder="Ej: 1.000.000"' })}
+          ${campo({ etiqueta: `Monto ${renovando ? 'del nuevo crédito' : 'prestado'} (${simbolo})`, nombre: 'monto', valor: base ? aTextoInput(base.montoPrestado) : '', requerido: true, attrs: 'inputmode="decimal" autocomplete="off" placeholder="Ej: 1.000.000"' })}
+          ${renovando ? html`<p class="aviso aviso-azul" id="neto" aria-live="polite"></p>` : ''}
           <div class="campo" data-campo="tipoInteres">
             <span class="campo-etiqueta" id="lbl-tipo">Tipo de interés</span>
             <div class="opciones-tarjeta" role="radiogroup" aria-labelledby="lbl-tipo">
               ${Object.entries(TIPOS_INTERES).map(([k, t], i) => html`<label class="opcion">
-                <input type="radio" name="tipoInteres" value="${k}" ${i === 0 ? 'checked' : ''}>
+                <input type="radio" name="tipoInteres" value="${k}" ${k === tipo0 ? 'checked' : ''}>
                 <span><strong>${t.corto}</strong></span></label>`)}
             </div>
             <div class="explicacion" id="explicacion" aria-live="polite"></div>
             <small class="campo-error" role="alert"></small>
           </div>
-          <div id="grupo-tasa">${campo({ etiqueta: 'Porcentaje (%)', nombre: 'tasa', attrs: 'inputmode="decimal" autocomplete="off" placeholder="Ej: 10"' })}</div>
-          <div id="grupo-fijo" class="oculto">${campo({ etiqueta: `Valor del interés (${simbolo})`, nombre: 'interesFijo', attrs: 'inputmode="decimal" autocomplete="off"' })}</div>
+          <div id="grupo-tasa">${campo({ etiqueta: 'Porcentaje (%)', nombre: 'tasa', valor: base?.tasaBp ? bpATexto(base.tasaBp) : '', attrs: 'inputmode="decimal" autocomplete="off" placeholder="Ej: 10"' })}</div>
+          <div id="grupo-fijo" class="oculto">${campo({ etiqueta: `Valor del interés (${simbolo})`, nombre: 'interesFijo', valor: base?.tipoInteres === 'FIJO' ? aTextoInput(base.interesFijo) : '', attrs: 'inputmode="decimal" autocomplete="off"' })}</div>
         </fieldset>
 
         <fieldset class="tarjeta">
@@ -62,26 +79,37 @@ export async function render(el, _p, query) {
           <div class="campo" data-campo="frecuencia">
             <span class="campo-etiqueta" id="lbl-frec">¿Cada cuánto paga?</span>
             <div class="segmentado" role="radiogroup" aria-labelledby="lbl-frec">
-              ${Object.entries(FRECUENCIAS).map(([k, f]) => html`<label><input type="radio" name="frecuencia" value="${k}" ${k === 'DIARIA' ? 'checked' : ''}><span>${f.nombre}</span></label>`)}
+              ${Object.entries(FRECUENCIAS).map(([k, f]) => html`<label><input type="radio" name="frecuencia" value="${k}" ${k === frec0 ? 'checked' : ''}><span>${f.nombre}</span></label>`)}
             </div>
             <small class="campo-error" role="alert"></small>
           </div>
-          <label class="check" id="grupo-domingos"><input type="checkbox" name="excluirDomingos"><span>No cobrar los domingos</span></label>
+          <label class="check" id="grupo-domingos"><input type="checkbox" name="excluirDomingos" ${base?.excluirDomingos ? 'checked' : ''}><span>No cobrar los domingos</span></label>
           <div class="rejilla-2">
-            ${campo({ etiqueta: 'Número de cuotas', nombre: 'numeroCuotas', tipo: 'number', valor: '20', requerido: true, attrs: 'min="1" max="1000" inputmode="numeric"' })}
-            ${campo({ etiqueta: 'Días de gracia', nombre: 'diasGracia', tipo: 'number', valor: String(cfg.diasGracia || 0), attrs: 'min="0" max="60" inputmode="numeric"', ayuda: 'Días tras el vencimiento antes de marcarla vencida.' })}
+            ${campo({ etiqueta: 'Número de cuotas', nombre: 'numeroCuotas', tipo: 'number', valor: String(base?.numeroCuotas || 20), requerido: true, attrs: 'min="1" max="1000" inputmode="numeric"' })}
+            ${campo({ etiqueta: 'Días de gracia', nombre: 'diasGracia', tipo: 'number', valor: String(base?.diasGracia ?? cfg.diasGracia ?? 0), attrs: 'min="0" max="60" inputmode="numeric"', ayuda: 'Días tras el vencimiento antes de marcarla vencida.' })}
           </div>
           <div class="rejilla-2">
             ${campo({ etiqueta: 'Fecha del préstamo', nombre: 'fechaInicio', tipo: 'date', valor: hoy, requerido: true })}
-            ${campo({ etiqueta: 'Primera cuota vence', nombre: 'fechaPrimerVencimiento', tipo: 'date', valor: primerVencimientoSugerido(hoy, 'DIARIA'), requerido: true })}
+            ${campo({ etiqueta: 'Primera cuota vence', nombre: 'fechaPrimerVencimiento', tipo: 'date', valor: primerVencimientoSugerido(hoy, frec0, !!base?.excluirDomingos), requerido: true })}
           </div>
           ${campo({ etiqueta: 'Notas', nombre: 'notas', tipo: 'textarea' })}
+        </fieldset>
+
+        <fieldset class="tarjeta">
+          <legend>Cobro y mora</legend>
+          ${equipo.length ? campo({ etiqueta: 'Cobrador asignado', nombre: 'cobradorId', valor: base?.cobradorId || '', opciones: cobradores.opciones(base?.cobradorId || ''), ayuda: 'Aparece en su ruta y en su liquidación de caja.' }) : ''}
+          ${campo({ etiqueta: 'Multa por atraso', nombre: 'multaTipo', valor: multa0.tipo, opciones: Object.entries(TIPOS_MULTA).map(([k, t]) => ({ valor: k, texto: t.nombre })) })}
+          <div class="rejilla-2 ${multa0.tipo === 'NINGUNA' ? 'oculto' : ''}" id="grupo-multa">
+            ${campo({ etiqueta: `Valor (${simbolo})`, nombre: 'multaValor', valor: multa0.valor ? aTextoInput(multa0.valor) : '', attrs: 'inputmode="decimal" autocomplete="off"' })}
+            <div id="grupo-tope" class="${multa0.tipo === 'DIARIA' ? '' : 'oculto'}">${campo({ etiqueta: `Tope por cuota (${simbolo})`, nombre: 'multaTope', valor: multa0.tope ? aTextoInput(multa0.tope) : '', attrs: 'inputmode="decimal" autocomplete="off"', ayuda: 'Máximo que puede sumar la multa de una cuota. Vacío = sin tope.' })}</div>
+          </div>
+          <small class="campo-ayuda" id="ayuda-multa"></small>
         </fieldset>
       </div>
 
       <aside class="form-resumen">
         <div class="tarjeta resumen-credito" id="resumen" aria-live="polite"></div>
-        <button class="btn btn-pri btn-lg btn-bloque" type="submit">${icono('check')}<span>Crear crédito</span></button>
+        <button class="btn btn-pri btn-lg btn-bloque" type="submit">${icono(renovando ? 'renovar' : 'check')}<span>${renovando ? 'Renovar crédito' : 'Crear crédito'}</span></button>
       </aside>
     </form>`);
 
@@ -103,6 +131,12 @@ export async function render(el, _p, query) {
       fechaPrimerVencimiento: form.fechaPrimerVencimiento.value,
       diasGracia: Number(form.diasGracia.value || 0),
       notas: form.notas.value,
+      cobradorId: form.cobradorId?.value || '',
+      multa: {
+        tipo: form.multaTipo.value,
+        valor: form.multaValor.value.trim() ? aMinimo(form.multaValor.value) : NaN,
+        tope: form.multaTope.value.trim() ? aMinimo(form.multaTope.value) : 0,
+      },
     };
   };
 
@@ -119,10 +153,22 @@ export async function render(el, _p, query) {
     if (!fechaEditada && form.fechaInicio.value) {
       form.fechaPrimerVencimiento.value = primerVencimientoSugerido(form.fechaInicio.value, frec, form.excluirDomingos.checked);
     }
+    const mt = form.multaTipo.value;
+    $('#grupo-multa', el).classList.toggle('oculto', mt === 'NINGUNA');
+    $('#grupo-tope', el).classList.toggle('oculto', mt !== 'DIARIA');
+    $('#ayuda-multa', el).textContent = TIPOS_MULTA[mt].explicacion + (mt === 'NINGUNA' ? '' : ' La multa no se cobra sola: la aplicas tú desde el crédito o al registrar el pago.');
+    if (renovando) {
+      const m = aMinimo(form.monto.value);
+      const n = Number.isFinite(m) ? m - saldoAnterior : NaN;
+      montar($('#neto', el), Number.isFinite(n)
+        ? n >= 0 ? html`${icono('dinero')} Entregas en efectivo: <strong class="dinero">${dinero(n, { ocultable: false })}</strong>` : html`${icono('alerta')} El monto debe ser al menos el saldo pendiente (${dinero(saldoAnterior, { ocultable: false })}).`
+        : '');
+    }
     pintarResumen(leer());
   };
 
-  const pintarResumen = e => {
+  const pintarResumen = entrada => {
+    const e = { ...entrada, multa: null }; // la multa no cambia el plan de cuotas
     const sim = creditos.simular(e);
     const caja = $('#resumen', el);
     if (Object.keys(sim.errores).length) {
@@ -146,7 +192,19 @@ export async function render(el, _p, query) {
       <ol class="mini-tabla">${muestras.map(c => c
         ? html`<li><span>Cuota ${c.numero}</span><span>${fecha(c.fechaVencimiento)}</span><b class="dinero">${dinero(c.valorProgramado, { ocultable: false })}</b></li>`
         : html`<li class="elipsis" aria-hidden="true">⋯</li>`)}</ol>
-      <p class="resumen-nota">Termina el ${fecha(s.fechaUltimoVencimiento)}.</p>`);
+      <p class="resumen-nota">Termina el ${fecha(s.fechaUltimoVencimiento)}.</p>
+      ${avisoUsura(e, s)}`);
+  };
+
+  // Tasa efectiva anual del plan y comparación con el tope configurado (usura).
+  const avisoUsura = (e, s) => {
+    const ea = tasaEfectivaAnual(e.montoPrestado, e.fechaInicio, s.cuotas);
+    const v = evaluarUsura(ea, cfg.tasaUsura);
+    if (v.estado === 'NA' || !ea) return '';
+    const pct = Number.isFinite(ea) ? (ea * 100).toLocaleString('es-CO', { maximumFractionDigits: 1 }) + ' %' : 'muy alta';
+    if (v.estado === 'EXCEDE') return html`<p class="aviso aviso-rojo usura">${icono('alerta')} <span>Equivale a <strong>${pct} efectivo anual</strong>, por encima del tope que configuraste (${String(v.tope).replace('.', ',')} %). Revisa la tasa: cobrar por encima del límite legal puede ser delito de usura.</span></p>`;
+    if (v.estado === 'OK') return html`<p class="resumen-nota usura">${icono('check')} Equivale a ${pct} efectivo anual, dentro de tu tope (${String(v.tope).replace('.', ',')} %).</p>`;
+    return html`<p class="resumen-nota usura">Equivale a ${pct} efectivo anual. <a href="#/configuracion">Configura la tasa máxima</a> para recibir alertas.</p>`;
   };
 
   form.addEventListener('input', e => {
@@ -154,7 +212,7 @@ export async function render(el, _p, query) {
     actualizar();
   });
   form.addEventListener('change', actualizar);
-  for (const nombre of ['monto', 'interesFijo']) {
+  for (const nombre of ['monto', 'interesFijo', 'multaValor', 'multaTope']) {
     form[nombre].addEventListener('blur', () => {
       const v = aMinimo(form[nombre].value);
       if (Number.isFinite(v) && v > 0) form[nombre].value = aTextoInput(v);
@@ -168,6 +226,7 @@ export async function render(el, _p, query) {
     const sim = creditos.simular(e);
     const errores = { ...sim.errores };
     if (errores.montoPrestado) errores.monto = errores.montoPrestado;
+    if (renovando && !errores.monto && e.montoPrestado < saldoAnterior) errores.monto = `Debe cubrir al menos el saldo pendiente (${dinero(saldoAnterior, { ocultable: false })}).`;
     mostrarErrores(form, errores);
     if (Object.keys(errores).length) {
       toast('Revisa los campos marcados.', 'error');
@@ -175,15 +234,22 @@ export async function render(el, _p, query) {
     }
     const cliente = lista.find(c => c.id === e.clienteId);
     const ok = await confirmar({
-      titulo: '¿Crear este crédito?',
+      titulo: renovando ? '¿Renovar este crédito?' : '¿Crear este crédito?',
       detalle: html`<div class="resumen-confirmacion">
         <strong>${cliente.nombreCompleto}</strong>
         <span>Presta ${dinero(e.montoPrestado, { ocultable: false })} · paga ${dinero(sim.totalAPagar, { ocultable: false })}</span>
+        ${renovando ? html`<span>Se descuenta el saldo anterior ${dinero(saldoAnterior, { ocultable: false })} · entregas ${dinero(e.montoPrestado - saldoAnterior, { ocultable: false })}</span>` : ''}
         <span>${e.numeroCuotas} cuotas de ${dinero(sim.valorCuota, { ocultable: false })} · desde ${fecha(e.fechaPrimerVencimiento)}</span>
       </div>`,
-      aceptar: 'Crear crédito',
+      aceptar: renovando ? 'Renovar' : 'Crear crédito',
     });
     if (!ok) return;
+    if (renovando) {
+      const { credito } = await intentar(() => creditos.renovar(base.id, e), 'renovar el crédito');
+      toast(`Crédito renovado: nuevo ${creditos.formatoNumero(credito.numero)}.`);
+      ir(`/creditos/${credito.id}`);
+      return;
+    }
     const credito = await intentar(() => creditos.crear(e), 'crear el crédito');
     toast(`Crédito ${creditos.formatoNumero(credito.numero)} creado con ${credito.numeroCuotas} cuotas.`);
     ir(`/creditos/${credito.id}`);

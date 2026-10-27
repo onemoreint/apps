@@ -3,14 +3,15 @@ import { encabezado, campo, mostrarErrores } from '../ui/componentes.js';
 import { toast, confirmar } from '../ui/dialogos.js';
 import * as config from '../services/config.js';
 import { obtener } from '../services/datos.js';
-import { MONEDAS } from '../core/money.js';
+import { MONEDAS, aMinimo, aTextoInput } from '../core/money.js';
+import { TIPOS_MULTA, validarPolitica } from '../domain/multas.js';
 import { icono } from '../ui/icons.js';
 import { PLANTILLAS } from '../services/whatsapp.js';
 import { ir } from '../core/router.js';
 import { intentar } from '../core/errors.js';
 
 // Colores con contraste suficiente sobre blanco para texto y botones.
-const COLORES = [['#0E7C66', 'Verde'], ['#1D4ED8', 'Azul'], ['#6D28D9', 'Morado'], ['#BE185D', 'Fucsia'],
+const COLORES = [['#163761', 'Azul Cartera Pro'], ['#0E7C66', 'Verde'], ['#1D4ED8', 'Azul'], ['#6D28D9', 'Morado'], ['#BE185D', 'Fucsia'],
   ['#B45309', 'Ámbar'], ['#B91C1C', 'Rojo'], ['#0F766E', 'Turquesa'], ['#334155', 'Grafito']];
 
 function comprimirLogo(archivo, lado = 256) {
@@ -96,6 +97,14 @@ export async function render(el, _p, query) {
         <legend>Cobros</legend>
         ${campo({ etiqueta: 'Días de gracia por defecto', nombre: 'diasGracia', valor: cfg.diasGracia, tipo: 'number', attrs: 'min="0" max="60" inputmode="numeric"', ayuda: 'Días después del vencimiento antes de marcar una cuota como vencida. Cada crédito puede cambiarlo.' })}
         ${campo({ etiqueta: 'Métodos de pago', nombre: 'metodosPago', valor: cfg.metodosPago.join('\n'), tipo: 'textarea', ayuda: 'Uno por línea. Aparecerán al registrar un pago.' })}
+        ${inicio ? '' : html`
+          ${campo({ etiqueta: 'Tasa máxima permitida (% efectivo anual)', nombre: 'tasaUsura', valor: cfg.tasaUsura || '', attrs: 'inputmode="decimal" placeholder="Ej: 26,5"', ayuda: 'Escribe la tasa de usura vigente que publica la autoridad de tu país (en Colombia, la Superintendencia Financiera). CarteraPro te avisará si un crédito la supera.' })}
+          <div class="rejilla-2">
+            ${campo({ etiqueta: 'Multa por atraso para créditos nuevos', nombre: 'multaTipo', valor: cfg.multaDefecto?.tipo || 'NINGUNA', opciones: Object.entries(TIPOS_MULTA).map(([k, t]) => ({ valor: k, texto: t.nombre })) })}
+            ${campo({ etiqueta: 'Valor de la multa', nombre: 'multaValor', valor: cfg.multaDefecto?.valor ? aTextoInput(cfg.multaDefecto.valor) : '', attrs: 'inputmode="decimal"' })}
+          </div>
+          ${campo({ etiqueta: 'Tope de multa por cuota (solo multa diaria)', nombre: 'multaTope', valor: cfg.multaDefecto?.tope ? aTextoInput(cfg.multaDefecto.tope) : '', attrs: 'inputmode="decimal"', ayuda: 'Vacío = sin tope. Cada crédito puede tener su propia política.' })}
+          <a class="enlace" href="#/cobradores">${icono('usuario')} Administrar cobradores</a>`}
       </fieldset>
 
       ${inicio ? '' : html`<fieldset class="tarjeta">
@@ -148,6 +157,14 @@ export async function render(el, _p, query) {
     const metodos = [...new Set(f.metodosPago.split('\n').map(s => s.trim()).filter(Boolean))];
     if (!metodos.length) errores.metodosPago = 'Agrega al menos un método de pago.';
     if (f.email && !/^\S+@\S+\.\S+$/.test(f.email)) errores.email = 'Revisa el correo.';
+    let multaDefecto = cfg.multaDefecto, tasaUsura = cfg.tasaUsura || '';
+    if (!inicio) {
+      const tasa = String(f.tasaUsura || '').trim().replace(',', '.');
+      if (tasa && !(Number(tasa) > 0 && Number(tasa) < 1000)) errores.tasaUsura = 'Escribe un porcentaje válido, por ejemplo 26,5.';
+      else tasaUsura = tasa;
+      multaDefecto = { tipo: f.multaTipo, valor: f.multaTipo === 'NINGUNA' ? 0 : aMinimo(f.multaValor), tope: f.multaTope ? aMinimo(f.multaTope) || 0 : 0 };
+      Object.assign(errores, validarPolitica(multaDefecto));
+    }
     mostrarErrores(form, errores);
     if (Object.keys(errores).length) return;
 
@@ -162,7 +179,7 @@ export async function render(el, _p, query) {
       plantillasWhatsApp,
       ...(inicio ? {} : { logo, tema: f.tema, colorPrincipal: f.colorPrincipal || cfg.colorPrincipal }),
       nombreNegocio: f.nombreNegocio.trim(), telefono: f.telefono.trim(), email: f.email.trim(), direccion: f.direccion.trim(),
-      pais: f.pais, formatoFecha: f.formatoFecha, diasGracia: gracia, metodosPago: metodos,
+      pais: f.pais, formatoFecha: f.formatoFecha, diasGracia: gracia, metodosPago: metodos, tasaUsura, multaDefecto,
       moneda: f.moneda === 'OTRA' ? { codigo: 'OTRA', simbolo: f.simbolo.trim() || '$', decimales: Number(f.decimales) } : { codigo: f.moneda },
     }), 'guardar la configuración');
     toast('Configuración guardada.');

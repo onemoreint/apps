@@ -36,6 +36,16 @@ const P = {
   anular: '<circle cx="12" cy="12" r="9"/><path d="m5.6 5.6 12.8 12.8"/>',
   usuario: '<circle cx="12" cy="8" r="4"/><path d="M4 21c.7-4 3.9-6.5 8-6.5s7.3 2.5 8 6.5"/>',
   camara: '<path d="M4 8h3l1.5-2.5h7L17 8h3v11H4V8Z"/><circle cx="12" cy="13" r="3.5"/>',
+  ruta: '<circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="6" r="2.2"/><path d="M8.2 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.8"/>',
+  mapa: '<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0C18.5 15.4 12 21 12 21Z"/><circle cx="12" cy="10" r="2.4"/>',
+  caja: '<path d="M3.5 7.5h14a2 2 0 0 1 2 2V19a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 19V7.5Z"/><path d="M3.5 7.5 15 4l1.2 3.5"/><path d="M15.5 13.5h4v3h-4a1.5 1.5 0 0 1 0-3Z"/>',
+  gasto: '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 11h6"/>',
+  renovar: '<path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 3.5V8h4.5"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20.5V16h-4.5"/>',
+  multa: '<circle cx="12" cy="12" r="9"/><path d="M12 7v6"/><path d="M12 16.5v.01"/>',
+  subir: '<path d="m6 14 6-6 6 6"/>',
+  bajar: '<path d="m6 10 6 6 6-6"/>',
+  ordenar: '<path d="M8 4v16M4.5 7.5 8 4l3.5 3.5"/><path d="M16 20V4M12.5 16.5 16 20l3.5-3.5"/>',
+  candado: '<rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>',
 };
 
 export function icono(nombre, clase = '') {

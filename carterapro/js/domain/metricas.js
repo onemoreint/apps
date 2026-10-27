@@ -4,18 +4,23 @@ import { diferenciaDias } from '../core/dates.js';
 import { saldoCuota } from './pagos.js';
 import { resumenCredito, estadoVisualCuota, estadoCuota, diasAtraso, peorEstado } from './estados.js';
 import { evaluarRiesgo } from './riesgo.js';
+import { saldoMultas } from './multas.js';
 
-export function analizarCartera({ clientes = [], creditos = [], cuotas = [], pagos = [] }, hoy) {
+export function analizarCartera({ clientes = [], creditos = [], cuotas = [], pagos = [], cargos = [] }, hoy) {
   const cuotasPorCredito = agrupar(cuotas, 'creditoId');
+  const cargosPorCredito = agrupar(cargos, 'creditoId');
   const clientePorId = new Map(clientes.map(c => [c.id, c]));
 
   const infoCreditos = new Map();
   for (const credito of creditos) {
     const lista = (cuotasPorCredito.get(credito.id) || []).sort((a, b) => a.numero - b.numero);
+    const cargosCredito = cargosPorCredito.get(credito.id) || [];
     infoCreditos.set(credito.id, {
       credito,
       cliente: clientePorId.get(credito.clienteId),
       cuotas: lista,
+      cargos: cargosCredito,
+      multasPendientes: saldoMultas(cargosCredito),
       resumen: resumenCredito(credito, lista, hoy),
     });
   }

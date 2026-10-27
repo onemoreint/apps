@@ -11,6 +11,7 @@ import { TIPOS_INTERES } from '../domain/interes.js';
 import { FRECUENCIAS } from '../domain/cuotas.js';
 import { ESTADOS } from '../domain/estados.js';
 import { saldoCuota } from '../domain/pagos.js';
+import * as cobradores from '../services/cobradores.js';
 import { getMoneda } from '../core/money.js';
 import { hoy as fechaHoy, diferenciaDias, formatear as fecha, deDate } from '../core/dates.js';
 import { recargar } from '../core/router.js';
@@ -74,6 +75,7 @@ export async function render(el) {
           <button type="button" class="btn btn-sec" data-accion="csv" data-tabla="creditos">Créditos</button>
           <button type="button" class="btn btn-sec" data-accion="csv" data-tabla="cuotas">Cuotas</button>
           <button type="button" class="btn btn-sec" data-accion="csv" data-tabla="pagos">Pagos</button>
+          <button type="button" class="btn btn-sec" data-accion="csv" data-tabla="gastos">Gastos</button>
         </div>
       </div>`)}
 
@@ -135,7 +137,7 @@ export async function render(el) {
     clientes: () => aCsv([
       { titulo: 'Nombre', valor: c => c.nombreCompleto }, { titulo: 'Documento', valor: c => c.documento },
       { titulo: 'Teléfono', valor: c => c.telefono }, { titulo: 'WhatsApp', valor: c => c.whatsapp },
-      { titulo: 'Dirección', valor: c => c.direccion }, { titulo: 'Ciudad', valor: c => c.ciudad },
+      { titulo: 'Dirección', valor: c => c.direccion }, { titulo: 'Barrio', valor: c => c.sector }, { titulo: 'Ciudad', valor: c => c.ciudad },
       { titulo: 'Referencia', valor: c => c.referencia }, { titulo: 'Notas', valor: c => c.notas },
       { titulo: 'Fecha registro', valor: c => c.fechaRegistro },
       { titulo: 'Saldo', valor: c => m(analisis.clientes.get(c.id)?.saldo) },
@@ -164,9 +166,16 @@ export async function render(el) {
       { titulo: 'Cliente', valor: p => cli(p.clienteId)?.nombreCompleto },
       { titulo: 'Crédito', valor: p => formatoNumero(analisis.creditos.get(p.creditoId)?.credito.numero || 0) },
       { titulo: 'Cuotas', valor: p => p.aplicaciones.map(a => a.numeroCuota).join(' ') },
-      { titulo: 'Método', valor: p => p.metodoPago }, { titulo: 'Valor', valor: p => m(p.monto) },
+      { titulo: 'Método', valor: p => p.metodoPago }, { titulo: 'Valor cuotas', valor: p => m(p.monto) },
+      { titulo: 'Multa', valor: p => m(p.multa) }, { titulo: 'Cobrador', valor: p => cobradores.nombre(p.cobradorId) },
+      { titulo: 'Tipo', valor: p => (p.tipo === 'RENOVACION' ? 'Renovación' : 'Pago') },
       { titulo: 'Anulado', valor: p => (p.anulado ? 'Sí' : 'No') }, { titulo: 'Observación', valor: p => p.observacion },
     ], [...datos.pagos].sort((a, b) => a.numeroRecibo.localeCompare(b.numeroRecibo))),
+    gastos: () => aCsv([
+      { titulo: 'Fecha', valor: g => g.fecha }, { titulo: 'Categoría', valor: g => g.categoria },
+      { titulo: 'Valor', valor: g => m(g.monto) }, { titulo: 'Descripción', valor: g => g.descripcion },
+      { titulo: 'Cobrador', valor: g => cobradores.nombre(g.cobradorId) }, { titulo: 'Anulado', valor: g => (g.anulado ? 'Sí' : 'No') },
+    ], [...datos.gastos].sort((a, b) => a.fecha.localeCompare(b.fecha))),
   };
 
   return acciones(el, {

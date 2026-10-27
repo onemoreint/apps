@@ -61,9 +61,11 @@ export function validarCredito(c, { existeCliente = true } = {}) {
   return e;
 }
 
-export function validarPago(p, { saldo, hoy }) {
+export function validarPago(p, { saldo, hoy, soloMulta = false }) {
   const e = {};
-  if (!Number.isInteger(p.monto) || p.monto <= 0) e.monto = 'Escribe un valor mayor que cero.';
+  // Con multa se admite un pago que no abone a cuotas (monto 0), por ejemplo cuando ya pagó todo.
+  if (soloMulta && p.monto === 0) { /* pago solo de multa */ }
+  else if (!Number.isInteger(p.monto) || p.monto <= 0) e.monto = 'Escribe un valor mayor que cero.';
   else if (p.monto > saldo) e.monto = 'El pago es mayor que el saldo pendiente del crédito.';
   if (!esValida(p.fecha)) e.fecha = 'Escribe una fecha válida.';
   else if (hoy && diferenciaDias(hoy, p.fecha) > 0) e.fecha = 'La fecha del pago no puede ser futura.';

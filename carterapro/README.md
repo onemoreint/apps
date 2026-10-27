@@ -1,4 +1,4 @@
-# CarteraPro — MVP (versión 1.0)
+# CarteraPro — versión 2.0
 
 Gestión de clientes, créditos, cuotas, pagos y cartera. Aplicación web progresiva (PWA): se instala en celular, tablet o computador y funciona sin internet. HTML + CSS + JavaScript (módulos ES), sin frameworks ni backend. Los datos se guardan en IndexedDB, dentro del navegador del dispositivo.
 
@@ -36,7 +36,7 @@ Al publicar cambios: edita los archivos, cambia `VERSION` en `service-worker.js`
 
 ## IndexedDB
 
-Base de datos `carterapro` con tablas (object stores): `clientes`, `creditos`, `cuotas`, `pagos`, `config`, `contadores` (consecutivos de crédito y recibo) y `meta` (copia previa a una restauración). Solo `js/data/db.js` habla con IndexedDB. Para cambiar el esquema, sube `VERSION` en ese archivo y agrega un bloque `if (anterior < N)` en `migrar()`.
+Base de datos `carterapro` (versión 2) con tablas (object stores): `clientes`, `creditos`, `cuotas`, `pagos`, `gastos`, `caja` (aportes, retiros y base al cobrador), `cierres` (cierres de caja), `visitas` (visitas sin pago y promesas), `cargos` (multas por mora), `config` (incluye los cobradores), `contadores` (consecutivos de crédito y recibo) y `meta` (copia previa a una restauración). Quien ya tenía la versión 1 conserva sus datos: la app agrega las tablas nuevas al abrir. Solo `js/data/db.js` habla con IndexedDB. Para cambiar el esquema, sube `VERSION` en ese archivo y agrega un bloque `if (anterior < N)` en `migrar()`.
 
 Reglas: dinero en enteros (unidad mínima de la moneda), fechas como `YYYY-MM-DD`, estados y saldos calculados (nunca guardados). Los pagos nunca se borran: se anulan y se revierten en las cuotas.
 
@@ -57,10 +57,11 @@ Más → Seguridad. PIN de 4 a 8 números guardado como hash PBKDF2-SHA256 (150.
 ## Pruebas
 
 ```bash
-node --test tests/*.test.mjs        # 19 pruebas del motor (cálculos, reportes, copias, CSV, diagnóstico, idiomas)
+node --test tests/*.test.mjs        # 25 pruebas del motor (cálculos, multas, caja, ruta, usura, reportes, copias, CSV, diagnóstico, idiomas)
 python3 tests/e2e.py                # recorrido completo en Chromium (requiere playwright y el servidor en :8080)
 python3 tests/e2e_etapa4.py         # copia/restauración, importación, PIN, apariencia y modo sin conexión
 python3 tests/e2e_final.py          # caso Carlos Pérez de la especificación, accesibilidad y rendimiento
+python3 tests/e2e_v2.py             # entrada con logo, ruta, caja, multas, renovación y alerta de usura
 ```
 
 ## Estructura
@@ -88,3 +89,13 @@ tests/                Pruebas unitarias y de navegador
 - **Etapa 5**: Analista IA (diagnóstico local y resumen anónimo para copiar a un asistente), ayuda y aviso legal, estructura de idiomas (español, inglés y portugués parcial), foco de teclado al navegar, pruebas finales.
 
 Para añadir funciones (pantallas, campos, tipos de interés, sincronización en la nube, IA conectada, idiomas) consulta **ARQUITECTURA.md**.
+- **Versión 2.0 (operación en la calle)**:
+  - **Pantalla de entrada** animada con el logo Cartera Pro (respeta "reducir movimiento"), íconos de la app con el escudo y color de marca por defecto.
+  - **Ruta de cobro** (`#/ruta`): una parada por cliente con lo que debe hoy y lo atrasado, en el orden de visita (se ordena con flechas y se guarda), filtro por cobrador, botón Cobrar, "No pagó" (no estaba, sin dinero, promesa de pago con fecha), mapa, llamada y WhatsApp, y avance del día.
+  - **Cobradores** (`#/cobradores`): equipo de cobro, crédito asignado a cada uno y su cartera.
+  - **Caja** (`#/caja`): base entregada al cobrador, cobrado, préstamos entregados y gastos → lo que debe entregar; cierre de caja con sobrante o faltante; caja general (efectivo disponible) y utilidad del mes; aportes y retiros del dueño.
+  - **Gastos** (`#/gastos`): por categoría, por mes y por cobrador, con anulación.
+  - **Renovaciones**: el saldo del crédito actual se cancela con un pago de "Renovación" (no es efectivo) y al cliente solo se le entrega la diferencia; todo en una transacción.
+  - **Multas por mora**: valor fijo por cuota vencida o valor diario con tope; se aplican y se pueden perdonar; se cobran junto con la cuota o solas y salen en el recibo.
+  - **Alerta de usura**: el formulario de crédito calcula la tasa efectiva anual real del plan (TIR) y avisa si supera el tope configurado.
+  - **Ticket de 58 mm** para impresoras térmicas portátiles, y copia de seguridad v2 (lee también las copias v1).

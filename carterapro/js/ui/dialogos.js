@@ -1,5 +1,5 @@
 // Avisos (toasts) y diálogos de confirmación accesibles basados en <dialog>.
-import { html, montar } from './html.js';
+import { html, montar, raw } from './html.js';
 import { icono } from './icons.js';
 
 function zonaToasts() {
@@ -55,19 +55,58 @@ export function confirmar({ titulo, mensaje, detalle, aceptar = 'Aceptar', cance
 }
 
 /** Pide un texto corto (p. ej. motivo de anulación). @returns {Promise<string|null>} */
-export function pedirTexto({ titulo, mensaje, etiqueta, aceptar = 'Aceptar', peligro = false, obligatorio = false }) {
+export function pedirTexto({ titulo, mensaje, etiqueta, aceptar = 'Aceptar', peligro = false, obligatorio = false, valor = '', tipo = 'text', attrs = '' }) {
   return new Promise(resolve => {
     const d = abrirDialogo(html`
       <form method="dialog" class="dialogo-cuerpo">
         <h2 class="dialogo-titulo">${titulo}</h2>
         ${mensaje ? html`<p class="dialogo-texto">${mensaje}</p>` : ''}
         <label class="campo"><span class="campo-etiqueta">${etiqueta}</span>
-          <input name="texto" class="input" maxlength="200" autocomplete="off" ${obligatorio ? 'required' : ''}></label>
+          <input name="texto" class="input" type="${tipo}" value="${valor}" maxlength="200" autocomplete="off" ${obligatorio ? 'required' : ''} ${raw(attrs)}></label>
         <div class="dialogo-botones">
           <button value="cancelar" formnovalidate class="btn btn-sec">Cancelar</button>
           <button value="ok" class="btn ${peligro ? 'btn-peligro' : 'btn-pri'}">${aceptar}</button>
         </div>
       </form>`, (v, dlg) => resolve(v === 'ok' ? dlg.querySelector('input').value.trim() : null));
     d.querySelector('input').focus();
+    d.querySelector('input').select?.();
+  });
+}
+
+/**
+ * Diálogo con un formulario libre. `cuerpo` es Html con los campos (usa name="…").
+ * `validar(datos, form)` puede devolver { campo: mensaje } para impedir cerrar.
+ * @returns {Promise<Object|null>} los datos del formulario o null si se cancela.
+ */
+export function formularioDialogo({ titulo, mensaje, cuerpo, aceptar = 'Guardar', peligro = false, validar }) {
+  return new Promise(resolve => {
+    let resultado = null;
+    const d = abrirDialogo(html`
+      <form class="dialogo-cuerpo" novalidate>
+        <h2 class="dialogo-titulo">${titulo}</h2>
+        ${mensaje ? html`<p class="dialogo-texto">${mensaje}</p>` : ''}
+        <div class="dialogo-campos">${cuerpo}</div>
+        <div class="dialogo-botones">
+          <button type="button" value="cancelar" class="btn btn-sec" data-cerrar>Cancelar</button>
+          <button type="submit" class="btn ${peligro ? 'btn-peligro' : 'btn-pri'}">${aceptar}</button>
+        </div>
+      </form>`, () => resolve(resultado));
+    const form = d.querySelector('form');
+    d.querySelector('[data-cerrar]').onclick = () => d.close('cancelar');
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const datos = Object.fromEntries(new FormData(form));
+      const errores = validar?.(datos, form) || {};
+      form.querySelectorAll('.campo').forEach(c => {
+        const msg = errores[c.dataset.campo];
+        c.classList.toggle('con-error', !!msg);
+        const el = c.querySelector('.campo-error');
+        if (el) el.textContent = msg || '';
+      });
+      if (Object.keys(errores).length) return;
+      resultado = datos;
+      d.close('ok');
+    });
+    form.querySelector('input:not([type=hidden]):not([type=radio]), select, textarea')?.focus();
   });
 }

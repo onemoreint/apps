@@ -1,8 +1,8 @@
 // Acceso a IndexedDB. Única capa que conoce la base de datos.
 const NOMBRE = 'carterapro';
-const VERSION = 1;
+const VERSION = 2;
 
-export const STORES = ['clientes', 'creditos', 'cuotas', 'pagos', 'config', 'contadores', 'meta'];
+export const STORES = ['clientes', 'creditos', 'cuotas', 'pagos', 'gastos', 'caja', 'cierres', 'visitas', 'cargos', 'config', 'contadores', 'meta'];
 
 /** Cambios de esquema por versión. Para evolucionar: añade un bloque `if (anterior < 2) {...}` y sube VERSION. */
 function migrar(db, anterior) {
@@ -28,6 +28,17 @@ function migrar(db, anterior) {
     db.createObjectStore('config', { keyPath: 'clave' });
     db.createObjectStore('contadores', { keyPath: 'clave' });
     db.createObjectStore('meta', { keyPath: 'clave' });
+  }
+  if (anterior < 2) {
+    // Versión 2: operación de cobro en la calle (caja, gastos, ruta, multas).
+    db.createObjectStore('gastos', { keyPath: 'id' }).createIndex('fecha', 'fecha');
+    db.createObjectStore('caja', { keyPath: 'id' }).createIndex('fecha', 'fecha');
+    db.createObjectStore('cierres', { keyPath: 'id' }).createIndex('fecha', 'fecha');
+    const visitas = db.createObjectStore('visitas', { keyPath: 'id' });
+    visitas.createIndex('fecha', 'fecha');
+    visitas.createIndex('creditoId', 'creditoId');
+    const cargos = db.createObjectStore('cargos', { keyPath: 'id' });
+    cargos.createIndex('creditoId', 'creditoId');
   }
 }
 

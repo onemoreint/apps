@@ -42,6 +42,13 @@ Reglas que mantienen el sistema consistente:
 2. En amortización decreciente el interés de cada cuota es distinto: genera el reparto en `domain/cuotas.js` (hoy `repartir()` divide en partes iguales). `distribuirPago()` ya trabaja con el capital e interés propios de cada cuota, así que no necesita cambios.
 3. Agrega pruebas en `tests/dominio.test.mjs`.
 
+### Dinero en la calle (versión 2)
+- `domain/caja.js`: liquidación (`resumenCaja`) y efectivo disponible. Un pago con `tipo: 'RENOVACION'` no mueve efectivo; un crédito renovado usa `desembolso` (lo realmente entregado).
+- `domain/multas.js`: política por crédito (`credito.multa`), multas sugeridas y reparto del cobro entre cargos. Las multas se guardan en `cargos` y el pago guarda `multa` y `cargosAplicados` para poder anularlo.
+- `domain/ruta.js`: paradas del día por cliente, ordenadas por `cliente.ordenRuta`.
+- `domain/usura.js`: tasa efectiva anual por TIR del plan de cuotas.
+- `services/pagos.registrarEnTransaccion()` permite registrar un pago dentro de otra transacción (lo usa la renovación).
+
 ### Sincronización en la nube y varios dispositivos
 Todos los registros ya tienen `id` UUID, `creadoEn` y `actualizadoEn`, y los pagos se anulan en lugar de borrarse; eso permite sincronizar sin conflictos destructivos. Pasos sugeridos:
 1. Backend con autenticación (Supabase, Firebase o API propia).

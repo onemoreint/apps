@@ -14,14 +14,15 @@ const d = v => dinero(v, { ocultable: false });
 
 /** Versión en texto plano, para compartir por cualquier app. */
 export function textoRecibo({ pago, cliente, credito }, cfg) {
-  const cuotas = pago.aplicaciones.map(a => a.numeroCuota).join(', ');
+  const cuotas = pago.aplicaciones.map(a => a.numeroCuota).join(', ') || '—';
   return [
     cfg.nombreNegocio && cfg.nombreNegocio.toUpperCase(),
     `RECIBO DE PAGO ${pago.numeroRecibo}${pago.anulado ? ' (ANULADO)' : ''}`,
     `Fecha: ${fecha(pago.fecha)}`,
     `Cliente: ${cliente?.nombreCompleto || ''}`,
     `Crédito: ${formatoNumero(credito.numero)} · Cuota(s): ${cuotas}`,
-    `Valor pagado: ${d(pago.monto)}`,
+    `Valor pagado: ${d(pago.monto + (pago.multa || 0))}`,
+    pago.multa && `  Cuotas: ${d(pago.monto)} · Multa: ${d(pago.multa)}`,
     `Método: ${pago.metodoPago}`,
     pago.observacion && `Observación: ${pago.observacion}`,
     `Saldo pendiente: ${d(pago.saldoDespues ?? 0)}`,
@@ -35,7 +36,8 @@ export async function render(el, { id }) {
   const info = analisis.creditos.get(pago.creditoId);
   const { credito, cliente } = info;
   const cfg = config.get();
-  const mensaje = wa.generar('confirmacion', { cliente, valor: pago.monto, fecha: pago.fecha, recibo: pago.numeroRecibo, saldo: pago.saldoDespues ?? 0 });
+  const total = pago.monto + (pago.multa || 0);
+  const mensaje = wa.generar('confirmacion', { cliente, valor: total, fecha: pago.fecha, recibo: pago.numeroRecibo, saldo: pago.saldoDespues ?? 0 });
 
   montar(el, html`
     <div class="no-imprimir">${encabezado(`Recibo ${pago.numeroRecibo}`, { atras: `#/creditos/${credito.id}` })}</div>
@@ -49,15 +51,17 @@ export async function render(el, { id }) {
         <div class="recibo-numero"><small>Recibo de pago</small><strong>${pago.numeroRecibo}</strong></div>
       </header>
       ${pago.anulado ? html`<p class="recibo-sello">Anulado${pago.motivoAnulacion ? ` · ${pago.motivoAnulacion}` : ''}</p>` : ''}
-      <div class="recibo-monto"><small>Valor recibido</small><strong class="dinero">${d(pago.monto)}</strong></div>
+      <div class="recibo-monto"><small>Valor recibido</small><strong class="dinero">${d(total)}</strong></div>
       <dl class="recibo-datos">
         <div><dt>Fecha</dt><dd>${fecha(pago.fecha)}</dd></div>
         <div><dt>Cliente</dt><dd>${cliente?.nombreCompleto || '—'}${cliente?.documento ? html`<br><small>Doc. ${cliente.documento}</small>` : ''}</dd></div>
         <div><dt>Crédito</dt><dd>${formatoNumero(credito.numero)}</dd></div>
         <div><dt>Método de pago</dt><dd>${pago.metodoPago}</dd></div>
+        ${pago.multa ? html`<div><dt>Abono a cuotas</dt><dd class="dinero">${d(pago.monto)}</dd></div><div><dt>Multa por mora</dt><dd class="dinero">${d(pago.multa)}</dd></div>` : ''}
         ${pago.observacion ? html`<div><dt>Observación</dt><dd>${pago.observacion}</dd></div>` : ''}
       </dl>
-      <table class="recibo-tabla">
+      ${pago.aplicaciones.length ? '' : html`<p class="recibo-nota">Pago de multa por mora.</p>`}
+      <table class="recibo-tabla ${pago.aplicaciones.length ? '' : 'oculto'}">
         <thead><tr><th scope="col">Cuota</th><th scope="col">Capital</th><th scope="col">Interés</th><th scope="col">Aplicado</th></tr></thead>
         <tbody>${pago.aplicaciones.map(a => html`<tr>
           <td>${a.numeroCuota}${a.liquida ? '' : html` <small>(abono)</small>`}</td>
@@ -71,8 +75,9 @@ export async function render(el, { id }) {
       ${!pago.anulado ? botonWhatsApp(cliente, mensaje, 'Enviar por WhatsApp') : ''}
       <button type="button" class="btn btn-sec" data-accion="compartir">${icono('copia')}<span>Compartir</span></button>
       <button type="button" class="btn btn-sec" data-accion="imprimir">${icono('recibo')}<span>Imprimir o guardar PDF</span></button>
+      <button type="button" class="btn btn-sec" data-accion="ticket">${icono('recibo')}<span>Ticket 58 mm</span></button>
     </div>
-    <p class="nota-pdf no-imprimir">Para PDF, elige "Guardar como PDF" en la ventana de impresión.</p>`);
+    <p class="nota-pdf no-imprimir">Para PDF, elige "Guardar como PDF" en la ventana de impresión. "Ticket 58 mm" sirve para impresoras térmicas portátiles (Bluetooth) emparejadas con el teléfono, por ejemplo a través de apps de impresión como RawBT.</p>`);
 
   return acciones(el, {
     async compartir() {
@@ -91,6 +96,13 @@ export async function render(el, { id }) {
     },
     imprimir() {
       window.print();
+    },
+    ticket() {
+      document.body.classList.add('imprimir-ticket');
+      const quitar = () => { document.body.classList.remove('imprimir-ticket'); window.removeEventListener('afterprint', quitar); };
+      window.addEventListener('afterprint', quitar);
+      window.print();
+      setTimeout(quitar, 1500);
     },
   });
 }

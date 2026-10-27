@@ -2,6 +2,9 @@ import { html, montar, $ } from '../ui/html.js';
 import { icono } from '../ui/icons.js';
 import { encabezado, campo, mostrarErrores, avatar, badge, filaLista, vacio, botonWhatsApp } from '../ui/componentes.js';
 import { toast } from '../ui/dialogos.js';
+import * as cobradores from '../services/cobradores.js';
+import * as multasSrv from '../services/multas.js';
+import { multasSugeridas } from '../domain/multas.js';
 import { obtener } from '../services/datos.js';
 import * as pagosSrv from '../services/pagos.js';
 import * as config from '../services/config.js';
@@ -11,10 +14,10 @@ import { distribuirPago, montoHastaCuota, saldoCuota } from '../domain/pagos.js'
 import { validarPago, normalizarTexto, soloDigitos } from '../domain/validaciones.js';
 import { aMinimo, aTextoInput, formatear as dinero } from '../core/money.js';
 import { formatear as fecha } from '../core/dates.js';
-import { ir } from '../core/router.js';
+import { ir, recargar } from '../core/router.js';
 import { intentar } from '../core/errors.js';
 
-const vigente = i => !i.credito.cancelado && i.resumen.saldoTotal > 0;
+const vigente = i => !i.credito.cancelado && (i.resumen.saldoTotal > 0 || i.multasPendientes > 0);
 
 export async function render(el, _p, query) {
   const { analisis, hoy } = await obtener();
@@ -25,16 +28,17 @@ export async function render(el, _p, query) {
       montar(el, html`${encabezado('Registrar pago', { atras: '#/pagos' })}${vacio({ ico: 'check', titulo: 'Este crédito no tiene saldo pendiente', accion: { href: '#/pagos/nuevo', texto: 'Elegir otro' } })}`);
       return;
     }
-    return formulario(el, info, Number(query.cuota) || null, hoy);
+    return formulario(el, info, Number(query.cuota) || null, hoy, query);
   }
 
   if (query.cliente) {
     const ic = analisis.clientes.get(query.cliente);
     const activos = (ic?.creditos || []).filter(vigente);
-    if (activos.length === 1) { ir(`/pagos/nuevo?credito=${activos[0].credito.id}`, { reemplazar: true }); return; }
+    const volver = query.volver ? `&volver=${query.volver}` : '';
+    if (activos.length === 1) { ir(`/pagos/nuevo?credito=${activos[0].credito.id}${volver}`, { reemplazar: true }); return; }
     montar(el, html`${encabezado('¿Qué crédito paga?', { atras: '#/pagos/nuevo', subtitulo: ic?.cliente.nombreCompleto })}
       ${activos.length ? html`<div class="lista">${activos.map(i => filaLista({
-        href: `#/pagos/nuevo?credito=${i.credito.id}`,
+        href: `#/pagos/nuevo?credito=${i.credito.id}${volver}`,
         izquierda: html`<span class="num-credito">${formatoNumero(i.credito.numero)}</span>`,
         titulo: `Prestado ${dinero(i.credito.montoPrestado)}`,
         sub: `${i.resumen.cuotasPagadas}/${i.resumen.totalCuotas} cuotas pagadas`,
@@ -72,19 +76,24 @@ function elegirCliente(el, analisis) {
   pintar();
 }
 
-function formulario(el, info, cuotaElegida, hoy) {
+function formulario(el, info, cuotaElegida, hoy, query = {}) {
   const { credito: k, cliente, cuotas, resumen: r } = info;
   const pendientes = cuotas.filter(c => saldoCuota(c) > 0);
   const objetivo = pendientes.find(c => c.numero === cuotaElegida) || pendientes[0];
-  const sugerencias = [
+  const soloMulta = r.saldoTotal <= 0;
+  const sugerencias = soloMulta ? [] : [
     { texto: objetivo.numero === pendientes[0].numero ? `Cuota ${objetivo.numero}` : `Hasta cuota ${objetivo.numero}`, valor: montoHastaCuota(cuotas, objetivo.numero) },
     r.montoVencido > 0 && { texto: 'Todo lo vencido', valor: r.montoVencido },
     { texto: 'Saldo total', valor: r.saldoTotal },
   ].filter(Boolean).filter((s, i, a) => a.findIndex(x => x.valor === s.valor) === i);
   const metodos = config.get().metodosPago;
+  const equipo = cobradores.lista();
+  const multaPendiente = info.multasPendientes || 0;
+  const multaSugerida = multasSugeridas(k, cuotas, info.cargos || [], hoy).reduce((s, x) => s + x.monto, 0);
+  const atras = query.volver === 'ruta' ? '#/ruta' : `#/creditos/${k.id}`;
 
   montar(el, html`
-    ${encabezado('Registrar pago', { atras: `#/creditos/${k.id}` })}
+    ${encabezado(soloMulta ? 'Cobrar multa' : 'Registrar pago', { atras })}
     <form class="formulario formulario-pago" novalidate>
       <div class="tarjeta pago-credito">
         ${avatar(cliente)}
@@ -92,13 +101,22 @@ function formulario(el, info, cuotaElegida, hoy) {
         ${badge(r.visual)}
       </div>
 
-      <div class="tarjeta">
-        ${campo({ etiqueta: 'Valor recibido', nombre: 'monto', valor: aTextoInput(sugerencias[0].valor), requerido: true, attrs: 'inputmode="decimal" autocomplete="off"' })}
+      <div class="tarjeta ${soloMulta ? 'oculto' : ''}">
+        ${campo({ etiqueta: 'Valor recibido para cuotas', nombre: 'monto', valor: soloMulta ? '0' : aTextoInput(sugerencias[0].valor), requerido: true, attrs: 'inputmode="decimal" autocomplete="off"' })}
         <div class="chips chips-sugerencia" aria-label="Valores sugeridos">
           ${sugerencias.map(s => html`<button type="button" class="chip" data-valor="${s.valor}">${s.texto} · <span class="dinero">${dinero(s.valor, { ocultable: false })}</span></button>`)}
         </div>
         <div class="aplicacion" id="aplicacion" aria-live="polite"></div>
       </div>
+
+      ${multaPendiente > 0 || multaSugerida > 0 ? html`<div class="tarjeta tarjeta-multa">
+        <h2 class="tarjeta-titulo">${icono('multa')} Multa por mora</h2>
+        ${multaSugerida > 0 ? html`<p class="aviso aviso-naranja">Según la política del crédito corresponde una multa de <strong class="dinero">${dinero(multaSugerida, { ocultable: false })}</strong> que aún no se ha aplicado.
+          <button type="button" class="btn btn-sec btn-xs" data-accion="aplicarMulta">Aplicar multa</button></p>` : ''}
+        ${multaPendiente > 0 ? html`
+          <label class="check"><input type="checkbox" name="cobrarMulta" ${soloMulta ? 'checked' : ''}><span>Cobrar multa pendiente (${dinero(multaPendiente, { ocultable: false })})</span></label>
+          <div id="grupo-multa" class="${soloMulta ? '' : 'oculto'}">${campo({ etiqueta: 'Valor de la multa que paga', nombre: 'multa', valor: aTextoInput(multaPendiente), attrs: 'inputmode="decimal" autocomplete="off"' })}</div>` : ''}
+      </div>` : ''}
 
       <div class="tarjeta">
         <div class="campo" data-campo="metodoPago">
@@ -112,16 +130,25 @@ function formulario(el, info, cuotaElegida, hoy) {
           ${campo({ etiqueta: 'Fecha del pago', nombre: 'fecha', tipo: 'date', valor: hoy, requerido: true, attrs: `max="${hoy}"` })}
           ${campo({ etiqueta: 'Observación', nombre: 'observacion', attrs: 'maxlength="200" placeholder="Opcional"' })}
         </div>
+        ${equipo.length ? campo({ etiqueta: 'Cobrado por', nombre: 'cobradorId', valor: k.cobradorId || '', opciones: cobradores.opciones(k.cobradorId || '', { textoVacio: 'Oficina / dueño' }) }) : ''}
       </div>
 
       <div class="barra-acciones">
+        <p class="total-recibido" id="total-recibido" aria-live="polite"></p>
         <button class="btn btn-pri btn-lg btn-bloque" type="submit">${icono('check')}<span>Guardar pago</span></button>
       </div>
     </form>`);
 
   const form = $('form', el);
   form.monto.classList.add('input-grande');
+  const multaActual = () => (form.cobrarMulta?.checked ? aMinimo(form.multa.value) : 0);
+  const pintarTotal = () => {
+    const m = aMinimo(form.monto.value);
+    const total = (Number.isFinite(m) ? m : 0) + (Number.isFinite(multaActual()) ? multaActual() : 0);
+    montar($('#total-recibido', el), multaActual() > 0 ? html`Total recibido: <strong class="dinero">${dinero(total, { ocultable: false })}</strong>` : '');
+  };
   const vista = () => {
+    pintarTotal();
     const monto = aMinimo(form.monto.value);
     const caja = $('#aplicacion', el);
     if (!Number.isFinite(monto) || monto <= 0) { montar(caja, ''); return; }
@@ -145,46 +172,64 @@ function formulario(el, info, cuotaElegida, hoy) {
     form.monto.value = aTextoInput(Number(b.dataset.valor));
     vista();
   }));
+  form.cobrarMulta?.addEventListener('change', () => { $('#grupo-multa', el).classList.toggle('oculto', !form.cobrarMulta.checked); pintarTotal(); });
+  form.multa?.addEventListener('input', pintarTotal);
+  el.querySelector('[data-accion="aplicarMulta"]')?.addEventListener('click', async () => {
+    await intentar(() => multasSrv.aplicarSugeridas(k.id), 'aplicar la multa');
+    toast('Multa aplicada al crédito.');
+    recargar();
+  });
   vista();
 
   let enviando = false;
   form.addEventListener('submit', async ev => {
     ev.preventDefault();
     if (enviando) return;
-    const datos = { monto: aMinimo(form.monto.value), fecha: form.fecha.value, metodoPago: form.metodoPago.value, observacion: form.observacion.value };
-    const errores = validarPago(datos, { saldo: r.saldoTotal, hoy });
+    const multa = multaActual();
+    const datos = {
+      monto: soloMulta ? 0 : aMinimo(form.monto.value), multa: Number.isFinite(multa) ? multa : NaN,
+      fecha: form.fecha.value, metodoPago: form.metodoPago.value, observacion: form.observacion.value,
+      ...(form.cobradorId ? { cobradorId: form.cobradorId.value } : {}),
+    };
+    const errores = validarPago(datos, { saldo: r.saldoTotal, hoy, soloMulta: datos.multa > 0 });
+    if (form.cobrarMulta?.checked && (!Number.isInteger(datos.multa) || datos.multa <= 0)) errores.multa = 'Escribe el valor de la multa.';
+    else if (datos.multa > multaPendiente) errores.multa = `La multa pendiente es ${dinero(multaPendiente, { ocultable: false })}.`;
+    if (datos.monto === 0 && !(datos.multa > 0)) errores.monto = 'Escribe un valor mayor que cero.';
     mostrarErrores(form, errores);
     if (Object.keys(errores).length) return;
     enviando = true;
     try {
-      const { pago, saldoDespues } = await intentar(() => pagosSrv.registrar({ creditoId: k.id, ...datos }), 'guardar este pago');
-      exito(el, { pago, saldoDespues, info });
+      const { pago, saldoDespues } = await intentar(() => pagosSrv.registrar({ creditoId: k.id, ...datos, multa: datos.multa || 0 }), 'guardar este pago');
+      exito(el, { pago, saldoDespues, info, volver: query.volver });
     } catch {
       enviando = false;
     }
   });
 }
 
-function exito(el, { pago, saldoDespues, info }) {
+function exito(el, { pago, saldoDespues, info, volver }) {
   const { credito: k, cliente } = info;
   const cuotas = pago.aplicaciones.map(a => a.numeroCuota);
-  const mensaje = wa.generar('confirmacion', { cliente, valor: pago.monto, fecha: pago.fecha, recibo: pago.numeroRecibo, saldo: saldoDespues });
+  const total = pago.monto + (pago.multa || 0);
+  const mensaje = wa.generar('confirmacion', { cliente, valor: total, fecha: pago.fecha, recibo: pago.numeroRecibo, saldo: saldoDespues });
   toast('Pago registrado.');
   montar(el, html`<section class="exito">
     <span class="exito-ico">${icono('check')}</span>
     <h1>Pago registrado</h1>
-    <p class="exito-monto dinero">${dinero(pago.monto, { ocultable: false })}</p>
+    <p class="exito-monto dinero">${dinero(total, { ocultable: false })}</p>
     <dl class="tarjeta datos recibo-datos">
       <div><dt>Recibo</dt><dd><strong>${pago.numeroRecibo}</strong></dd></div>
       <div><dt>Cliente</dt><dd>${cliente?.nombreCompleto}</dd></div>
       <div><dt>Crédito</dt><dd>${formatoNumero(k.numero)}</dd></div>
-      <div><dt>${cuotas.length > 1 ? 'Cuotas' : 'Cuota'}</dt><dd>${cuotas.join(', ')}</dd></div>
+      ${cuotas.length ? html`<div><dt>${cuotas.length > 1 ? 'Cuotas' : 'Cuota'}</dt><dd>${cuotas.join(', ')}</dd></div>` : ''}
+      ${pago.multa ? html`<div><dt>Multa cobrada</dt><dd class="dinero">${dinero(pago.multa, { ocultable: false })}</dd></div>` : ''}
       <div><dt>Fecha</dt><dd>${fecha(pago.fecha)}</dd></div>
       <div><dt>Método</dt><dd>${pago.metodoPago}</dd></div>
       <div><dt>Saldo restante</dt><dd><strong class="dinero">${dinero(saldoDespues, { ocultable: false })}</strong></dd></div>
     </dl>
-    ${saldoDespues === 0 ? html`<p class="aviso aviso-azul">${icono('check')} ¡Este crédito quedó totalmente pagado!</p>` : ''}
+    ${saldoDespues === 0 && pago.monto > 0 ? html`<p class="aviso aviso-azul">${icono('check')} ¡Este crédito quedó totalmente pagado! <a href="#/creditos/nuevo?renovar=${k.id}">Renovar crédito</a></p>` : ''}
     <div class="exito-botones">
+      ${volver === 'ruta' ? html`<a class="btn btn-pri" href="#/ruta">${icono('ruta')}<span>Seguir con la ruta</span></a>` : ''}
       ${botonWhatsApp(cliente, mensaje, 'Enviar confirmación')}
       <a class="btn btn-sec" href="#/recibos/${pago.id}">${icono('recibo')}<span>Ver recibo</span></a>
       <a class="btn btn-sec" href="#/creditos/${k.id}">Ver crédito</a>

@@ -3,27 +3,41 @@
 import { esValida } from '../core/dates.js';
 
 export const FORMATO = 'carterapro-backup';
-export const VERSION_FORMATO = 1;
-export const TABLAS = ['clientes', 'creditos', 'cuotas', 'pagos'];
+export const VERSION_FORMATO = 2;
+/** Tablas obligatorias desde la versión 1 de la copia. */
+export const TABLAS_BASE = ['clientes', 'creditos', 'cuotas', 'pagos'];
+/** Tablas que se agregaron en la versión 2 (una copia antigua no las trae: se toman vacías). */
+export const TABLAS_V2 = ['gastos', 'caja', 'cierres', 'visitas', 'cargos'];
+export const TABLAS = [...TABLAS_BASE, ...TABLAS_V2];
 
 /** Campos de configuración que NO viajan en la copia (seguridad propia de cada dispositivo). */
 export const CONFIG_LOCAL = ['pinHash', 'pinSalt', 'pinIteraciones', 'pinActivo', 'bloqueoMinutos', 'ultimoBackup'];
 
-export function construirCopia({ clientes, creditos, cuotas, pagos, config, contadores }, creadoEn = new Date().toISOString()) {
-  const cfg = { ...(config || {}) };
+export function construirCopia(todo, creadoEn = new Date().toISOString()) {
+  const cfg = { ...(todo.config || {}) };
   for (const k of CONFIG_LOCAL) delete cfg[k];
+  const tablas = Object.fromEntries(TABLAS.map(t => [t, todo[t] || []]));
   return {
     formato: FORMATO,
     version: VERSION_FORMATO,
     app: 'CarteraPro',
     creadoEn,
-    resumen: resumir({ clientes, creditos, cuotas, pagos }),
-    datos: { clientes, creditos, cuotas, pagos, config: cfg, contadores: contadores || [] },
+    resumen: resumir(tablas),
+    datos: { ...tablas, config: cfg, contadores: todo.contadores || [] },
   };
 }
 
-export function resumir({ clientes = [], creditos = [], cuotas = [], pagos = [] }) {
-  return { clientes: clientes.length, creditos: creditos.length, cuotas: cuotas.length, pagos: pagos.length };
+export function resumir(d) {
+  const r = Object.fromEntries(TABLAS_BASE.map(t => [t, (d[t] || []).length]));
+  for (const t of TABLAS_V2) if (d[t]?.length) r[t] = d[t].length;
+  return r;
+}
+
+/** Completa una copia antigua con las tablas nuevas vacías. */
+export function normalizarDatos(d) {
+  const out = { ...d };
+  for (const t of TABLAS_V2) if (!Array.isArray(out[t])) out[t] = [];
+  return out;
 }
 
 const esEntero = n => Number.isInteger(n);
@@ -39,8 +53,9 @@ export function validarCopia(obj) {
   if (!esEntero(obj.version) || obj.version > VERSION_FORMATO) {
     return { ok: false, errores: ['Esta copia se creó con una versión más nueva de CarteraPro. Actualiza la app e inténtalo de nuevo.'] };
   }
-  const d = obj.datos;
-  if (!d || TABLAS.some(t => !Array.isArray(d[t]))) return { ok: false, errores: ['La copia está incompleta o dañada.'] };
+  if (!obj.datos || TABLAS_BASE.some(t => !Array.isArray(obj.datos[t]))) return { ok: false, errores: ['La copia está incompleta o dañada.'] };
+  if (TABLAS_V2.some(t => obj.datos[t] != null && !Array.isArray(obj.datos[t]))) return { ok: false, errores: ['La copia está incompleta o dañada.'] };
+  const d = normalizarDatos(obj.datos);
 
   const ids = t => new Set(d[t].map(r => r?.id));
   for (const t of TABLAS) {
@@ -59,7 +74,10 @@ export function validarCopia(obj) {
   if ((n = malos(d.cuotas, c => creditos.has(c.creditoId)))) errores.push(`${n} cuotas pertenecen a créditos que no están en la copia.`);
   if ((n = malos(d.cuotas, c => esEntero(c.valorProgramado) && esEntero(c.capital) && esEntero(c.interes) && esValida(c.fechaVencimiento)))) errores.push(`${n} cuotas tienen valores o fechas inválidos.`);
   if ((n = malos(d.pagos, p => creditos.has(p.creditoId)))) errores.push(`${n} pagos pertenecen a créditos que no están en la copia.`);
-  if ((n = malos(d.pagos, p => esEntero(p.monto) && p.monto > 0 && esValida(p.fecha) && Array.isArray(p.aplicaciones) && p.aplicaciones.every(a => cuotas.has(a.cuotaId))))) errores.push(`${n} pagos tienen datos inválidos.`);
+  if ((n = malos(d.pagos, p => esEntero(p.monto) && p.monto >= 0 && p.monto + (p.multa || 0) > 0 && esValida(p.fecha) && Array.isArray(p.aplicaciones) && p.aplicaciones.every(a => cuotas.has(a.cuotaId))))) errores.push(`${n} pagos tienen datos inválidos.`);
+  if ((n = malos(d.cargos, c => creditos.has(c.creditoId) && esEntero(c.monto) && c.monto > 0))) errores.push(`${n} multas tienen datos inválidos.`);
+  if ((n = malos(d.gastos, g => esEntero(g.monto) && g.monto > 0 && esValida(g.fecha)))) errores.push(`${n} gastos tienen datos inválidos.`);
+  if ((n = malos(d.caja, m => esEntero(m.monto) && m.monto > 0 && esValida(m.fecha)))) errores.push(`${n} movimientos de caja tienen datos inválidos.`);
 
   return { ok: errores.length === 0, errores, resumen: resumir(d), creadoEn: obj.creadoEn };
 }
@@ -97,6 +115,7 @@ const SINONIMOS = {
   documento: ['documento', 'cedula', 'cédula', 'cc', 'dni', 'ci', 'identificacion', 'identificación', 'id'],
   direccion: ['direccion', 'dirección', 'domicilio', 'address'],
   ciudad: ['ciudad', 'municipio', 'city'],
+  sector: ['barrio', 'sector', 'zona', 'comuna'],
   referencia: ['referencia', 'referido', 'recomendado'],
   notas: ['notas', 'nota', 'observaciones', 'observacion', 'observación', 'comentarios'],
 };

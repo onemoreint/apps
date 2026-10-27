@@ -6,6 +6,8 @@ import * as config from '../services/config.js';
 import { formatear as dinero, porcentaje } from '../core/money.js';
 import { larga, diferenciaDias, deDate } from '../core/dates.js';
 import * as instalacion from '../services/instalacion.js';
+import { construirRuta } from '../domain/ruta.js';
+import { resumenCaja } from '../domain/caja.js';
 
 const LIMITE = 6;
 
@@ -37,6 +39,7 @@ export async function render(el) {
     ${avisoCopia(cfg, datos, hoy)}
     ${instalacion.estado() === 'disponible' ? html`<a class="alerta alerta-azul" href="#/instalar">${icono('telefono')}<span>Instala CarteraPro en tu pantalla de inicio para usarla sin internet.</span></a>` : ''}
     ${accionesRapidas()}
+    ${resumenHoy(a, datos, hoy)}
 
     <section class="kpis" aria-label="Indicadores principales">
       ${kpi('Capital prestado', dinero(k.capitalPrestado, { compacto: true }), { ico: 'creditos' })}
@@ -99,11 +102,28 @@ function avisoCopia(cfg, datos, hoy) {
 function accionesRapidas() {
   const b = (href, ico, texto) => html`<a class="accion-rapida" href="${href}"><span class="accion-ico">${icono(ico)}</span><span>${texto}</span></a>`;
   return html`<nav class="acciones-rapidas" aria-label="Acciones rápidas">
-    ${b('#/clientes/nuevo', 'usuario', 'Cliente')}
-    ${b('#/creditos/nuevo', 'creditos', 'Crédito')}
+    ${b('#/ruta', 'ruta', 'Ruta')}
     ${b('#/pagos/nuevo', 'dinero', 'Pago')}
-    ${b('#/cobranzas', 'cobranza', 'Cobranzas')}
+    ${b('#/creditos/nuevo', 'creditos', 'Crédito')}
+    ${b('#/caja', 'caja', 'Caja')}
   </nav>`;
+}
+
+/** Tarjeta "Hoy": avance de la ruta y efectivo del día. */
+function resumenHoy(a, datos, hoy) {
+  const { totales } = construirRuta(a.creditos, datos, hoy);
+  const caja = resumenCaja(datos, { desde: hoy, hasta: hoy });
+  if (!totales.paradas && !caja.pagos.length && !caja.desembolsos.length) return '';
+  const avance = totales.meta ? totales.recaudado / totales.meta : 0;
+  return html`<a class="tarjeta hoy-tarjeta" href="#/ruta">
+    <span class="hoy-fila">
+      <span><small>Ruta de hoy</small><strong>${totales.visitadas}/${totales.paradas} paradas</strong></span>
+      <span><small>Recaudado</small><strong class="dinero verde">${dinero(caja.cobrado)}</strong></span>
+      <span><small>Efectivo del día</small><strong class="dinero">${dinero(caja.esperado)}</strong></span>
+    </span>
+    ${progreso(avance, 'verde')}
+    <small class="hoy-pie">${Math.round(avance * 100)}% de la meta (${dinero(totales.meta)}) ${icono('derecha')}</small>
+  </a>`;
 }
 
 function alertas(lista) {

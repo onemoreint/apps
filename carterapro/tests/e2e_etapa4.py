@@ -48,7 +48,9 @@ with sync_playwright() as p:
     if page.locator('#lista a.fila').count(): page.locator('#lista a.fila').first.click()
     page.wait_for_selector('#f-monto'); page.click('button:has-text("Guardar pago")'); page.wait_for_selector('h1:has-text("Pago registrado")')
     recibo = page.inner_text('.recibo-datos')
-    assert 'R-000021' in recibo, recibo  # el consecutivo continúa tras restaurar
+    siguiente = 'R-%06d' % (copia['resumen']['pagos'] + 1)
+    assert siguiente in recibo, recibo  # el consecutivo continúa tras restaurar
+    assert copia['version'] == 2 and copia['resumen'].get('gastos') == 2, copia['resumen']  # la copia v2 incluye caja y gastos
 
     # Copia dañada
     mala = os.path.join(tempfile.gettempdir(), 'mala.json')

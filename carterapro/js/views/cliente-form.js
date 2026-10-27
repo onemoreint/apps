@@ -49,8 +49,9 @@ export async function render(el, { id }, query) {
           ${campo({ etiqueta: 'WhatsApp', nombre: 'whatsapp', valor: c.whatsapp && c.whatsapp !== c.telefono ? c.whatsapp : '', tipo: 'tel', ayuda: 'Déjalo vacío si es el mismo teléfono.', attrs: 'inputmode="tel"' })}
         </div>
         ${campo({ etiqueta: 'Documento de identidad', nombre: 'documento', valor: c.documento, attrs: 'maxlength="25"' })}
+        ${campo({ etiqueta: 'Dirección', nombre: 'direccion', valor: c.direccion, attrs: 'autocomplete="street-address"', ayuda: 'Con la dirección, la ruta de cobro abre el mapa para llegar.' })}
         <div class="rejilla-2">
-          ${campo({ etiqueta: 'Dirección', nombre: 'direccion', valor: c.direccion, attrs: 'autocomplete="street-address"' })}
+          ${campo({ etiqueta: 'Barrio o sector', nombre: 'sector', valor: c.sector, ayuda: 'Agrupa la ruta de cobro por zonas.' })}
           ${campo({ etiqueta: 'Ciudad', nombre: 'ciudad', valor: c.ciudad, attrs: 'autocomplete="address-level2"' })}
         </div>
         ${campo({ etiqueta: 'Referencia', nombre: 'referencia', valor: c.referencia, ayuda: 'Quién lo recomendó, dónde trabaja o cómo ubicarlo.' })}

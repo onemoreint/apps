@@ -2,7 +2,10 @@
 (function(){
 'use strict';
 const CFG = window.MA_APP || {id:'app',name:'Microapp'};
-const PREFIX = 'ma:' + CFG.id + ':';
+// En copias con licencia («con tu marca») todo va en un espacio propio: no se mezcla con la demo pública.
+const NS = CFG.ns ? CFG.ns + ':' : '';
+const PREFIX = 'ma:' + NS + CFG.id + ':';
+const LIC = CFG.licencia || null;
 const AUTOR = {nombre:'José Lugo', tel:'+57 312 638 7467', telRaw:'573126387467', email:'jose.lugocdv@gmail.com'};
 
 /* ---------- Iconos ---------- */
@@ -107,7 +110,9 @@ const store = {
   keys(){ try { return Object.keys(localStorage).filter(k => k.startsWith(PREFIX)); } catch(e){ return []; } }
 };
 /* Perfil del negocio: compartido entre todas las microapps */
-const NEG_KEY = 'ma:negocio';
+const NEG_KEY = 'ma:' + NS + 'negocio';
+// copia con marca: el perfil del cliente viene precargado la primera vez
+if (CFG.marca) { try { const cur = JSON.parse(localStorage.getItem(NEG_KEY)||'{}'); if (!cur.nombre) localStorage.setItem(NEG_KEY, JSON.stringify(Object.assign({moneda:'COP'}, CFG.marca))); } catch(e){} }
 function negocio(){ try { return Object.assign({nombre:'',doc:'',tel:'',email:'',dir:'',ciudad:'',moneda:'COP',logo:''}, JSON.parse(localStorage.getItem(NEG_KEY)||'{}')); } catch(e){ return {moneda:'COP'}; } }
 function setNegocio(o){ try { localStorage.setItem(NEG_KEY, JSON.stringify(o)); } catch(e){ toast('No se pudo guardar el logo: prueba con una imagen más liviana.', true); } }
 
@@ -332,7 +337,7 @@ function montar(){
       <button data-a="rs">${I.up}Restaurar copia de seguridad</button>
       <hr><button data-a="inst">${I.install}Instalar en el dispositivo</button>
       <button data-a="tema">${I.moon}Cambiar modo claro / oscuro</button>
-      <a href="../">${I.grid}Ver todas las microapps</a>`;
+      <a href="../">${I.grid}${LIC?'Ir al inicio':'Ver todas las microapps'}</a>`;
     bar.appendChild(btn); document.querySelector('.app-bar').appendChild(menu);
     btn.onclick = e => { e.stopPropagation(); menu.hidden = !menu.hidden; };
     document.addEventListener('click', e => { if(!menu.contains(e.target)) menu.hidden = true; });
@@ -346,11 +351,24 @@ function montar(){
   renderPrintHead();
   // firma
   const f = $('#firma');
-  if (f){
+  if (f && LIC){
+    const n = negocio();
+    f.className = 'firma firma-lic';
+    f.innerHTML = `<div class="firma-in">
+      <div class="firma-id">${n.logo?`<img class="firma-logo" src="${n.logo}" alt="">`:''}
+        <div class="firma-txt"><small>Software de uso exclusivo de</small><strong>${esc(LIC.cliente)}</strong><em>Licencia N.º ${esc(LIC.id)} · desde ${esc(LIC.fecha)}</em></div></div>
+      <p class="firma-legal">Tus datos se guardan solo en este dispositivo.<br>Desarrollado por ${AUTOR.nombre}. Copia personalizada, prohibida su reventa o distribución.<br><a href="${LIC.legal}privacidad/" target="_blank" rel="noopener">Política de privacidad</a> <span aria-hidden="true">|</span> <a href="${LIC.legal}terminos/" target="_blank" rel="noopener">Términos de uso</a></p>
+      <div class="firma-links">
+        <a class="wa" href="https://wa.me/${AUTOR.telRaw}?text=${encodeURIComponent('Hola José, necesito soporte con «'+CFG.name+'». Licencia '+LIC.id+' ('+LIC.cliente+').')}" target="_blank" rel="noopener">${I.wa}Soporte por WhatsApp</a>
+      </div></div>`;
+    const ps = document.createElement('div'); ps.className = 'print-only print-sign';
+    ps.textContent = `${LIC.cliente} · ${CFG.name}`;
+    main && main.appendChild(ps);
+  } else if (f){
     f.className = 'firma';
     f.innerHTML = `<div class="firma-in">
       <div class="firma-id"><div class="firma-mono" aria-hidden="true">JL</div>
-        <div class="firma-txt"><small>Diseño y desarrollo</small><strong>${AUTOR.nombre}</strong><em>Soluciones digitales para emprendedores y empresas</em></div></div>
+        <div class="firma-txt"><small>Diseño y desarrollo</small><strong>${AUTOR.nombre}</strong><em>¿La quieres con el logo y los colores de tu negocio? Escríbeme.</em></div></div>
       <p class="firma-legal">© ${new Date().getFullYear()} ${AUTOR.nombre}. Todos los derechos reservados.<br>Tus datos se guardan solo en este dispositivo.<br><a href="../privacidad/">Política de privacidad</a> <span aria-hidden="true">|</span> <a href="../terminos/">Términos de uso</a></p>
       <div class="firma-links">
         <a class="wa" href="https://wa.me/${AUTOR.telRaw}?text=${encodeURIComponent('Hola José, vi tu app «'+CFG.name+'» y quiero más información.')}" target="_blank" rel="noopener">${I.wa}${AUTOR.tel}</a>

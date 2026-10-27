@@ -35,6 +35,18 @@ El perfil del negocio (nombre, logo, NIT, moneda) se comparte entre todas las mi
 
 Los valores legales de nómina y horas extra (Colombia y Venezuela) están en `src/apps/nomina/app.js` y `src/apps/horas-extras/app.js`, vigentes a octubre de 2026, y cada usuario puede editarlos desde la app.
 
+## Versión «con tu marca» (licencias)
+
+`src/marca.py` genera en minutos la copia personalizada de un cliente: su logo, colores y nombre en todas las pantallas, ícono propio al instalarla, datos guardados aparte de la demo pública, número de licencia en el pie y `noindex` para buscadores.
+
+```
+python3 microapps/src/marca.py cliente.json --entrega ./entregas
+```
+
+`cliente.json` lleva al menos `nombre` y `pack` (`nomina`, `tienda`, `receta`, `civil`, `finanzas` o una lista de apps); opcionales `logo`, `color`, `doc`, `tel`, `email`, `dir`, `ciudad`, `moneda`. La copia queda en `clientes/<carpeta>/` con un sufijo aleatorio en la dirección, y `--entrega` produce el PDF con QR y el mensaje para el cliente. Para actualizar una copia ya entregada sin cambiar su enlace, se repiten `carpeta` y `licencia` en el JSON.
+
+Demos públicas: [Nómina](https://onemoreint.github.io/apps/microapps/clientes/demo-nomina/) y [Sistema administrativo](https://onemoreint.github.io/apps/microapps/clientes/demo-tienda/), con marcas de ejemplo.
+
 ## Seguridad y normativa
 
 - **Política de privacidad** (Ley 1581 de 2012 de Colombia y art. 28 de la Constitución de Venezuela): `privacidad/`. **Términos de uso**: `terminos/`. Se generan desde `src/legal.py` y se enlazan desde la landing y la firma de cada app.

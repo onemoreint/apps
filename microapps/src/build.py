@@ -31,25 +31,36 @@ def mark_svg(m):
     return f'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{m["icon"]}</svg>'
 
 
-def build(slug):
+def build(slug, marca=None):
+    """marca: dict de marca.py para generar una copia con licencia (logo, colores y espacio de datos propio)."""
     d = SRC / "apps" / slug
     m = json.loads((d / "meta.json").read_text(encoding="utf-8"))
     body = (d / "body.html").read_text(encoding="utf-8")
     js = (d / "app.js").read_text(encoding="utf-8")
     css = (d / "app.css").read_text(encoding="utf-8") if (d / "app.css").exists() else ""
-    out = OUT / slug
+    if marca:
+        m = dict(m, accent=marca['accent'], accentInk=marca['accentInk'], accentDark=marca['accentDark'])
+    out = (marca['out'] if marca else OUT) / slug
     out.mkdir(parents=True, exist_ok=True)
-    url = BASE_URL + slug + "/"
+    url = (marca['url'] if marca else BASE_URL) + slug + "/"
     tabs = "".join(f'<button class="tab" role="tab" data-tab="{t[0]}">{html.escape(t[1])}</button>' for t in m.get("tabs", []))
     tabs_html = f'<nav class="tabs" role="tablist" aria-label="Secciones">{tabs}</nav>' if tabs else ""
-    cfg = json.dumps({"id": m["id"], "name": m["name"], "version": VERSION}, ensure_ascii=False)
+    cfgd = {"id": m["id"], "name": m["name"], "version": VERSION}
+    if marca:
+        cfgd.update(ns=marca['ns'], marca=marca['negocio'], licencia=marca['licencia'])
+    cfg = json.dumps(cfgd, ensure_ascii=False)
     t = html.escape
+    quien = marca['negocio']['nombre'] if marca else 'Microapps José Lugo'
+    mark = f'<div class="app-mark logo"><img src="{marca["logo"]}" alt=""></div>' if marca else f'<div class="app-mark">{mark_svg(m)}</div>'
+    home = 'Inicio' if marca else 'Todas las microapps'
+    robots = '<meta name="robots" content="noindex, nofollow">\n' if marca else ''
     page = f"""<!doctype html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>{t(m['name'])} | Microapps José Lugo</title>
+<title>{t(m['name'])} | {t(quien)}</title>
+{robots}
 <meta name="description" content="{t(m['desc'])}">
 <meta name="author" content="José Lugo">
 <meta name="theme-color" content="{m['accent']}">
@@ -74,9 +85,9 @@ def build(slug):
 <body>
 <header class="app-bar">
   <div class="app-bar-in">
-    <div class="app-mark">{mark_svg(m)}</div>
+    {mark}
     <div class="app-title"><h1>{t(m['name'])}</h1><p>{t(m['tagline'])}</p></div>
-    <a class="app-home" href="../">Todas las microapps</a>
+    <a class="app-home" href="../">{home}</a>
   </div>
   {tabs_html}
 </header>
@@ -91,9 +102,12 @@ def build(slug):
 </html>
 """
     (out / "index.html").write_text(endurecer(page), encoding="utf-8")
-    (out / "icon.svg").write_text(icon_svg(m), encoding="utf-8")
+    if marca:
+        marca['iconos'](out)
+    else:
+        (out / "icon.svg").write_text(icon_svg(m), encoding="utf-8")
     manifest = {
-        "name": m["name"] + " | José Lugo", "short_name": m["short"], "description": m["desc"],
+        "name": m["name"] + " | " + (quien if marca else "José Lugo"), "short_name": m["short"], "description": m["desc"],
         "start_url": "./", "scope": "./", "display": "standalone", "background_color": "#F3F6F8",
         "theme_color": m["accent"], "lang": "es",
         "icons": [{"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"},
@@ -102,10 +116,10 @@ def build(slug):
     }
     (out / "manifest.webmanifest").write_text(json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
     sw = f"""// Service worker: abre la app sin conexión y se actualiza sola cuando hay internet.
-const CACHE = '{slug}-v{VERSION}';
+const CACHE = '{(marca['ns']+'-') if marca else ''}{slug}-v{VERSION}';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png', '../fonts/bricolage-grotesque.woff2', '../fonts/instrument-sans.woff2'];
 self.addEventListener('install', e => {{ e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); }});
-self.addEventListener('activate', e => {{ e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith('{slug}-') && k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); }});
+self.addEventListener('activate', e => {{ e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith('{(marca['ns']+'-') if marca else ''}{slug}-') && k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); }});
 self.addEventListener('fetch', e => {{
   const req = e.request; if (req.method !== 'GET') return;
   const url = new URL(req.url);

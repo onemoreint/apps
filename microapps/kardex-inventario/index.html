@@ -2,10 +2,11 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-0M3J23sGiCJ/6CS8Q/etb34YMif92UttMtZOqn49zlw=' 'sha256-BeW+ocbQJhGm+QRLqj/lm+fTpXtTHI5CdSkf2q0C5K4=' 'sha256-WrkgFrGddkHG+4GEnC33DpldVQNOme5Ggd3g+cUvtO8=' 'sha256-vg1W4lVidhTc0DdtIpiPg5hiQTMrRePpxfEONrmfA6M='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; media-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-0M3J23sGiCJ/6CS8Q/etb34YMif92UttMtZOqn49zlw=' 'sha256-1nqRTW8Ww0MNNCTIk1D2JjJRa5WK7bnDlzKeC+/O1xM=' 'sha256-WrkgFrGddkHG+4GEnC33DpldVQNOme5Ggd3g+cUvtO8=' 'sha256-vg1W4lVidhTc0DdtIpiPg5hiQTMrRePpxfEONrmfA6M='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; media-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kardex de Inventario | Microapps José Lugo</title>
+
 <meta name="description" content="Controla entradas, salidas y ajustes de inventario con kardex valorizado por promedio ponderado o PEPS, alertas de stock mínimo y utilidad bruta por venta.">
 <meta name="author" content="José Lugo">
 <meta name="theme-color" content="#A15C0B">
@@ -248,6 +249,9 @@ dialog.dlg.wide{width:min(860px,calc(100vw - 24px))}
 .firma-txt small{display:block;color:var(--ink-3);font-size:.78rem}
 .firma-txt strong{display:block;font-family:var(--f-head);font-size:1.15rem;font-weight:700;letter-spacing:-.01em}
 .firma-txt em{display:block;font-style:normal;color:var(--ink-2);font-size:.86rem}
+.app-mark.logo{background:#fff;border:1px solid var(--line);padding:3px}
+.app-mark.logo img{width:100%;height:100%;object-fit:contain;border-radius:8px}
+.firma-logo{width:52px;height:52px;flex:none;object-fit:contain;border-radius:12px;background:#fff;border:1px solid var(--line);padding:4px}
 .firma-legal{color:var(--ink-3);font-size:.8rem;line-height:1.5}
 .firma-legal a{color:var(--ink-2);text-underline-offset:2px}
 @media(min-width:820px){.firma-legal{text-align:center;padding:0 12px}}
@@ -358,7 +362,10 @@ dialog.dlg.wide{width:min(860px,calc(100vw - 24px))}
 (function(){
 'use strict';
 const CFG = window.MA_APP || {id:'app',name:'Microapp'};
-const PREFIX = 'ma:' + CFG.id + ':';
+// En copias con licencia («con tu marca») todo va en un espacio propio: no se mezcla con la demo pública.
+const NS = CFG.ns ? CFG.ns + ':' : '';
+const PREFIX = 'ma:' + NS + CFG.id + ':';
+const LIC = CFG.licencia || null;
 const AUTOR = {nombre:'José Lugo', tel:'+57 312 638 7467', telRaw:'573126387467', email:'jose.lugocdv@gmail.com'};
 
 /* ---------- Iconos ---------- */
@@ -463,7 +470,9 @@ const store = {
   keys(){ try { return Object.keys(localStorage).filter(k => k.startsWith(PREFIX)); } catch(e){ return []; } }
 };
 /* Perfil del negocio: compartido entre todas las microapps */
-const NEG_KEY = 'ma:negocio';
+const NEG_KEY = 'ma:' + NS + 'negocio';
+// copia con marca: el perfil del cliente viene precargado la primera vez
+if (CFG.marca) { try { const cur = JSON.parse(localStorage.getItem(NEG_KEY)||'{}'); if (!cur.nombre) localStorage.setItem(NEG_KEY, JSON.stringify(Object.assign({moneda:'COP'}, CFG.marca))); } catch(e){} }
 function negocio(){ try { return Object.assign({nombre:'',doc:'',tel:'',email:'',dir:'',ciudad:'',moneda:'COP',logo:''}, JSON.parse(localStorage.getItem(NEG_KEY)||'{}')); } catch(e){ return {moneda:'COP'}; } }
 function setNegocio(o){ try { localStorage.setItem(NEG_KEY, JSON.stringify(o)); } catch(e){ toast('No se pudo guardar el logo: prueba con una imagen más liviana.', true); } }
 
@@ -688,7 +697,7 @@ function montar(){
       <button data-a="rs">${I.up}Restaurar copia de seguridad</button>
       <hr><button data-a="inst">${I.install}Instalar en el dispositivo</button>
       <button data-a="tema">${I.moon}Cambiar modo claro / oscuro</button>
-      <a href="../">${I.grid}Ver todas las microapps</a>`;
+      <a href="../">${I.grid}${LIC?'Ir al inicio':'Ver todas las microapps'}</a>`;
     bar.appendChild(btn); document.querySelector('.app-bar').appendChild(menu);
     btn.onclick = e => { e.stopPropagation(); menu.hidden = !menu.hidden; };
     document.addEventListener('click', e => { if(!menu.contains(e.target)) menu.hidden = true; });
@@ -702,11 +711,24 @@ function montar(){
   renderPrintHead();
   // firma
   const f = $('#firma');
-  if (f){
+  if (f && LIC){
+    const n = negocio();
+    f.className = 'firma firma-lic';
+    f.innerHTML = `<div class="firma-in">
+      <div class="firma-id">${n.logo?`<img class="firma-logo" src="${n.logo}" alt="">`:''}
+        <div class="firma-txt"><small>Software de uso exclusivo de</small><strong>${esc(LIC.cliente)}</strong><em>Licencia N.º ${esc(LIC.id)} · desde ${esc(LIC.fecha)}</em></div></div>
+      <p class="firma-legal">Tus datos se guardan solo en este dispositivo.<br>Desarrollado por ${AUTOR.nombre}. Copia personalizada, prohibida su reventa o distribución.<br><a href="${LIC.legal}privacidad/" target="_blank" rel="noopener noreferrer">Política de privacidad</a> <span aria-hidden="true">|</span> <a href="${LIC.legal}terminos/" target="_blank" rel="noopener noreferrer">Términos de uso</a></p>
+      <div class="firma-links">
+        <a class="wa" href="https://wa.me/${AUTOR.telRaw}?text=${encodeURIComponent('Hola José, necesito soporte con «'+CFG.name+'». Licencia '+LIC.id+' ('+LIC.cliente+').')}" target="_blank" rel="noopener noreferrer">${I.wa}Soporte por WhatsApp</a>
+      </div></div>`;
+    const ps = document.createElement('div'); ps.className = 'print-only print-sign';
+    ps.textContent = `${LIC.cliente} · ${CFG.name}`;
+    main && main.appendChild(ps);
+  } else if (f){
     f.className = 'firma';
     f.innerHTML = `<div class="firma-in">
       <div class="firma-id"><div class="firma-mono" aria-hidden="true">JL</div>
-        <div class="firma-txt"><small>Diseño y desarrollo</small><strong>${AUTOR.nombre}</strong><em>Soluciones digitales para emprendedores y empresas</em></div></div>
+        <div class="firma-txt"><small>Diseño y desarrollo</small><strong>${AUTOR.nombre}</strong><em>¿La quieres con el logo y los colores de tu negocio? Escríbeme.</em></div></div>
       <p class="firma-legal">© ${new Date().getFullYear()} ${AUTOR.nombre}. Todos los derechos reservados.<br>Tus datos se guardan solo en este dispositivo.<br><a href="../privacidad/">Política de privacidad</a> <span aria-hidden="true">|</span> <a href="../terminos/">Términos de uso</a></p>
       <div class="firma-links">
         <a class="wa" href="https://wa.me/${AUTOR.telRaw}?text=${encodeURIComponent('Hola José, vi tu app «'+CFG.name+'» y quiero más información.')}" target="_blank" rel="noopener noreferrer">${I.wa}${AUTOR.tel}</a>

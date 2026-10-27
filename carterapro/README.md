@@ -1,6 +1,6 @@
 # CarteraPro — versión 2.0
 
-Gestión de clientes, créditos, cuotas, pagos y cartera. Aplicación web progresiva (PWA): se instala en celular, tablet o computador y funciona sin internet. HTML + CSS + JavaScript (módulos ES), sin frameworks ni backend. Los datos se guardan en IndexedDB, dentro del navegador del dispositivo.
+Gestión de clientes, créditos, cuotas, pagos y cartera. Manual para el usuario final: [MANUAL-CarteraPro.pdf](MANUAL-CarteraPro.pdf). Aplicación web progresiva (PWA): se instala en celular, tablet o computador y funciona sin internet. HTML + CSS + JavaScript (módulos ES), sin frameworks ni backend. Los datos se guardan en IndexedDB, dentro del navegador del dispositivo.
 
 ## Ejecutar localmente
 

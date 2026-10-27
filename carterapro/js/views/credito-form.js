@@ -1,6 +1,8 @@
 import { html, montar, $ } from '../ui/html.js';
 import { icono } from '../ui/icons.js';
-import { encabezado, campo, mostrarErrores, vacio } from '../ui/componentes.js';
+import { encabezado, campo, mostrarErrores, vacio, limitePrueba } from '../ui/componentes.js';
+import * as licencia from '../services/licencia.js';
+import { dentroDelLimite } from '../domain/licencia.js';
 import { confirmar, toast } from '../ui/dialogos.js';
 import { obtener } from '../services/datos.js';
 import * as creditos from '../services/creditos.js';
@@ -21,6 +23,11 @@ export async function render(el, _p, query) {
   const inicio = query.inicio === '1';
   const hoy = fechaHoy();
   const cfg = config.get();
+
+  if (!licencia.esCompleta()) {
+    const lim = dentroDelLimite('creditos', datos.creditos);
+    if (!lim.ok) { montar(el, limitePrueba('creditos', lim.limite, '#/creditos')); return; }
+  }
 
   if (!lista.length) {
     montar(el, html`${encabezado('Nuevo crédito', { atras: '#/creditos' })}

@@ -3,6 +3,7 @@ import { validarCliente, buscarDuplicados, soloDigitos } from '../domain/validac
 import { ErrorNegocio } from '../domain/errores.js';
 import { hoy } from '../core/dates.js';
 import { cambio } from './datos.js';
+import * as licencia from './licencia.js';
 
 function limpiar(d) {
   const t = v => String(v ?? '').trim();
@@ -34,6 +35,7 @@ export async function guardar(datos, id) {
   const ahora = new Date().toISOString();
   const previo = id ? await uno('clientes', id) : null;
   if (id && !previo) throw new ErrorNegocio('NO_EXISTE', 'Este cliente ya no existe.');
+  if (!previo && !datos.esDemo) licencia.exigirLimite('clientes', await todos('clientes'));
   const registro = previo
     ? { ...previo, ...cliente, actualizadoEn: ahora }
     : { ...cliente, id: uid(), fechaRegistro: hoy(), activo: true, esDemo: !!datos.esDemo, creadoEn: ahora, actualizadoEn: ahora };

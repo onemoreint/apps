@@ -11,6 +11,7 @@ import { t } from './core/i18n.js';
 import { bloquear, instalarAutobloqueo } from './ui/bloqueo.js';
 import * as instalacion from './services/instalacion.js';
 import { ocultarSplash } from './ui/splash.js';
+import * as licencia from './services/licencia.js';
 
 const NAV = [
   { href: '#/', clave: 'nav.inicio', ico: 'inicio', seccion: 'inicio' },
@@ -52,6 +53,7 @@ function definirRutas() {
   router.ruta('/caja', v('caja'), { seccion: 'caja' });
   router.ruta('/gastos', v('gastos'), { seccion: 'gastos' });
   router.ruta('/cobradores', v('cobradores'), { seccion: 'cobradores' });
+  router.ruta('/activar', v('activar'), { seccion: 'activar' });
   router.ruta('/calendario', v('calendario'), { seccion: 'calendario' });
   router.ruta('/reportes', v('reportes'), { seccion: 'reportes' });
   router.ruta('/buscar', v('buscar'), { seccion: 'buscar' });
@@ -74,7 +76,7 @@ function pintarNavegacion() {
   document.querySelector('.indicador-offline').textContent = t('barra.sinConexion');
 }
 
-const EN_MAS = ['pagos', 'caja', 'gastos', 'cobradores', 'cobranzas', 'calendario', 'reportes', 'configuracion', 'copia', 'seguridad', 'instalar', 'analista', 'ayuda'];
+const EN_MAS = ['activar', 'pagos', 'caja', 'gastos', 'cobradores', 'cobranzas', 'calendario', 'reportes', 'configuracion', 'copia', 'seguridad', 'instalar', 'analista', 'ayuda'];
 
 function marcarActivo({ seccion }) {
   document.body.dataset.seccion = seccion || '';
@@ -125,6 +127,7 @@ async function iniciar() {
   try {
     await abrir();
     await config.cargar();
+    await licencia.cargar();
   } catch (e) {
     ocultarSplash();
     errorDeVista(e, main);
@@ -152,7 +155,7 @@ async function iniciar() {
   instalarAutobloqueo();
 
   const { path } = router.actual();
-  if (!config.get().configurado && !['/bienvenida', '/configuracion'].includes(path)) {
+  if (!config.get().configurado && !['/bienvenida', '/configuracion', '/activar'].includes(path)) {
     history.replaceState(null, '', '#/bienvenida');
   }
   await router.iniciar(main, { onError: errorDeVista });

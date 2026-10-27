@@ -36,6 +36,14 @@ export function progreso(fraccion, tono = '') {
   return html`<div class="progreso ${tono}" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><span style="width:${pct}%"></span></div>`;
 }
 
+/** Bloque que se muestra en lugar de un formulario cuando se llegó al límite de la versión de prueba. */
+export function limitePrueba(tipo, limite, atras) {
+  return html`${encabezado(tipo === 'clientes' ? 'Nuevo cliente' : 'Nuevo crédito', { atras })}
+    ${vacio({ ico: 'candado', titulo: `Llegaste a los ${limite} ${tipo} de la versión de prueba`,
+      texto: 'Activa la versión completa para registrar todos los que necesites. Lo que ya registraste se conserva.',
+      accion: { href: '#/activar', texto: 'Activar versión completa' } })}`;
+}
+
 export function vacio({ ico = 'info', titulo, texto, accion }) {
   return html`<div class="vacio">
     <span class="vacio-ico">${icono(ico)}</span>

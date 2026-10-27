@@ -11,7 +11,7 @@ export const TABLAS_V2 = ['gastos', 'caja', 'cierres', 'visitas', 'cargos'];
 export const TABLAS = [...TABLAS_BASE, ...TABLAS_V2];
 
 /** Campos de configuración que NO viajan en la copia (seguridad propia de cada dispositivo). */
-export const CONFIG_LOCAL = ['pinHash', 'pinSalt', 'pinIteraciones', 'pinActivo', 'bloqueoMinutos', 'ultimoBackup'];
+export const CONFIG_LOCAL = ['pinHash', 'pinSalt', 'pinIteraciones', 'pinActivo', 'bloqueoMinutos', 'ultimoBackup', 'licencia', 'licenciaActivadaEn'];
 
 export function construirCopia(todo, creadoEn = new Date().toISOString()) {
   const cfg = { ...(todo.config || {}) };

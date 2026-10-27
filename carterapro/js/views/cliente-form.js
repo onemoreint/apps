@@ -1,6 +1,9 @@
 import { html, montar, $ } from '../ui/html.js';
 import { icono } from '../ui/icons.js';
-import { encabezado, campo, mostrarErrores, avatar } from '../ui/componentes.js';
+import { encabezado, campo, mostrarErrores, avatar, limitePrueba } from '../ui/componentes.js';
+import * as licencia from '../services/licencia.js';
+import { dentroDelLimite } from '../domain/licencia.js';
+import { todos } from '../data/db.js';
 import { confirmar, toast } from '../ui/dialogos.js';
 import * as clientes from '../services/clientes.js';
 import { ir } from '../core/router.js';
@@ -28,6 +31,10 @@ function comprimirFoto(archivo, lado = 320) {
 export async function render(el, { id }, query) {
   const existente = id ? await clientes.obtener(id) : null;
   if (id && !existente) { ir('/clientes', { reemplazar: true }); return; }
+  if (!existente && !licencia.esCompleta()) {
+    const lim = dentroDelLimite('clientes', await todos('clientes'));
+    if (!lim.ok) { montar(el, limitePrueba('clientes', lim.limite, '#/clientes')); return; }
+  }
   const c = existente || {};
   const inicio = query.inicio === '1';
   let foto = c.foto || null;

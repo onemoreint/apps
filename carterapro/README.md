@@ -99,3 +99,8 @@ Para añadir funciones (pantallas, campos, tipos de interés, sincronización en
   - **Multas por mora**: valor fijo por cuota vencida o valor diario con tope; se aplican y se pueden perdonar; se cobran junto con la cuota o solas y salen en el recibo.
   - **Alerta de usura**: el formulario de crédito calcula la tasa efectiva anual real del plan (TIR) y avisa si supera el tope configurado.
   - **Ticket de 58 mm** para impresoras térmicas portátiles, y copia de seguridad v2 (lee también las copias v1).
+- **Versión 2.1 (licencias)**:
+  - **Versión de prueba** por defecto: hasta 5 clientes y 5 créditos (los datos de demostración no cuentan), sin copia de seguridad, exportación a Excel, importación ni restauración. En `localhost` la app funciona completa para desarrollar; la bandera `localStorage['carterapro-forzar-prueba'] = '1'` simula la versión de prueba.
+  - **Versión completa** con licencia firmada (ECDSA P-256): `CP1.<datos>.<firma>`. La app solo tiene la clave pública (`js/domain/licencia.js`); se activa abriendo `#/activar?l=<licencia>` o pegando el código en Más → Activar licencia. La licencia no viaja en las copias de seguridad (cada dispositivo se activa con su enlace).
+  - **Generador de licencias** en `../carterapro-licencias/`: carga la clave privada (archivo que **nunca** se sube al repositorio), emite licencias a nombre del comprador, arma el mensaje de entrega y guarda el historial con exportación CSV.
+  - Pruebas: `tests/licencia.test.mjs` y `python3 tests/e2e_licencia.py RUTA-CLAVE-PRIVADA.json` (servidor en la raíz del repositorio, puerto 8090).

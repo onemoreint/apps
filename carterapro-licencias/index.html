@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Licencias CarteraPro</title>
+<link rel="icon" href="../carterapro/icons/favicon-32.png">
+<style>
+  :root { --navy: #163761; --verde: #A2CA39; --fondo: #F3F6FA; --borde: #DCE3EC; --texto: #14213A; --texto-2: #5A6B85; --rojo: #C62828; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--fondo); color: var(--texto); }
+  header { background: var(--navy); color: #fff; padding: 18px 16px; }
+  header .in { max-width: 860px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+  header img { height: 36px; }
+  header h1 { font-size: 19px; margin: 0; }
+  header small { display: block; opacity: .75; font-weight: 500; }
+  main { max-width: 860px; margin: 0 auto; padding: 16px; display: grid; gap: 14px; }
+  .tarjeta { background: #fff; border: 1px solid var(--borde); border-radius: 14px; padding: 18px; }
+  h2 { font-size: 17px; margin: 0 0 10px; color: var(--navy); }
+  p { margin: 0 0 10px; line-height: 1.45; }
+  label { display: grid; gap: 6px; font-weight: 600; font-size: 14px; margin-bottom: 12px; }
+  input, textarea { font: inherit; padding: 11px 12px; border: 1px solid var(--borde); border-radius: 10px; width: 100%; }
+  textarea { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; word-break: break-all; }
+  .btn { font: inherit; font-weight: 700; border: 0; border-radius: 10px; padding: 11px 16px; cursor: pointer; background: var(--navy); color: #fff; }
+  .btn.sec { background: #fff; color: var(--navy); border: 1px solid var(--borde); }
+  .btn.verde { background: var(--verde); color: var(--navy); }
+  .fila { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .aviso { padding: 10px 12px; border-radius: 10px; background: #FFF6DB; color: #8A5A00; font-size: 14px; }
+  .ok { background: #E7F6EC; color: #15803D; }
+  .error { background: #FDECEC; color: var(--rojo); }
+  .oculto { display: none !important; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--borde); vertical-align: top; }
+  th { font-size: 12px; text-transform: uppercase; color: var(--texto-2); }
+  .mono { font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+  .muted { color: var(--texto-2); font-size: 13px; }
+  .grid2 { display: grid; gap: 0 12px; }
+  @media (min-width: 640px) { .grid2 { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<header><div class="in"><img src="../carterapro/icons/logo-escudo.png" alt=""><h1>Generador de licencias<small>CarteraPro · uso exclusivo del dueño</small></h1></div></header>
+<main>
+  <section class="tarjeta" id="sin-clave">
+    <h2>1. Carga tu clave privada</h2>
+    <p>Elige el archivo <strong>CLAVE-PRIVADA-CarteraPro-NO-COMPARTIR.json</strong>. Se guarda solo en este navegador; no se sube a ningún lado.</p>
+    <input type="file" id="archivo-clave" accept=".json,application/json">
+    <p id="msg-clave" class="aviso oculto" style="margin-top:10px"></p>
+  </section>
+
+  <section class="tarjeta oculto" id="generar">
+    <h2>Nueva licencia</h2>
+    <form id="form" autocomplete="off">
+      <div class="grid2">
+        <label>Nombre del comprador<input name="nombre" required maxlength="60" placeholder="Ej: Carlos Pérez"></label>
+        <label>Referencia de la venta (opcional)<input name="ref" maxlength="40" placeholder="Ej: venta ML #2000012345"></label>
+      </div>
+      <button class="btn verde" type="submit">Generar licencia</button>
+    </form>
+    <div id="resultado" class="oculto" style="margin-top:16px">
+      <p class="aviso ok" id="res-titulo"></p>
+      <label>Enlace de activación (el comprador solo lo abre)<textarea id="res-enlace" rows="3" readonly></textarea></label>
+      <label>Código de licencia (por si el enlace no abre: se pega en Más → Activar licencia)<textarea id="res-codigo" rows="3" readonly></textarea></label>
+      <label>Mensaje para enviar al comprador<textarea id="res-mensaje" rows="9" readonly style="font-family:inherit;font-size:14px"></textarea></label>
+      <div class="fila">
+        <button class="btn" data-copiar="res-mensaje" type="button">Copiar mensaje</button>
+        <button class="btn sec" data-copiar="res-enlace" type="button">Copiar enlace</button>
+        <button class="btn sec" data-copiar="res-codigo" type="button">Copiar código</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="tarjeta oculto" id="historial-caja">
+    <div class="fila" style="justify-content:space-between"><h2 style="margin:0">Licencias emitidas</h2>
+      <div class="fila"><button class="btn sec" id="csv" type="button">Descargar CSV</button></div></div>
+    <p class="muted">El historial vive en este navegador. Descarga el CSV de vez en cuando como respaldo.</p>
+    <table><thead><tr><th>Fecha</th><th>Comprador</th><th>N.º</th><th></th></tr></thead><tbody id="historial"></tbody></table>
+  </section>
+
+  <section class="tarjeta oculto" id="zona-clave">
+    <h2>Clave privada</h2>
+    <p class="muted">Cargada en este navegador. Guarda el archivo original en un lugar seguro (Drive personal, USB): si se pierde no podrás emitir más licencias, y si alguien lo obtiene podría fabricarlas.</p>
+    <button class="btn sec" id="olvidar" type="button">Quitar la clave de este navegador</button>
+  </section>
+</main>
+<script>
+const APP = 'https://onemoreint.github.io/apps/carterapro/';
+const K_CLAVE = 'cp-licencias-clave', K_HIST = 'cp-licencias-historial';
+const $ = id => document.getElementById(id);
+const b64 = bytes => btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const leer = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
+const guardar = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } };
+const hoy = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+const idCorto = () => 'L-' + Array.from(crypto.getRandomValues(new Uint8Array(4)), x => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[x % 32]).join('') + Array.from(crypto.getRandomValues(new Uint8Array(2)), x => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[x % 32]).join('');
+
+async function firmar(datos, jwk) {
+  const bytes = new TextEncoder().encode(JSON.stringify({ v: 1, ...datos }));
+  const k = await crypto.subtle.importKey('jwk', jwk, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign']);
+  const sig = await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, k, bytes);
+  return `CP1.${b64(bytes)}.${b64(sig)}`;
+}
+
+function pintar() {
+  const clave = leer(K_CLAVE, null);
+  $('sin-clave').classList.toggle('oculto', !!clave);
+  for (const id of ['generar', 'historial-caja', 'zona-clave']) $(id).classList.toggle('oculto', !clave);
+  const hist = leer(K_HIST, []);
+  $('historial').innerHTML = hist.length ? hist.slice().reverse().map((h, i) => `<tr><td>${h.fecha}</td><td>${esc(h.nombre)}<div class="muted">${esc(h.ref || '')}</div></td><td class="mono">${h.id}</td>
+    <td><button class="btn sec" data-ver="${hist.length - 1 - i}" type="button">Ver</button></td></tr>`).join('') : '<tr><td colspan="4" class="muted">Todavía no has emitido licencias.</td></tr>';
+}
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+function mostrar(h) {
+  const enlace = `${APP}#/activar?l=${h.codigo}`;
+  $('res-titulo').textContent = `Licencia ${h.id} para ${h.nombre}`;
+  $('res-enlace').value = enlace;
+  $('res-codigo').value = h.codigo;
+  $('res-mensaje').value = `¡Hola ${h.nombre.split(' ')[0]}! Gracias por tu compra de Cartera Pro.
+
+1. Abre la app en tu celular: ${APP}
+2. Instálala: en el menú del navegador elige "Instalar app" o "Agregar a inicio".
+3. Activa tu versión completa abriendo este enlace:
+${enlace}
+
+Si el enlace no abre, entra a Más → Activar licencia y pega este código:
+${h.codigo}
+
+Tu número de licencia es ${h.id}. Guarda este mensaje: lo necesitas si cambias de teléfono.`;
+  $('resultado').classList.remove('oculto');
+}
+
+$('archivo-clave').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  const msg = $('msg-clave');
+  try {
+    const obj = JSON.parse(await f.text());
+    const jwk = obj.jwk || obj;
+    if (jwk.kty !== 'EC' || !jwk.d) throw new Error('no');
+    await firmar({ id: 'PRUEBA', n: 'prueba' }, jwk);
+    if (!guardar(K_CLAVE, jwk)) throw new Error('almacenamiento');
+    pintar();
+  } catch (err) {
+    msg.textContent = err.message === 'almacenamiento' ? 'Este navegador no permite guardar datos (¿modo incógnito?).' : 'Ese archivo no es una clave privada de CarteraPro.';
+    msg.className = 'aviso error';
+  }
+});
+
+$('form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.target, nombre = f.nombre.value.trim().replace(/\s+/g, ' ');
+  if (nombre.length < 3) { f.nombre.focus(); return; }
+  const h = { id: idCorto(), nombre, ref: f.ref.value.trim(), fecha: hoy() };
+  h.codigo = await firmar({ id: h.id, n: nombre, e: h.fecha, p: 'COMPLETA' }, leer(K_CLAVE, null));
+  const hist = leer(K_HIST, []); hist.push(h); guardar(K_HIST, hist);
+  f.reset(); pintar(); mostrar(h);
+  $('resultado').scrollIntoView({ behavior: 'smooth' });
+});
+
+document.addEventListener('click', async e => {
+  const c = e.target.closest('[data-copiar]');
+  if (c) {
+    try { await navigator.clipboard.writeText($(c.dataset.copiar).value); c.textContent = '¡Copiado!'; setTimeout(() => pintarBotones(), 1500); }
+    catch { $(c.dataset.copiar).select(); }
+  }
+  const v = e.target.closest('[data-ver]');
+  if (v) { mostrar(leer(K_HIST, [])[Number(v.dataset.ver)]); $('resultado').scrollIntoView({ behavior: 'smooth' }); }
+});
+function pintarBotones() { document.querySelectorAll('[data-copiar]').forEach(b => { b.textContent = { 'res-mensaje': 'Copiar mensaje', 'res-enlace': 'Copiar enlace', 'res-codigo': 'Copiar código' }[b.dataset.copiar]; }); }
+
+$('csv').addEventListener('click', () => {
+  const filas = [['Fecha', 'Comprador', 'Referencia', 'Licencia', 'Código'], ...leer(K_HIST, []).map(h => [h.fecha, h.nombre, h.ref || '', h.id, h.codigo])];
+  const csv = '﻿' + filas.map(f => f.map(x => `"${String(x).replace(/"/g, '""')}"`).join(';')).join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = `licencias-carterapro-${hoy()}.csv`; a.click();
+});
+
+$('olvidar').addEventListener('click', () => {
+  if (confirm('¿Quitar la clave de este navegador? Necesitarás el archivo para volver a emitir licencias. El historial se conserva.')) { localStorage.removeItem(K_CLAVE); pintar(); }
+});
+
+pintar();
+</script>
+</body>
+</html>

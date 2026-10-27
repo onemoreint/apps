@@ -8,6 +8,8 @@ import { larga, diferenciaDias, deDate } from '../core/dates.js';
 import * as instalacion from '../services/instalacion.js';
 import { construirRuta } from '../domain/ruta.js';
 import { resumenCaja } from '../domain/caja.js';
+import * as licencia from '../services/licencia.js';
+import { LIMITES_PRUEBA } from '../domain/licencia.js';
 
 const LIMITE = 6;
 
@@ -38,6 +40,7 @@ export async function render(el) {
     ${alertas(a.alertas)}
     ${avisoCopia(cfg, datos, hoy)}
     ${instalacion.estado() === 'disponible' ? html`<a class="alerta alerta-azul" href="#/instalar">${icono('telefono')}<span>Instala CarteraPro en tu pantalla de inicio para usarla sin internet.</span></a>` : ''}
+    ${avisoPrueba(datos)}
     ${accionesRapidas()}
     ${resumenHoy(a, datos, hoy)}
 
@@ -107,6 +110,12 @@ function accionesRapidas() {
     ${b('#/creditos/nuevo', 'creditos', 'Crédito')}
     ${b('#/caja', 'caja', 'Caja')}
   </nav>`;
+}
+
+function avisoPrueba(datos) {
+  if (licencia.esCompleta()) return '';
+  const n = t => datos[t].filter(r => !r.esDemo).length;
+  return html`<a class="alerta alerta-azul" href="#/activar">${icono('candado')}<span>Versión de prueba · ${n('clientes')}/${LIMITES_PRUEBA.clientes} clientes · ${n('creditos')}/${LIMITES_PRUEBA.creditos} créditos. <strong>Activar versión completa</strong></span></a>`;
 }
 
 /** Tarjeta "Hoy": avance de la ruta y efectivo del día. */

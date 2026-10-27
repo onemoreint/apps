@@ -16,9 +16,11 @@ export async function intentar(fn, contexto) {
     return await fn();
   } catch (e) {
     if (e?.name !== 'ErrorNegocio') console.error(e);
-    toast(mensajeAmigable(e, contexto), 'error', {
-      accion: e?.name === 'ErrorNegocio' ? null : { texto: 'Reintentar', fn: () => intentar(fn, contexto) },
-      duracion: 6000,
+    const licencia = ['LIMITE_PRUEBA', 'LICENCIA_REQUERIDA'].includes(e?.codigo);
+    toast(mensajeAmigable(e, contexto), licencia ? 'info' : 'error', {
+      accion: licencia ? { texto: 'Activar', fn: () => { location.hash = '#/activar'; } }
+        : e?.name === 'ErrorNegocio' ? null : { texto: 'Reintentar', fn: () => intentar(fn, contexto) },
+      duracion: licencia ? 9000 : 6000,
     });
     if (e && typeof e === 'object') e.__manejado = true;
     throw e;

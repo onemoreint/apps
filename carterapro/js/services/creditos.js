@@ -1,4 +1,5 @@
-import { uno, porIndice, transaccion, uid } from '../data/db.js';
+import { uno, porIndice, todos, transaccion, uid } from '../data/db.js';
+import * as licencia from './licencia.js';
 import { calcularInteres } from '../domain/interes.js';
 import { generarCuotas } from '../domain/cuotas.js';
 import { validarCredito } from '../domain/validaciones.js';
@@ -75,6 +76,7 @@ async function guardarEnTransaccion(api, credito, cuotas) {
 }
 
 async function preparar(entrada) {
+  if (!entrada.esDemo) licencia.exigirLimite('creditos', await todos('creditos'));
   const cliente = entrada.clienteId ? await uno('clientes', entrada.clienteId) : null;
   const errores = { ...validarCredito(entrada, { existeCliente: !!cliente }), ...validarPolitica(entrada.multa) };
   if (Object.keys(errores).length) throw new ErrorNegocio('VALIDACION', 'Revisa los campos marcados.', errores);

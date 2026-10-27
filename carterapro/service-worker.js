@@ -1,6 +1,6 @@
 // Service worker: guarda la app en el dispositivo para que funcione sin internet.
 // Al publicar una versión nueva, cambia VERSION para que los teléfonos descarguen los cambios.
-const VERSION = 'carterapro-v2.0.0';
+const VERSION = 'carterapro-v2.1.0';
 const ARCHIVOS = [
   './',
   './index.html',
@@ -31,6 +31,7 @@ const ARCHIVOS = [
   './js/domain/errores.js',
   './js/domain/estados.js',
   './js/domain/interes.js',
+  './js/domain/licencia.js',
   './js/domain/metricas.js',
   './js/domain/multas.js',
   './js/domain/pagos.js',
@@ -51,6 +52,7 @@ const ARCHIVOS = [
   './js/services/gastos.js',
   './js/services/ia.js',
   './js/services/instalacion.js',
+  './js/services/licencia.js',
   './js/services/multas.js',
   './js/services/pagos.js',
   './js/services/seguridad.js',
@@ -63,6 +65,7 @@ const ARCHIVOS = [
   './js/ui/html.js',
   './js/ui/icons.js',
   './js/ui/splash.js',
+  './js/views/activar.js',
   './js/views/analista-ia.js',
   './js/views/ayuda.js',
   './js/views/bienvenida.js',

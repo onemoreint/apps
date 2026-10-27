@@ -6,6 +6,7 @@ import { ErrorNegocio } from '../domain/errores.js';
 import { hoy } from '../core/dates.js';
 import * as config from './config.js';
 import { cambio } from './datos.js';
+import * as licencia from './licencia.js';
 
 async function leerTodo() {
   const lista = await Promise.all([...TABLAS, 'contadores'].map(todos));
@@ -19,6 +20,7 @@ export async function generarCopia() {
 
 /** Crea el archivo de copia y registra la fecha del último respaldo. */
 export async function archivoCopia() {
+  licencia.exigir('exportar');
   const copia = await generarCopia();
   const ahora = new Date();
   const hora = `${String(ahora.getHours()).padStart(2, '0')}${String(ahora.getMinutes()).padStart(2, '0')}`;
@@ -67,11 +69,13 @@ async function reemplazarTodo(datosCopia, { guardarPrevio }) {
     if (previo) await api.put('meta', { clave: 'antesDeRestaurar', fecha: new Date().toISOString(), copia: previo });
   });
   await config.cargar();
+  await licencia.cargar();
   cambio('datos:restaurados');
 }
 
 /** Restaura una copia validada. Antes guarda automáticamente los datos actuales para poder deshacer. */
 export async function restaurar(copia) {
+  licencia.exigir('restaurar');
   const v = validarCopia(copia);
   if (!v.ok) throw new ErrorNegocio('COPIA_INVALIDA', v.errores[0]);
   await reemplazarTodo(copia.datos, { guardarPrevio: true });
@@ -104,6 +108,7 @@ export async function borrarTodo() {
 
 /** Analiza el archivo sin guardar: qué filas se importarán y cuáles no (con el motivo). */
 export async function analizarImportacion(archivo) {
+  licencia.exigir('importar');
   const { clientes, errores } = clientesDesdeCsv(leerCsv(await archivo.text()));
   if (errores.length) throw new ErrorNegocio('CSV', errores[0]);
   const existentes = await todos('clientes');

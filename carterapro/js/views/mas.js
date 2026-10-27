@@ -4,6 +4,7 @@ import { encabezado } from '../ui/componentes.js';
 import { confirmar, toast } from '../ui/dialogos.js';
 import * as demo from '../services/demo.js';
 import * as config from '../services/config.js';
+import * as licencia from '../services/licencia.js';
 import { recargar } from '../core/router.js';
 import { intentar } from '../core/errors.js';
 
@@ -16,6 +17,9 @@ export async function render(el) {
   montar(el, html`
     ${encabezado('Más opciones')}
     <div class="lista">
+      ${licencia.esCompleta()
+        ? item('#/activar', 'escudo', 'Licencia', `Versión completa · ${licencia.get().datos?.n || ''}`)
+        : item('#/activar', 'candado', 'Activar licencia', 'Estás en la versión de prueba: activa la versión completa')}
       ${item('#/pagos', 'pagos', 'Pagos', 'Historial de pagos y recibos')}
       ${item('#/caja', 'caja', 'Caja y liquidación', 'Base, cierre del día, aportes y retiros')}
       ${item('#/gastos', 'gasto', 'Gastos', 'Gasolina, almuerzos, papelería y más')}
@@ -44,7 +48,7 @@ export async function render(el) {
 
     <div class="lista lista-sep">${item('#/ayuda', 'ayuda', 'Ayuda y aviso legal', 'Cómo se calculan intereses, pagos y estados')}</div>
 
-    <p class="version">CarteraPro · versión 2.0 · Los datos se guardan solo en este dispositivo.</p>`);
+    <p class="version">CarteraPro · versión 2.1 · ${licencia.esCompleta() ? 'Versión completa' : 'Versión de prueba'} · Los datos se guardan solo en este dispositivo.</p>`);
 
   return acciones(el, {
     async cargarDemo(btn) {

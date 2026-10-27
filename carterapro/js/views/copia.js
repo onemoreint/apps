@@ -12,6 +12,7 @@ import { FRECUENCIAS } from '../domain/cuotas.js';
 import { ESTADOS } from '../domain/estados.js';
 import { saldoCuota } from '../domain/pagos.js';
 import * as cobradores from '../services/cobradores.js';
+import * as licencia from '../services/licencia.js';
 import { getMoneda } from '../core/money.js';
 import { hoy as fechaHoy, diferenciaDias, formatear as fecha, deDate } from '../core/dates.js';
 import { recargar } from '../core/router.js';
@@ -195,6 +196,7 @@ export async function render(el) {
       recargar();
     },
     csv(btn) {
+      try { licencia.exigir('exportar'); } catch (e) { toast(e.message, 'error', { duracion: 6000 }); return; }
       const tabla = btn.dataset.tabla;
       descargar(`carterapro-${tabla}-${fechaHoy()}.csv`, TABLAS_CSV[tabla]());
       toast(`Archivo de ${tabla} descargado.`);

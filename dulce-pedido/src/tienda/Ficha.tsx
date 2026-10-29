@@ -73,7 +73,7 @@ export function Ficha({ catalogo, id }: { catalogo: Catalogo; id: string }) {
         <div>
           <FotoProducto
             producto={{ ...p, fotos: p.fotos.slice(foto, foto + 1).concat(p.fotos) }}
-            categoria={categoria}
+            referencia={catalogo.tienda.demo}
             className="aspect-square rounded-3xl ring-1 ring-linea"
             grande
           />

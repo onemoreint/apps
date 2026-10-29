@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ArrowDown, ArrowUp, Eye, EyeOff, ImagePlus, Loader2, Pencil, Plus, Search, Trash2, X } from 'lucide-react';
 import { cop, leerPesos } from '@/core/dinero';
-import { Ilustracion } from '@/tienda/Ilustracion';
+import { SinFoto } from '@/tienda/partes';
 import { db, textoError } from './cliente';
 import { borrarFoto, subirFoto } from './fotos';
 import { Area, Boton, Campo, Entrada, Interruptor, Tarjeta, Vacio, claseCampo, notificar } from './ui';
@@ -128,7 +128,7 @@ export function Productos({ tienda }: { tienda: TiendaFila }) {
                     {p.fotos[0] ? (
                       <img src={p.fotos[0]} alt="" className="h-full w-full object-cover" loading="lazy" />
                     ) : (
-                      <Ilustracion texto={`${p.nombre} ${g.nombre}`} className="h-full w-full" />
+                      <SinFoto className="h-full w-full [&_span]:text-[0px]" texto="" />
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
@@ -501,7 +501,7 @@ function EditorProducto({
                 </label>
               )}
             </div>
-            {p.fotos.length === 0 && <p className="mt-2 text-xs text-tinta-3">Sin foto, la tienda muestra una imagen ilustrativa marcada como tal.</p>}
+            {p.fotos.length === 0 && <p className="mt-2 text-xs text-tinta-3">Sin foto, la tienda muestra un espacio con «Foto próximamente». Sube fotos reales para vender más.</p>}
           </Tarjeta>
 
           <Tarjeta titulo="Visibilidad">

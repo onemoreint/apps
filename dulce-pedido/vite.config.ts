@@ -45,7 +45,7 @@ export default defineConfig({
         globIgnores: ['**/admin-*.js'],
         runtimeCaching: [
           {
-            urlPattern: ({ url }) => url.pathname.includes('/storage/v1/object/public/'),
+            urlPattern: ({ url }) => url.pathname.includes('/storage/v1/object/public/') || url.hostname === 'images.unsplash.com',
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'fotos-catalogo',

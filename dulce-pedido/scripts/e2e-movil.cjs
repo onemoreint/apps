@@ -27,6 +27,11 @@ const CAPTURAS = process.env.CAPTURAS;
     locale: 'es-CO',
     timezoneId: 'America/Bogota',
   });
+  // Opcional: FOTO_LOCAL sustituye las fotos externas (para entornos sin acceso a internet).
+  if (process.env.FOTO_LOCAL) {
+    const img = require('node:fs').readFileSync(process.env.FOTO_LOCAL);
+    await ctx.route('https://images.unsplash.com/**', (r) => r.fulfill({ status: 200, contentType: 'image/png', body: img }));
+  }
   const p = await ctx.newPage();
   const errores = [];
   p.on('pageerror', (e) => errores.push(e.message));
@@ -43,7 +48,10 @@ const CAPTURAS = process.env.CAPTURAS;
   await foto('01-inicio');
   await sinDesbordeHorizontal('Inicio');
   assert.ok(await p.getByText('Tienda de demostración.').isVisible(), 'Debe anunciar la tienda de demostración');
-  assert.ok((await p.getByText('Imagen ilustrativa').count()) > 0, 'Las imágenes de referencia deben estar marcadas');
+  assert.ok((await p.getByText('Foto de referencia').count()) > 0, 'Las fotos de la demo deben estar marcadas como referencia');
+  assert.equal(await p.locator('svg[aria-label="Imagen ilustrativa"]').count(), 0, 'No debe haber ilustraciones');
+  const fotos = await p.locator('main img').evaluateAll((imgs) => imgs.map((i) => i.getAttribute('src')));
+  assert.ok(fotos.length >= 5 && fotos.every((s) => s.startsWith('https://')), `Fotos reales esperadas, se vio: ${fotos.join(', ')}`);
   assert.equal(await p.getByText('Lo que dicen nuestros clientes').count(), 0, 'Sin testimonios reales no se muestra la sección');
   await p.getByText('Preguntas frecuentes').scrollIntoViewIfNeeded();
   await foto('02-inicio-secciones');

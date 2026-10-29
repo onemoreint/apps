@@ -44,6 +44,7 @@ export async function createDb(): Promise<PGlite> {
     await db.exec(readFileSync(join(dir, file), 'utf8'));
   }
   await db.exec(readFileSync(join(root, 'seed.sql'), 'utf8'));
+  await db.exec(readFileSync(join(root, 'fotos-demo.sql'), 'utf8'));
   return db;
 }
 

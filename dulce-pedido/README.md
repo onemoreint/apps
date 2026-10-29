@@ -5,7 +5,7 @@ Tienda digital para emprendimientos de repostería: los clientes abren un enlace
 - **Tienda publicada (demo):** https://onemoreint.github.io/apps/dulce-pedido/app/
 - **Panel:** https://onemoreint.github.io/apps/dulce-pedido/app/#/admin
 
-> La tienda de demostración (`dulce-pedido-demo`) usa productos, precios e imágenes **de ejemplo** y lo anuncia en pantalla.
+> La tienda de demostración (`dulce-pedido-demo`) usa productos y precios **de ejemplo** con fotografías reales de banco (Unsplash) marcadas como «Foto de referencia» ([créditos](docs/CREDITOS.md)). Si un producto no tiene foto, se muestra un espacio neutro «Foto próximamente»; nunca dibujos.
 
 ## Qué hace
 

@@ -4,8 +4,7 @@ import type { Catalogo } from '@/core/tipos';
 import { enlace } from '@/app/ruta';
 import { enlaceWhatsApp } from '@/core/whatsapp';
 import { cop } from '@/core/dinero';
-import { Seccion, TarjetaProducto, nombreCategoria } from './partes';
-import { Ilustracion } from './Ilustracion';
+import { EtiquetaReferencia, Seccion, SinFoto, TarjetaProducto } from './partes';
 
 export function Inicio({ catalogo }: { catalogo: Catalogo }) {
   const t = catalogo.tienda;
@@ -16,6 +15,11 @@ export function Inicio({ catalogo }: { catalogo: Catalogo }) {
   const faq = (c.faq ?? []).filter((f) => f.pregunta && f.respuesta);
   const testimonios = (c.testimonios ?? []).filter((x) => x.texto && x.nombre);
   const zonas = catalogo.zonas;
+  // Portada: la foto que configuró la tienda o, si no hay, la del primer destacado con foto.
+  const portada = c.banner_url || mostrar.find((p) => p.fotos[0])?.fotos[0] || '';
+  const fotoCategoria = (id: string) =>
+    catalogo.productos.find((p) => p.categoria_id === id && p.fotos[0] && p.disponible)?.fotos[0] ??
+    catalogo.productos.find((p) => p.categoria_id === id && p.fotos[0])?.fotos[0];
 
   return (
     <>
@@ -49,16 +53,12 @@ export function Inicio({ catalogo }: { catalogo: Catalogo }) {
           </div>
           <div className="order-1 md:order-2">
             <div className="relative overflow-hidden rounded-[28px] shadow-[0_30px_60px_-30px_rgba(46,29,21,0.5)] ring-1 ring-linea">
-              {c.banner_url ? (
-                <img src={c.banner_url} alt={t.nombre} className="aspect-[5/4] w-full object-cover" fetchPriority="high" />
+              {portada ? (
+                <img src={portada} alt={t.nombre} className="aspect-[5/4] w-full object-cover" fetchPriority="high" />
               ) : (
-                <>
-                  <Ilustracion texto="torta" className="aspect-[5/4] w-full" />
-                  <span className="absolute bottom-3 left-3 rounded-full bg-papel/85 px-2.5 py-1 text-xs font-medium text-tinta-2">
-                    Imagen ilustrativa
-                  </span>
-                </>
+                <SinFoto className="aspect-[5/4] w-full" />
               )}
+              {portada && t.demo && <EtiquetaReferencia />}
             </div>
           </div>
         </div>
@@ -199,7 +199,14 @@ export function Inicio({ catalogo }: { catalogo: Catalogo }) {
                   href={enlace(`/catalogo?c=${cat.id}`)}
                   className="group overflow-hidden rounded-2xl bg-papel ring-1 ring-linea/70 transition hover:-translate-y-0.5"
                 >
-                  <Ilustracion texto={nombreCategoria(catalogo, cat.id)} className="aspect-[4/3] w-full" />
+                  {fotoCategoria(cat.id) ? (
+                    <div className="relative">
+                      <img src={fotoCategoria(cat.id)} alt="" loading="lazy" className="aspect-[4/3] w-full object-cover" />
+                      {t.demo && <EtiquetaReferencia />}
+                    </div>
+                  ) : (
+                    <SinFoto className="aspect-[4/3] w-full" />
+                  )}
                   <div className="p-3">
                     <p className="font-semibold leading-tight text-tinta">{cat.nombre}</p>
                     <p className="text-xs text-tinta-3">

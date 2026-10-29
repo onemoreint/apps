@@ -3,7 +3,7 @@ import type { Catalogo } from '@/core/tipos';
 import { cop } from '@/core/dinero';
 import { calcularLineas, detalleLinea, subtotalCarrito } from '@/core/carrito';
 import { enlace } from '@/app/ruta';
-import { Cantidad, FotoProducto, nombreCategoria } from './partes';
+import { Cantidad, FotoProducto } from './partes';
 import { useTienda } from './estado';
 
 export function Carrito({ catalogo }: { catalogo: Catalogo }) {
@@ -52,7 +52,6 @@ export function Carrito({ catalogo }: { catalogo: Catalogo }) {
             <a href={enlace(`/p/${l.producto.id}`)} className="shrink-0">
               <FotoProducto
                 producto={l.producto}
-                categoria={nombreCategoria(catalogo, l.producto.categoria_id)}
                 className="h-20 w-20 rounded-xl sm:h-24 sm:w-24 [&_span]:hidden"
               />
             </a>

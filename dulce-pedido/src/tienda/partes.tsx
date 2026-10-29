@@ -1,52 +1,67 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { Minus, Plus, ShoppingBag, MessageCircle, Clock, Sparkles, X } from 'lucide-react';
+import { Camera, Minus, Plus, ShoppingBag, MessageCircle, Clock, Sparkles, X } from 'lucide-react';
 import { cop } from '@/core/dinero';
 import { precioDesde, unidadesCarrito, calcularLineas, subtotalCarrito } from '@/core/carrito';
 import { textoPreparacion } from '@/core/fechas';
 import { enlaceWhatsApp } from '@/core/whatsapp';
 import type { Catalogo, Producto } from '@/core/tipos';
 import { enlace } from '@/app/ruta';
-import { Ilustracion } from './Ilustracion';
 import { useTienda } from './estado';
 
 export function nombreCategoria(c: Catalogo, id: string | null): string {
   return c.categorias.find((x) => x.id === id)?.nombre ?? '';
 }
 
-/** Foto real del producto o, si no hay, ilustración marcada como tal. */
+/** Espacio neutro cuando aún no hay fotografía (sin dibujos ni imágenes falsas). */
+export function SinFoto({ className = '', texto = 'Foto próximamente' }: { className?: string; texto?: string }) {
+  return (
+    <div className={`grid place-items-center bg-gradient-to-br from-crema-2 to-rosa/40 text-tinta-3 ${className}`}>
+      <span className="flex flex-col items-center gap-1 text-[12px] font-medium">
+        <Camera size={22} strokeWidth={1.6} aria-hidden />
+        {texto}
+      </span>
+    </div>
+  );
+}
+
+/**
+ * Fotografía del producto. En la tienda de demostración las fotos son de
+ * referencia (banco de imágenes) y se marcan como tales.
+ */
 export function FotoProducto({
   producto,
-  categoria,
+  referencia = false,
   className = '',
   grande = false,
 }: {
   producto: Producto;
-  categoria: string;
+  referencia?: boolean;
   className?: string;
   grande?: boolean;
 }) {
   const [fallo, setFallo] = useState(false);
   const foto = producto.fotos[0];
+  if (!foto || fallo) return <SinFoto className={className} />;
   return (
     <div className={`relative overflow-hidden bg-crema-2 ${className}`}>
-      {foto && !fallo ? (
-        <img
-          src={foto}
-          alt={producto.nombre}
-          loading={grande ? 'eager' : 'lazy'}
-          decoding="async"
-          onError={() => setFallo(true)}
-          className="h-full w-full object-cover"
-        />
-      ) : (
-        <>
-          <Ilustracion texto={`${producto.nombre} ${categoria}`} className="h-full w-full" />
-          <span className="absolute bottom-2 left-2 rounded-full bg-papel/85 px-2 py-0.5 text-[11px] font-medium text-tinta-2 backdrop-blur-sm">
-            Imagen ilustrativa
-          </span>
-        </>
-      )}
+      <img
+        src={foto}
+        alt={producto.nombre}
+        loading={grande ? 'eager' : 'lazy'}
+        decoding="async"
+        onError={() => setFallo(true)}
+        className="h-full w-full object-cover"
+      />
+      {referencia && <EtiquetaReferencia />}
     </div>
+  );
+}
+
+export function EtiquetaReferencia() {
+  return (
+    <span className="absolute bottom-2 right-2 rounded-full bg-tinta/55 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
+      Foto de referencia
+    </span>
   );
 }
 
@@ -79,14 +94,13 @@ export function Precio({ p, className = '' }: { p: Producto; className?: string 
 }
 
 export function TarjetaProducto({ p, catalogo }: { p: Producto; catalogo: Catalogo }) {
-  const cat = nombreCategoria(catalogo, p.categoria_id);
   return (
     <a
       href={enlace(`/p/${p.id}`)}
       className={`group flex flex-col overflow-hidden rounded-2xl bg-papel shadow-[0_1px_0_rgba(46,29,21,0.04),0_8px_24px_-12px_rgba(46,29,21,0.18)] ring-1 ring-linea/70 transition hover:-translate-y-0.5 hover:shadow-[0_14px_30px_-14px_rgba(46,29,21,0.3)] ${!p.disponible ? 'opacity-75' : ''}`}
     >
       <div className="relative">
-        <FotoProducto producto={p} categoria={cat} className="aspect-[4/3]" />
+        <FotoProducto producto={p} referencia={catalogo.tienda.demo} className="aspect-[4/3]" />
         <div className="absolute left-2 top-2">
           <Etiquetas p={p} compacto />
         </div>
@@ -200,7 +214,7 @@ export function BannerDemo() {
     <div className="flex items-start gap-2 bg-tinta px-4 py-2 text-[13px] text-crema">
       <Sparkles size={16} className="mt-0.5 shrink-0 text-rosa-2" />
       <p className="flex-1">
-        <strong className="font-semibold">Tienda de demostración.</strong> Productos, precios e imágenes son de ejemplo; los pedidos
+        <strong className="font-semibold">Tienda de demostración.</strong> Productos y precios de ejemplo, fotos de referencia; los pedidos
         de prueba no se preparan.
       </p>
       <button type="button" onClick={() => setCerrado(true)} aria-label="Cerrar aviso" className="text-crema/70">

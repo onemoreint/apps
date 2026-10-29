@@ -1,4 +1,4 @@
-import { CREDITO, HORARIO, NOMBRE, UBICACION, WHATSAPP_VISIBLE } from '../contenido';
+import { CREDITO, ESPECIALIDAD, HORARIO, NOMBRE, UBICACION, WHATSAPP_VISIBLE } from '../contenido';
 import { EnlaceWhatsApp } from '../componentes/Enlaces';
 import { mensajeGeneral } from '../whatsapp';
 
@@ -8,9 +8,13 @@ export function Pie({ onPrivacidad }: { onPrivacidad: () => void }) {
       <div className="contenedor grid gap-10 md:grid-cols-[1.3fr_1fr_1fr]">
         <div>
           <p className="font-serif text-[1.6rem] text-petroleo-oscuro">{NOMBRE}</p>
-          <p className="mt-1 text-gris">Servicio de atención odontológica</p>
-          {UBICACION && <p className="mt-3 text-gris">{UBICACION}</p>}
-          {HORARIO && <p className="mt-1 text-gris">{HORARIO}</p>}
+          <p className="mt-1 text-gris">{ESPECIALIDAD} · Servicio de atención odontológica</p>
+          <p className="mt-4 text-tinta/85">
+            {HORARIO.dias}, de {HORARIO.horas}
+            <br />
+            <span className="text-gris">Atención con cita previa</span>
+          </p>
+          {UBICACION && <p className="mt-2 text-gris">{UBICACION}</p>}
         </div>
         <div>
           <p className="text-[0.78rem] font-semibold tracking-[0.14em] text-salvia-oscuro uppercase">Citas y consultas</p>

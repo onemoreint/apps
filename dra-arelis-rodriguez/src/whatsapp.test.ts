@@ -33,7 +33,7 @@ describe('solicitud de cita', () => {
     telefono: '',
     servicio: 'Limpieza dental',
     dia: '2026-11-05',
-    horario: 'Mañana',
+    horario: '4:00 a 5:00 p. m.',
     comentario: '',
   };
 
@@ -46,7 +46,7 @@ describe('solicitud de cita', () => {
         'Nombre: María José Pérez',
         'Servicio de interés: Limpieza dental',
         'Día preferido: jueves, 5 de noviembre de 2026',
-        'Horario preferido: Mañana',
+        'Horario preferido: 4:00 a 5:00 p. m.',
         'Comentario: Sin comentarios',
         '',
         'Quedo pendiente de la disponibilidad. Muchas gracias.',
@@ -65,6 +65,12 @@ describe('solicitud de cita', () => {
   it('valida los campos obligatorios', () => {
     const e = validarSolicitud({ nombre: '', telefono: 'abc', servicio: '', dia: '', horario: '', comentario: '' }, '2026-10-29');
     expect(Object.keys(e).sort()).toEqual(['dia', 'horario', 'nombre', 'servicio', 'telefono']);
+  });
+
+  it('solo acepta días de lunes a viernes', () => {
+    expect(validarSolicitud({ ...base, dia: '2026-11-07' }, '2026-10-29').dia).toMatch(/lunes a viernes/); // sábado
+    expect(validarSolicitud({ ...base, dia: '2026-11-08' }, '2026-10-29').dia).toBeDefined(); // domingo
+    expect(validarSolicitud({ ...base, dia: '2026-11-09' }, '2026-10-29').dia).toBeUndefined(); // lunes
   });
 
   it('no acepta días pasados', () => {

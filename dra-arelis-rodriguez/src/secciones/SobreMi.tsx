@@ -1,32 +1,29 @@
 import { Quote } from 'lucide-react';
-import { FOTOS, MOSTRAR_PENDIENTES, NOMBRE, PERFIL, PROFESION } from '../contenido';
+import { ESPECIALIDAD, FOTOS, MOSTRAR_PENDIENTES, NOMBRE, PERFIL } from '../contenido';
 import { Pendiente } from '../componentes/Enlaces';
 
 export function SobreMi() {
   const datos = PERFIL.filter((d) => d.valor || MOSTRAR_PENDIENTES);
 
   return (
-    <section id="sobre-mi" aria-labelledby="titulo-sobre-mi" className="py-20 md:py-28">
+    <section id="sobre-mi" aria-labelledby="titulo-sobre-mi" className="overflow-x-clip py-20 md:py-28">
       <div className="contenedor grid items-center gap-12 md:grid-cols-[0.9fr_1.1fr] md:gap-16 lg:gap-24">
-        <div className="revelar relative mx-auto w-full max-w-[25rem]">
-          <div aria-hidden className="absolute -inset-3 -z-10 rounded-t-[999px] rounded-b-[2.25rem] border border-salvia/35" />
-          <div className="relative aspect-[4/5] overflow-hidden rounded-t-[999px] rounded-b-[2rem] bg-gradient-to-b from-salvia-claro to-arena">
-            {FOTOS.doctora ? (
-              <img src={FOTOS.doctora.src} alt={FOTOS.doctora.alt} loading="lazy" className="size-full object-cover" />
-            ) : (
-              <div className="flex size-full flex-col items-center justify-center gap-5 p-8 text-center">
-                <span
-                  aria-hidden
-                  className="grid size-32 place-items-center rounded-full border border-petroleo/15 bg-crema/70 font-serif text-[3.2rem] font-light text-petroleo italic"
-                >
-                  AR
-                </span>
-                <span className="sr-only">Monograma de {NOMBRE}</span>
-                {MOSTRAR_PENDIENTES && <Pendiente>Espacio para la fotografía de la doctora</Pendiente>}
-              </div>
-            )}
-          </div>
-        </div>
+        <figure className="revelar relative mx-auto w-full max-w-[22rem] sm:max-w-[26rem]">
+          <div aria-hidden className="absolute -inset-4 rounded-full border border-salvia/40" />
+          <div aria-hidden className="absolute -inset-9 -z-10 rounded-full bg-salvia-claro/60 blur-2xl" />
+          <img
+            src={FOTOS.doctora.retrato}
+            alt={FOTOS.doctora.alt}
+            width={880}
+            height={880}
+            loading="lazy"
+            className="relative aspect-square w-full rounded-full object-cover shadow-elevada"
+          />
+          <figcaption className="tarjeta absolute -bottom-3 left-1/2 -translate-x-1/2 px-5 py-2.5 text-center whitespace-nowrap">
+            <span className="block font-serif text-[1.05rem] text-petroleo-oscuro">{NOMBRE}</span>
+            <span className="text-[0.8rem] tracking-wide text-gris">{ESPECIALIDAD}</span>
+          </figcaption>
+        </figure>
 
         <div className="revelar" style={{ '--retraso': '120ms' } as React.CSSProperties}>
           <p className="antetitulo">Sobre mí</p>
@@ -41,7 +38,7 @@ export function SobreMi() {
               conocer las opciones de atención disponibles para ti.
             </p>
             <footer className="mt-4 text-[0.95rem] text-gris">
-              <span className="font-semibold text-tinta">{NOMBRE}</span> · {PROFESION}
+              <span className="font-semibold text-tinta">{NOMBRE}</span> · {ESPECIALIDAD}
             </footer>
           </blockquote>
 

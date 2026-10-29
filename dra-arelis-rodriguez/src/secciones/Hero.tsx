@@ -1,5 +1,5 @@
-import { ArrowDown, CalendarHeart } from 'lucide-react';
-import { FOTOS } from '../contenido';
+import { ArrowDown, Clock } from 'lucide-react';
+import { ESPECIALIDAD, FOTOS, HORARIO, NOMBRE } from '../contenido';
 import { EnlaceWhatsApp, EtiquetaIlustrativa } from '../componentes/Enlaces';
 import { mensajeGeneral } from '../whatsapp';
 
@@ -14,7 +14,7 @@ export function Hero() {
 
       <div className="contenedor grid items-center gap-12 pt-10 pb-20 md:grid-cols-[1.05fr_0.95fr] md:gap-14 md:pt-16 md:pb-28 lg:gap-20">
         <div className="revelar max-w-xl">
-          <p className="antetitulo">Atención odontológica</p>
+          <p className="antetitulo">{ESPECIALIDAD}</p>
           <h1 className="text-[2.75rem] leading-[1.04] font-normal sm:text-[3.6rem] lg:text-[4.35rem]">
             Tu sonrisa merece <em className="font-light text-salvia-oscuro italic">sentirse</em> bien.
           </h1>
@@ -29,6 +29,12 @@ export function Hero() {
               <ArrowDown aria-hidden className="size-4" />
             </a>
           </div>
+          <p className="mt-8 flex items-center gap-2.5 text-[0.98rem] text-gris">
+            <Clock aria-hidden className="size-[1.1rem] shrink-0 text-salvia-oscuro" />
+            <span>
+              <strong className="font-semibold text-tinta">{HORARIO.dias}</strong>, {HORARIO.horas} · {HORARIO.nota}
+            </span>
+          </p>
         </div>
 
         <figure className="revelar relative mx-auto w-full max-w-[30rem] md:max-w-none" style={{ '--retraso': '150ms' } as React.CSSProperties}>
@@ -44,13 +50,17 @@ export function Hero() {
             />
             {FOTOS.hero.ilustrativa && <EtiquetaIlustrativa className="absolute top-[18%] right-4" />}
           </div>
-          <figcaption className="tarjeta absolute -bottom-6 left-4 flex items-center gap-3.5 px-5 py-4 sm:-left-6 sm:px-6">
-            <span className="grid size-11 shrink-0 place-items-center rounded-full bg-salvia-claro text-salvia-oscuro">
-              <CalendarHeart aria-hidden className="size-5" />
-            </span>
+          <figcaption className="tarjeta absolute -bottom-7 left-3 flex items-center gap-3.5 py-3 pr-6 pl-3 sm:-left-8">
+            <img
+              src={FOTOS.doctora.avatar}
+              alt=""
+              width={56}
+              height={56}
+              className="size-14 shrink-0 rounded-full object-cover ring-2 ring-salvia-claro"
+            />
             <span className="leading-tight">
-              <span className="block text-[0.95rem] font-semibold text-petroleo-oscuro">Agenda a tu ritmo</span>
-              <span className="text-[0.85rem] text-gris">Escríbenos y coordinamos tu cita</span>
+              <span className="block font-serif text-[1.08rem] text-petroleo-oscuro">{NOMBRE}</span>
+              <span className="text-[0.85rem] text-gris">{ESPECIALIDAD} · Previa cita</span>
             </span>
           </figcaption>
         </figure>

@@ -1,6 +1,6 @@
-# Dra. Arelis Rodríguez · Landing odontológica
+# Dra. Arelis Rodríguez de Díaz · Odontología general
 
-Página web de una sola sección para presentar la atención odontológica de la **Dra. Arelis Rodríguez** y convertir las visitas en conversaciones por WhatsApp (+58 416 783 1789).
+Página web de una sola sección para presentar la atención de **odontología general** de la **Dra. Arelis Rodríguez de Díaz** (lunes a viernes, de 3:00 a 6:00 p. m., previa cita) y convertir las visitas en conversaciones por WhatsApp (+58 416 783 1789).
 
 **Publicada en:** https://onemoreint.github.io/apps/dra-arelis-rodriguez/app/
 
@@ -50,10 +50,11 @@ Casi todo está en **`src/contenido.ts`**, con comentarios en español:
 | Número de WhatsApp | `WHATSAPP` (solo dígitos con código de país) y `WHATSAPP_VISIBLE` |
 | Servicios | `SERVICIOS`: borra o copia un bloque `{ … }`. El formulario se actualiza solo |
 | Datos de la doctora | `PERFIL`: escribe el texto en lugar de `null` |
-| Ubicación y horario | `UBICACION` y `HORARIO` (aparecen en el pie y en las preguntas frecuentes) |
+| Horario de atención | `HORARIO` (texto), `DIAS_ATENCION` (días que acepta el formulario) y `FRANJAS` (opciones de horario del formulario) |
+| Ubicación | `UBICACION` (aparece en «Sobre mí», el pie y las preguntas frecuentes) |
 | Preguntas frecuentes | `PREGUNTAS` |
-| Fotos | `FOTOS`. Copia la foto en `public/fotos/` y escribe `'fotos/nombre.jpg'`. Si es real, pon `ilustrativa: false` |
-| Foto de la doctora | `FOTOS.doctora = { src: 'fotos/doctora.jpg', alt: 'Dra. Arelis Rodríguez' }` |
+| Fotos | `FOTOS` y la `foto` de cada servicio. Copia la foto en `public/fotos/` y usa `local('nombre.jpg')`. Si es del consultorio real, pon `ilustrativa: false` |
+| Foto de la doctora | ya está en `public/fotos/` (retrato y avatar); para cambiarla, reemplaza esos archivos con el mismo nombre |
 | Recuadros «Por confirmar» | `MOSTRAR_PENDIENTES = false` para la versión final: los datos sin confirmar se ocultan |
 | Crédito del desarrollador | `CREDITO.mostrar` |
 | Títulos y textos de cada sección | el archivo de esa sección en `src/secciones/` |
@@ -83,11 +84,12 @@ En uno o dos minutos se actualiza https://onemoreint.github.io/apps/dra-arelis-r
 
 ## 5. Datos que la doctora debe confirmar antes de publicar
 
+- [x] Nombre completo, especialidad (odontología general) y horario (lunes a viernes, 3:00 a 6:00 p. m., previa cita)
+- [x] Fotografía de la doctora
 - [ ] Servicios que realmente ofrece (y si quiere agregar o quitar alguno)
-- [ ] Perfil profesional, formación académica, experiencia y áreas de atención
+- [ ] Formación académica y experiencia
 - [ ] Ubicación del consultorio (ciudad, dirección o zona)
-- [ ] Días y horario de atención
-- [ ] Fotografía profesional propia (y fotos del consultorio, si las tiene)
+- [ ] Fotos reales de su consultorio (para reemplazar las ilustrativas)
 - [ ] Que el número +58 416 783 1789 recibirá las solicitudes
 - [ ] Texto de privacidad y tratamiento de datos (revisar según la normativa local)
 - [ ] Redes sociales, si quiere mostrarlas
@@ -100,7 +102,7 @@ En uno o dos minutos se actualiza https://onemoreint.github.io/apps/dra-arelis-r
 |---|---|
 | Enlaces de WhatsApp | 12 enlaces al número de la doctora (consulta general, uno por servicio y solicitud de cita) con mensaje codificado con `encodeURIComponent` |
 | Acentos y saltos de línea | Verificados en pruebas automáticas (`ñ`, `í`, `&`, `\n` → `%0A`) |
-| Formulario | Valida nombre, servicio, día (no permite fechas pasadas) y horario; teléfono y comentario opcionales; lleva el foco al primer error; muestra «Abriendo WhatsApp…» y luego una confirmación con botón de respaldo si el navegador no abrió WhatsApp |
+| Formulario | Valida nombre, servicio, día (no permite fechas pasadas ni sábados y domingos) y franja de la tarde (3 a 6 p. m.); teléfono y comentario opcionales; lleva el foco al primer error; muestra «Abriendo WhatsApp…» y luego una confirmación con botón de respaldo si el navegador no abrió WhatsApp |
 | Aviso de no confirmación | Visible junto al formulario y en preguntas frecuentes |
 | Datos médicos | El formulario no los pide y advierte no enviarlos en el mensaje inicial |
 | Navegación | Todas las anclas del menú llevan a su sección; menú móvil se cierra al elegir y con Esc |
@@ -111,7 +113,8 @@ En uno o dos minutos se actualiza https://onemoreint.github.io/apps/dra-arelis-r
 
 ## Fotografías
 
-Las fotos actuales son ilustrativas, de [Unsplash](https://unsplash.com) (licencia gratuita, uso comercial permitido) y **no muestran a la doctora ni a su consultorio**. Se cargan desde los servidores de Unsplash; al tener fotos propias conviene guardarlas en `public/fotos/`.
+- **Doctora:** foto propia (`public/fotos/dra-arelis-retrato.webp` y `dra-arelis-avatar.webp`), en el inicio, «Sobre mí», el cierre y la imagen para compartir.
+- **Consultorio y servicios:** fotos reales de referencia de [Unsplash](https://unsplash.com) (licencia gratuita, uso comercial permitido). **No son del consultorio de la doctora**, por eso llevan la etiqueta «Imagen ilustrativa». Se cargan desde los servidores de Unsplash; cuando haya fotos propias conviene guardarlas en `public/fotos/`.
 
 ---
 

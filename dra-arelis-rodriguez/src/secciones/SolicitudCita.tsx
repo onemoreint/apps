@@ -1,10 +1,9 @@
 import { cloneElement, useId, useRef, useState, type FormEvent, type ReactElement, type ReactNode } from 'react';
-import { CheckCircle2, Info, LoaderCircle, LockKeyhole, MessageCircle, Send } from 'lucide-react';
-import { SERVICIOS, WHATSAPP_VISIBLE } from '../contenido';
+import { CheckCircle2, Clock, Info, LoaderCircle, LockKeyhole, MessageCircle, Send } from 'lucide-react';
+import { FRANJAS, HORARIO, SERVICIOS, WHATSAPP_VISIBLE } from '../contenido';
 import { enlaceWhatsApp, mensajeCita, type SolicitudCita as Datos } from '../whatsapp';
 import { hoyISO, validarSolicitud, type Errores } from '../validacion';
 
-const HORARIOS = ['Mañana', 'Tarde', 'Flexible'] as const;
 const VACIO: Datos = { nombre: '', telefono: '', servicio: '', dia: '', horario: '', comentario: '' };
 const ORDEN: (keyof Datos)[] = ['nombre', 'telefono', 'servicio', 'dia', 'horario', 'comentario'];
 
@@ -18,8 +17,11 @@ export function SolicitudCita({ onPrivacidad }: { onPrivacidad: () => void }) {
   const id = useId();
 
   const cambiar = (campo: keyof Datos, valor: string) => {
-    setDatos((d) => ({ ...d, [campo]: valor }));
-    if (errores[campo]) setErrores((e) => ({ ...e, [campo]: undefined }));
+    const nuevos = { ...datos, [campo]: valor };
+    setDatos(nuevos);
+    // El día se revisa al momento (por ejemplo, si eligen un sábado o un domingo).
+    if (campo === 'dia') setErrores((e) => ({ ...e, dia: valor ? validarSolicitud(nuevos).dia : undefined }));
+    else if (errores[campo]) setErrores((e) => ({ ...e, [campo]: undefined }));
   };
 
   const enviar = (ev: FormEvent) => {
@@ -77,7 +79,18 @@ export function SolicitudCita({ onPrivacidad }: { onPrivacidad: () => void }) {
             ))}
           </ol>
 
-          <div className="mt-9 flex gap-3.5 rounded-2xl border border-salvia/40 bg-salvia-claro/50 p-5 text-[0.97rem]">
+          <div className="mt-9 flex items-center gap-4 rounded-2xl bg-petroleo-oscuro p-5 text-crema">
+            <span className="grid size-11 shrink-0 place-items-center rounded-full bg-white/10">
+              <Clock aria-hidden className="size-5" />
+            </span>
+            <p className="leading-snug">
+              <span className="block text-[0.78rem] font-semibold tracking-[0.14em] text-crema/70 uppercase">Horario de atención</span>
+              <span className="font-semibold">{HORARIO.dias}, {HORARIO.horas}</span>
+              <span className="text-crema/80"> · {HORARIO.nota}</span>
+            </p>
+          </div>
+
+          <div className="mt-4 flex gap-3.5 rounded-2xl border border-salvia/40 bg-salvia-claro/50 p-5 text-[0.97rem]">
             <Info aria-hidden className="mt-0.5 size-5 shrink-0 text-salvia-oscuro" />
             <p className="text-tinta/85">
               <strong className="font-semibold text-petroleo-oscuro">Tu solicitud no confirma automáticamente una cita.</strong>{' '}
@@ -151,7 +164,7 @@ export function SolicitudCita({ onPrivacidad }: { onPrivacidad: () => void }) {
                     <option value="Aún no lo sé, quisiera orientación">Aún no lo sé, quisiera orientación</option>
                   </select>
                 </Campo>
-                <Campo etiqueta="Día preferido para la cita" nombre="dia" error={errores.dia} id={id}>
+                <Campo etiqueta="Día preferido para la cita" nombre="dia" error={errores.dia} id={id} ancho pista={`Atención de ${HORARIO.dias.toLowerCase()}`}>
                   <input
                     className="campo min-h-[3.2rem]"
                     type="date"
@@ -161,16 +174,16 @@ export function SolicitudCita({ onPrivacidad }: { onPrivacidad: () => void }) {
                   />
                 </Campo>
                 <fieldset
-                  className="sm:col-span-1"
+                  className="sm:col-span-2"
                   aria-invalid={errores.horario ? true : undefined}
                   aria-describedby={errores.horario ? `${id}-horario-error` : undefined}
                 >
                   <legend className="mb-2 text-[0.95rem] font-semibold text-tinta">Horario preferido</legend>
-                  <div className="grid grid-cols-3 gap-2">
-                    {HORARIOS.map((h) => (
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                    {FRANJAS.map((h) => (
                       <label
                         key={h}
-                        className="relative flex min-h-[3.2rem] cursor-pointer items-center justify-center rounded-xl border border-arena-oscura bg-white px-2 text-[0.95rem] font-medium text-tinta/85 transition hover:border-salvia has-[:checked]:border-petroleo has-[:checked]:bg-petroleo has-[:checked]:text-white has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-petroleo/20"
+                        className="relative flex min-h-[3.2rem] cursor-pointer items-center justify-center rounded-xl border border-arena-oscura bg-white px-2 py-2 text-center text-[0.92rem] leading-tight font-medium text-tinta/85 transition hover:border-salvia has-[:checked]:border-petroleo has-[:checked]:bg-petroleo has-[:checked]:text-white has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-petroleo/20"
                       >
                         <input
                           type="radio"
@@ -243,6 +256,7 @@ function Campo({
   error,
   opcional,
   ancho,
+  pista,
   id,
   children,
 }: {
@@ -251,6 +265,7 @@ function Campo({
   error?: string;
   opcional?: boolean;
   ancho?: boolean;
+  pista?: string;
   id: string;
   children: ReactElement<Record<string, unknown>>;
 }) {
@@ -268,6 +283,7 @@ function Campo({
       <label htmlFor={campoId} className="mb-2 flex items-baseline justify-between gap-2 text-[0.95rem] font-semibold text-tinta">
         {etiqueta}
         {opcional && <span className="text-[0.82rem] font-normal text-gris">Opcional</span>}
+        {pista && <span className="text-[0.82rem] font-normal text-gris">{pista}</span>}
       </label>
       {hijo}
       {error && <MensajeError id={errorId}>{error}</MensajeError>}

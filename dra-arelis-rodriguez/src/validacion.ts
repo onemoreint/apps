@@ -1,3 +1,4 @@
+import { DIAS_ATENCION, HORARIO } from './contenido';
 import type { SolicitudCita } from './whatsapp';
 
 export type Errores = Partial<Record<keyof SolicitudCita, string>>;
@@ -6,6 +7,12 @@ export type Errores = Partial<Record<keyof SolicitudCita, string>>;
 export function hoyISO(ahora: Date = new Date()): string {
   const p = (n: number) => String(n).padStart(2, '0');
   return `${ahora.getFullYear()}-${p(ahora.getMonth() + 1)}-${p(ahora.getDate())}`;
+}
+
+/** Día de la semana (0 = domingo … 6 = sábado) de una fecha AAAA-MM-DD. */
+export function diaSemana(iso: string): number {
+  const [a, m, d] = iso.split('-').map(Number);
+  return new Date(a!, m! - 1, d!, 12).getDay();
 }
 
 export function validarSolicitud(s: SolicitudCita, hoy: string = hoyISO()): Errores {
@@ -27,6 +34,8 @@ export function validarSolicitud(s: SolicitudCita, hoy: string = hoyISO()): Erro
   if (!s.dia) e.dia = 'Elige el día que prefieres.';
   else if (!/^\d{4}-\d{2}-\d{2}$/.test(s.dia)) e.dia = 'Revisa la fecha elegida.';
   else if (s.dia < hoy) e.dia = 'Elige un día a partir de hoy.';
+  else if (!DIAS_ATENCION.includes(diaSemana(s.dia)))
+    e.dia = `La atención es de ${HORARIO.dias.toLowerCase()}. Elige uno de esos días.`;
 
   if (!s.horario) e.horario = 'Elige el horario que prefieres.';
 

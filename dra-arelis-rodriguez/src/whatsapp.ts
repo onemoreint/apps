@@ -1,4 +1,4 @@
-import { NOMBRE, WHATSAPP } from './contenido';
+import { NOMBRE_CORTO as NOMBRE, WHATSAPP } from './contenido';
 
 /**
  * Enlace a la conversación de WhatsApp con un mensaje ya escrito.

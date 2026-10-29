@@ -1,3 +1,4 @@
+import { FOTOS, HORARIO, NOMBRE } from '../contenido';
 import { EnlaceWhatsApp } from '../componentes/Enlaces';
 import { mensajeGeneral } from '../whatsapp';
 
@@ -13,6 +14,14 @@ export function Cierre() {
           <div className="absolute -top-32 -left-24 size-80 rounded-full bg-salvia/20 blur-3xl" />
         </div>
         <div className="relative mx-auto max-w-2xl">
+          <img
+            src={FOTOS.doctora.avatar}
+            alt={NOMBRE}
+            width={96}
+            height={96}
+            loading="lazy"
+            className="mx-auto mb-8 size-24 rounded-full object-cover ring-4 ring-white/15"
+          />
           <h2 id="titulo-cierre" className="text-[2.3rem] leading-[1.1] !text-crema sm:text-[3.1rem]">
             Regálate un momento para cuidar de ti.
           </h2>
@@ -25,6 +34,9 @@ export function Cierre() {
           >
             Consultar por WhatsApp
           </EnlaceWhatsApp>
+          <p className="mt-6 text-[0.95rem] text-crema/70">
+            {HORARIO.dias}, {HORARIO.horas} · {HORARIO.nota}
+          </p>
         </div>
       </div>
     </section>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import { NOMBRE, PROFESION } from '../contenido';
+import { ESPECIALIDAD, NOMBRE } from '../contenido';
 
 const MENU = [
   { href: '#inicio', texto: 'Inicio' },
@@ -42,9 +42,9 @@ export function Encabezado() {
     >
       <div className="contenedor flex h-[4.5rem] items-center justify-between gap-6">
         <a href="#inicio" className="group flex flex-col leading-none" onClick={() => setAbierto(false)}>
-          <span className="font-serif text-[1.45rem] font-medium tracking-tight text-petroleo-oscuro">{NOMBRE}</span>
+          <span className="font-serif text-[1.2rem] font-medium tracking-tight text-petroleo-oscuro min-[400px]:text-[1.3rem] lg:text-[1.45rem]">{NOMBRE}</span>
           <span className="mt-1 text-[0.68rem] font-semibold tracking-[0.22em] text-salvia-oscuro uppercase">
-            {PROFESION}
+            {ESPECIALIDAD}
           </span>
         </a>
 

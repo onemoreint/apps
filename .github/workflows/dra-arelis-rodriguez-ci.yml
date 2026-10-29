@@ -1,0 +1,44 @@
+name: Dra. Arelis Rodríguez · calidad
+
+# Solo verifica. La página publicada es dra-arelis-rodriguez/app/ (compilada con "npm run build:pages")
+# y GitHub Pages la sirve tal cual desde la rama main.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'dra-arelis-rodriguez/**'
+      - '.github/workflows/dra-arelis-rodriguez-ci.yml'
+  pull_request:
+    paths:
+      - 'dra-arelis-rodriguez/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dra-arelis-rodriguez
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: dra-arelis-rodriguez/package-lock.json
+
+      - name: Instalar
+        run: npm ci
+
+      - name: Tipos (TypeScript estricto)
+        run: npm run typecheck
+
+      - name: Pruebas (mensajes de WhatsApp y formulario)
+        run: npm test
+
+      - name: Build (modo GitHub Pages)
+        run: npm run build:pages

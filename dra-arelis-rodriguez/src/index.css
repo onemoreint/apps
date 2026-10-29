@@ -1,0 +1,123 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/newsreader';
+@import '@fontsource-variable/newsreader/wght-italic.css';
+@import '@fontsource-variable/figtree';
+
+@theme {
+  --font-serif: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Figtree Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --color-crema: #fbf8f3;
+  --color-arena: #f3ece1;
+  --color-arena-oscura: #e6dccc;
+  --color-salvia: #7f9c8d;
+  --color-salvia-claro: #e3ebe5;
+  --color-salvia-oscuro: #4f6b5d;
+  --color-petroleo: #2c5a63;
+  --color-petroleo-oscuro: #1e3f46;
+  --color-tinta: #262b2d;
+  --color-gris: #59625f;
+  --color-linea: #e4ddd2;
+
+  --shadow-suave: 0 1px 2px rgb(38 43 45 / 0.04), 0 8px 28px -12px rgb(38 43 45 / 0.12);
+  --shadow-elevada: 0 2px 4px rgb(38 43 45 / 0.05), 0 18px 40px -16px rgb(30 63 70 / 0.22);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-crema font-sans text-tinta antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.65;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-serif text-petroleo-oscuro;
+    font-optical-sizing: auto;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    @apply bg-salvia-claro text-petroleo-oscuro;
+  }
+  :focus-visible {
+    outline: 2.5px solid var(--color-petroleo);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+}
+
+@utility contenedor {
+  @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+}
+@utility antetitulo {
+  @apply mb-4 inline-flex items-center gap-2.5 text-[0.8rem] font-semibold tracking-[0.16em] text-salvia-oscuro uppercase;
+  &::before {
+    content: '';
+    @apply h-px w-7 bg-salvia;
+  }
+}
+@utility btn {
+  @apply inline-flex min-h-12 items-center justify-center gap-2.5 rounded-full px-6 py-3 text-[1rem] font-semibold transition duration-300 ease-out;
+}
+@utility btn-principal {
+  @apply btn bg-petroleo text-white shadow-suave hover:bg-petroleo-oscuro hover:shadow-elevada;
+}
+@utility btn-secundario {
+  @apply btn border border-petroleo/25 bg-white/60 text-petroleo-oscuro hover:border-petroleo/50 hover:bg-white;
+}
+@utility tarjeta {
+  @apply rounded-[1.375rem] border border-linea bg-white shadow-suave;
+}
+@utility campo {
+  @apply block w-full rounded-xl border border-arena-oscura bg-white px-4 py-3 text-[1rem] text-tinta transition placeholder:text-gris/60 hover:border-salvia focus:border-petroleo focus:ring-4 focus:ring-petroleo/10 focus:outline-none;
+  &[aria-invalid='true'] {
+    @apply border-[#b4533f] focus:ring-[#b4533f]/15;
+  }
+}
+
+/* Aparición suave de las secciones al desplazarse */
+.revelar {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--retraso, 0ms);
+}
+.revelar.visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .revelar {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Sin JavaScript: todo visible */
+.sin-js .revelar {
+  opacity: 1;
+  transform: none;
+}

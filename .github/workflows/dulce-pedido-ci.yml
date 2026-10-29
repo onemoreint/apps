@@ -1,0 +1,44 @@
+name: Dulce Pedido · calidad
+
+# Solo verifica. La app publicada es dulce-pedido/app/ (compilada con "npm run build:pages")
+# y GitHub Pages la sirve tal cual desde la rama main.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'dulce-pedido/**'
+      - '.github/workflows/dulce-pedido-ci.yml'
+  pull_request:
+    paths:
+      - 'dulce-pedido/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dulce-pedido
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: dulce-pedido/package-lock.json
+
+      - name: Instalar
+        run: npm ci
+
+      - name: Tipos (TypeScript estricto)
+        run: npm run typecheck
+
+      - name: Pruebas (carrito, COP, fechas, WhatsApp y base de datos con RLS en PostgreSQL)
+        run: npm test
+
+      - name: Build (modo GitHub Pages)
+        run: node scripts/build-pages.mjs

@@ -1,0 +1,149 @@
+@import 'tailwindcss';
+
+/* Solo latín y solo el eje de peso: fuentes livianas para datos móviles. */
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 300 800;
+  src: url('@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2') format('woff2-variations');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 300 700;
+  src: url('@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2-variations');
+}
+
+/* Colores de marca: la tienda los reemplaza con los que configure la propietaria. */
+:root {
+  --primario: #5a3222;
+  --acento: #c4673f;
+  --en-primario: #fffaf3;
+}
+
+@theme inline {
+  --font-display: 'Fraunces', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+
+  --color-primario: var(--primario);
+  --color-acento: var(--acento);
+  --color-en-primario: var(--en-primario);
+  --color-crema: #fbf6f0;
+  --color-crema-2: #f4ebe0;
+  --color-papel: #fffdf9;
+  --color-rosa: #f3d9d3;
+  --color-rosa-2: #e9b8ae;
+  --color-tinta: #2e1d15;
+  --color-tinta-2: #6b5548;
+  --color-tinta-3: #8f7a6d;
+  --color-linea: #e8dccf;
+  --color-whatsapp: #128c4a;
+  --color-whatsapp-oscuro: #0c6b37;
+  --color-peligro: #a8321d;
+  --color-exito: #2f6b3c;
+  --color-aviso: #8a5a00;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--color-crema);
+  color: var(--color-tinta);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer base {
+  :focus-visible {
+    outline: 3px solid var(--acento);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  button {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+}
+
+/* Precios: números tabulares para que no "bailen" al cambiar cantidades. */
+.precio {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+/* Hoja inferior / diálogo nativo (foco atrapado y tecla Esc incluidos). */
+dialog.hoja {
+  margin: auto auto 0;
+  padding: 0;
+  width: 100%;
+  max-width: 560px;
+  max-height: 92dvh;
+  border: 0;
+  border-radius: 22px 22px 0 0;
+  background: var(--color-papel);
+  color: inherit;
+}
+@media (min-width: 640px) {
+  dialog.hoja {
+    margin: auto;
+    border-radius: 22px;
+  }
+}
+dialog.hoja::backdrop {
+  background: rgb(46 29 21 / 0.45);
+}
+dialog.hoja[open] {
+  animation: subir 0.22s ease-out;
+}
+
+@keyframes subir {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+}
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+.aparecer {
+  animation: aparecer 0.25s ease-out both;
+}
+
+/* Barras de categorías deslizables sin barra visible. */
+.sin-barra {
+  scrollbar-width: none;
+}
+.sin-barra::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

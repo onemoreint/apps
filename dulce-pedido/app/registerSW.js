@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/apps/dulce-pedido/app/sw.js', { scope: '/apps/dulce-pedido/app/' })})}

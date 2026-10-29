@@ -2,6 +2,7 @@ import { StrictMode, Suspense, lazy } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import { TiendaApp } from '@/tienda/TiendaApp';
+import { PantallaCarga } from '@/tienda/LogoCarga';
 import { useRuta } from '@/app/ruta';
 
 // El panel se descarga solo al entrar a #/admin: los clientes nunca lo cargan.
@@ -17,9 +18,7 @@ function Raiz() {
   const ruta = useRuta();
   if (ruta.partes[0] === 'admin' || esRetornoDeAcceso()) {
     return (
-      <Suspense
-        fallback={<div className="grid min-h-dvh place-items-center bg-crema text-tinta-3">Cargando panel…</div>}
-      >
+      <Suspense fallback={<PantallaCarga texto="Cargando el panel…" />}>
         <AdminApp />
       </Suspense>
     );

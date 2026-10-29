@@ -15,6 +15,7 @@ import { Pedido } from './Pedido';
 import { Listo } from './Listo';
 import { Privacidad } from './Privacidad';
 import { Pie } from './Pie';
+import { PantallaCarga, recordarMarca } from './LogoCarga';
 
 export function TiendaApp() {
   const slug = slugTienda();
@@ -34,6 +35,7 @@ export function TiendaApp() {
         return;
       }
       iniciar(slug, c);
+      recordarMarca(slug, c.tienda.nombre, c.tienda.contenido?.logo_url ?? '');
       aplicarTema(c.tienda.contenido?.colores);
       document.title = `${c.tienda.nombre} · ${c.tienda.contenido?.eslogan || 'Pedidos en línea'}`;
       setEstado('listo');
@@ -48,14 +50,7 @@ export function TiendaApp() {
   }, [cargar]);
 
   if (estado === 'cargando' || (estado === 'listo' && !catalogo)) {
-    return (
-      <div className="grid min-h-dvh place-items-center bg-crema">
-        <div className="flex flex-col items-center gap-3 text-tinta-3">
-          <div className="h-10 w-10 animate-spin rounded-full border-4 border-rosa border-t-primario" />
-          <p className="text-sm">Cargando el catálogo…</p>
-        </div>
-      </div>
-    );
+    return <PantallaCarga slug={slug} />;
   }
   if (estado === 'no-existe') {
     return (

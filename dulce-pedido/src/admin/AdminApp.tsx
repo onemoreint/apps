@@ -4,6 +4,7 @@ import { BarChart3, CakeSlice, ExternalLink, Layers, LogOut, Receipt, Settings, 
 import { CON_SERVIDOR } from '@/config';
 import { enlace, ir, useRuta } from '@/app/ruta';
 import { aplicarTema } from '@/tienda/tema';
+import { PantallaCarga } from '@/tienda/LogoCarga';
 import { db, textoError } from './cliente';
 import { Boton, Campo, Entrada, Notas, notificar } from './ui';
 import type { Membresia, TiendaFila } from './tipos';
@@ -63,7 +64,7 @@ function Panel() {
     }
   }, [sesion]);
 
-  if (sesion === undefined) return <Centro>Cargando…</Centro>;
+  if (sesion === undefined) return <PantallaCarga texto="Cargando el panel…" />;
   if (recuperando && sesion) return <NuevaClave alTerminar={() => setRecuperando(false)} />;
   if (!sesion) return <Ingreso />;
   return <Tiendas sesion={sesion} />;
@@ -212,7 +213,7 @@ function Tiendas({ sesion }: { sesion: Session }) {
       </Centro>
     );
   }
-  if (!membresias) return <Centro>Cargando tu tienda…</Centro>;
+  if (!membresias) return <PantallaCarga texto="Cargando tu tienda…" />;
   if (membresias.length === 0) {
     return (
       <Centro>

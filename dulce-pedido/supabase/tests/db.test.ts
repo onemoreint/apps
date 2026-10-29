@@ -329,3 +329,58 @@ describe('Invitaciones y privacidad', () => {
     expect(inv.rows[0]!.email).toBe('luz@correo.co');
   });
 });
+
+describe('Fotos de categoría y ubicación', () => {
+  it('cada categoría de la demo trae su foto real y la tienda su ubicación', async () => {
+    const cat = await catalogo();
+    expect(cat.categorias.every((x) => /^https:\/\/images\.unsplash\.com\/photo-/.test(x.foto_url ?? ''))).toBe(true);
+    expect(cat.productos.every((x) => x.fotos.length > 0)).toBe(true);
+    expect(cat.tienda.contenido.mapa_lat).toBeCloseTo(6.1526068, 6);
+    expect(cat.tienda.contenido.mapa_lng).toBeCloseTo(-75.6518412, 6);
+    expect(cat.tienda.contenido.direccion).toContain('Felicity');
+  });
+});
+
+describe('Cotizaciones', () => {
+  const cotizar = (datos: unknown, slug = SLUG) =>
+    as<{ r: { codigo: string } }>(db, 'anon', 'select public.dp_crear_cotizacion($1, $2::jsonb) as r', [slug, JSON.stringify(datos)]).then(
+      (x) => x[0]!.r,
+    );
+  const base = (extra: Record<string, unknown> = {}) => ({
+    nombre: 'Laura Díaz',
+    telefono: '3115550000',
+    tipo_evento: 'Cumpleaños',
+    fecha_evento: sumarDias(c.ahora.slice(0, 10), 20),
+    personas: '40',
+    presupuesto: '400000',
+    descripcion: 'Torta de dos pisos temática de unicornio y 30 cupcakes.',
+    acepta_datos: true,
+    ...extra,
+  });
+
+  it('registra la solicitud con código propio y campos opcionales', async () => {
+    expect((await cotizar(base())).codigo).toBe('CT-0001');
+    expect((await cotizar(base({ fecha_evento: '', personas: '', presupuesto: '', telefono: '3115550001' }))).codigo).toBe('CT-0002');
+    const fila = (await db.query<Record<string, unknown>>(`select * from public.dp_cotizaciones where codigo = 'CT-0001'`)).rows[0]!;
+    expect(fila).toMatchObject({ estado: 'nueva', personas: 40, presupuesto: 400000, cliente_telefono: '3115550000' });
+  });
+
+  it('valida descripción, contacto, fecha, personas y autorización', async () => {
+    expect(await errorOf(cotizar(base({ descripcion: 'torta' })))).toMatch(/Cuéntanos/);
+    expect(await errorOf(cotizar(base({ telefono: '12' })))).toMatch(/número de contacto/);
+    expect(await errorOf(cotizar(base({ fecha_evento: '2020-01-01' })))).toMatch(/ya pasó/);
+    expect(await errorOf(cotizar(base({ personas: '-3' })))).toMatch(/personas/);
+    expect(await errorOf(cotizar(base({ acepta_datos: false })))).toMatch(/autorización/);
+    expect(await errorOf(cotizar(base(), 'no-existe'))).toMatch(/no está disponible/);
+  });
+
+  it('visitantes no leen cotizaciones; cada tienda ve solo las suyas y solo cambia estado y notas', async () => {
+    expect(await errorOf(as(db, 'anon', 'select * from public.dp_cotizaciones'))).toMatch(/permission denied/);
+    expect(await as(db, 'authenticated', 'select * from public.dp_cotizaciones', [], INTRUSA)).toHaveLength(0);
+    expect((await as(db, 'authenticated', 'select * from public.dp_cotizaciones', [], DUENA)).length).toBeGreaterThanOrEqual(2);
+    await as(db, 'authenticated', `update public.dp_cotizaciones set estado = 'respondida', notas_internas = 'Enviada propuesta' where codigo = 'CT-0001'`, [], DUENA);
+    expect(await errorOf(as(db, 'authenticated', `update public.dp_cotizaciones set descripcion = 'x'`, [], DUENA))).toMatch(/permission denied/);
+    const fila = (await db.query<{ estado: string }>(`select estado from public.dp_cotizaciones where codigo = 'CT-0001'`)).rows[0]!;
+    expect(fila.estado).toBe('respondida');
+  });
+});

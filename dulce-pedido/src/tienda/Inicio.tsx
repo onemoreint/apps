@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { ArrowRight, CalendarHeart, ChevronDown, Clock, PartyPopper, Truck } from 'lucide-react';
 import type { Catalogo } from '@/core/tipos';
 import { enlace } from '@/app/ruta';
-import { enlaceWhatsApp } from '@/core/whatsapp';
 import { cop } from '@/core/dinero';
 import { EtiquetaReferencia, Seccion, SinFoto, TarjetaProducto } from './partes';
+import { Cotizacion } from './Cotizacion';
+import { Ubicacion } from './Ubicacion';
 
 export function Inicio({ catalogo }: { catalogo: Catalogo }) {
   const t = catalogo.tienda;
@@ -18,8 +19,9 @@ export function Inicio({ catalogo }: { catalogo: Catalogo }) {
   // Portada: la foto que configuró la tienda o, si no hay, la del primer destacado con foto.
   const portada = c.banner_url || mostrar.find((p) => p.fotos[0])?.fotos[0] || '';
   const fotoCategoria = (id: string) =>
-    catalogo.productos.find((p) => p.categoria_id === id && p.fotos[0] && p.disponible)?.fotos[0] ??
-    catalogo.productos.find((p) => p.categoria_id === id && p.fotos[0])?.fotos[0];
+    catalogo.categorias.find((x) => x.id === id)?.foto_url ||
+    (catalogo.productos.find((p) => p.categoria_id === id && p.fotos[0] && p.disponible)?.fotos[0] ??
+      catalogo.productos.find((p) => p.categoria_id === id && p.fotos[0])?.fotos[0]);
 
   return (
     <>
@@ -64,20 +66,31 @@ export function Inicio({ catalogo }: { catalogo: Catalogo }) {
         </div>
       </section>
 
-      {/* Categorías */}
+      {/* Categorías con foto */}
       {catalogo.categorias.length > 0 && (
-        <section className="mx-auto max-w-6xl px-4">
-          <div className="sin-barra -mx-4 flex gap-2 overflow-x-auto px-4 pb-2">
-            {catalogo.categorias.map((cat) => (
-              <a
-                key={cat.id}
-                href={enlace(`/catalogo?c=${cat.id}`)}
-                className="shrink-0 rounded-full bg-papel px-4 py-2.5 text-sm font-medium text-tinta-2 ring-1 ring-linea transition hover:bg-rosa hover:text-primario"
-              >
-                {cat.nombre}
-              </a>
-            ))}
+        <section className="mx-auto max-w-6xl px-4" aria-label="Categorías">
+          <div className="sin-barra -mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
+            {catalogo.categorias.map((cat) => {
+              const foto = fotoCategoria(cat.id);
+              return (
+                <a
+                  key={cat.id}
+                  href={enlace(`/catalogo?c=${cat.id}`)}
+                  className="group relative w-36 shrink-0 snap-start overflow-hidden rounded-2xl ring-1 ring-linea/70 sm:w-44"
+                >
+                  {foto ? (
+                    <img src={foto} alt="" loading="lazy" className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105" />
+                  ) : (
+                    <SinFoto className="aspect-[4/5] w-full" />
+                  )}
+                  <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/35 to-transparent px-3 pb-3 pt-10 text-[15px] font-semibold leading-tight text-white">
+                    {cat.nombre}
+                  </span>
+                </a>
+              );
+            })}
           </div>
+          {t.demo && <p className="mt-1 text-right text-[11px] text-tinta-3">Fotos de referencia</p>}
         </section>
       )}
 
@@ -140,16 +153,16 @@ export function Inicio({ catalogo }: { catalogo: Catalogo }) {
           {c.eventos_texto && (
             <Info icono={<PartyPopper size={20} />} titulo="Cumpleaños, reuniones y eventos">
               <p>{c.eventos_texto}</p>
-              {t.whatsapp && (
-                <a
-                  href={enlaceWhatsApp(t.whatsapp, `Hola, ${t.nombre}. Quiero cotizar un pedido para un evento.`)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3 inline-flex items-center gap-1.5 font-semibold text-acento hover:underline"
-                >
-                  Cotizar mi evento <ArrowRight size={16} />
-                </a>
-              )}
+              <a
+                href="#cotizar"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById('cotizar')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="mt-3 inline-flex items-center gap-1.5 font-semibold text-acento hover:underline"
+              >
+                Solicitar cotización <ArrowRight size={16} />
+              </a>
             </Info>
           )}
           {c.horario_texto && (
@@ -159,6 +172,22 @@ export function Inicio({ catalogo }: { catalogo: Catalogo }) {
           )}
         </div>
       </Seccion>
+
+      {/* Cotización de pedidos especiales */}
+      <div className="bg-papel">
+        <Seccion id="cotizar" titulo="Cotiza tu pedido especial">
+          <div className="mx-auto max-w-3xl">
+            <Cotizacion catalogo={catalogo} />
+          </div>
+        </Seccion>
+      </div>
+
+      {/* Dónde estamos */}
+      {(c.direccion || typeof c.mapa_lat === 'number') && (
+        <Seccion id="ubicacion" titulo="Dónde estamos">
+          <Ubicacion catalogo={catalogo} />
+        </Seccion>
+      )}
 
       {/* Testimonios: solo si existen opiniones reales cargadas por la tienda */}
       {testimonios.length > 0 && (
@@ -187,38 +216,6 @@ export function Inicio({ catalogo }: { catalogo: Catalogo }) {
         </Seccion>
       )}
 
-      {/* Productos por categoría (enlace rápido) */}
-      {catalogo.categorias.length > 0 && (
-        <Seccion titulo="Explora por categoría">
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-            {catalogo.categorias.map((cat) => {
-              const n = catalogo.productos.filter((p) => p.categoria_id === cat.id).length;
-              return (
-                <a
-                  key={cat.id}
-                  href={enlace(`/catalogo?c=${cat.id}`)}
-                  className="group overflow-hidden rounded-2xl bg-papel ring-1 ring-linea/70 transition hover:-translate-y-0.5"
-                >
-                  {fotoCategoria(cat.id) ? (
-                    <div className="relative">
-                      <img src={fotoCategoria(cat.id)} alt="" loading="lazy" className="aspect-[4/3] w-full object-cover" />
-                      {t.demo && <EtiquetaReferencia />}
-                    </div>
-                  ) : (
-                    <SinFoto className="aspect-[4/3] w-full" />
-                  )}
-                  <div className="p-3">
-                    <p className="font-semibold leading-tight text-tinta">{cat.nombre}</p>
-                    <p className="text-xs text-tinta-3">
-                      {n} {n === 1 ? 'producto' : 'productos'}
-                    </p>
-                  </div>
-                </a>
-              );
-            })}
-          </div>
-        </Seccion>
-      )}
     </>
   );
 }

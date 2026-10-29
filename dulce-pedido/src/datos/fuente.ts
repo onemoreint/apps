@@ -66,3 +66,9 @@ export async function registrarPedido(
     },
   });
 }
+
+/** Registra una solicitud de cotización (sin servidor, solo arma el mensaje). */
+export async function registrarCotizacion(slug: string, datos: import('@/core/cotizacion').DatosCotizacion): Promise<{ codigo: string | null }> {
+  if (!CON_SERVIDOR) return { codigo: null };
+  return rpc<{ codigo: string }>('dp_crear_cotizacion', { p_slug: slug, p_datos: datos });
+}

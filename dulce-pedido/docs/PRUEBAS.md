@@ -2,21 +2,24 @@
 
 ## Automáticas (`npm test`, también en GitHub Actions)
 
-**Lógica (`src/core/core.test.ts`, 21 pruebas)**
+**Lógica (`src/core/*.test.ts`, 26 pruebas)**
 - Formato COP (`$1.250.000`) y lectura de precios escritos a mano.
 - Fechas en hora de Colombia: no permite pasadas, respeta horas de preparación desde la hora actual, días de atención, fechas bloqueadas, anticipación máxima y fechas inválidas.
 - Carrito: precio por variante, subtotales, agotados, variantes no disponibles, mínimos, productos eliminados del catálogo.
 - Domicilio: recogida gratis, tarifa por zona, «pendiente de cotizar» (no se suma al total).
 - Mensaje de WhatsApp: contenido completo según el formato pedido, codificación de tildes, saltos, `#`, `&` y comillas.
 - Validación del formulario con mensajes comprensibles.
+- Cotización: validación, mensaje de WhatsApp y lectura de coordenadas desde enlaces de Google Maps (prefiere el punto exacto del lugar sobre el centro de la vista).
 
-**Base de datos real en memoria (`supabase/tests/db.test.ts`, 23 pruebas)** — PostgreSQL (PGlite) con las migraciones reales y los permisos por defecto de Supabase:
+**Base de datos real en memoria (`supabase/tests/db.test.ts`, 27 pruebas)** — PostgreSQL (PGlite) con las migraciones reales y los permisos por defecto de Supabase:
 - Catálogo público sin datos internos ni de otras tiendas; tiendas inactivas no se muestran.
 - Visitantes no pueden leer ni escribir tablas ni crear tiendas.
 - `dp_crear_pedido` ignora precios enviados por el navegador y recalcula todo; rechaza agotados, variantes ajenas, sabores inventados, cantidades fraccionarias/negativas o bajo el mínimo, productos de otra tienda, fechas imposibles, franjas, zonas y direcciones faltantes, falta de autorización; limita solicitudes repetidas.
 - Aislamiento entre tiendas (RLS) en pedidos, productos, variantes y fotos.
 - La propietaria solo cambia estado y notas de un pedido; no puede alterar consecutivo, límite ni activación.
 - Invitaciones solo con correo verificado; anonimización solo por la propietaria.
+- Fotos reales en todas las categorías y productos de la demo; ubicación cargada.
+- Cotizaciones: código propio (CT-0001), validaciones, visitantes sin acceso, aislamiento por tienda y solo estado/notas editables.
 
 ## Manuales/E2E ejecutadas en esta entrega
 

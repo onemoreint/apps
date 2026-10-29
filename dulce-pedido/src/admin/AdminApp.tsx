@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { BarChart3, CakeSlice, ExternalLink, Layers, LogOut, Receipt, Settings, Truck } from 'lucide-react';
+import { BarChart3, CakeSlice, ExternalLink, FileText, Layers, LogOut, Receipt, Settings, Truck } from 'lucide-react';
 import { CON_SERVIDOR } from '@/config';
 import { enlace, ir, useRuta } from '@/app/ruta';
 import { aplicarTema } from '@/tienda/tema';
@@ -14,9 +14,11 @@ import { Categorias } from './Categorias';
 import { Entregas } from './Entregas';
 import { Negocio } from './Negocio';
 import { Estadisticas } from './Estadisticas';
+import { Cotizaciones } from './Cotizaciones';
 
 const SECCIONES = [
   { id: 'pedidos', texto: 'Pedidos', icono: Receipt },
+  { id: 'cotizaciones', texto: 'Cotizaciones', icono: FileText },
   { id: 'productos', texto: 'Productos', icono: CakeSlice },
   { id: 'categorias', texto: 'Categorías', icono: Layers },
   { id: 'entregas', texto: 'Entregas', icono: Truck },
@@ -277,6 +279,9 @@ function Escritorio({
 
   let contenido;
   switch (seccion) {
+    case 'cotizaciones':
+      contenido = <Cotizaciones tienda={tienda} />;
+      break;
     case 'productos':
       contenido = <Productos tienda={tienda} />;
       break;

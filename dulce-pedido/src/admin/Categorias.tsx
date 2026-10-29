@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { ArrowDown, ArrowUp, Plus, Trash2 } from 'lucide-react';
+import { ArrowDown, ArrowUp, ImagePlus, Loader2, Plus, Trash2 } from 'lucide-react';
+import { borrarFoto, subirFoto } from './fotos';
 import { db, textoError } from './cliente';
 import { Boton, Entrada, Interruptor, Tarjeta, Vacio, notificar } from './ui';
 import type { CategoriaFila, TiendaFila } from './tipos';
@@ -70,7 +71,10 @@ export function Categorias({ tienda }: { tienda: TiendaFila }) {
     <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-semibold text-primario">Categorías</h1>
-        <p className="text-sm text-tinta-2">Organizan tu catálogo. Las categorías sin productos visibles no se muestran a los clientes.</p>
+        <p className="text-sm text-tinta-2">
+          Organizan tu catálogo. Toca la foto para cambiarla (usa una foto real de tus productos). Las categorías sin productos visibles no se
+          muestran a los clientes.
+        </p>
       </div>
       <Tarjeta>
         <form onSubmit={crear} className="flex gap-2">
@@ -88,8 +92,9 @@ export function Categorias({ tienda }: { tienda: TiendaFila }) {
         <Tarjeta>
           <ul className="divide-y divide-linea">
             {cats.map((c, i) => (
-              <li key={c.id} className="flex flex-wrap items-center gap-2 py-3">
-                <div className="min-w-[180px] flex-1">
+              <li key={c.id} className="flex flex-wrap items-center gap-3 py-3">
+                <FotoCategoria categoria={c} tiendaId={tienda.id} alCambiar={(url) => void guardar(c, { foto_url: url })} />
+                <div className="min-w-[160px] flex-1">
                   <Entrada
                     defaultValue={c.nombre}
                     maxLength={60}
@@ -122,5 +127,37 @@ export function Categorias({ tienda }: { tienda: TiendaFila }) {
         </Tarjeta>
       )}
     </div>
+  );
+}
+
+function FotoCategoria({ categoria, tiendaId, alCambiar }: { categoria: CategoriaFila; tiendaId: string; alCambiar: (url: string) => void }) {
+  const [subiendo, setSubiendo] = useState(false);
+  const elegir = async (archivos: FileList | null) => {
+    const f = archivos?.[0];
+    if (!f) return;
+    setSubiendo(true);
+    try {
+      const anterior = categoria.foto_url;
+      const url = await subirFoto(tiendaId, f, 'categorias', 900);
+      alCambiar(url);
+      if (anterior) void borrarFoto(anterior);
+      notificar('Foto de la categoría actualizada');
+    } catch (e) {
+      notificar(textoError(e), 'error');
+    } finally {
+      setSubiendo(false);
+    }
+  };
+  return (
+    <label
+      className="relative grid h-16 w-16 shrink-0 cursor-pointer place-items-center overflow-hidden rounded-xl bg-crema-2 text-tinta-3 ring-1 ring-linea hover:ring-acento"
+      title="Cambiar foto de la categoría"
+    >
+      {categoria.foto_url ? <img src={categoria.foto_url} alt="" className="absolute inset-0 h-full w-full object-cover" /> : null}
+      <span className={`relative grid h-7 w-7 place-items-center rounded-full ${categoria.foto_url ? 'bg-tinta/55 text-white' : ''}`}>
+        {subiendo ? <Loader2 size={16} className="animate-spin" /> : <ImagePlus size={16} />}
+      </span>
+      <input type="file" accept="image/*" className="sr-only" disabled={subiendo} onChange={(e) => void elegir(e.target.files)} />
+    </label>
   );
 }

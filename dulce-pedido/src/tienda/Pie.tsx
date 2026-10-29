@@ -2,6 +2,7 @@ import { AtSign, Clock, MapPin, MessageCircle } from 'lucide-react';
 import type { Catalogo } from '@/core/tipos';
 import { enlaceWhatsApp } from '@/core/whatsapp';
 import { enlace } from '@/app/ruta';
+import { urlComoLlegar } from '@/core/cotizacion';
 
 function redUrl(tipo: 'instagram' | 'facebook' | 'tiktok', valor: string): string {
   const v = valor.trim();
@@ -33,9 +34,16 @@ export function Pie({ catalogo }: { catalogo: Catalogo }) {
               </a>
             </li>
           )}
-          {c.ciudad && (
-            <li className="flex items-center gap-2">
-              <MapPin size={17} /> {c.ciudad}
+          {(c.direccion || c.ciudad) && (
+            <li className="flex items-start gap-2">
+              <MapPin size={17} className="mt-0.5 shrink-0" />
+              {typeof c.mapa_lat === 'number' && typeof c.mapa_lng === 'number' ? (
+                <a href={urlComoLlegar(c.mapa_lat, c.mapa_lng)} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                  {c.direccion || c.ciudad}
+                </a>
+              ) : (
+                c.direccion || c.ciudad
+              )}
             </li>
           )}
           {c.horario_texto && (
@@ -63,6 +71,9 @@ export function Pie({ catalogo }: { catalogo: Catalogo }) {
               {r === 'tiktok' ? 'TikTok' : r}: {c[r].replace(/^https?:\/\/(www\.)?[^/]+\//, '@').replace(/^@?/, '@')}
             </a>
           ))}
+          <a href={enlace('/cotizar')} className="block opacity-90 hover:underline">
+            Solicitar cotización
+          </a>
           <a href={enlace('/privacidad')} className="block opacity-80 hover:underline">
             Política de privacidad
           </a>

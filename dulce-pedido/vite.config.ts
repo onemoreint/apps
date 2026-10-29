@@ -41,6 +41,10 @@ export default defineConfig({
       },
       workbox: {
         navigateFallback: `${base}index.html`,
+        // La versión nueva reemplaza a la anterior de inmediato (nadie se queda viendo una versión vieja).
+        skipWaiting: true,
+        clientsClaim: true,
+        cleanupOutdatedCaches: true,
         // El panel de administración no se precachea: los clientes nunca lo descargan.
         globIgnores: ['**/admin-*.js'],
         runtimeCaching: [

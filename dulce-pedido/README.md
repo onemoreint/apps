@@ -11,7 +11,7 @@ Tienda digital para emprendimientos de repostería: los clientes abren un enlace
 
 | Cliente (sin registrarse) | Propietaria (panel con contraseña) |
 |---|---|
-| Inicio con portada, categorías, destacados, cómo pedir, entregas, eventos, preguntas frecuentes y testimonios reales (si existen) | Pedidos con 7 estados, notas internas, botón para escribir al cliente |
+| Inicio con portada, categorías con foto, destacados, cómo pedir, entregas, cotización de pedidos especiales, dirección con mapa, preguntas frecuentes y testimonios reales (si existen) | Pedidos con 7 estados y cotizaciones con 4 estados, notas internas, botón para escribir al cliente |
 | Catálogo con búsqueda (sin importar tildes) y filtro por categoría | Productos: fotos (se optimizan solas), precios, presentaciones con precio propio, sabores, mínimos, tiempo de preparación, alérgenos, conservación, agotado/oculto, orden |
 | Ficha con presentaciones, sabores (cajas surtidas: varios), cantidad mínima | Categorías: crear, renombrar, ordenar, ocultar |
 | Carrito persistente: cambiar cantidades, quitar, vaciar | Entregas: recogida, domicilio por zonas (tarifa o «se cotiza»), días de atención, franjas, anticipación máxima, fechas bloqueadas |
@@ -36,7 +36,7 @@ cd dulce-pedido
 npm install
 npm run dev                # modo demostración en http://localhost:5173
 cp .env.example .env.local # (opcional) poner URL y clave publicable de Supabase → modo real
-npm test                   # 44 pruebas: lógica + base de datos real en memoria (PGlite) con RLS
+npm test                   # 53 pruebas: lógica + base de datos real en memoria (PGlite) con RLS
 npm run typecheck
 ```
 

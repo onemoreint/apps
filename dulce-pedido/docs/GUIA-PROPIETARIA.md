@@ -8,7 +8,7 @@ Tu tienda tiene dos partes:
 ## 1. Primer día: deja la tienda lista
 
 1. **Mi negocio:** nombre, WhatsApp con +57, ciudad, horario, logo, foto principal y colores. Revisa los textos de inicio, las preguntas frecuentes y la política de privacidad. Pulsa **Guardar cambios**.
-2. **Categorías:** crea o renombra las tuyas (Tortas, Brownies…). Ordénalas con las flechas.
+2. **Categorías:** crea o renombra las tuyas (Tortas, Brownies…), ponle a cada una una **foto real** (toca el cuadro de la foto) y ordénalas con las flechas.
 3. **Productos:** para cada uno, nombre, precio, foto real, presentación y tiempo de preparación.
    - **Presentaciones** (½ libra, 1 libra, caja x6…): si las agregas, cada una puede tener su precio y el cliente debe elegir una.
    - **Sabores:** sepáralos con comas. En cajas surtidas indica cuántos puede elegir.
@@ -27,7 +27,15 @@ Tu tienda tiene dos partes:
 
 > Si ves una solicitud en el panel pero no te llegó el WhatsApp, el cliente no terminó de enviarlo. Usa el botón **Escribir por WhatsApp** del pedido para contactarlo.
 
-## 3. Día a día
+## 3. Cotizaciones (pedidos especiales)
+
+Los clientes pueden pedir una cotización para cumpleaños, bodas, eventos o tortas personalizadas desde «Cotiza tu pedido especial» (en el inicio o en el menú **Cotizar**). Te escriben por WhatsApp con un código, por ejemplo **CT-0003**, y la solicitud aparece en **Cotizaciones** del panel. Respóndela con el botón **Responder por WhatsApp** y márcala como *Respondida*, *Aceptada* o *Descartada*. Usa las notas internas para guardar el precio que propusiste.
+
+## 4. Ubicación y mapa
+
+En **Mi negocio → Ubicación y mapa** escribe la dirección que verán tus clientes y pega el enlace de Google Maps del lugar: el mapa y el botón «Cómo llegar» se actualizan solos. Si prefieres no mostrar la ubicación exacta, deja el enlace vacío.
+
+## 5. Día a día
 
 - **Se acabó algo:** en Productos, toca «Disponible» para marcarlo agotado. Sigue visible, pero no se puede pedir.
 - **No lo quieres mostrar:** usa el ojo para ocultarlo sin borrarlo.
@@ -36,12 +44,12 @@ Tu tienda tiene dos partes:
 - **Testimonios:** solo opiniones reales de clientes, con su permiso.
 - **Estadísticas:** solicitudes, pedidos confirmados, ventas y productos más pedidos.
 
-## 4. Cuidado de los datos de tus clientes
+## 6. Cuidado de los datos de tus clientes
 
 - Pide solo lo necesario (la tienda ya lo hace).
 - Cada cierto tiempo, en Mi negocio → Privacidad, pulsa **Anonimizar pedidos vencidos**.
 - Si un cliente pide borrar sus datos, escribe al administrador del servicio.
 
-## 5. Contraseña
+## 7. Contraseña
 
 En la pantalla de ingreso, **Olvidé mi contraseña** te envía un enlace al correo.

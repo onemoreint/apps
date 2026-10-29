@@ -94,6 +94,11 @@ const pedidos = [
       dp_zonas: catalogo.zonas.map((z, i) => ({ ...z, tienda_id: TIENDA_ID, activa: true, orden: i + 1 })),
       dp_fechas_bloqueadas: [{ fecha: '2026-12-24', motivo: 'Nochebuena' }],
       dp_invitaciones: [],
+      dp_cotizaciones: [
+        { id: 'c1', codigo: 'CT-0001', estado: 'nueva', cliente_nombre: 'Laura Díaz', cliente_telefono: '3115550000', tipo_evento: 'Cumpleaños',
+          fecha_evento: '2026-11-21', personas: 40, presupuesto: 400000, descripcion: 'Torta de dos pisos temática de unicornio.', notas_internas: '',
+          datos_anonimizados: false, creado_en: '2026-10-29T15:00:00Z' },
+      ],
     }[tabla];
     return responder(datos ?? []);
   });
@@ -155,6 +160,7 @@ const pedidos = [
   assert.deepEqual(JSON.parse(cambioEstado.cuerpo), { estado: 'confirmado', notas_internas: '' }, 'Solo se actualizan estado y notas');
 
   for (const [seccion, titulo] of [
+    ['cotizaciones', 'Cotizaciones'],
     ['productos', 'Productos'],
     ['categorias', 'Categorías'],
     ['entregas', 'Entregas y calendario'],

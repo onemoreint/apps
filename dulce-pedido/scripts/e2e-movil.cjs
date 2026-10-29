@@ -31,6 +31,7 @@ const CAPTURAS = process.env.CAPTURAS;
   if (process.env.FOTO_LOCAL) {
     const img = require('node:fs').readFileSync(process.env.FOTO_LOCAL);
     await ctx.route('https://images.unsplash.com/**', (r) => r.fulfill({ status: 200, contentType: 'image/png', body: img }));
+    await ctx.route('https://www.google.com/maps**', (r) => r.fulfill({ status: 200, contentType: 'text/html', body: '<body style="background:#cfe3d0;margin:0;display:grid;place-items:center;height:100vh;font:14px sans-serif">Mapa (simulado en pruebas)</body>' }));
   }
   const p = await ctx.newPage();
   const errores = [];
@@ -53,8 +54,40 @@ const CAPTURAS = process.env.CAPTURAS;
   const fotos = await p.locator('main img').evaluateAll((imgs) => imgs.map((i) => i.getAttribute('src')));
   assert.ok(fotos.length >= 5 && fotos.every((s) => s.startsWith('https://')), `Fotos reales esperadas, se vio: ${fotos.join(', ')}`);
   assert.equal(await p.getByText('Lo que dicen nuestros clientes').count(), 0, 'Sin testimonios reales no se muestra la sección');
+  // Categorías con foto real
+  const fotosCategorias = await p.locator('section[aria-label="Categorías"] img').count();
+  assert.ok(fotosCategorias >= 9, `Cada categoría debe tener foto (${fotosCategorias})`);
+  await foto('02-inicio-categorias');
+
+  // Ubicación con mapa
+  await p.getByRole('heading', { name: 'Dónde estamos' }).scrollIntoViewIfNeeded();
+  assert.ok(await p.getByText('Urbanización Felicity, La Estrella, Antioquia').first().isVisible(), 'Muestra la dirección');
+  const mapa = await p.locator('iframe[title^="Mapa"]').getAttribute('src');
+  assert.ok(mapa.includes('q=6.1526068,-75.6518412'), `Mapa con las coordenadas: ${mapa}`);
+  const llegar = await p.getByRole('link', { name: 'Cómo llegar' }).getAttribute('href');
+  assert.ok(llegar.includes('destination=6.1526068,-75.6518412'));
+  await foto('02b-ubicacion');
+
+  // Cotización
+  await p.getByRole('heading', { name: 'Cotiza tu pedido especial' }).scrollIntoViewIfNeeded();
+  const cot = p.getByRole('form', { name: 'Solicitar cotización' });
+  await cot.getByRole('button', { name: 'Solicitar cotización' }).click();
+  assert.ok(await cot.getByText('Cuéntanos qué necesitas (mínimo 10 caracteres).').isVisible(), 'Valida la descripción');
+  await cot.getByLabel('Nombre').fill('Laura Díaz');
+  await cot.getByLabel('Celular / WhatsApp').fill('311 555 0000');
+  await cot.getByLabel('Ocasión').selectOption('Cumpleaños');
+  await cot.getByLabel('Número de personas (opcional)').fill('40');
+  await cot.getByLabel('¿Qué quieres?').fill('Torta de dos pisos temática de unicornio y 30 cupcakes.');
+  await cot.locator('input[type="checkbox"]').check();
+  await foto('02c-cotizacion');
+  await cot.getByRole('button', { name: 'Solicitar cotización' }).click();
+  const hrefCot = await p.getByRole('link', { name: 'Abrir WhatsApp y enviar' }).getAttribute('href');
+  const textoCot = new URL(hrefCot).searchParams.get('text');
+  for (const f of ['Hola, quiero solicitar una cotización.', 'Ocasión: Cumpleaños', 'Personas: 40', 'Torta de dos pisos temática de unicornio']) {
+    assert.ok(textoCot.includes(f), `Falta en la cotización: ${f}`);
+  }
+  await foto('02d-cotizacion-lista');
   await p.getByText('Preguntas frecuentes').scrollIntoViewIfNeeded();
-  await foto('02-inicio-secciones');
 
   // 2. Catálogo y búsqueda
   await p.getByRole('link', { name: 'Ver catálogo' }).first().click();
@@ -67,6 +100,7 @@ const CAPTURAS = process.env.CAPTURAS;
   assert.equal(tarjetas, 1, 'La búsqueda (sin importar tildes) debe dejar un producto');
   await p.getByPlaceholder(/Buscar/).fill('');
   await p.waitForTimeout(400);
+  assert.ok((await p.locator('[role="tablist"] img').count()) >= 9, 'Los filtros del catálogo muestran foto');
   await p.getByRole('tab', { name: 'Galletas' }).click();
   await p.waitForTimeout(300);
   assert.ok(await p.getByText('Agotado').first().isVisible(), 'El producto agotado se marca');

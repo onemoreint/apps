@@ -41,7 +41,7 @@ export type TiendaFila = {
 
 export type Membresia = { rol: 'propietaria' | 'equipo'; tienda: TiendaFila };
 
-export type CategoriaFila = { id: string; tienda_id: string; nombre: string; descripcion: string; orden: number; activa: boolean };
+export type CategoriaFila = { id: string; tienda_id: string; nombre: string; descripcion: string; orden: number; activa: boolean; foto_url: string };
 
 export type VarianteFila = { id?: string; nombre: string; precio: number | null; disponible: boolean; orden: number };
 

@@ -32,7 +32,7 @@ export type Producto = {
   orden: number;
 };
 
-export type Categoria = { id: string; nombre: string; descripcion: string; orden: number };
+export type Categoria = { id: string; nombre: string; descripcion: string; orden: number; foto_url?: string };
 
 export type Zona = {
   id: string;
@@ -65,6 +65,11 @@ export type Contenido = {
   tiktok: string;
   correo: string;
   privacidad: string;
+  /** Dirección visible para clientes. */
+  direccion?: string;
+  /** Coordenadas para el mapa (null = sin mapa). */
+  mapa_lat?: number | null;
+  mapa_lng?: number | null;
 };
 
 export type Tienda = {

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { ImagePlus, Loader2, Plus, Trash2, X } from 'lucide-react';
 import type { Contenido } from '@/core/tipos';
 import { whatsappValido } from '@/core/whatsapp';
+import { coordenadasDeEnlace, urlMapaIncrustado } from '@/core/cotizacion';
 import { colorValido } from '@/tienda/tema';
 import { db, textoError } from './cliente';
 import { subirFoto } from './fotos';
@@ -27,6 +28,9 @@ const CONTENIDO_BASE: Contenido = {
   tiktok: '',
   correo: '',
   privacidad: '',
+  direccion: '',
+  mapa_lat: null,
+  mapa_lng: null,
 };
 
 export function Negocio({ tienda, puedeEditar, alGuardar }: { tienda: TiendaFila; puedeEditar: boolean; alGuardar: () => Promise<void> }) {
@@ -40,6 +44,11 @@ export function Negocio({ tienda, puedeEditar, alGuardar }: { tienda: TiendaFila
   }));
   const [guardando, setGuardando] = useState(false);
   const [subiendo, setSubiendo] = useState<'' | 'logo' | 'banner'>('');
+  const [enlaceMapa, setEnlaceMapa] = useState(() =>
+    typeof tienda.contenido.mapa_lat === 'number' && typeof tienda.contenido.mapa_lng === 'number'
+      ? `${tienda.contenido.mapa_lat}, ${tienda.contenido.mapa_lng}`
+      : '',
+  );
 
   const cambiar = (x: Partial<Contenido>) => setC((v) => ({ ...v, ...x }));
 
@@ -243,6 +252,37 @@ export function Negocio({ tienda, puedeEditar, alGuardar }: { tienda: TiendaFila
               </li>
             ))}
           </ul>
+        </Tarjeta>
+
+        <Tarjeta titulo="Ubicación y mapa">
+          <div className="space-y-4">
+            <Campo etiqueta="Dirección visible para clientes" ayuda="Puedes dejar solo el conjunto o barrio y dar torre y apartamento por WhatsApp.">
+              <Entrada value={c.direccion ?? ''} maxLength={160} onChange={(e) => cambiar({ direccion: e.target.value })} placeholder="Urbanización Felicity, La Estrella" />
+            </Campo>
+            <Campo etiqueta="Ubicación en el mapa" ayuda="Pega el enlace de Google Maps del lugar (o «latitud, longitud»). Vacío = sin mapa.">
+              <Entrada
+                value={enlaceMapa}
+                onChange={(e) => {
+                  setEnlaceMapa(e.target.value);
+                  const v = e.target.value.trim();
+                  if (!v) return cambiar({ mapa_lat: null, mapa_lng: null });
+                  const p = coordenadasDeEnlace(v);
+                  if (p) cambiar({ mapa_lat: p.lat, mapa_lng: p.lng });
+                }}
+                placeholder="https://www.google.com/maps/place/…"
+              />
+            </Campo>
+            {typeof c.mapa_lat === 'number' && typeof c.mapa_lng === 'number' ? (
+              <div className="overflow-hidden rounded-xl ring-1 ring-linea">
+                <iframe title="Vista previa del mapa" src={urlMapaIncrustado(c.mapa_lat, c.mapa_lng)} className="h-48 w-full border-0" loading="lazy" />
+                <p className="bg-crema px-3 py-1.5 text-xs text-tinta-3">
+                  {c.mapa_lat.toFixed(6)}, {c.mapa_lng.toFixed(6)}
+                </p>
+              </div>
+            ) : (
+              enlaceMapa.trim() && <p className="text-xs font-medium text-peligro">No encontramos coordenadas en ese enlace.</p>
+            )}
+          </div>
         </Tarjeta>
 
         <Tarjeta titulo="Redes sociales">

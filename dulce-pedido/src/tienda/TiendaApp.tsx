@@ -15,6 +15,7 @@ import { Pedido } from './Pedido';
 import { Listo } from './Listo';
 import { Privacidad } from './Privacidad';
 import { Pie } from './Pie';
+import { Cotizacion } from './Cotizacion';
 import { PantallaCarga, recordarMarca } from './LogoCarga';
 
 export function TiendaApp() {
@@ -93,6 +94,15 @@ export function TiendaApp() {
     case 'listo':
       pagina = <Listo catalogo={catalogo} />;
       break;
+    case 'cotizar':
+      pagina = (
+        <div className="mx-auto max-w-3xl px-4 pb-14 pt-6">
+          <h1 className="mb-1 text-3xl font-semibold text-primario">Cotiza tu pedido especial</h1>
+          <p className="mb-5 text-tinta-2">Cuéntanos tu idea y te enviamos una propuesta con precio, sin compromiso.</p>
+          <Cotizacion catalogo={catalogo} />
+        </div>
+      );
+      break;
     case 'privacidad':
       pagina = <Privacidad catalogo={catalogo} />;
       break;
@@ -118,6 +128,9 @@ export function TiendaApp() {
           <nav className="flex items-center gap-1">
             <a href={enlace('/catalogo')} className="hidden rounded-full px-3 py-2 text-sm font-medium text-tinta-2 hover:bg-crema-2 sm:block">
               Catálogo
+            </a>
+            <a href={enlace('/cotizar')} className="rounded-full px-3 py-2 text-sm font-medium text-tinta-2 hover:bg-crema-2">
+              Cotizar
             </a>
             <a
               href={enlace('/carrito')}

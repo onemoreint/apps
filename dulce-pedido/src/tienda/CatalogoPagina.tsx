@@ -79,7 +79,7 @@ export function CatalogoPagina({ catalogo, categoria, busqueda }: { catalogo: Ca
             Todo
           </Chip>
           {catalogo.categorias.map((c) => (
-            <Chip key={c.id} activo={categoria === c.id} onClick={() => actualizar(c.id, busqueda)}>
+            <Chip key={c.id} activo={categoria === c.id} foto={c.foto_url} onClick={() => actualizar(c.id, busqueda)}>
               {c.nombre}
             </Chip>
           ))}
@@ -145,17 +145,18 @@ function Rejilla({ productos, catalogo }: { productos: Producto[]; catalogo: Cat
   );
 }
 
-function Chip({ activo, onClick, children }: { activo: boolean; onClick: () => void; children: React.ReactNode }) {
+function Chip({ activo, onClick, foto, children }: { activo: boolean; onClick: () => void; foto?: string; children: React.ReactNode }) {
   return (
     <button
       type="button"
       role="tab"
       aria-selected={activo}
       onClick={onClick}
-      className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition ${
+      className={`inline-flex shrink-0 items-center gap-2 rounded-full py-1.5 text-sm font-medium transition ${foto ? 'pl-1.5 pr-4' : 'px-4'} ${
         activo ? 'bg-primario text-en-primario' : 'bg-papel text-tinta-2 ring-1 ring-linea hover:bg-rosa/60'
       }`}
     >
+      {foto && <img src={foto} alt="" loading="lazy" className="h-7 w-7 rounded-full object-cover" />}
       {children}
     </button>
   );

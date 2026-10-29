@@ -1,0 +1,34 @@
+name: Preasesoría · calidad
+
+# Solo verifica. La app publicada es preasesoria/app/ (compilada con "npm run build")
+# y GitHub Pages la sirve tal cual desde la rama main.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'preasesoria/**'
+      - '.github/workflows/preasesoria-ci.yml'
+  pull_request:
+    paths:
+      - 'preasesoria/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: preasesoria
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: preasesoria/package-lock.json
+      - run: npm ci
+      - name: Tipos, pruebas y build
+        run: npm run check

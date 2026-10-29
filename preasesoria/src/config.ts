@@ -9,24 +9,29 @@ export const CONFIG = {
   /** Cómo se muestra el número en pantalla. */
   whatsappVisible: '+57 302 291 7846',
 
-  /**
-   * Nombre de la persona o empresa responsable del tratamiento de los datos.
-   * Déjalo vacío hasta definirlo: la app NO inventa un responsable y mostrará
-   * "el asesor que te compartió este enlace" junto al número de WhatsApp.
-   */
-  responsableNombre: '',
+  /** Responsable del tratamiento de los datos (quien recibe las respuestas). */
+  responsableNombre: 'Jaqueline Cataño',
 
-  /** Correo de contacto para consultas sobre datos personales (opcional). */
-  responsableCorreo: '',
+  /** Nombre corto para los textos de la app. */
+  nombreCorto: 'Jaqueline',
+
+  /** Especialidad que se muestra junto a la foto. */
+  especialidad: 'Especialista en pérdida de peso',
+
+  /** Correo de contacto para consultas sobre datos personales. */
+  responsableCorreo: 'diosjake86@gmail.com',
 
   /**
-   * Enlace a la política de tratamiento de datos personales.
-   * Déjalo vacío si aún no está publicada: la app indicará que se puede solicitar por WhatsApp.
+   * Enlace a una política de tratamiento de datos externa (opcional).
+   * Vacío = se muestra la política incluida en la app (src/components/Politica.tsx).
    */
   politicaPrivacidadUrl: '',
 
+  /** Fecha desde la que rige la política incluida en la app. */
+  politicaVigencia: '29 de octubre de 2026',
+
   /** Título visible en la app. */
-  tituloApp: 'Preasesoría de bienestar',
+  tituloApp: 'Valoración de bienestar',
 
   /**
    * Longitud máxima del enlace de WhatsApp (en caracteres, ya codificado) que se considera

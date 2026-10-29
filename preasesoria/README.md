@@ -1,4 +1,6 @@
-# Preasesoría de bienestar · formulario con envío a WhatsApp
+# Valoración de bienestar · Jaqueline Cataño
+
+Formulario de preasesoría con envío a WhatsApp para **Jaqueline Cataño, especialista en pérdida de peso** (+57 302 291 7846 · diosjake86@gmail.com). La foto está en la bienvenida, en la cabecera de todas las pantallas y junto al botón de envío.
 
 Formulario web (React) para que los prospectos respondan, desde el celular, un cuestionario de hábitos, sueño, salud y objetivos antes de una asesoría personalizada. Al final se abre WhatsApp con todas las respuestas ordenadas y dirigidas a **+57 302 291 7846**; el prospecto solo pulsa **Enviar**.
 
@@ -9,9 +11,9 @@ Formulario web (React) para que los prospectos respondan, desde el celular, un c
 - 6 secciones, una por pantalla, con barra de progreso y botones «Anterior» / «Continuar».
 - Respuestas con tarjetas grandes de selección simple; texto o números solo donde hace falta.
 - Preguntas condicionales: «Otro» (actividad laboral y objetivo), tipo de ejercicio, tiempo para volver a dormir, condiciones de salud, lista de medicamentos (añadir/eliminar sin límite práctico, máx. 25) y alergias.
-- Validaciones: nombre y edad obligatorios, edad 1–120, peso 2–400 kg, estatura 0.40–2.60 m (detecta si escriben centímetros), decimales con punto o coma, sin negativos.
+- Validaciones: nombre, edad, peso y estatura obligatorios, edad 1–120, peso 2–400 kg, estatura 0.40–2.60 m (detecta si escriben centímetros), decimales con punto o coma, sin negativos.
 - Las respuestas se conservan al ir y volver; pantalla de revisión con botón «Editar» por sección.
-- Autorizaciones (Ley 1581 de 2012): datos personales siempre; datos sensibles de salud solo si se compartieron; representante legal si la edad es menor de 18. Las preguntas de salud son opcionales.
+- Autorizaciones (Ley 1581 de 2012): datos personales siempre; datos sensibles de salud solo si se compartieron; representante legal si la edad es menor de 18. Sueño y preguntas de salud son opcionales.
 - Mensaje con las respuestas reales, por secciones, sin incluir condicionales que no aplican. Opcionales vacías = «Sin respuesta».
 - Enlace oficial `https://wa.me/573022917846?text=…` con codificación correcta de acentos, ñ, emojis, saltos de línea y símbolos.
 - Si el mensaje es demasiado largo (enlace > 6.000 caracteres), se divide en «Parte 1 de N», «Parte 2 de N»… sin quitar nada.
@@ -26,9 +28,10 @@ Edita `src/config.ts`:
 |---|---|
 | `whatsappNumero` | Número receptor (solo dígitos con indicativo). |
 | `whatsappVisible` | Cómo se muestra el número. |
-| `responsableNombre` | Nombre de la persona o empresa responsable de los datos. **Vacío por ahora**: la app no inventa uno. |
-| `responsableCorreo` | Correo para consultas sobre datos (opcional). |
-| `politicaPrivacidadUrl` | Enlace a la política de tratamiento de datos. **Vacío por ahora**: la app dice que se solicita por WhatsApp. |
+| `responsableNombre`, `nombreCorto`, `especialidad` | Datos de Jaqueline que se muestran en la app y en la política. |
+| `responsableCorreo` | Correo para consultas sobre datos. |
+| `politicaPrivacidadUrl` | Vacío = se usa la política incluida en la app (`src/components/Politica.tsx`). |
+| Foto | `src/foto-jaqueline.webp` y `src/foto-jaqueline-mini.webp`. |
 | `maxLongitudEnlace` | Límite para dividir mensajes largos. |
 
 Después: `npm run build` y sube los cambios.
@@ -58,9 +61,8 @@ Alternativa: arrastra `app/index.html` a Netlify Drop (https://app.netlify.com/d
 
 ## Pendiente para producción
 
-1. **Responsable del tratamiento:** completar `responsableNombre` (y `responsableCorreo` si aplica).
-2. **Política de tratamiento de datos:** redactarla y publicarla (la Ley 1581 la exige para quien recolecta datos), y poner su enlace en `politicaPrivacidadUrl`.
-3. **Probar en tu celular** el flujo completo (Android e iPhone si es posible).
-4. **Dominio propio (opcional):** para un enlace más corto o de marca.
-5. **Recepción automática (opcional):** hoy el prospecto envía el mensaje manualmente. Si quieres recibir las respuestas sin depender de eso, o confirmar el envío, se necesita un backend privado (p. ej. una función serverless) con la API oficial de WhatsApp Business (Meta Cloud API), número verificado y token guardado como secreto del servidor, nunca en esta página. No está configurado.
-6. **Resguardo de los chats:** las respuestas incluyen datos de salud; protege el teléfono que las recibe y borra lo que ya no necesites.
+1. **Revisar la política incluida** en la app (botón «Leer la política…» en el paso 6) y ajustarla si un abogado lo recomienda.
+2. **Probar en tu celular** el flujo completo (Android e iPhone si es posible).
+3. **Dominio propio (opcional):** para un enlace más corto o de marca.
+4. **Recepción automática (opcional):** hoy el prospecto envía el mensaje manualmente. Si quieres recibir las respuestas sin depender de eso, o confirmar el envío, se necesita un backend privado (p. ej. una función serverless) con la API oficial de WhatsApp Business (Meta Cloud API), número verificado y token guardado como secreto del servidor, nunca en esta página. No está configurado.
+5. **Resguardo de los chats:** las respuestas incluyen datos de salud; protege el teléfono que las recibe y borra lo que ya no necesites.

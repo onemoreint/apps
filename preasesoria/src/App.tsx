@@ -9,6 +9,8 @@ import {
   primerPasoConErrores,
   validarPaso,
 } from './logica';
+import fotoGrande from './foto-jaqueline.webp';
+import fotoMini from './foto-jaqueline-mini.webp';
 import { RESPUESTAS_VACIAS, type Errores, type Respuestas } from './types';
 import {
   SeccionHabitos,
@@ -24,7 +26,6 @@ import {
   IconoCopiar,
   IconoFlechaDer,
   IconoFlechaIzq,
-  IconoHoja,
   IconoLapiz,
   IconoListo,
   IconoWhatsApp,
@@ -240,10 +241,11 @@ export default function App() {
     <div className="pagina">
       <header className="cabecera">
         <div className="cabecera__marca">
-          <span className="cabecera__logo">
-            <IconoHoja />
+          <img className="cabecera__foto" src={fotoMini} alt="" width={40} height={40} />
+          <span className="cabecera__textos">
+            <span className="cabecera__nombre">{CONFIG.responsableNombre}</span>
+            <span className="cabecera__rol">{CONFIG.especialidad}</span>
           </span>
-          <span>{CONFIG.tituloApp}</span>
         </div>
         {indiceProgreso >= 0 && (
           <div className="progreso" aria-label={`Paso ${indiceProgreso + 1} de ${PASOS_PROGRESO.length}`}>
@@ -272,11 +274,23 @@ export default function App() {
       <main className="contenido" data-paso={paso}>
         {paso === 'inicio' && (
           <section className="bienvenida">
+            <div className="perfil">
+              <img
+                className="perfil__foto"
+                src={fotoGrande}
+                alt={`${CONFIG.responsableNombre}, ${CONFIG.especialidad.toLowerCase()}`}
+                width={168}
+                height={168}
+              />
+              <p className="perfil__nombre">{CONFIG.responsableNombre}</p>
+              <p className="perfil__rol">{CONFIG.especialidad}</p>
+            </div>
             <h1 ref={tituloRef} tabIndex={-1}>
-              Antes de tu asesoría, queremos conocerte
+              Antes de tu valoración, quiero conocerte
             </h1>
             <p className="bienvenida__lead">
-              Responde unas preguntas sencillas sobre tus hábitos, tu descanso y tus objetivos. Toma unos 5 minutos.
+              Hola, soy {CONFIG.nombreCorto}. Responde estas preguntas sobre tus medidas, hábitos, descanso y objetivos
+              para preparar una asesoría hecha a tu medida. Toma unos 5 minutos.
             </p>
             <ul className="bienvenida__puntos">
               <li>
@@ -292,8 +306,8 @@ export default function App() {
             <div className="aviso aviso--suave">
               <IconoCandado />
               <p>
-                No necesitas crear una cuenta. Tus respuestas no se guardan en internet: solo se envían cuando tú pulsas{' '}
-                <strong>Enviar</strong> en WhatsApp. Los campos con <span className="marca-obligatoria">*</span> son
+                No necesitas crear una cuenta. Tus respuestas no se almacenan en ninguna parte: solo me llegan cuando tú
+                pulsas <strong>Enviar</strong> en WhatsApp. Los campos con <span className="marca-obligatoria">*</span> son
                 obligatorios.
               </p>
             </div>
@@ -379,12 +393,17 @@ export default function App() {
               ))}
             </div>
 
+            <div className="destinataria">
+              <img src={fotoMini} alt="" width={48} height={48} />
+              <p>
+                Tus respuestas llegarán al WhatsApp de <strong>{CONFIG.responsableNombre}</strong>
+                <span>{CONFIG.whatsappVisible}</span>
+              </p>
+            </div>
             <button type="button" className="boton boton--whatsapp boton--ancho" onClick={enviarPorWhatsApp}>
               <IconoWhatsApp /> ENVIAR MIS RESPUESTAS POR WHATSAPP
             </button>
-            <p className="nota nota--centro">
-              Se abrirá WhatsApp con tus respuestas listas para enviar a {CONFIG.whatsappVisible}.
-            </p>
+            <p className="nota nota--centro">Se abrirá WhatsApp con tu mensaje listo; solo tendrás que pulsar Enviar.</p>
             <div className="navegacion navegacion--sola">
               <button type="button" className="boton boton--fantasma" onClick={() => irA('privacidad')}>
                 <IconoFlechaIzq /> Anterior
@@ -446,7 +465,7 @@ export default function App() {
             )}
 
             <ol className="pasos-finales">
-              <li>Se abre WhatsApp con el chat del asesor y tu mensaje escrito.</li>
+              <li>Se abre WhatsApp con el chat de {CONFIG.nombreCorto} y tu mensaje escrito.</li>
               <li>
                 Pulsa <strong>Enviar</strong> (la flecha verde).
               </li>

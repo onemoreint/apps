@@ -18,12 +18,15 @@ function base(extra: Partial<Respuestas> = {}): Respuestas {
     ...RESPUESTAS_VACIAS,
     nombre: 'Ana Prueba Ficticia',
     edad: '34',
+    peso: '68',
+    estatura: '1.62',
     actividadLaboral: 'Empleado',
     actividadFisica: 'No realizo actividad física',
     agua: 'Entre 500 ml y 1 litro',
     comidas: 'Tres veces',
     objetivo: 'Mejorar mi descanso',
     autorizaDatos: true,
+    autorizaSensibles: true,
     ...extra,
   };
 }
@@ -31,10 +34,12 @@ function base(extra: Partial<Respuestas> = {}): Respuestas {
 const decodificar = (url: string) => decodeURIComponent(url.split('?text=')[1]);
 
 describe('validaciones', () => {
-  it('exige nombre y edad', () => {
+  it('exige nombre, edad, peso y estatura', () => {
     const e = validarPaso('personales', RESPUESTAS_VACIAS);
     expect(e.nombre).toBeTruthy();
     expect(e.edad).toBeTruthy();
+    expect(e.peso).toBeTruthy();
+    expect(e.estatura).toBeTruthy();
   });
 
   it('rechaza valores numéricos inválidos o negativos', () => {
@@ -74,17 +79,19 @@ describe('validaciones', () => {
     expect(validarPaso('privacidad', base({ autorizaDatos: false })).autorizaDatos).toBeTruthy();
   });
 
-  it('exige autorización de datos sensibles solo si se compartieron', () => {
-    expect(compartioDatosSensibles(base())).toBe(false);
-    expect(validarPaso('privacidad', base()).autorizaSensibles).toBeUndefined();
-    const conSalud = base({ horasSueno: 'Entre 6 y 7 horas' });
-    expect(compartioDatosSensibles(conSalud)).toBe(true);
-    expect(validarPaso('privacidad', conSalud).autorizaSensibles).toBeTruthy();
-    expect(validarPaso('privacidad', { ...conSalud, autorizaSensibles: true })).toEqual({});
+  it('exige autorización expresa de datos sensibles (peso y estatura son datos de salud)', () => {
+    expect(compartioDatosSensibles(base())).toBe(true);
+    expect(validarPaso('privacidad', base({ autorizaSensibles: false })).autorizaSensibles).toBeTruthy();
+    expect(validarPaso('privacidad', base())).toEqual({});
+    expect(compartioDatosSensibles(base({ peso: '', estatura: '' }))).toBe(false);
   });
 
   it('«Prefiero no responder» no cuenta como dato de salud', () => {
-    expect(compartioDatosSensibles(base({ evacuacion: 'Prefiero no responder', tieneCondicion: 'Prefiero no responder' }))).toBe(false);
+    expect(
+      compartioDatosSensibles(
+        base({ peso: '', estatura: '', evacuacion: 'Prefiero no responder', tieneCondicion: 'Prefiero no responder' }),
+      ),
+    ).toBe(false);
   });
 
   it('pide autorización del representante si es menor de edad', () => {
@@ -105,11 +112,13 @@ describe('mensaje de WhatsApp', () => {
     expect(m.startsWith('📋 *NUEVA SOLICITUD DE ASESORÍA*')).toBe(true);
     expect(m).toContain('Nombre: Ana Prueba Ficticia');
     expect(m).toContain('Edad: 34 años');
-    expect(m).toContain('Peso: Sin respuesta');
+    expect(m).toContain('Peso: 68 kg');
+    expect(m).toContain('Estatura: 1.62 m');
+    expect(m).toContain('Horas de sueño: Sin respuesta');
     expect(m).toContain('Comidas al día: Tres veces');
     expect(m).toContain('Objetivo principal: Mejorar mi descanso');
     expect(m).toContain('✅ Autorizó el tratamiento de sus datos personales');
-    expect(m).toContain('Datos de salud: no compartió');
+    expect(m).toContain('✅ Autorizó de forma expresa el tratamiento de sus datos de salud');
     expect(m).toContain('Fecha de diligenciamiento: 29/10/2026 15:30');
   });
 

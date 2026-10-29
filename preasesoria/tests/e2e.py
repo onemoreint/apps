@@ -60,13 +60,14 @@ def main():
         page.goto(url)
 
         # Bienvenida
-        expect(page.get_by_role("heading", name="Antes de tu asesoría, queremos conocerte")).to_be_visible()
+        expect(page.get_by_role("heading", name="Antes de tu valoración, quiero conocerte")).to_be_visible()
+        expect(page.get_by_role("img", name="Jaqueline Cataño, especialista en pérdida de peso")).to_be_visible()
         captura(page, "01-bienvenida")
         page.get_by_role("button", name="Comenzar").click()
 
         # A. Datos personales: validaciones
         page.get_by_role("button", name="Continuar").click()
-        expect(page.locator('[data-error-de]')).to_have_count(2)
+        expect(page.locator('[data-error-de]')).to_have_count(4)
         expect(page.get_by_text("Escribe tu nombre completo.")).to_be_visible()
         captura(page, "02-errores")
         campo(page, "nombre").fill("Ana Prueba Ficticia")
@@ -147,15 +148,25 @@ def main():
         expect(page.get_by_role("heading", name="Autorización y privacidad")).to_be_visible()
         expect(campo(page, "autorizaDatos")).not_to_be_checked()
         expect(campo(page, "autorizaSensibles")).not_to_be_checked()
+        page.locator('[data-accion="ver-politica"]').click()
+        politica = page.locator("dialog.politica")
+        expect(politica).to_be_visible()
+        for t in ["Jaqueline Cataño", "diosjake86@gmail.com", "no almacena tus datos en ninguna parte",
+                  "No se usarán para ningún otro fin"]:
+            expect(politica).to_contain_text(t, ignore_case=True)
+        captura(page, "06a-politica")
+        politica.get_by_role("button", name="Entendido").click()
+        expect(politica).to_be_hidden()
         page.get_by_role("button", name="Revisar respuestas").click()
         expect(page.locator(".casilla--error")).to_have_count(2)
         captura(page, "06-privacidad-errores")
-        page.locator('label:has-text("Autorizo el tratamiento de mis datos personales")').click()
+        page.locator('label:has-text("el tratamiento de mis datos personales para mi valoración")').click()
         page.locator('label:has-text("Autorizo de forma expresa")').click()
         page.get_by_role("button", name="Revisar respuestas").click()
 
         # Revisión
         expect(page.get_by_role("heading", name="Revisa tus respuestas")).to_be_visible()
+        expect(page.locator(".destinataria")).to_contain_text("Jaqueline Cataño")
         resumen = page.locator(".resumen")
         for t in ["Ana Prueba Ficticia", "72.5 kg", "1.68 m", "Otro: Artesana", "Caminar y natación",
                   "Entre 10 y 30 minutos", "Producto ficticio A", "Otro: Dormir mejor y tener energía"]:

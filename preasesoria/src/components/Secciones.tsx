@@ -1,4 +1,6 @@
 import { CONFIG, nombreResponsable } from '../config';
+import { Politica } from './Politica';
+import { useState } from 'react';
 import { LIMITE_TEXTO_LARGO, MAX_MEDICAMENTOS, compartioDatosSensibles, esMenorDeEdad, mostrar } from '../logica';
 import * as O from '../opciones';
 import type { Errores, Medicamento, Respuestas } from '../types';
@@ -54,6 +56,7 @@ export function SeccionPersonales({ r, set, errores }: SeccionProps) {
         numero={3}
         nombre="peso"
         etiqueta="Peso actual"
+        obligatoria
         tipo="decimal"
         sufijo="kg"
         valor={r.peso}
@@ -61,12 +64,13 @@ export function SeccionPersonales({ r, set, errores }: SeccionProps) {
         error={errores.peso}
         placeholder="Ej.: 72.5"
         maxLength={6}
-        ayuda="Puedes usar decimales."
+        ayuda="En kilogramos. Puedes usar decimales."
       />
       <Campo
         numero={4}
         nombre="estatura"
         etiqueta="Estatura"
+        obligatoria
         tipo="decimal"
         sufijo="m"
         valor={r.estatura}
@@ -392,27 +396,28 @@ export function SeccionPrivacidad({ r, set, errores }: SeccionProps) {
   const sensibles = compartioDatosSensibles(r);
   const menor = esMenorDeEdad(r);
   const responsable = nombreResponsable();
+  const [verPolitica, setVerPolitica] = useState(false);
 
   return (
     <>
       <div className="texto-legal">
-        <h3>¿Para qué usamos tus respuestas?</h3>
+        <h3>¿Para qué se usan tus respuestas?</h3>
         <p>
-          Solo para conocer tus hábitos y objetivos y preparar tu <strong>asesoría personalizada de bienestar</strong>.
-          No se usan para diagnósticos médicos.
+          Solo para tu <strong>valoración inicial</strong> y para preparar tu asesoría personalizada. Son datos
+          esenciales para valorarte bien y <strong>no se usarán para ningún otro fin</strong>. No se hacen diagnósticos
+          médicos.
         </p>
-        <h3>¿Quién las recibe y cómo?</h3>
+        <h3>¿Se guardan en algún lugar?</h3>
         <p>
-          Las recibe {responsable}. Esta página <strong>no guarda tus respuestas en ninguna base de datos</strong>: al
-          final se abrirá WhatsApp con un mensaje preparado y <strong>tú decides si lo envías</strong>. Una vez enviado,
-          el mensaje queda en la conversación de WhatsApp con el asesor.
+          <strong>No.</strong> Este formulario no almacena tus datos en ninguna base de datos, servidor ni en tu
+          navegador. Al final se abrirá WhatsApp con un mensaje preparado para {responsable} y{' '}
+          <strong>tú decides si lo envías</strong>.
         </p>
         <h3>Tus derechos</h3>
         <p>
-          Puedes conocer, actualizar, rectificar y solicitar la supresión de tus datos, y revocar esta autorización,
-          escribiendo al mismo WhatsApp
-          {CONFIG.responsableCorreo ? ` o a ${CONFIG.responsableCorreo}` : ''}. Las preguntas sobre salud son
-          opcionales: no estás obligado(a) a responderlas.
+          Puedes conocer, actualizar, rectificar o pedir que se borren tus datos, y revocar esta autorización,
+          escribiendo al WhatsApp {CONFIG.whatsappVisible}
+          {CONFIG.responsableCorreo ? ` o a ${CONFIG.responsableCorreo}` : ''}.
         </p>
         <p className="texto-legal__politica">
           {CONFIG.politicaPrivacidadUrl ? (
@@ -420,10 +425,13 @@ export function SeccionPrivacidad({ r, set, errores }: SeccionProps) {
               Consulta la política de tratamiento de datos personales
             </a>
           ) : (
-            <>Puedes solicitar la política de tratamiento de datos personales por WhatsApp al {CONFIG.whatsappVisible}.</>
+            <button type="button" className="enlace" onClick={() => setVerPolitica(true)} data-accion="ver-politica">
+              Leer la política de tratamiento de datos personales
+            </button>
           )}
         </p>
       </div>
+      <Politica abierta={verPolitica} onCerrar={() => setVerPolitica(false)} />
 
       <Casilla
         nombre="autorizaDatos"
@@ -431,8 +439,9 @@ export function SeccionPrivacidad({ r, set, errores }: SeccionProps) {
         onCambio={(v) => set('autorizaDatos', v)}
         error={errores.autorizaDatos}
       >
-        <strong>Autorizo</strong> el tratamiento de mis datos personales para la finalidad descrita y que mis respuestas
-        se compartan con el asesor por medio de WhatsApp. <span className="marca-obligatoria">*</span>
+        <strong>Autorizo</strong> a {responsable} el tratamiento de mis datos personales para mi valoración, conforme a
+        la política de tratamiento de datos, y que mis respuestas se le envíen por WhatsApp.{' '}
+        <span className="marca-obligatoria">*</span>
       </Casilla>
 
       {sensibles ? (
@@ -442,9 +451,9 @@ export function SeccionPrivacidad({ r, set, errores }: SeccionProps) {
           onCambio={(v) => set('autorizaSensibles', v)}
           error={errores.autorizaSensibles}
         >
-          <strong>Autorizo de forma expresa</strong> el tratamiento de los datos relacionados con mi salud que compartí
-          (peso, estatura, sueño, digestión, condiciones, medicamentos o alergias). Entiendo que son datos sensibles y que
-          su respuesta era opcional. <span className="marca-obligatoria">*</span>
+          <strong>Autorizo de forma expresa</strong> el tratamiento de los datos relacionados con mi salud (peso,
+          estatura, sueño, digestión, condiciones, medicamentos o alergias). Entiendo que son datos sensibles.{' '}
+          <span className="marca-obligatoria">*</span>
         </Casilla>
       ) : (
         <p className="nota">No compartiste datos de salud, así que no hace falta una autorización adicional.</p>
@@ -458,7 +467,7 @@ export function SeccionPrivacidad({ r, set, errores }: SeccionProps) {
           error={errores.autorizaRepresentante}
         >
           Soy <strong>el padre, la madre o el representante legal</strong> del menor de edad y autorizo el tratamiento de
-          sus datos para esta asesoría. <span className="marca-obligatoria">*</span>
+          sus datos para esta valoración. <span className="marca-obligatoria">*</span>
         </Casilla>
       )}
     </>

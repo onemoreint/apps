@@ -87,13 +87,15 @@ export function validarPaso(paso: PasoId, r: Respuestas): Errores {
       else if (edad < 1 || edad > 120) e.edad = 'Escribe una edad entre 1 y 120 años.';
     }
 
-    if (r.peso.trim()) {
+    if (!r.peso.trim()) e.peso = 'Escribe tu peso actual en kilogramos.';
+    else {
       const peso = leerDecimal(r.peso);
       if (peso === null) e.peso = 'Escribe el peso solo con números, por ejemplo 72.5.';
       else if (peso < 2 || peso > 400) e.peso = 'Revisa el peso: debe estar entre 2 y 400 kg.';
     }
 
-    if (r.estatura.trim()) {
+    if (!r.estatura.trim()) e.estatura = 'Escribe tu estatura en metros, por ejemplo 1.68.';
+    else {
       const est = leerDecimal(r.estatura);
       if (est === null) e.estatura = 'Escribe la estatura en metros, por ejemplo 1.68.';
       else if (est >= 40 && est <= 260)
@@ -140,7 +142,7 @@ export function validarPaso(paso: PasoId, r: Respuestas): Errores {
       e.autorizaDatos = 'Para preparar tu mensaje necesitamos tu autorización para el tratamiento de tus datos personales.';
     if (compartioDatosSensibles(r) && !r.autorizaSensibles)
       e.autorizaSensibles =
-        'Compartiste datos relacionados con tu salud. Autoriza su tratamiento o vuelve atrás y deja esas respuestas en blanco o elige «Prefiero no responder».';
+        'Para tu valoración necesitamos tu autorización expresa para tratar tus datos de salud (peso, estatura y los que compartiste).';
     if (esMenorDeEdad(r) && !r.autorizaRepresentante)
       e.autorizaRepresentante = 'Si eres menor de edad, tu padre, madre o representante legal debe autorizar el envío.';
   }

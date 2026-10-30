@@ -96,6 +96,12 @@ h2{font-size:clamp(32px,4.6vw,54px);font-weight:800;max-width:20ch}
 .tool a:hover{text-decoration:underline}
 .tag{display:inline-block;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--sun2);align-self:flex-start}
 
+.styles{margin-top:40px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.styles b{font:700 18px 'Bricolage Grotesque',sans-serif;margin-right:6px}
+.sw{display:inline-flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);text-decoration:none;font-weight:700;font-size:15px}
+.sw:hover{border-color:var(--ink)}
+.sw i{width:26px;height:26px;border-radius:50%;flex:none}
+
 /* plans */
 .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px;align-items:stretch}
 .plan{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:30px 26px;display:flex;flex-direction:column;position:relative}
@@ -154,8 +160,8 @@ footer a{color:#fff}
 .stepbox .btn{width:100%}
 label{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
 label small{font-weight:400;color:var(--muted)}
-input{width:100%;font:500 16px 'DM Sans',sans-serif;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink)}
-input:focus{outline:none;border-color:var(--ink)}
+input,select{width:100%;font:500 16px 'DM Sans',sans-serif;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink)}
+input:focus,select:focus{outline:none;border-color:var(--ink)}
 .err{color:#B3261E;font-size:14px;margin-top:10px;display:none}
 
 @media(max-width:900px){
@@ -273,6 +279,13 @@ Hola, quiero recibir mi <strong>asesoría personalizada</strong> 💜</div>
         </div>
       </article>
     </div>
+    <div class="styles">
+      <b>Elige tu estilo:</b>
+      <a class="sw" href="bienestar/" target="_blank" rel="noopener"><i style="background:linear-gradient(135deg,#00d4aa,#3b82f6)"></i>Clásico</a>
+      <a class="sw" href="bienestar/?t=aurora" target="_blank" rel="noopener"><i style="background:linear-gradient(135deg,#7C5CFF,#22D3EE)"></i>Aurora</a>
+      <a class="sw" href="bienestar/?t=sol" target="_blank" rel="noopener"><i style="background:linear-gradient(135deg,#14110F 50%,#FFD23F 50%)"></i>Sol</a>
+      <a class="sw" href="bienestar/?t=esmeralda" target="_blank" rel="noopener"><i style="background:linear-gradient(135deg,#0F5B46,#D9B45A)"></i>Esmeralda</a>
+    </div>
   </div>
 </section>
 
@@ -295,6 +308,7 @@ Hola, quiero recibir mi <strong>asesoría personalizada</strong> 💜</div>
       <details><summary>¿Cuánto se demora la entrega?</summary><p>Menos de 24 horas después de confirmar tu pago y recibir tus datos.</p></details>
       <details><summary>¿Dónde quedan los datos de mis prospectos?</summary><p>Las respuestas de cada prospecto te llegan directo a tu WhatsApp. El CRM guarda tus contactos en tu propio celular; nadie más los ve.</p></details>
       <details><summary>¿La evaluación de bienestar es un diagnóstico médico?</summary><p>No. Es una evaluación orientativa para abrir la conversación, y así se le indica al prospecto. No reemplaza la consulta con un profesional de la salud.</p></details>
+      <details><summary>¿Puedo cambiar los colores?</summary><p>Sí. Hay 4 estilos para elegir: Clásico, Aurora, Sol y Esmeralda. Pruébalos en las demos y me dices cuál quieres; también se puede cambiar después.</p></details>
       <details><summary>¿Puedo poner mi propio video?</summary><p>Sí. Si tienes un video de presentación en YouTube, lo ponemos en tu página de oportunidad.</p></details>
     </div>
   </div>
@@ -344,6 +358,10 @@ Hola, quiero recibir mi <strong>asesoría personalizada</strong> 💜</div>
         <input id="fComp" placeholder="Ej. la empresa con la que trabajas">
         <label for="fVideo">Video de YouTube <small>(opcional)</small></label>
         <input id="fVideo" inputmode="url" placeholder="Enlace de tu video de presentación">
+        <label for="fTema">Estilo visual</label>
+        <select id="fTema">
+          <option>Clásico</option><option>Aurora</option><option>Sol</option><option>Esmeralda</option>
+        </select>
         <div class="err" id="fErr"></div>
         <button class="btn btn-wa" type="submit" style="width:100%;margin-top:18px">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.2.1.8-.1 1.5Z"/></svg>
@@ -372,6 +390,7 @@ const CONFIG = {
         'Página de Oportunidad con tu nombre y tu WhatsApp',
         'El nombre de tu compañía en ambas páginas',
         'Tu video de YouTube integrado',
+        'Elige entre 4 estilos visuales',
         'Entrega en menos de 24 horas'
       ]
     },
@@ -474,6 +493,7 @@ document.getElementById('dataForm').addEventListener('submit', e => {
     '*WhatsApp:* ' + wa,
     '*Compañía:* ' + comp,
     '*Video:* ' + (video || 'No tengo'),
+    '*Estilo:* ' + document.getElementById('fTema').value,
     '',
     'Adjunto el comprobante de pago.'
   ].join('\n');

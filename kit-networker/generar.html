@@ -48,6 +48,13 @@ textarea{min-height:230px;font-size:14px;resize:vertical}
     </div>
     <label for="video">Video de YouTube <small>(opcional: enlace o ID)</small></label>
     <input id="video" placeholder="https://youtu.be/...">
+    <label for="tema">Estilo visual</label>
+    <select id="tema">
+      <option value="">Clásico (el de siempre)</option>
+      <option value="aurora">Aurora · oscuro con violeta y cian</option>
+      <option value="sol">Sol · negro y amarillo</option>
+      <option value="esmeralda">Esmeralda · verde y dorado</option>
+    </select>
     <label for="plan">Plan</label>
     <select id="plan">
       <option value="arranque">Arranque</option>
@@ -80,13 +87,14 @@ function ytId(s){
 function build(path, d){
   const p=new URLSearchParams({n:d.nombre,w:d.wa,c:d.comp});
   if(d.video) p.set('v',d.video);
+  if(d.tema) p.set('t',d.tema);
   return BASE + path + '?' + p.toString();
 }
 function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1800)}
 function copy(t){navigator.clipboard.writeText(t).then(()=>toast('Copiado')).catch(()=>toast('No se pudo copiar'))}
 
 $('go').addEventListener('click', () => {
-  const d={nombre:$('nombre').value.trim(), wa:$('wa').value.replace(/\D/g,''), comp:$('comp').value.trim(), video:ytId($('video').value)};
+  const d={nombre:$('nombre').value.trim(), wa:$('wa').value.replace(/\D/g,''), comp:$('comp').value.trim(), video:ytId($('video').value), tema:$('tema').value};
   if(d.nombre.length<3 || d.wa.length<10 || d.comp.length<2){ toast('Faltan nombre, WhatsApp o compañía'); return; }
   if($('video').value.trim() && !d.video) toast('No reconocí el video; lo dejo sin video');
   const plan=$('plan').value;

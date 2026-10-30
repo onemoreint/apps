@@ -1,5 +1,5 @@
 /* Kit Digital del Networker · temas visuales
-   Se elige con ?t=aurora | sol | esmeralda en el enlace. Sin ?t= la página se ve como siempre.
+   Se elige con ?t=aurora | sol | esmeralda | clasico en el enlace. Sin ?t= se usa Aurora.
    Solo cambia la apariencia: no toca preguntas, cálculos, datos ni los parámetros n, w, c, v.
    Cada página declara window.KIT_PAGE = 'oportunidad' | 'bienestar' antes de cargar este archivo. */
 (function () {
@@ -89,7 +89,8 @@
     }
   };
 
-  var t = new URLSearchParams(location.search).get('t');
+  // Aurora es el estilo por defecto. ?t=clasico deja el diseño original.
+  var t = new URLSearchParams(location.search).get('t') || 'aurora';
   var tema = TEMAS[t];
   var pagina = window.KIT_PAGE;
   if (!tema || !tema[pagina]) return;

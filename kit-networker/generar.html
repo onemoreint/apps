@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Entregar un kit · Kit Digital del Networker</title>
+<style>
+:root{--ink:#14110F;--ink2:#3B3530;--muted:#6E655C;--paper:#FBF7EF;--line:#E8E0D2;--sun:#FFD23F;--wa:#1FA855}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:400 16px/1.55 system-ui,-apple-system,'Segoe UI',sans-serif;padding:28px 16px 60px}
+.wrap{max-width:620px;margin:0 auto}
+h1{font-size:28px;line-height:1.1;margin-bottom:6px}
+.lead{color:var(--ink2);margin-bottom:22px}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:16px}
+label{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
+label small{font-weight:400;color:var(--muted)}
+input,select,textarea{width:100%;font:inherit;padding:12px 13px;border:1.5px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink)}
+textarea{min-height:230px;font-size:14px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.row{grid-template-columns:1fr}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;cursor:pointer;font:700 15px/1 system-ui,sans-serif;padding:14px 18px;border-radius:999px;text-decoration:none}
+.sun{background:var(--sun);color:var(--ink)}
+.wa{background:var(--wa);color:#fff}
+.ghost{background:transparent;border:1.5px solid var(--ink);color:var(--ink)}
+.links{display:grid;gap:10px}
+.link{display:flex;gap:8px;align-items:center}
+.link b{font-size:13px;min-width:92px}
+.link input{font-size:13px;padding:9px 10px}
+.link button{flex:none;padding:9px 12px;font-size:13px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.hide{display:none}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-size:14px;opacity:0;transition:opacity .2s}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Entregar un kit</h1>
+  <p class="lead">Escribe los datos del comprador (los que te llegaron por WhatsApp) y te armo sus enlaces y el mensaje de entrega.</p>
+
+  <div class="card">
+    <label for="nombre">Nombre del comprador</label>
+    <input id="nombre" placeholder="María Pérez">
+    <div class="row">
+      <div><label for="wa">WhatsApp <small>(con indicativo)</small></label><input id="wa" inputmode="tel" placeholder="573001234567"></div>
+      <div><label for="comp">Compañía</label><input id="comp" placeholder="Nombre de su compañía"></div>
+    </div>
+    <label for="video">Video de YouTube <small>(opcional: enlace o ID)</small></label>
+    <input id="video" placeholder="https://youtu.be/...">
+    <label for="plan">Plan</label>
+    <select id="plan">
+      <option value="arranque">Arranque</option>
+      <option value="profesional">Profesional (incluye CRM)</option>
+      <option value="lider">Líder de equipo</option>
+    </select>
+    <div class="actions"><button class="btn sun" id="go">Generar enlaces</button></div>
+  </div>
+
+  <div class="card hide" id="out">
+    <div class="links" id="links"></div>
+    <label for="msg">Mensaje de entrega</label>
+    <textarea id="msg"></textarea>
+    <div class="actions">
+      <a class="btn wa" id="send" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+      <button class="btn ghost" id="copyMsg">Copiar mensaje</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const BASE = new URL('./', location.href).href;
+const $ = id => document.getElementById(id);
+function ytId(s){
+  s=(s||'').trim(); if(!s) return '';
+  if(/^[\w-]{11}$/.test(s)) return s;
+  const m=s.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/); return m?m[1]:'';
+}
+function build(path, d){
+  const p=new URLSearchParams({n:d.nombre,w:d.wa,c:d.comp});
+  if(d.video) p.set('v',d.video);
+  return BASE + path + '?' + p.toString();
+}
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1800)}
+function copy(t){navigator.clipboard.writeText(t).then(()=>toast('Copiado')).catch(()=>toast('No se pudo copiar'))}
+
+$('go').addEventListener('click', () => {
+  const d={nombre:$('nombre').value.trim(), wa:$('wa').value.replace(/\D/g,''), comp:$('comp').value.trim(), video:ytId($('video').value)};
+  if(d.nombre.length<3 || d.wa.length<10 || d.comp.length<2){ toast('Faltan nombre, WhatsApp o compañía'); return; }
+  if($('video').value.trim() && !d.video) toast('No reconocí el video; lo dejo sin video');
+  const plan=$('plan').value;
+  const L=[['Bienestar',build('bienestar/',d)],['Oportunidad',build('oportunidad/',d)]];
+  if(plan!=='arranque') L.push(['CRM',build('crm/',d)]);
+
+  const box=$('links'); box.innerHTML='';
+  L.forEach(([t,u])=>{
+    const r=document.createElement('div'); r.className='link';
+    r.innerHTML='<b></b><input readonly><button class="btn ghost">Copiar</button>';
+    r.querySelector('b').textContent=t; r.querySelector('input').value=u;
+    r.querySelector('button').onclick=()=>copy(u);
+    box.appendChild(r);
+  });
+
+  const first=d.nombre.split(' ')[0];
+  const lines=[
+    `¡Hola ${first}! 🎉 Tu *Kit Digital del Networker* ya está listo.`,
+    '',
+    `📊 *Tu Evaluación de Bienestar:*\n${L[0][1]}`,
+    '',
+    `🚀 *Tu Página de Oportunidad:*\n${L[1][1]}`
+  ];
+  if(L[2]) lines.push('', `📇 *Tu CRM del Networker:*\n${L[2][1]}\nÁbrelo en tu celular y toca "Agregar a pantalla de inicio" para instalarlo.`);
+  lines.push('',
+    '✅ *Cómo usarlos:* comparte los enlaces en tus estados, redes y chats. Cuando un prospecto termine, sus respuestas te llegan a tu WhatsApp.',
+    '',
+    'Pruébalos tú primero haciendo la evaluación. Cualquier ajuste, me escribes. ¡Éxitos! 💪');
+  if(plan==='profesional') lines.push('', '📅 ¿Qué día te queda bien para la configuración guiada de 20 minutos?');
+  if(plan==='lider') lines.push('', '👥 Envíame nombre, WhatsApp y compañía de las 10 personas de tu equipo y te entrego sus kits. ¿Qué día hacemos la capacitación?');
+  const msg=lines.join('\n');
+  $('msg').value=msg;
+  $('send').href='https://wa.me/'+d.wa+'?text='+encodeURIComponent(msg);
+  $('out').classList.remove('hide');
+  $('out').scrollIntoView({behavior:'smooth'});
+});
+$('copyMsg').addEventListener('click',()=>copy($('msg').value));
+</script>
+</body>
+</html>

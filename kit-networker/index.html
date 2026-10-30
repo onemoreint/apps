@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kit Digital del Networker · José Lugo</title>
+<meta name="description" content="Tu página de evaluación de bienestar, tu página de oportunidad y tu CRM, con tu nombre y tu WhatsApp. Para networkers de cualquier compañía.">
+<meta property="og:title" content="Kit Digital del Networker">
+<meta property="og:description" content="Tus prospectos hacen una evaluación de 2 minutos y te llegan por WhatsApp con todo su perfil. Para cualquier compañía de redes.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="og.png">
+<meta name="theme-color" content="#14110F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14110F; --ink2:#3B3530; --muted:#6E655C;
+  --paper:#FBF7EF; --card:#FFFFFF; --line:#E8E0D2;
+  --sun:#FFD23F; --sun2:#FFE58A; --wa:#1FA855; --wa2:#17894A;
+  --r:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font:400 17px/1.6 'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;line-height:1.05;letter-spacing:-.02em}
+a{color:inherit}
+.wrap{width:min(1120px,100% - 32px);margin-inline:auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;cursor:pointer;font:700 16px/1 'DM Sans',sans-serif;padding:17px 26px;border-radius:999px;text-decoration:none;transition:transform .15s,box-shadow .15s,background .15s}
+.btn:active{transform:scale(.98)}
+.btn-sun{background:var(--sun);color:var(--ink);box-shadow:0 6px 0 #D9A90F}
+.btn-sun:hover{transform:translateY(-2px);box-shadow:0 8px 0 #D9A90F}
+.btn-line{background:transparent;color:inherit;border:2px solid currentColor}
+.btn-wa{background:var(--wa);color:#fff;box-shadow:0 6px 0 var(--wa2)}
+.btn-ink{background:var(--ink);color:#fff}
+.btn svg{width:20px;height:20px;flex:none}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:20;background:rgba(20,17,15,.92);backdrop-filter:blur(10px);color:#fff}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font:800 17px/1 'Bricolage Grotesque',sans-serif;letter-spacing:-.01em;display:flex;gap:8px;align-items:center}
+.logo i{width:12px;height:12px;border-radius:50%;background:var(--sun);display:inline-block}
+.nav .btn{padding:11px 18px;font-size:14px;box-shadow:none}
+
+/* hero */
+.hero{background:var(--ink);color:#fff;overflow:hidden;position:relative}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;padding:72px 0 88px}
+.kicker{display:inline-block;background:rgba(255,210,63,.14);color:var(--sun);font-weight:700;font-size:14px;padding:7px 14px;border-radius:999px;margin-bottom:22px}
+.hero h1{font-size:clamp(40px,6.4vw,76px);font-weight:800}
+.hero h1 mark{background:none;color:var(--sun)}
+.hero p.lead{font-size:clamp(17px,2vw,20px);color:#D8D0C4;margin:22px 0 32px;max-width:34ch}
+.hero .ctas{display:flex;gap:14px;flex-wrap:wrap}
+.hero .ctas .btn-line{color:#fff}
+.hero small{display:block;margin-top:18px;color:#A69D90;font-size:14px}
+
+/* phone mock */
+.phone{justify-self:center;width:290px;border-radius:38px;background:#2A2521;padding:12px;box-shadow:0 40px 80px rgba(0,0,0,.45);transform:rotate(3deg)}
+.screen{border-radius:28px;background:#0F1420;overflow:hidden;height:540px;display:flex;flex-direction:column}
+.chat-top{background:#1F2C33;color:#E9EDEF;padding:14px 16px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700}
+.chat-top b{width:32px;height:32px;border-radius:50%;background:var(--sun);display:grid;place-items:center;color:var(--ink);font-size:13px}
+.chat{flex:1;background:#0B141A;padding:16px 12px;display:flex;flex-direction:column;gap:8px;font-size:12.5px;line-height:1.45}
+.bub{background:#005C4B;color:#E9EDEF;padding:10px 12px;border-radius:12px 12px 4px 12px;align-self:flex-end;max-width:92%;white-space:pre-line}
+.bub.in{background:#202C33;align-self:flex-start;border-radius:12px 12px 12px 4px}
+.bub strong{color:#fff}
+.bub em{font-style:normal;color:#53BDEB}
+
+/* sections */
+section{padding:88px 0}
+.eyebrow{font-weight:700;color:var(--muted);font-size:14px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+h2{font-size:clamp(32px,4.6vw,54px);font-weight:800;max-width:20ch}
+.sub{color:var(--ink2);font-size:19px;max-width:56ch;margin-top:16px}
+
+.pain{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px}
+.pain div{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:26px}
+.pain b{font:700 22px/1.15 'Bricolage Grotesque',sans-serif;display:block;margin-bottom:8px}
+.pain p{color:var(--ink2);font-size:16px}
+
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:48px;border-top:2px solid var(--ink)}
+.steps div{padding:28px 26px 0 0}
+.steps .n{font:800 56px/1 'Bricolage Grotesque',sans-serif;color:var(--sun);-webkit-text-stroke:2px var(--ink);margin-bottom:14px}
+.steps b{font:700 22px/1.2 'Bricolage Grotesque',sans-serif;display:block;margin-bottom:8px}
+.steps p{color:var(--ink2);font-size:16px}
+
+/* tools */
+.tools{background:#F3ECDF}
+.tool-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px}
+.tool{background:var(--card);border-radius:var(--r);overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column}
+.tool .shot{aspect-ratio:4/3;display:grid;place-items:center;font:800 26px/1.05 'Bricolage Grotesque',sans-serif;text-align:center;padding:20px;color:#fff}
+.tool:nth-child(1) .shot{background:linear-gradient(140deg,#0A0D14,#0f3b3a);color:#3DE3BF}
+.tool:nth-child(2) .shot{background:linear-gradient(140deg,#E8F1FF,#D5F5EC);color:#14325C}
+.tool:nth-child(3) .shot{background:linear-gradient(140deg,#0E2A4F,#163E70);color:#E9C96A}
+.tool .body{padding:24px;display:flex;flex-direction:column;gap:10px;flex:1}
+.tool h3{font-size:24px}
+.tool p{color:var(--ink2);font-size:16px;flex:1}
+.tool a{font-weight:700;text-decoration:none;display:inline-flex;gap:6px;align-items:center;margin-top:6px}
+.tool a:hover{text-decoration:underline}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--sun2);align-self:flex-start}
+
+/* plans */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px;align-items:stretch}
+.plan{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:30px 26px;display:flex;flex-direction:column;position:relative}
+.plan.hot{background:var(--ink);color:#fff;border-color:var(--ink);transform:translateY(-10px);box-shadow:0 30px 60px rgba(20,17,15,.25)}
+.plan .badge{position:absolute;top:-14px;left:26px;background:var(--sun);color:var(--ink);font-weight:700;font-size:13px;padding:6px 14px;border-radius:999px}
+.plan h3{font-size:26px}
+.plan .for{color:var(--muted);font-size:15px;margin-top:6px;min-height:48px}
+.plan.hot .for{color:#B9B0A3}
+.price{font:800 44px/1 'Bricolage Grotesque',sans-serif;margin:22px 0 4px;letter-spacing:-.03em}
+.price small{font:500 15px 'DM Sans',sans-serif;color:var(--muted);letter-spacing:0}
+.plan.hot .price small{color:#B9B0A3}
+.once{font-size:14px;color:var(--muted);margin-bottom:22px}
+.plan.hot .once{color:#B9B0A3}
+.plan ul{list-style:none;display:grid;gap:11px;margin-bottom:28px;flex:1}
+.plan li{display:flex;gap:10px;font-size:16px;line-height:1.4}
+.plan li::before{content:"";flex:none;width:20px;height:20px;margin-top:1px;border-radius:50%;background:var(--sun) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.5l3 3 6-7' fill='none' stroke='%2314110F' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
+.plan .btn{width:100%}
+.plan:not(.hot) .btn-sun{box-shadow:0 6px 0 #D9A90F}
+.save{font-size:13px;font-weight:700;color:var(--wa2);margin:-14px 0 20px}
+.plan.hot .save{color:#6BDB9B}
+
+/* faq */
+.faq{max-width:780px;margin-top:40px}
+details{border-bottom:1px solid var(--line);padding:20px 0}
+summary{cursor:pointer;font:700 20px/1.3 'Bricolage Grotesque',sans-serif;list-style:none;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:28px;line-height:.8;flex:none;transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--ink2);margin-top:10px;font-size:16px}
+
+/* final */
+.final{background:var(--sun);text-align:center}
+.final h2{margin-inline:auto}
+.final .sub{margin-inline:auto}
+.final .ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px}
+.final .btn-sun{background:var(--ink);color:#fff;box-shadow:0 6px 0 #000}
+
+footer{background:var(--ink);color:#A69D90;padding:40px 0;font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer a{color:#fff}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(20,17,15,.6);display:none;align-items:flex-end;justify-content:center}
+.modal.open{display:flex}
+.sheet{background:var(--paper);width:min(560px,100%);max-height:94vh;overflow:auto;border-radius:24px 24px 0 0;padding:28px 24px 30px;animation:up .25s ease}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+@media(min-width:700px){.modal{align-items:center}.sheet{border-radius:24px}}
+.sheet-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px}
+.sheet h3{font-size:26px}
+.x{background:none;border:0;font-size:28px;line-height:1;cursor:pointer;color:var(--muted);padding:2px 6px}
+.sheet .resume{color:var(--ink2);margin-bottom:22px}
+.stepbox{border:1px solid var(--line);background:#fff;border-radius:18px;padding:20px;margin-bottom:14px}
+.stepbox h4{font:700 18px/1.2 'Bricolage Grotesque',sans-serif;display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.stepbox h4 span{width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:14px;flex:none}
+.stepbox p{font-size:15px;color:var(--ink2);margin-bottom:14px}
+.stepbox .btn{width:100%}
+label{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
+label small{font-weight:400;color:var(--muted)}
+input{width:100%;font:500 16px 'DM Sans',sans-serif;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink)}
+input:focus{outline:none;border-color:var(--ink)}
+.err{color:#B3261E;font-size:14px;margin-top:10px;display:none}
+
+@media(max-width:900px){
+  .hero .wrap{grid-template-columns:1fr;padding:48px 0 64px;gap:40px}
+  .phone{transform:none;width:270px}
+  .screen{height:480px}
+  .pain,.steps,.tool-grid,.plans{grid-template-columns:1fr}
+  .steps{border-top:0}
+  .steps div{border-top:2px solid var(--ink);padding:24px 0 8px}
+  .plan.hot{transform:none;order:-1}
+  section{padding:64px 0}
+}
+@media(max-width:420px){.nav .btn span{display:none}.hero .ctas .btn{width:100%}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <div class="logo"><i></i>Kit Digital del Networker</div>
+    <a class="btn btn-sun" href="#planes"><span>Ver</span> planes</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Para networkers de cualquier compañía</span>
+      <h1>Tus prospectos llegan a tu WhatsApp <mark>ya evaluados.</mark></h1>
+      <p class="lead">Una página de evaluación de bienestar y otra de oportunidad con tu nombre y tu número. El prospecto responde en 2 minutos y te llega todo su perfil para que sepas exactamente qué decirle.</p>
+      <div class="ctas">
+        <a class="btn btn-sun" href="#planes">Quiero mi kit</a>
+        <a class="btn btn-line" href="bienestar/" target="_blank" rel="noopener">Probar la demo</a>
+      </div>
+      <small>Pago único · Sin mensualidades · Listo en 24 horas</small>
+    </div>
+
+    <div class="phone" aria-hidden="true">
+      <div class="screen">
+        <div class="chat-top"><b>MP</b>María Pérez · prospecto</div>
+        <div class="chat">
+          <div class="bub"><strong>━ EVALUACIÓN DE BIENESTAR ━</strong>
+
+👤 María Pérez, 38 años
+📏 IMC: <strong>27,4</strong> · Sobrepeso
+🏃 Oficina, sin ejercicio
+💧 Agua: 1 L/día · 😴 Sueño: 5 h
+
+🎯 Quiere: más energía
+y un ingreso extra
+
+Hola, quiero recibir mi <strong>asesoría personalizada</strong> 💜</div>
+          <div class="bub in">¡Hola María! Ya vi tu evaluación. Me llamó la atención lo del sueño y la energía 👀 ¿Te puedo hacer 2 preguntas rápidas?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">El problema</p>
+    <h2>Mandar audios largos y PDFs ya no cierra ventas.</h2>
+    <div class="pain">
+      <div><b>El prospecto se enfría</b><p>Le envías información y te deja en visto. No sabes qué le interesó ni por dónde seguir.</p></div>
+      <div><b>Cada conversación empieza de cero</b><p>No sabes si busca salud, producto o ingreso extra, así que hablas de todo y no conectas con nada.</p></div>
+      <div><b>Se te olvida hacer seguimiento</b><p>Los contactos quedan regados entre chats, notas y la memoria. Los que iban a comprar se pierden.</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <p class="eyebrow">Cómo funciona</p>
+    <h2>Compartes un enlace. El prospecto hace el resto.</h2>
+    <div class="steps">
+      <div><div class="n">1</div><b>Compartes tu enlace</b><p>En tus estados, en Instagram, en TikTok o por chat. La página lleva tu nombre y tu compañía.</p></div>
+      <div><div class="n">2</div><b>El prospecto se evalúa</b><p>En 2 minutos responde sobre su salud, sus hábitos y lo que busca. Recibe un resultado claro y bonito.</p></div>
+      <div><div class="n">3</div><b>Te llega por WhatsApp</b><p>Con un toque te envía todo su perfil. Tú abres la conversación sabiendo exactamente qué le duele y qué quiere.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="tools" id="herramientas">
+  <div class="wrap">
+    <p class="eyebrow">Lo que recibes</p>
+    <h2>Tres herramientas que trabajan por ti 24/7.</h2>
+    <p class="sub">Todas funcionan desde el celular, sin descargar nada. Pruébalas ahora mismo: las demos son las mismas que vas a recibir, pero con tus datos.</p>
+    <div class="tool-grid">
+      <article class="tool">
+        <div class="shot">Descubre cómo está tu cuerpo</div>
+        <div class="body">
+          <span class="tag">Atrae prospectos de producto</span>
+          <h3>Evaluación de Bienestar</h3>
+          <p>Calcula el IMC y evalúa hábitos: agua, sueño, ejercicio, sedentarismo. El prospecto recibe recomendaciones y tú recibes su perfil completo.</p>
+          <a href="bienestar/" target="_blank" rel="noopener">Probar la demo →</a>
+        </div>
+      </article>
+      <article class="tool">
+        <div class="shot">Descubre tu forma de empezar</div>
+        <div class="body">
+          <span class="tag">Atrae prospectos de negocio</span>
+          <h3>Página de Oportunidad</h3>
+          <p>Un recorrido paso a paso que detecta si la persona busca bienestar, producto o ingreso extra, y le muestra su ruta ideal. Incluye tu video de presentación.</p>
+          <a href="oportunidad/" target="_blank" rel="noopener">Probar la demo →</a>
+        </div>
+      </article>
+      <article class="tool">
+        <div class="shot">Networker CRM</div>
+        <div class="body">
+          <span class="tag">Solo en Profesional y Líder</span>
+          <h3>CRM del Networker</h3>
+          <p>Tus contactos por etapas, recordatorios de seguimiento, historial de cada conversación y mensajes de WhatsApp listos para enviar. Se instala en tu celular.</p>
+          <a href="crm/" target="_blank" rel="noopener">Probar la demo →</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="planes">
+  <div class="wrap">
+    <p class="eyebrow">Planes</p>
+    <h2>Un solo pago. Tuyo para siempre.</h2>
+    <div class="plans" id="plans"></div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <p class="eyebrow">Preguntas frecuentes</p>
+    <h2>Lo que más me preguntan.</h2>
+    <div class="faq">
+      <details><summary>¿Sirve para mi compañía?</summary><p>Sí. El kit no está atado a ninguna marca: lleva el nombre de tu compañía, tu nombre y tu WhatsApp. Funciona para cualquier empresa de redes, de bienestar o de otros productos.</p></details>
+      <details><summary>¿Tengo que saber de tecnología?</summary><p>No. Tú me envías tus datos y yo te entrego tus enlaces listos. Solo tienes que copiarlos y compartirlos.</p></details>
+      <details><summary>¿Hay que pagar mensualidad?</summary><p>No. Es un pago único y las páginas quedan funcionando.</p></details>
+      <details><summary>¿Cuánto se demora la entrega?</summary><p>Menos de 24 horas después de confirmar tu pago y recibir tus datos.</p></details>
+      <details><summary>¿Dónde quedan los datos de mis prospectos?</summary><p>Las respuestas de cada prospecto te llegan directo a tu WhatsApp. El CRM guarda tus contactos en tu propio celular; nadie más los ve.</p></details>
+      <details><summary>¿La evaluación de bienestar es un diagnóstico médico?</summary><p>No. Es una evaluación orientativa para abrir la conversación, y así se le indica al prospecto. No reemplaza la consulta con un profesional de la salud.</p></details>
+      <details><summary>¿Puedo poner mi propio video?</summary><p>Sí. Si tienes un video de presentación en YouTube, lo ponemos en tu página de oportunidad.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2>Deja de perseguir prospectos. Haz que lleguen listos.</h2>
+    <p class="sub">Elige tu plan, paga en línea y recibe tus enlaces en menos de 24 horas.</p>
+    <div class="ctas">
+      <a class="btn btn-sun" href="#planes">Elegir mi plan</a>
+      <a class="btn btn-line" id="askBtn" href="#" target="_blank" rel="noopener">Tengo una pregunta</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="yr"></span> José Lugo · Kit Digital del Networker</span>
+    <span>Pagos seguros con Bold · <a id="footWa" href="#" target="_blank" rel="noopener">Escríbeme por WhatsApp</a></span>
+  </div>
+</footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="sheet">
+    <div class="sheet-head">
+      <h3 id="mTitle">Plan</h3>
+      <button class="x" aria-label="Cerrar" onclick="closeModal()">×</button>
+    </div>
+    <p class="resume" id="mResume"></p>
+
+    <div class="stepbox">
+      <h4><span>1</span>Paga en línea</h4>
+      <p>Se abre la página de pago seguro de Bold en una pestaña nueva. Cuando termines, vuelve aquí para el paso 2.</p>
+      <a class="btn btn-sun" id="payBtn" href="#" target="_blank" rel="noopener">Pagar con Bold</a>
+    </div>
+
+    <div class="stepbox">
+      <h4><span>2</span>Envíame tus datos</h4>
+      <p>Con estos datos armo tu kit. Se envían a mi WhatsApp.</p>
+      <form id="dataForm" novalidate>
+        <label for="fNombre">Tu nombre completo</label>
+        <input id="fNombre" autocomplete="name" placeholder="Ej. María Pérez">
+        <label for="fWa">Tu WhatsApp <small>(con indicativo, ej. 57 300 123 4567)</small></label>
+        <input id="fWa" inputmode="tel" autocomplete="tel" placeholder="57 300 123 4567">
+        <label for="fComp">Tu compañía</label>
+        <input id="fComp" placeholder="Ej. la empresa con la que trabajas">
+        <label for="fVideo">Video de YouTube <small>(opcional)</small></label>
+        <input id="fVideo" inputmode="url" placeholder="Enlace de tu video de presentación">
+        <div class="err" id="fErr"></div>
+        <button class="btn btn-wa" type="submit" style="width:100%;margin-top:18px">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.2.1.8-.1 1.5Z"/></svg>
+          Enviar mis datos por WhatsApp
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============ CONFIGURACIÓN ============
+   Cambia aquí precios, links de pago y tu WhatsApp. */
+const CONFIG = {
+  whatsapp: '573126387467',
+  moneda: 'COP',
+  planes: [
+    {
+      id: 'arranque',
+      nombre: 'Arranque',
+      para: 'Para empezar a recibir prospectos evaluados esta misma semana.',
+      precio: 59900,
+      bold: 'https://checkout.bold.co/payment/LNK_9W7Q58TJLO',
+      incluye: [
+        'Evaluación de Bienestar con tu nombre y tu WhatsApp',
+        'Página de Oportunidad con tu nombre y tu WhatsApp',
+        'El nombre de tu compañía en ambas páginas',
+        'Tu video de YouTube integrado',
+        'Entrega en menos de 24 horas'
+      ]
+    },
+    {
+      id: 'profesional',
+      nombre: 'Profesional',
+      destacado: true,
+      para: 'Para el networker que quiere atraer, hacer seguimiento y cerrar.',
+      precio: 99900,
+      bold: 'https://checkout.bold.co/payment/LNK_9W7Q58TJLO',
+      incluye: [
+        'Todo lo del plan Arranque',
+        'CRM del Networker instalable en tu celular',
+        'Contactos por etapas y recordatorios de seguimiento',
+        'Mensajes de WhatsApp listos para invitar, hacer seguimiento y cerrar',
+        'Configuración guiada de 20 minutos por videollamada'
+      ]
+    },
+    {
+      id: 'lider',
+      nombre: 'Líder de equipo',
+      para: 'Para el líder que quiere duplicar: tú y 10 personas de tu equipo.',
+      precio: 399900,
+      ahorro: 'Ahorras $299.000 frente a comprar 1 Profesional + 10 Arranque por separado',
+      bold: 'https://checkout.bold.co/payment/LNK_9W7Q58TJLO',
+      incluye: [
+        'Kit Profesional para ti',
+        '10 kits Arranque para tu equipo, cada uno con su nombre y WhatsApp',
+        'Entrega de todos los enlaces en un solo mensaje',
+        'Capacitación de 45 minutos para tu equipo sobre cómo usarlos'
+      ]
+    }
+  ]
+};
+/* ======================================= */
+
+const fmt = n => '$' + n.toLocaleString('es-CO');
+const waLink = t => 'https://wa.me/' + CONFIG.whatsapp + (t ? '?text=' + encodeURIComponent(t) : '');
+let current = null;
+
+function renderPlans(){
+  const box = document.getElementById('plans');
+  box.innerHTML = '';
+  CONFIG.planes.forEach(p => {
+    const el = document.createElement('article');
+    el.className = 'plan' + (p.destacado ? ' hot' : '');
+    el.innerHTML =
+      (p.destacado ? '<span class="badge">El más elegido</span>' : '') +
+      '<h3></h3><p class="for"></p>' +
+      '<div class="price"></div>' +
+      '<p class="once">Pago único</p>' +
+      '<ul></ul>' +
+      '<button class="btn btn-sun" type="button">Elegir ' + '</button>';
+    el.querySelector('h3').textContent = p.nombre;
+    el.querySelector('.for').textContent = p.para;
+    el.querySelector('.price').innerHTML = fmt(p.precio) + ' <small>' + CONFIG.moneda + '</small>';
+    if (p.ahorro){ const s=document.createElement('p'); s.className='save'; s.textContent=p.ahorro; el.querySelector('.once').after(s); }
+    const ul = el.querySelector('ul');
+    p.incluye.forEach(i => { const li=document.createElement('li'); li.textContent=i; ul.appendChild(li); });
+    const b = el.querySelector('button');
+    b.textContent = 'Quiero el plan ' + p.nombre;
+    b.addEventListener('click', () => openModal(p));
+    box.appendChild(el);
+  });
+}
+
+function openModal(p){
+  current = p;
+  document.getElementById('mTitle').textContent = 'Plan ' + p.nombre;
+  document.getElementById('mResume').textContent = fmt(p.precio) + ' ' + CONFIG.moneda + ' · pago único';
+  document.getElementById('payBtn').href = p.bold;
+  document.getElementById('fErr').style.display = 'none';
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+document.getElementById('dataForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const nombre = document.getElementById('fNombre').value.trim();
+  const wa = document.getElementById('fWa').value.replace(/\D/g,'');
+  const comp = document.getElementById('fComp').value.trim();
+  const video = document.getElementById('fVideo').value.trim();
+  const err = document.getElementById('fErr');
+  const fail = m => { err.textContent = m; err.style.display = 'block'; };
+  if (nombre.length < 3) return fail('Escribe tu nombre completo.');
+  if (wa.length < 10) return fail('Escribe tu WhatsApp con el indicativo del país, por ejemplo 57 300 123 4567.');
+  if (comp.length < 2) return fail('Escribe el nombre de tu compañía.');
+  err.style.display = 'none';
+  const msg = [
+    'Hola José, ya pagué el *Kit Digital del Networker*.',
+    '',
+    '*Plan:* ' + current.nombre + ' (' + fmt(current.precio) + ' ' + CONFIG.moneda + ')',
+    '*Nombre:* ' + nombre,
+    '*WhatsApp:* ' + wa,
+    '*Compañía:* ' + comp,
+    '*Video:* ' + (video || 'No tengo'),
+    '',
+    'Adjunto el comprobante de pago.'
+  ].join('\n');
+  window.open(waLink(msg), '_blank');
+});
+
+document.getElementById('askBtn').href = waLink('Hola José, tengo una pregunta sobre el Kit Digital del Networker.');
+document.getElementById('footWa').href = waLink('Hola José, quiero información del Kit Digital del Networker.');
+document.getElementById('yr').textContent = new Date().getFullYear();
+renderPlans();
+</script>
+</body>
+</html>

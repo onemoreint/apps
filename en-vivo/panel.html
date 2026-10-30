@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Panel de registrados · Clase en vivo</title>
+<script src="config.js"></script>
+<style>
+:root{--bg:#0b0a14;--card:#15122a;--card2:#1c1838;--text:#EEEBFF;--muted:#A49FC4;--line:rgba(255,255,255,.10);--violet:#7C5CFF;--cyan:#22D3EE;--wa:#25D366}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--text);font:400 15px/1.5 Inter,system-ui,sans-serif;padding:20px 14px 60px}
+.wrap{max-width:1100px;margin:0 auto}
+h1{font:800 24px/1.1 Sora,system-ui,sans-serif;margin-bottom:4px}
+.muted{color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+input,select,textarea{font:inherit;color:var(--text);background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+textarea{width:100%;min-height:90px;resize:vertical}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;cursor:pointer;font:700 14px/1 Sora,system-ui,sans-serif;padding:11px 16px;border-radius:999px;color:#0b0820;background:linear-gradient(120deg,var(--cyan),var(--violet));text-decoration:none;white-space:nowrap}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+.btn.wa{background:var(--wa);color:#05310f;padding:8px 12px;font-size:13px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+#login{max-width:420px;margin:12vh auto 0}
+#login input{width:100%;margin:14px 0}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.kpi b{display:block;font:800 26px/1 Sora,system-ui,sans-serif}
+.kpi span{font-size:13px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top;font-size:14px}
+th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.bar{height:8px;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--violet))}
+.leads td:first-child b{display:block}
+.leads small{color:var(--muted)}
+.pill{display:inline-block;padding:3px 9px;border-radius:99px;font-size:12px;background:var(--card2);border:1px solid var(--line)}
+.err{color:#FECACA;margin-top:8px;font-size:14px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#fff;color:#111;padding:10px 16px;border-radius:99px;font-weight:600;opacity:0;transition:.2s;pointer-events:none}
+.toast.show{opacity:1}
+@media(max-width:760px){.kpis{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.hide-m{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="login" class="card">
+    <h1>Panel de registrados</h1>
+    <p class="muted">Escribe tu clave de acceso.</p>
+    <input id="clave" type="password" autocomplete="current-password" placeholder="Clave">
+    <button class="btn" id="entrar" style="width:100%">Entrar</button>
+    <div class="err" id="loginErr"></div>
+  </div>
+
+  <div id="app" hidden>
+    <div class="row" style="justify-content:space-between">
+      <div><h1>Clase en vivo</h1><p class="muted" id="sub"></p></div>
+      <div class="row">
+        <select id="fEvento"></select>
+        <button class="btn ghost" id="recargar">Actualizar</button>
+        <button class="btn ghost" id="csv">Descargar Excel (CSV)</button>
+        <button class="btn ghost" id="salir">Salir</button>
+      </div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><b id="kTotal">0</b><span>registrados</span></div>
+      <div class="kpi"><b id="kHoy">0</b><span>hoy</span></div>
+      <div class="kpi"><b id="kAnuncio">0</b><span>desde anuncios</span></div>
+      <div class="kpi"><b id="kCompra">0</b><span>compraron</span></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <b>Por campaña</b>
+        <table id="tCamp" style="margin-top:8px"></table>
+      </div>
+      <div class="card">
+        <b>Por anuncio</b>
+        <table id="tAnuncio" style="margin-top:8px"></table>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:12px">
+      <div class="row" style="justify-content:space-between;margin-bottom:8px">
+        <b>Mensaje de WhatsApp</b>
+        <select id="plantilla"></select>
+      </div>
+      <textarea id="texto"></textarea>
+      <p class="muted" style="font-size:13px;margin-top:6px">Usa {nombre} y se reemplaza por el nombre de cada persona. Tus cambios a los mensajes se guardan en este dispositivo.</p>
+    </div>
+
+    <div class="card">
+      <div class="row" style="justify-content:space-between;margin-bottom:8px">
+        <b>Registrados</b>
+        <div class="row">
+          <input id="buscar" placeholder="Buscar nombre o número">
+          <select id="fEstado"><option value="">Todos los estados</option></select>
+        </div>
+      </div>
+      <div style="overflow:auto"><table class="leads" id="tLeads"></table></div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var E = window.EVENTO, datos = [], clave = '';
+  var ESTADOS = ['registrado','contactado','asistió','no asistió','compró','no interesado'];
+  var PLANTILLAS = {
+    bienvenida: 'Hola {nombre} 👋 Soy José Lugo. ¡Gracias por registrarte a la clase en vivo "Cómo conseguir prospectos todos los días usando IA"! Por aquí te aviso la fecha y te envío el enlace. Guarda este número para que te lleguen los mensajes 🙌',
+    fecha: '{nombre}, ¡ya tenemos fecha! 🗓️ La clase en vivo es el [DÍA] a las [HORA] (hora Colombia). Dura 45 minutos y al final regalo una página de Evaluación de Bienestar personalizada a quienes se queden. ¿Me confirmas que vienes?',
+    dia_antes: '{nombre}, mañana es la clase en vivo 🔥 [HORA] (hora Colombia). Te voy a enseñar cómo hacer que los prospectos lleguen a tu WhatsApp ya evaluados. Llega puntual: el regalo es solo en vivo.',
+    hora_antes: '{nombre}, en 1 hora empezamos ⏰ Aquí está el enlace: [ENLACE]. Ten a mano tu celular y algo para tomar notas.',
+    en_vivo: '{nombre}, ¡ya estamos en vivo! 🔴 Entra aquí: [ENLACE]',
+    oferta: '{nombre}, gracias por estar en la clase 🙏 Como te conté, el precio especial del Kit Digital del Networker es solo hasta [FECHA LÍMITE]. Aquí puedes verlo y elegir tu plan: https://onemoreint.github.io/apps/kit-networker/ ¿Tienes alguna pregunta?',
+    no_asistio: '{nombre}, te extrañamos en la clase 😅 Te dejo la repetición por 48 horas: [ENLACE REPETICIÓN]. Mira especialmente el minuto [MINUTO], donde explico cómo llegan los prospectos ya evaluados.'
+  };
+  var NOMBRES = {bienvenida:'1 · Bienvenida (al registrarse)',fecha:'2 · Fecha confirmada',dia_antes:'3 · Recordatorio 24 h antes',hora_antes:'4 · Recordatorio 1 h antes',en_vivo:'5 · Estamos en vivo',oferta:'6 · Oferta después de la clase',no_asistio:'7 · No asistió (repetición)'};
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+  var toast = function(t){ var e=$('toast'); e.textContent=t; e.classList.add('show'); setTimeout(function(){e.classList.remove('show')},1800); };
+  var store = {
+    get:function(k){ try{return localStorage.getItem(k)}catch(e){return null} },
+    set:function(k,v){ try{localStorage.setItem(k,v)}catch(e){} },
+    sget:function(k){ try{return sessionStorage.getItem(k)}catch(e){return null} },
+    sset:function(k,v){ try{ v==null?sessionStorage.removeItem(k):sessionStorage.setItem(k,v)}catch(e){} }
+  };
+
+  // plantillas
+  Object.keys(PLANTILLAS).forEach(function(k){ var o=document.createElement('option'); o.value=k; o.textContent=NOMBRES[k]; $('plantilla').appendChild(o); });
+  var cargarPlantilla = function(){ var k=$('plantilla').value; $('texto').value = store.get('pl_'+k) || PLANTILLAS[k]; };
+  $('plantilla').onchange = cargarPlantilla;
+  $('texto').oninput = function(){ store.set('pl_'+$('plantilla').value, $('texto').value); };
+  cargarPlantilla();
+  ESTADOS.forEach(function(s){ var o=document.createElement('option'); o.value=s; o.textContent=s; $('fEstado').appendChild(o); });
+
+  function entrar(k){
+    $('loginErr').textContent = '';
+    return EV.rpc('funnel_listar', {p_clave:k, p_evento:null}).then(function(rows){
+      clave = k; store.sset('ev_clave', k); datos = rows || [];
+      $('login').hidden = true; $('app').hidden = false;
+      llenarEventos(); pintar();
+    }).catch(function(x){
+      store.sset('ev_clave', null);
+      $('loginErr').textContent = /clave/.test(x.message) ? 'Clave incorrecta.' : 'No se pudo conectar. Revisa tu internet.';
+    });
+  }
+  $('entrar').onclick = function(){ entrar($('clave').value.trim()); };
+  $('clave').onkeydown = function(e){ if(e.key==='Enter') entrar($('clave').value.trim()); };
+  $('salir').onclick = function(){ store.sset('ev_clave',null); location.reload(); };
+  $('recargar').onclick = function(){ entrar(clave).then(function(){ toast('Actualizado'); }); };
+  if (store.sget('ev_clave')) entrar(store.sget('ev_clave'));
+
+  function llenarEventos(){
+    var ev = {}; datos.forEach(function(r){ ev[r.evento]=1; }); ev[E.id]=1;
+    var sel=$('fEvento'), cur=sel.value||E.id; sel.innerHTML='';
+    var o=document.createElement('option'); o.value='*'; o.textContent='Todas las clases'; sel.appendChild(o);
+    Object.keys(ev).forEach(function(k){ var o=document.createElement('option'); o.value=k; o.textContent=k; sel.appendChild(o); });
+    sel.value=cur;
+  }
+  $('fEvento').onchange = pintar; $('fEstado').onchange = pintar; $('buscar').oninput = pintar;
+
+  function filtrados(){
+    var ev=$('fEvento').value, es=$('fEstado').value, b=$('buscar').value.trim().toLowerCase();
+    return datos.filter(function(r){
+      return (ev==='*'||r.evento===ev) && (!es||r.estado===es) &&
+        (!b || (r.nombre||'').toLowerCase().indexOf(b)>-1 || (r.whatsapp||'').indexOf(b.replace(/\D/g,''))>-1 && b.replace(/\D/g,''));
+    });
+  }
+
+  function agrupar(rows, campo){
+    var m={}; rows.forEach(function(r){ var k=r[campo]||'(sin dato)'; m[k]=m[k]||{n:0,c:0}; m[k].n++; if(r.estado==='compró') m[k].c++; });
+    return Object.keys(m).map(function(k){return {k:k,n:m[k].n,c:m[k].c}}).sort(function(a,b){return b.n-a.n}).slice(0,8);
+  }
+  function tablaGrupo(id, g, total){
+    $(id).innerHTML = '<tr><th>Nombre</th><th>Registros</th><th class="hide-m"></th><th>Compras</th></tr>' + (g.length? g.map(function(x){
+      return '<tr><td>'+esc(x.k)+'</td><td>'+x.n+'</td><td class="hide-m" style="width:35%"><div class="bar" style="width:'+Math.max(4,Math.round(x.n/total*100))+'%"></div></td><td>'+x.c+'</td></tr>';
+    }).join('') : '<tr><td colspan="4" class="muted">Todavía no hay datos.</td></tr>');
+  }
+
+  function pintar(){
+    var ev=$('fEvento').value, base = datos.filter(function(r){ return ev==='*'||r.evento===ev; });
+    var hoy = new Date().toDateString();
+    $('kTotal').textContent = base.length;
+    $('kHoy').textContent = base.filter(function(r){ return new Date(r.creado).toDateString()===hoy; }).length;
+    $('kAnuncio').textContent = base.filter(function(r){ return r.utm_source||r.fbclid; }).length;
+    $('kCompra').textContent = base.filter(function(r){ return r.estado==='compró'; }).length;
+    $('sub').textContent = 'Clase: ' + (ev==='*'?'todas':ev) + ' · ' + base.length + ' registrados';
+    var t = Math.max(1, base.length);
+    tablaGrupo('tCamp', agrupar(base,'utm_campaign'), t);
+    tablaGrupo('tAnuncio', agrupar(base,'utm_content'), t);
+
+    var rows = filtrados();
+    $('tLeads').innerHTML = '<tr><th>Persona</th><th>Origen</th><th>Estado</th><th></th></tr>' + (rows.length ? rows.map(function(r){
+      var opts = ESTADOS.map(function(s){ return '<option'+(s===r.estado?' selected':'')+'>'+s+'</option>'; }).join('');
+      return '<tr><td><b>'+esc(r.nombre)+'</b><small>+'+esc(r.whatsapp)+(r.correo?' · '+esc(r.correo):'')+'</small><br><small>'+new Date(r.creado).toLocaleString('es-CO')+'</small></td>'+
+        '<td><small>'+esc(r.utm_source||(r.fbclid?'facebook':'directo'))+'<br>'+esc(r.utm_campaign||'')+(r.utm_content?' · '+esc(r.utm_content):'')+'</small></td>'+
+        '<td><select data-id="'+r.id+'">'+opts+'</select></td>'+
+        '<td><a class="btn wa" data-wa="'+esc(r.whatsapp)+'" data-n="'+esc((r.nombre||'').split(' ')[0])+'" href="#">WhatsApp</a></td></tr>';
+    }).join('') : '<tr><td colspan="4" class="muted">No hay registrados con ese filtro.</td></tr>');
+  }
+
+  $('tLeads').addEventListener('click', function(e){
+    var a = e.target.closest('[data-wa]'); if(!a) return; e.preventDefault();
+    var txt = $('texto').value.split('{nombre}').join(a.dataset.n);
+    window.open('https://wa.me/'+a.dataset.wa+'?text='+encodeURIComponent(txt), '_blank');
+  });
+  $('tLeads').addEventListener('change', function(e){
+    var s = e.target.closest('select[data-id]'); if(!s) return;
+    EV.rpc('funnel_estado', {p_clave:clave, p_id:s.dataset.id, p_estado:s.value, p_notas:null}).then(function(){
+      datos.forEach(function(r){ if(r.id===s.dataset.id) r.estado=s.value; }); pintar(); toast('Estado guardado');
+    }).catch(function(){ toast('No se pudo guardar'); });
+  });
+
+  $('csv').onclick = function(){
+    var cols=['creado','evento','nombre','whatsapp','correo','estado','utm_source','utm_medium','utm_campaign','utm_content','utm_term','notas'];
+    var q=function(v){ v=String(v==null?'':v); return /[",;\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; };
+    var lines=[cols.join(';')].concat(filtrados().map(function(r){ return cols.map(function(c){ return q(r[c]); }).join(';'); }));
+    var blob=new Blob(['﻿'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
+    var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='registrados-'+new Date().toISOString().slice(0,10)+'.csv'; a.click();
+  };
+})();
+</script>
+</body>
+</html>

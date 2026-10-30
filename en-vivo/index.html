@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clase en vivo gratis · José Lugo</title>
+<meta name="description" content="Clase en vivo gratuita: cómo conseguir prospectos todos los días en redes de mercadeo usando IA. Con José Lugo.">
+<meta property="og:title" content="Clase en vivo gratis: prospectos todos los días con IA">
+<meta property="og:description" content="45 minutos con José Lugo. Te registras en menos de un minuto.">
+<meta property="og:image" content="og.png">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#07060f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<style>
+:root{
+  --bg:#07060f; --card:rgba(22,18,44,.66); --card2:rgba(255,255,255,.04);
+  --text:#EEEBFF; --muted:#A49FC4; --line:rgba(255,255,255,.10);
+  --violet:#7C5CFF; --cyan:#22D3EE; --pink:#E879F9; --ok:#34D399; --bad:#F87171;
+  --r:22px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{color:var(--text);font:400 17px/1.6 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+  background:radial-gradient(60% 40% at 0% 0%,rgba(124,92,255,.35),transparent 60%),radial-gradient(50% 35% at 100% 8%,rgba(34,211,238,.20),transparent 60%),radial-gradient(60% 40% at 50% 100%,rgba(232,121,249,.16),transparent 60%),var(--bg);background-attachment:fixed}
+h1,h2,h3{font-family:Sora,system-ui,sans-serif;letter-spacing:-.02em;line-height:1.08}
+.wrap{width:min(980px,100% - 32px);margin-inline:auto}
+.grad{background:linear-gradient(100deg,#fff 10%,#C9BCFF 50%,#67E8F9);-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;cursor:pointer;text-decoration:none;font:700 17px/1 Sora,sans-serif;padding:18px 28px;border-radius:999px;color:#0b0820;background:linear-gradient(120deg,var(--cyan),var(--violet) 60%,var(--pink));box-shadow:0 12px 40px rgba(124,92,255,.45);transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 16px 50px rgba(124,92,255,.6)}
+.btn:disabled{opacity:.6;cursor:wait;transform:none}
+.micro{font-size:14px;color:var(--muted);margin-top:12px}
+.tag{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;font:700 13px/1 Sora,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#C9BCFF;background:rgba(124,92,255,.16);border:1px solid rgba(124,92,255,.4)}
+.dot{width:8px;height:8px;border-radius:50%;background:#F43F5E;box-shadow:0 0 0 0 rgba(244,63,94,.7);animation:pulse 1.6s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 10px rgba(244,63,94,0)}100%{box-shadow:0 0 0 0 rgba(244,63,94,0)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:28px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+section{padding:56px 0}
+.eyebrow{font:700 13px/1 Sora,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:14px}
+h2{font-size:clamp(28px,4.4vw,42px);margin-bottom:22px}
+
+/* top */
+.top{position:sticky;top:0;z-index:20;background:rgba(7,6,15,.78);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;height:62px}
+.top b{font:800 16px Sora,sans-serif}
+.top .btn{padding:11px 18px;font-size:14px;box-shadow:none}
+.top small{display:block;font-size:12px;color:var(--muted);font-weight:500}
+
+/* hero */
+.hero{padding:56px 0 40px;text-align:center}
+.hero h1{font-size:clamp(36px,6.2vw,64px);font-weight:800;margin:22px auto 18px;max-width:17ch}
+.hero p.lead{font-size:clamp(17px,2.2vw,20px);color:#D3CDF2;max-width:40ch;margin:0 auto 30px}
+.facts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:30px}
+.fact{padding:10px 16px;border-radius:999px;background:var(--card2);border:1px solid var(--line);font-size:14px;color:#D3CDF2}
+.fact b{color:#fff}
+
+/* list */
+.learn{display:grid;gap:14px}
+.learn li{list-style:none;display:grid;grid-template-columns:44px 1fr;gap:16px;align-items:start;padding:20px;border-radius:18px;background:var(--card2);border:1px solid var(--line)}
+.learn .n{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font:800 18px Sora,sans-serif;color:#0b0820;background:linear-gradient(135deg,var(--cyan),var(--violet))}
+.learn b{display:block;font:700 18px/1.3 Sora,sans-serif;margin-bottom:4px}
+.learn span{color:var(--muted);font-size:16px}
+.plus{margin-top:18px;padding:18px 20px;border-radius:18px;border:1px dashed rgba(34,211,238,.45);background:rgba(34,211,238,.06);color:#D3F6FD}
+
+.video{aspect-ratio:16/9;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#000}
+.video iframe{width:100%;height:100%;border:0}
+
+.fit{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fit h3{font-size:20px;margin-bottom:14px}
+.fit ul{list-style:none;display:grid;gap:12px}
+.fit li{display:flex;gap:10px;font-size:16px;line-height:1.45;color:#D3CDF2}
+.fit li::before{flex:none;font-weight:800}
+.yes li::before{content:"✓";color:var(--ok)}
+.no li::before{content:"✕";color:var(--bad)}
+.no{opacity:.92}
+
+.gift{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;border:1px solid rgba(232,121,249,.4);background:linear-gradient(135deg,rgba(232,121,249,.14),rgba(124,92,255,.08))}
+.gift .ico{font-size:52px;line-height:1}
+.gift h3{font-size:22px;margin-bottom:6px}
+.gift p{color:#E6DDF7;font-size:16px}
+.gift small{display:block;margin-top:10px;color:var(--muted);font-size:14px}
+
+.when{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.when div{padding:18px;border-radius:18px;background:var(--card2);border:1px solid var(--line)}
+.when span{display:block;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:6px}
+.when b{font:700 17px/1.3 Sora,sans-serif}
+.count{display:flex;gap:10px;justify-content:center;margin-top:22px}
+.count div{min-width:74px;padding:14px 8px;border-radius:16px;text-align:center;background:rgba(124,92,255,.14);border:1px solid rgba(124,92,255,.35)}
+.count b{display:block;font:800 30px/1 Sora,sans-serif}
+.count small{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.tba{margin-top:18px;text-align:center;color:#D3F6FD;font-size:15px}
+
+.host{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center}
+.avatar{width:110px;height:110px;border-radius:30px;display:grid;place-items:center;font:800 40px Sora,sans-serif;color:#0b0820;background:linear-gradient(135deg,var(--cyan),var(--violet),var(--pink))}
+.host h3{font-size:26px;margin-bottom:4px}
+.host .role{color:var(--cyan);font-weight:600;font-size:15px;margin-bottom:10px}
+.host p{color:#D3CDF2;font-size:16px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.stats div{padding:18px;border-radius:18px;background:var(--card2);border:1px solid var(--line);text-align:center}
+.stats b{display:block;font:800 30px/1 Sora,sans-serif}
+.stats span{font-size:14px;color:var(--muted)}
+
+/* form */
+#registro{scroll-margin-top:80px}
+.form{max-width:560px;margin:0 auto;border:1px solid rgba(124,92,255,.45);box-shadow:0 30px 80px rgba(124,92,255,.25)}
+.form h2{text-align:center;margin-bottom:6px}
+.form .sub{text-align:center;color:var(--muted);margin-bottom:20px}
+label{display:block;font-weight:600;font-size:14px;margin:14px 0 6px;color:#E6E1FF}
+label small{color:var(--muted);font-weight:400}
+input,select{width:100%;font:500 16px Inter,sans-serif;padding:14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text)}
+input::placeholder{color:#7d77a3}
+input:focus,select:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,211,238,.18)}
+select option{background:#151129}
+.phone{display:grid;grid-template-columns:128px 1fr;gap:8px}
+.check{display:flex;gap:10px;align-items:flex-start;margin-top:16px;font-size:14px;color:#D3CDF2;font-weight:400;line-height:1.45}
+.check input{width:20px;height:20px;flex:none;margin-top:1px;accent-color:var(--violet)}
+.check a{color:var(--cyan)}
+.form .btn{width:100%;margin-top:20px}
+.err{display:none;margin-top:14px;padding:12px 14px;border-radius:12px;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.35);color:#FECACA;font-size:14px}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+
+footer{padding:40px 0 110px;color:var(--muted);font-size:13px;text-align:center;line-height:1.7}
+footer a{color:#C9BCFF}
+
+.sticky-cta{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,rgba(7,6,15,.95) 35%);display:none}
+.sticky-cta .btn{width:100%}
+@media(max-width:760px){
+  .fit,.when,.stats{grid-template-columns:1fr}
+  .when{grid-template-columns:1fr 1fr}
+  .host,.gift{grid-template-columns:1fr;text-align:left}
+  .card{padding:22px}
+  .top .btn{display:none}
+  .sticky-cta{display:block}
+  section{padding:44px 0}
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap">
+    <div><b>José Lugo</b><small>Clase en vivo gratuita</small></div>
+    <a class="btn" href="#registro">Regístrate ahora</a>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="tag"><span class="dot"></span>Clase en vivo · gratis</span>
+    <h1><span class="grad" id="titulo">Cómo conseguir prospectos todos los días en redes de mercadeo usando IA</span></h1>
+    <p class="lead">Sin perseguir a tus amigos ni enviar mensajes que nadie responde. En una sola clase te muestro el sistema que uso después de 16 años formando líderes.</p>
+    <a class="btn" href="#registro">Aparta tu lugar gratis</a>
+    <p class="micro">Te registras en menos de un minuto.</p>
+    <div class="facts">
+      <span class="fact"><b>Gratis</b> · en línea</span>
+      <span class="fact" id="factFecha"><b>Fecha</b> por anunciar</span>
+      <span class="fact"><b>Regalo</b> si llegas en vivo</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Te lo cuento en un minuto</p>
+    <h2>Esto es lo que vas a descubrir</h2>
+    <ul class="learn">
+      <li><span class="n">1</span><div><b>Por qué tus mensajes no reciben respuesta</b><span>Y cómo cambiar la forma de abrir la conversación para que la persona quiera seguir hablando contigo.</span></div></li>
+      <li><span class="n">2</span><div><b>Cómo hacer que los prospectos lleguen a tu WhatsApp ya calificados</b><span>Con una evaluación de 2 minutos sabes si buscan salud, producto o ingreso extra antes de decir una sola palabra.</span></div></li>
+      <li><span class="n">3</span><div><b>Cómo crear el contenido de tu semana en 20 minutos con IA gratuita</b><span>Publicaciones, estados y mensajes de seguimiento sin quedarte en blanco frente al celular.</span></div></li>
+    </ul>
+    <div class="plus"><b>Y además:</b> un plan de 7 días para aplicar lo de la clase desde el día siguiente.</div>
+  </div>
+</section>
+
+<section id="secVideo" hidden>
+  <div class="wrap">
+    <p class="eyebrow">En este evento</p>
+    <h2>Mira este mensaje</h2>
+    <div class="video"><iframe id="videoFrame" title="Mensaje de José Lugo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">¿Este evento es para ti?</p>
+    <h2>Revisa si te identificas</h2>
+    <div class="fit">
+      <div class="card yes">
+        <h3>Es para ti si…</h3>
+        <ul>
+          <li>Estás en una compañía de redes de mercadeo y quieres más prospectos.</li>
+          <li>Ya le hablaste a tus conocidos y no sabes a quién más hablarle.</li>
+          <li>Quieres usar la tecnología a tu favor, aunque no sepas mucho de ella.</li>
+          <li>Estás pensando en empezar en este negocio y quieres hacerlo bien desde el principio.</li>
+        </ul>
+      </div>
+      <div class="card no">
+        <h3>No es para ti si…</h3>
+        <ul>
+          <li>Buscas dinero rápido sin trabajar.</li>
+          <li>No estás dispuesto a aplicar nada de lo que aprendas.</li>
+          <li>Esperas que la IA haga todo por ti mientras no haces nada.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="card gift">
+      <div class="ico">🎁</div>
+      <div>
+        <p class="eyebrow" style="margin-bottom:8px">Tu regalo por llegar en vivo</p>
+        <h3>Tu propia página de Evaluación de Bienestar</h3>
+        <p>Con tu nombre y tu WhatsApp, lista para compartir y recibir prospectos evaluados. Es la misma herramienta que te muestro en la clase.</p>
+        <small>Solo para quienes se queden hasta el final de la clase en vivo. La repetición no está garantizada.</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Cuándo y dónde</p>
+    <h2>Detalles de la clase</h2>
+    <div class="when">
+      <div><span>Fecha</span><b id="wFecha">Por anunciar</b></div>
+      <div><span>Hora</span><b id="wHora">Por anunciar</b></div>
+      <div><span>Duración</span><b id="wDur"></b></div>
+      <div><span>Costo</span><b>Gratis</b></div>
+    </div>
+    <div class="when" style="grid-template-columns:1fr;margin-top:12px"><div><span>Lugar</span><b id="wLugar"></b></div></div>
+    <div class="count" id="count" hidden>
+      <div><b id="cD">0</b><small>días</small></div>
+      <div><b id="cH">0</b><small>horas</small></div>
+      <div><b id="cM">0</b><small>min</small></div>
+      <div><b id="cS">0</b><small>seg</small></div>
+    </div>
+    <p class="tba" id="tba">Regístrate y te avisamos por WhatsApp apenas confirmemos la fecha.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Quién presenta</p>
+    <div class="card host">
+      <div class="avatar">JL</div>
+      <div>
+        <h3>José Lugo</h3>
+        <p class="role">Formador de líderes · emprendedor digital · especialista en IA</p>
+        <p>Llevo más de 16 años formando líderes en redes de mercadeo en Latinoamérica. Hoy combino esa experiencia con herramientas de inteligencia artificial para que prospectar sea más simple y menos incómodo.</p>
+      </div>
+    </div>
+    <div class="stats">
+      <div><b class="grad">16+</b><span>años formando líderes</span></div>
+      <div><b class="grad">3.000+</b><span>personas formadas</span></div>
+      <div><b class="grad">15+</b><span>países</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="registro">
+  <div class="wrap">
+    <form class="card form" id="form" novalidate>
+      <h2>Aparta tu lugar</h2>
+      <p class="sub">Es gratis. Te llega todo por WhatsApp.</p>
+
+      <label for="nombre">Tu nombre</label>
+      <input id="nombre" name="nombre" autocomplete="name" placeholder="Nombre y apellido" required>
+
+      <label for="tel">Tu WhatsApp</label>
+      <div class="phone">
+        <select id="pais" aria-label="Indicativo del país">
+          <option value="57">🇨🇴 +57</option>
+          <option value="58">🇻🇪 +58</option>
+          <option value="52">🇲🇽 +52</option>
+          <option value="51">🇵🇪 +51</option>
+          <option value="593">🇪🇨 +593</option>
+          <option value="56">🇨🇱 +56</option>
+          <option value="54">🇦🇷 +54</option>
+          <option value="507">🇵🇦 +507</option>
+          <option value="506">🇨🇷 +506</option>
+          <option value="1">🇺🇸 +1</option>
+          <option value="34">🇪🇸 +34</option>
+          <option value="351">🇵🇹 +351</option>
+          <option value="353">🇮🇪 +353</option>
+        </select>
+        <input id="tel" name="tel" inputmode="tel" autocomplete="tel-national" placeholder="300 123 4567" required>
+      </div>
+
+      <label for="correo">Tu correo <small>(opcional)</small></label>
+      <input id="correo" name="correo" type="email" autocomplete="email" placeholder="tucorreo@ejemplo.com">
+
+      <input class="hp" id="empresa" name="empresa" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <label class="check"><input type="checkbox" id="acepta"> <span>Acepto recibir información de la clase por WhatsApp y correo, y el <a href="privacidad.html" target="_blank" rel="noopener">aviso de privacidad</a>.</span></label>
+
+      <button class="btn" type="submit" id="enviar">Quiero mi lugar gratis</button>
+      <div class="err" id="err" role="alert"></div>
+      <p class="micro" style="text-align:center">Tus datos solo se usan para avisarte de la clase.</p>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a href="privacidad.html">Aviso de privacidad</a> · Organiza: José Lugo<br>
+    Este sitio no forma parte de Facebook ni de Meta Platforms, Inc., y no está respaldado por Meta de ninguna manera.<br>
+    © <span id="yr"></span> José Lugo
+  </div>
+</footer>
+
+<div class="sticky-cta"><a class="btn" href="#registro">Regístrate ahora · gratis</a></div>
+
+<script>
+(function(){
+  var E = window.EVENTO;
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  document.getElementById('titulo').textContent = E.titulo;
+  document.getElementById('wDur').textContent = E.duracion;
+  document.getElementById('wLugar').textContent = E.lugar;
+
+  if (/^[\w-]{11}$/.test(E.video || '')) {
+    document.getElementById('videoFrame').src = 'https://www.youtube.com/embed/' + E.video;
+    document.getElementById('secVideo').hidden = false;
+  }
+
+  var f = EV.fechaTexto();
+  if (f && f.fecha > new Date()) {
+    document.getElementById('wFecha').textContent = f.dia;
+    document.getElementById('wHora').textContent = f.hora;
+    document.getElementById('factFecha').innerHTML = '<b></b>';
+    document.querySelector('#factFecha b').textContent = f.dia;
+    document.getElementById('tba').textContent = 'El enlace de la clase te llega por WhatsApp.';
+    var box = document.getElementById('count'); box.hidden = false;
+    var tick = function(){
+      var s = Math.max(0, Math.floor((f.fecha - new Date())/1000));
+      document.getElementById('cD').textContent = Math.floor(s/86400);
+      document.getElementById('cH').textContent = Math.floor(s%86400/3600);
+      document.getElementById('cM').textContent = Math.floor(s%3600/60);
+      document.getElementById('cS').textContent = s%60;
+    };
+    tick(); setInterval(tick, 1000);
+  }
+
+  // Origen del visitante (anuncio, campaña) para saber qué anuncio funciona
+  var q = new URLSearchParams(location.search), utm = {};
+  ['utm_source','utm_medium','utm_campaign','utm_term','utm_content'].forEach(function(k){ if (q.get(k)) utm[k] = q.get(k); });
+  try {
+    if (Object.keys(utm).length || q.get('fbclid')) sessionStorage.setItem('ev_origen', JSON.stringify({utm:utm, fbclid:q.get('fbclid')}));
+    var guardado = JSON.parse(sessionStorage.getItem('ev_origen') || 'null');
+    if (guardado && !Object.keys(utm).length) { utm = guardado.utm || {}; q.set('fbclid', guardado.fbclid || ''); }
+  } catch(e){}
+
+  EV.pixel();
+
+  var form = document.getElementById('form'), err = document.getElementById('err'), btn = document.getElementById('enviar');
+  var fail = function(m){ err.textContent = m; err.style.display = 'block'; };
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault(); err.style.display = 'none';
+    if (document.getElementById('empresa').value) return;          // trampa para robots
+    var nombre = document.getElementById('nombre').value.trim();
+    var pais = document.getElementById('pais').value;
+    var tel = document.getElementById('tel').value.replace(/\D/g,'').replace(/^0+/, '');
+    var correo = document.getElementById('correo').value.trim();
+    var acepta = document.getElementById('acepta').checked;
+    if (nombre.length < 3) return fail('Escribe tu nombre y apellido.');
+    if (tel.length < 7) return fail('Escribe tu número de WhatsApp sin el indicativo del país.');
+    if (correo && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(correo)) return fail('Revisa tu correo o déjalo en blanco.');
+    if (!acepta) return fail('Para enviarte la información de la clase necesitamos que aceptes el aviso de privacidad.');
+    var wa = tel.indexOf(pais) === 0 && tel.length > 10 ? tel : pais + tel;
+
+    btn.disabled = true; btn.textContent = 'Apartando tu lugar…';
+    EV.rpc('funnel_registrar', {
+      p_nombre: nombre, p_correo: correo || null, p_whatsapp: wa, p_acepta: true,
+      p_evento: E.id, p_utm: utm, p_fbclid: q.get('fbclid') || null, p_referente: document.referrer || null
+    }).then(function(){
+      EV.pixel('Lead');
+      try { sessionStorage.setItem('ev_nombre', nombre.split(' ')[0]); } catch(e){}
+      setTimeout(function(){ location.href = 'gracias.html'; }, 250);
+    }).catch(function(x){
+      btn.disabled = false; btn.textContent = 'Quiero mi lugar gratis';
+      fail(/whatsapp/i.test(x.message) ? 'Revisa tu número de WhatsApp.' : 'No pudimos registrarte. Revisa tu conexión e inténtalo de nuevo.');
+    });
+  });
+})();
+</script>
+</body>
+</html>

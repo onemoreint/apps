@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TV Limpia | José Lugo</title>
+<meta name="description" content="Quita la publicidad y el rastreo de tu televisor. Elige tu marca y sigue los pasos con botones, sin comandos.">
+<meta name="author" content="José Lugo">
+<meta name="theme-color" content="#EEF1F4">
+<meta property="og:title" content="TV Limpia: tu televisor sin publicidad">
+<meta property="og:description" content="Elige tu televisor y sigue los pasos. Sin comandos, todo se puede deshacer.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://onemoreint.github.io/apps/tvlimpia/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='10' width='56' height='38' rx='7' fill='%2315202B'/%3E%3Crect x='10' y='16' width='8' height='26' fill='%23E8D21D'/%3E%3Crect x='18' y='16' width='8' height='26' fill='%232FB7C9'/%3E%3Crect x='26' y='16' width='8' height='26' fill='%233FA34D'/%3E%3Crect x='34' y='16' width='8' height='26' fill='%23C2369A'/%3E%3Crect x='42' y='16' width='8' height='26' fill='%23D23B2C'/%3E%3Crect x='22' y='52' width='20' height='4' rx='2' fill='%2315202B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112..125,600;112..125,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF1F4; --panel:#FFFFFF; --ink:#15202B; --ink2:#46525E; --ink3:#6B7782;
+  --line:#D3D9DF; --blue:#2A45B8; --blue-d:#1F3592; --ok:#2E7D43; --warn:#9A5B00; --warn-bg:#FFF4DC;
+  --b1:#E8D21D; --b2:#2FB7C9; --b3:#3FA34D; --b4:#C2369A; --b5:#D23B2C; --b6:#2A45B8;
+  --display:'Archivo',system-ui,sans-serif; --body:'Atkinson Hyperlegible',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.125rem/1.55 var(--body)}
+a{color:var(--blue)}
+:focus-visible{outline:3px solid var(--b1);outline-offset:3px;box-shadow:0 0 0 6px var(--ink)}
+.wrap{max-width:680px;margin:0 auto;padding:0 16px}
+
+/* Cabecera: barras de ajuste */
+.mast{padding-top:28px;padding-bottom:8px}
+.bars{display:flex;height:72px;border-radius:12px;overflow:hidden;background:var(--ink)}
+.bars i{flex:1;transform-origin:bottom;animation:clean 1.4s cubic-bezier(.7,0,.2,1) .5s forwards}
+.bars i:nth-child(1){background:var(--b1)}.bars i:nth-child(2){background:var(--b2);animation-delay:.58s}
+.bars i:nth-child(3){background:var(--b3);animation-delay:.66s}.bars i:nth-child(4){background:var(--b4);animation-delay:.74s}
+.bars i:nth-child(5){background:var(--b5);animation-delay:.82s}.bars i:nth-child(6){background:var(--b6);animation-delay:.9s}
+@keyframes clean{to{transform:scaleY(.08)}}
+.bars-wrap{position:relative}
+.bars-wrap span{position:absolute;inset:0;display:flex;align-items:center;padding-left:20px;color:#fff;
+  font:800 1.05rem/1 var(--display);font-stretch:125%;letter-spacing:.01em;opacity:0;animation:show .6s ease 1.7s forwards}
+@keyframes show{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.bars i{animation:none;transform:scaleY(.08)}.bars-wrap span{animation:none;opacity:1}}
+h1{font:800 clamp(2.1rem,7vw,3.1rem)/1.02 var(--display);font-stretch:125%;margin:22px 0 10px;letter-spacing:-.01em}
+.lead{color:var(--ink2);margin:0 0 6px;max-width:58ch}
+
+/* Pantallas */
+main{padding-top:18px;padding-bottom:40px}
+.screen{animation:in .25s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}}
+@media (prefers-reduced-motion:reduce){.screen{animation:none}}
+h2{font:800 1.6rem/1.15 var(--display);font-stretch:112%;margin:8px 0 6px}
+.q-help{color:var(--ink2);margin:0 0 18px}
+.back{display:inline-flex;align-items:center;gap:8px;background:none;border:0;color:var(--ink2);
+  font:700 1rem var(--body);padding:10px 0;cursor:pointer;margin-bottom:4px}
+.back svg{width:18px;height:18px}
+.trail{font-size:.95rem;color:var(--ink3);margin:0 0 4px}
+
+/* Opciones */
+.opts{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+.opt{width:100%;display:grid;grid-template-columns:56px 1fr 22px;gap:16px;align-items:center;text-align:left;
+  background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:16px 18px;cursor:pointer;
+  font:inherit;color:inherit;min-height:84px}
+.opt:hover{border-color:var(--ink3)}
+.opt:focus-visible{border-color:var(--ink)}
+.opt b{display:block;font:800 1.25rem/1.15 var(--display);font-stretch:112%}
+.opt small{display:block;color:var(--ink2);font-size:.98rem;margin-top:3px}
+.opt .ic{width:56px;height:56px;border-radius:12px;display:grid;place-items:center;background:var(--bg)}
+.opt .ic svg{width:30px;height:30px}
+.opt .chev{width:22px;height:22px;color:var(--ink3)}
+
+/* Pasos */
+.steps{list-style:none;margin:8px 0 0;padding:0;counter-reset:s}
+.step{position:relative;background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:18px 18px 16px 72px;margin-bottom:12px;counter-increment:s}
+.step::before{content:counter(s);position:absolute;left:18px;top:16px;width:38px;height:38px;border-radius:50%;
+  display:grid;place-items:center;background:var(--ink);color:#fff;font:800 1.1rem var(--display)}
+.step.done{border-color:var(--ok)}
+.step.done::before{content:"✓";background:var(--ok)}
+.step h3{font:800 1.15rem/1.2 var(--display);font-stretch:112%;margin:4px 0 6px}
+.step p{margin:0 0 8px;color:var(--ink2)}
+.step .path{display:inline;background:var(--bg);border-radius:6px;padding:1px 6px;color:var(--ink);font-weight:700}
+.check{display:inline-flex;align-items:center;gap:10px;margin-top:6px;font-weight:700;cursor:pointer;min-height:44px}
+.check input{width:24px;height:24px;accent-color:var(--ok)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 22px;border-radius:14px;
+  font:800 1.05rem var(--display);font-stretch:112%;text-decoration:none;border:2px solid transparent;cursor:pointer}
+.btn.primary{background:var(--blue);color:#fff}.btn.primary:hover{background:var(--blue-d)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--ink)}
+.btn svg{width:22px;height:22px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+
+.note{border-radius:14px;padding:14px 16px;margin:14px 0;background:var(--warn-bg);color:#4A3300}
+.note strong{color:#3A2800}
+.safe{display:grid;gap:8px;margin:18px 0 0;padding:0;list-style:none;color:var(--ink2)}
+.safe li{display:flex;gap:10px}
+.safe li::before{content:"";flex:0 0 10px;height:10px;margin-top:9px;border-radius:2px;background:var(--b3)}
+
+/* Ayuda */
+.help{margin-top:28px;background:var(--ink);color:#fff;border-radius:18px;padding:22px}
+.help h2{color:#fff;margin-top:0}
+.help p{color:#C9D1D8;margin:0 0 14px}
+.help .btn.primary{background:#25D366;color:#0B2A15}.help .btn.primary:hover{background:#1EBE5A}
+
+/* Pie y firma */
+footer{border-top:1px solid var(--line);padding-top:26px;padding-bottom:40px;color:var(--ink2);font-size:.95rem}
+.sig{display:flex;gap:14px;align-items:center;margin-bottom:16px}
+.sig .mono{width:52px;height:52px;border-radius:14px;background:var(--ink);color:#fff;display:grid;place-items:center;font:800 1.2rem var(--display)}
+.sig strong{display:block;color:var(--ink);font:800 1.15rem var(--display);font-stretch:112%}
+.sig a{color:var(--ink2);text-decoration:none}
+.sig a:hover{text-decoration:underline}
+.credits{font-size:.88rem;color:var(--ink3);max-width:62ch}
+.credits a{color:var(--ink2)}
+@media (max-width:420px){.opt{grid-template-columns:44px 1fr 18px;gap:12px;padding:14px}.opt .ic{width:44px;height:44px}.step{padding-left:62px}.step::before{left:14px}}
+</style>
+</head>
+<body>
+<header class="mast wrap">
+  <div class="bars-wrap" aria-hidden="true"><div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i></div><span>TV Limpia</span></div>
+  <h1>Tu televisor, sin publicidad</h1>
+  <p class="lead">Elige tu televisor y sigue los pasos con el control remoto. Sin comandos y todo se puede deshacer.</p>
+</header>
+
+<main class="wrap" id="app" aria-live="polite"></main>
+
+<footer class="wrap">
+  <div class="sig">
+    <span class="mono" aria-hidden="true">JL</span>
+    <div>
+      <strong>José Lugo</strong>
+      <a href="https://wa.me/573126387467">+57 312 638 7467</a> &nbsp;|&nbsp; <a href="mailto:jose.lugocdv@gmail.com">jose.lugocdv@gmail.com</a>
+    </div>
+  </div>
+  <p class="credits">TV Limpia es una guía independiente. Recomienda proyectos de código abierto con licencia MIT:
+    <a href="https://github.com/Gathin23/cleanyourtv" rel="noopener">Clean Your TV</a> de Gathin,
+    <a href="https://github.com/udhaykumarbala/cleanyourtv-app" rel="noopener">su app para celular</a>,
+    <a href="https://github.com/lasharor/cleanyourtv-WebOS" rel="noopener">CleanYourTV for LG webOS</a> y
+    <a href="https://github.com/simbasjungles/free-my-tv" rel="noopener">Free My TV</a>.
+    No tiene relación con esos proyectos ni con ningún fabricante. Los nombres de marcas pertenecen a sus dueños. Cambiar el software de tu TV es bajo tu responsabilidad y puede afectar la garantía.</p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+var WA='573126387467';
+var ic={
+  android:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M10 9l4 2-4 2z" fill="currentColor"/></svg>',
+  lg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 8v8h4" stroke-linecap="round"/><circle cx="15" cy="9" r="1" fill="currentColor"/></svg>',
+  samsung:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 9h10M7 13h6"/></svg>',
+  other:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/><circle cx="8" cy="11" r="1" fill="currentColor"/><circle cx="12" cy="11" r="1" fill="currentColor"/><circle cx="16" cy="11" r="1" fill="currentColor"/></svg>',
+  ask:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>',
+  phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>',
+  pc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M2 20h20"/></svg>',
+  hand:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12V5.5a1.5 1.5 0 0 1 3 0V11m0-1V4.5a1.5 1.5 0 0 1 3 0V11m0-4.5a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7h-.5a6 6 0 0 1-5-2.7L3 15.5a1.5 1.5 0 0 1 2.5-1.7L8 17"/></svg>',
+  yes:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  no:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  remote:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="7" y="2" width="10" height="20" rx="4"/><circle cx="12" cy="8" r="2"/><path d="M10 14h4M10 17h4"/></svg>',
+  chev:'<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
+  backc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>',
+  ext:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>',
+  wa:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.2.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.4.1.1.1.7-.1 1.3z"/></svg>'
+};
+
+/* Contenido. Cada pantalla es una pregunta (opts) o una lista de pasos (steps). */
+var S={
+  home:{title:'¿Qué televisor tienes?',help:'Mira la marca en el borde del TV o en el control remoto.',opts:[
+    {to:'android',ic:'android',b:'Android TV o Google TV',s:'TCL, Sony, Xiaomi, Kalley, Philips, Hisense con Google TV, Chromecast'},
+    {to:'lg',ic:'lg',b:'LG',s:'Sistema webOS, control Magic Remote'},
+    {to:'samsung',ic:'samsung',b:'Samsung',s:'Sistema Tizen'},
+    {to:'other',ic:'other',b:'Otra marca',s:'Roku, Hisense VIDAA, Vizio y demás'},
+    {to:'unsure',ic:'ask',b:'No sé cuál es',s:'Te ayudamos a saberlo en un minuto'}
+  ]},
+  unsure:{title:'Averigua tu sistema',help:'Presiona el botón de inicio (la casita) del control y mira la pantalla.',opts:[
+    {to:'android',ic:'android',b:'Veo «Google TV» o la tienda Google Play',s:'Es Android TV o Google TV'},
+    {to:'lg',ic:'lg',b:'Veo una barra de apps y el logo de LG',s:'Es LG webOS'},
+    {to:'samsung',ic:'samsung',b:'Veo «Smart Hub» o el logo de Samsung',s:'Es Samsung Tizen'},
+    {to:'other',ic:'other',b:'Veo otra cosa',s:'Roku, VIDAA u otro sistema'}
+  ]},
+
+  /* ANDROID */
+  android:{title:'¿Tienes un celular Android?',help:'Es el camino más fácil: todo se hace desde el celular, con botones.',opts:[
+    {to:'and-phone',ic:'phone',b:'Sí, tengo celular Android',s:'Android 9 o más reciente, con bloqueo de pantalla'},
+    {to:'and-pc',ic:'pc',b:'No, pero tengo computador',s:'Windows, Mac o Linux en el mismo Wi-Fi'},
+    {to:'help',ic:'hand',b:'Prefiero que lo hagan por mí',s:'Te acompañamos paso a paso'}
+  ]},
+  'and-phone':{title:'Limpia tu TV desde el celular',help:'Unos diez minutos. El TV y el celular deben estar en el mismo Wi-Fi.',
+    warnAndroid:true,steps:[
+    {h:'Activa el modo desarrollador en el TV',p:'Ve a <span class="path">Ajustes → Preferencias del dispositivo → Información</span> (en Google TV: <span class="path">Ajustes → Sistema → Información</span>) y presiona OK sobre <span class="path">Compilación</span> siete veces seguidas.'},
+    {h:'Activa la depuración',p:'Vuelve atrás, entra a <span class="path">Opciones para desarrolladores</span> y enciende <span class="path">Depuración USB</span>. Si ves <span class="path">Depuración por red</span> o <span class="path">ADB por red</span>, enciéndela también.'},
+    {h:'Instala la app en tu celular',p:'Descarga el archivo APK más reciente y ábrelo para instalarlo. Si el celular pregunta, permite instalar apps de esta fuente.',
+      links:[{t:'Descargar la app',u:'https://github.com/udhaykumarbala/cleanyourtv-app/releases/latest',primary:true}]},
+    {h:'Toca Conectar',p:'La app encuentra el TV en tu Wi-Fi. En la pantalla del TV aparece «¿Permitir depuración?»: marca <span class="path">Permitir siempre</span> y presiona OK.'},
+    {h:'Revisa el plan',p:'La app te muestra qué va a apagar y qué deja intacto. Todavía no cambia nada. Si usas alguna app de la lista, desmárcala.'},
+    {h:'Toca «Make it clean»',p:'La app guarda un punto de restauración, apaga la publicidad y pone la pantalla de inicio limpia. Si algo falla, el TV vuelve solo a su pantalla original.'},
+    {h:'Apaga la depuración al terminar',p:'En <span class="path">Opciones para desarrolladores</span>, apaga la depuración USB y por red. Así nadie más en tu red puede controlar el TV.'}
+  ]},
+  'and-pc':{title:'Limpia tu TV con un computador',help:'Un asistente de IA hace el trabajo por ti en unos quince minutos.',warnAndroid:true,steps:[
+    {h:'Activa el modo desarrollador y la depuración en el TV',p:'<span class="path">Ajustes → Preferencias del dispositivo → Información</span>, presiona OK siete veces sobre <span class="path">Compilación</span>. Luego en <span class="path">Opciones para desarrolladores</span> enciende <span class="path">Depuración USB</span> y, si aparece, la depuración por red.'},
+    {h:'Descarga el proyecto en tu computador',p:'Desde la página del proyecto, botón <span class="path">Code → Download ZIP</span>, y descomprímelo.',
+      links:[{t:'Abrir Clean Your TV',u:'https://github.com/Gathin23/cleanyourtv',primary:true}]},
+    {h:'Abre la carpeta con un asistente de IA',p:'Por ejemplo Claude Code. Pega el texto del archivo <span class="path">PROMPT.md</span> que viene en la carpeta y escribe el modelo de tu TV.'},
+    {h:'Acepta en el TV y responde las preguntas',p:'Marca <span class="path">Permitir siempre</span> cuando el TV lo pida. El asistente te pregunta qué apps usas y cuáles quieres en el dock, y comprueba cada paso.'},
+    {h:'Apaga la depuración al terminar',p:'En <span class="path">Opciones para desarrolladores</span>, apaga la depuración USB y por red.'}
+  ]},
+
+  /* LG */
+  lg:{title:'¿Tu LG tiene Homebrew Channel?',help:'Es una tienda de apps no oficial que solo aparece en televisores LG con acceso root. Si no sabes qué es, elige «No».',opts:[
+    {to:'lg-nor',ic:'remote',b:'No, o no sé',s:'Lo normal: quitas la publicidad desde los ajustes'},
+    {to:'lg-root',ic:'yes',b:'Sí, ya tengo Homebrew Channel',s:'Puedes cambiar toda la pantalla de inicio'},
+    {to:'help',ic:'hand',b:'Prefiero que lo hagan por mí',s:'Te acompañamos paso a paso'}
+  ]},
+  'lg-nor':{title:'Quita la publicidad de tu LG',help:'Solo con el control remoto. Los nombres de los menús pueden variar un poco según la versión.',steps:[
+    {h:'Apaga las promociones de la pantalla de inicio',p:'<span class="path">Ajustes → General → Sistema → Ajustes adicionales → Ajustes de la pantalla de inicio</span>. Apaga <span class="path">Promoción de inicio</span> y <span class="path">Recomendación de contenido</span>.'},
+    {h:'Apaga el rastreo de lo que ves',p:'<span class="path">Ajustes → Soporte → Privacidad y términos → Acuerdos de usuario</span>. Desmarca <span class="path">Información de visualización</span> y <span class="path">Recomendaciones basadas en intereses</span>.'},
+    {h:'Opcional: una pantalla de inicio limpia',p:'Free My TV instala una pantalla estilo Apple TV con el modo desarrollador oficial de LG, sin root. Necesitas un computador la primera vez y renovar el modo desarrollador cada 40 días aprox.',
+      links:[{t:'Ver Free My TV',u:'https://github.com/simbasjungles/free-my-tv'}]}
+  ]},
+  'lg-root':{title:'Pantalla limpia para LG con root',help:'Con CleanYourTV for LG webOS. Probado por su autor en un LG OLED G2 con webOS 25; en otros modelos no está garantizado.',steps:[
+    {h:'Necesitas un computador una sola vez',p:'La instalación se hace por SSH como root, desde un computador en el mismo Wi-Fi. Estamos preparando una versión con botones que se instale desde Homebrew Channel.'},
+    {h:'Sigue la guía del proyecto',p:'El instalador te pregunta tres cosas: quitar publicidad, instalar notificaciones con imagen e iniciar ahora. Puedes dejar las respuestas que trae por defecto.',
+      links:[{t:'Abrir CleanYourTV webOS',u:'https://github.com/lasharor/cleanyourtv-WebOS',primary:true}]},
+    {h:'Para volver atrás, desde el TV',p:'En la cuadrícula de apps, el último recuadro es <span class="path">Restore LG Home</span>. También puedes reiniciar en el modo a prueba de fallos de Homebrew Channel.'}
+  ]},
+
+  /* SAMSUNG */
+  samsung:{title:'Quita la publicidad de tu Samsung',help:'Samsung no permite cambiar la pantalla de inicio, pero sí apagar el rastreo y gran parte de la publicidad. Los menús varían según el año del TV.',steps:[
+    {h:'Apaga la información de visualización',p:'<span class="path">Ajustes → General y privacidad → Términos y privacidad</span> (o <span class="path">Soporte → Términos y políticas</span>). Desactiva <span class="path">Servicios de información de visualización</span>.'},
+    {h:'Apaga la publicidad personalizada',p:'En el mismo menú, desactiva <span class="path">Publicidad basada en intereses</span> y, si no usas comandos de voz, <span class="path">Servicios de reconocimiento de voz</span>.'},
+    {h:'Evita que se abran apps solas',p:'<span class="path">Ajustes → General → Funciones inteligentes</span>. Apaga <span class="path">Ejecutar automáticamente Smart Hub</span> y la ejecución automática de la última app si no la quieres.'}
+  ]},
+
+  /* OTROS */
+  other:{title:'Otras marcas',help:'Roku, Hisense VIDAA, Vizio y similares no permiten cambiar la pantalla de inicio.',steps:[
+    {h:'Busca los ajustes de privacidad',p:'En casi todos están en <span class="path">Ajustes → Privacidad</span>. Apaga lo que diga «información de visualización», «reconocimiento de contenido» (ACR) o «publicidad personalizada».'},
+    {h:'Alternativa: conecta un dispositivo Google TV',p:'Un Chromecast con Google TV u otro reproductor Google TV por HDMI se puede limpiar con los pasos de Android desde tu celular.',
+      links:[{t:'Ver los pasos de Android',go:'android'}]}
+  ]}
+};
+
+var app=document.getElementById('app');
+var hist=[];
+var labels={home:'Inicio',android:'Android TV',lg:'LG',samsung:'Samsung',other:'Otra marca',unsure:'No sé'};
+
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+
+function waLink(id){
+  var brand=labels[hist[1]]||labels[id]||'mi TV';
+  var txt='Hola José, quiero quitarle la publicidad a mi televisor ('+brand+'). ¿Me ayudas?';
+  return 'https://wa.me/'+WA+'?text='+encodeURIComponent(txt);
+}
+
+function render(id,push){
+  if(push!==false&&hist[hist.length-1]!==id)hist.push(id);
+  var d=S[id],h='';
+  if(id!=='home')h+='<button class="back" type="button" data-back>'+ic.backc+'Atrás</button>';
+  if(id==='help'){h+=helpBlock(true);app.innerHTML='<section class="screen">'+h+'</section>';focus();return;}
+  h+='<h2 tabindex="-1">'+d.title+'</h2><p class="q-help">'+d.help+'</p>';
+  if(d.opts){
+    h+='<ul class="opts">';
+    d.opts.forEach(function(o){h+='<li><button class="opt" type="button" data-go="'+o.to+'"><span class="ic">'+ic[o.ic]+'</span><span><b>'+o.b+'</b><small>'+o.s+'</small></span>'+ic.chev+'</button></li>';});
+    h+='</ul>';
+    if(id==='home')h+='<ul class="safe"><li>No se desinstala nada: las apps se apagan y se pueden volver a encender.</li><li>Cada paso se puede deshacer.</li><li>Tus apps de streaming siguen funcionando.</li></ul>';
+  }else{
+    if(d.warnAndroid)h+='<div class="note"><strong>Antes de empezar.</strong> En algunos equipos solo se apaga la publicidad y se conserva la pantalla de inicio original: Fire TV, Chromecast con Google TV, Google TV Streamer y algunos Kalley y PRISM+. <a href="https://cleanyour.tv/tvs" rel="noopener">Busca tu modelo</a> para ver qué se probó.</div>';
+    h+='<ol class="steps">';
+    d.steps.forEach(function(s,i){
+      var key='tvl:'+id+':'+i,done=store(key)==='1';
+      h+='<li class="step'+(done?' done':'')+'"><h3>'+s.h+'</h3><p>'+s.p+'</p>';
+      if(s.links){h+='<div class="actions">';s.links.forEach(function(l){
+        if(l.go)h+='<button class="btn ghost" type="button" data-go="'+l.go+'">'+l.t+'</button>';
+        else h+='<a class="btn '+(l.primary?'primary':'ghost')+'" href="'+l.u+'" target="_blank" rel="noopener">'+l.t+ic.ext+'</a>';
+      });h+='</div>';}
+      h+='<label class="check"><input type="checkbox" data-key="'+key+'"'+(done?' checked':'')+'>Hecho</label></li>';
+    });
+    h+='</ol>'+helpBlock(false);
+  }
+  app.innerHTML='<section class="screen">'+h+'</section>';
+  focus();
+}
+
+function helpBlock(full){
+  return '<div class="help"><h2>'+(full?'Lo hacemos contigo':'¿Te trabaste en algún paso?')+'</h2><p>'+
+    (full?'Escríbenos por WhatsApp con la marca y el modelo de tu TV. Te ayudamos a dejarlo limpio.':'Escríbenos por WhatsApp con la marca, el modelo y el paso donde quedaste.')+
+    '</p><a class="btn primary" href="'+waLink()+'" target="_blank" rel="noopener">'+ic.wa+'Escribir por WhatsApp</a></div>';
+}
+
+function focus(){var t=app.querySelector('h2');if(t&&hist.length>1)t.focus({preventScroll:false});window.scrollTo({top:hist.length>1?app.offsetTop-8:0,behavior:'instant'});}
+
+app.addEventListener('click',function(e){
+  var g=e.target.closest('[data-go]');if(g){render(g.getAttribute('data-go'));history.pushState({d:hist.length},'');return;}
+  if(e.target.closest('[data-back]')){history.back();}
+});
+app.addEventListener('change',function(e){
+  var c=e.target.closest('[data-key]');if(!c)return;
+  store(c.getAttribute('data-key'),c.checked?'1':'0');
+  c.closest('.step').classList.toggle('done',c.checked);
+});
+window.addEventListener('popstate',function(){if(hist.length>1){hist.pop();render(hist[hist.length-1],false);}});
+
+/* Flechas del control remoto o del teclado: mover entre botones */
+document.addEventListener('keydown',function(e){
+  if(e.key!=='ArrowDown'&&e.key!=='ArrowUp')return;
+  var els=[].slice.call(document.querySelectorAll('main button, main a.btn, main input'));
+  var i=els.indexOf(document.activeElement);if(i<0)return;
+  var n=els[i+(e.key==='ArrowDown'?1:-1)];if(n){e.preventDefault();n.focus();}
+});
+
+history.replaceState({d:1},'');
+render('home');
+})();
+</script>
+</body>
+</html>

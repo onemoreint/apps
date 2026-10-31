@@ -136,6 +136,7 @@ footer{border-top:1px solid var(--line);padding-top:26px;padding-bottom:40px;col
     <a href="https://github.com/udhaykumarbala/cleanyourtv-app" rel="noopener">su app para celular</a>,
     <a href="https://github.com/lasharor/cleanyourtv-WebOS" rel="noopener">CleanYourTV for LG webOS</a> y
     <a href="https://github.com/simbasjungles/free-my-tv" rel="noopener">Free My TV</a>.
+    También recomienda <a href="https://alogus.github.io/Borealis/" rel="noopener">Borealis</a> de Alogus Tov, gratuito solo para uso no comercial (licencia PolyForm Noncommercial 1.0.0); TV Limpia no lo distribuye ni lo modifica, solo enlaza a su página oficial.
     No tiene relación con esos proyectos ni con ningún fabricante. Los nombres de marcas pertenecen a sus dueños. Cambiar el software de tu TV es bajo tu responsabilidad y puede afectar la garantía.</p>
 </footer>
 
@@ -181,6 +182,7 @@ var S={
   android:{title:'¿Tienes un celular Android?',help:'Es el camino más fácil: todo se hace desde el celular, con botones.',opts:[
     {to:'and-phone',ic:'phone',b:'Sí, tengo celular Android',s:'Android 9 o más reciente, con bloqueo de pantalla'},
     {to:'and-pc',ic:'pc',b:'No, pero tengo computador',s:'Windows, Mac o Linux en el mismo Wi-Fi'},
+    {to:'and-remote',ic:'remote',b:'No, solo tengo el control remoto',s:'Cambia la pantalla de inicio con Borealis (beta)'},
     {to:'help',ic:'hand',b:'Prefiero que lo hagan por mí',s:'Te acompañamos paso a paso'}
   ]},
   'and-phone':{title:'Limpia tu TV desde el celular',help:'Unos diez minutos. El TV y el celular deben estar en el mismo Wi-Fi.',
@@ -194,6 +196,18 @@ var S={
     {h:'Toca «Make it clean»',p:'La app guarda un punto de restauración, apaga la publicidad y pone la pantalla de inicio limpia. Si algo falla, el TV vuelve solo a su pantalla original.'},
     {h:'Apaga la depuración al terminar',p:'En <span class="path">Opciones para desarrolladores</span>, apaga la depuración USB y por red. Así nadie más en tu red puede controlar el TV.'}
   ]},
+  'and-remote':{title:'Pantalla de inicio nueva con el control',help:'Con Borealis, una pantalla de inicio gratuita para uso personal. Unos diez minutos y conexión a internet.',
+    note:'<strong>Ten en cuenta.</strong> Borealis está en beta y su autor lo probó en un TV con Android TV 11. Cambia la pantalla de inicio, pero no apaga las apps de publicidad y rastreo del fabricante; para eso usa la opción del celular o del computador.',
+    steps:[
+    {h:'Instala Downloader',p:'Abre la tienda de apps del TV, busca <span class="path">Downloader</span> de AFTVnews e instálala.'},
+    {h:'Permite que Downloader instale apps',p:'Cuando el TV lo pida, activa el permiso para instalar apps de fuentes desconocidas en Downloader. Si no aparece, búscalo en los ajustes de seguridad del TV.'},
+    {h:'Escribe el código de Borealis',p:'Abre Downloader, escribe el código <span class="path">3357424</span> e instala Borealis. Antes de instalar, confirma el código en la página oficial del proyecto.',
+      links:[{t:'Página oficial de Borealis',u:'https://alogus.github.io/Borealis/',primary:true}]},
+    {h:'Activa la depuración y abre Borealis',p:'Activa el modo desarrollador (presiona OK siete veces sobre <span class="path">Compilación</span> en <span class="path">Información</span>) y enciende <span class="path">Depuración USB</span>. Luego abre Borealis y sigue la bienvenida.'},
+    {h:'Si no queda como pantalla de inicio',p:'Su autor recomienda instalarlo una vez desde un computador, con su guía oficial.',
+      links:[{t:'Guía de instalación',u:'https://github.com/Alogus/Borealis/blob/main/INSTALL.md'}]},
+    {h:'Para volver atrás',p:'En los ajustes de Borealis elige <span class="path">Original</span> y el TV vuelve a su pantalla de inicio de siempre.'}
+  ],ownHelp:'<div class="help"><h2>¿Algo no funciona con Borealis?</h2><p>Repórtalo a su autor: así el arreglo llega a todos en la siguiente versión.</p><a class="btn primary" href="https://github.com/Alogus/Borealis/issues" target="_blank" rel="noopener">Reportar en Borealis</a></div>'},
   'and-pc':{title:'Limpia tu TV con un computador',help:'Un asistente de IA hace el trabajo por ti en unos quince minutos.',warnAndroid:true,steps:[
     {h:'Activa el modo desarrollador y la depuración en el TV',p:'<span class="path">Ajustes → Preferencias del dispositivo → Información</span>, presiona OK siete veces sobre <span class="path">Compilación</span>. Luego en <span class="path">Opciones para desarrolladores</span> enciende <span class="path">Depuración USB</span> y, si aparece, la depuración por red.'},
     {h:'Descarga el proyecto en tu computador',p:'Desde la página del proyecto, botón <span class="path">Code → Download ZIP</span>, y descomprímelo.',
@@ -261,6 +275,7 @@ function render(id,push){
     h+='</ul>';
     if(id==='home')h+='<ul class="safe"><li>No se desinstala nada: las apps se apagan y se pueden volver a encender.</li><li>Cada paso se puede deshacer.</li><li>Tus apps de streaming siguen funcionando.</li></ul>';
   }else{
+    if(d.note)h+='<div class="note">'+d.note+'</div>';
     if(d.warnAndroid)h+='<div class="note"><strong>Antes de empezar.</strong> En algunos equipos solo se apaga la publicidad y se conserva la pantalla de inicio original: Fire TV, Chromecast con Google TV, Google TV Streamer y algunos Kalley y PRISM+. <a href="https://cleanyour.tv/tvs" rel="noopener">Busca tu modelo</a> para ver qué se probó.</div>';
     h+='<ol class="steps">';
     d.steps.forEach(function(s,i){
@@ -272,7 +287,7 @@ function render(id,push){
       });h+='</div>';}
       h+='<label class="check"><input type="checkbox" data-key="'+key+'"'+(done?' checked':'')+'>Hecho</label></li>';
     });
-    h+='</ol>'+helpBlock(false);
+    h+='</ol>'+(d.ownHelp||helpBlock(false));
   }
   app.innerHTML='<section class="screen">'+h+'</section>';
   focus();

@@ -1,0 +1,10 @@
+# Dirol: HTML siempre fresco, CSS/JS con versión en la URL
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+</IfModule>
+AddDefaultCharset UTF-8

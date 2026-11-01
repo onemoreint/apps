@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Dirol · Artesanos del cuero</title>
-<meta name="description" content="Dirol, empresa familiar colombiana que desde 2009 fabrica a mano bolsos, billeteras y accesorios en cuero. Colecciones Monarca y Encanto Nativo.">
-<meta name="theme-color" content="#2A1911">
+<meta name="description" content="Dirol, empresa familiar colombiana que desde 2009 hace a mano bolsos, billeteras y accesorios en cuero, en diez colores. Envío gratis desde $130.000 y pago contraentrega.">
+<meta name="theme-color" content="#FCFBF9">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Dirol · Artesanos del cuero">
 <meta property="og:description" content="Bolsos, billeteras y accesorios en cuero hechos a mano en Colombia desde 2009.">
@@ -13,341 +13,166 @@
 <link rel="canonical" href="https://www.dirol.co/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Hanken+Grotesk:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="styles.css?v=20261101">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Organization","name":"Dirol","alternateName":"Dirol Artesanos del cuero","url":"https://www.dirol.co/","foundingDate":"2009","foundingLocation":"Colombia","description":"Empresa familiar colombiana dedicada a la fabricación artesanal de artículos de cuero.","sameAs":["https://www.instagram.com/dirolhandbags/","https://www.facebook.com/dirolhandbags"]}
+{"@context":"https://schema.org","@type":"Organization","name":"Dirol","alternateName":"Dirol Artesanos del cuero","url":"https://www.dirol.co/","logo":"https://www.dirol.co/cdn/shop/files/Dirol-Artesanos_del_Cuero.png","foundingDate":"2009","description":"Empresa familiar colombiana dedicada a la fabricación artesanal de bolsos, billeteras y accesorios de cuero.","sameAs":["https://www.instagram.com/dirolhandbags/","https://www.facebook.com/dirolhandbags"]}
 </script>
-<style>
-/* Concepto: una maison de cuero. La página es una sucesión de pieles a sangre:
-   cada colección tiene su color de curtido, su título grabado en bajo relieve
-   (como un sello en caliente) y sus piezas en ventanas de arco con costura.
-   Diseño de un solo tema, intencionalmente oscuro y cálido. */
-:root{
-  --tabaco:#2A1911;      /* piel base */
-  --tabaco-2:#45301F;
-  --pergamino:#EDE3D4;   /* texto sobre piel oscura */
-  --pergamino-2:#BFAE98; /* texto secundario */
-  --hilo:#D9B98A;        /* hilo encerado: costuras y enlaces */
-  --monarca:#8E3B14;
-  --nativo:#4F4B26;
-  --mujer:#C8A28D;
-  --mujer-tinta:#3A2219;
-  --natural:#B98B5C;
-  --ventana:#F6F3EE;     /* fondo dentro de los arcos (fotos sobre blanco) */
-  --f-display:"Marcellus","Trajan Pro","Optima",Georgia,serif;
-  --f-body:"Jost","Futura","Avenir Next",system-ui,sans-serif;
-  --gutter:max(20px,env(safe-area-inset-left,0px));
-  --gutter-r:max(20px,env(safe-area-inset-right,0px));
-  color-scheme:dark;
-}
-*{box-sizing:border-box}
-html{background:var(--tabaco)}
-body{margin:0;background:var(--tabaco);color:var(--pergamino);font-family:var(--f-body);font-weight:300;font-size:17px;line-height:1.65;
-  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);overflow-x:hidden}
-img{max-width:100%}
-a{color:inherit}
-:focus-visible{outline:2px solid var(--hilo);outline-offset:4px}
-h1,h2,h3{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance;line-height:1.05}
-.inner{max-width:1240px;margin:0 auto;padding-left:var(--gutter);padding-right:var(--gutter-r)}
-
-/* Piel: color + grano generado en canvas (se inyecta como --grano) */
-.piel{background-color:var(--c,var(--tabaco));background-image:var(--grano,none);background-blend-mode:multiply;background-size:420px}
-
-/* Bajo relieve: el texto toma el color de la piel y se hunde */
-.relieve{color:var(--c,var(--tabaco));filter:brightness(.82);
-  text-shadow:0 1.5px 0 rgba(255,236,210,.26),0 -1px 1px rgba(0,0,0,.6)}
-
-/* Cabecera */
-.top{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding-block:22px}
-.marca{font-family:var(--f-display);font-size:26px;letter-spacing:.04em;text-decoration:none}
-.top nav{display:flex;gap:26px;flex-wrap:wrap;font-size:15px}
-.top nav a{text-decoration:none;color:var(--pergamino-2)}
-.top nav a:hover{color:var(--pergamino)}
-
-/* Portada */
-.portada{--c:var(--tabaco)}
-.portada .heroe{display:grid;grid-template-columns:1.35fr 1fr;gap:56px;align-items:end;padding-block:36px 80px}
-.wordmark{font-size:clamp(110px,21vw,300px);letter-spacing:-.01em;line-height:.8;margin-left:-.04em}
-.portada .relieve{--c:#3A2418;filter:none}
-.costura{display:block;width:100%;height:28px;margin:26px 0 30px;overflow:visible}
-.costura .p{stroke:var(--hilo);stroke-width:2.4;stroke-linecap:round;opacity:0;animation:puntada .01s linear forwards}
-.costura .agujero{fill:rgba(0,0,0,.45)}
-@keyframes puntada{to{opacity:1}}
-.lema{font-family:var(--f-display);font-size:clamp(26px,3vw,38px);line-height:1.2;max-width:22ch;color:var(--pergamino)}
-.portada p.intro{max-width:50ch;color:var(--pergamino-2);margin:18px 0 0}
-.acciones{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}
-.boton{display:inline-block;padding:15px 26px;font-family:var(--f-body);font-weight:400;font-size:15px;letter-spacing:.02em;text-decoration:none;border:1px solid var(--hilo);color:var(--pergamino);transition:background .25s,color .25s}
-.boton.lleno{background:var(--hilo);color:var(--tabaco)}
-.boton:hover{background:var(--pergamino);border-color:var(--pergamino);color:var(--tabaco)}
-
-/* Arco con costura: ventana para cada pieza */
-.arco{position:relative;aspect-ratio:3/4;max-width:100%;border-radius:50% 50% 6px 6px/37.5% 37.5% 6px 6px;background:var(--ventana);overflow:hidden;display:grid;place-items:center}
-.arco::after{content:"";position:absolute;inset:9px;border-radius:inherit;border:1.5px dashed rgba(120,80,50,.35);pointer-events:none}
-.arco svg{width:62%;height:auto;color:#5a3a28}
-.arco img{position:absolute;inset:8% 6% 6%;width:88%;height:86%;object-fit:contain;opacity:0;transition:opacity .5s}
-.arco img.ok{opacity:1}
-.portada .arco{box-shadow:0 30px 60px -20px rgba(0,0,0,.6)}
-.pie{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:2px 12px;margin-top:16px;font-size:15px}
-.pie b{font-family:var(--f-display);font-weight:400;font-size:20px;line-height:1.2}
-.pie span{color:var(--pergamino-2);white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* Colecciones a sangre */
-.coleccion{padding-block:88px 96px}
-.coleccion .cabeza{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:40px;align-items:end;margin-bottom:48px}
-.coleccion h2{font-size:clamp(64px,11vw,150px);line-height:.85}
-.coleccion .cabeza p{margin:0;max-width:46ch;font-size:18px}
-.coleccion .cuenta{display:block;margin-top:14px;font-size:15px;opacity:.75}
-.monarca{--c:var(--monarca)}
-.nativo{--c:var(--nativo)}
-.mujer{--c:var(--mujer);color:var(--mujer-tinta)}
-.mujer .pie span,.mujer .cuenta{color:#6a4636}
-.hombre{--c:var(--tabaco-2)}
-
-.riel{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(220px,calc((100% - 3*28px)/4));gap:28px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:18px;scrollbar-width:thin;scrollbar-color:var(--hilo) transparent}
-.pieza{scroll-snap-align:start;text-decoration:none;display:block;min-width:0}
-.pieza .arco{transition:transform .35s ease}
-.pieza:hover .arco{transform:translateY(-6px)}
-.pieza .ver{display:inline-block;margin-top:6px;font-size:14px;text-decoration:underline;text-decoration-color:var(--hilo);text-underline-offset:4px}
-.mujer .pieza .ver{text-decoration-color:var(--mujer-tinta)}
-.desliza{font-size:14px;opacity:.7;margin-top:6px}
-
-/* Encanto Nativo: una sola pieza junto a su geometría */
-.nativo .obra{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:56px;align-items:center}
-.geometria{width:100%;max-width:520px;height:auto;justify-self:center}
-.geometria *{fill:none;stroke:rgba(255,240,215,.38);stroke-width:1.2}
-
-/* Pátina */
-.patina{--c:var(--natural);color:#2E1B10;padding-block:88px}
-.patina .obra{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:center}
-.patina h2{font-size:clamp(56px,8vw,104px);margin-bottom:18px}
-#cuero{width:100%;aspect-ratio:4/3;display:block;border-radius:4px;box-shadow:0 24px 50px -24px rgba(40,20,5,.7)}
-.anio{font-family:var(--f-display);font-size:72px;line-height:1;font-variant-numeric:tabular-nums;margin-top:26px}
-.anio small{font-size:24px}
-.nota{font-family:var(--f-display);font-size:23px;line-height:1.35;min-height:3.1em;margin-top:10px}
-input[type=range]{width:100%;margin-top:16px;accent-color:#3A2219}
-.extremos{display:flex;justify-content:space-between;font-size:14px;opacity:.8}
-.cuidado{margin-top:26px;font-size:16px;max-width:48ch}
-
-/* Oficio */
-.oficio{padding-block:96px}
-.oficio h2{font-size:clamp(44px,6vw,76px);max-width:16ch}
-.pilares{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px 72px;margin-top:56px}
-.pilares h3{font-size:28px;color:var(--hilo);margin-bottom:10px}
-.pilares p{margin:0;color:var(--pergamino-2);max-width:44ch}
-blockquote{margin:88px 0 0;font-family:var(--f-display);font-size:clamp(30px,4.2vw,54px);line-height:1.2;max-width:24ch}
-blockquote footer{font-family:var(--f-body);font-size:16px;color:var(--pergamino-2);margin-top:18px}
-
-/* Envíos */
-.envios{border-top:1px solid rgba(217,185,138,.25);padding-block:64px}
-.envios .datos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px}
-.envios b{display:block;font-family:var(--f-display);font-weight:400;font-size:26px;line-height:1.2;margin-bottom:8px;color:var(--pergamino)}
-.envios p{margin:0;color:var(--pergamino-2)}
-
-/* Dedicatoria y cierre */
-.dedicatoria{padding-block:72px 40px;text-align:center}
-.dedicatoria p{font-family:var(--f-display);font-size:clamp(22px,2.6vw,30px);line-height:1.4;max-width:34ch;margin:0 auto}
-.dedicatoria .firma{font-family:var(--f-body);font-size:15px;color:var(--pergamino-2);margin-top:16px}
-.cierre{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-block:28px 40px;font-size:14px;color:var(--pergamino-2);border-top:1px solid rgba(217,185,138,.18)}
-
-@media (max-width:860px){
-  .portada .heroe,.coleccion .cabeza,.nativo .obra,.patina .obra{grid-template-columns:1fr}
-  .portada .heroe{gap:44px;padding-bottom:64px}
-  .portada .arco{max-width:340px}
-  .riel{grid-auto-columns:68%;gap:18px}
-  .nativo .obra{gap:36px}
-  .nativo .pieza{max-width:280px}
-  .pilares,.envios .datos{grid-template-columns:1fr;gap:32px}
-  .coleccion{padding-block:64px 72px}
-}
-@media (prefers-reduced-motion:reduce){
-  .costura .p{animation:none;opacity:1}
-  *{transition:none!important}
-}
-</style>
+<script src="main.js?v=20261101" defer></script>
 </head>
 <body>
 
-<header class="piel portada" style="--c:var(--tabaco)">
-  <div class="inner top">
-    <a class="marca" href="#">Dirol</a>
+<header class="barra">
+  <div class="inner barra-in">
+    <a class="marca" href="#inicio">Dirol</a>
     <nav aria-label="Secciones">
-      <a href="#monarca">Colecciones</a>
-      <a href="#patina">La pátina</a>
-      <a href="#oficio">El oficio</a>
-      <a href="https://www.dirol.co/" target="_blank" rel="noopener">Tienda</a>
+      <a href="#muestrario">Colores</a>
+      <a href="#colecciones">Colecciones</a>
+      <a href="#oficio">Oficio</a>
+      <a class="nav-tienda" href="https://www.dirol.co/" target="_blank" rel="noopener">Ir a la tienda</a>
     </nav>
-  </div>
-  <div class="inner heroe">
-    <div>
-      <h1 class="wordmark relieve">Dirol</h1>
-      <svg class="costura" id="costura" aria-hidden="true" preserveAspectRatio="none"></svg>
-      <p class="lema">Cuero colombiano cortado, cosido y terminado a mano desde 2009.</p>
-      <p class="intro">Una empresa familiar de maestros marroquineros. Hacen bolsos, billeteras y accesorios de líneas sobrias, pensados para usarse cada día durante <span id="anios">17</span> años o más.</p>
-      <div class="acciones">
-        <a class="boton lleno" href="#monarca">Ver las colecciones</a>
-        <a class="boton" href="https://www.dirol.co/" target="_blank" rel="noopener">Comprar en dirol.co</a>
-      </div>
-    </div>
-    <a class="pieza" id="destacada" href="https://www.dirol.co/products/bolso-mediano-en-cuero" target="_blank" rel="noopener"></a>
   </div>
 </header>
 
-<main id="colecciones"></main>
+<main id="inicio">
 
-<section class="piel patina" id="patina">
-  <div class="inner obra">
-    <canvas id="cuero" width="800" height="600" role="img" aria-label="Muestra de cuero que se oscurece con los años de uso"></canvas>
-    <div>
-      <h2>La pátina</h2>
-      <p style="margin:0;max-width:44ch">El buen cuero madura con el uso: la luz y el roce de las manos lo oscurecen y le dan brillo. Mueve los años y mira cómo cambia.</p>
-      <div class="anio"><span id="av">0</span> <small>años de uso</small></div>
-      <div class="nota" id="nota"></div>
-      <label for="anio" class="extremos"><span>Recién salido del taller</span><span>17 años</span></label>
-      <input type="range" id="anio" min="0" max="17" step="1" value="0">
-      <p class="cuidado">Para cuidarlo: límpialo con un paño seco, evita el agua directa, hidrátalo con crema para cuero cada pocos meses y guárdalo en una bolsa de tela.</p>
+  <section class="portada" id="muestrario" style="--cuero:#E07A36">
+    <div class="inner portada-in">
+      <div class="portada-texto">
+        <p class="pre">Artesanos del cuero en Colombia desde 2009</p>
+        <h1>Diez colores de cuero, cosidos a mano.</h1>
+        <p class="bajada">Dirol es una empresa familiar que hace bolsos, billeteras y accesorios en cuero. Toca un color del muestrario y conoce la pieza que lo lleva.</p>
+
+        <div class="muestrario" role="group" aria-label="Muestrario de colores de cuero">
+          <button type="button" class="tira" aria-pressed="true" style="--c:#E07A36" data-color="#E07A36" data-nombre="Mandarina" data-pieza="Billetera Porta Celular Pandora" data-precio="$190.000" data-slug="billetera-porta-celular-pandora" data-img="Manolibre_Mandarina.svg?v=1782248732" data-tipo="manolibre"><span>Mandarina</span></button>
+          <button type="button" class="tira" aria-pressed="false" style="--c:#E6A68A" data-color="#E6A68A" data-nombre="Durazno" data-pieza="Billetera de mujer Nova" data-precio="$110.000" data-slug="billetera-nova" data-img="Billetera_Peque_a_Durazno.svg?v=1782148268" data-tipo="billetera"><span>Durazno</span></button>
+          <button type="button" class="tira" aria-pressed="false" style="--c:#B5A07A" data-color="#B5A07A" data-nombre="Caqui" data-pieza="Mini Bolso Zavy" data-precio="$180.000" data-slug="mini-bolso-zavy-en-cuero" data-img="Bolso_Caqui.svg?v=1782248564" data-tipo="bolso"><span>Caqui</span></button>
+          <button type="button" class="tira" aria-pressed="false" style="--c:#A8262E" data-color="#A8262E" data-nombre="Rojo" data-pieza="Billetera de mujer Broche" data-precio="$110.000" data-slug="billetera-broche" data-img="Billetera_Peque_a_Roja.svg?v=1782148548" data-tipo="billetera"><span>Rojo</span></button>
+          <button type="button" class="tira" aria-pressed="false" style="--c:#BF7F2E" data-color="#BF7F2E" data-nombre="Miel" data-pieza="Bolso de mujer Lua" data-precio="$298.000" data-slug="bolso-de-mujer-en-cuero-lua" data-img="Bolso_grande_Miel_Dirol.svg?v=1783986762" data-tipo="bolso"><span>Miel</span></button>
+          <button type="button" class="tira" aria-pressed="false" style="--c:#D7B9A1" data-color="#D7B9A1" data-nombre="Nude" data-pieza="Mano-Libre tipo Carriel" data-precio="$260.000" data-slug="mano-libre-koala" data-img="Bolso_Nude_Dirol.svg?v=1784063109" data-tipo="manolibre"><span>Nude</span></button>
+          <button type="button" class="tira" aria-pressed="false" style="--c:#D3C1A2" data-color="#D3C1A2" data-nombre="Beige" data-pieza="Mano-libre en Cuero" data-precio="$280.000" data-slug="mano-libre-en-cuero" data-img="Manolibre_beige.svg?v=1784093845" data-tipo="manolibre"><span>Beige</span></button>
+          <button type="button" class="tira" aria-pressed="false" style="--c:#B4526D" data-color="#B4526D" data-nombre="Tulipán" data-pieza="Mano-Libre tipo Carriel Monarca" data-precio="$306.000" data-slug="mano-libre-tipo-carriel" data-img="Mano-Libre_tipo_Carriel_Mariposa_Dirol_Tulipan.svg?v=1785123003" data-tipo="manolibre"><span>Tulipán</span></button>
+          <button type="button" class="tira" aria-pressed="false" style="--c:#2C2523" data-color="#2C2523" data-nombre="Negro" data-pieza="Bolso en cuero Véa" data-precio="$420.000" data-slug="bolso-en-cuero-vea" data-img="Bolso_en_cuero_Negro_Dirol...svg?v=1783999640" data-tipo="bolso"><span>Negro</span></button>
+          <button type="button" class="tira" aria-pressed="false" style="--c:#6A4330" data-color="#6A4330" data-nombre="Café" data-pieza="Billetera en Cuero de Hombre" data-precio="$88.000" data-slug="billetera-en-cuero-de-hombre-1" data-img="Billetera_en_Cuero_de_Hombre_Cafe.svg?v=1785103319" data-tipo="billetera"><span>Café</span></button>
+        </div>
+      </div>
+
+      <a class="escena" id="escena" href="https://www.dirol.co/products/billetera-porta-celular-pandora" target="_blank" rel="noopener">
+        <span class="escena-fondo" aria-hidden="true"></span>
+        <span class="escena-foto">
+          <svg class="silueta" viewBox="0 0 200 200" aria-hidden="true"><path d="M44 74 L20 6 M156 74 L180 6" fill="none" stroke="currentColor" stroke-width="2"/><rect x="38" y="70" width="124" height="110" rx="14" fill="currentColor" fill-opacity=".85"/><path d="M48 80 H152 V170 H48 Z" fill="none" stroke="#fff" stroke-opacity=".6" stroke-dasharray="4 4"/></svg>
+          <img id="escena-img" alt="Billetera Porta Celular Pandora en cuero color mandarina" src="https://www.dirol.co/cdn/shop/files/Manolibre_Mandarina.svg?v=1782248732&width=900" onload="this.classList.add('ok')" onerror="this.remove()">
+        </span>
+        <span class="etiqueta">
+          <span class="etiqueta-color" id="escena-color">Mandarina</span>
+          <span class="etiqueta-nombre" id="escena-nombre">Billetera Porta Celular Pandora</span>
+          <span class="etiqueta-precio"><span id="escena-precio">$190.000</span> · Ver en la tienda</span>
+        </span>
+      </a>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="piel oficio" id="oficio" style="--c:var(--tabaco)">
-  <div class="inner">
-    <h2>Cuatro decisiones detrás de cada pieza</h2>
-    <div class="pilares">
-      <div><h3>Hecho a mano</h3><p>Maestros marroquineros cuidan cada costura, ensamble y acabado, con la precisión y la paciencia que el cuero pide.</p></div>
-      <div><h3>Cuero con origen</h3><p>Dirol visita en persona cada curtiembre y selecciona el cuero con criterios estrictos de calidad y trazabilidad.</p></div>
-      <div><h3>Para el día a día</h3><p>Colores versátiles y compartimentos pensados para la rutina real, lejos de las modas pasajeras.</p></div>
-      <div><h3>Nada se desperdicia</h3><p>Los retales se convierten en pequeña marroquinería, así casi todo el cuero cumple un propósito.</p></div>
+  <section class="seccion" aria-labelledby="t-vendidas">
+    <div class="inner">
+      <div class="titular">
+        <h2 id="t-vendidas">Las más pedidas</h2>
+        <a class="enlace" href="https://www.dirol.co/" target="_blank" rel="noopener">Ver toda la tienda</a>
+      </div>
+      <ul class="vitrina">
+        <li><a class="producto" href="https://www.dirol.co/products/billetera-broche" target="_blank" rel="noopener" style="--cuero:#A8262E" data-tipo="billetera">
+          <span class="producto-foto"><img alt="Billetera de mujer Broche en cuero rojo" loading="lazy" src="https://www.dirol.co/cdn/shop/files/Billetera_Peque_a_Roja.svg?v=1782148548&width=700" onload="this.classList.add('ok')" onerror="this.remove()"></span>
+          <span class="producto-nombre">Billetera de mujer Broche</span><span class="producto-precio">$110.000</span></a></li>
+        <li><a class="producto" href="https://www.dirol.co/products/billetera-porta-celular-pandora" target="_blank" rel="noopener" style="--cuero:#E07A36" data-tipo="manolibre">
+          <span class="producto-foto"><img alt="Billetera Porta Celular Pandora en cuero mandarina" loading="lazy" src="https://www.dirol.co/cdn/shop/files/Manolibre_Mandarina.svg?v=1782248732&width=700" onload="this.classList.add('ok')" onerror="this.remove()"></span>
+          <span class="producto-nombre">Billetera Porta Celular Pandora</span><span class="producto-precio">$190.000</span></a></li>
+        <li><a class="producto" href="https://www.dirol.co/products/mini-bolso-zavy-en-cuero" target="_blank" rel="noopener" style="--cuero:#B5A07A" data-tipo="bolso">
+          <span class="producto-foto"><img alt="Mini Bolso Zavy en cuero caqui" loading="lazy" src="https://www.dirol.co/cdn/shop/files/Bolso_Caqui.svg?v=1782248564&width=700" onload="this.classList.add('ok')" onerror="this.remove()"></span>
+          <span class="producto-nombre">Mini Bolso Zavy</span><span class="producto-precio">$180.000</span></a></li>
+        <li><a class="producto" href="https://www.dirol.co/products/billetera-nova" target="_blank" rel="noopener" style="--cuero:#E6A68A" data-tipo="billetera">
+          <span class="producto-foto"><img alt="Billetera de mujer Nova en cuero durazno" loading="lazy" src="https://www.dirol.co/cdn/shop/files/Billetera_Peque_a_Durazno.svg?v=1782148268&width=700" onload="this.classList.add('ok')" onerror="this.remove()"></span>
+          <span class="producto-nombre">Billetera de mujer Nova</span><span class="producto-precio">$110.000</span></a></li>
+      </ul>
     </div>
-    <blockquote>“Nuestro compromiso es diseñar soluciones, no solo productos.”<footer>Dirol</footer></blockquote>
-  </div>
-</section>
+  </section>
 
-<section class="piel" style="--c:var(--tabaco)">
-  <div class="inner envios">
-    <div class="datos">
-      <div><b>Envío gratis desde $130.000</b><p>En compras nacionales. No aplica para Quibdó ni San Andrés.</p></div>
-      <div><b>Pago contraentrega</b><p>Paga cuando recibes tu pieza, según las condiciones de la tienda.</p></div>
-      <div><b>Interrapidísimo y Envia</b><p>Los aliados que llevan cada pedido a todo el país.</p></div>
+  <section class="seccion seccion-suave" id="colecciones" aria-labelledby="t-col">
+    <div class="inner">
+      <div class="titular"><h2 id="t-col">Dos colecciones de autor</h2></div>
+      <div class="colecciones">
+        <a class="coleccion" href="https://www.dirol.co/collections/mar" target="_blank" rel="noopener" style="--cuero:#B4526D" data-tipo="bolso">
+          <span class="coleccion-foto"><img alt="Bolso mediano en cuero de la colección Monarca" loading="lazy" src="https://www.dirol.co/cdn/shop/files/Mariposa-Bolso_Mediano_en_Cuero.svg?v=1785113904&width=900" onload="this.classList.add('ok')" onerror="this.remove()"></span>
+          <span class="coleccion-texto">
+            <span class="coleccion-nombre">Monarca</span>
+            <span>La belleza de las mariposas llevada al cuero, con texturas trabajadas a mano. Cuatro piezas, desde $106.000.</span>
+            <span class="enlace">Ver la colección</span>
+          </span>
+        </a>
+        <a class="coleccion" href="https://www.dirol.co/collections/encanto-nativo" target="_blank" rel="noopener" style="--cuero:#BF7F2E" data-tipo="bolso">
+          <span class="coleccion-foto"><img alt="Bolso en cuero de la colección Encanto Nativo" loading="lazy" src="https://www.dirol.co/cdn/shop/files/Bolso_en_Cuero_Encanto_Nativo_Dirol.svg?v=1784130173&width=900" onload="this.classList.add('ok')" onerror="this.remove()"></span>
+          <span class="coleccion-texto">
+            <span class="coleccion-nombre">Encanto Nativo</span>
+            <span>Círculos y líneas que se vuelven silueta: una geometría serena y atemporal. Bolso en cuero, $249.000.</span>
+            <span class="enlace">Ver la colección</span>
+          </span>
+        </a>
+      </div>
     </div>
-    <div class="acciones">
-      <a class="boton lleno" href="https://www.dirol.co/" target="_blank" rel="noopener">Ir a la tienda</a>
-      <a class="boton" href="https://www.instagram.com/dirolhandbags/" target="_blank" rel="noopener">Instagram</a>
-      <a class="boton" href="https://www.facebook.com/dirolhandbags" target="_blank" rel="noopener">Facebook</a>
+  </section>
+
+  <section class="seccion" aria-labelledby="t-quien">
+    <div class="inner">
+      <div class="titular"><h2 id="t-quien">Busca por estilo</h2></div>
+      <div class="categorias">
+        <a href="https://www.dirol.co/collections/bolsos-en-cuero-para-mujer-dirol" target="_blank" rel="noopener" style="--cuero:#D7B9A1"><span>Bolsos de mujer</span><small>Desde $180.000</small></a>
+        <a href="https://www.dirol.co/collections/billeteras-de-mujer-en-cuero" target="_blank" rel="noopener" style="--cuero:#E6A68A"><span>Billeteras de mujer</span><small>Broche, Nova y más</small></a>
+        <a href="https://www.dirol.co/collections/bolsos-de-hombres-1" target="_blank" rel="noopener" style="--cuero:#6A4330"><span>Bolsos de hombre</span><small>Desde $130.000</small></a>
+        <a href="https://www.dirol.co/collections/billeteras-hombres" target="_blank" rel="noopener" style="--cuero:#2C2523"><span>Billeteras de hombre</span><small>Desde $88.000</small></a>
+      </div>
     </div>
+  </section>
+
+  <section class="seccion seccion-oficio" id="oficio" aria-labelledby="t-oficio">
+    <div class="inner oficio">
+      <div>
+        <h2 id="t-oficio">Hecho por manos que llevan años en el oficio</h2>
+        <p class="cita">“El cuero no es solo una materia prima: es durabilidad, identidad y el talento de nuestra tierra.”</p>
+      </div>
+      <dl class="pilares">
+        <div><dt>Cada costura a mano</dt><dd>Maestros marroquineros cuidan cada ensamble y cada acabado.</dd></div>
+        <div><dt>Cuero con origen</dt><dd>Dirol visita en persona las curtiembres y elige el cuero con criterios estrictos.</dd></div>
+        <div><dt>Para todos los días</dt><dd>Colores versátiles y compartimentos pensados para tu rutina real.</dd></div>
+        <div><dt>Nada se desperdicia</dt><dd>Los retales se convierten en pequeña marroquinería.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="beneficios" aria-label="Condiciones de compra">
+    <div class="inner beneficios-in">
+      <p><strong>Envío gratis</strong> desde $130.000 a todo Colombia*</p>
+      <p><strong>Pago contraentrega</strong> en tu ciudad</p>
+      <p><strong>Envíos con</strong> Interrapidísimo y Envia</p>
+    </div>
+  </section>
+
+  <section class="cierre">
+    <div class="inner cierre-in">
+      <h2>Encuentra tu color en la tienda de Dirol.</h2>
+      <div class="acciones">
+        <a class="btn btn-lleno" href="https://www.dirol.co/" target="_blank" rel="noopener">Comprar en dirol.co</a>
+        <a class="btn" href="https://www.instagram.com/dirolhandbags/" target="_blank" rel="noopener">Instagram</a>
+        <a class="btn" href="https://www.facebook.com/dirolhandbags" target="_blank" rel="noopener">Facebook</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pie">
+  <div class="inner pie-in">
+    <p class="dedicatoria">Para la familia Dirol, por diecisiete años de oficio. Con aprecio, José Lugo.</p>
+    <p>*No aplica para Quibdó ni San Andrés. Precios en pesos colombianos de referencia; confírmalos en dirol.co.</p>
   </div>
-</section>
+</footer>
 
-<section class="piel" style="--c:var(--tabaco)">
-  <div class="inner dedicatoria">
-    <p>Para la familia Dirol, por diecisiete años convirtiendo cuero colombiano en piezas que se heredan.</p>
-    <div class="firma">Con aprecio, José Lugo</div>
-  </div>
-  <div class="inner cierre">
-    <span>Dirol, artesanos del cuero. Colombia, desde 2009.</span>
-    <span>Precios en pesos colombianos de referencia. Confírmalos en dirol.co</span>
-  </div>
-</section>
-
-<script>
-/* Grano de cuero: un mosaico de ruido y poros, usado por todas las pieles */
-(function(){
-  const s=420,c=document.createElement("canvas");c.width=c.height=s;const x=c.getContext("2d");
-  let k=11;const r=()=>(k=(k*16807)%2147483647)/2147483647;
-  x.fillStyle="#fff";x.fillRect(0,0,s,s);
-  const d=x.getImageData(0,0,s,s);
-  for(let i=0;i<d.data.length;i+=4){const v=255-(r()*34|0);d.data[i]=d.data[i+1]=d.data[i+2]=v}
-  x.putImageData(d,0,0);
-  for(let i=0;i<900;i++){x.fillStyle=`rgba(0,0,0,${.05+r()*.08})`;x.beginPath();x.arc(r()*s,r()*s,.6+r()*1.4,0,7);x.fill()}
-  x.strokeStyle="rgba(0,0,0,.07)";x.lineWidth=1;
-  for(let i=0;i<60;i++){x.beginPath();let a=r()*s,b=r()*s;x.moveTo(a,b);for(let j=0;j<5;j++){a+=r()*50-25;b+=r()*24-12;x.lineTo(a,b)}x.stroke()}
-  try{document.documentElement.style.setProperty("--grano",`url(${c.toDataURL("image/png")})`)}catch(e){}
-})();
-
-/* Costura que se cose sola: puntadas inclinadas de silla de montar */
-(function(){
-  const svg=document.getElementById("costura"),W=1000,H=28,paso=22,n=Math.floor(W/paso);
-  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);let h="";
-  for(let i=0;i<n;i++){const x=i*paso+6;
-    h+=`<circle class="agujero" cx="${x}" cy="14" r="2"/>`;
-    h+=`<line class="p" x1="${x}" y1="20" x2="${x+12}" y2="8" style="animation-delay:${(i*0.035).toFixed(3)}s"/>`}
-  svg.innerHTML=h;
-})();
-
-const IMG="https://www.dirol.co/cdn/shop/files/",PROD="https://www.dirol.co/products/";
-const sil={
- bolso:'<path d="M40 50 Q100 0 160 50" fill="none" stroke="currentColor" stroke-width="4"/><path d="M30 70 H170 L182 180 H18 Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M38 80 H162 L172 170 H28 Z" fill="none" stroke="currentColor" stroke-dasharray="4 4"/>',
- billetera:'<rect x="22" y="62" width="156" height="104" rx="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M22 62 H178 V112 Q100 128 22 112 Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M30 70 H170 V158 H30 Z" fill="none" stroke="currentColor" stroke-dasharray="4 4"/>',
- manolibre:'<path d="M44 74 L20 6 M156 74 L180 6" fill="none" stroke="currentColor" stroke-width="2"/><rect x="38" y="70" width="124" height="110" rx="14" fill="none" stroke="currentColor" stroke-width="2"/><path d="M48 80 H152 V170 H48 Z" fill="none" stroke="currentColor" stroke-dasharray="4 4"/>',
- morral:'<path d="M70 42 Q100 14 130 42" fill="none" stroke="currentColor" stroke-width="4"/><rect x="40" y="40" width="120" height="146" rx="22" fill="none" stroke="currentColor" stroke-width="2"/><rect x="62" y="116" width="76" height="56" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>',
- neceser:'<rect x="24" y="76" width="152" height="96" rx="40" fill="none" stroke="currentColor" stroke-width="2"/><path d="M48 92 H152" stroke="currentColor" stroke-width="2" stroke-dasharray="3 3"/>'
-};
-const cop=v=>"$"+v.toLocaleString("es-CO");
-function pieza([nombre,slug,img,precio,tipo]){
-  return `<a class="pieza" href="${PROD+slug}" target="_blank" rel="noopener">
-    <div class="arco"><svg viewBox="0 0 200 200" aria-hidden="true">${sil[tipo]}</svg>
-      <img alt="${nombre}" loading="lazy" src="${IMG+img}&width=700" onload="this.classList.add('ok')" onerror="this.remove()"></div>
-    <div class="pie"><b>${nombre}</b><span>${cop(precio)}</span></div>
-    <span class="ver">Ver en la tienda</span></a>`;
-}
-const colecciones=[
- {id:"monarca",clase:"monarca",nombre:"Monarca",texto:"La belleza de las mariposas llevada al cuero, con texturas trabajadas a mano y un diseño atemporal.",piezas:[
-  ["Bolso Mediano","bolso-mediano-en-cuero","Mariposa-Bolso_Mediano_en_Cuero.svg?v=1785113904",409000,"bolso"],
-  ["Mano-Libre tipo Carriel","mano-libre-tipo-carriel","Mano-Libre_tipo_Carriel_Mariposa_Dirol_Tulipan.svg?v=1785123003",306000,"manolibre"],
-  ["Billetera sencilla","billetera-de-mujer-sencilla-monarca","Billetera_de_mujer_sencilla_dirol.svg?v=1784398420",106000,"billetera"],
-  ["Billetera Broche","billetera-de-mujer-broche-monarca","Fotospagina-2026-07-26T223303.583.svg?v=1785124106",106000,"billetera"]]},
- {id:"nativo",clase:"nativo",nombre:"Encanto Nativo",texto:"Círculos y líneas que se vuelven silueta. Una geometría serena, hecha de equilibrio y movimiento.",piezas:[
-  ["Bolso Encanto Nativo","bolso-en-cuero-encanto-nativo","Bolso_en_Cuero_Encanto_Nativo_Dirol.svg?v=1784130173",249000,"bolso"]]},
- {id:"mujer",clase:"mujer",nombre:"Mujer",texto:"Bolsos, mano-libres y billeteras de líneas sobrias, con compartimentos pensados para el día.",piezas:[
-  ["Bolso Véa","bolso-en-cuero-vea","Bolso_en_cuero_Negro_Dirol...svg?v=1783999640",420000,"bolso"],
-  ["Bolso Mediano","bolso-mano-libre-en-cuero-broche","Bolsos_en_Cuero_Negro_Dirol.svg?v=1784048508",320000,"bolso"],
-  ["Bolso Lua","bolso-de-mujer-en-cuero-lua","Bolso_grande_Miel_Dirol.svg?v=1783986762",298000,"bolso"],
-  ["Mano-libre en Cuero","mano-libre-en-cuero","Manolibre_beige.svg?v=1784093845",280000,"manolibre"],
-  ["Mano-Libre tipo Carriel","mano-libre-koala","Bolso_Nude_Dirol.svg?v=1784063109",260000,"manolibre"],
-  ["Mini-Bombola","mini-bombola-en-cuero","Mini_bombola_dirol_en_cuero.svg?v=1784225340",248000,"neceser"],
-  ["Porta Celular Pandora","billetera-porta-celular-pandora","Manolibre_Mandarina.svg?v=1782248732",190000,"manolibre"],
-  ["Mini Bolso Zavy","mini-bolso-zavy-en-cuero","Bolso_Caqui.svg?v=1782248564",180000,"bolso"],
-  ["Billetera Broche","billetera-broche","Billetera_Peque_a_Roja.svg?v=1782148548",110000,"billetera"],
-  ["Billetera Nova","billetera-nova","Billetera_Peque_a_Durazno.svg?v=1782148268",110000,"billetera"]]},
- {id:"hombre",clase:"hombre",nombre:"Hombre",texto:"Morrales, bolsos de cruzar y billeteras con carácter, para llevar todos los días sin adornos.",piezas:[
-  ["Morral de Hombre","morral-de-hombre","Morral_de_hombre_dirol.svg?v=1784824093",690000,"morral"],
-  ["Bolso de Cruzar","bolso-de-cruzar-para-hombre","Bolso_de_hombre_cruzar.svg?v=1784839760",290000,"manolibre"],
-  ["Bolso Mano-Libre","bolso-mano-libre-de-hombre","Mano_libre_Dirol_Hombre.svg?v=1784842384",280000,"manolibre"],
-  ["Neceser","neceser-de-hombre","Neceser_de_hombre.svg?v=1784842997",130000,"neceser"],
-  ["Billetera de hombre","billetera-de-hombre","Fotos_pagina_-_2026-07-26T165202.663.svg?v=1785102753",110000,"billetera"],
-  ["Billetera en Cuero","billetera-en-cuero-de-hombre-1","Billetera_en_Cuero_de_Hombre_Cafe.svg?v=1785103319",88000,"billetera"]]}
-];
-function geometria(){let g='<svg class="geometria" viewBox="0 0 520 360" aria-hidden="true">';
-  [150,110,70,30].forEach(r=>g+=`<circle cx="190" cy="180" r="${r}"/>`);
-  [120,80,40].forEach(r=>g+=`<circle cx="380" cy="180" r="${r}"/>`);
-  for(let i=0;i<9;i++)g+=`<line x1="${20+i*60}" y1="20" x2="${20+i*60}" y2="340"/>`;
-  g+='<line x1="20" y1="180" x2="500" y2="180"/></svg>';return g}
-document.getElementById("colecciones").innerHTML=colecciones.map(c=>{
-  const cab=`<div class="cabeza"><h2 class="relieve">${c.nombre}</h2><p>${c.texto}<span class="cuenta">${c.piezas.length===1?"Una pieza":c.piezas.length+" piezas"} en esta colección</span></p></div>`;
-  const cuerpo=c.piezas.length===1
-    ?`<div class="obra">${pieza(c.piezas[0])}${geometria()}</div>`
-    :`<div class="riel" role="list">${c.piezas.map(pieza).join("")}</div>${c.piezas.length>4?'<div class="desliza">Desliza para ver todas las piezas</div>':""}`;
-  return `<section class="piel coleccion ${c.clase}" id="${c.id}"><div class="inner">${cab}${cuerpo}</div></section>`;
-}).join("");
-document.getElementById("destacada").innerHTML=pieza(colecciones[0].piezas[0]).replace(/^<a[^>]*>|<\/a>$/g,"");
-document.getElementById("anios").textContent=new Date().getFullYear()-2009;
-
-/* Pátina */
-const cv=document.getElementById("cuero"),cx=cv.getContext("2d");
-const grano=(()=>{const g=document.createElement("canvas");g.width=800;g.height=600;const c=g.getContext("2d");let k=5;const r=()=>(k=(k*16807)%2147483647)/2147483647;
-  const d=c.createImageData(800,600);for(let i=0;i<d.data.length;i+=4){d.data[i]=d.data[i+1]=d.data[i+2]=(r()*45)|0;d.data[i+3]=38}c.putImageData(d,0,0);
-  c.strokeStyle="rgba(0,0,0,.08)";for(let i=0;i<80;i++){c.beginPath();let a=r()*800,b=r()*600;c.moveTo(a,b);for(let j=0;j<6;j++){a+=r()*60-30;b+=r()*30-15;c.lineTo(a,b)}c.stroke()}return g})();
-const A=[222,184,140],B=[112,54,22];
-const notas=["Recién salido del taller: tono claro y parejo, con olor a cuero nuevo.","El primer año el cuero se ablanda y toma la forma de quien lo usa.","Aparece un brillo suave en los bordes y donde más lo tocas.","El color se ha profundizado y cada marca cuenta un viaje.","Una pátina madura: el cuero ya guarda la historia de su dueño.","Diecisiete años, los mismos del oficio de Dirol. Una pieza para heredar."];
-function pintar(y){
-  const t=Math.pow(y/17,.8),col=A.map((a,i)=>Math.round(a+(B[i]-a)*t));
-  cx.fillStyle=`rgb(${col})`;cx.fillRect(0,0,800,600);
-  const g=cx.createRadialGradient(400,280,60,400,300,500);g.addColorStop(0,`rgba(255,235,200,${.05+.22*t})`);g.addColorStop(1,`rgba(40,15,0,${.12+.38*t})`);
-  cx.fillStyle=g;cx.fillRect(0,0,800,600);cx.drawImage(grano,0,0);
-  cx.strokeStyle=`rgba(245,225,195,${.8-.3*t})`;cx.lineWidth=3;cx.setLineDash([18,12]);cx.strokeRect(34,34,732,532);cx.setLineDash([]);
-  document.getElementById("av").textContent=y;
-  document.getElementById("nota").textContent=notas[y===0?0:y<=1?1:y<=4?2:y<=9?3:y<17?4:5];
-}
-const rango=document.getElementById("anio");rango.addEventListener("input",()=>pintar(+rango.value));pintar(0);
-</script>
 </body>
 </html>

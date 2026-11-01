@@ -1,0 +1,1279 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Demo interactiva de FerrePOS Pro: punto de venta bimonetario USD/Bs. para ferreterías.">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>FerrePOS Pro Demo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap">
+<style>
+/* Layout: barra lateral de mostrador (navy) + área de trabajo; en teléfono la barra pasa a pestañas superiores.
+   Identidad heredada de FerrePOS: navy de caja registradora, ámbar de señalización de ferretería, verde dólar, azul bolívar. */
+:root {
+  --bg: #eef2f6;
+  --card: #ffffff;
+  --sunken: #f6f8fb;
+  --fg: #0f172a;
+  --muted: #5b6b80;
+  --line: #dde4ec;
+  --side: #0f172a;
+  --side-2: #1c283d;
+  --side-fg: #cbd5e1;
+  --amber: #f59e0b;
+  --amber-ink: #8a5300;
+  --amber-soft: #fff4d6;
+  --usd: #047857;
+  --usd-soft: #e7f7ef;
+  --ves: #1d4ed8;
+  --ves-soft: #e8efff;
+  --bad: #c62828;
+  --bad-soft: #fdecec;
+  --total-bg: #0f172a;
+  --total-usd: #34d399;
+  --total-ves: #7fb0ff;
+  --shadow: 0 1px 2px rgba(15, 23, 42, .06), 0 4px 14px rgba(15, 23, 42, .05);
+  --f-ui: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-num: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b1220; --card: #121b2c; --sunken: #0f1726; --fg: #e6edf6; --muted: #93a3b8; --line: #23324a;
+    --side: #070c16; --side-2: #15203a; --side-fg: #b7c3d4; --amber: #fbbf24; --amber-ink: #fcd34d; --amber-soft: #2b2210;
+    --usd: #34d399; --usd-soft: #0f2a22; --ves: #7fb0ff; --ves-soft: #13213d; --bad: #f87171; --bad-soft: #2d1414;
+    --total-bg: #050a14; --total-usd: #34d399; --total-ves: #7fb0ff; --shadow: 0 1px 2px rgba(0,0,0,.4); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b1220; --card: #121b2c; --sunken: #0f1726; --fg: #e6edf6; --muted: #93a3b8; --line: #23324a;
+  --side: #070c16; --side-2: #15203a; --side-fg: #b7c3d4; --amber: #fbbf24; --amber-ink: #fcd34d; --amber-soft: #2b2210;
+  --usd: #34d399; --usd-soft: #0f2a22; --ves: #7fb0ff; --ves-soft: #13213d; --bad: #f87171; --bad-soft: #2d1414;
+  --total-bg: #050a14; --total-usd: #34d399; --total-ves: #7fb0ff; --shadow: 0 1px 2px rgba(0,0,0,.4); color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--f-ui); font-size: 14px; line-height: 1.45; }
+button, input, select { font: inherit; color: inherit; }
+.num { font-family: var(--f-num); font-variant-numeric: tabular-nums; }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+h2 { font-size: 1.3rem; font-weight: 800; letter-spacing: -.01em; }
+h3 { font-size: 1rem; font-weight: 700; }
+.muted { color: var(--muted); }
+.small { font-size: .78rem; }
+.usd { color: var(--usd); }
+.ves { color: var(--ves); }
+.bad { color: var(--bad); }
+
+/* ---------- Estructura ---------- */
+.shell { display: flex; min-height: 100%; }
+.side { width: 236px; flex-shrink: 0; background: var(--side); color: var(--side-fg); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; }
+.brand { padding: 1.1rem 1.1rem 1rem; border-bottom: 1px solid var(--side-2); display: flex; gap: .7rem; align-items: center; }
+.brand-mark { width: 38px; height: 38px; border-radius: 9px; background: var(--amber); display: grid; place-items: center; flex-shrink: 0; }
+.brand-name { font-weight: 800; font-size: 1.12rem; color: #fff; letter-spacing: .02em; }
+.brand-name b { color: var(--amber); }
+.brand-sub { font-size: .7rem; color: #8b9ab0; }
+.nav { padding: .8rem .6rem; display: flex; flex-direction: column; gap: .2rem; flex: 1; overflow-y: auto; }
+.nav a { display: flex; align-items: center; gap: .65rem; padding: .6rem .75rem; border-radius: 8px; color: var(--side-fg); text-decoration: none; font-weight: 500; }
+.nav a:hover { background: var(--side-2); color: #fff; }
+.nav a.on { background: var(--amber); color: #1a1200; font-weight: 700; }
+.nav svg { width: 17px; height: 17px; flex-shrink: 0; }
+.nav .dot { margin-left: auto; width: 8px; height: 8px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 3px rgba(52,211,153,.25); }
+.side-foot { padding: .9rem 1rem; border-top: 1px solid var(--side-2); display: grid; gap: .55rem; }
+.side-foot label { font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: #8b9ab0; }
+.role { display: flex; background: var(--side-2); border-radius: 8px; padding: 3px; }
+.role button { flex: 1; border: 0; background: transparent; color: var(--side-fg); padding: .4rem; border-radius: 6px; cursor: pointer; font-size: .8rem; font-weight: 600; }
+.role button.on { background: #fff; color: #0f172a; }
+
+.main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: .75rem; flex-wrap: wrap; padding-block: .7rem; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); background: var(--card); border-bottom: 1px solid var(--line); }
+.demo-flag { display: inline-flex; align-items: center; gap: .45rem; font-size: .76rem; font-weight: 700; color: var(--amber-ink); background: var(--amber-soft); padding: .28rem .65rem; border-radius: 999px; }
+.top-right { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.rate { display: inline-flex; align-items: center; gap: .5rem; background: var(--total-bg); color: #fff; border-radius: 999px; padding: .35rem .5rem .35rem .85rem; font-size: .8rem; }
+.rate span { color: #94a3b8; font-size: .72rem; }
+.rate strong { color: #fde047; }
+.rate input { width: 82px; border: 1px solid #334155; background: #1e293b; color: #fff; border-radius: 999px; padding: .2rem .55rem; text-align: right; }
+.page { padding-block: 1.1rem 2rem; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); flex: 1; }
+.head { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.head p { margin: .25rem 0 0; color: var(--muted); font-size: .86rem; max-width: 62ch; }
+
+/* ---------- Componentes ---------- */
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 1rem; box-shadow: var(--shadow); min-width: 0; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; border: 1px solid transparent; border-radius: 8px; padding: .55rem .95rem; font-weight: 600; cursor: pointer; background: var(--sunken); color: var(--fg); white-space: nowrap; }
+.btn:hover:not(:disabled) { filter: brightness(.97); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn:focus-visible, .nav a:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+.btn-amber { background: var(--amber); color: #1a1200; }
+.btn-dark { background: var(--fg); color: var(--card); }
+.btn-ok { background: var(--usd); color: #fff; }
+.btn-bad { background: var(--bad); color: #fff; }
+.btn-line { background: transparent; border-color: var(--line); }
+.btn-sm { padding: .32rem .6rem; font-size: .78rem; }
+.kbd { font-family: var(--f-num); font-size: .66rem; border: 1px solid currentColor; border-bottom-width: 2px; border-radius: 4px; padding: 0 .3rem; opacity: .7; }
+.field { display: grid; gap: .3rem; }
+.field label, .lbl { font-size: .74rem; font-weight: 600; color: var(--muted); }
+.inp { width: 100%; border: 1px solid var(--line); background: var(--card); border-radius: 8px; padding: .55rem .7rem; }
+.inp:focus { border-color: var(--amber); }
+.chip { display: inline-flex; align-items: center; gap: .3rem; font-size: .7rem; font-weight: 700; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.chip-usd { background: var(--usd-soft); color: var(--usd); }
+.chip-ves { background: var(--ves-soft); color: var(--ves); }
+.chip-amber { background: var(--amber-soft); color: var(--amber-ink); }
+.chip-bad { background: var(--bad-soft); color: var(--bad); }
+.alert { padding: .6rem .8rem; border-radius: 8px; font-size: .84rem; display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.alert-bad { background: var(--bad-soft); color: var(--bad); }
+.alert-ok { background: var(--usd-soft); color: var(--usd); }
+.alert-warn { background: var(--amber-soft); color: var(--amber-ink); }
+.grid { display: grid; gap: .9rem; }
+.g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.kpi-l { font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.kpi-v { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-size: 1.4rem; font-weight: 700; margin-top: .2rem; }
+.tw { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .84rem; }
+th { text-align: left; font-size: .68rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 700; padding: .55rem .6rem; border-bottom: 1px solid var(--line); background: var(--sunken); white-space: nowrap; }
+td { padding: .55rem .6rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
+td.r, th.r { text-align: right; }
+.empty { text-align: center; color: var(--muted); padding: 1.6rem .5rem; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { border: 0; background: var(--card); padding: .45rem .85rem; font-weight: 600; cursor: pointer; font-size: .82rem; }
+.seg button.on { background: var(--fg); color: var(--card); }
+.seg button:disabled { opacity: .45; cursor: not-allowed; }
+.stack { display: grid; gap: .9rem; }
+.row { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+
+/* ---------- POS ---------- */
+.pos { display: grid; grid-template-columns: minmax(0, 1fr) 410px; gap: 1rem; align-items: start; }
+.search-bar { display: grid; gap: .6rem; }
+.cats { display: flex; gap: .35rem; flex-wrap: wrap; }
+.cats button { border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: .3rem .75rem; font-size: .78rem; font-weight: 600; cursor: pointer; }
+.cats button.on { background: var(--fg); color: var(--card); border-color: var(--fg); }
+.products { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: .75rem; }
+.prod { display: flex; flex-direction: column; gap: .45rem; }
+.prod-top { display: flex; justify-content: space-between; gap: .4rem; align-items: flex-start; }
+.sku { font-family: var(--f-num); font-size: .7rem; color: var(--muted); font-weight: 600; }
+.prod-name { font-weight: 700; font-size: .88rem; min-height: 2.5em; }
+.prices { display: flex; justify-content: space-between; align-items: baseline; background: var(--sunken); border: 1px solid var(--line); border-radius: 8px; padding: .45rem .6rem; }
+.prices .a { font-family: var(--f-num); font-weight: 700; color: var(--usd); font-size: 1.05rem; }
+.prices .b { font-family: var(--f-num); font-weight: 600; color: var(--ves); font-size: .8rem; }
+.prod-foot { display: flex; justify-content: space-between; align-items: center; gap: .4rem; font-size: .75rem; color: var(--muted); }
+.fracs { display: flex; gap: .3rem; border-top: 1px dashed var(--line); padding-top: .45rem; }
+.fracs button { flex: 1; border: 1px solid var(--line); background: var(--card); border-radius: 6px; font-size: .7rem; padding: .25rem; cursor: pointer; font-weight: 600; }
+.prod.low .stockv { color: var(--bad); }
+.cart { position: sticky; top: .75rem; display: flex; flex-direction: column; gap: .7rem; }
+.cart-head { display: flex; justify-content: space-between; align-items: center; gap: .5rem; }
+.client { background: var(--sunken); border: 1px solid var(--line); border-radius: 8px; padding: .6rem; display: grid; gap: .45rem; }
+.lines { max-height: 300px; overflow-y: auto; border-block: 1px solid var(--line); }
+.line { display: grid; grid-template-columns: minmax(0, 1fr) auto auto auto; gap: .45rem; align-items: center; padding: .5rem 0; border-bottom: 1px dashed var(--line); }
+.line:last-child { border-bottom: 0; }
+.line-n { font-weight: 600; font-size: .82rem; overflow-wrap: anywhere; }
+.qty { width: 74px; text-align: right; padding: .3rem .4rem; }
+.line-t { text-align: right; font-family: var(--f-num); font-size: .8rem; min-width: 82px; }
+.sum-row { display: flex; justify-content: space-between; gap: .5rem; font-size: .84rem; align-items: center; }
+.total { background: var(--total-bg); border-radius: 10px; padding: .85rem 1rem; display: flex; justify-content: space-between; gap: .75rem; flex-wrap: wrap; color: #fff; }
+.total .l { font-size: .66rem; color: #94a3b8; font-weight: 700; letter-spacing: .05em; }
+.total .u { font-family: var(--f-num); font-size: 1.5rem; font-weight: 700; color: var(--total-usd); }
+.total .v { font-family: var(--f-num); font-size: 1.15rem; font-weight: 700; color: var(--total-ves); text-align: right; }
+.hold { display: flex; gap: .35rem; flex-wrap: wrap; align-items: center; background: var(--amber-soft); border-radius: 8px; padding: .5rem .65rem; }
+
+/* ---------- Modal ---------- */
+.modal-bg { position: fixed; inset: 0; background: rgba(8, 13, 25, .55); display: grid; place-items: center; z-index: 50; padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.modal { background: var(--card); border-radius: 12px; width: min(760px, 100%); max-height: 100%; overflow-y: auto; padding: 1.1rem; display: grid; gap: .85rem; box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+.modal-h { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+.box { border-radius: 9px; padding: .75rem; border: 1px solid var(--line); background: var(--sunken); }
+
+/* ---------- Ticket térmico 80 mm ---------- */
+.ticket { width: 100%; max-width: 300px; margin: 0 auto; background: #fff; color: #111; font-family: var(--f-num); font-size: 11.5px; line-height: 1.4; padding: 14px 12px; border-radius: 4px; box-shadow: 0 2px 10px rgba(0,0,0,.15); position: relative; }
+.ticket::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 6px; background: radial-gradient(circle at 6px 0, transparent 5px, #fff 5.5px) 0 0 / 12px 6px repeat-x; }
+.t-c { text-align: center; }
+.t-r { display: flex; justify-content: space-between; gap: 8px; }
+.t-sep { border-top: 1px dashed #111; margin: 6px 0; }
+.t-b { font-weight: 700; }
+
+/* ---------- Gráfico ---------- */
+.bars { display: flex; align-items: flex-end; gap: 6px; height: 190px; padding-top: 18px; overflow-x: auto; }
+.bar-c { flex: 1; min-width: 26px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 3px; }
+.bar { width: 100%; max-width: 34px; background: var(--amber); border-radius: 4px 4px 0 0; display: flex; align-items: flex-end; overflow: hidden; }
+.bar i { display: block; width: 100%; background: var(--usd); }
+.bar-v, .bar-d { font-family: var(--f-num); font-size: .62rem; color: var(--muted); }
+.meter { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+.meter i { display: block; height: 100%; background: var(--ves); }
+.firma { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; border-top: 1px solid var(--line); background: var(--card); padding-block: .9rem; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.firma-mark { width: 34px; height: 34px; border-radius: 50%; background: var(--fg); color: var(--card); display: grid; place-items: center; font-weight: 700; font-size: .8rem; }
+.firma a { color: var(--ves); text-decoration: none; }
+.firma-nota { margin-left: auto; }
+.mbar { display: none; }
+@media (max-width: 1150px) {
+  .mbar { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; gap: .6rem; align-items: center; justify-content: space-between; background: var(--total-bg); color: #fff; padding-block: .6rem calc(.6rem + env(safe-area-inset-bottom, 0px)); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .mbar[hidden] { display: none !important; }
+  .page.con-mbar { padding-bottom: 5rem; }
+  .main:has(.con-mbar) .firma { padding-bottom: 5.5rem; }
+}
+.toast { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(16px, env(safe-area-inset-bottom, 0px)); background: var(--fg); color: var(--card); padding: .65rem .95rem; border-radius: 9px; font-weight: 600; font-size: .85rem; z-index: 60; box-shadow: var(--shadow); max-width: calc(100% - 32px); }
+
+@media (max-width: 1150px) { .pos { grid-template-columns: minmax(0, 1fr); } .cart { position: static; } }
+@media (max-width: 900px) {
+  .shell { flex-direction: column; }
+  .side { width: 100%; height: auto; position: static; }
+  .brand { padding: .7rem max(16px, env(safe-area-inset-left, 0px)); border: 0; }
+  .nav { flex-direction: row; overflow-x: auto; padding: 0 max(16px, env(safe-area-inset-right, 0px)) .6rem max(16px, env(safe-area-inset-left, 0px)); }
+  .nav a { white-space: nowrap; padding: .45rem .7rem; }
+  .side-foot { grid-template-columns: auto 1fr; align-items: center; padding: .5rem max(16px, env(safe-area-inset-left, 0px)) .7rem; border-top: 1px solid var(--side-2); }
+  .g4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .g3, .g2 { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 480px) { .g4 { grid-template-columns: minmax(0, 1fr); } .line { grid-template-columns: minmax(0, 1fr) auto; } .line-t { grid-column: 1; text-align: left; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="shell">
+  <aside class="side">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1200" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 1-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 1 5.4-5.4l-2.6 2.6-2.8-.6-.6-2.8z"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">FERRE<b>POS</b> <span class="small" style="color: var(--amber)">PRO</span></div>
+        <div class="brand-sub">Bimonetario USD / Bs.</div>
+      </div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot">
+      <label for="rol-admin">Ver como</label>
+      <div class="role" role="group" aria-label="Rol">
+        <button id="rol-admin" data-a="rol" data-v="ADMIN">Admin</button>
+        <button id="rol-cajero" data-a="rol" data-v="CAJERO">Cajero</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="top">
+      <div class="row">
+        <span class="demo-flag">● DEMO · datos de ejemplo guardados solo en este navegador</span>
+        <span class="muted small" id="empresa-top"></span>
+      </div>
+      <div class="top-right">
+        <div class="rate" title="Tasa BCV de la demo. El administrador puede cambiarla.">
+          <span>TASA BCV</span>
+          <strong class="num" id="rate-view"></strong>
+          <input id="rate-input" class="num" type="number" min="0.01" step="0.01" aria-label="Tasa en bolívares por dólar">
+        </div>
+        <button class="btn btn-line btn-sm" data-a="reset">Reiniciar demo</button>
+      </div>
+    </header>
+    <main class="page" id="page"></main>
+    <footer class="firma">
+      <span class="firma-mark num" aria-hidden="true">JL</span>
+      <div><strong>José Lugo</strong><div class="small"><a href="https://wa.me/573126387467" rel="noopener">+57 312 638 7467</a> · <span class="num">jose.lugocdv@gmail.com</span></div></div>
+      <div class="small muted firma-nota">Demo de FerrePOS Pro con datos de ejemplo. Los datos se guardan solo en este navegador.</div>
+    </footer>
+  </div>
+</div>
+<div id="modal"></div>
+<div id="mbar" class="mbar" hidden></div>
+<div id="toast" class="toast" hidden></div>
+
+<script>
+'use strict';
+/* =====================================================================
+   Motor de cálculo — espejo de CalculadoraVenta.php / utils/calculo.js
+   ===================================================================== */
+const r2 = (n) => Math.round((Number(n) + Number.EPSILON) * 100) / 100;
+const r3 = (n) => Math.round((Number(n) + Number.EPSILON) * 1000) / 1000;
+
+function calcularTotales(lineas, descuentoUsd) {
+  const conSub = lineas.map((l) => ({ ...l, subtotal_usd: r2(l.cantidad * l.precio_usd) }));
+  const subtotal = r2(conSub.reduce((a, l) => a + l.subtotal_usd, 0));
+  const descuento = r2(Math.min(Math.max(0, Number(descuentoUsd) || 0), subtotal));
+  const factor = subtotal > 0 ? descuento / subtotal : 0;
+  let asignado = 0, impuesto = 0;
+  conSub.forEach((l, i) => {
+    const d = i === conSub.length - 1 ? r2(descuento - asignado) : r2(l.subtotal_usd * factor);
+    asignado += d;
+    impuesto += r2(r2(l.subtotal_usd - d) * (l.iva_pct / 100));
+  });
+  impuesto = r2(impuesto);
+  return { subtotal_usd: subtotal, descuento_usd: descuento, impuesto_usd: impuesto, total_usd: r2(subtotal - descuento + impuesto), lineas: conSub };
+}
+
+function calcularCobro(totalUsd, pagos, tasa, igtfPct) {
+  let pagado = 0, divisas = 0;
+  for (const p of pagos) {
+    const eq = p.moneda === 'USD' ? r2(p.monto) : r2(p.monto / tasa);
+    pagado += eq;
+    if (p.igtf) divisas += eq;
+  }
+  pagado = r2(pagado); divisas = r2(divisas);
+  const base = igtfPct > 0 ? r2(Math.min(divisas, totalUsd)) : 0;
+  const igtf = r2(base * igtfPct / 100);
+  const cobrar = r2(totalUsd + igtf);
+  const diff = r2(cobrar - pagado);
+  return { pagado, base_igtf: base, igtf, cobrar, faltante: diff > 0.009 ? diff : 0, excedente: diff < -0.009 ? r2(-diff) : 0 };
+}
+
+function montoSugerido(totalUsd, pagos, metodo, tasa, igtfPct) {
+  const actual = calcularCobro(totalUsd, pagos, tasa, igtfPct);
+  if (actual.faltante <= 0) return 0;
+  let usd = actual.faltante;
+  const p = igtfPct / 100;
+  if (p > 0 && metodo.igtf) {
+    const pagadoDiv = pagos.filter((x) => x.igtf).reduce((a, x) => a + (x.moneda === 'USD' ? r2(x.monto) : r2(x.monto / tasa)), 0);
+    const base = Math.max(0, totalUsd - pagadoDiv);
+    const x = actual.faltante / (1 - p);
+    usd = x <= base ? x : actual.faltante + p * base;
+  }
+  let monto = metodo.moneda === 'USD' ? r2(usd) : r2(usd * tasa);
+  const paso = metodo.moneda === 'USD' ? 0.01 : Math.max(0.01, r2(tasa / 100));
+  for (let i = 0; i < 5; i++) {
+    const t = calcularCobro(totalUsd, [...pagos, { moneda: metodo.moneda, monto, igtf: metodo.igtf }], tasa, igtfPct);
+    if (t.faltante <= 0) break;
+    monto = r2(monto + paso);
+  }
+  return monto;
+}
+
+/* =====================================================================
+   Datos de ejemplo
+   ===================================================================== */
+const CATS = ['Electricidad', 'Plomería', 'Tornillería y Fijación', 'Construcción', 'Herramientas', 'Pinturas y Químicos'];
+const UNIDADES = { UND: false, M: true, KG: true, L: true, CAJA: false };
+const METODOS = [
+  { id: 1, codigo: 'EFECTIVO_VES', nombre: 'Efectivo Bs.', moneda: 'VES', ref: false, igtf: false },
+  { id: 2, codigo: 'EFECTIVO_USD', nombre: 'Efectivo USD', moneda: 'USD', ref: false, igtf: true },
+  { id: 3, codigo: 'PUNTO_DEBITO', nombre: 'Punto Débito', moneda: 'VES', ref: true, igtf: false },
+  { id: 4, codigo: 'PUNTO_CREDITO', nombre: 'Punto Crédito', moneda: 'VES', ref: true, igtf: false },
+  { id: 5, codigo: 'BINANCE', nombre: 'Binance Pay', moneda: 'USD', ref: true, igtf: true },
+  { id: 6, codigo: 'ZELLE', nombre: 'Zelle', moneda: 'USD', ref: true, igtf: true },
+  { id: 7, codigo: 'PAGO_MOVIL', nombre: 'Pago Móvil', moneda: 'VES', ref: true, igtf: false }
+];
+const metodo = (id) => METODOS.find((m) => m.id === Number(id));
+
+function productosIniciales() {
+  return [
+    { id: 1, sku: 'ELE-CAB-12', barra: '7591000000121', nombre: 'Cable THW #12 AWG cobre (por metro)', cat: 0, um: 'M', costo: 0.55, precio: 0.85, stock: 300, min: 50, iva: 16 },
+    { id: 2, sku: 'TOR-CLA-25', barra: '7591000000252', nombre: 'Clavo de hierro 2-1/2" (por kilo)', cat: 2, um: 'KG', costo: 1.7, precio: 2.6, stock: 75, min: 10, iva: 16 },
+    { id: 3, sku: 'CON-CEM-42', barra: '7591000000423', nombre: 'Saco de cemento gris 42,5 kg', cat: 3, um: 'UND', costo: 7.2, precio: 9.5, stock: 120, min: 20, iva: 16 },
+    { id: 4, sku: 'PLO-TUB-12', barra: '7591000000124', nombre: 'Tubo PVC agua fría 1/2" x 6 m', cat: 1, um: 'UND', costo: 3.1, precio: 4.75, stock: 60, min: 10, iva: 16 },
+    { id: 5, sku: 'HER-ESM-45', barra: '7591000000455', nombre: 'Esmeril angular 4-1/2" 850 W', cat: 4, um: 'UND', costo: 32, precio: 45, stock: 12, min: 3, iva: 16 },
+    { id: 6, sku: 'PIN-SOL-TH', barra: '7591000000666', nombre: 'Thinner acrílico (por litro)', cat: 5, um: 'L', costo: 2.2, precio: 3.4, stock: 40, min: 8, iva: 16 },
+    { id: 7, sku: 'ELE-BRK-20', barra: '7591000000207', nombre: 'Breaker 1 polo 20 A', cat: 0, um: 'UND', costo: 3.8, precio: 5.9, stock: 45, min: 8, iva: 16 },
+    { id: 8, sku: 'PLO-LLA-12', barra: '7591000000128', nombre: 'Llave de paso 1/2" bronce', cat: 1, um: 'UND', costo: 4.2, precio: 6.5, stock: 4, min: 6, iva: 16 },
+    { id: 9, sku: 'CON-CAB-38', barra: '7591000000389', nombre: 'Cabilla 3/8" x 6 m', cat: 3, um: 'UND', costo: 4.9, precio: 6.8, stock: 200, min: 40, iva: 16 },
+    { id: 10, sku: 'PIN-CAU-GL', barra: '7591000000100', nombre: 'Pintura de caucho blanca (galón)', cat: 5, um: 'UND', costo: 9.8, precio: 14.5, stock: 25, min: 5, iva: 16 },
+    { id: 11, sku: 'HER-MAR-16', barra: '7591000000161', nombre: 'Martillo de carpintero 16 oz', cat: 4, um: 'UND', costo: 5.1, precio: 8.25, stock: 18, min: 4, iva: 16 },
+    { id: 12, sku: 'TOR-DRY-61', barra: '7591000000612', nombre: 'Tornillo drywall 6 x 1" (caja 100)', cat: 2, um: 'CAJA', costo: 3.2, precio: 4.9, stock: 50, min: 10, iva: 16 }
+  ];
+}
+
+function rng(seed) { return () => ((seed = (seed * 9301 + 49297) % 233280) / 233280); }
+const hoyStr = () => fecha(new Date());
+function fecha(d) { const z = (n) => String(n).padStart(2, '0'); return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`; }
+function fechaHora(d) { const z = (n) => String(n).padStart(2, '0'); return `${fecha(d)} ${z(d.getHours())}:${z(d.getMinutes())}`; }
+function sumarDias(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+
+function estadoInicial() {
+  const st = {
+    v: 1,
+    rol: 'ADMIN',
+    tasa: 42.5,
+    config: { empresa: 'Ferretería El Tornillo C.A.', rif: 'J-40123456-7', direccion: 'Av. Bolívar, local 12, Maracay', telefono: '0243-555-0101', pie: '¡Gracias por su compra!', igtf: true, igtfPct: 3, cajaObligatoria: true, descMaxCajero: 10, diasCredito: 15 },
+    productos: productosIniciales(),
+    clientes: [
+      { id: 1, doc: 'V-15222333', nombre: 'José Gregorio Pérez', tel: '0414-1234567', limite: 0 },
+      { id: 2, doc: 'J-29876543-1', nombre: 'Inversiones Delta 2020', tel: '0424-7654321', limite: 300 },
+      { id: 3, doc: 'J-31234567-0', nombre: 'Constructora Los Andes', tel: '0412-5550199', limite: 500 },
+      { id: 4, doc: 'V-12345678', nombre: 'María Fernández', tel: '', limite: 0 }
+    ],
+    ventas: [],
+    abonos: [],
+    correlativo: 0,
+    cajas: [],
+    espera: [],
+    carrito: { items: [], doc: '', descuento: 0 }
+  };
+
+  // Historial de 13 días de ventas (determinista)
+  const rnd = rng(20261031);
+  const usuarios = ['Cajero Principal', 'Administrador'];
+  for (let d = 13; d >= 1; d--) {
+    const dia = sumarDias(new Date(), -d);
+    const n = 3 + Math.floor(rnd() * 6);
+    for (let k = 0; k < n; k++) {
+      dia.setHours(8 + Math.floor(rnd() * 10), Math.floor(rnd() * 60));
+      const items = [];
+      const nl = 1 + Math.floor(rnd() * 3);
+      for (let j = 0; j < nl; j++) {
+        const p = st.productos[Math.floor(rnd() * st.productos.length)];
+        if (items.some((i) => i.id === p.id)) continue;
+        const cant = UNIDADES[p.um] ? r3(1 + Math.floor(rnd() * 8) * 0.5) : 1 + Math.floor(rnd() * 4);
+        items.push({ id: p.id, cant });
+      }
+      const m = METODOS[[1, 2, 6, 7, 3][Math.floor(rnd() * 5)] - 1];
+      registrarVentaInterna(st, {
+        items, doc: ['V-15222333', 'V-12345678', 'V-20111222', 'V-18999000'][Math.floor(rnd() * 4)],
+        descuento: 0, condicion: 'CONTADO', pagos: null, metodoAuto: m, usuario: usuarios[Math.floor(rnd() * 2)], fechaObj: new Date(dia), sinStock: true
+      });
+    }
+  }
+  // Créditos abiertos
+  registrarVentaInterna(st, { items: [{ id: 3, cant: 10 }, { id: 9, cant: 12 }], doc: 'J-31234567-0', descuento: 0, condicion: 'CREDITO', pagos: [{ metodo_id: 2, monto: 50 }], usuario: 'Administrador', fechaObj: sumarDias(new Date(), -8), sinStock: true });
+  registrarVentaInterna(st, { items: [{ id: 10, cant: 4 }, { id: 6, cant: 6 }], doc: 'J-29876543-1', descuento: 0, condicion: 'CREDITO', pagos: [], usuario: 'Cajero Principal', fechaObj: sumarDias(new Date(), -20), sinStock: true, diasCredito: 15 });
+
+  // Caja del día abierta con dos ventas
+  st.cajas.push({ id: 1, usuario: 'Caja principal', estado: 'ABIERTA', fondoUsd: 20, fondoVes: 850, abierta: fechaHora(sumarDias(new Date(), 0)), cerrada: null, arqueo: null, dif: null });
+  const hoy = new Date(); hoy.setHours(Math.max(8, hoy.getHours() - 2), 10);
+  registrarVentaInterna(st, { items: [{ id: 3, cant: 2 }, { id: 1, cant: 6.5 }], doc: 'V-15222333', descuento: 0, condicion: 'CONTADO', pagos: null, metodoAuto: metodo(7), usuario: 'Cajero Principal', fechaObj: new Date(hoy), caja: 1 });
+  hoy.setMinutes(45);
+  registrarVentaInterna(st, { items: [{ id: 11, cant: 1 }, { id: 12, cant: 2 }], doc: 'V-12345678', descuento: 0, condicion: 'CONTADO', pagos: [{ metodo_id: 2, monto: 30 }], usuario: 'Cajero Principal', fechaObj: new Date(hoy), caja: 1 });
+  return st;
+}
+
+/* =====================================================================
+   Reglas de negocio (equivalentes a VentaService / CajaService / CxcService)
+   ===================================================================== */
+class ErrorNegocio extends Error {}
+
+function deudaCliente(st, clienteId) {
+  return r2(st.ventas.filter((v) => v.clienteId === clienteId && v.estado === 'COMPLETADA').reduce((a, v) => a + v.saldo, 0));
+}
+
+function registrarVentaInterna(st, o) {
+  const cfg = st.config;
+  const tasa = st.tasa;
+  if (!o.items.length) throw new ErrorNegocio('El carrito está vacío.');
+  const doc = String(o.doc || '').trim().toUpperCase();
+  if (!doc) throw new ErrorNegocio('La cédula o RIF del cliente es obligatoria.');
+
+  // Agrupa cantidades y valida stock
+  const cant = {};
+  o.items.forEach((i) => { cant[i.id] = r3((cant[i.id] || 0) + Number(i.cant)); });
+  const lineas = Object.entries(cant).map(([id, c]) => {
+    const p = st.productos.find((x) => x.id === Number(id));
+    if (!p) throw new ErrorNegocio('Producto no encontrado.');
+    if (!UNIDADES[p.um] && c % 1 !== 0) throw new ErrorNegocio(`"${p.nombre}" se vende por ${p.um} y no admite decimales.`);
+    if (!o.sinStock && c > p.stock + 0.0005) throw new ErrorNegocio(`Stock insuficiente para "${p.nombre}". Disponible: ${fmtCant(p.stock)} ${p.um}.`);
+    return { p, cantidad: c, precio_usd: p.precio, iva_pct: p.iva };
+  });
+
+  const t = calcularTotales(lineas, o.descuento);
+  if (o.rol === 'CAJERO' && t.descuento_usd > r2(t.subtotal_usd * cfg.descMaxCajero / 100) + 0.001) {
+    throw new ErrorNegocio(`El descuento máximo para cajeros es ${cfg.descMaxCajero}% (${usd(r2(t.subtotal_usd * cfg.descMaxCajero / 100))}).`);
+  }
+  const igtfPct = cfg.igtf ? cfg.igtfPct : 0;
+  let pagos = (o.pagos || []).map((p) => { const m = metodo(p.metodo_id); return { metodo_id: m.id, moneda: m.moneda, monto: r2(p.monto), igtf: m.igtf, ref: p.ref || null }; });
+  if (o.pagos === null && o.metodoAuto) {
+    const m = o.metodoAuto;
+    pagos = [{ metodo_id: m.id, moneda: m.moneda, monto: montoSugerido(t.total_usd, [], m, tasa, igtfPct), igtf: m.igtf, ref: m.ref ? String(100000 + st.correlativo * 37).slice(-6) : null }];
+  }
+  const c = calcularCobro(t.total_usd, pagos, tasa, igtfPct);
+  let condicion = o.condicion;
+  let saldo = 0;
+  if (condicion === 'CONTADO' && c.faltante > 0.02) throw new ErrorNegocio(`Falta cobrar ${usd(c.faltante)} (${ves(r2(c.faltante * tasa))}).`);
+  if (condicion === 'CREDITO') {
+    saldo = c.faltante;
+    if (saldo <= 0.02) { condicion = 'CONTADO'; saldo = 0; }
+  }
+
+  let cliente = st.clientes.find((x) => x.doc === doc);
+  if (!cliente) {
+    cliente = { id: Math.max(0, ...st.clientes.map((x) => x.id)) + 1, doc, nombre: o.nombre || '', tel: '', limite: 0 };
+    st.clientes.push(cliente);
+  } else if (o.nombre && !cliente.nombre) cliente.nombre = o.nombre;
+
+  if (condicion === 'CREDITO') {
+    if (cliente.limite <= 0) throw new ErrorNegocio(`${cliente.doc} no tiene crédito aprobado.`);
+    const deuda = deudaCliente(st, cliente.id);
+    if (deuda + saldo > cliente.limite + 0.009) throw new ErrorNegocio(`Límite de crédito excedido. Disponible: ${usd(Math.max(0, cliente.limite - deuda))}.`);
+  }
+
+  const f = o.fechaObj || new Date();
+  st.correlativo += 1;
+  const venta = {
+    id: st.correlativo,
+    numero: 'FAC-' + String(st.correlativo).padStart(6, '0'),
+    fecha: fechaHora(f), dia: fecha(f),
+    clienteId: cliente.id, doc: cliente.doc, cliente: cliente.nombre,
+    usuario: o.usuario, tasa, condicion,
+    subtotal: t.subtotal_usd, descuento: t.descuento_usd, impuesto: t.impuesto_usd, total: t.total_usd,
+    baseIgtf: c.base_igtf, igtf: c.igtf, cobrar: c.cobrar, saldo: r2(saldo),
+    vencimiento: condicion === 'CREDITO' ? fecha(sumarDias(f, o.diasCredito || cfg.diasCredito)) : null,
+    vueltoUsd: c.excedente, vueltoVes: 0,
+    estado: 'COMPLETADA', caja: o.caja ?? null,
+    detalles: t.lineas.map((l) => ({ id: l.p.id, nombre: l.p.nombre, um: l.p.um, cant: l.cantidad, precio: l.precio_usd, sub: l.subtotal_usd, costo: l.p.costo })),
+    pagos: pagos.map((p) => ({ ...p, eq: p.moneda === 'USD' ? p.monto : r2(p.monto / tasa) }))
+  };
+  if (!o.sinStock) t.lineas.forEach((l) => { l.p.stock = r3(l.p.stock - l.cantidad); });
+  st.ventas.push(venta);
+  return venta;
+}
+
+function cajaAbierta(st) { return st.cajas.find((c) => c.estado === 'ABIERTA') || null; }
+
+function resumenCaja(st, caja) {
+  const filas = METODOS.map((m) => ({ m, fondo: 0, ventas: 0, abonos: 0, vueltos: 0, n: 0 }));
+  const ventas = st.ventas.filter((v) => v.caja === caja.id);
+  ventas.filter((v) => v.estado === 'COMPLETADA').forEach((v) => {
+    v.pagos.forEach((p) => { const f = filas[p.metodo_id - 1]; f.ventas = r2(f.ventas + p.monto); f.n++; });
+    filas[1].vueltos = r2(filas[1].vueltos + v.vueltoUsd);
+    filas[0].vueltos = r2(filas[0].vueltos + v.vueltoVes);
+  });
+  st.abonos.filter((a) => a.caja === caja.id).forEach((a) => { const f = filas[a.metodo_id - 1]; f.abonos = r2(f.abonos + a.monto); f.n++; });
+  filas[1].fondo = caja.fondoUsd; filas[0].fondo = caja.fondoVes;
+  filas.forEach((f) => { f.esperado = r2(f.fondo + f.ventas + f.abonos - f.vueltos); });
+  const ok = ventas.filter((v) => v.estado === 'COMPLETADA');
+  return {
+    filas: filas.filter((f) => f.n > 0 || f.fondo > 0),
+    facturas: ok.length,
+    anuladas: ventas.length - ok.length,
+    vendido: r2(ok.reduce((a, v) => a + v.total, 0)),
+    igtf: r2(ok.reduce((a, v) => a + v.igtf, 0)),
+    credito: r2(ok.filter((v) => v.condicion === 'CREDITO').reduce((a, v) => a + v.saldo, 0))
+  };
+}
+
+/* =====================================================================
+   Formato
+   ===================================================================== */
+const usd = (n) => '$ ' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const ves = (n) => 'Bs. ' + Number(n || 0).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const bs = (nUsd) => ves(r2(nUsd * S.tasa));
+const fmtCant = (n) => { const v = Number(n); return Number.isInteger(v) ? String(v) : v.toFixed(3).replace(/0+$/, '').replace(/\.$/, ''); };
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const $ = (s) => document.querySelector(s);
+const usuarioActual = () => (S.rol === 'ADMIN' ? 'Administrador' : 'Cajero Principal');
+const esAdmin = () => S.rol === 'ADMIN';
+
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.hidden = false;
+  clearTimeout(toast._t); toast._t = setTimeout(() => { t.hidden = true; }, 2600);
+}
+
+/* =====================================================================
+   Estado persistente (solo en este navegador)
+   ===================================================================== */
+const CLAVE = 'ferrepos_pro_demo_v1';
+let S;
+try { S = JSON.parse(localStorage.getItem(CLAVE) || 'null'); } catch { S = null; }
+if (!S || S.v !== 1) S = estadoInicial();
+function guardar() { try { localStorage.setItem(CLAVE, JSON.stringify(S)); } catch { /* sin almacenamiento: la demo sigue en memoria */ } }
+
+/* Estado de interfaz (no persistente) */
+const UI = { cat: null, q: '', alerta: null, cobro: null, ticket: null, confirmar: null, cxc: null, desde: null, hasta: null };
+
+/* =====================================================================
+   Navegación
+   ===================================================================== */
+const ICON = {
+  pos: '<path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6.2"/><circle cx="10" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/>',
+  caja: '<rect x="3" y="7" width="18" height="12" rx="2"/><path d="M3 11h18M7 15h3"/>',
+  ventas: '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>',
+  cxc: '<path d="M4 4h12a4 4 0 0 1 4 4v12H8a4 4 0 0 1-4-4z"/><path d="M8 9h8M8 13h5"/>',
+  reportes: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  config: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>'
+};
+const VISTAS = [
+  { id: 'pos', nombre: 'Punto de venta' },
+  { id: 'caja', nombre: 'Caja' },
+  { id: 'ventas', nombre: 'Ventas' },
+  { id: 'cxc', nombre: 'Cuentas por cobrar' },
+  { id: 'reportes', nombre: 'Reportes', admin: true },
+  { id: 'config', nombre: 'Configuración', admin: true }
+];
+function vistaActual() {
+  const h = location.hash.replace('#', '');
+  const v = VISTAS.find((x) => x.id === h) || VISTAS[0];
+  return v.admin && !esAdmin() ? VISTAS[0] : v;
+}
+function renderNav() {
+  const actual = vistaActual().id;
+  $('#nav').innerHTML = VISTAS.filter((v) => !v.admin || esAdmin()).map((v) => `
+    <a href="#${v.id}" class="${v.id === actual ? 'on' : ''}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[v.id]}</svg>
+      ${v.nombre}${v.id === 'caja' && cajaAbierta(S) ? '<span class="dot" title="Caja abierta"></span>' : ''}
+    </a>`).join('');
+  $('#rol-admin').classList.toggle('on', S.rol === 'ADMIN');
+  $('#rol-cajero').classList.toggle('on', S.rol === 'CAJERO');
+  $('#rate-view').textContent = 'Bs. ' + S.tasa.toFixed(2);
+  $('#rate-input').hidden = !esAdmin();
+  $('#rate-view').hidden = esAdmin();
+  if (document.activeElement !== $('#rate-input')) $('#rate-input').value = S.tasa.toFixed(2);
+  $('#empresa-top').textContent = S.config.empresa;
+}
+
+function render() {
+  renderNav();
+  $('#mbar').hidden = true;
+  $('#page').classList.remove('con-mbar');
+  const v = vistaActual().id;
+  ({ pos: vistaPos, caja: vistaCaja, ventas: vistaVentas, cxc: vistaCxc, reportes: vistaReportes, config: vistaConfig })[v]();
+  renderModal();
+}
+
+function alertaHtml() {
+  if (!UI.alerta) return '';
+  return `<div class="alert ${UI.alerta.tipo === 'ok' ? 'alert-ok' : 'alert-bad'}">${UI.alerta.tipo === 'ok' ? '✓' : '⚠'} ${esc(UI.alerta.msg)}</div>`;
+}
+
+/* =====================================================================
+   POS
+   ===================================================================== */
+const carrito = () => S.carrito;
+function totalesCarrito() {
+  const lineas = carrito().items.map((i) => { const p = S.productos.find((x) => x.id === i.id); return { precio_usd: p.precio, cantidad: i.cant, iva_pct: p.iva }; });
+  return calcularTotales(lineas, carrito().descuento);
+}
+function clienteCarrito() { const d = carrito().doc.trim().toUpperCase(); return d ? S.clientes.find((c) => c.doc === d || c.doc.replace(/\D/g, '') === d.replace(/\D/g, '') && d.replace(/\D/g, '').length >= 5) : null; }
+function descMax() { const t = totalesCarrito(); return esAdmin() ? t.subtotal_usd : r2(t.subtotal_usd * S.config.descMaxCajero / 100); }
+
+function agregar(id, cant) {
+  const p = S.productos.find((x) => x.id === id);
+  const dec = UNIDADES[p.um];
+  const c = dec ? r3(cant) : Math.max(1, Math.round(cant));
+  const it = carrito().items.find((i) => i.id === id);
+  const nueva = dec ? r3((it?.cant || 0) + c) : Math.round((it?.cant || 0) + c);
+  if (nueva > p.stock) { UI.alerta = { tipo: 'bad', msg: `Stock insuficiente para "${p.nombre}". Disponible: ${fmtCant(p.stock)} ${p.um}.` }; return false; }
+  if (it) it.cant = nueva; else carrito().items.push({ id, cant: nueva });
+  UI.alerta = null;
+  guardar();
+  return true;
+}
+
+function vistaPos() {
+  const caja = cajaAbierta(S);
+  const bloqueada = S.config.cajaObligatoria && !caja;
+  $('#page').innerHTML = `
+    <div class="pos">
+      <section class="stack" style="min-width:0">
+        <div class="card search-bar">
+          <input id="buscar" class="inp" type="search" autocomplete="off" placeholder="Escanee o escriba código, SKU o nombre · Enter agrega · 3*código = 3 unidades   [F2]" value="${esc(UI.q)}" aria-label="Buscar producto">
+          <div class="cats">
+            <button data-a="cat" data-v="" class="${UI.cat === null ? 'on' : ''}">Todas</button>
+            ${CATS.map((c, i) => `<button data-a="cat" data-v="${i}" class="${UI.cat === i ? 'on' : ''}">${c}</button>`).join('')}
+          </div>
+          <div class="muted small">Pruebe escribir <span class="num">2*7591000000423</span> y Enter: agrega 2 sacos de cemento como haría un lector de código de barras.</div>
+        </div>
+        ${bloqueada ? `<div class="alert alert-bad">🔒 La caja está cerrada: no se puede facturar. <a href="#caja"><b>Abrir caja →</b></a></div>` : ''}
+        ${S.espera.length ? `<div class="hold"><b class="small">En espera:</b>${S.espera.map((e, i) => `<button class="btn btn-line btn-sm" data-a="recuperar" data-v="${i}">${esc(e.etiqueta)} · <span class="num">${usd(e.total)}</span></button>`).join('')}</div>` : ''}
+        <div id="pos-alerta">${alertaHtml()}</div>
+        <div class="products" id="grid"></div>
+      </section>
+      <aside class="card cart" id="cart"></aside>
+    </div>`;
+  renderGrid();
+  renderCart();
+}
+
+function productosFiltrados() {
+  const q = UI.q.trim().toLowerCase();
+  return S.productos.filter((p) => (UI.cat === null || p.cat === UI.cat) && (!q || p.nombre.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q) || p.barra.includes(q)));
+}
+
+function renderGrid() {
+  const lista = productosFiltrados();
+  $('#grid').innerHTML = lista.length ? lista.map((p) => {
+    const dec = UNIDADES[p.um];
+    const bajo = p.stock <= p.min;
+    return `<article class="card prod ${bajo ? 'low' : ''}">
+      <div class="prod-top"><span class="sku">${p.sku}</span><span class="chip ${dec ? 'chip-amber' : 'chip-ves'}">${p.um}${dec ? ' · fraccionable' : ''}</span></div>
+      <div class="prod-name">${esc(p.nombre)}</div>
+      <div class="prices"><span class="a">${usd(p.precio)}</span><span class="b">${bs(p.precio)}</span></div>
+      <div class="prod-foot"><span>Stock <b class="num stockv">${fmtCant(p.stock)} ${p.um}</b>${bajo ? ' · bajo' : ''}</span>
+        <button class="btn btn-amber btn-sm" data-a="add" data-v="${p.id}" data-c="1" ${p.stock <= 0 ? 'disabled' : ''}>+ Agregar</button></div>
+      ${dec && p.stock > 0 ? `<div class="fracs">${[0.25, 0.5, 2.5].map((f) => `<button data-a="add" data-v="${p.id}" data-c="${f}">+${f.toFixed(2)} ${p.um}</button>`).join('')}</div>` : ''}
+    </article>`;
+  }).join('') : '<div class="card empty" style="grid-column:1/-1">Sin productos para esa búsqueda.</div>';
+}
+
+function renderCart() {
+  const c = carrito();
+  const t = totalesCarrito();
+  const cli = clienteCarrito();
+  const caja = cajaAbierta(S);
+  const bloqueada = S.config.cajaObligatoria && !caja;
+  const deuda = cli ? deudaCliente(S, cli.id) : 0;
+  $('#cart').innerHTML = `
+    <div class="cart-head"><h3>Ticket de venta</h3>
+      <div class="row">${c.items.length ? `<button class="btn btn-line btn-sm" data-a="esperar">Espera <span class="kbd">F8</span></button><button class="btn btn-line btn-sm" data-a="vaciar">Vaciar</button>` : ''}</div></div>
+    <div class="client">
+      <label class="lbl" for="doc">Cédula o RIF del cliente <span class="bad">*</span> <span class="kbd">F4</span></label>
+      <input id="doc" class="inp num" placeholder="V-15222333 o J-31234567-0" value="${esc(c.doc)}" autocomplete="off">
+      <div id="cli-info" class="small">${clienteInfo(cli, deuda)}</div>
+    </div>
+    <div class="lines">${c.items.length ? c.items.map((i) => {
+      const p = S.productos.find((x) => x.id === i.id);
+      return `<div class="line">
+        <div class="line-n">${esc(p.nombre)}<div class="muted small num">${usd(p.precio)} / ${p.um}</div></div>
+        <input class="inp qty num" type="number" min="0" step="${UNIDADES[p.um] ? '0.001' : '1'}" value="${i.cant}" data-in="qty" data-v="${p.id}" aria-label="Cantidad de ${esc(p.nombre)}">
+        <div class="line-t"><div class="usd">${usd(r2(i.cant * p.precio))}</div><div class="ves small">${bs(r2(i.cant * p.precio))}</div></div>
+        <button class="btn btn-line btn-sm" data-a="quitar" data-v="${p.id}" aria-label="Quitar">✕</button></div>`;
+    }).join('') : '<div class="empty small">Agregue productos del catálogo o escanee un código.</div>'}</div>
+    <div id="sum">${resumenHtml(t)}</div>
+    <button class="btn btn-amber" style="padding:.85rem;font-size:1rem" data-a="cobrar" ${!c.items.length || bloqueada ? 'disabled' : ''}>Cobrar · multipago USD + Bs. <span class="kbd">F9</span></button>
+    ${S.config.igtf ? `<div class="muted small" style="text-align:center">Pagos en divisas generan IGTF ${S.config.igtfPct}% al cobrar.</div>` : ''}`;
+  barraMovil();
+}
+
+function barraMovil() {
+  const bar = $('#mbar');
+  const n = carrito().items.length;
+  const enPos = vistaActual().id === 'pos';
+  bar.hidden = !enPos || !n;
+  $('#page').classList.toggle('con-mbar', enPos && n > 0);
+  if (!n) return;
+  const t = totalesCarrito();
+  bar.innerHTML = `<div><div class="small" style="color:#94a3b8">${n} artículo${n > 1 ? 's' : ''}</div><b class="num" style="color:var(--total-usd);font-size:1.1rem">${usd(t.total_usd)}</b> <span class="num small" style="color:var(--total-ves)">${bs(t.total_usd)}</span></div>
+    <button class="btn btn-amber" data-a="ir-ticket">Ver ticket y cobrar</button>`;
+}
+
+function clienteInfo(cli, deuda) {
+  if (!carrito().doc.trim()) return '<span class="muted">Pruebe J-31234567-0 (tiene crédito) o V-15222333.</span>';
+  if (!cli) return '<span class="chip chip-amber">Cliente nuevo: se registrará con la venta</span>';
+  return `<span class="chip chip-usd">✓ ${esc(cli.nombre || 'Sin nombre')}</span>
+    ${deuda > 0 ? ` <span class="chip chip-bad">Debe ${usd(deuda)}</span>` : ''}
+    ${cli.limite > 0 ? ` <span class="chip chip-ves">Crédito disp. ${usd(Math.max(0, cli.limite - deuda))}</span>` : ''}`;
+}
+
+function resumenHtml(t) {
+  const max = descMax();
+  return `<div class="stack" style="gap:.4rem">
+    <div class="sum-row"><span>Subtotal</span><span class="num">${usd(t.subtotal_usd)} <span class="muted">· ${bs(t.subtotal_usd)}</span></span></div>
+    <div class="sum-row"><label for="desc">Descuento USD <span class="muted small">(máx. ${usd(max)})</span></label>
+      <input id="desc" class="inp num" type="number" min="0" step="0.01" style="width:110px;text-align:right;padding:.3rem .5rem" value="${carrito().descuento || ''}" placeholder="0.00" ${carrito().items.length ? '' : 'disabled'}></div>
+    ${t.descuento_usd > 0 ? `<div class="sum-row"><span class="muted">Descuento antes de IVA</span><span class="num bad">−${usd(t.descuento_usd)}</span></div>` : ''}
+    ${carrito().descuento > max + 0.001 ? '<div class="alert alert-warn small">Supera el máximo permitido para cajeros: se rechazará.</div>' : ''}
+    <div class="sum-row"><span>IVA</span><span class="num">${usd(t.impuesto_usd)} <span class="muted">· ${bs(t.impuesto_usd)}</span></span></div>
+    <div class="total"><div><div class="l">TOTAL USD (ANCLA)</div><div class="u">${usd(t.total_usd)}</div></div>
+      <div><div class="l" style="text-align:right">TOTAL Bs. · TASA ${S.tasa.toFixed(2)}</div><div class="v">${bs(t.total_usd)}</div></div></div>
+  </div>`;
+}
+
+function escanear() {
+  let q = UI.q.trim();
+  if (!q) return;
+  let cant = 1;
+  const m = q.match(/^(\d+(?:[.,]\d+)?)\s*[*xX]\s*(.+)$/);
+  if (m) { cant = Number(m[1].replace(',', '.')); q = m[2].trim(); }
+  const ql = q.toLowerCase();
+  const exacto = S.productos.find((p) => p.barra === q || p.sku.toLowerCase() === ql);
+  const lista = productosFiltrados();
+  const p = exacto || (lista.length === 1 ? lista[0] : null);
+  if (!p) {
+    UI.alerta = { tipo: 'bad', msg: lista.length ? `Hay ${lista.length} coincidencias para "${q}". Elija el producto.` : `No hay ningún producto con el código "${q}".` };
+    $('#pos-alerta').innerHTML = alertaHtml();
+    return;
+  }
+  if (agregar(p.id, cant)) { UI.q = ''; $('#buscar').value = ''; renderGrid(); }
+  $('#pos-alerta').innerHTML = alertaHtml();
+  renderCart();
+}
+
+function aparcar() {
+  const c = carrito();
+  if (!c.items.length) return;
+  const cli = clienteCarrito();
+  S.espera.push({ etiqueta: cli?.nombre || c.doc || `Venta ${S.espera.length + 1}`, total: totalesCarrito().total_usd, carrito: JSON.parse(JSON.stringify(c)) });
+  S.carrito = { items: [], doc: '', descuento: 0 };
+  guardar();
+  toast('Venta puesta en espera');
+  vistaPos();
+}
+
+/* ---------- Cobro ---------- */
+function abrirCobro() {
+  const c = carrito();
+  if (!c.items.length) return;
+  if (!c.doc.trim()) { UI.alerta = { tipo: 'bad', msg: 'Ingrese la cédula o RIF del cliente (único dato obligatorio).' }; $('#pos-alerta').innerHTML = alertaHtml(); $('#doc').focus(); return; }
+  if (S.config.cajaObligatoria && !cajaAbierta(S)) return;
+  UI.cobro = { condicion: 'CONTADO', pagos: [], metodoId: 2, monto: '', ref: '', error: '' };
+  sugerir();
+  renderModal();
+}
+/** Pagos del cobro con moneda e IGTF de su método (lo que espera el motor de cálculo). */
+function pagosCobro() {
+  return UI.cobro.pagos.map((p) => { const m = metodo(p.metodo_id); return { ...p, moneda: m.moneda, igtf: m.igtf }; });
+}
+function cobroCalc() {
+  const t = totalesCarrito();
+  return { t, c: calcularCobro(t.total_usd, pagosCobro(), S.tasa, S.config.igtf ? S.config.igtfPct : 0) };
+}
+function sugerir() {
+  const { t } = cobroCalc();
+  const m = metodo(UI.cobro.metodoId);
+  const s = montoSugerido(t.total_usd, pagosCobro(), m, S.tasa, S.config.igtf ? S.config.igtfPct : 0);
+  UI.cobro.monto = s > 0 ? s.toFixed(2) : '';
+}
+function emitir() {
+  const cb = UI.cobro;
+  const { c } = cobroCalc();
+  const cli = clienteCarrito();
+  if (cb.condicion === 'CONTADO' && !cb.pagos.length) { cb.error = 'Agregue al menos un pago.'; return renderModal(); }
+  if (cb.condicion === 'CONTADO' && c.faltante > 0.02) { cb.error = `Falta cobrar ${usd(c.faltante)} (${bs(c.faltante)}).`; return renderModal(); }
+  if (cb.condicion === 'CREDITO' && c.faltante > Math.max(0, (cli?.limite || 0) - deudaCliente(S, cli?.id)) + 0.009) { cb.error = 'El saldo supera el crédito disponible del cliente.'; return renderModal(); }
+  try {
+    const caja = cajaAbierta(S);
+    const v = registrarVentaInterna(S, {
+      items: carrito().items, doc: carrito().doc, descuento: carrito().descuento, condicion: cb.condicion,
+      pagos: cb.pagos.map((p) => ({ metodo_id: p.metodo_id, monto: p.monto, ref: p.ref })), rol: S.rol, usuario: usuarioActual(), caja: caja ? caja.id : null
+    });
+    S.carrito = { items: [], doc: '', descuento: 0 };
+    UI.cobro = null;
+    UI.ticket = v.id;
+    UI.alerta = { tipo: 'ok', msg: `Factura ${v.numero} emitida.` };
+    guardar();
+    render();
+  } catch (e) {
+    if (!(e instanceof ErrorNegocio)) throw e;
+    cb.error = e.message;
+    renderModal();
+  }
+}
+
+/* =====================================================================
+   Modales
+   ===================================================================== */
+function renderModal() {
+  const root = $('#modal');
+  if (UI.cobro) return (root.innerHTML = modalCobro());
+  if (UI.ticket) return (root.innerHTML = modalTicket());
+  if (UI.confirmar) return (root.innerHTML = modalConfirmar());
+  if (UI.cxc) return (root.innerHTML = modalCxc());
+  root.innerHTML = '';
+}
+
+function modalCobro() {
+  const cb = UI.cobro;
+  const { t, c } = cobroCalc();
+  const cli = clienteCarrito();
+  const credDisp = cli ? Math.max(0, cli.limite - deudaCliente(S, cli.id)) : 0;
+  const m = metodo(cb.metodoId);
+  const puede = cb.condicion === 'CREDITO' ? c.faltante <= credDisp + 0.009 : cb.pagos.length > 0 && c.faltante <= 0.02;
+  return `<div class="modal-bg" data-a="cerrar-modal-bg"><div class="modal" role="dialog" aria-modal="true" aria-label="Cobro">
+    <div class="modal-h"><div><h3>Cobro multipago USD / Bs.</h3><div class="muted small">Tasa congelada para esta factura: <b class="num">Bs. ${S.tasa.toFixed(4)} / $1</b></div></div>
+      <button class="btn btn-line btn-sm" data-a="cerrar-modal" aria-label="Cerrar">✕</button></div>
+    <div class="row" style="justify-content:space-between">
+      <div class="seg"><button class="${cb.condicion === 'CONTADO' ? 'on' : ''}" data-a="condicion" data-v="CONTADO">Contado</button>
+        <button class="${cb.condicion === 'CREDITO' ? 'on' : ''}" data-a="condicion" data-v="CREDITO" ${credDisp > 0 ? '' : 'disabled title="El cliente no tiene crédito aprobado"'}>A crédito</button></div>
+      ${cb.condicion === 'CREDITO' ? `<span class="muted small">Disponible <b class="num">${usd(credDisp)}</b> · vence en ${S.config.diasCredito} días · los pagos son la inicial</span>` : (credDisp > 0 ? '' : '<span class="muted small">Crédito: pruebe con J-31234567-0</span>')}
+    </div>
+    <div class="grid g3">
+      <div class="box"><div class="kpi-l">${c.igtf > 0 ? 'Total con IGTF' : 'Total factura'}</div><div class="kpi-v">${usd(c.cobrar)}</div><div class="num ves small">${bs(c.cobrar)}</div>
+        ${c.igtf > 0 ? `<div class="num muted small">${usd(t.total_usd)} + IGTF ${usd(c.igtf)}</div>` : ''}</div>
+      <div class="box" style="background:var(--usd-soft)"><div class="kpi-l usd">Abonado (equiv. USD)</div><div class="kpi-v usd">${usd(c.pagado)}</div><div class="num small usd">${bs(c.pagado)}</div></div>
+      <div class="box" style="background:${c.faltante > 0 ? 'var(--bad-soft)' : 'var(--ves-soft)'}"><div class="kpi-l ${c.faltante > 0 ? 'bad' : 'ves'}">${c.faltante > 0 ? (cb.condicion === 'CREDITO' ? 'Queda a crédito' : 'Falta por cobrar') : 'Vuelto'}</div>
+        <div class="kpi-v">${usd(c.faltante > 0 ? c.faltante : c.excedente)}</div><div class="num small">${bs(c.faltante > 0 ? c.faltante : c.excedente)}</div></div>
+    </div>
+    ${cb.error ? `<div class="alert alert-bad">⚠ ${esc(cb.error)}</div>` : ''}
+    <div class="box grid g3" style="align-items:end">
+      <div class="field"><label for="metodo">Método</label><select id="metodo" class="inp" data-in="metodo">${METODOS.map((x) => `<option value="${x.id}" ${x.id === cb.metodoId ? 'selected' : ''}>${x.nombre} (${x.moneda})${S.config.igtf && x.igtf ? ' · IGTF' : ''}</option>`).join('')}</select></div>
+      <div class="field"><label for="monto">Monto en ${m.moneda}</label><input id="monto" class="inp num" type="number" min="0.01" step="0.01" value="${cb.monto}" data-in="monto"></div>
+      <div class="field"><label for="ref">Referencia ${m.ref ? '<span class="bad">*</span>' : '(opcional)'}</label>
+        <div class="row" style="flex-wrap:nowrap"><input id="ref" class="inp num" value="${esc(cb.ref)}" data-in="ref" placeholder="${m.ref ? 'Nro. de referencia' : 'Efectivo'}"><button class="btn btn-dark" data-a="pago-add">+ Añadir</button></div></div>
+    </div>
+    <div class="tw"><table><thead><tr><th>Método</th><th class="r">Monto</th><th class="r">Equiv. USD</th><th>Referencia</th><th></th></tr></thead><tbody>
+      ${cb.pagos.length ? cb.pagos.map((p, i) => { const mm = metodo(p.metodo_id); return `<tr><td><b>${mm.nombre}</b> <span class="chip ${mm.moneda === 'USD' ? 'chip-usd' : 'chip-ves'}">${mm.moneda}</span></td>
+        <td class="r num">${mm.moneda === 'USD' ? usd(p.monto) : ves(p.monto)}</td><td class="r num">${usd(mm.moneda === 'USD' ? p.monto : r2(p.monto / S.tasa))}</td><td class="num">${esc(p.ref || '—')}</td>
+        <td class="r"><button class="btn btn-line btn-sm" data-a="pago-del" data-v="${i}" aria-label="Quitar pago">✕</button></td></tr>`; }).join('')
+        : '<tr><td colspan="5" class="empty">Combine métodos: por ejemplo, Pago Móvil en Bs. y el resto en efectivo USD.</td></tr>'}
+    </tbody></table></div>
+    <div class="row" style="justify-content:flex-end"><button class="btn btn-line" data-a="cerrar-modal">Cancelar</button>
+      <button class="btn btn-ok" data-a="emitir" ${puede ? '' : 'disabled'}>${cb.condicion === 'CREDITO' ? 'Emitir a crédito' : 'Emitir factura'} <span class="kbd">F9</span></button></div>
+  </div></div>`;
+}
+
+function ticketHtml(v) {
+  const cfg = S.config;
+  return `<div class="ticket">
+    <div class="t-c t-b" style="font-size:13px;text-transform:uppercase">${esc(cfg.empresa)}</div>
+    <div class="t-c">RIF ${esc(cfg.rif)}<br>${esc(cfg.direccion)}<br>Tel ${esc(cfg.telefono)}</div>
+    <div class="t-sep"></div>
+    <div class="t-b">${v.condicion === 'CREDITO' ? 'NOTA DE ENTREGA A CRÉDITO' : 'NOTA DE ENTREGA'}</div>
+    <div class="t-r"><span>Nro.</span><b>${v.numero}</b></div>
+    <div class="t-r"><span>Fecha</span><span>${v.fecha}</span></div>
+    <div class="t-r"><span>Cajero</span><span>${esc(v.usuario)}</span></div>
+    <div class="t-r"><span>CI/RIF</span><b>${esc(v.doc)}</b></div>
+    ${v.cliente ? `<div class="t-r"><span>Cliente</span><span>${esc(v.cliente)}</span></div>` : ''}
+    ${v.estado === 'ANULADA' ? '<div class="t-c t-b" style="margin-top:4px">*** ANULADA ***</div>' : ''}
+    <div class="t-sep"></div>
+    ${v.detalles.map((d) => `<div>${esc(d.nombre)}</div><div class="t-r"><span>${fmtCant(d.cant)} ${d.um} x ${usd(d.precio)}</span><span>${usd(d.sub)}</span></div>`).join('')}
+    <div class="t-sep"></div>
+    <div class="t-r"><span>Subtotal</span><span>${usd(v.subtotal)}</span></div>
+    ${v.descuento > 0 ? `<div class="t-r"><span>Descuento</span><span>-${usd(v.descuento)}</span></div>` : ''}
+    <div class="t-r"><span>IVA</span><span>${usd(v.impuesto)}</span></div>
+    <div class="t-r t-b"><span>TOTAL USD</span><span>${usd(v.total)}</span></div>
+    ${v.igtf > 0 ? `<div class="t-r"><span>IGTF (${usd(v.baseIgtf)})</span><span>${usd(v.igtf)}</span></div><div class="t-r t-b"><span>A PAGAR USD</span><span>${usd(v.cobrar)}</span></div>` : ''}
+    <div class="t-r t-b"><span>TOTAL Bs.</span><span>${ves(r2(v.cobrar * v.tasa))}</span></div>
+    <div class="t-r"><span>Tasa BCV</span><span>Bs. ${v.tasa.toFixed(4)}</span></div>
+    <div class="t-sep"></div>
+    ${v.pagos.map((p) => `<div class="t-r"><span>${metodo(p.metodo_id).nombre}${p.ref ? ' #' + esc(p.ref) : ''}</span><span>${p.moneda === 'USD' ? usd(p.monto) : ves(p.monto)}</span></div>`).join('')}
+    ${v.vueltoUsd > 0 ? `<div class="t-r"><span>Vuelto USD</span><span>${usd(v.vueltoUsd)}</span></div>` : ''}
+    ${v.condicion === 'CREDITO' ? `<div class="t-sep"></div><div class="t-r t-b"><span>SALDO PENDIENTE</span><span>${usd(v.saldo)}</span></div><div class="t-r"><span>Vence</span><span>${v.vencimiento}</span></div><div style="margin-top:26px;border-top:1px solid #111;text-align:center">Firma del cliente</div>` : ''}
+    <div class="t-sep"></div><div class="t-c">${esc(cfg.pie)}</div>
+  </div>`;
+}
+
+function modalTicket() {
+  const v = S.ventas.find((x) => x.id === UI.ticket);
+  return `<div class="modal-bg" data-a="cerrar-modal-bg"><div class="modal" style="width:min(420px,100%)" role="dialog" aria-modal="true" aria-label="Ticket">
+    <div class="modal-h"><h3>Venta ${v.numero}</h3><button class="btn btn-line btn-sm" data-a="cerrar-modal" aria-label="Cerrar">✕</button></div>
+    ${v.vueltoUsd > 0 ? `<div class="alert alert-ok" style="font-size:1rem">Vuelto: <b class="num">${usd(v.vueltoUsd)}</b></div>` : ''}
+    <div style="background:var(--sunken);padding:14px 8px 20px;border-radius:8px">${ticketHtml(v)}</div>
+    <div class="muted small">En la versión instalada este ticket se imprime en la térmica de 80 mm.</div>
+    <div class="row" style="justify-content:flex-end"><button class="btn btn-amber" data-a="cerrar-modal">Nueva venta <span class="kbd">Esc</span></button></div>
+  </div></div>`;
+}
+
+function modalConfirmar() {
+  const c = UI.confirmar;
+  return `<div class="modal-bg" data-a="cerrar-modal-bg"><div class="modal" style="width:min(460px,100%)" role="alertdialog" aria-modal="true">
+    <h3>${esc(c.titulo)}</h3><div class="muted">${esc(c.texto)}</div>
+    <div class="row" style="justify-content:flex-end"><button class="btn btn-line" data-a="cerrar-modal">Cancelar</button><button class="btn ${c.peligro ? 'btn-bad' : 'btn-amber'}" data-a="confirmar-ok">${esc(c.boton)}</button></div>
+  </div></div>`;
+}
+
+/* =====================================================================
+   Caja
+   ===================================================================== */
+function vistaCaja() {
+  const caja = cajaAbierta(S);
+  const hist = [...S.cajas].reverse();
+  let cuerpo;
+  if (!caja) {
+    cuerpo = `<div class="card stack" style="max-width:520px"><h3>Abrir caja</h3><div class="muted small">Efectivo con el que inicia el turno para dar vueltos.</div>
+      <div class="grid g2"><div class="field"><label for="fusd">Fondo efectivo USD</label><input id="fusd" class="inp num" type="number" min="0" step="0.01" value="20"></div>
+      <div class="field"><label for="fves">Fondo efectivo Bs.</label><input id="fves" class="inp num" type="number" min="0" step="0.01" value="850"></div></div>
+      <div><button class="btn btn-amber" data-a="abrir-caja">Abrir caja</button></div></div>`;
+  } else {
+    const r = resumenCaja(S, caja);
+    UI.conteos = UI.conteos || {};
+    cuerpo = `<div class="grid g4">
+        <div class="card"><div class="kpi-l">Abierta desde</div><div class="kpi-v" style="font-size:1.05rem">${caja.abierta}</div></div>
+        <div class="card"><div class="kpi-l">Facturas del turno</div><div class="kpi-v">${r.facturas}</div><div class="muted small">${r.anuladas} anuladas</div></div>
+        <div class="card"><div class="kpi-l">Vendido</div><div class="kpi-v usd">${usd(r.vendido)}</div><div class="muted small">IGTF ${usd(r.igtf)}</div></div>
+        <div class="card"><div class="kpi-l">Crédito otorgado</div><div class="kpi-v">${usd(r.credito)}</div></div></div>
+      <div class="card stack"><div><h3>Arqueo y cierre</h3><div class="muted small">Cuente cada método. Esperado = fondo + ventas + abonos − vueltos.</div></div>
+        <div class="tw"><table><thead><tr><th>Método</th><th class="r">Fondo</th><th class="r">Ventas</th><th class="r">Abonos</th><th class="r">Vueltos</th><th class="r">Esperado</th><th style="width:140px">Contado</th><th class="r">Diferencia</th></tr></thead><tbody id="arqueo">
+        ${r.filas.length ? r.filas.map((f) => filaArqueo(f)).join('') : '<tr><td colspan="8" class="empty">Sin movimientos todavía.</td></tr>'}</tbody></table></div>
+        <div class="field"><label for="obs">Observación (opcional)</label><input id="obs" class="inp" maxlength="255" placeholder="Ej. faltante por billete roto"></div>
+        <div><button class="btn btn-bad" data-a="cerrar-caja">Cerrar caja</button></div></div>`;
+  }
+  $('#page').innerHTML = `<div class="head"><div><h2>Caja</h2><p>Apertura con fondo, cobros del turno y cierre con arqueo por método de pago.</p></div></div>
+    <div class="stack">${alertaHtml()}${cuerpo}
+    <div class="card stack"><h3>Historial</h3><div class="tw"><table><thead><tr><th>#</th><th>Apertura</th><th>Cierre</th><th>Estado</th><th class="r">Esperado</th><th class="r">Contado</th><th class="r">Diferencia</th></tr></thead><tbody>
+    ${hist.map((h) => `<tr><td class="num">${h.id}</td><td class="num">${h.abierta}</td><td class="num">${h.cerrada || '—'}</td><td><span class="chip ${h.estado === 'ABIERTA' ? 'chip-amber' : 'chip-ves'}">${h.estado}</span></td>
+      <td class="r num">${h.esperado == null ? '—' : usd(h.esperado)}</td><td class="r num">${h.contado == null ? '—' : usd(h.contado)}</td><td class="r num ${h.dif == null ? '' : Math.abs(h.dif) < 0.01 ? 'usd' : 'bad'}">${h.dif == null ? '—' : usd(h.dif)}</td></tr>`).join('')}
+    </tbody></table></div></div></div>`;
+}
+function filaArqueo(f) {
+  const fm = (n) => (f.m.moneda === 'USD' ? usd(n) : ves(n));
+  const cont = UI.conteos[f.m.id];
+  const tiene = cont !== undefined && cont !== '';
+  const dif = tiene ? r2(Number(cont) - f.esperado) : null;
+  return `<tr><td><b>${f.m.nombre}</b> <span class="chip ${f.m.moneda === 'USD' ? 'chip-usd' : 'chip-ves'}">${f.m.moneda}</span></td>
+    <td class="r num">${fm(f.fondo)}</td><td class="r num">${fm(f.ventas)}</td><td class="r num">${fm(f.abonos)}</td><td class="r num">${f.vueltos ? '−' + fm(f.vueltos) : '—'}</td>
+    <td class="r num"><b>${fm(f.esperado)}</b></td>
+    <td><input class="inp num" style="text-align:right" type="number" min="0" step="0.01" placeholder="${f.esperado.toFixed(2)}" value="${tiene ? cont : ''}" data-in="conteo" data-v="${f.m.id}" aria-label="Contado ${f.m.nombre}"></td>
+    <td class="r num ${dif === null ? 'muted' : Math.abs(dif) < 0.01 ? 'usd' : 'bad'}" id="dif-${f.m.id}">${dif === null ? '—' : (dif > 0 ? '+' : '') + fm(dif)}</td></tr>`;
+}
+
+/* =====================================================================
+   Ventas
+   ===================================================================== */
+function vistaVentas() {
+  const lista = [...S.ventas].reverse().filter((v) => esAdmin() || v.usuario === 'Cajero Principal').slice(0, 80);
+  $('#page').innerHTML = `<div class="head"><div><h2>${esAdmin() ? 'Facturas y multipago' : 'Mis ventas'}</h2><p>Tasa congelada por factura, desglose de pagos, ticket y anulación con reverso de inventario.</p></div></div>
+    ${alertaHtml()}
+    <div class="card"><div class="tw"><table><thead><tr><th>Factura</th><th>Cliente</th><th>Cajero</th><th class="r">Total USD</th><th class="r">Total Bs.</th><th>Estado</th><th>Fecha</th><th></th></tr></thead><tbody>
+    ${lista.map((v) => `<tr><td class="num"><b>${v.numero}</b>${v.condicion === 'CREDITO' ? ' <span class="chip chip-amber">CRÉDITO</span>' : ''}</td>
+      <td>${esc(v.cliente || '—')}<div class="muted small num">${esc(v.doc)}</div></td><td>${esc(v.usuario)}</td>
+      <td class="r num"><b class="usd">${usd(v.total)}</b>${v.igtf > 0 ? `<div class="muted small">+ IGTF ${usd(v.igtf)}</div>` : ''}${v.saldo > 0 ? `<div class="bad small">Debe ${usd(v.saldo)}</div>` : ''}</td>
+      <td class="r num ves">${ves(r2(v.total * v.tasa))}</td>
+      <td><span class="chip ${v.estado === 'COMPLETADA' ? 'chip-usd' : 'chip-bad'}">${v.estado}</span></td><td class="num small">${v.fecha}</td>
+      <td class="r" style="white-space:nowrap"><button class="btn btn-line btn-sm" data-a="ver-ticket" data-v="${v.id}">Ticket</button>
+      ${esAdmin() && v.estado === 'COMPLETADA' ? `<button class="btn btn-line btn-sm bad" data-a="anular" data-v="${v.id}">Anular</button>` : ''}</td></tr>`).join('')}
+    </tbody></table></div></div>`;
+}
+function anular(id) {
+  const v = S.ventas.find((x) => x.id === id);
+  if (S.abonos.some((a) => a.venta === id)) { UI.alerta = { tipo: 'bad', msg: `${v.numero} tiene abonos registrados y no puede anularse.` }; return; }
+  v.estado = 'ANULADA'; v.saldo = 0;
+  v.detalles.forEach((d) => { const p = S.productos.find((x) => x.id === d.id); if (p) p.stock = r3(p.stock + d.cant); });
+  UI.alerta = { tipo: 'ok', msg: `${v.numero} anulada; el stock volvió al inventario.` };
+  guardar();
+}
+
+/* =====================================================================
+   Cuentas por cobrar
+   ===================================================================== */
+function vistaCxc() {
+  const hoy = hoyStr();
+  const porCliente = {};
+  S.ventas.filter((v) => v.estado === 'COMPLETADA' && v.saldo > 0).forEach((v) => {
+    const c = (porCliente[v.clienteId] ||= { cli: S.clientes.find((x) => x.id === v.clienteId), deuda: 0, vencido: 0, n: 0, prox: null });
+    c.deuda = r2(c.deuda + v.saldo); c.n++;
+    if (v.vencimiento < hoy) c.vencido = r2(c.vencido + v.saldo);
+    if (!c.prox || v.vencimiento < c.prox) c.prox = v.vencimiento;
+  });
+  const filas = Object.values(porCliente).sort((a, b) => b.vencido - a.vencido || b.deuda - a.deuda);
+  const total = r2(filas.reduce((a, f) => a + f.deuda, 0));
+  const venc = r2(filas.reduce((a, f) => a + f.vencido, 0));
+  const conLimite = S.clientes.filter((c) => c.limite > 0 || esAdmin());
+  $('#page').innerHTML = `<div class="head"><div><h2>Cuentas por cobrar</h2><p>Ventas a crédito con límite por cliente, abonos en USD o Bs. a la tasa del día y control de vencimientos.</p></div></div>
+    <div class="stack">${alertaHtml()}
+    <div class="grid g3"><div class="card"><div class="kpi-l">Total por cobrar</div><div class="kpi-v">${usd(total)}</div><div class="num ves small">${bs(total)}</div></div>
+      <div class="card"><div class="kpi-l">Vencido</div><div class="kpi-v bad">${usd(venc)}</div></div>
+      <div class="card"><div class="kpi-l">Clientes con deuda</div><div class="kpi-v">${filas.length}</div></div></div>
+    <div class="card"><div class="tw"><table><thead><tr><th>Cliente</th><th class="r">Facturas</th><th class="r">Deuda</th><th class="r">Vencido</th><th>Próx. vence</th><th class="r">Límite</th><th></th></tr></thead><tbody>
+      ${filas.length ? filas.map((f) => `<tr><td><b>${esc(f.cli.nombre)}</b><div class="muted small num">${f.cli.doc}${f.cli.tel ? ' · ' + f.cli.tel : ''}</div></td>
+        <td class="r num">${f.n}</td><td class="r num"><b>${usd(f.deuda)}</b></td><td class="r num ${f.vencido > 0 ? 'bad' : 'muted'}">${f.vencido > 0 ? usd(f.vencido) : '—'}</td>
+        <td class="num ${f.prox < hoy ? 'bad' : ''}">${f.prox}</td><td class="r num">${usd(f.cli.limite)}</td>
+        <td class="r"><button class="btn btn-amber btn-sm" data-a="cxc-abrir" data-v="${f.cli.id}">Cobrar</button></td></tr>`).join('') : '<tr><td colspan="7" class="empty">No hay cuentas pendientes.</td></tr>'}
+    </tbody></table></div></div>
+    ${esAdmin() ? `<div class="card stack"><div><h3>Límites de crédito</h3><div class="muted small">Solo los clientes con límite mayor a cero pueden comprar a crédito en el POS.</div></div>
+      <div class="tw"><table><thead><tr><th>Cliente</th><th class="r">Deuda</th><th style="width:150px">Límite USD</th></tr></thead><tbody>
+      ${conLimite.map((c) => `<tr><td>${esc(c.nombre || 'Sin nombre')} <span class="muted small num">${c.doc}</span></td><td class="r num">${usd(deudaCliente(S, c.id))}</td>
+        <td><input class="inp num" style="text-align:right" type="number" min="0" step="10" value="${c.limite}" data-in="limite" data-v="${c.id}" aria-label="Límite de ${esc(c.nombre)}"></td></tr>`).join('')}
+      </tbody></table></div></div>` : ''}
+    </div>`;
+}
+
+function modalCxc() {
+  const x = UI.cxc;
+  const cli = S.clientes.find((c) => c.id === x.cliente);
+  const hoy = hoyStr();
+  const facturas = S.ventas.filter((v) => v.clienteId === cli.id && v.estado === 'COMPLETADA' && v.saldo > 0);
+  const abonos = S.abonos.filter((a) => a.cliente === cli.id).slice(-6).reverse();
+  if (!facturas.find((f) => f.id === x.venta)) x.venta = facturas[0]?.id || null;
+  const m = metodo(x.metodo);
+  return `<div class="modal-bg" data-a="cerrar-modal-bg"><div class="modal" role="dialog" aria-modal="true" aria-label="Estado de cuenta">
+    <div class="modal-h"><div><h3>${esc(cli.nombre)}</h3><div class="muted small num">${cli.doc} · deuda ${usd(deudaCliente(S, cli.id))} · límite ${usd(cli.limite)}</div></div>
+      <button class="btn btn-line btn-sm" data-a="cerrar-modal" aria-label="Cerrar">✕</button></div>
+    ${x.error ? `<div class="alert alert-bad">⚠ ${esc(x.error)}</div>` : ''}
+    <div class="tw"><table><thead><tr><th></th><th>Factura</th><th>Emitida</th><th>Vence</th><th class="r">Saldo</th></tr></thead><tbody>
+      ${facturas.length ? facturas.map((f) => `<tr data-a="cxc-fact" data-v="${f.id}" style="cursor:pointer"><td><input type="radio" name="fact" ${f.id === x.venta ? 'checked' : ''} aria-label="${f.numero}"></td><td class="num"><b>${f.numero}</b></td><td class="num">${f.dia}</td>
+        <td class="num ${f.vencimiento < hoy ? 'bad' : ''}">${f.vencimiento}</td><td class="r num"><b>${usd(f.saldo)}</b><div class="ves small">${bs(f.saldo)}</div></td></tr>`).join('') : '<tr><td colspan="5" class="empty">Cuenta saldada.</td></tr>'}
+    </tbody></table></div>
+    ${facturas.length ? `<div class="box grid g3" style="align-items:end">
+      <div class="field"><label for="cxc-m">Método</label><select id="cxc-m" class="inp" data-in="cxc-metodo">${METODOS.map((mm) => `<option value="${mm.id}" ${mm.id === x.metodo ? 'selected' : ''}>${mm.nombre} (${mm.moneda})</option>`).join('')}</select></div>
+      <div class="field"><label for="cxc-monto">Monto ${m.moneda} <a href="#cxc" data-a="cxc-saldar" class="small">saldar</a></label><input id="cxc-monto" class="inp num" type="number" min="0.01" step="0.01" value="${x.monto}" data-in="cxc-monto"></div>
+      <div class="field"><label for="cxc-ref">Referencia ${m.ref ? '<span class="bad">*</span>' : ''}</label><input id="cxc-ref" class="inp num" value="${esc(x.ref)}" data-in="cxc-ref"></div>
+    </div><div class="row" style="justify-content:flex-end"><button class="btn btn-ok" data-a="cxc-abonar">Registrar abono</button></div>` : ''}
+    ${abonos.length ? `<div class="tw"><table><thead><tr><th>Fecha</th><th>Método</th><th class="r">Monto</th><th class="r">Saldo después</th></tr></thead><tbody>
+      ${abonos.map((a) => `<tr><td class="num">${a.fecha}</td><td>${metodo(a.metodo_id).nombre}</td><td class="r num">${a.moneda === 'USD' ? usd(a.monto) : ves(a.monto)}</td><td class="r num">${usd(a.saldoDespues)}</td></tr>`).join('')}</tbody></table></div>` : ''}
+  </div></div>`;
+}
+function abonar() {
+  const x = UI.cxc;
+  const v = S.ventas.find((y) => y.id === x.venta);
+  const m = metodo(x.metodo);
+  const monto = r2(Number(x.monto));
+  x.error = '';
+  if (!v || !(monto > 0)) { x.error = 'Elija una factura e indique un monto mayor a cero.'; return; }
+  if (m.ref && !String(x.ref).trim()) { x.error = `${m.nombre} requiere número de referencia.`; return; }
+  const caja = cajaAbierta(S);
+  if (S.config.cajaObligatoria && !caja) { x.error = 'Abra la caja antes de registrar cobros.'; return; }
+  const eq = m.moneda === 'USD' ? monto : r2(monto / S.tasa);
+  if (eq > v.saldo + 0.02) { x.error = `El abono (${usd(eq)}) supera el saldo (${usd(v.saldo)}).`; return; }
+  v.saldo = r2(Math.max(0, v.saldo - Math.min(eq, v.saldo)));
+  S.abonos.push({ venta: v.id, cliente: v.clienteId, metodo_id: m.id, moneda: m.moneda, monto, eq, saldoDespues: v.saldo, caja: caja ? caja.id : null, fecha: fechaHora(new Date()) });
+  x.monto = ''; x.ref = '';
+  guardar();
+  toast(`Abono registrado · saldo ${usd(v.saldo)}`);
+}
+
+/* =====================================================================
+   Reportes
+   ===================================================================== */
+function vistaReportes() {
+  const hasta = UI.hasta || hoyStr();
+  const desde = UI.desde || fecha(sumarDias(new Date(), -13));
+  const ventas = S.ventas.filter((v) => v.dia >= desde && v.dia <= hasta);
+  const ok = ventas.filter((v) => v.estado === 'COMPLETADA');
+  const sum = (arr, f) => r2(arr.reduce((a, x) => a + f(x), 0));
+  const total = sum(ok, (v) => v.total);
+  const neta = sum(ok, (v) => v.subtotal - v.descuento);
+  const costo = sum(ok, (v) => v.detalles.reduce((a, d) => a + d.cant * d.costo, 0));
+  const util = r2(neta - costo);
+  const dias = [];
+  for (let d = new Date(desde + 'T12:00'); fecha(d) <= hasta; d = sumarDias(d, 1)) {
+    const f = fecha(d); const dv = ok.filter((v) => v.dia === f);
+    dias.push({ f, total: sum(dv, (v) => v.total), util: r2(sum(dv, (v) => v.subtotal - v.descuento) - sum(dv, (v) => v.detalles.reduce((a, x) => a + x.cant * x.costo, 0))), n: dv.length });
+  }
+  const max = Math.max(1, ...dias.map((d) => d.total));
+  const prods = {};
+  ok.forEach((v) => v.detalles.forEach((d) => { const p = (prods[d.id] ||= { nombre: d.nombre, um: d.um, cant: 0, venta: 0, util: 0 }); p.cant = r3(p.cant + d.cant); p.venta = r2(p.venta + d.sub); p.util = r2(p.util + d.sub - d.cant * d.costo); }));
+  const top = Object.values(prods).sort((a, b) => b.venta - a.venta).slice(0, 8);
+  const met = {};
+  ok.forEach((v) => v.pagos.forEach((p) => { const x = (met[p.metodo_id] ||= { m: metodo(p.metodo_id), monto: 0, eq: 0, n: 0 }); x.monto = r2(x.monto + p.monto); x.eq = r2(x.eq + p.eq); x.n++; }));
+  const mets = Object.values(met).sort((a, b) => b.eq - a.eq);
+  const totMet = mets.reduce((a, x) => a + x.eq, 0) || 1;
+
+  $('#page').innerHTML = `<div class="head"><div><h2>Reportes</h2><p>Utilidad bruta y margen calculados con el costo histórico de cada venta (costo promedio ponderado).</p></div>
+      <div class="row"><input id="r-desde" class="inp" type="date" value="${desde}" aria-label="Desde" style="width:auto"><span class="muted">→</span><input id="r-hasta" class="inp" type="date" value="${hasta}" aria-label="Hasta" style="width:auto"></div></div>
+    <div class="stack">
+    <div class="grid g4">
+      <div class="card"><div class="kpi-l">Ventas con IVA</div><div class="kpi-v usd">${usd(total)}</div><div class="num ves small">${ves(sum(ok, (v) => v.total * v.tasa))}</div></div>
+      <div class="card"><div class="kpi-l">Utilidad bruta</div><div class="kpi-v ${util >= 0 ? 'usd' : 'bad'}">${usd(util)}</div><div class="muted small">Margen ${neta > 0 ? (util / neta * 100).toFixed(1) : '0.0'}% · costo ${usd(costo)}</div></div>
+      <div class="card"><div class="kpi-l">Facturas</div><div class="kpi-v">${ok.length}</div><div class="muted small">Ticket promedio ${usd(ok.length ? total / ok.length : 0)} · ${ventas.length - ok.length} anuladas</div></div>
+      <div class="card"><div class="kpi-l">Impuestos</div><div class="kpi-v">${usd(sum(ok, (v) => v.impuesto))}</div><div class="muted small">IGTF ${usd(sum(ok, (v) => v.igtf))} · descuentos ${usd(sum(ok, (v) => v.descuento))}</div></div>
+    </div>
+    <div class="card"><div class="row" style="justify-content:space-between"><h3>Ventas por día</h3><span class="muted small"><span style="display:inline-block;width:10px;height:10px;background:var(--amber);border-radius:2px"></span> venta total · <span style="display:inline-block;width:10px;height:10px;background:var(--usd);border-radius:2px"></span> utilidad</span></div>
+      <div class="bars">${dias.map((d) => `<div class="bar-c" title="${d.f}: ${usd(d.total)} · ${d.n} facturas · utilidad ${usd(d.util)}"><span class="bar-v">${d.total ? Math.round(d.total) : ''}</span>
+        <div class="bar" style="height:${Math.max(2, d.total / max * 150)}px"><i style="height:${d.total ? Math.max(0, Math.min(100, d.util / d.total * 100)) : 0}%"></i></div><span class="bar-d">${d.f.slice(8)}/${d.f.slice(5, 7)}</span></div>`).join('')}</div></div>
+    <div class="grid g2" style="align-items:start">
+      <div class="card stack"><h3>Productos más vendidos</h3><div class="tw"><table><thead><tr><th>Producto</th><th class="r">Cant.</th><th class="r">Venta</th><th class="r">Utilidad</th></tr></thead><tbody>
+        ${top.map((p) => `<tr><td>${esc(p.nombre)}</td><td class="r num">${fmtCant(p.cant)} ${p.um}</td><td class="r num">${usd(p.venta)}</td><td class="r num">${usd(p.util)}</td></tr>`).join('') || '<tr><td colspan="4" class="empty">Sin ventas.</td></tr>'}</tbody></table></div></div>
+      <div class="card stack"><h3>Por método de pago</h3>
+        ${mets.map((x) => `<div><div class="row" style="justify-content:space-between;font-size:.84rem"><span>${x.m.nombre} <span class="muted">(${x.n})</span></span><span class="num">${x.m.moneda === 'USD' ? usd(x.monto) : ves(x.monto)} <span class="muted">· ${(x.eq / totMet * 100).toFixed(1)}%</span></span></div><div class="meter"><i style="width:${x.eq / totMet * 100}%"></i></div></div>`).join('') || '<div class="empty">Sin ventas.</div>'}
+        <div class="muted small">La exportación a Excel (CSV) está disponible en la versión instalada.</div></div>
+    </div></div>`;
+}
+
+/* =====================================================================
+   Configuración
+   ===================================================================== */
+function vistaConfig() {
+  const c = S.config;
+  const demo = S.ventas.filter((v) => v.estado === 'COMPLETADA').slice(-1)[0];
+  $('#page').innerHTML = `<div class="head"><div><h2>Configuración</h2><p>Los cambios se aplican al instante en el POS, el ticket y las reglas de caja y crédito.</p></div></div>
+    <div class="grid g2" style="align-items:start">
+      <div class="stack">
+        <div class="card stack"><h3>Datos del negocio</h3>
+          <div class="field"><label for="c-emp">Nombre o razón social</label><input id="c-emp" class="inp" data-in="cfg" data-v="empresa" value="${esc(c.empresa)}"></div>
+          <div class="grid g2"><div class="field"><label for="c-rif">RIF</label><input id="c-rif" class="inp num" data-in="cfg" data-v="rif" value="${esc(c.rif)}"></div>
+          <div class="field"><label for="c-tel">Teléfono</label><input id="c-tel" class="inp num" data-in="cfg" data-v="telefono" value="${esc(c.telefono)}"></div></div>
+          <div class="field"><label for="c-dir">Dirección</label><input id="c-dir" class="inp" data-in="cfg" data-v="direccion" value="${esc(c.direccion)}"></div>
+          <div class="field"><label for="c-pie">Mensaje al pie del ticket</label><input id="c-pie" class="inp" data-in="cfg" data-v="pie" value="${esc(c.pie)}"></div></div>
+        <div class="card stack"><h3>IGTF</h3>
+          <label class="row"><input id="c-igtf" type="checkbox" data-in="cfg-bool" data-v="igtf" ${c.igtf ? 'checked' : ''}> Cobrar IGTF sobre pagos en divisas (efectivo USD, Zelle, Binance)</label>
+          <div class="field" style="max-width:180px"><label for="c-igtfp">Porcentaje</label><input id="c-igtfp" class="inp num" type="number" min="0" max="100" step="0.01" data-in="cfg-num" data-v="igtfPct" value="${c.igtfPct}"></div></div>
+        <div class="card stack"><h3>Reglas de operación</h3>
+          <label class="row"><input id="c-caja" type="checkbox" data-in="cfg-bool" data-v="cajaObligatoria" ${c.cajaObligatoria ? 'checked' : ''}> Exigir caja abierta para facturar y cobrar</label>
+          <div class="grid g2"><div class="field"><label for="c-desc">Descuento máx. cajeros (%)</label><input id="c-desc" class="inp num" type="number" min="0" max="100" data-in="cfg-num" data-v="descMaxCajero" value="${c.descMaxCajero}"></div>
+          <div class="field"><label for="c-dias">Días de crédito</label><input id="c-dias" class="inp num" type="number" min="1" max="365" data-in="cfg-num" data-v="diasCredito" value="${c.diasCredito}"></div></div></div>
+      </div>
+      <div class="card stack"><h3>Vista previa del ticket</h3><div class="muted small">Última factura emitida, tal como sale en la térmica de 80 mm.</div>
+        <div id="cfg-ticket" style="background:var(--sunken);padding:14px 8px 20px;border-radius:8px">${demo ? ticketHtml(demo) : ''}</div></div>
+    </div>`;
+}
+
+/* =====================================================================
+   Eventos
+   ===================================================================== */
+const ACCIONES = {
+  rol: (d) => { S.rol = d.v; guardar(); UI.alerta = null; render(); toast(d.v === 'ADMIN' ? 'Viendo como administrador' : 'Viendo como cajero: menú y descuentos limitados'); },
+  reset: () => { UI.confirmar = { titulo: 'Reiniciar la demo', texto: 'Se borran las ventas, cajas y cambios que hizo y se vuelven a cargar los datos de ejemplo.', boton: 'Reiniciar', peligro: true, fn: () => { S = estadoInicial(); guardar(); UI.alerta = null; toast('Demo reiniciada'); } }; renderModal(); },
+  cat: (d) => { UI.cat = d.v === '' ? null : Number(d.v); vistaPos(); },
+  add: (d) => { agregar(Number(d.v), Number(d.c)); $('#pos-alerta').innerHTML = alertaHtml(); renderCart(); },
+  quitar: (d) => { S.carrito.items = S.carrito.items.filter((i) => i.id !== Number(d.v)); guardar(); renderCart(); },
+  vaciar: () => { S.carrito = { items: [], doc: '', descuento: 0 }; guardar(); renderCart(); },
+  esperar: aparcar,
+  recuperar: (d) => { const e = S.espera.splice(Number(d.v), 1)[0]; if (S.carrito.items.length) S.espera.push({ etiqueta: clienteCarrito()?.nombre || S.carrito.doc || 'Venta', total: totalesCarrito().total_usd, carrito: S.carrito }); S.carrito = e.carrito; guardar(); vistaPos(); },
+  cobrar: abrirCobro,
+  'ir-ticket': () => { $('#cart').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }); },
+  condicion: (d) => { UI.cobro.condicion = d.v; UI.cobro.error = ''; renderModal(); },
+  'pago-add': () => {
+    const cb = UI.cobro; const m = metodo(cb.metodoId); const monto = r2(Number(cb.monto));
+    cb.error = '';
+    if (!(monto > 0)) cb.error = 'El monto debe ser mayor a cero.';
+    else if (m.ref && !cb.ref.trim()) cb.error = `${m.nombre} requiere número de referencia.`;
+    else { cb.pagos.push({ metodo_id: m.id, monto, ref: cb.ref.trim() || null }); cb.ref = ''; cb.metodoId = 2; sugerir(); }
+    renderModal(); document.getElementById('monto')?.focus();
+  },
+  'pago-del': (d) => { UI.cobro.pagos.splice(Number(d.v), 1); sugerir(); renderModal(); },
+  emitir,
+  'cerrar-modal': () => { const habiaTicket = UI.ticket; UI.cobro = null; UI.ticket = null; UI.confirmar = null; UI.cxc = null; render(); if (habiaTicket) $('#buscar')?.focus(); },
+  'cerrar-modal-bg': (d, el, e) => { if (e.target === el) ACCIONES['cerrar-modal'](); },
+  'confirmar-ok': () => { const fn = UI.confirmar.fn; UI.confirmar = null; fn(); render(); },
+  'ver-ticket': (d) => { UI.ticket = Number(d.v); renderModal(); },
+  anular: (d) => { const v = S.ventas.find((x) => x.id === Number(d.v)); UI.confirmar = { titulo: `Anular ${v.numero}`, texto: 'Los productos regresan al inventario y la factura queda marcada como anulada.', boton: 'Anular factura', peligro: true, fn: () => anular(v.id) }; renderModal(); },
+  'abrir-caja': () => { S.cajas.push({ id: S.cajas.length + 1, usuario: 'Caja principal', estado: 'ABIERTA', fondoUsd: r2(Number($('#fusd').value) || 0), fondoVes: r2(Number($('#fves').value) || 0), abierta: fechaHora(new Date()), cerrada: null, esperado: null, contado: null, dif: null }); UI.conteos = {}; UI.alerta = { tipo: 'ok', msg: 'Caja abierta. Ya puede facturar.' }; guardar(); render(); },
+  'cerrar-caja': () => {
+    UI.confirmar = { titulo: 'Cerrar la caja', texto: 'Se registra el arqueo con los montos contados. Los métodos sin contar quedan en cero.', boton: 'Cerrar caja', peligro: true, fn: () => {
+      const caja = cajaAbierta(S); const r = resumenCaja(S, caja);
+      const aUsd = (n, m) => (m.moneda === 'USD' ? n : n / S.tasa);
+      let esp = 0, cont = 0;
+      r.filas.forEach((f) => { esp += aUsd(f.esperado, f.m); cont += aUsd(Number(UI.conteos[f.m.id] || 0), f.m); });
+      Object.assign(caja, { estado: 'CERRADA', cerrada: fechaHora(new Date()), esperado: r2(esp), contado: r2(cont), dif: r2(cont - esp) });
+      UI.alerta = { tipo: Math.abs(caja.dif) < 0.01 ? 'ok' : 'bad', msg: `Caja cerrada. Diferencia total: ${usd(caja.dif)}.` };
+      UI.conteos = {}; guardar();
+    } };
+    renderModal();
+  },
+  'cxc-abrir': (d) => { UI.cxc = { cliente: Number(d.v), venta: null, metodo: 2, monto: '', ref: '', error: '' }; renderModal(); },
+  'cxc-fact': (d) => { UI.cxc.venta = Number(d.v); renderModal(); },
+  'cxc-saldar': (d, el, e) => { e.preventDefault(); const v = S.ventas.find((y) => y.id === UI.cxc.venta); const m = metodo(UI.cxc.metodo); if (v) UI.cxc.monto = (m.moneda === 'USD' ? v.saldo : r2(v.saldo * S.tasa)).toFixed(2); renderModal(); },
+  'cxc-abonar': () => { abonar(); renderModal(); vistaCxc(); }
+};
+
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-a]');
+  if (!el) return;
+  const fn = ACCIONES[el.dataset.a];
+  if (fn) fn(el.dataset, el, e);
+});
+
+document.addEventListener('input', (e) => {
+  const el = e.target;
+  if (el.id === 'buscar') { UI.q = el.value; renderGrid(); return; }
+  if (el.id === 'doc') { S.carrito.doc = el.value.toUpperCase(); guardar(); const cli = clienteCarrito(); $('#cli-info').innerHTML = clienteInfo(cli, cli ? deudaCliente(S, cli.id) : 0); return; }
+  if (el.id === 'desc') { S.carrito.descuento = Math.max(0, Number(el.value) || 0); guardar(); const t = totalesCarrito(); const keep = el.selectionStart; $('#sum').innerHTML = resumenHtml(t); const n = $('#desc'); n.focus(); try { n.setSelectionRange(keep, keep); } catch { /* number inputs */ } return; }
+  const k = el.dataset.in;
+  if (k === 'monto') UI.cobro.monto = el.value;
+  if (k === 'ref') UI.cobro.ref = el.value;
+  if (k === 'cxc-monto') UI.cxc.monto = el.value;
+  if (k === 'cxc-ref') UI.cxc.ref = el.value;
+  if (k === 'conteo') {
+    UI.conteos[el.dataset.v] = el.value;
+    const caja = cajaAbierta(S); const f = resumenCaja(S, caja).filas.find((x) => x.m.id === Number(el.dataset.v));
+    const td = document.getElementById('dif-' + el.dataset.v);
+    if (f && td) { const tmp = document.createElement('tbody'); tmp.innerHTML = filaArqueo(f); const nuevo = tmp.querySelector('#dif-' + el.dataset.v); td.className = nuevo.className; td.textContent = nuevo.textContent; }
+  }
+  if (k === 'cfg') { S.config[el.dataset.v] = el.value; guardar(); $('#empresa-top').textContent = S.config.empresa; const d = S.ventas.filter((v) => v.estado === 'COMPLETADA').slice(-1)[0]; if (d) $('#cfg-ticket').innerHTML = ticketHtml(d); }
+  if (k === 'cfg-num') { const n = Number(el.value); if (el.value !== '' && n >= 0) { S.config[el.dataset.v] = n; guardar(); } }
+});
+
+document.addEventListener('change', (e) => {
+  const el = e.target;
+  const k = el.dataset.in;
+  if (el.id === 'rate-input') { const n = r2(Number(el.value)); if (n > 0) { S.tasa = n; guardar(); toast(`Nueva tasa: Bs. ${n.toFixed(2)} por dólar`); } render(); return; }
+  if (el.id === 'r-desde' || el.id === 'r-hasta') { UI.desde = $('#r-desde').value; UI.hasta = $('#r-hasta').value; if (UI.desde > UI.hasta) [UI.desde, UI.hasta] = [UI.hasta, UI.desde]; vistaReportes(); return; }
+  if (k === 'qty') {
+    const p = S.productos.find((x) => x.id === Number(el.dataset.v));
+    const it = S.carrito.items.find((i) => i.id === p.id);
+    let c = Number(el.value);
+    if (!(c > 0)) S.carrito.items = S.carrito.items.filter((i) => i !== it);
+    else { c = UNIDADES[p.um] ? r3(c) : Math.floor(c); it.cant = Math.min(c, p.stock); if (it.cant <= 0) S.carrito.items = S.carrito.items.filter((i) => i !== it); }
+    guardar(); renderCart(); return;
+  }
+  if (k === 'metodo') { UI.cobro.metodoId = Number(el.value); UI.cobro.ref = ''; sugerir(); renderModal(); return; }
+  if (k === 'cxc-metodo') { UI.cxc.metodo = Number(el.value); UI.cxc.monto = ''; renderModal(); return; }
+  if (k === 'limite') { const c = S.clientes.find((x) => x.id === Number(el.dataset.v)); c.limite = Math.max(0, r2(Number(el.value) || 0)); guardar(); toast(`Límite de ${c.nombre || c.doc}: ${usd(c.limite)}`); return; }
+  if (k === 'cfg-bool') { S.config[el.dataset.v] = el.checked; guardar(); renderNav(); toast('Configuración guardada'); }
+  if (k === 'cfg-num') { const n = Number(el.value); if (n >= 0) { S.config[el.dataset.v] = n; guardar(); toast('Configuración guardada'); } }
+});
+
+document.addEventListener('keydown', (e) => {
+  const enPos = vistaActual().id === 'pos';
+  if (e.key === 'Enter' && e.target.id === 'buscar') { e.preventDefault(); escanear(); return; }
+  if (e.key === 'Enter' && e.target.id === 'ref') { e.preventDefault(); ACCIONES['pago-add'](); return; }
+  if (e.key === 'Enter' && e.target.id === 'monto') { e.preventDefault(); ACCIONES['pago-add'](); return; }
+  if (e.key === 'Escape' && (UI.cobro || UI.ticket || UI.confirmar || UI.cxc)) { ACCIONES['cerrar-modal'](); return; }
+  if (!enPos) return;
+  if (e.key === 'F2') { e.preventDefault(); $('#buscar')?.focus(); }
+  if (e.key === 'F4') { e.preventDefault(); $('#doc')?.focus(); }
+  if (e.key === 'F8') { e.preventDefault(); if (!UI.cobro) aparcar(); }
+  if (e.key === 'F9') { e.preventDefault(); if (UI.cobro) emitir(); else if (!UI.ticket) abrirCobro(); }
+});
+
+window.addEventListener('hashchange', () => { UI.alerta = null; render(); window.scrollTo(0, 0); });
+render();
+</script>
+
+</body>
+</html>

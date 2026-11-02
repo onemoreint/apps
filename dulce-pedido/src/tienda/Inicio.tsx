@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronDown, MapPin } from 'lucide-react';
 import type { Catalogo } from '@/core/tipos';
 import { enlace } from '@/app/ruta';
 import { cop } from '@/core/dinero';
-import { Chorreado, Plato, Seccion, TarjetaProducto } from './partes';
+import { Chorreado, Cinta, Plato, Seccion, TarjetaProducto, useEfecto } from './partes';
 import { Cotizacion } from './Cotizacion';
 import { Ubicacion } from './Ubicacion';
 
@@ -30,13 +30,44 @@ export function Inicio({ catalogo }: { catalogo: Catalogo }) {
     (catalogo.productos.find((p) => p.categoria_id === id && p.fotos[0] && p.disponible)?.fotos[0] ??
       catalogo.productos.find((p) => p.categoria_id === id && p.fotos[0])?.fotos[0]);
 
+  // El desplazamiento alimenta los efectos de la portada (variable --d, en píxeles).
+  useEffect(() => {
+    const raiz = document.documentElement;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let cuadro = 0;
+    const medir = () => {
+      cuadro = 0;
+      raiz.style.setProperty('--d', String(Math.round(window.scrollY)));
+    };
+    const alMover = () => {
+      if (!cuadro) cuadro = requestAnimationFrame(medir);
+    };
+    medir();
+    window.addEventListener('scroll', alMover, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', alMover);
+      cancelAnimationFrame(cuadro);
+      raiz.style.removeProperty('--d');
+    };
+  }, []);
+
+  const titulo = c.eslogan || t.nombre;
+
   return (
     <>
       {/* Portada: guayaba que chorrea sobre la página, con la foto en un plato con blonda */}
-      <section className="relative z-[1] overflow-x-clip bg-acento text-en-acento">
+      <section id="portada" className="relative z-[1] overflow-x-clip bg-acento text-en-acento">
         <div className="mx-auto grid max-w-6xl items-center gap-x-6 px-4 pt-8 sm:pt-12 md:grid-cols-[1.15fr_1fr]">
           <div className="pb-6 md:pb-16">
-            <h1 className="text-[clamp(2.9rem,11.5vw,5.6rem)] leading-[1.02]">{c.eslogan || t.nombre}</h1>
+            <h1 className="text-[clamp(2.9rem,11.5vw,5.6rem)] leading-[1.02]" aria-label={titulo}>
+              {titulo.split(/\s+/).map((palabra, i) => (
+                <span key={i} aria-hidden>
+                  <span className="palabra" style={{ '--n': i } as React.CSSProperties}>
+                    {palabra}
+                  </span>{' '}
+                </span>
+              ))}
+            </h1>
             {c.mensaje_bienvenida && <p className="mt-5 max-w-lg text-[1.08rem] leading-relaxed sm:text-xl">{c.mensaje_bienvenida}</p>}
             <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
               <a href={enlace('/catalogo')} className="boton-maracuya px-7 py-3.5 text-lg">
@@ -52,23 +83,19 @@ export function Inicio({ catalogo }: { catalogo: Catalogo }) {
               </p>
             )}
           </div>
-          <Plato
-            foto={portada}
-            alt={t.nombre}
-            referencia={t.demo}
-            prioridad
-            className="plato-portada relative z-10 -mb-[12vw] -mr-[16vw] ml-auto w-[88vw] max-w-[600px] sm:-mr-[6vw] md:-mb-24 md:-mr-10 md:w-full"
-          />
+          <div className="parallax-plato relative z-10 -mb-[12vw] -mr-[16vw] ml-auto w-[88vw] max-w-[600px] sm:-mr-[6vw] md:-mb-24 md:-mr-10 md:w-full">
+            <Plato foto={portada} alt={t.nombre} referencia={t.demo} prioridad className="plato-portada w-full" />
+          </div>
         </div>
       </section>
       <Chorreado />
 
       {/* Categorías en platos */}
       {catalogo.categorias.length > 0 && (
-        <section className="mx-auto mt-[4vw] max-w-6xl px-4 pt-6 md:mt-0" aria-label="Categorías">
+        <section className="sobre-chorreado mx-auto mt-[4vw] max-w-6xl px-4 pt-6 md:mt-0" aria-label="Categorías">
           <div className="sin-barra -mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:gap-6">
             {catalogo.categorias.map((cat) => (
-              <a key={cat.id} href={enlace(`/catalogo?c=${cat.id}`)} className="w-28 shrink-0 snap-start text-center sm:w-36">
+              <a key={cat.id} href={enlace(`/catalogo?c=${cat.id}`)} className="plato-categoria w-28 shrink-0 snap-start text-center sm:w-36">
                 <Plato foto={fotoCategoria(cat.id) ?? ''} color="var(--color-rosa)" sinCalados className="w-full" />
                 <span className="mt-2 block text-[15px] font-bold leading-tight text-primario">{cat.nombre}</span>
               </a>
@@ -94,19 +121,16 @@ export function Inicio({ catalogo }: { catalogo: Catalogo }) {
         </Seccion>
       )}
 
+      <Cinta textos={catalogo.categorias.map((x) => x.nombre)} />
+
       {/* Cómo pedir: es una secuencia real, por eso va numerada */}
       {pasos.length > 0 && (
-        <section id="como-pedir" className="bg-primario text-en-primario">
+        <section id="como-pedir" className="-mt-7 bg-primario pt-4 text-en-primario">
           <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
             <h2 className="text-[clamp(2rem,6vw,3.2rem)] leading-tight">Cómo hacer tu pedido</h2>
             <ol className="mt-8 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
               {pasos.map((paso, i) => (
-                <li key={i} className="flex gap-4 sm:block">
-                  <span className="font-display text-5xl leading-none text-maracuya sm:text-6xl" aria-hidden>
-                    {i + 1}
-                  </span>
-                  <p className="text-[1.05rem] sm:mt-3">{paso}</p>
-                </li>
+                <Paso key={i} numero={i + 1} texto={paso} />
               ))}
             </ol>
           </div>
@@ -195,6 +219,18 @@ export function Inicio({ catalogo }: { catalogo: Catalogo }) {
         </Seccion>
       )}
     </>
+  );
+}
+
+function Paso({ numero, texto }: { numero: number; texto: string }) {
+  const ref = useEfecto<HTMLLIElement>();
+  return (
+    <li ref={ref} className="flex gap-4 sm:block">
+      <span className="numero-paso font-display text-5xl leading-none text-maracuya sm:text-6xl" aria-hidden>
+        {numero}
+      </span>
+      <p className="text-[1.05rem] sm:mt-3">{texto}</p>
+    </li>
   );
 }
 

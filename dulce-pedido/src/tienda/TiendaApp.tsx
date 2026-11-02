@@ -17,6 +17,7 @@ import { Privacidad } from './Privacidad';
 import { Pie } from './Pie';
 import { Cotizacion } from './Cotizacion';
 import { PantallaCarga, recordarMarca } from './LogoCarga';
+import { Grajeas } from './Grajeas';
 
 export function TiendaApp() {
   const slug = slugTienda();
@@ -135,7 +136,7 @@ export function TiendaApp() {
             >
               <ShoppingBag size={22} />
               {n > 0 && (
-                <span className="absolute right-0.5 top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-maracuya px-1 text-[11px] font-extrabold text-tinta">
+                <span key={n} className="latido absolute right-0.5 top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-maracuya px-1 text-[11px] font-extrabold text-tinta">
                   {n}
                 </span>
               )}
@@ -149,6 +150,7 @@ export function TiendaApp() {
       <BarraCarrito catalogo={catalogo} oculta={enFlujo} />
       <WhatsAppFlotante numero={t.whatsapp} nombre={t.nombre} subir={lineas.length > 0 && !enFlujo} />
       <Aviso />
+      <Grajeas lluvia={seccion === ''} />
     </div>
   );
 }

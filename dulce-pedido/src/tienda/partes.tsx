@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { Camera, Minus, Plus, ShoppingBag, MessageCircle, Clock, Sparkles, X } from 'lucide-react';
 import { cop } from '@/core/dinero';
 import { precioDesde, unidadesCarrito, calcularLineas, subtotalCarrito } from '@/core/carrito';
@@ -13,6 +13,63 @@ export function nombreCategoria(c: Catalogo, id: string | null): string {
 }
 
 /** Espacio neutro cuando aún no hay fotografía (sin dibujos ni imágenes falsas). */
+/**
+ * Prepara un elemento para animarse cuando entra en pantalla. Sin movimiento
+ * reducido ni IntersectionObserver el contenido queda visible desde el principio.
+ */
+export function useEfecto<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || !('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // Los vecinos de una misma fila entran escalonados.
+    const hermanos = el.parentElement ? Array.from(el.parentElement.children).indexOf(el) : 0;
+    el.style.setProperty('--retardo', `${(hermanos % 4) * 90}ms`);
+    el.dataset.efecto = 'antes';
+    const vigia = new IntersectionObserver(
+      ([entrada]) => {
+        if (entrada?.isIntersecting) {
+          el.dataset.efecto = 'listo';
+          vigia.disconnect();
+        }
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -6% 0px' },
+    );
+    vigia.observe(el);
+    return () => vigia.disconnect();
+  }, []);
+  return ref;
+}
+
+/** Cinta con los nombres de las categorías que cruza la página. */
+export function Cinta({ textos }: { textos: string[] }) {
+  if (textos.length === 0) return null;
+  const tira = (
+    <span className="flex shrink-0 items-center">
+      {Array.from({ length: Math.ceil(16 / textos.length) }).flatMap((_, v) =>
+        textos.map((t, i) => (
+          <span key={`${v}-${i}`} className="flex items-center whitespace-nowrap font-display text-[1.65rem] leading-none sm:text-[2.1rem]">
+            {t}
+            <span className="mx-5 h-2.5 w-2.5 rounded-full bg-acento" />
+          </span>
+        )),
+      )}
+    </span>
+  );
+  return (
+    <div className="overflow-x-clip py-3" aria-hidden>
+      <div className="cinta py-3">
+        <div className="cinta__desliza">
+          <div className="cinta__pista">
+            {tira}
+            {tira}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** Contorno de blonda: el papel calado que va bajo una torta. Se calcula una vez. */
 const BLONDA = (() => {
   const lobulos = 40;
@@ -89,14 +146,11 @@ const CHORREADO = (() => {
 
 export function Chorreado() {
   return (
-    <svg
-      viewBox="0 0 1440 120"
-      preserveAspectRatio="xMidYMin slice"
-      className="chorreado -mt-px block h-[max(96px,8.34vw)] w-full"
-      aria-hidden
-    >
-      <path d={CHORREADO} fill="var(--acento)" />
-    </svg>
+    <div className="chorreado-scroll -mt-px">
+      <svg viewBox="0 0 1440 120" preserveAspectRatio="xMidYMin slice" className="chorreado block h-[max(96px,8.34vw)] w-full" aria-hidden>
+        <path d={CHORREADO} fill="var(--acento)" />
+      </svg>
+    </div>
   );
 }
 
@@ -190,8 +244,9 @@ export function Campana({ p, referencia, grande = false }: { p: Producto; refere
 }
 
 export function TarjetaProducto({ p, catalogo }: { p: Producto; catalogo: Catalogo }) {
+  const ref = useEfecto<HTMLAnchorElement>();
   return (
-    <a href={enlace(`/p/${p.id}`)} className="flex flex-col items-center text-center">
+    <a ref={ref} href={enlace(`/p/${p.id}`)} className="flex flex-col items-center text-center">
       <div className="w-full px-[5%]">
         <Campana p={p} referencia={catalogo.tienda.demo} />
       </div>
@@ -261,7 +316,7 @@ export function BarraCarrito({ catalogo, oculta }: { catalogo: Catalogo; oculta:
         <span className="flex items-center gap-2.5 font-semibold">
           <span className="relative">
             <ShoppingBag size={22} />
-            <span className="absolute -right-2 -top-2 grid h-5 min-w-5 place-items-center rounded-full bg-maracuya px-1 text-[11px] font-extrabold text-tinta">
+            <span key={n} className="latido absolute -right-2 -top-2 grid h-5 min-w-5 place-items-center rounded-full bg-maracuya px-1 text-[11px] font-extrabold text-tinta">
               {n}
             </span>
           </span>
@@ -322,8 +377,9 @@ export function Aviso() {
 }
 
 export function Seccion({ id, titulo, children, className = '' }: { id?: string; titulo: string; children: ReactNode; className?: string }) {
+  const ref = useEfecto<HTMLElement>();
   return (
-    <section id={id} className={`mx-auto max-w-6xl px-4 py-10 sm:py-14 ${className}`}>
+    <section ref={ref} id={id} className={`mx-auto max-w-6xl px-4 py-10 sm:py-14 ${className}`}>
       <h2 className="mb-7 text-[clamp(2rem,6vw,3.2rem)] leading-tight text-primario">{titulo}</h2>
       {children}
     </section>

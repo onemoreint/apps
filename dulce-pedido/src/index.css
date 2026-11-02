@@ -297,3 +297,190 @@ dialog.hoja[open] {
     scroll-behavior: auto !important;
   }
 }
+
+/* ---------- Efectos ---------- */
+
+/* Portada: las palabras caen una a una y rebotan. */
+@keyframes caer {
+  from {
+    opacity: 0;
+    transform: translateY(-1.1em) rotate(-7deg);
+  }
+}
+.palabra {
+  display: inline-block;
+  animation: caer 0.8s cubic-bezier(0.2, 1.5, 0.4, 1) backwards;
+  animation-delay: calc(var(--n) * 90ms + 120ms);
+}
+
+/* La blonda gira sola y además responde al desplazamiento. */
+@keyframes girar {
+  to {
+    rotate: 360deg;
+  }
+}
+.plato-portada svg {
+  transform: rotate(calc(var(--d, 0) * 0.14deg));
+  animation: girar 70s linear infinite;
+}
+.parallax-plato {
+  transform: translateY(calc(var(--d, 0) * -0.07px));
+}
+
+/* El glaseado se alarga mientras se baja por la página. */
+.chorreado-scroll {
+  position: relative;
+  z-index: 0;
+  transform-origin: top;
+  transform: scaleY(min(2.1, calc(1 + var(--d, 0) * 0.0022)));
+}
+.sobre-chorreado {
+  position: relative;
+  z-index: 1;
+}
+
+/* Cinta de sabores que cruza la página. */
+@keyframes correr {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.cinta {
+  position: relative;
+  z-index: 2;
+  width: 106%;
+  margin-left: -3%;
+  transform: rotate(-1.6deg);
+  background: var(--color-maracuya);
+  color: var(--color-tinta);
+}
+.cinta__desliza {
+  transform: translateX(calc(var(--d, 0) * -0.22px));
+}
+.cinta__pista {
+  display: flex;
+  width: max-content;
+  animation: correr 46s linear infinite;
+}
+
+/* La campana baja sobre el producto, la base acusa el golpe y el precio se balancea. */
+@keyframes bajar {
+  from {
+    opacity: 0;
+    transform: translateY(-74px) scale(1.05);
+  }
+}
+@keyframes golpe {
+  40% {
+    transform: scale(1.07, 0.55);
+  }
+}
+@keyframes colgar {
+  0% {
+    rotate: -26deg;
+  }
+  35% {
+    rotate: 13deg;
+  }
+  60% {
+    rotate: -7deg;
+  }
+  82% {
+    rotate: 3deg;
+  }
+}
+[data-efecto='antes'] .campana__cristal,
+[data-efecto='antes'] .etiqueta-precio {
+  opacity: 0;
+}
+[data-efecto='listo'] .campana__cristal {
+  animation: bajar 0.75s cubic-bezier(0.3, 1.45, 0.5, 1) backwards;
+  animation-delay: var(--retardo, 0ms);
+}
+[data-efecto='listo'] .campana__base {
+  animation: golpe 0.36s ease-out backwards;
+  animation-delay: calc(var(--retardo, 0ms) + 380ms);
+}
+[data-efecto='listo'] .etiqueta-precio {
+  transform-origin: 0 50%;
+  animation: colgar 1.1s ease-out backwards;
+  animation-delay: calc(var(--retardo, 0ms) + 420ms);
+}
+
+/* Al pasar por encima: la campana se levanta y el producto se acerca. */
+.campana__foto img {
+  transition: scale 0.4s ease-out;
+}
+a:hover .campana__foto img {
+  scale: 1.09;
+}
+
+/* Títulos de sección: se destapan de izquierda a derecha. */
+@keyframes destapar {
+  from {
+    clip-path: inset(-20% 100% -30% 0);
+  }
+  to {
+    clip-path: inset(-20% -5% -30% 0);
+  }
+}
+[data-efecto='antes'] > h2 {
+  clip-path: inset(-20% 100% -30% 0);
+}
+[data-efecto='listo'] > h2 {
+  animation: destapar 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+/* Pasos del pedido: el número salta. */
+@keyframes saltar {
+  from {
+    opacity: 0;
+    transform: scale(0.2) rotate(-24deg);
+  }
+}
+[data-efecto='antes'] .numero-paso {
+  opacity: 0;
+}
+[data-efecto='listo'] .numero-paso {
+  display: inline-block;
+  animation: saltar 0.65s cubic-bezier(0.3, 1.7, 0.5, 1) backwards;
+  animation-delay: var(--retardo, 0ms);
+}
+.numero-paso {
+  display: inline-block;
+}
+
+/* Platos de categoría: la blonda da una vuelta al señalarlos. */
+.plato-categoria svg {
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.plato-categoria:hover svg,
+.plato-categoria:focus-visible svg {
+  transform: rotate(120deg) scale(1.05);
+}
+
+/* Botón principal: gelatina al señalarlo. */
+@keyframes gelatina {
+  30% {
+    scale: 1.08 0.92;
+  }
+  55% {
+    scale: 0.96 1.05;
+  }
+  80% {
+    scale: 1.02 0.98;
+  }
+}
+.boton-maracuya:hover {
+  animation: gelatina 0.55s ease-out;
+}
+
+/* El contador del pedido late cuando cambia. */
+@keyframes latido {
+  40% {
+    transform: scale(1.5);
+  }
+}
+.latido {
+  animation: latido 0.4s ease-out;
+}

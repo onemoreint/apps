@@ -7,6 +7,7 @@ import { textoPreparacion } from '@/core/fechas';
 import { enlace, ir } from '@/app/ruta';
 import { Campana, Cantidad, Etiquetas, Precio, TarjetaProducto, nombreCategoria } from './partes';
 import { useTienda } from './estado';
+import { lanzarGrajeas } from './Grajeas';
 
 export function Ficha({ catalogo, id }: { catalogo: Catalogo; id: string }) {
   const p = catalogo.productos.find((x) => x.id === id);
@@ -49,13 +50,15 @@ export function Ficha({ catalogo, id }: { catalogo: Catalogo; id: string }) {
     setSabores((act) => (act.includes(s) ? act.filter((x) => x !== s) : act.length >= p.sabores_max ? act : [...act, s]));
   };
 
-  const agregarAlCarrito = (irAlCarrito: boolean) => {
+  const agregarAlCarrito = (irAlCarrito: boolean, evento: React.MouseEvent<HTMLButtonElement>) => {
     setIntento(true);
     if (!p.disponible || faltaVariante || faltaSabor) return;
     // Orden alfabético, igual que el registro del servidor.
     const ordenados = [...sabores].sort((a, b) => a.localeCompare(b, 'es'));
     agregar({ producto_id: p.id, variante_id: variante?.id ?? null, sabores: ordenados, cantidad });
     avisar(`Agregado: ${p.nombre}`);
+    const caja = evento.currentTarget.getBoundingClientRect();
+    lanzarGrajeas(caja.left + caja.width / 2, caja.top + caja.height / 2);
     ir(irAlCarrito ? '/carrito' : '/catalogo');
   };
 
@@ -198,14 +201,14 @@ export function Ficha({ catalogo, id }: { catalogo: Catalogo; id: string }) {
               <div className="flex flex-col gap-2 sm:flex-row">
                 <button
                   type="button"
-                  onClick={() => agregarAlCarrito(true)}
+                  onClick={(e) => agregarAlCarrito(true, e)}
                   className="boton-maracuya flex-1 px-6 py-4 text-[1.05rem]"
                 >
                   <ShoppingBag size={20} /> Agregar · <span className="precio">{cop(precio * cantidad)}</span>
                 </button>
                 <button
                   type="button"
-                  onClick={() => agregarAlCarrito(false)}
+                  onClick={(e) => agregarAlCarrito(false, e)}
                   className="rounded-full px-5 py-4 font-semibold text-primario ring-1 ring-linea hover:bg-crema-2"
                 >
                   Agregar y seguir viendo

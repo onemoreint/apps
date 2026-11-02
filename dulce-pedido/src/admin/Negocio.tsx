@@ -3,7 +3,7 @@ import { ImagePlus, Loader2, Plus, Trash2, X } from 'lucide-react';
 import type { Contenido } from '@/core/tipos';
 import { whatsappValido } from '@/core/whatsapp';
 import { coordenadasDeEnlace, urlMapaIncrustado } from '@/core/cotizacion';
-import { colorValido } from '@/tienda/tema';
+import { COLORES_BASE, colorValido, coloresTienda } from '@/tienda/tema';
 import { db, textoError } from './cliente';
 import { subirFoto } from './fotos';
 import { Area, Boton, Campo, Entrada, Tarjeta, notificar } from './ui';
@@ -14,7 +14,7 @@ const CONTENIDO_BASE: Contenido = {
   mensaje_bienvenida: '',
   logo_url: '',
   banner_url: '',
-  colores: { primario: '#5a3222', acento: '#c4673f' },
+  colores: COLORES_BASE,
   como_pedir: [],
   info_entregas: '',
   info_anticipacion: '',
@@ -40,7 +40,7 @@ export function Negocio({ tienda, puedeEditar, alGuardar }: { tienda: TiendaFila
   const [c, setC] = useState<Contenido>(() => ({
     ...CONTENIDO_BASE,
     ...tienda.contenido,
-    colores: { ...CONTENIDO_BASE.colores, ...(tienda.contenido.colores ?? {}) },
+    colores: coloresTienda(tienda.contenido.colores),
   }));
   const [guardando, setGuardando] = useState(false);
   const [subiendo, setSubiendo] = useState<'' | 'logo' | 'banner'>('');
@@ -152,7 +152,7 @@ export function Negocio({ tienda, puedeEditar, alGuardar }: { tienda: TiendaFila
               </span>
             </Campo>
           </div>
-          <p className="mt-3 text-xs text-tinta-3">Los colores oscuros dan mejor lectura. Sugerencia: chocolate, terracota o vino.</p>
+          <p className="mt-3 text-xs text-tinta-3">Los colores oscuros dan mejor lectura. Sugerencia: mora, chocolate o vino para el principal; un tono vivo como guayaba para el acento.</p>
         </Tarjeta>
 
         <Tarjeta titulo="Textos de la página de inicio" className="lg:col-span-2">

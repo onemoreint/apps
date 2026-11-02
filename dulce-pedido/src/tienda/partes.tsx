@@ -13,9 +13,96 @@ export function nombreCategoria(c: Catalogo, id: string | null): string {
 }
 
 /** Espacio neutro cuando aún no hay fotografía (sin dibujos ni imágenes falsas). */
+/** Contorno de blonda: el papel calado que va bajo una torta. Se calcula una vez. */
+const BLONDA = (() => {
+  const lobulos = 40;
+  const punto = (r: number, a: number) => `${(100 + r * Math.cos(a)).toFixed(2)} ${(100 + r * Math.sin(a)).toFixed(2)}`;
+  let d = `M${punto(95, 0)}`;
+  for (let i = 0; i < lobulos; i++) {
+    const a = (i * 2 * Math.PI) / lobulos;
+    const paso = (2 * Math.PI) / lobulos;
+    d += `Q${punto(103, a + paso / 2)} ${punto(95, a + paso)}`;
+  }
+  return d + 'Z';
+})();
+const CALADOS = (() => {
+  const anillo = (r: number, n: number, radio: number, giro = 0) =>
+    Array.from({ length: n }, (_, i) => {
+      const a = (i * 2 * Math.PI) / n + giro;
+      const x = 100 + r * Math.cos(a);
+      const y = 100 + r * Math.sin(a);
+      return `M${(x - radio).toFixed(2)} ${y.toFixed(2)}a${radio} ${radio} 0 1 0 ${radio * 2} 0a${radio} ${radio} 0 1 0 ${-radio * 2} 0Z`;
+    }).join('');
+  return anillo(90.5, 40, 1.7, Math.PI / 40) + anillo(85.5, 40, 1, 0);
+})();
+
+/** Foto redonda sobre una blonda de papel. El calado deja ver el color que haya detrás. */
+export function Plato({
+  foto,
+  alt = '',
+  color = '#ffffff',
+  referencia = false,
+  sinCalados = false,
+  prioridad = false,
+  className = '',
+}: {
+  foto: string;
+  alt?: string;
+  color?: string;
+  referencia?: boolean;
+  sinCalados?: boolean;
+  prioridad?: boolean;
+  className?: string;
+}) {
+  return (
+    <div className={`relative aspect-square ${className}`}>
+      <svg viewBox="0 0 200 200" className="absolute inset-0 h-full w-full" aria-hidden>
+        <path d={sinCalados ? BLONDA : BLONDA + CALADOS} fill={color} fillRule="evenodd" />
+      </svg>
+      <div className={`absolute overflow-hidden rounded-full bg-crema-2 ${sinCalados ? 'inset-[6%]' : 'inset-[9.5%]'}`}>
+        {foto ? (
+          <img src={foto} alt={alt} loading={prioridad ? 'eager' : 'lazy'} fetchPriority={prioridad ? 'high' : undefined} className="h-full w-full object-cover" />
+        ) : (
+          <SinFoto className="h-full w-full" />
+        )}
+        {foto && referencia && <EtiquetaReferencia />}
+      </div>
+    </div>
+  );
+}
+
+/** Borde inferior de la portada: el glaseado chorrea sobre la página. */
+const GOTAS: [number, number, number][] = [
+  [40, 34, 40], [120, 46, 74], [214, 30, 26], [292, 54, 96], [410, 32, 44], [486, 44, 66], [590, 28, 22],
+  [664, 50, 88], [770, 34, 36], [850, 46, 104], [958, 30, 30], [1036, 52, 70], [1146, 32, 48], [1226, 44, 92], [1330, 36, 34],
+];
+const CHORREADO = (() => {
+  const base = 8;
+  const r = 14;
+  let d = `M0 0H1440V${base}`;
+  for (const [x, w, h] of [...GOTAS].reverse()) {
+    const fondo = base + h;
+    d += `L${x + w + r} ${base}Q${x + w} ${base} ${x + w} ${base + r}V${fondo - w / 2}A${w / 2} ${w / 2} 0 0 1 ${x} ${fondo - w / 2}V${base + r}Q${x} ${base} ${x - r} ${base}`;
+  }
+  return d + `L0 ${base}Z`;
+})();
+
+export function Chorreado() {
+  return (
+    <svg
+      viewBox="0 0 1440 120"
+      preserveAspectRatio="xMidYMin slice"
+      className="chorreado -mt-px block h-[max(96px,8.34vw)] w-full"
+      aria-hidden
+    >
+      <path d={CHORREADO} fill="var(--acento)" />
+    </svg>
+  );
+}
+
 export function SinFoto({ className = '', texto = 'Foto próximamente' }: { className?: string; texto?: string }) {
   return (
-    <div className={`grid place-items-center bg-gradient-to-br from-crema-2 to-rosa/40 text-tinta-3 ${className}`}>
+    <div className={`grid place-items-center bg-rosa text-tinta-2 ${className}`}>
       <span className="flex flex-col items-center gap-1 text-[12px] font-medium">
         <Camera size={22} strokeWidth={1.6} aria-hidden />
         {texto}
@@ -59,70 +146,64 @@ export function FotoProducto({
 
 export function EtiquetaReferencia() {
   return (
-    <span className="absolute bottom-2 right-2 rounded-full bg-tinta/55 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
+    <span className="absolute bottom-1.5 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-tinta/70 px-2 py-0.5 text-[10px] font-medium text-white">
       Foto de referencia
     </span>
   );
 }
 
 export function Etiquetas({ p, compacto = false }: { p: Producto; compacto?: boolean }) {
-  const chips: { t: string; c: string }[] = [];
-  if (!p.disponible) chips.push({ t: 'Agotado', c: 'bg-tinta text-crema' });
-  if (p.destacado) chips.push({ t: 'Destacado', c: 'bg-acento text-white' });
-  if (p.nuevo) chips.push({ t: 'Nuevo', c: 'bg-rosa text-primario' });
-  if (p.por_encargo) chips.push({ t: 'Por encargo', c: 'bg-papel text-primario ring-1 ring-linea' });
-  if (chips.length === 0) return null;
-  return (
-    <div className={`flex flex-wrap gap-1.5 ${compacto ? '' : 'mb-2'}`}>
-      {chips.map((x) => (
-        <span key={x.t} className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold tracking-wide ${x.c}`}>
-          {x.t}
-        </span>
-      ))}
-    </div>
-  );
+  const textos: string[] = [];
+  if (p.nuevo) textos.push('Nuevo');
+  if (p.por_encargo) textos.push('Por encargo');
+  if (!compacto && p.destacado) textos.push('De los más pedidos');
+  if (textos.length === 0) return compacto ? <span className="mb-2" /> : null;
+  return <p className={`text-[13px] font-bold text-acento ${compacto ? 'mb-2 mt-0.5' : 'mb-2'}`}>{textos.join(', ')}</p>;
 }
 
 export function Precio({ p, className = '' }: { p: Producto; className?: string }) {
   const { valor, varios } = precioDesde(p);
   return (
     <span className={`precio ${className}`}>
-      {varios && <span className="block text-[0.72em] font-normal leading-tight text-tinta-3">desde</span>}
+      {varios && <span className="mr-1 text-[0.8em] font-medium">desde</span>}
       {cop(valor)}
     </span>
   );
 }
 
-export function TarjetaProducto({ p, catalogo }: { p: Producto; catalogo: Catalogo }) {
+/** Producto en vitrina: foto bajo una campana de cristal, sobre su base. */
+export function Campana({ p, referencia, grande = false }: { p: Producto; referencia: boolean; grande?: boolean }) {
   return (
-    <a
-      href={enlace(`/p/${p.id}`)}
-      className={`group flex flex-col overflow-hidden rounded-2xl bg-papel shadow-[0_1px_0_rgba(46,29,21,0.04),0_8px_24px_-12px_rgba(46,29,21,0.18)] ring-1 ring-linea/70 transition hover:-translate-y-0.5 hover:shadow-[0_14px_30px_-14px_rgba(46,29,21,0.3)] ${!p.disponible ? 'opacity-75' : ''}`}
-    >
-      <div className="relative">
-        <FotoProducto producto={p} referencia={catalogo.tienda.demo} className="aspect-[4/3]" />
-        <div className="absolute left-2 top-2">
-          <Etiquetas p={p} compacto />
-        </div>
-      </div>
-      <div className="flex flex-1 flex-col gap-1 p-3 sm:p-4">
-        <h3 className="text-[1.05rem] font-semibold leading-snug text-tinta">{p.nombre}</h3>
-        {p.presentacion && <p className="text-[13px] text-tinta-3">{p.presentacion}</p>}
-        <div className="mt-auto flex items-end justify-between gap-2 pt-2">
-          <Precio p={p} className="text-lg font-bold text-primario" />
-          <span
-            aria-hidden
-            className={`grid h-9 w-9 shrink-0 place-items-center rounded-full ${p.disponible ? 'bg-primario text-en-primario' : 'bg-crema-2 text-tinta-3'}`}
-          >
-            <Plus size={18} />
+    <div className="campana">
+      <div className="campana__cristal">
+        <FotoProducto producto={p} referencia={referencia} grande={grande} className={`campana__foto aspect-[4/5] ${!p.disponible ? 'grayscale-[0.6]' : ''}`} />
+        {!p.disponible && (
+          <span className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 -rotate-6 bg-tinta px-3 py-1 text-sm font-extrabold text-white">
+            Agotado
           </span>
-        </div>
-        {p.horas_preparacion >= 24 && (
-          <p className="flex items-center gap-1 text-[12px] text-tinta-3">
-            <Clock size={12} /> {textoPreparacion(p.horas_preparacion)}
-          </p>
         )}
       </div>
+      <div className="campana__base" />
+      <div className="campana__pie" />
+    </div>
+  );
+}
+
+export function TarjetaProducto({ p, catalogo }: { p: Producto; catalogo: Catalogo }) {
+  return (
+    <a href={enlace(`/p/${p.id}`)} className="flex flex-col items-center text-center">
+      <div className="w-full px-[5%]">
+        <Campana p={p} referencia={catalogo.tienda.demo} />
+      </div>
+      <h3 className="mt-3 font-sans text-[1.06rem] font-bold leading-snug text-tinta">{p.nombre}</h3>
+      {p.presentacion && <p className="mt-0.5 text-[13px] text-tinta-3">{p.presentacion}</p>}
+      <Etiquetas p={p} compacto />
+      <Precio p={p} className="etiqueta-precio mt-auto translate-y-1 text-[1.02rem]" />
+      {p.horas_preparacion >= 24 && (
+        <p className="mt-3 flex items-center gap-1 text-[12px] text-tinta-3">
+          <Clock size={12} aria-hidden /> {textoPreparacion(p.horas_preparacion)}
+        </p>
+      )}
     </a>
   );
 }
@@ -175,12 +256,12 @@ export function BarraCarrito({ catalogo, oculta }: { catalogo: Catalogo; oculta:
     <div className="fixed inset-x-0 bottom-0 z-30 px-3 pb-[max(12px,env(safe-area-inset-bottom))] pt-2">
       <a
         href={enlace('/carrito')}
-        className="aparecer mx-auto flex max-w-xl items-center justify-between gap-3 rounded-2xl bg-primario px-4 py-3.5 text-en-primario shadow-[0_12px_30px_-10px_rgba(46,29,21,0.55)]"
+        className="aparecer mx-auto flex max-w-xl items-center justify-between gap-3 rounded-full bg-primario px-6 py-3.5 text-en-primario shadow-[0_10px_24px_-10px_rgba(42,20,32,0.6)]"
       >
         <span className="flex items-center gap-2.5 font-semibold">
           <span className="relative">
             <ShoppingBag size={22} />
-            <span className="absolute -right-2 -top-2 grid h-5 min-w-5 place-items-center rounded-full bg-acento px-1 text-[11px] font-bold text-white">
+            <span className="absolute -right-2 -top-2 grid h-5 min-w-5 place-items-center rounded-full bg-maracuya px-1 text-[11px] font-extrabold text-tinta">
               {n}
             </span>
           </span>
@@ -212,7 +293,7 @@ export function BannerDemo() {
   if (cerrado) return null;
   return (
     <div className="flex items-start gap-2 bg-tinta px-4 py-2 text-[13px] text-crema">
-      <Sparkles size={16} className="mt-0.5 shrink-0 text-rosa-2" />
+      <Sparkles size={16} className="mt-0.5 shrink-0 text-maracuya" />
       <p className="flex-1">
         <strong className="font-semibold">Tienda de demostración.</strong> Productos y precios de ejemplo, fotos de referencia; los pedidos
         de prueba no se preparan.
@@ -243,7 +324,7 @@ export function Aviso() {
 export function Seccion({ id, titulo, children, className = '' }: { id?: string; titulo: string; children: ReactNode; className?: string }) {
   return (
     <section id={id} className={`mx-auto max-w-6xl px-4 py-10 sm:py-14 ${className}`}>
-      <h2 className="mb-5 text-2xl font-semibold text-primario sm:text-3xl">{titulo}</h2>
+      <h2 className="mb-7 text-[clamp(2rem,6vw,3.2rem)] leading-tight text-primario">{titulo}</h2>
       {children}
     </section>
   );

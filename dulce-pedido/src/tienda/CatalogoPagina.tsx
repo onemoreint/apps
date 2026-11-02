@@ -46,10 +46,10 @@ export function CatalogoPagina({ catalogo, categoria, busqueda }: { catalogo: Ca
 
   return (
     <div className="mx-auto max-w-6xl px-4 pb-12 pt-6">
-      <h1 className="text-3xl font-semibold text-primario sm:text-4xl">Catálogo</h1>
-      <p className="mt-1 text-tinta-2">Precios en pesos colombianos. Agrega lo que quieras y envía tu pedido por WhatsApp.</p>
+      <h1 className="text-[clamp(2.6rem,9vw,4.4rem)] leading-none text-primario">Catálogo</h1>
+      <p className="mt-3 text-[1.05rem] text-tinta-2">Precios en pesos colombianos. Agrega lo que quieras y envía tu pedido por WhatsApp.</p>
 
-      <div className="sticky top-16 z-10 -mx-4 mt-5 bg-crema/95 px-4 pb-3 pt-2 backdrop-blur-md">
+      <div className="sticky top-16 z-10 -mx-4 mt-5 bg-crema px-4 pb-3 pt-2">
         <label className="relative block">
           <span className="sr-only">Buscar productos</span>
           <Search size={18} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-tinta-3" />
@@ -87,8 +87,8 @@ export function CatalogoPagina({ catalogo, categoria, busqueda }: { catalogo: Ca
       </div>
 
       {lista.length === 0 ? (
-        <div className="mt-10 rounded-2xl bg-papel p-8 text-center ring-1 ring-linea/70">
-          <p className="font-display text-xl text-primario">No encontramos productos</p>
+        <div className="mt-10 text-center">
+          <p className="font-display text-3xl text-primario">No encontramos productos</p>
           <p className="mt-1 text-tinta-2">Prueba con otra palabra o mira todas las categorías.</p>
           <button
             type="button"
@@ -102,13 +102,13 @@ export function CatalogoPagina({ catalogo, categoria, busqueda }: { catalogo: Ca
           </button>
         </div>
       ) : agrupar ? (
-        <div className="mt-4 space-y-10">
+        <div className="mt-6 space-y-14">
           {catalogo.categorias.map((c) => {
             const ps = lista.filter((p) => p.categoria_id === c.id);
             if (ps.length === 0) return null;
             return (
               <section key={c.id} aria-labelledby={`cat-${c.id}`}>
-                <h2 id={`cat-${c.id}`} className="mb-1 text-2xl font-semibold text-primario">
+                <h2 id={`cat-${c.id}`} className="mb-5 text-[clamp(1.7rem,5vw,2.4rem)] leading-tight text-acento">
                   {c.nombre}
                 </h2>
                 {c.descripcion && <p className="mb-3 text-tinta-2">{c.descripcion}</p>}
@@ -118,7 +118,7 @@ export function CatalogoPagina({ catalogo, categoria, busqueda }: { catalogo: Ca
           })}
           {sinCategoria.length > 0 && (
             <section>
-              <h2 className="mb-3 text-2xl font-semibold text-primario">Otros productos</h2>
+              <h2 className="mb-5 text-[clamp(1.7rem,5vw,2.4rem)] leading-tight text-acento">Otros productos</h2>
               <Rejilla productos={sinCategoria} catalogo={catalogo} />
             </section>
           )}
@@ -137,7 +137,7 @@ export function CatalogoPagina({ catalogo, categoria, busqueda }: { catalogo: Ca
 
 function Rejilla({ productos, catalogo }: { productos: Producto[]; catalogo: Catalogo }) {
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 sm:gap-x-10 lg:grid-cols-4">
       {productos.map((p) => (
         <TarjetaProducto key={p.id} p={p} catalogo={catalogo} />
       ))}
@@ -153,7 +153,7 @@ function Chip({ activo, onClick, foto, children }: { activo: boolean; onClick: (
       aria-selected={activo}
       onClick={onClick}
       className={`inline-flex shrink-0 items-center gap-2 rounded-full py-1.5 text-sm font-medium transition ${foto ? 'pl-1.5 pr-4' : 'px-4'} ${
-        activo ? 'bg-primario text-en-primario' : 'bg-papel text-tinta-2 ring-1 ring-linea hover:bg-rosa/60'
+        activo ? 'bg-primario text-en-primario' : 'bg-papel font-semibold text-primario ring-1 ring-linea hover:bg-rosa/60'
       }`}
     >
       {foto && <img src={foto} alt="" loading="lazy" className="h-7 w-7 rounded-full object-cover" />}

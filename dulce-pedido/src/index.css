@@ -1,44 +1,58 @@
 @import 'tailwindcss';
 
-/* Solo latín y solo el eje de peso: fuentes livianas para datos móviles. */
+/* Solo latín: fuentes livianas para datos móviles. */
 @font-face {
-  font-family: 'Fraunces';
+  font-family: 'Shrikhand';
   font-style: normal;
   font-display: swap;
-  font-weight: 300 800;
-  src: url('@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 400;
+  src: url('@fontsource/shrikhand/files/shrikhand-latin-400-normal.woff2') format('woff2');
 }
 @font-face {
-  font-family: 'Inter';
+  font-family: 'Figtree';
   font-style: normal;
   font-display: swap;
-  font-weight: 300 700;
-  src: url('@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 300 900;
+  src: url('@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2') format('woff2-variations');
 }
 
-/* Colores de marca: la tienda los reemplaza con los que configure la propietaria. */
+/*
+ * Identidad: sabores de la repostería colombiana.
+ * mora (primario), guayaba (acento) y maracuyá (precios y acción principal).
+ * La propietaria cambia primario y acento; los tonos claros se derivan del acento.
+ */
 :root {
-  --primario: #5a3222;
-  --acento: #c4673f;
-  --en-primario: #fffaf3;
+  --primario: #43102f;
+  --acento: #d11f4a;
+  --en-primario: #fff5f6;
+  --en-acento: #ffffff;
+  --fuente-titulos: 'Shrikhand', 'Cooper Black', Georgia, serif;
+}
+
+/* El panel es una herramienta de trabajo: títulos sobrios. */
+.panel-admin {
+  --fuente-titulos: 'Figtree', ui-sans-serif, system-ui, sans-serif;
 }
 
 @theme inline {
-  --font-display: 'Fraunces', ui-serif, Georgia, 'Times New Roman', serif;
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-display: var(--fuente-titulos);
+  --font-sans: 'Figtree', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
 
   --color-primario: var(--primario);
   --color-acento: var(--acento);
   --color-en-primario: var(--en-primario);
-  --color-crema: #fbf6f0;
-  --color-crema-2: #f4ebe0;
-  --color-papel: #fffdf9;
-  --color-rosa: #f3d9d3;
-  --color-rosa-2: #e9b8ae;
-  --color-tinta: #2e1d15;
-  --color-tinta-2: #6b5548;
-  --color-tinta-3: #8f7a6d;
-  --color-linea: #e8dccf;
+  --color-en-acento: var(--en-acento);
+  --color-crema: color-mix(in srgb, var(--acento) 5%, white);
+  --color-crema-2: color-mix(in srgb, var(--acento) 10%, white);
+  --color-papel: #ffffff;
+  --color-rosa: color-mix(in srgb, var(--acento) 18%, white);
+  --color-rosa-2: color-mix(in srgb, var(--acento) 38%, white);
+  --color-maracuya: #ffc42e;
+  --color-maracuya-2: #d99a00;
+  --color-tinta: #2a1420;
+  --color-tinta-2: #5a4250;
+  --color-tinta-3: #755c6a;
+  --color-linea: color-mix(in srgb, var(--acento) 22%, #eee3e6);
   --color-whatsapp: #128c4a;
   --color-whatsapp-oscuro: #0c6b37;
   --color-peligro: #a8321d;
@@ -59,6 +73,8 @@ body {
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.5;
+  /* Shrikhand tiene un solo peso: nunca engordarla ni inclinarla artificialmente. */
+  font-synthesis: none;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -71,8 +87,7 @@ body {
   h1,
   h2,
   h3 {
-    font-family: var(--font-display);
-    letter-spacing: -0.01em;
+    font-family: var(--fuente-titulos);
     text-wrap: balance;
   }
   button {
@@ -81,6 +96,141 @@ body {
   button:disabled {
     cursor: not-allowed;
   }
+}
+
+/* Botón principal de la portada y de las fichas: un caramelo de maracuyá que se hunde al tocarlo. */
+.boton-maracuya {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  background: var(--color-maracuya);
+  color: var(--color-tinta);
+  font-weight: 800;
+  box-shadow: 0 4px 0 var(--color-maracuya-2);
+  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
+}
+.boton-maracuya:hover {
+  transform: translateY(1px);
+  box-shadow: 0 3px 0 var(--color-maracuya-2);
+}
+.boton-maracuya:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 var(--color-maracuya-2);
+}
+.boton-maracuya:focus-visible {
+  outline-color: var(--color-tinta);
+}
+
+/*
+ * Vitrina: cada producto se exhibe bajo una campana de cristal sobre su base.
+ * Al pasar el dedo o el cursor, la campana se levanta un poco.
+ */
+.campana {
+  position: relative;
+  padding-top: 9px;
+}
+.campana__cristal {
+  position: relative;
+  transition: transform 0.2s ease-out;
+}
+.campana__cristal::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: -9px;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  margin-left: -9px;
+  border-radius: 50%;
+  background: var(--primario);
+}
+.campana__foto {
+  overflow: hidden;
+  border-radius: 999px 999px 0 0;
+  box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.7);
+}
+/* Reflejo del cristal, encima de la foto. */
+.campana__foto::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: 999px 999px 0 0;
+  background: linear-gradient(115deg, transparent 22%, rgb(255 255 255 / 0.28) 27%, rgb(255 255 255 / 0.1) 34%, transparent 35%);
+  box-shadow: inset 0 0 0 3px rgb(255 255 255 / 0.55);
+}
+.campana__base {
+  position: relative;
+  height: 9px;
+  margin-inline: -5%;
+  border-radius: 999px;
+  background: var(--primario);
+}
+.campana__pie {
+  width: 26%;
+  height: 11px;
+  margin-inline: auto;
+  background: var(--primario);
+  clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%);
+}
+a:hover > * > .campana__cristal,
+a:focus-visible > * > .campana__cristal {
+  transform: translateY(-7px);
+}
+
+/* Etiqueta de precio colgada de la base: amarillo maracuyá para encontrarla de un vistazo. */
+.etiqueta-precio {
+  display: inline-block;
+  padding: 0.28rem 0.7rem 0.28rem 1.15rem;
+  background: var(--color-maracuya);
+  color: var(--color-tinta);
+  font-weight: 800;
+  line-height: 1.1;
+  clip-path: polygon(0.55rem 0, 100% 0, 100% 100%, 0.55rem 100%, 0 50%);
+}
+
+/* Lista con puntos guía, como una carta de pastelería. */
+.guia {
+  flex: 1;
+  min-width: 1rem;
+  border-bottom: 2px dotted var(--color-rosa-2);
+  transform: translateY(-0.3em);
+}
+
+/* Comanda: papel con borde inferior festoneado. */
+.comanda {
+  --festón: 16px;
+  padding-bottom: calc(var(--festón) + 1.25rem);
+  -webkit-mask:
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--festón)) no-repeat,
+    radial-gradient(circle at 50% 0, #000 calc(var(--festón) - 0.5px), transparent var(--festón)) bottom / calc(var(--festón) * 2) var(--festón) repeat-x;
+  mask:
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--festón)) no-repeat,
+    radial-gradient(circle at 50% 0, #000 calc(var(--festón) - 0.5px), transparent var(--festón)) bottom / calc(var(--festón) * 2) var(--festón) repeat-x;
+}
+
+/* Portada: único momento coreografiado. El chorreado baja y el plato se asienta. */
+@keyframes chorrear {
+  from {
+    transform: scaleY(0.2);
+  }
+}
+@keyframes asentar {
+  from {
+    transform: rotate(-14deg) scale(0.9);
+    opacity: 0;
+  }
+}
+.chorreado {
+  transform-origin: top;
+  animation: chorrear 0.9s cubic-bezier(0.3, 0.7, 0.2, 1) both;
+}
+.plato-portada {
+  animation: asentar 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 /* Precios: números tabulares para que no "bailen" al cambiar cantidades. */
@@ -108,7 +258,7 @@ dialog.hoja {
   }
 }
 dialog.hoja::backdrop {
-  background: rgb(46 29 21 / 0.45);
+  background: rgb(42 20 32 / 0.5);
 }
 dialog.hoja[open] {
   animation: subir 0.22s ease-out;

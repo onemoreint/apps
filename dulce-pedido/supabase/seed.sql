@@ -24,7 +24,7 @@ begin
       'eslogan', 'Repostería casera hecha con cariño',
       'mensaje_bienvenida', 'Tortas, postres y detalles dulces preparados en casa para tus celebraciones y antojos. Elige lo que te guste y envíanos tu pedido por WhatsApp.',
       'logo_url', '', 'banner_url', '',
-      'colores', jsonb_build_object('primario', '#5a3222', 'acento', '#c4673f'),
+      'colores', jsonb_build_object('primario', '#43102f', 'acento', '#d11f4a'),
       'como_pedir', jsonb_build_array(
         'Explora el catálogo y agrega tus productos al carrito.',
         'Elige la fecha, la franja horaria y si recoges o te lo llevamos.',

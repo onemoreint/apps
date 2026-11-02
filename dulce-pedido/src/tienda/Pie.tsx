@@ -20,10 +20,10 @@ export function Pie({ catalogo }: { catalogo: Catalogo }) {
   const telefono = t.whatsapp.replace(/^\+57/, '').replace(/(\d{3})(\d{3})(\d{4})$/, '$1 $2 $3');
 
   return (
-    <footer className="mt-6 bg-primario pb-20 sm:pb-0 text-en-primario">
+    <footer className="bg-primario pb-20 text-en-primario sm:pb-0">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-3">
         <div>
-          <p className="font-display text-2xl font-semibold">{t.nombre}</p>
+          <p className="font-display text-4xl">{t.nombre}</p>
           {c.eslogan && <p className="mt-1 opacity-80">{c.eslogan}</p>}
         </div>
         <ul className="space-y-2 text-[15px] opacity-90">
@@ -80,7 +80,7 @@ export function Pie({ catalogo }: { catalogo: Catalogo }) {
         </div>
       </div>
       <div className="border-t border-white/10 py-4 text-center text-xs opacity-60">
-        Pedidos en línea con Dulce Pedido · Los pedidos se confirman por WhatsApp
+        Los pedidos se confirman por WhatsApp. Tienda en línea con Dulce Pedido.
       </div>
     </footer>
   );

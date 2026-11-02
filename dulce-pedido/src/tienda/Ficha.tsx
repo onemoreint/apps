@@ -5,7 +5,7 @@ import { cop } from '@/core/dinero';
 import { precioUnitario } from '@/core/carrito';
 import { textoPreparacion } from '@/core/fechas';
 import { enlace, ir } from '@/app/ruta';
-import { Cantidad, Etiquetas, FotoProducto, Precio, TarjetaProducto, nombreCategoria } from './partes';
+import { Campana, Cantidad, Etiquetas, Precio, TarjetaProducto, nombreCategoria } from './partes';
 import { useTienda } from './estado';
 
 export function Ficha({ catalogo, id }: { catalogo: Catalogo; id: string }) {
@@ -71,21 +71,18 @@ export function Ficha({ catalogo, id }: { catalogo: Catalogo; id: string }) {
 
       <div className="grid gap-6 md:grid-cols-2 md:gap-10">
         <div>
-          <FotoProducto
-            producto={{ ...p, fotos: p.fotos.slice(foto, foto + 1).concat(p.fotos) }}
-            referencia={catalogo.tienda.demo}
-            className="aspect-square rounded-3xl ring-1 ring-linea"
-            grande
-          />
+          <div className="mx-auto max-w-[min(84%,26rem)]">
+            <Campana p={{ ...p, fotos: p.fotos.slice(foto, foto + 1).concat(p.fotos) }} referencia={catalogo.tienda.demo} grande />
+          </div>
           {p.fotos.length > 1 && (
-            <div className="mt-3 flex gap-2">
+            <div className="mt-4 flex justify-center gap-3">
               {p.fotos.map((f, i) => (
                 <button
                   key={f}
                   type="button"
                   onClick={() => setFoto(i)}
                   aria-label={`Ver foto ${i + 1}`}
-                  className={`h-16 w-16 overflow-hidden rounded-xl ring-2 ${i === foto ? 'ring-acento' : 'ring-transparent'}`}
+                  className={`h-16 w-16 overflow-hidden rounded-full ring-[3px] ring-offset-2 ring-offset-crema ${i === foto ? 'ring-acento' : 'ring-transparent'}`}
                 >
                   <img src={f} alt="" className="h-full w-full object-cover" loading="lazy" />
                 </button>
@@ -95,13 +92,13 @@ export function Ficha({ catalogo, id }: { catalogo: Catalogo; id: string }) {
         </div>
 
         <div className="aparecer">
-          {categoria && <p className="text-sm font-medium uppercase tracking-[0.12em] text-acento">{categoria}</p>}
-          <h1 className="mt-1 text-3xl font-semibold leading-tight text-primario sm:text-4xl">{p.nombre}</h1>
+          {categoria && <p className="font-bold text-acento">{categoria}</p>}
+          <h1 className="mt-1 text-[clamp(2.3rem,7vw,3.6rem)] leading-[1.05] text-primario">{p.nombre}</h1>
           <div className="mt-3">
             <Etiquetas p={p} />
           </div>
-          <p className="text-2xl font-bold text-tinta">
-            {variante ? <span className="precio">{cop(precio)}</span> : <Precio p={p} />}
+          <p className="text-2xl">
+            {variante ? <span className="precio etiqueta-precio">{cop(precio)}</span> : <Precio p={p} className="etiqueta-precio" />}
           </p>
           {p.presentacion && <p className="mt-1 text-tinta-3">{p.presentacion}</p>}
           {p.descripcion && <p className="mt-4 text-[1.02rem] text-tinta-2">{p.descripcion}</p>}
@@ -133,19 +130,19 @@ export function Ficha({ catalogo, id }: { catalogo: Catalogo; id: string }) {
               {p.variantes.length > 0 && (
                 <fieldset>
                   <legend className="mb-2 font-semibold text-tinta">Presentación</legend>
-                  <div className="grid gap-2">
+                  <div className="grid gap-0.5">
                     {p.variantes.map((v) => (
                       <label
                         key={v.id}
-                        className={`flex items-center justify-between gap-3 rounded-xl px-4 py-3 ring-1 transition ${
+                        className={`flex items-baseline gap-2 rounded-lg px-3 py-2.5 transition ${
                           !v.disponible
-                            ? 'cursor-not-allowed bg-crema-2 text-tinta-3 ring-linea'
+                            ? 'cursor-not-allowed text-tinta-3'
                             : varianteId === v.id
-                              ? 'cursor-pointer bg-rosa/50 ring-2 ring-acento'
-                              : 'cursor-pointer bg-papel ring-linea hover:bg-crema-2'
+                              ? 'cursor-pointer bg-rosa'
+                              : 'cursor-pointer hover:bg-crema-2'
                         }`}
                       >
-                        <span className="flex items-center gap-3">
+                        <span className="flex items-center gap-3 self-center">
                           <input
                             type="radio"
                             name="variante"
@@ -157,7 +154,8 @@ export function Ficha({ catalogo, id }: { catalogo: Catalogo; id: string }) {
                           <span className="font-medium">{v.nombre}</span>
                           {!v.disponible && <span className="text-xs">(agotado)</span>}
                         </span>
-                        <span className="precio font-semibold">{cop(v.precio ?? p.precio)}</span>
+                        <span className="guia" aria-hidden />
+                        <span className="precio font-bold">{cop(v.precio ?? p.precio)}</span>
                       </label>
                     ))}
                   </div>
@@ -201,7 +199,7 @@ export function Ficha({ catalogo, id }: { catalogo: Catalogo; id: string }) {
                 <button
                   type="button"
                   onClick={() => agregarAlCarrito(true)}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primario px-6 py-4 text-base font-semibold text-en-primario shadow-[0_10px_24px_-12px_rgba(46,29,21,0.7)] hover:brightness-110"
+                  className="boton-maracuya flex-1 px-6 py-4 text-[1.05rem]"
                 >
                   <ShoppingBag size={20} /> Agregar · <span className="precio">{cop(precio * cantidad)}</span>
                 </button>
@@ -217,7 +215,7 @@ export function Ficha({ catalogo, id }: { catalogo: Catalogo; id: string }) {
           )}
 
           {(p.ingredientes || p.alergenos || p.conservacion) && (
-            <dl className="mt-8 space-y-3 rounded-2xl bg-papel p-5 text-[14px] ring-1 ring-linea/70">
+            <dl className="mt-8 space-y-3 border-t-2 border-rosa pt-5 text-[15px]">
               {p.ingredientes && (
                 <div>
                   <dt className="font-semibold text-tinta">Ingredientes</dt>
@@ -245,8 +243,8 @@ export function Ficha({ catalogo, id }: { catalogo: Catalogo; id: string }) {
 
       {relacionados.length > 0 && (
         <section className="mt-14">
-          <h2 className="mb-4 text-2xl font-semibold text-primario">También te puede gustar</h2>
-          <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+          <h2 className="mb-7 text-[clamp(1.9rem,5vw,2.8rem)] leading-tight text-primario">También te puede gustar</h2>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:gap-x-10 lg:grid-cols-4">
             {relacionados.map((x) => (
               <TarjetaProducto key={x.id} p={x} catalogo={catalogo} />
             ))}

@@ -6,13 +6,13 @@
  */
 import { useId } from 'react';
 
-const CHOCO = '#5a3222';
-const CHOCO_2 = '#7a4a33';
-const ROSA = '#e46f8c';
-const ROSA_SUAVE = '#f6c9d2';
-const CREMA = '#fff8ef';
-const MIEL = '#f2b33d';
-const TERRA = '#c4673f';
+const CHOCO = '#43102f';
+const CHOCO_2 = '#6d1f4d';
+const ROSA = '#d11f4a';
+const ROSA_SUAVE = '#f6c3cf';
+const CREMA = '#ffffff';
+const MIEL = '#ffc42e';
+const TERRA = '#d11f4a';
 
 const clave = (slug: string) => `dulce-pedido:${slug}:marca`;
 
@@ -58,7 +58,7 @@ export function InsigniaSvg({ nombre, className = '' }: { nombre: string; classN
       <circle cx="120" cy="116" r="78" fill="none" stroke={ROSA_SUAVE} strokeWidth="1.5" strokeDasharray="2 5" strokeLinecap="round" />
 
       {/* Texto curvo superior */}
-      <text fontFamily="Inter, sans-serif" fontSize="9" fontWeight="700" letterSpacing="2.4" fill={TERRA}>
+      <text fontFamily="Figtree, sans-serif" fontSize="9" fontWeight="700" letterSpacing="2.4" fill={TERRA}>
         <textPath href={`#arco${id}`} startOffset="50%" textAnchor="middle">
           REPOSTERÍA CASERA
         </textPath>
@@ -102,10 +102,8 @@ export function InsigniaSvg({ nombre, className = '' }: { nombre: string; classN
         x="120"
         y="176"
         textAnchor="middle"
-        fontFamily="Fraunces, Georgia, serif"
-        fontStyle="italic"
-        fontWeight="700"
-        fontSize={tam}
+        fontFamily="Shrikhand, Georgia, serif"
+                fontSize={tam}
         fill={CHOCO}
         {...ajuste}
       >

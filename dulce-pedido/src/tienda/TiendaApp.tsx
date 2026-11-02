@@ -97,7 +97,7 @@ export function TiendaApp() {
     case 'cotizar':
       pagina = (
         <div className="mx-auto max-w-3xl px-4 pb-14 pt-6">
-          <h1 className="mb-1 text-3xl font-semibold text-primario">Cotiza tu pedido especial</h1>
+          <h1 className="mb-2 text-[clamp(2.2rem,7vw,3.4rem)] leading-tight text-primario">Cotiza tu pedido especial</h1>
           <p className="mb-5 text-tinta-2">Cuéntanos tu idea y te enviamos una propuesta con precio, sin compromiso.</p>
           <Cotizacion catalogo={catalogo} />
         </div>
@@ -113,23 +113,19 @@ export function TiendaApp() {
   return (
     <div className="flex min-h-dvh flex-col bg-crema">
       {t.demo && <BannerDemo />}
-      <header className="sticky top-0 z-20 border-b border-linea/70 bg-crema/90 backdrop-blur-md">
+      <header className="sticky top-0 z-20 bg-crema">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
           <a href={enlace('/')} className="flex min-w-0 items-center gap-2.5">
-            {t.contenido?.logo_url ? (
+            {t.contenido?.logo_url && (
               <img src={t.contenido.logo_url} alt="" className="h-10 w-10 rounded-full object-cover ring-1 ring-linea" />
-            ) : (
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-primario font-display text-lg font-semibold text-en-primario">
-                {t.nombre.trim().charAt(0).toUpperCase()}
-              </span>
             )}
-            <span className="truncate font-display text-xl font-semibold text-primario">{t.nombre}</span>
+            <span className="truncate font-display text-[1.6rem] leading-none text-primario">{t.nombre}</span>
           </a>
           <nav className="flex items-center gap-1">
-            <a href={enlace('/catalogo')} className="hidden rounded-full px-3 py-2 text-sm font-medium text-tinta-2 hover:bg-crema-2 sm:block">
+            <a href={enlace('/catalogo')} className="hidden rounded-full px-3 py-2 text-[15px] font-bold text-primario hover:bg-crema-2 sm:block">
               Catálogo
             </a>
-            <a href={enlace('/cotizar')} className="rounded-full px-3 py-2 text-sm font-medium text-tinta-2 hover:bg-crema-2">
+            <a href={enlace('/cotizar')} className="rounded-full px-3 py-2 text-[15px] font-bold text-primario hover:bg-crema-2">
               Cotizar
             </a>
             <a
@@ -139,7 +135,7 @@ export function TiendaApp() {
             >
               <ShoppingBag size={22} />
               {n > 0 && (
-                <span className="absolute right-0.5 top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-acento px-1 text-[11px] font-bold text-white">
+                <span className="absolute right-0.5 top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-maracuya px-1 text-[11px] font-extrabold text-tinta">
                   {n}
                 </span>
               )}

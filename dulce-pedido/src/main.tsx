@@ -18,9 +18,11 @@ function Raiz() {
   const ruta = useRuta();
   if (ruta.partes[0] === 'admin' || esRetornoDeAcceso()) {
     return (
-      <Suspense fallback={<PantallaCarga texto="Cargando el panel…" />}>
-        <AdminApp />
-      </Suspense>
+      <div className="panel-admin">
+        <Suspense fallback={<PantallaCarga texto="Cargando el panel…" />}>
+          <AdminApp />
+        </Suspense>
+      </div>
     );
   }
   return <TiendaApp />;

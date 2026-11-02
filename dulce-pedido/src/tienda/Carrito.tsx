@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, ShoppingBag, Trash2, TriangleAlert } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, Trash2, TriangleAlert } from 'lucide-react';
 import type { Catalogo } from '@/core/tipos';
 import { cop } from '@/core/dinero';
 import { calcularLineas, detalleLinea, subtotalCarrito } from '@/core/carrito';
@@ -22,7 +22,7 @@ export function Carrito({ catalogo }: { catalogo: Catalogo }) {
         <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-rosa text-primario">
           <ShoppingBag size={28} />
         </div>
-        <h1 className="mt-4 text-2xl font-semibold text-primario">Tu pedido está vacío</h1>
+        <h1 className="mt-4 text-4xl leading-tight text-primario">Tu pedido está vacío</h1>
         <p className="mt-1 text-tinta-2">Explora el catálogo y agrega lo que se te antoje.</p>
         <a href={enlace('/catalogo')} className="mt-6 inline-flex rounded-full bg-primario px-6 py-3.5 font-semibold text-en-primario">
           Ver catálogo
@@ -34,7 +34,7 @@ export function Carrito({ catalogo }: { catalogo: Catalogo }) {
   return (
     <div className="mx-auto max-w-3xl px-4 pb-16 pt-6">
       <div className="flex items-end justify-between gap-3">
-        <h1 className="text-3xl font-semibold text-primario">Tu pedido</h1>
+        <h1 className="text-[clamp(2.4rem,8vw,3.6rem)] leading-none text-primario">Tu pedido</h1>
         <button
           type="button"
           onClick={() => {
@@ -46,13 +46,13 @@ export function Carrito({ catalogo }: { catalogo: Catalogo }) {
         </button>
       </div>
 
-      <ul className="mt-5 space-y-3">
+      <ul className="mt-6 divide-y-2 divide-rosa border-y-2 border-rosa">
         {calc.map((l) => (
-          <li key={l.linea.clave} className="flex gap-3 rounded-2xl bg-papel p-3 ring-1 ring-linea/70 sm:gap-4 sm:p-4">
+          <li key={l.linea.clave} className="flex gap-3 py-4 sm:gap-4">
             <a href={enlace(`/p/${l.producto.id}`)} className="shrink-0">
               <FotoProducto
                 producto={l.producto}
-                className="h-20 w-20 rounded-xl sm:h-24 sm:w-24 [&_span]:hidden"
+                className="h-20 w-20 rounded-full sm:h-24 sm:w-24 [&_span]:hidden"
               />
             </a>
             <div className="min-w-0 flex-1">
@@ -92,7 +92,7 @@ export function Carrito({ catalogo }: { catalogo: Catalogo }) {
         ))}
       </ul>
 
-      <div className="mt-6 rounded-2xl bg-papel p-5 ring-1 ring-linea/70">
+      <div className="comanda mt-6 bg-papel p-5">
         <div className="flex items-center justify-between text-lg">
           <span className="font-semibold">Subtotal</span>
           <span className="precio text-2xl font-bold text-primario">{cop(subtotal)}</span>
@@ -107,10 +107,10 @@ export function Carrito({ catalogo }: { catalogo: Catalogo }) {
           href={conProblema ? undefined : enlace('/pedido')}
           aria-disabled={conProblema}
           className={`mt-4 flex items-center justify-center gap-2 rounded-full px-6 py-4 text-base font-semibold ${
-            conProblema ? 'pointer-events-none bg-crema-2 text-tinta-3' : 'bg-primario text-en-primario hover:brightness-110'
+            conProblema ? 'pointer-events-none bg-crema-2 text-tinta-3' : 'boton-maracuya w-full'
           }`}
         >
-          Continuar con mis datos <ArrowRight size={18} />
+          Continuar con mis datos
         </a>
         <a href={enlace('/catalogo')} className="mt-3 flex items-center justify-center gap-1.5 py-2 font-semibold text-primario">
           <ArrowLeft size={16} /> Seguir comprando

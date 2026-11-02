@@ -288,16 +288,17 @@ const WA = 'https://wa.me/573126387467';
 
 /* ---------- data ---------- */
 const PRODUCTS = [
-  {id:'png', name:'Painless Night GLU', short:'PNG', color:'#C0392B,#E67E22', img:'', line:'Dolor muscular y articular, energía. 48 h por parche.'},
-  {id:'b12', name:'B12 Plus', short:'B12', color:'#C2185B,#F06292', img:'', line:'Energía, memoria y sistema nervioso. 24 h.'},
-  {id:'omevia', name:'Omevia', short:'Ω3', color:'#1565C0,#42A5F5', img:'', line:'Corazón, circulación y memoria. 24 h.'},
-  {id:'melatonin', name:'Melatonin Plus', short:'ZZ', color:'#4527A0,#7E57C2', img:'', line:'Sueño profundo y reparador. 8 h de noche.'},
-  {id:'dekamin', name:'Dekamin D3+K2', short:'D3', color:'#EF8F00,#FFCA28', img:'', line:'Huesos, defensas y energía. 24 h.'},
-  {id:'slim', name:'Slim Style', short:'SS', color:'#00897B,#4DB6AC', img:'', line:'Control de peso, apetito y celulitis. 24 h.'},
-  {id:'ladies', name:'Ladies Night', short:'LN', color:'#AD1457,#EC407A', img:'', line:'Equilibrio hormonal y menopausia. 24 h.'},
-  {id:'gentleman', name:'Gentleman Night', short:'GN', color:'#263238,#546E7A', img:'', line:'Salud masculina y vitalidad. Hasta 48 h.'},
-  {id:'sornie', name:'Colágeno Sornie', short:'CO', color:'#B76E79,#E8B4B8', img:'', line:'Piel, cabello y uñas. 24 h.'},
-  {id:'gluta', name:'GlutaNAD+ / Glutamore', short:'GL', color:'#2E7D32,#81C784', img:'', line:'Antioxidante y longevidad. Sublingual.'},
+  {id:'png', name:'Painless Night GLU', short:'PNG', color:'#C0392B,#E67E22', img:'productos/png.jpg', line:'Dolor muscular y articular, energía. 48 h por parche.'},
+  {id:'b12', name:'B12 Plus', short:'B12', color:'#C2185B,#F06292', img:'productos/b12.jpg', line:'Energía, memoria y sistema nervioso. 24 h.'},
+  {id:'omevia', name:'Omevia', short:'Ω3', color:'#1565C0,#42A5F5', img:'productos/omevia.jpg', line:'Corazón, circulación y memoria. 24 h.'},
+  {id:'melatonin', name:'Melatonin Plus', short:'ZZ', color:'#4527A0,#7E57C2', img:'productos/melatonin.jpg', line:'Sueño profundo y reparador. 8 h de noche.'},
+  {id:'dekamin', name:'Dekamin D3+K2', short:'D3', color:'#EF8F00,#FFCA28', img:'productos/dekamin.jpg', line:'Huesos, defensas y energía. 24 h.'},
+  {id:'slim', name:'Slim Style', short:'SS', color:'#00897B,#4DB6AC', img:'productos/slim.jpg', line:'Control de peso, apetito y celulitis. 24 h.'},
+  {id:'ladies', name:'Ladies Night', short:'LN', color:'#AD1457,#EC407A', img:'productos/ladies.jpg', line:'Equilibrio hormonal y menopausia. 24 h.'},
+  {id:'gentleman', name:'Gentleman Night', short:'GN', color:'#263238,#546E7A', img:'productos/gentleman.jpg', line:'Salud masculina y vitalidad. Hasta 48 h.'},
+  {id:'sornie', name:'Colágeno Sornie', short:'CO', color:'#B76E79,#E8B4B8', img:'productos/sornie.jpg', line:'Piel, cabello y uñas. 24 h.'},
+  {id:'mascarilla', name:'Mascarilla Sornie', short:'MS', color:'#B76E79,#E8B4B8', img:'productos/mascarilla.jpg', line:'Antiedad y lifting facial, línea Lumyére.'},
+  {id:'gluta', name:'GlutaNAD+ / Glutamore', short:'GL', color:'#2E7D32,#81C784', img:'productos/gluta.jpg', line:'Antioxidante y longevidad. Sublingual.'},
   {id:'omicoff', name:'Omicoff', short:'OC', color:'#5D4037,#A1887F', img:'', line:'Café funcional con ginseng y colágeno.'}
 ];
 const P = Object.fromEntries(PRODUCTS.map(p => [p.id, p]));
@@ -474,7 +475,7 @@ function recommend(n){
   let speech = 'Combinación sugerida para ' + n.t.toLowerCase() + '.\n';
   for (const [id, where, dur] of n.items){
     const p = P[id]; const it = document.createElement('div'); it.className = 'it';
-    const dot = patchArt(p, '30px'); dot.className = 'dot'; dot.style.width = '30px';
+    let dot; if (p.img){ dot = document.createElement('img'); dot.src = p.img; dot.alt = ''; dot.className = 'dot'; dot.style.cssText = 'width:44px;height:44px;object-fit:cover;border-radius:10px'; } else { dot = patchArt(p, '30px'); dot.className = 'dot'; dot.style.width = '30px'; }
     const tx = document.createElement('div'); const bb = document.createElement('b'); bb.textContent = p.name;
     const sp = document.createElement('span'); sp.textContent = where + ' · ' + dur; tx.append(bb, sp); it.append(dot, tx); box.appendChild(it);
     speech += '- **' + p.name + '**: ' + where + ', ' + dur + '.\n';

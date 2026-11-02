@@ -415,16 +415,9 @@ const Voice = (() => {
   function impulse(c){ const len = c.sampleRate*.9, b = c.createBuffer(2,len,c.sampleRate);
     for (let ch=0; ch<2; ch++){ const d = b.getChannelData(ch); for (let i=0;i<len;i++) d[i] = (Math.random()*2-1)*Math.pow(1-i/len,3.2)*.6; } return b; }
   function chain(c, node){
-    const lo = c.createBiquadFilter(); lo.type = 'lowshelf'; lo.frequency.value = 180; lo.gain.value = 3;
-    const pres = c.createBiquadFilter(); pres.type = 'peaking'; pres.frequency.value = 3200; pres.Q.value = .8; pres.gain.value = 3;
-    const air = c.createBiquadFilter(); air.type = 'highshelf'; air.frequency.value = 9000; air.gain.value = 2;
-    const comp = c.createDynamicsCompressor(); comp.threshold.value = -20; comp.ratio.value = 3;
-    const verb = c.createConvolver(); verb.buffer = impulse(c); const wet = c.createGain(); wet.gain.value = .14;
-    const echo = c.createDelay(); echo.delayTime.value = .018; const eg = c.createGain(); eg.gain.value = .18;
+    const comp = c.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 2;
     analyser = c.createAnalyser(); analyser.fftSize = 256;
-    node.connect(lo).connect(pres).connect(air).connect(comp);
-    comp.connect(analyser); comp.connect(verb).connect(wet).connect(analyser); comp.connect(echo).connect(eg).connect(analyser);
-    analyser.connect(c.destination);
+    node.connect(comp).connect(analyser).connect(c.destination);
   }
   function draw(fake){
     const dpr = Math.min(devicePixelRatio||1,2), W = oc.clientWidth, H = oc.clientHeight; oc.width = W*dpr; oc.height = H*dpr; ox.setTransform(dpr,0,0,dpr,0,0);
@@ -460,13 +453,13 @@ const Voice = (() => {
     if (!('speechSynthesis' in window)) { stop(); return; }
     const u = new SpeechSynthesisUtterance(clean(text)); const v = bestVoice();
     if (v){ u.voice = v; u.lang = v.lang; } else u.lang = 'es-CO';
-    u.rate = .96; u.pitch = .82;
+    u.rate = 1; u.pitch = 1;
     u.onend = u.onerror = () => { if (current === btn) stop(); };
     show(true, true); speechSynthesis.speak(u);
   }
   async function speak(text, btn){
     if (current === btn){ stop(); return; }
-    stop(); current = btn; btn.lastChild.textContent = 'Detener'; chime();
+    stop(); current = btn; btn.lastChild.textContent = 'Detener';
     const c = audio(); const t = clean(text);
     if (c && !ttsOff){
       try {

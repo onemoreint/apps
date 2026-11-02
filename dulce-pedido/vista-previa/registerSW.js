@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/apps/dulce-pedido/vista-previa/sw.js', { scope: '/apps/dulce-pedido/vista-previa/' })})}

@@ -158,6 +158,13 @@ textarea::placeholder{color:var(--muted)}
 .credit a svg{width:12px;height:12px}
 .legal{font-size:.64rem;color:var(--muted);opacity:.75;text-align:center;margin-top:4px}
 
+
+/* speaking orb */
+.orb{position:fixed;z-index:15;left:50%;transform:translateX(-50%);bottom:calc(205px + env(safe-area-inset-bottom,0px));width:min(240px,64vw);display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
+.orb canvas{width:100%;aspect-ratio:1/1;max-width:100%}
+.orbbar{pointer-events:auto;display:flex;align-items:center;gap:10px;background:rgba(11,20,52,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--line-strong);border-radius:999px;padding:6px 6px 6px 14px;font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan)}
+.orbbar button{font:700 .75rem var(--body);letter-spacing:0;text-transform:none;color:#04101e;background:var(--cyan);border:0;border-radius:999px;padding:6px 12px;cursor:pointer}
+
 /* recommender sheet */
 .scrim{position:fixed;inset:0;z-index:20;background:rgba(3,6,18,.6);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center}
 .sheet{width:100%;max-width:640px;max-height:86%;overflow-y:auto;background:var(--sheet);border:1px solid var(--line);border-bottom:0;border-radius:24px 24px 0 0;
@@ -248,6 +255,11 @@ textarea::placeholder{color:var(--muted)}
     </div>
     <div class="legal">Información de bienestar, no consejo médico. Ante una enfermedad o medicamentos, consulta a tu médico.</div>
   </div>
+</div>
+
+<div class="orb" id="orb" hidden>
+  <canvas id="orbCanvas" aria-hidden="true"></canvas>
+  <div class="orbbar"><span>Asistente hablando</span><button type="button" id="orbStop">Detener</button></div>
 </div>
 
 <div class="scrim" id="scrim" hidden>
@@ -388,23 +400,103 @@ function ctaCard(col, text){
   const a = document.createElement('a'); a.href = BUY; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Comprar / Afiliarme';
   c.append(s, a); col.appendChild(c);
 }
-let speaking = null;
+/* ---------- voice engine: Gemini voice + holographic FX + orb, phone voice as fallback ---------- */
+const Voice = (() => {
+  let ctx = null, src = null, analyser = null, current = null, raf = 0, ttsOff = false;
+  const cache = new Map();
+  const orb = document.getElementById('orb'), oc = document.getElementById('orbCanvas'), ox = oc.getContext('2d');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function audio(){ if (!ctx){ const AC = window.AudioContext || window.webkitAudioContext; if (AC) ctx = new AC(); } if (ctx && ctx.state === 'suspended') ctx.resume(); return ctx; }
+  function chime(){
+    const c = audio(); if (!c) return; const t = c.currentTime;
+    [[880,0],[1320,.09]].forEach(([f,d]) => { const o = c.createOscillator(), g = c.createGain(); o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(0,t+d); g.gain.linearRampToValueAtTime(.08,t+d+.02); g.gain.exponentialRampToValueAtTime(.0001,t+d+.22); o.connect(g).connect(c.destination); o.start(t+d); o.stop(t+d+.25); });
+  }
+  function impulse(c){ const len = c.sampleRate*.9, b = c.createBuffer(2,len,c.sampleRate);
+    for (let ch=0; ch<2; ch++){ const d = b.getChannelData(ch); for (let i=0;i<len;i++) d[i] = (Math.random()*2-1)*Math.pow(1-i/len,3.2)*.6; } return b; }
+  function chain(c, node){
+    const lo = c.createBiquadFilter(); lo.type = 'lowshelf'; lo.frequency.value = 180; lo.gain.value = 3;
+    const pres = c.createBiquadFilter(); pres.type = 'peaking'; pres.frequency.value = 3200; pres.Q.value = .8; pres.gain.value = 3;
+    const air = c.createBiquadFilter(); air.type = 'highshelf'; air.frequency.value = 9000; air.gain.value = 2;
+    const comp = c.createDynamicsCompressor(); comp.threshold.value = -20; comp.ratio.value = 3;
+    const verb = c.createConvolver(); verb.buffer = impulse(c); const wet = c.createGain(); wet.gain.value = .14;
+    const echo = c.createDelay(); echo.delayTime.value = .018; const eg = c.createGain(); eg.gain.value = .18;
+    analyser = c.createAnalyser(); analyser.fftSize = 256;
+    node.connect(lo).connect(pres).connect(air).connect(comp);
+    comp.connect(analyser); comp.connect(verb).connect(wet).connect(analyser); comp.connect(echo).connect(eg).connect(analyser);
+    analyser.connect(c.destination);
+  }
+  function draw(fake){
+    const dpr = Math.min(devicePixelRatio||1,2), W = oc.clientWidth, H = oc.clientHeight; oc.width = W*dpr; oc.height = H*dpr; ox.setTransform(dpr,0,0,dpr,0,0);
+    const data = new Uint8Array(128); let tt = 0;
+    const loop = () => {
+      tt += .05; let lvl = .25;
+      if (analyser && !fake){ analyser.getByteFrequencyData(data); let sum = 0; for (let i=2;i<48;i++) sum += data[i]; lvl = Math.min(1, sum/46/150); }
+      else lvl = .35 + Math.abs(Math.sin(tt*2.3))*.35*Math.abs(Math.sin(tt*.7));
+      ox.clearRect(0,0,W,H); const cx = W/2, cy = H/2, r = Math.min(W,H)*.22;
+      const g = ox.createRadialGradient(cx,cy,r*.2,cx,cy,r*(1.6+lvl)); g.addColorStop(0,'rgba(62,230,255,.55)'); g.addColorStop(.5,'rgba(79,107,255,.18)'); g.addColorStop(1,'rgba(5,8,22,0)');
+      ox.fillStyle = g; ox.beginPath(); ox.arc(cx,cy,r*(1.7+lvl),0,7); ox.fill();
+      for (let k=0;k<3;k++){ ox.strokeStyle = `rgba(${k===1?'233,196,106':'62,230,255'},${.55-k*.12})`; ox.lineWidth = 1.5; ox.beginPath();
+        for (let a=0;a<=64;a++){ const th = a/64*Math.PI*2, wob = Math.sin(th*6+tt*(2+k)+k)*lvl*r*.18; const rr = r*(1+k*.22)+wob; const px = cx+Math.cos(th)*rr, py = cy+Math.sin(th)*rr; a?ox.lineTo(px,py):ox.moveTo(px,py); }
+        ox.closePath(); ox.stroke(); }
+      ox.fillStyle = 'rgba(234,240,255,.95)'; ox.beginPath(); ox.arc(cx,cy,r*.32+lvl*r*.12,0,7); ox.fill();
+      if (!still) raf = requestAnimationFrame(loop);
+    };
+    cancelAnimationFrame(raf); loop();
+  }
+  function show(on, fake){ orb.hidden = !on; if (on) draw(fake); else cancelAnimationFrame(raf); }
+  function clean(text){ return plain(text).replace(URL_RE,'el enlace de compra que aparece en pantalla').replace(/^[-•]\s*/gm,'').replace(/\+57 312 638 7467/g,'más cincuenta y siete, tres doce, seis tres ocho, setenta y cuatro, sesenta y siete').slice(0,1400); }
+  function stop(){
+    if (src){ try { src.stop(); } catch {} src = null; }
+    if ('speechSynthesis' in window) speechSynthesis.cancel();
+    show(false); if (current){ current.lastChild.textContent = 'Escuchar'; current = null; }
+  }
+  function bestVoice(){
+    const vs = ('speechSynthesis' in window) ? speechSynthesis.getVoices().filter(v => /^es/i.test(v.lang)) : [];
+    const score = v => (/natural|neural|online|premium|enhanced/i.test(v.name)?6:0) + (/google/i.test(v.name)?3:0) + (/jorge|álvaro|alvaro|pablo|gonzalo|raúl|raul|diego|tomás|tomas|jorge|juan|carlos|andrés|andres|male|hombre/i.test(v.name)?3:0) + (/(CO|MX|US|419)/i.test(v.lang)?1:0);
+    return vs.sort((a,b) => score(b)-score(a))[0];
+  }
+  function fallback(text, btn){
+    if (!('speechSynthesis' in window)) { stop(); return; }
+    const u = new SpeechSynthesisUtterance(clean(text)); const v = bestVoice();
+    if (v){ u.voice = v; u.lang = v.lang; } else u.lang = 'es-CO';
+    u.rate = .96; u.pitch = .82;
+    u.onend = u.onerror = () => { if (current === btn) stop(); };
+    show(true, true); speechSynthesis.speak(u);
+  }
+  async function speak(text, btn){
+    if (current === btn){ stop(); return; }
+    stop(); current = btn; btn.lastChild.textContent = 'Detener'; chime();
+    const c = audio(); const t = clean(text);
+    if (c && !ttsOff){
+      try {
+        let buf = cache.get(t);
+        if (!buf){
+          show(true, true); btn.lastChild.textContent = 'Preparando voz…';
+          const res = await fetch(API, {method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({tts: t})});
+          if (!res.ok){ if (res.status === 503 || res.status === 429) ttsOff = res.status === 503; throw new Error('tts ' + res.status); }
+          buf = await c.decodeAudioData(await res.arrayBuffer()); cache.set(t, buf);
+        }
+        if (current !== btn) return;
+        btn.lastChild.textContent = 'Detener';
+        src = c.createBufferSource(); src.buffer = buf; chain(c, src);
+        src.onended = () => { if (current === btn) stop(); };
+        show(true, false); src.start(); return;
+      } catch (e) { if (current !== btn) return; }
+    }
+    btn.lastChild.textContent = 'Detener'; fallback(text, btn);
+  }
+  document.getElementById('orbStop').onclick = stop;
+  if ('speechSynthesis' in window){ speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices(); }
+  return { speak, stop };
+})();
+
 function tools(col, text, label){
   const t = document.createElement('div'); t.className = 'tools';
   if (label){ const s = document.createElement('span'); s.textContent = label; t.appendChild(s); }
-  if ('speechSynthesis' in window){
-    const sp = document.createElement('button'); sp.type = 'button'; sp.innerHTML = svg('<path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/>') + '<span>Escuchar</span>';
-    sp.onclick = () => {
-      if (speaking === sp){ speechSynthesis.cancel(); speaking = null; sp.lastChild.textContent = 'Escuchar'; return; }
-      speechSynthesis.cancel(); if (speaking) speaking.lastChild.textContent = 'Escuchar';
-      const u = new SpeechSynthesisUtterance(plain(text).replace(URL_RE,'el enlace de compra').replace(/^[-•]\s*/gm,''));
-      const v = speechSynthesis.getVoices().find(v => /^es(-|_)(CO|MX|US|419)/i.test(v.lang)) || speechSynthesis.getVoices().find(v => /^es/i.test(v.lang));
-      if (v) u.voice = v; u.lang = v ? v.lang : 'es-CO'; u.rate = 1;
-      u.onend = u.onerror = () => { if (speaking === sp){ speaking = null; sp.lastChild.textContent = 'Escuchar'; } };
-      speaking = sp; sp.lastChild.textContent = 'Detener'; speechSynthesis.speak(u);
-    };
-    t.appendChild(sp);
-  }
+  const sp = document.createElement('button'); sp.type = 'button'; sp.innerHTML = svg('<path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/>') + '<span>Escuchar</span>';
+  sp.onclick = () => Voice.speak(text, sp);
+  t.appendChild(sp);
   const c = document.createElement('button'); c.type = 'button'; c.innerHTML = svg('<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/>') + '<span>Copiar</span>';
   c.onclick = async () => {
     try { await navigator.clipboard.writeText(plain(text)); c.lastChild.textContent = 'Copiado'; }
@@ -538,7 +630,6 @@ if (SR){
     try { rec.start(); } catch {}
   };
 }
-if ('speechSynthesis' in window) speechSynthesis.getVoices();
 
 /* ---------- composer ---------- */
 function grow(){ q.style.height = 'auto'; q.style.height = Math.min(q.scrollHeight, 130) + 'px'; }

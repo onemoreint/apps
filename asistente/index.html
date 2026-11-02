@@ -4,23 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Asistente ONE MORE · José Lugo</title>
-<meta name="description" content="Asistente con inteligencia artificial para socios ONE MORE International. Creado por José Lugo, Diamante Imperial.">
+<meta name="description" content="Asistente con inteligencia artificial para socios y clientes ONE MORE International. Creado por José Lugo, Diamante Imperial.">
 <meta name="theme-color" content="#050816">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="logo-192.png">
-<link rel="apple-touch-icon" href="logo-192.png">
-<meta property="og:title" content="Asistente ONE MORE">
-<meta property="og:description" content="Pregunta lo que quieras sobre productos, negocio y oficina virtual ONE MORE. Creado por José Lugo, Diamante Imperial.">
-<meta property="og:image" content="logo-512.png">
+<link rel="apple-touch-icon" href="jose-512.jpg">
+<meta property="og:title" content="Asistente ONE MORE · José Lugo">
+<meta property="og:description" content="Pregunta lo que quieras sobre los parches ONE MORE, encuentra tu combinación ideal y pide tus productos. Creado por José Lugo, Diamante Imperial.">
+<meta property="og:image" content="https://onemoreint.github.io/apps/asistente/jose-512.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
 <style>
-/* Layout: full-height HUD — slim top bar, orbital logo hero that collapses into the chat, glass composer + credit strip pinned to the bottom */
+/* Layout: full-height HUD — top bar with buy CTA, hero (José in orbital ring, two primary actions, product rail, starter questions) that collapses into the chat, glass composer with mic + credit strip pinned at the bottom; recommender opens as a bottom sheet */
 :root{
-  --void:#050816; --deep:#0A1230; --panel:rgba(16,26,62,.62); --panel-solid:#0F1838;
+  --void:#050816; --panel:rgba(16,26,62,.66); --panel-2:rgba(22,34,78,.8); --sheet:#0B1434;
   --line:rgba(130,170,255,.16); --line-strong:rgba(62,230,255,.45);
-  --ink:#EAF0FF; --muted:#8E9CC8; --cyan:#3EE6FF; --blue:#4F6BFF; --gold:#E9C46A;
+  --ink:#EAF0FF; --muted:#8E9CC8; --cyan:#3EE6FF; --blue:#4F6BFF; --gold:#E9C46A; --gold-ink:#1B1304; --rose:#B4325A;
   --user:linear-gradient(135deg,#2E4BFF,#1BB5E0);
   --display:"Unbounded","Segoe UI",system-ui,sans-serif;
   --body:"Manrope","Segoe UI",system-ui,-apple-system,sans-serif;
@@ -28,54 +28,77 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{height:100%;margin:0}
 body{background:var(--void);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;overflow:hidden;-webkit-font-smoothing:antialiased}
 #fx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
 .glow{position:fixed;inset:-20% -20% auto;height:70vh;z-index:0;pointer-events:none;
   background:radial-gradient(50% 60% at 50% 0%,rgba(79,107,255,.28),transparent 70%),radial-gradient(30% 40% at 85% 10%,rgba(62,230,255,.14),transparent 70%)}
-.app{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;max-width:860px;margin:0 auto;
+.app{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;max-width:880px;margin:0 auto;
   padding-top:env(safe-area-inset-top,0px);
   padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px))}
+button{font-family:var(--body)}
+button:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 
 /* top bar */
 .bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-block:12px}
 .id{display:flex;align-items:center;gap:10px;min-width:0}
-.id img{width:38px;height:38px;border-radius:50%;box-shadow:0 0 0 1px var(--line-strong),0 0 18px rgba(62,230,255,.35)}
-.id b{font-family:var(--display);font-weight:500;font-size:.82rem;letter-spacing:.08em;display:block}
-.id span{font-family:var(--mono);font-size:.66rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
-.pill{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);border:1px solid var(--line-strong);border-radius:999px;padding:5px 10px;display:flex;align-items:center;gap:6px;white-space:nowrap;background:rgba(62,230,255,.06)}
-.pill i{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
-.pill.off{color:var(--gold);border-color:rgba(233,196,106,.45);background:rgba(233,196,106,.06)}
-.pill.off i{background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.id img{width:38px;height:38px;border-radius:50%;box-shadow:0 0 0 1px var(--line-strong),0 0 18px rgba(62,230,255,.35);flex:none}
+.id b{font-family:var(--display);font-weight:500;font-size:.8rem;letter-spacing:.08em;display:block;white-space:nowrap}
+.id span{font-family:var(--mono);font-size:.62rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.id span i{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+.id span.off i{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.buy{display:inline-flex;align-items:center;gap:7px;text-decoration:none;font-weight:800;font-size:.82rem;color:var(--gold-ink);background:linear-gradient(135deg,#F6DC93,var(--gold));border-radius:999px;padding:9px 14px;box-shadow:0 6px 22px rgba(233,196,106,.28);white-space:nowrap}
+.buy svg{width:15px;height:15px}
 
-/* scroll area */
-main{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-block:6px 18px;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin;scrollbar-color:rgba(130,170,255,.25) transparent}
+main{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-block:4px 18px;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin;scrollbar-color:rgba(130,170,255,.25) transparent}
 
 /* hero */
-.hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding-block:14px 4px}
-.orbit{position:relative;width:150px;height:150px;display:grid;place-items:center;margin-bottom:6px}
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding-block:8px 4px}
+.orbit{position:relative;width:146px;height:146px;display:grid;place-items:center;margin-bottom:4px}
 .orbit::before{content:"";position:absolute;inset:0;border-radius:50%;
-  background:conic-gradient(from 0deg,transparent 0 55%,var(--cyan) 70%,var(--blue) 85%,transparent 100%);
+  background:conic-gradient(from 0deg,transparent 0 55%,var(--cyan) 70%,var(--gold) 86%,transparent 100%);
   -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 1px));mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 1px));
   animation:spin 6s linear infinite}
-.orbit::after{content:"";position:absolute;inset:-14px;border-radius:50%;border:1px dashed rgba(130,170,255,.22);animation:spin 40s linear infinite reverse}
-.orbit img{width:118px;height:118px;border-radius:50%;box-shadow:0 0 40px rgba(62,230,255,.35),0 0 0 6px rgba(10,18,48,.9)}
+.orbit::after{content:"";position:absolute;inset:-12px;border-radius:50%;border:1px dashed rgba(130,170,255,.22);animation:spin 40s linear infinite reverse}
+.orbit .me{width:118px;height:118px;border-radius:50%;object-fit:cover;box-shadow:0 0 40px rgba(62,230,255,.3),0 0 0 5px rgba(10,18,48,.95)}
+.orbit .lg{position:absolute;right:2px;bottom:4px;width:44px;height:44px;border-radius:50%;box-shadow:0 0 0 3px var(--void),0 0 16px rgba(62,230,255,.4)}
 @keyframes spin{to{transform:rotate(360deg)}}
-.hero h1{font-family:var(--display);font-weight:700;font-size:clamp(1.35rem,5.4vw,2.1rem);line-height:1.15;margin:0;letter-spacing:-.01em;text-wrap:balance;max-width:20ch}
+.badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(233,196,106,.35);border-radius:999px;padding:6px 12px;background:rgba(233,196,106,.06)}
+.badge svg{width:12px;height:12px}
+.hero h1{font-family:var(--display);font-weight:700;font-size:clamp(1.3rem,5.2vw,2rem);line-height:1.15;margin:0;letter-spacing:-.01em;text-wrap:balance;max-width:22ch}
 .hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--cyan),#9DB4FF);-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero p{margin:0;color:var(--muted);max-width:46ch;font-size:.95rem}
-.badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(233,196,106,.35);border-radius:999px;padding:6px 12px;background:rgba(233,196,106,.06)}
-.badge svg{width:12px;height:12px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%;margin-top:8px}
-.card{text-align:left;font:600 .88rem var(--body);color:var(--ink);background:var(--panel);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:16px;padding:12px 13px;cursor:pointer;line-height:1.35;transition:border-color .2s,transform .2s,box-shadow .2s;min-width:0}
-.card small{display:block;font-family:var(--mono);font-weight:500;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:5px}
-.card:hover{border-color:var(--line-strong);transform:translateY(-2px);box-shadow:0 10px 30px rgba(62,230,255,.12)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-top:4px}
+.act{display:flex;align-items:center;gap:10px;text-align:left;border-radius:18px;padding:13px 14px;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-weight:700;font-size:.92rem;line-height:1.25;text-decoration:none;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.act small{display:block;font-weight:500;font-size:.74rem;color:var(--muted);margin-top:2px}
+.act .ic{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:rgba(62,230,255,.12);color:var(--cyan)}
+.act .ic svg{width:20px;height:20px}
+.act.gold{background:linear-gradient(135deg,rgba(246,220,147,.16),rgba(233,196,106,.08));border-color:rgba(233,196,106,.45)}
+.act.gold .ic{background:var(--gold);color:var(--gold-ink)}
+.act:hover{border-color:var(--line-strong)}
 
-/* chips */
-.chips{display:flex;gap:8px;overflow-x:auto;padding-block:8px 2px;scrollbar-width:none;mask-image:linear-gradient(90deg,#000 88%,transparent)}
-.chips::-webkit-scrollbar{display:none}
-.chips button{flex:none;font:600 .8rem var(--body);color:var(--ink);background:rgba(16,26,62,.7);border:1px solid var(--line);border-radius:999px;padding:7px 13px;cursor:pointer}
-.chips button:hover{border-color:var(--line-strong);color:var(--cyan)}
+.sec{width:100%;text-align:left;display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.sec h2{font-family:var(--mono);font-weight:500;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0}
+.rail{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.prod{flex:none;width:168px;scroll-snap-align:start;border:1px solid var(--line);background:var(--panel);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.prod .ph{aspect-ratio:1/1;width:100%;max-width:100%;display:grid;place-items:center;position:relative;overflow:hidden}
+.prod .ph img{width:100%;height:100%;object-fit:cover}
+.prod .ph .art{position:absolute;inset:0;display:grid;place-items:center}
+.prod .ph .patch{width:62%;aspect-ratio:1/1;border-radius:22%;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:1.15rem;color:#fff;box-shadow:inset 0 0 0 2px rgba(255,255,255,.25),0 10px 30px rgba(0,0,0,.35);letter-spacing:.02em}
+.prod .bd{padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px;flex:1}
+.prod b{font-size:.9rem;line-height:1.2}
+.prod span{font-size:.76rem;color:var(--muted);line-height:1.35;flex:1}
+.prod .row{display:flex;gap:6px;margin-top:6px}
+.prod .row button,.prod .row a{flex:1;text-align:center;font:700 .74rem var(--body);border-radius:10px;padding:7px 6px;cursor:pointer;text-decoration:none}
+.prod .q{background:rgba(62,230,255,.1);color:var(--cyan);border:1px solid rgba(62,230,255,.3)}
+.prod .p{background:var(--gold);color:var(--gold-ink);border:0}
+
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%}
+.card{text-align:left;font:600 .86rem var(--body);color:var(--ink);background:var(--panel);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:16px;padding:11px 12px;cursor:pointer;line-height:1.35;min-width:0}
+.card small{display:block;font-family:var(--mono);font-weight:500;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:5px}
+.card:hover{border-color:var(--line-strong)}
 
 /* messages */
 .msg{display:flex;flex-direction:column;gap:6px;min-width:0}
@@ -83,41 +106,75 @@ main{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-blo
 .bubble{max-width:86%;min-width:0;border-radius:18px;padding:11px 15px;overflow-wrap:anywhere}
 .user .bubble{background:var(--user);color:#fff;border-bottom-right-radius:6px;box-shadow:0 8px 24px rgba(46,75,255,.3)}
 .bot{flex-direction:row;align-items:flex-start;gap:10px}
-.bot .av{flex:none;width:30px;height:30px;border-radius:50%;margin-top:2px;box-shadow:0 0 0 1px var(--line-strong)}
-.bot .col{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
+.bot .av{flex:none;width:34px;height:34px;border-radius:50%;object-fit:cover;margin-top:2px;box-shadow:0 0 0 1.5px var(--line-strong)}
+.bot .col{display:flex;flex-direction:column;gap:7px;min-width:0;flex:1}
 .bot .bubble{max-width:100%;background:var(--panel);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-top-left-radius:6px}
 .bubble p{margin:0 0 8px}.bubble p:last-child{margin:0}
 .bubble ul,.bubble ol{margin:0 0 8px;padding-left:20px}.bubble li{margin:3px 0}
 .bubble li::marker{color:var(--cyan)}
-.bubble strong{color:#fff;font-weight:700}
+.bubble strong{color:#fff;font-weight:800}
+.bubble a{color:var(--gold);font-weight:700}
 .typing{display:inline-flex;gap:5px;padding:4px 0}
 .typing i{width:7px;height:7px;border-radius:50%;background:var(--cyan);opacity:.3;animation:blink 1.2s infinite}
 .typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
 @keyframes blink{50%{opacity:1;transform:translateY(-2px)}}
 .tools{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:.75rem;color:var(--muted)}
-.tools button{font:600 .75rem var(--body);color:var(--cyan);background:none;border:0;padding:2px 0;cursor:pointer}
+.tools button{font:700 .76rem var(--body);color:var(--cyan);background:none;border:0;padding:2px 0;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.tools button svg{width:14px;height:14px}
+.cta{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;border:1px solid rgba(233,196,106,.4);background:linear-gradient(135deg,rgba(246,220,147,.12),rgba(233,196,106,.04));border-radius:14px;padding:10px 12px}
+.cta span{font-size:.84rem;font-weight:600;min-width:0}
+.cta a{flex:none;text-decoration:none;font-weight:800;font-size:.8rem;color:var(--gold-ink);background:var(--gold);border-radius:999px;padding:8px 13px}
 .warn{font-size:.8rem;color:var(--gold);border:1px solid rgba(233,196,106,.3);background:rgba(233,196,106,.06);border-radius:12px;padding:8px 12px}
+.reco h3{font-family:var(--display);font-weight:500;font-size:.98rem;margin:0 0 8px}
+.reco .it{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.reco .it:first-of-type{border-top:0}
+.reco .dot{flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font:700 .7rem var(--display);color:#fff}
+.reco .it div{min-width:0}
+.reco .it b{display:block;font-size:.92rem}
+.reco .it span{font-size:.82rem;color:var(--muted)}
 
-/* composer */
-.dock{padding-block:8px calc(10px + env(safe-area-inset-bottom,0px))}
-form{display:flex;gap:8px;align-items:flex-end;background:var(--panel);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:22px;padding:6px 6px 6px 16px;transition:border-color .2s,box-shadow .2s}
+/* chips + composer */
+.dock{padding-block:6px calc(10px + env(safe-area-inset-bottom,0px))}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-block:4px 8px;scrollbar-width:none;mask-image:linear-gradient(90deg,#000 88%,transparent);-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent)}
+.chips::-webkit-scrollbar{display:none}
+.chips button{flex:none;font:700 .78rem var(--body);color:var(--ink);background:rgba(16,26,62,.75);border:1px solid var(--line);border-radius:999px;padding:7px 12px;cursor:pointer}
+.chips button.hl{border-color:rgba(233,196,106,.5);color:var(--gold)}
+.chips button:hover{border-color:var(--line-strong)}
+form{display:flex;gap:6px;align-items:flex-end;background:var(--panel);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:22px;padding:6px 6px 6px 16px;transition:border-color .2s,box-shadow .2s}
 form:focus-within{border-color:var(--line-strong);box-shadow:0 0 0 4px rgba(62,230,255,.08),0 0 30px rgba(62,230,255,.12)}
-textarea{flex:1;min-width:0;resize:none;border:0;outline:0;background:transparent;color:var(--ink);font:500 1rem var(--body);line-height:1.4;padding:9px 0;max-height:130px}
+textarea{flex:1;min-width:0;resize:none;border:0;outline:0;background:transparent;color:var(--ink);font:500 1rem var(--body);line-height:1.4;padding:10px 0;max-height:130px}
 textarea::placeholder{color:var(--muted)}
-.send{flex:none;width:44px;height:44px;border-radius:16px;border:0;cursor:pointer;display:grid;place-items:center;color:#04101e;background:linear-gradient(135deg,var(--cyan),#7FA0FF);box-shadow:0 6px 20px rgba(62,230,255,.35)}
+.ibtn{flex:none;width:44px;height:44px;border-radius:16px;border:0;cursor:pointer;display:grid;place-items:center}
+.ibtn svg{width:20px;height:20px}
+.mic{background:rgba(62,230,255,.1);color:var(--cyan)}
+.mic.on{background:var(--rose);color:#fff;box-shadow:0 0 0 0 rgba(180,50,90,.6);animation:pulse 1.4s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 12px rgba(180,50,90,0)}100%{box-shadow:0 0 0 0 rgba(180,50,90,0)}}
+.send{color:#04101e;background:linear-gradient(135deg,var(--cyan),#7FA0FF);box-shadow:0 6px 20px rgba(62,230,255,.35)}
 .send[disabled]{opacity:.45;cursor:default;box-shadow:none}
-.send svg{width:20px;height:20px}
 .credit{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:9px;font-size:.74rem;color:var(--muted);text-align:center}
-.credit b{color:var(--ink);font-weight:700}
-.credit .dia{color:var(--gold);font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase}
+.credit b{color:var(--ink);font-weight:800}
+.credit .dia{color:var(--gold);font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase}
 .credit a{color:var(--cyan);text-decoration:none;font-family:var(--mono);font-size:.72rem;display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:999px;padding:3px 9px}
 .credit a svg{width:12px;height:12px}
-.legal{font-size:.66rem;color:var(--muted);opacity:.75;text-align:center;margin-top:4px}
+.legal{font-size:.64rem;color:var(--muted);opacity:.75;text-align:center;margin-top:4px}
 
-button:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
-@media (min-width:640px){ .grid{grid-template-columns:repeat(4,minmax(0,1fr))} .orbit{width:170px;height:170px} .orbit img{width:134px;height:134px} }
-@media (max-width:360px){ .grid{grid-template-columns:1fr} }
-@media (prefers-reduced-motion:reduce){ .orbit::before,.orbit::after,.typing i{animation:none} .card{transition:none} }
+/* recommender sheet */
+.scrim{position:fixed;inset:0;z-index:20;background:rgba(3,6,18,.6);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:100%;max-width:640px;max-height:86%;overflow-y:auto;background:var(--sheet);border:1px solid var(--line);border-bottom:0;border-radius:24px 24px 0 0;
+  padding-block:18px calc(18px + env(safe-area-inset-bottom,0px));padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));box-shadow:0 -20px 60px rgba(0,0,0,.5)}
+.sheet .hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+.sheet h3{font-family:var(--display);font-weight:700;font-size:1.1rem;margin:0}
+.sheet p{margin:4px 0 0;color:var(--muted);font-size:.88rem}
+.x{flex:none;width:36px;height:36px;border-radius:12px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;font-size:1.1rem}
+.needs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.need{display:flex;flex-direction:column;gap:2px;text-align:left;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);border-radius:16px;padding:12px;cursor:pointer;font-weight:800;font-size:.92rem}
+.need span{font-weight:500;font-size:.76rem;color:var(--muted)}
+.need i{display:block;width:26px;height:4px;border-radius:4px;margin-bottom:6px}
+.need:hover{border-color:var(--line-strong)}
+
+@media (min-width:640px){ .grid{grid-template-columns:repeat(4,minmax(0,1fr))} .needs{grid-template-columns:repeat(3,minmax(0,1fr))} .orbit{width:160px;height:160px} .orbit .me{width:130px;height:130px} .scrim{align-items:center} .sheet{border-radius:24px;border-bottom:1px solid var(--line)} }
+@media (max-width:370px){ .actions{grid-template-columns:1fr} .buy .t{display:none} }
+@media (prefers-reduced-motion:reduce){ .orbit::before,.orbit::after,.typing i,.mic.on{animation:none} }
 .rise{animation:rise .3s ease-out}
 @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.rise{animation:none}}
@@ -131,18 +188,42 @@ button:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid va
   <header class="bar">
     <div class="id">
       <img src="logo-192.png" alt="ONE MORE International">
-      <div><b>ONE MORE</b><span>Asistente IA</span></div>
+      <div><b>ONE MORE</b><span id="state"><i></i><em id="stateText" style="font-style:normal">IA en línea</em></span></div>
     </div>
-    <div class="pill" id="pill"><i></i><span id="pillText">IA en línea</span></div>
+    <a class="buy" id="buyTop" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
+      <span class="t">Comprar / Afiliarme</span>
+    </a>
   </header>
 
   <main id="chat" aria-live="polite">
     <section class="hero" id="hero">
-      <div class="orbit"><img src="logo-512.png" alt="Logo ONE MORE International"></div>
-      <span class="badge"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2 3 9l9 13 9-13-9-7Zm0 3.1L17.7 9H6.3L12 5.1Z"/></svg>Equipo Diamante Imperial</span>
-      <h1>Tu asistente <em>inteligente</em> ONE MORE</h1>
-      <p>Pregunta lo que necesites sobre los parches, el plan de compensación, la oficina virtual o cómo responder a un prospecto. Te respondo al instante.</p>
-      <div class="grid" id="cards"></div>
+      <div class="orbit">
+        <img class="me" src="jose-512.jpg" alt="José Lugo">
+        <img class="lg" src="logo-192.png" alt="">
+      </div>
+      <span class="badge"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2 3 9l9 13 9-13-9-7Zm0 3.1L17.7 9H6.3L12 5.1Z"/></svg>José Lugo · Diamante Imperial</span>
+      <h1>Hola, soy tu asistente <em>ONE MORE</em></h1>
+      <p>Pregúntame por los parches, el negocio o la oficina virtual. Escribe o tócame el micrófono y háblame.</p>
+      <div class="actions">
+        <button class="act" type="button" id="openReco">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></span>
+          <span>Encuentra tu parche<small>En 1 toque, según lo que buscas</small></span>
+        </button>
+        <a class="act gold" id="buyHero" target="_blank" rel="noopener">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg></span>
+          <span>Pedir mis parches<small>Compra o afíliate aquí</small></span>
+        </a>
+      </div>
+
+      <div class="sec">
+        <h2>Productos</h2>
+        <div class="rail" id="rail"></div>
+      </div>
+      <div class="sec">
+        <h2>Preguntas frecuentes</h2>
+        <div class="grid" id="cards"></div>
+      </div>
     </section>
   </main>
 
@@ -150,7 +231,10 @@ button:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid va
     <div class="chips" id="chips" aria-label="Preguntas rápidas"></div>
     <form id="form" autocomplete="off">
       <textarea id="q" rows="1" aria-label="Escribe tu pregunta" placeholder="Escribe tu pregunta…"></textarea>
-      <button class="send" id="send" type="submit" aria-label="Enviar pregunta">
+      <button class="ibtn mic" id="mic" type="button" aria-label="Hablar" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+      </button>
+      <button class="ibtn send" id="send" type="submit" aria-label="Enviar pregunta">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
     </form>
@@ -166,14 +250,28 @@ button:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid va
   </div>
 </div>
 
+<div class="scrim" id="scrim" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="hd">
+      <div><h3 id="sheetTitle">¿Qué te gustaría mejorar?</h3><p>Elige una opción y te muestro la combinación de parches sugerida.</p></div>
+      <button class="x" type="button" id="closeReco" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="needs" id="needs"></div>
+  </div>
+</div>
+
 <script>
+const BUY = 'https://onemore.global/!aasespa';
+const API = 'https://ybatnimglmstcsaotntn.supabase.co/functions/v1/asistente-onemore';
+const WA = 'https://wa.me/573126387467';
+
 /* ---------- background: slow nano-particle network ---------- */
 (() => {
   const c = document.getElementById('fx'), x = c.getContext('2d');
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let w, h, pts = [], dpr = Math.min(devicePixelRatio || 1, 2);
   function size(){ w = c.clientWidth; h = c.clientHeight; c.width = w*dpr; c.height = h*dpr; x.setTransform(dpr,0,0,dpr,0,0);
-    const n = Math.round(Math.min(70, w*h/16000)); pts = Array.from({length:n}, () => ({x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-.5)*.18, vy:(Math.random()-.5)*.18, r:Math.random()*1.4+.4})); }
+    const n = Math.round(Math.min(64, w*h/17000)); pts = Array.from({length:n}, () => ({x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-.5)*.18, vy:(Math.random()-.5)*.18, r:Math.random()*1.4+.4})); }
   function frame(){
     x.clearRect(0,0,w,h);
     for (const p of pts){ p.x += p.vx; p.y += p.vy; if (p.x<0||p.x>w) p.vx*=-1; if (p.y<0||p.y>h) p.vy*=-1; }
@@ -188,9 +286,37 @@ button:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid va
   size(); frame();
 })();
 
-/* ---------- chat ---------- */
+/* ---------- data ---------- */
+const PRODUCTS = [
+  {id:'png', name:'Painless Night GLU', short:'PNG', color:'#C0392B,#E67E22', img:'', line:'Dolor muscular y articular, energía. 48 h por parche.'},
+  {id:'b12', name:'B12 Plus', short:'B12', color:'#C2185B,#F06292', img:'', line:'Energía, memoria y sistema nervioso. 24 h.'},
+  {id:'omevia', name:'Omevia', short:'Ω3', color:'#1565C0,#42A5F5', img:'', line:'Corazón, circulación y memoria. 24 h.'},
+  {id:'melatonin', name:'Melatonin Plus', short:'ZZ', color:'#4527A0,#7E57C2', img:'', line:'Sueño profundo y reparador. 8 h de noche.'},
+  {id:'dekamin', name:'Dekamin D3+K2', short:'D3', color:'#EF8F00,#FFCA28', img:'', line:'Huesos, defensas y energía. 24 h.'},
+  {id:'slim', name:'Slim Style', short:'SS', color:'#00897B,#4DB6AC', img:'', line:'Control de peso, apetito y celulitis. 24 h.'},
+  {id:'ladies', name:'Ladies Night', short:'LN', color:'#AD1457,#EC407A', img:'', line:'Equilibrio hormonal y menopausia. 24 h.'},
+  {id:'gentleman', name:'Gentleman Night', short:'GN', color:'#263238,#546E7A', img:'', line:'Salud masculina y vitalidad. Hasta 48 h.'},
+  {id:'sornie', name:'Colágeno Sornie', short:'CO', color:'#B76E79,#E8B4B8', img:'', line:'Piel, cabello y uñas. 24 h.'},
+  {id:'gluta', name:'GlutaNAD+ / Glutamore', short:'GL', color:'#2E7D32,#81C784', img:'', line:'Antioxidante y longevidad. Sublingual.'},
+  {id:'omicoff', name:'Omicoff', short:'OC', color:'#5D4037,#A1887F', img:'', line:'Café funcional con ginseng y colágeno.'}
+];
+const P = Object.fromEntries(PRODUCTS.map(p => [p.id, p]));
+const NEEDS = [
+  {k:'energia', t:'Energía', d:'Cansancio y fatiga', c:'#FFCA28', items:[['b12','En el cuello, detrás de la oreja','24 h'],['dekamin','Parte alta del pecho o brazo','24 h'],['png','Nuca o espalda baja','48 h']]},
+  {k:'dolor', t:'Dolor y articulaciones', d:'Espalda, rodillas, cuello', c:'#E67E22', items:[['png','Justo en el punto de la molestia','48 h'],['b12','En el cuello','24 h'],['omevia','Parte alta del pecho','24 h']]},
+  {k:'sueno', t:'Dormir mejor', d:'Insomnio y descanso', c:'#7E57C2', items:[['melatonin','Frente o nuca, 1 hora antes de dormir','8 h en la noche']], note:'Para ronquidos se puede usar medio parche sobre el tabique nasal o en el pecho.'},
+  {k:'estres', t:'Estrés y ánimo', d:'Tensión del día a día', c:'#EC407A', items:[['melatonin','Frente o nuca, en la noche','8 h'],['omevia','Parte alta del pecho','24 h'],['b12','En el cuello','24 h']]},
+  {k:'corazon', t:'Corazón y circulación', d:'Cuidado cardiovascular', c:'#42A5F5', items:[['omevia','Parte alta del pecho','24 h'],['dekamin','Parte alta del pecho','24 h'],['png','Nuca, lumbar o planta del pie','48 h']]},
+  {k:'memoria', t:'Memoria y enfoque', d:'Concentración', c:'#26C6DA', items:[['omevia','Parte alta del pecho','24 h'],['b12','En el cuello, detrás de la oreja','24 h']]},
+  {k:'peso', t:'Peso y figura', d:'Apetito, medidas, celulitis', c:'#4DB6AC', items:[['slim','Laterales del abdomen, brazos u hombros','Mínimo 16 h, cambiar a las 24 h'],['dekamin','Parte alta del pecho','24 h']]},
+  {k:'piel', t:'Piel y belleza', d:'Firmeza, arrugas, cabello', c:'#E8B4B8', items:[['sornie','Rostro, escote o cuello','24 h'],['gluta','Bajo la lengua','Según el empaque']]},
+  {k:'mujer', t:'Bienestar femenino', d:'Hormonas y menopausia', c:'#EC407A', items:[['ladies','Lateral bajo el ombligo o nuca','24 h'],['omevia','Parte alta del pecho','24 h']]},
+  {k:'hombre', t:'Bienestar masculino', d:'Vitalidad y próstata', c:'#90A4AE', items:[['gentleman','Zona inguinal','Hasta 48 h'],['omevia','Parte alta del pecho','24 h']]},
+  {k:'deporte', t:'Deporte', d:'Rendimiento y recuperación', c:'#FF7043', items:[['png','Músculos o articulaciones trabajadas','48 h'],['dekamin','Parte alta del pecho','24 h'],['omevia','Parte alta del pecho','24 h']], note:'Toda la línea cuenta con certificación Doping Free.'},
+  {k:'mayor', t:'Adulto mayor', d:'Movilidad y vitalidad', c:'#9CCC65', items:[['png','Rodillas o articulaciones','48 h'],['b12','En el cuello','24 h'],['omevia','Parte alta del pecho','24 h']]}
+];
 const TOPICS = [
-  ['Painless Night GLU', '¿Para qué sirve el Painless Night GLU, dónde se pone y cuánto dura?'],
+  ['Comprar o afiliarme', '¿Cómo compro los parches o me afilio a ONE MORE?', true],
   ['Bono 2+1', '¿Cómo funciona el Bono 2+1?'],
   ['Inscribir socio', 'Explícame paso a paso cómo inscribo a un socio nuevo en la oficina virtual.'],
   ['Paquetes', '¿Qué paquetes de inicio hay y qué porcentaje del binario da cada uno?'],
@@ -198,25 +324,30 @@ const TOPICS = [
   ['Retiros', '¿Cómo retiro mis comisiones a mi cuenta bancaria?'],
   ['Medicamentos', '¿Se pueden usar los parches si la persona toma medicamentos?'],
   ['Objeción pirámide', '¿Cómo respondo si un prospecto me dice que esto es una pirámide?'],
-  ['Dormir mejor', '¿Qué parche se recomienda para dormir mejor y cómo se usa?'],
   ['Rangos', '¿Cuáles son los rangos y qué requisitos tiene cada uno?']
 ];
 const CARDS = [
-  ['Productos', '¿Qué combinación de parches se sugiere para energía y fatiga?'],
   ['Negocio', '¿Cuáles son las 9 formas de ganar en One More?'],
   ['Oficina virtual', '¿Cómo hago la primera compra y qué método de pago conviene?'],
-  ['Prospectos', 'Escríbeme un mensaje corto de WhatsApp para invitar a alguien a conocer los parches.']
+  ['Prospectos', 'Escríbeme un mensaje corto de WhatsApp para invitar a alguien a conocer los parches.'],
+  ['Tecnología', '¿Cómo funciona la tecnología transdérmica de los parches?']
 ];
 
+/* ---------- helpers ---------- */
 const $ = id => document.getElementById(id);
 const chat = $('chat'), form = $('form'), q = $('q'), send = $('send');
-const API = 'https://ybatnimglmstcsaotntn.supabase.co/functions/v1/asistente-onemore';
 const turns = []; let busy = false, offline = false, KB = null;
+for (const id of ['buyTop','buyHero']) $(id).href = BUY;
 
+const URL_RE = /(https?:\/\/[^\s)]+)/g;
 function inline(el, text){
   for (const part of text.split(/(\*\*[^*]+\*\*)/g)){
-    if (/^\*\*[^*]+\*\*$/.test(part)){ const b = document.createElement('strong'); b.textContent = part.slice(2,-2); el.appendChild(b); }
-    else if (part) el.appendChild(document.createTextNode(part.replace(/\*\*/g,'')));
+    if (/^\*\*[^*]+\*\*$/.test(part)){ const b = document.createElement('strong'); b.textContent = part.slice(2,-2); el.appendChild(b); continue; }
+    for (const seg of part.replace(/\*\*/g,'').split(URL_RE)){
+      if (!seg) continue;
+      if (/^https?:\/\//.test(seg)){ const a = document.createElement('a'); a.href = seg.replace(/[.,]+$/,''); a.target = '_blank'; a.rel = 'noopener'; a.textContent = seg.includes('onemore.global') ? 'Comprar / afiliarme en ONE MORE' : seg; el.appendChild(a); }
+      else el.appendChild(document.createTextNode(seg));
+    }
   }
 }
 function render(el, md){
@@ -231,39 +362,66 @@ function render(el, md){
   }
 }
 const down = () => chat.scrollTop = chat.scrollHeight;
+const plain = t => t.replace(/\*\*/g,'').replace(URL_RE, m => m.includes('onemore.global') ? BUY : m);
+const svg = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
 
+function startChat(){ $('hero')?.remove(); }
 function userMsg(text){
+  startChat();
   const w = document.createElement('div'); w.className = 'msg user rise';
   const b = document.createElement('div'); b.className = 'bubble'; b.textContent = text; w.appendChild(b); chat.appendChild(w); down();
 }
 function botMsg(){
+  startChat();
   const w = document.createElement('div'); w.className = 'msg bot rise';
-  const av = document.createElement('img'); av.className = 'av'; av.src = 'logo-192.png'; av.alt = '';
+  const av = document.createElement('img'); av.className = 'av'; av.src = 'jose-160.jpg'; av.alt = '';
   const col = document.createElement('div'); col.className = 'col';
   const b = document.createElement('div'); b.className = 'bubble';
   const t = document.createElement('span'); t.className = 'typing'; t.innerHTML = '<i></i><i></i><i></i>'; b.appendChild(t);
   col.appendChild(b); w.append(av, col); chat.appendChild(w); down();
   return {w, col, b};
 }
+function ctaCard(col, text){
+  const c = document.createElement('div'); c.className = 'cta';
+  const s = document.createElement('span'); s.textContent = text || '¿Listo para tus parches o para empezar el negocio?';
+  const a = document.createElement('a'); a.href = BUY; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Comprar / Afiliarme';
+  c.append(s, a); col.appendChild(c);
+}
+let speaking = null;
 function tools(col, text, label){
   const t = document.createElement('div'); t.className = 'tools';
   if (label){ const s = document.createElement('span'); s.textContent = label; t.appendChild(s); }
-  const c = document.createElement('button'); c.type = 'button'; c.textContent = 'Copiar';
-  c.onclick = async () => { const plain = text.replace(/\*\*/g,'');
-    try { await navigator.clipboard.writeText(plain); c.textContent = 'Copiado'; }
-    catch { const r = document.createRange(); r.selectNodeContents(col.querySelector('.bubble')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); c.textContent = 'Texto seleccionado'; }
-    setTimeout(() => c.textContent = 'Copiar', 1800); };
-  const wa = document.createElement('button'); wa.type = 'button'; wa.textContent = 'Enviar por WhatsApp';
-  wa.onclick = () => window.open('https://wa.me/?text=' + encodeURIComponent(text.replace(/\*\*/g,'')), '_blank', 'noopener');
+  if ('speechSynthesis' in window){
+    const sp = document.createElement('button'); sp.type = 'button'; sp.innerHTML = svg('<path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/>') + '<span>Escuchar</span>';
+    sp.onclick = () => {
+      if (speaking === sp){ speechSynthesis.cancel(); speaking = null; sp.lastChild.textContent = 'Escuchar'; return; }
+      speechSynthesis.cancel(); if (speaking) speaking.lastChild.textContent = 'Escuchar';
+      const u = new SpeechSynthesisUtterance(plain(text).replace(URL_RE,'el enlace de compra').replace(/^[-•]\s*/gm,''));
+      const v = speechSynthesis.getVoices().find(v => /^es(-|_)(CO|MX|US|419)/i.test(v.lang)) || speechSynthesis.getVoices().find(v => /^es/i.test(v.lang));
+      if (v) u.voice = v; u.lang = v ? v.lang : 'es-CO'; u.rate = 1;
+      u.onend = u.onerror = () => { if (speaking === sp){ speaking = null; sp.lastChild.textContent = 'Escuchar'; } };
+      speaking = sp; sp.lastChild.textContent = 'Detener'; speechSynthesis.speak(u);
+    };
+    t.appendChild(sp);
+  }
+  const c = document.createElement('button'); c.type = 'button'; c.innerHTML = svg('<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/>') + '<span>Copiar</span>';
+  c.onclick = async () => {
+    try { await navigator.clipboard.writeText(plain(text)); c.lastChild.textContent = 'Copiado'; }
+    catch { const r = document.createRange(); r.selectNodeContents(col.querySelector('.bubble')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); c.lastChild.textContent = 'Seleccionado'; }
+    setTimeout(() => c.lastChild.textContent = 'Copiar', 1800); };
+  const wa = document.createElement('button'); wa.type = 'button'; wa.innerHTML = svg('<path d="M21 12a9 9 0 0 1-13.5 7.8L3 21l1.2-4.4A9 9 0 1 1 21 12z"/>') + '<span>WhatsApp</span>';
+  wa.onclick = () => window.open('https://wa.me/?text=' + encodeURIComponent(plain(text)), '_blank', 'noopener');
   t.append(c, wa); col.appendChild(t);
 }
-function setOffline(v){ offline = v; $('pill').classList.toggle('off', v); $('pillText').textContent = v ? 'Modo consulta' : 'IA en línea'; }
+function setOffline(v){ offline = v; $('state').classList.toggle('off', v); $('stateText').textContent = v ? 'Modo consulta' : 'IA en línea'; }
+const wantsBuy = s => /compr|afili|inscrib|registr|precio|cu[aá]nto cuesta|paquete|pedir|pedido|ser socio|empezar|unirme|entrar al negocio/i.test(s);
 
-/* local fallback search */
-async function loadKB(){ if (KB) return KB; try { KB = (await (await fetch('kb.json')).json()).kb; } catch { KB = ''; } return KB; }
+/* ---------- local fallback ---------- */
+async function loadKB(){ if (KB !== null) return KB; try { KB = (await (await fetch('kb.json')).json()).kb; } catch { KB = ''; } return KB; }
 const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 const STOP = new Set('que como para por los las del una uno unos con sin mas cual cuales donde cuando esto esta este son hay hace puedo puede tengo tiene sobre entre desde hasta muy sus mis tus'.split(' '));
 async function localAnswer(question){
+  if (/compr|afili|ser socio|unirme/i.test(question)) return 'Para comprar tus parches o afiliarte a ONE MORE, regístrate por este enlace: ' + BUY + '\n\nAl registrarte puedes elegir tu paquete. Si tienes dudas, escríbele a José Lugo por WhatsApp al +57 312 638 7467.';
   const kb = await loadKB(); const secs = []; let title = '', buf = [];
   const flush = () => { if (buf.join('').trim()) secs.push({title, text: buf.join('\n').trim()}); buf = []; };
   for (const line of kb.split('\n')){ if (/^#{1,3}\s/.test(line)){ flush(); title = line.replace(/^#+\s*/,''); } else if (/^P:/.test(line)){ flush(); buf.push(line); } else buf.push(line); }
@@ -275,9 +433,10 @@ async function localAnswer(question){
   return top.map(({s}) => '**' + s.title + '**\n' + s.text.replace(/^P:\s*/,'**').replace(/\nR:\s*/,'**\n')).join('\n\n');
 }
 
+/* ---------- ask ---------- */
 async function ask(question){
   question = question.trim(); if (!question || busy) return;
-  $('hero')?.remove(); busy = true; send.disabled = true; q.value = ''; grow();
+  stopListening(); busy = true; send.disabled = true; q.value = ''; grow();
   userMsg(question); const {col, b} = botMsg();
   turns.push({role:'user', content:question});
   let text = '';
@@ -289,20 +448,104 @@ async function ask(question){
     const reader = res.body.getReader(), dec = new TextDecoder();
     for (;;){ const {done, value} = await reader.read(); if (done) break; text += dec.decode(value, {stream:true}); render(b, text); down(); }
     if (!text.trim()) throw new Error('empty');
-    turns.push({role:'assistant', content:text}); setOffline(false); tools(col, text);
+    turns.push({role:'assistant', content:text}); setOffline(false);
+    if (wantsBuy(question) || /onemore\.global/.test(text)) ctaCard(col);
+    tools(col, text);
   } catch (e) {
     turns.pop();
     if (e.rate){ b.replaceChildren(); const n = document.createElement('div'); n.className = 'warn'; n.textContent = 'Muchas preguntas en poco tiempo. Espera un minuto y vuelve a intentar.'; col.appendChild(n); }
     else if (text.trim()){ tools(col, text); }
-    else { setOffline(true); const ans = await localAnswer(question); render(b, ans); tools(col, ans, 'Del material de consulta'); }
+    else { setOffline(true); const ans = await localAnswer(question); render(b, ans); if (wantsBuy(question)) ctaCard(col); tools(col, ans, 'Del material de consulta'); }
   } finally { busy = false; send.disabled = false; down(); }
 }
 
+/* ---------- recommender ---------- */
+function patchArt(p, size){
+  const [a, b] = p.color.split(',');
+  const d = document.createElement('div'); d.className = 'patch'; d.style.background = `linear-gradient(135deg,${a},${b})`; d.textContent = p.short;
+  if (size) { d.style.width = size; d.style.borderRadius = '9px'; d.style.fontSize = '.66rem'; }
+  return d;
+}
+function recommend(n){
+  closeReco(); userMsg('Quiero mejorar: ' + n.t.toLowerCase());
+  const {col, b} = botMsg(); b.replaceChildren();
+  const box = document.createElement('div'); box.className = 'reco';
+  const h = document.createElement('h3'); h.textContent = 'Combinación sugerida para ' + n.t.toLowerCase(); box.appendChild(h);
+  let speech = 'Combinación sugerida para ' + n.t.toLowerCase() + '.\n';
+  for (const [id, where, dur] of n.items){
+    const p = P[id]; const it = document.createElement('div'); it.className = 'it';
+    const dot = patchArt(p, '30px'); dot.className = 'dot'; dot.style.width = '30px';
+    const tx = document.createElement('div'); const bb = document.createElement('b'); bb.textContent = p.name;
+    const sp = document.createElement('span'); sp.textContent = where + ' · ' + dur; tx.append(bb, sp); it.append(dot, tx); box.appendChild(it);
+    speech += '- **' + p.name + '**: ' + where + ', ' + dur + '.\n';
+  }
+  const tip = document.createElement('p'); tip.style.cssText = 'margin:10px 0 0;font-size:.82rem;color:var(--muted)';
+  tip.textContent = (n.note ? n.note + ' ' : '') + 'Toma mínimo 2 litros de agua al día. Si tienes una condición médica o tomas medicamentos, consúltalo antes con tu médico.';
+  box.appendChild(tip); b.appendChild(box);
+  speech += '\n' + tip.textContent;
+  ctaCard(col, 'Pide esta combinación con tu registro en ONE MORE');
+  const more = document.createElement('div'); more.className = 'tools';
+  const m = document.createElement('button'); m.type = 'button'; m.innerHTML = svg('<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.7M12 17h.01"/>') + '<span>Preguntar más</span>';
+  m.onclick = () => ask('Cuéntame más sobre la combinación para ' + n.t.toLowerCase() + ': ' + n.items.map(i => P[i[0]].name).join(', ') + '.');
+  more.appendChild(m); col.appendChild(more);
+  tools(col, speech);
+  down();
+}
+function openReco(){ $('scrim').hidden = false; $('needs').querySelector('button')?.focus(); }
+function closeReco(){ $('scrim').hidden = true; }
+$('openReco').onclick = openReco; $('closeReco').onclick = closeReco;
+$('scrim').addEventListener('click', e => { if (e.target === $('scrim')) closeReco(); });
+addEventListener('keydown', e => { if (e.key === 'Escape') closeReco(); });
+for (const n of NEEDS){
+  const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'need';
+  const i = document.createElement('i'); i.style.background = n.c;
+  const s = document.createElement('span'); s.textContent = n.d;
+  btn.append(i, document.createTextNode(n.t), s); btn.onclick = () => recommend(n); $('needs').appendChild(btn);
+}
+
+/* ---------- product rail ---------- */
+for (const p of PRODUCTS){
+  const card = document.createElement('article'); card.className = 'prod';
+  const ph = document.createElement('div'); ph.className = 'ph';
+  const [a, b] = p.color.split(','); ph.style.background = `radial-gradient(80% 80% at 30% 20%, ${b}55, transparent 70%), linear-gradient(160deg, #101a3e, #0a1230)`;
+  if (p.img){ const im = document.createElement('img'); im.src = p.img; im.alt = p.name; im.loading = 'lazy'; ph.appendChild(im); }
+  else { const art = document.createElement('div'); art.className = 'art'; art.appendChild(patchArt(p)); ph.appendChild(art); }
+  const bd = document.createElement('div'); bd.className = 'bd';
+  const nb = document.createElement('b'); nb.textContent = p.name;
+  const ln = document.createElement('span'); ln.textContent = p.line;
+  const row = document.createElement('div'); row.className = 'row';
+  const qb = document.createElement('button'); qb.type = 'button'; qb.className = 'q'; qb.textContent = 'Preguntar';
+  qb.onclick = () => ask('¿Para qué sirve ' + p.name + ', cómo se usa y con qué se combina?');
+  const pb = document.createElement('a'); pb.className = 'p'; pb.href = BUY; pb.target = '_blank'; pb.rel = 'noopener'; pb.textContent = 'Pedir';
+  row.append(qb, pb); bd.append(nb, ln, row); card.append(ph, bd); $('rail').appendChild(card);
+}
+
+/* ---------- voice input ---------- */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, listening = false;
+function stopListening(){ if (rec && listening){ try { rec.stop(); } catch {} } }
+if (SR){
+  const mic = $('mic'); mic.hidden = false;
+  mic.onclick = () => {
+    if (listening){ stopListening(); return; }
+    rec = new SR(); rec.lang = 'es-CO'; rec.interimResults = true; rec.continuous = false;
+    let finalText = '';
+    rec.onstart = () => { listening = true; mic.classList.add('on'); mic.setAttribute('aria-label','Detener'); q.placeholder = 'Te escucho…'; };
+    rec.onresult = e => { let interim = ''; for (let i = e.resultIndex; i < e.results.length; i++){ const r = e.results[i]; if (r.isFinal) finalText += r[0].transcript; else interim += r[0].transcript; } q.value = (finalText + interim).trim(); grow(); };
+    rec.onerror = ev => { if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed'){ q.placeholder = 'Permite el micrófono para hablar'; } };
+    rec.onend = () => { listening = false; mic.classList.remove('on'); mic.setAttribute('aria-label','Hablar'); q.placeholder = 'Escribe tu pregunta…'; if (finalText.trim()) ask(finalText); };
+    try { rec.start(); } catch {}
+  };
+}
+if ('speechSynthesis' in window) speechSynthesis.getVoices();
+
+/* ---------- composer ---------- */
 function grow(){ q.style.height = 'auto'; q.style.height = Math.min(q.scrollHeight, 130) + 'px'; }
 q.addEventListener('input', grow);
 q.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && !matchMedia('(pointer:coarse)').matches){ e.preventDefault(); ask(q.value); } });
 form.addEventListener('submit', e => { e.preventDefault(); ask(q.value); });
-for (const [l, qq] of TOPICS){ const b = document.createElement('button'); b.type = 'button'; b.textContent = l; b.onclick = () => ask(qq); $('chips').appendChild(b); }
+for (const [l, qq, hl] of TOPICS){ const b = document.createElement('button'); b.type = 'button'; b.textContent = l; if (hl) b.className = 'hl'; b.onclick = () => ask(qq); $('chips').appendChild(b); }
+const recoChip = document.createElement('button'); recoChip.type = 'button'; recoChip.textContent = 'Encuentra tu parche'; recoChip.onclick = openReco; $('chips').insertBefore(recoChip, $('chips').children[1]);
 for (const [tag, qq] of CARDS){ const b = document.createElement('button'); b.type = 'button'; b.className = 'card';
   const s = document.createElement('small'); s.textContent = tag; b.append(s, document.createTextNode(qq)); b.onclick = () => ask(qq); $('cards').appendChild(b); }
 </script>

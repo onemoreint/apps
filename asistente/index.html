@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Asistente ONE MORE · José Lugo</title>
+<meta name="description" content="Asistente con inteligencia artificial para socios ONE MORE International. Creado por José Lugo, Diamante Imperial.">
+<meta name="theme-color" content="#050816">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="logo-192.png">
+<link rel="apple-touch-icon" href="logo-192.png">
+<meta property="og:title" content="Asistente ONE MORE">
+<meta property="og:description" content="Pregunta lo que quieras sobre productos, negocio y oficina virtual ONE MORE. Creado por José Lugo, Diamante Imperial.">
+<meta property="og:image" content="logo-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: full-height HUD — slim top bar, orbital logo hero that collapses into the chat, glass composer + credit strip pinned to the bottom */
+:root{
+  --void:#050816; --deep:#0A1230; --panel:rgba(16,26,62,.62); --panel-solid:#0F1838;
+  --line:rgba(130,170,255,.16); --line-strong:rgba(62,230,255,.45);
+  --ink:#EAF0FF; --muted:#8E9CC8; --cyan:#3EE6FF; --blue:#4F6BFF; --gold:#E9C46A;
+  --user:linear-gradient(135deg,#2E4BFF,#1BB5E0);
+  --display:"Unbounded","Segoe UI",system-ui,sans-serif;
+  --body:"Manrope","Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--void);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;overflow:hidden;-webkit-font-smoothing:antialiased}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.glow{position:fixed;inset:-20% -20% auto;height:70vh;z-index:0;pointer-events:none;
+  background:radial-gradient(50% 60% at 50% 0%,rgba(79,107,255,.28),transparent 70%),radial-gradient(30% 40% at 85% 10%,rgba(62,230,255,.14),transparent 70%)}
+.app{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;max-width:860px;margin:0 auto;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px))}
+
+/* top bar */
+.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-block:12px}
+.id{display:flex;align-items:center;gap:10px;min-width:0}
+.id img{width:38px;height:38px;border-radius:50%;box-shadow:0 0 0 1px var(--line-strong),0 0 18px rgba(62,230,255,.35)}
+.id b{font-family:var(--display);font-weight:500;font-size:.82rem;letter-spacing:.08em;display:block}
+.id span{font-family:var(--mono);font-size:.66rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+.pill{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);border:1px solid var(--line-strong);border-radius:999px;padding:5px 10px;display:flex;align-items:center;gap:6px;white-space:nowrap;background:rgba(62,230,255,.06)}
+.pill i{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+.pill.off{color:var(--gold);border-color:rgba(233,196,106,.45);background:rgba(233,196,106,.06)}
+.pill.off i{background:var(--gold);box-shadow:0 0 10px var(--gold)}
+
+/* scroll area */
+main{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-block:6px 18px;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin;scrollbar-color:rgba(130,170,255,.25) transparent}
+
+/* hero */
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding-block:14px 4px}
+.orbit{position:relative;width:150px;height:150px;display:grid;place-items:center;margin-bottom:6px}
+.orbit::before{content:"";position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from 0deg,transparent 0 55%,var(--cyan) 70%,var(--blue) 85%,transparent 100%);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 1px));mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 1px));
+  animation:spin 6s linear infinite}
+.orbit::after{content:"";position:absolute;inset:-14px;border-radius:50%;border:1px dashed rgba(130,170,255,.22);animation:spin 40s linear infinite reverse}
+.orbit img{width:118px;height:118px;border-radius:50%;box-shadow:0 0 40px rgba(62,230,255,.35),0 0 0 6px rgba(10,18,48,.9)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero h1{font-family:var(--display);font-weight:700;font-size:clamp(1.35rem,5.4vw,2.1rem);line-height:1.15;margin:0;letter-spacing:-.01em;text-wrap:balance;max-width:20ch}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--cyan),#9DB4FF);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin:0;color:var(--muted);max-width:46ch;font-size:.95rem}
+.badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(233,196,106,.35);border-radius:999px;padding:6px 12px;background:rgba(233,196,106,.06)}
+.badge svg{width:12px;height:12px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%;margin-top:8px}
+.card{text-align:left;font:600 .88rem var(--body);color:var(--ink);background:var(--panel);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:16px;padding:12px 13px;cursor:pointer;line-height:1.35;transition:border-color .2s,transform .2s,box-shadow .2s;min-width:0}
+.card small{display:block;font-family:var(--mono);font-weight:500;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:5px}
+.card:hover{border-color:var(--line-strong);transform:translateY(-2px);box-shadow:0 10px 30px rgba(62,230,255,.12)}
+
+/* chips */
+.chips{display:flex;gap:8px;overflow-x:auto;padding-block:8px 2px;scrollbar-width:none;mask-image:linear-gradient(90deg,#000 88%,transparent)}
+.chips::-webkit-scrollbar{display:none}
+.chips button{flex:none;font:600 .8rem var(--body);color:var(--ink);background:rgba(16,26,62,.7);border:1px solid var(--line);border-radius:999px;padding:7px 13px;cursor:pointer}
+.chips button:hover{border-color:var(--line-strong);color:var(--cyan)}
+
+/* messages */
+.msg{display:flex;flex-direction:column;gap:6px;min-width:0}
+.msg.user{align-items:flex-end}
+.bubble{max-width:86%;min-width:0;border-radius:18px;padding:11px 15px;overflow-wrap:anywhere}
+.user .bubble{background:var(--user);color:#fff;border-bottom-right-radius:6px;box-shadow:0 8px 24px rgba(46,75,255,.3)}
+.bot{flex-direction:row;align-items:flex-start;gap:10px}
+.bot .av{flex:none;width:30px;height:30px;border-radius:50%;margin-top:2px;box-shadow:0 0 0 1px var(--line-strong)}
+.bot .col{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
+.bot .bubble{max-width:100%;background:var(--panel);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-top-left-radius:6px}
+.bubble p{margin:0 0 8px}.bubble p:last-child{margin:0}
+.bubble ul,.bubble ol{margin:0 0 8px;padding-left:20px}.bubble li{margin:3px 0}
+.bubble li::marker{color:var(--cyan)}
+.bubble strong{color:#fff;font-weight:700}
+.typing{display:inline-flex;gap:5px;padding:4px 0}
+.typing i{width:7px;height:7px;border-radius:50%;background:var(--cyan);opacity:.3;animation:blink 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{50%{opacity:1;transform:translateY(-2px)}}
+.tools{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:.75rem;color:var(--muted)}
+.tools button{font:600 .75rem var(--body);color:var(--cyan);background:none;border:0;padding:2px 0;cursor:pointer}
+.warn{font-size:.8rem;color:var(--gold);border:1px solid rgba(233,196,106,.3);background:rgba(233,196,106,.06);border-radius:12px;padding:8px 12px}
+
+/* composer */
+.dock{padding-block:8px calc(10px + env(safe-area-inset-bottom,0px))}
+form{display:flex;gap:8px;align-items:flex-end;background:var(--panel);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:22px;padding:6px 6px 6px 16px;transition:border-color .2s,box-shadow .2s}
+form:focus-within{border-color:var(--line-strong);box-shadow:0 0 0 4px rgba(62,230,255,.08),0 0 30px rgba(62,230,255,.12)}
+textarea{flex:1;min-width:0;resize:none;border:0;outline:0;background:transparent;color:var(--ink);font:500 1rem var(--body);line-height:1.4;padding:9px 0;max-height:130px}
+textarea::placeholder{color:var(--muted)}
+.send{flex:none;width:44px;height:44px;border-radius:16px;border:0;cursor:pointer;display:grid;place-items:center;color:#04101e;background:linear-gradient(135deg,var(--cyan),#7FA0FF);box-shadow:0 6px 20px rgba(62,230,255,.35)}
+.send[disabled]{opacity:.45;cursor:default;box-shadow:none}
+.send svg{width:20px;height:20px}
+.credit{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:9px;font-size:.74rem;color:var(--muted);text-align:center}
+.credit b{color:var(--ink);font-weight:700}
+.credit .dia{color:var(--gold);font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase}
+.credit a{color:var(--cyan);text-decoration:none;font-family:var(--mono);font-size:.72rem;display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:999px;padding:3px 9px}
+.credit a svg{width:12px;height:12px}
+.legal{font-size:.66rem;color:var(--muted);opacity:.75;text-align:center;margin-top:4px}
+
+button:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+@media (min-width:640px){ .grid{grid-template-columns:repeat(4,minmax(0,1fr))} .orbit{width:170px;height:170px} .orbit img{width:134px;height:134px} }
+@media (max-width:360px){ .grid{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){ .orbit::before,.orbit::after,.typing i{animation:none} .card{transition:none} }
+.rise{animation:rise .3s ease-out}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.rise{animation:none}}
+</style>
+</head>
+<body>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="glow" aria-hidden="true"></div>
+
+<div class="app">
+  <header class="bar">
+    <div class="id">
+      <img src="logo-192.png" alt="ONE MORE International">
+      <div><b>ONE MORE</b><span>Asistente IA</span></div>
+    </div>
+    <div class="pill" id="pill"><i></i><span id="pillText">IA en línea</span></div>
+  </header>
+
+  <main id="chat" aria-live="polite">
+    <section class="hero" id="hero">
+      <div class="orbit"><img src="logo-512.png" alt="Logo ONE MORE International"></div>
+      <span class="badge"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2 3 9l9 13 9-13-9-7Zm0 3.1L17.7 9H6.3L12 5.1Z"/></svg>Equipo Diamante Imperial</span>
+      <h1>Tu asistente <em>inteligente</em> ONE MORE</h1>
+      <p>Pregunta lo que necesites sobre los parches, el plan de compensación, la oficina virtual o cómo responder a un prospecto. Te respondo al instante.</p>
+      <div class="grid" id="cards"></div>
+    </section>
+  </main>
+
+  <div class="dock">
+    <div class="chips" id="chips" aria-label="Preguntas rápidas"></div>
+    <form id="form" autocomplete="off">
+      <textarea id="q" rows="1" aria-label="Escribe tu pregunta" placeholder="Escribe tu pregunta…"></textarea>
+      <button class="send" id="send" type="submit" aria-label="Enviar pregunta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </form>
+    <div class="credit">
+      <span>Creado por <b>José Lugo</b></span>
+      <span class="dia">◆ Diamante Imperial</span>
+      <a href="https://wa.me/573126387467?text=Hola%20Jos%C3%A9%2C%20vengo%20del%20Asistente%20ONE%20MORE" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3a.5.5 0 0 0 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.5-.3Z"/></svg>
+        +57 312 638 7467
+      </a>
+    </div>
+    <div class="legal">Información de bienestar, no consejo médico. Ante una enfermedad o medicamentos, consulta a tu médico.</div>
+  </div>
+</div>
+
+<script>
+/* ---------- background: slow nano-particle network ---------- */
+(() => {
+  const c = document.getElementById('fx'), x = c.getContext('2d');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let w, h, pts = [], dpr = Math.min(devicePixelRatio || 1, 2);
+  function size(){ w = c.clientWidth; h = c.clientHeight; c.width = w*dpr; c.height = h*dpr; x.setTransform(dpr,0,0,dpr,0,0);
+    const n = Math.round(Math.min(70, w*h/16000)); pts = Array.from({length:n}, () => ({x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-.5)*.18, vy:(Math.random()-.5)*.18, r:Math.random()*1.4+.4})); }
+  function frame(){
+    x.clearRect(0,0,w,h);
+    for (const p of pts){ p.x += p.vx; p.y += p.vy; if (p.x<0||p.x>w) p.vx*=-1; if (p.y<0||p.y>h) p.vy*=-1; }
+    for (let i=0;i<pts.length;i++) for (let j=i+1;j<pts.length;j++){
+      const a=pts[i], b=pts[j], d=Math.hypot(a.x-b.x, a.y-b.y);
+      if (d<120){ x.strokeStyle = `rgba(110,160,255,${(1-d/120)*.16})`; x.lineWidth=1; x.beginPath(); x.moveTo(a.x,a.y); x.lineTo(b.x,b.y); x.stroke(); }
+    }
+    for (const p of pts){ x.fillStyle='rgba(62,230,255,.55)'; x.beginPath(); x.arc(p.x,p.y,p.r,0,7); x.fill(); }
+    if (!still) requestAnimationFrame(frame);
+  }
+  addEventListener('resize', () => { size(); if (still) frame(); });
+  size(); frame();
+})();
+
+/* ---------- chat ---------- */
+const TOPICS = [
+  ['Painless Night GLU', '¿Para qué sirve el Painless Night GLU, dónde se pone y cuánto dura?'],
+  ['Bono 2+1', '¿Cómo funciona el Bono 2+1?'],
+  ['Inscribir socio', 'Explícame paso a paso cómo inscribo a un socio nuevo en la oficina virtual.'],
+  ['Paquetes', '¿Qué paquetes de inicio hay y qué porcentaje del binario da cada uno?'],
+  ['Picazón', '¿Qué le digo a un cliente si el parche le da picazón o enrojecimiento?'],
+  ['Retiros', '¿Cómo retiro mis comisiones a mi cuenta bancaria?'],
+  ['Medicamentos', '¿Se pueden usar los parches si la persona toma medicamentos?'],
+  ['Objeción pirámide', '¿Cómo respondo si un prospecto me dice que esto es una pirámide?'],
+  ['Dormir mejor', '¿Qué parche se recomienda para dormir mejor y cómo se usa?'],
+  ['Rangos', '¿Cuáles son los rangos y qué requisitos tiene cada uno?']
+];
+const CARDS = [
+  ['Productos', '¿Qué combinación de parches se sugiere para energía y fatiga?'],
+  ['Negocio', '¿Cuáles son las 9 formas de ganar en One More?'],
+  ['Oficina virtual', '¿Cómo hago la primera compra y qué método de pago conviene?'],
+  ['Prospectos', 'Escríbeme un mensaje corto de WhatsApp para invitar a alguien a conocer los parches.']
+];
+
+const $ = id => document.getElementById(id);
+const chat = $('chat'), form = $('form'), q = $('q'), send = $('send');
+const API = 'https://ybatnimglmstcsaotntn.supabase.co/functions/v1/asistente-onemore';
+const turns = []; let busy = false, offline = false, KB = null;
+
+function inline(el, text){
+  for (const part of text.split(/(\*\*[^*]+\*\*)/g)){
+    if (/^\*\*[^*]+\*\*$/.test(part)){ const b = document.createElement('strong'); b.textContent = part.slice(2,-2); el.appendChild(b); }
+    else if (part) el.appendChild(document.createTextNode(part.replace(/\*\*/g,'')));
+  }
+}
+function render(el, md){
+  el.replaceChildren(); let list = null, kind = null;
+  for (const raw of md.split('\n')){
+    const line = raw.trimEnd();
+    const ul = line.match(/^\s*[-*•]\s+(.*)$/), ol = line.match(/^\s*(\d+)[.)]\s+(.*)$/);
+    if (ul || ol){ const t = ul ? 'ul' : 'ol'; if (!list || kind !== t){ list = document.createElement(t); kind = t; el.appendChild(list); }
+      const li = document.createElement('li'); inline(li, ul ? ul[1] : ol[2]); list.appendChild(li); continue; }
+    list = null; kind = null; if (!line.trim()) continue;
+    const p = document.createElement('p'); inline(p, line.replace(/^#+\s*/, '')); el.appendChild(p);
+  }
+}
+const down = () => chat.scrollTop = chat.scrollHeight;
+
+function userMsg(text){
+  const w = document.createElement('div'); w.className = 'msg user rise';
+  const b = document.createElement('div'); b.className = 'bubble'; b.textContent = text; w.appendChild(b); chat.appendChild(w); down();
+}
+function botMsg(){
+  const w = document.createElement('div'); w.className = 'msg bot rise';
+  const av = document.createElement('img'); av.className = 'av'; av.src = 'logo-192.png'; av.alt = '';
+  const col = document.createElement('div'); col.className = 'col';
+  const b = document.createElement('div'); b.className = 'bubble';
+  const t = document.createElement('span'); t.className = 'typing'; t.innerHTML = '<i></i><i></i><i></i>'; b.appendChild(t);
+  col.appendChild(b); w.append(av, col); chat.appendChild(w); down();
+  return {w, col, b};
+}
+function tools(col, text, label){
+  const t = document.createElement('div'); t.className = 'tools';
+  if (label){ const s = document.createElement('span'); s.textContent = label; t.appendChild(s); }
+  const c = document.createElement('button'); c.type = 'button'; c.textContent = 'Copiar';
+  c.onclick = async () => { const plain = text.replace(/\*\*/g,'');
+    try { await navigator.clipboard.writeText(plain); c.textContent = 'Copiado'; }
+    catch { const r = document.createRange(); r.selectNodeContents(col.querySelector('.bubble')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); c.textContent = 'Texto seleccionado'; }
+    setTimeout(() => c.textContent = 'Copiar', 1800); };
+  const wa = document.createElement('button'); wa.type = 'button'; wa.textContent = 'Enviar por WhatsApp';
+  wa.onclick = () => window.open('https://wa.me/?text=' + encodeURIComponent(text.replace(/\*\*/g,'')), '_blank', 'noopener');
+  t.append(c, wa); col.appendChild(t);
+}
+function setOffline(v){ offline = v; $('pill').classList.toggle('off', v); $('pillText').textContent = v ? 'Modo consulta' : 'IA en línea'; }
+
+/* local fallback search */
+async function loadKB(){ if (KB) return KB; try { KB = (await (await fetch('kb.json')).json()).kb; } catch { KB = ''; } return KB; }
+const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+const STOP = new Set('que como para por los las del una uno unos con sin mas cual cuales donde cuando esto esta este son hay hace puedo puede tengo tiene sobre entre desde hasta muy sus mis tus'.split(' '));
+async function localAnswer(question){
+  const kb = await loadKB(); const secs = []; let title = '', buf = [];
+  const flush = () => { if (buf.join('').trim()) secs.push({title, text: buf.join('\n').trim()}); buf = []; };
+  for (const line of kb.split('\n')){ if (/^#{1,3}\s/.test(line)){ flush(); title = line.replace(/^#+\s*/,''); } else if (/^P:/.test(line)){ flush(); buf.push(line); } else buf.push(line); }
+  flush();
+  const words = norm(question).split(/[^a-z0-9+]+/).filter(w => w.length > 2 && !STOP.has(w));
+  const top = secs.map(s => { const t = norm(s.title+' '+s.text); let sc = 0; for (const w of words) if (t.includes(w)) sc += norm(s.title).includes(w) ? 3 : 1; return {s, sc}; })
+    .filter(x => x.sc > 0).sort((a,b) => b.sc - a.sc).slice(0,2);
+  if (!top.length) return 'No encontré ese tema en el material. Prueba con otras palabras o escríbele a José Lugo por WhatsApp al +57 312 638 7467.';
+  return top.map(({s}) => '**' + s.title + '**\n' + s.text.replace(/^P:\s*/,'**').replace(/\nR:\s*/,'**\n')).join('\n\n');
+}
+
+async function ask(question){
+  question = question.trim(); if (!question || busy) return;
+  $('hero')?.remove(); busy = true; send.disabled = true; q.value = ''; grow();
+  userMsg(question); const {col, b} = botMsg();
+  turns.push({role:'user', content:question});
+  let text = '';
+  try {
+    if (offline) throw new Error('offline');
+    const res = await fetch(API, {method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({messages: turns.slice(-9)})});
+    if (res.status === 429) throw Object.assign(new Error('rate'), {rate:true});
+    if (!res.ok || !res.body) throw new Error('http ' + res.status);
+    const reader = res.body.getReader(), dec = new TextDecoder();
+    for (;;){ const {done, value} = await reader.read(); if (done) break; text += dec.decode(value, {stream:true}); render(b, text); down(); }
+    if (!text.trim()) throw new Error('empty');
+    turns.push({role:'assistant', content:text}); setOffline(false); tools(col, text);
+  } catch (e) {
+    turns.pop();
+    if (e.rate){ b.replaceChildren(); const n = document.createElement('div'); n.className = 'warn'; n.textContent = 'Muchas preguntas en poco tiempo. Espera un minuto y vuelve a intentar.'; col.appendChild(n); }
+    else if (text.trim()){ tools(col, text); }
+    else { setOffline(true); const ans = await localAnswer(question); render(b, ans); tools(col, ans, 'Del material de consulta'); }
+  } finally { busy = false; send.disabled = false; down(); }
+}
+
+function grow(){ q.style.height = 'auto'; q.style.height = Math.min(q.scrollHeight, 130) + 'px'; }
+q.addEventListener('input', grow);
+q.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && !matchMedia('(pointer:coarse)').matches){ e.preventDefault(); ask(q.value); } });
+form.addEventListener('submit', e => { e.preventDefault(); ask(q.value); });
+for (const [l, qq] of TOPICS){ const b = document.createElement('button'); b.type = 'button'; b.textContent = l; b.onclick = () => ask(qq); $('chips').appendChild(b); }
+for (const [tag, qq] of CARDS){ const b = document.createElement('button'); b.type = 'button'; b.className = 'card';
+  const s = document.createElement('small'); s.textContent = tag; b.append(s, document.createTextNode(qq)); b.onclick = () => ask(qq); $('cards').appendChild(b); }
+</script>
+</body>
+</html>

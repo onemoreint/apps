@@ -49,6 +49,8 @@ const $ = (sel) => document.querySelector(sel);
 
 export function toast(message, { kind = 'info', actions = [], timeout = 5000 } = {}) {
   const box = $('#toasts');
+  // No repite un aviso que ya está en pantalla.
+  if ([...box.children].some((t) => t.querySelector('p')?.textContent === message)) return () => {};
   const close = () => el.remove();
   const el = h('div', { class: 'toast', 'data-kind': kind },
     h('p', {}, message),

@@ -1,5 +1,5 @@
 // Guarda la app para que funcione sin conexión. Las rutas son relativas para servirse desde cualquier carpeta.
-const VERSION = 'jarvis-v1.1.0';
+const VERSION = 'jarvis-v1.2.0';
 const SHELL = [
   './',
   'index.html',

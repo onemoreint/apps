@@ -259,6 +259,33 @@ const lastMsg=(page)=>page.locator('.msg-jarvis').last().innerText();
   check('configuración en móvil',await mob.locator('#dlg-settings').isVisible());
   await phone.close();
 
+  // ---------- Brave: tiene la API, pero no el servicio ----------
+  const brave=await browser.newContext({viewport:{width:1280,height:800}});
+  await brave.addInitScript(VOICE_MOCK);
+  await brave.addInitScript(()=>{Object.defineProperty(navigator,'brave',{value:{isBrave:()=>Promise.resolve(true)}});});
+  const bp=await brave.newPage(); await bp.goto(URL_); await bp.waitForTimeout(400);
+  check('Brave: micrófono marcado sin servicio',await bp.getAttribute('#btn-mic','data-unsupported')==='true');
+  for(let i=0;i<3;i++){await bp.click('#btn-mic');await bp.waitForTimeout(60);}
+  check('Brave: un solo aviso aunque insista',(await bp.locator('.msg-alert').count())===1);
+  check('Brave: explica la causa',(await bp.locator('.msg-alert').last().innerText()).includes('Brave no incluye'));
+  check('Brave: no marca error de conexión',await bp.evaluate(()=>document.body.dataset.state)==='idle');
+  check('Brave: ofrece copiar el enlace',(await bp.locator('.toast button',{hasText:'Copiar enlace'}).count())===1);
+  await say(bp,'háblame');
+  check('Brave: la escritura sigue funcionando',(await bp.locator('.msg-jarvis').last().innerText()).includes('Aquí estoy'));
+  await brave.close();
+
+  // ---------- Fallo repetido del servicio y limpieza de avisos viejos ----------
+  const net=await browser.newContext({viewport:{width:1280,height:800}});
+  await net.addInitScript(VOICE_MOCK);
+  const np2=await net.newPage(); await np2.goto(URL_); await np2.waitForTimeout(300);
+  for(let i=0;i<3;i++){await np2.click('#btn-mic');await np2.waitForTimeout(40);await np2.evaluate(()=>window.__micError('network'));await np2.waitForTimeout(60);}
+  check('fallo de red: un solo aviso',(await np2.locator('.msg-alert').count())===1);
+  check('fallo de red: estado de error',await np2.evaluate(()=>document.body.dataset.state)==='error');
+  await np2.evaluate(()=>{const d=JSON.parse(localStorage.getItem('jarvis.v1'));const m=d.messages[d.messages.length-1];d.messages.push({...m,id:'a'},{...m,id:'b'});localStorage.setItem('jarvis.v1',JSON.stringify(d));});
+  await np2.reload(); await np2.waitForTimeout(300);
+  check('limpia avisos repetidos guardados',(await np2.locator('.msg-alert').count())===1);
+  await net.close();
+
   // ---------- Navegador sin voz ----------
   const nov=await browser.newContext({viewport:{width:1280,height:800}});
   await nov.addInitScript(()=>{delete window.webkitSpeechRecognition;delete window.SpeechRecognition;Object.defineProperty(window,'webkitSpeechRecognition',{value:undefined});Object.defineProperty(window,'SpeechRecognition',{value:undefined});});

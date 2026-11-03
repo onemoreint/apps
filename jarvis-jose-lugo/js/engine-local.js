@@ -106,6 +106,9 @@ export function respondLocal(rawText, ctx) {
     const count = pendingTasks(s).length;
     return reply(`Hola, ${owner}. ${count ? `Tienes ${plural(count, 'tarea pendiente', 'tareas pendientes')}.` : 'No tienes tareas pendientes.'} ¿Qué organizamos?`);
   }
+  if (/^(hablame|habla|di algo|dime algo|saludame|me escuchas|me oyes)\b/.test(n) && n.length < 24) {
+    return reply(`Aquí estoy, ${owner}. Puedo organizar tus tareas, recordarte pendientes y guardar tus ideas. Prueba con: qué me recomiendas hacer ahora.`);
+  }
   if (/^(gracias|muchas gracias|perfecto|excelente)\b/.test(n) && n.length < 24) return reply('Con gusto.');
   if (/^(quien eres|que eres|como te llamas|eres una ia|eres inteligencia artificial)\b/.test(n)) {
     return reply(`Soy JARVIS, tu asistente personal, ${owner}. Ahora trabajo con ${s.settings.ai.enabled ? 'el motor local y tu conexión de IA' : 'el motor local: reglas que reconocen comandos, sin un modelo de IA conectado'}. Organizo tareas, recordatorios y memoria en este dispositivo, y preparo acciones que solo se ejecutan si las autorizas.`);

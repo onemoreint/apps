@@ -4,15 +4,19 @@ const ERRORS = {
   'not-allowed': 'El navegador no tiene permiso para usar el micrófono. Actívalo en los ajustes del sitio y vuelve a intentarlo.',
   'service-not-allowed': 'Este navegador o dispositivo no permite el reconocimiento de voz aquí. Puedes escribir tu mensaje.',
   'audio-capture': 'No detecto un micrófono. Revisa que esté conectado y disponible.',
-  network: 'El reconocimiento de voz necesita internet y no pudo conectarse. Puedes escribir tu mensaje.',
+  network: 'El servicio de voz de este navegador no respondió. Revisa tu internet. Si continúa, abre JARVIS en Edge o Chrome, porque algunos navegadores no incluyen este servicio. Puedes escribir tu mensaje.',
   'language-not-supported': 'Este navegador no reconoce el acento elegido. Cambia el idioma en Configuración.',
   'no-speech': 'No escuché nada. Pulsa el micrófono y habla de nuevo.',
 };
 
+// Brave expone la API de reconocimiento, pero no incluye el servicio y siempre falla con «network».
+const isBrave = () => typeof globalThis.navigator?.brave?.isBrave === 'function';
+const recognitionApi = () => (isBrave() ? null : globalThis.SpeechRecognition || globalThis.webkitSpeechRecognition);
+
 export function voiceCapabilities() {
-  const SR = globalThis.SpeechRecognition || globalThis.webkitSpeechRecognition;
   return {
-    recognition: Boolean(SR),
+    recognition: Boolean(recognitionApi()),
+    brave: isBrave(),
     synthesis: 'speechSynthesis' in globalThis && 'SpeechSynthesisUtterance' in globalThis,
     secure: globalThis.isSecureContext !== false,
   };
@@ -99,7 +103,7 @@ function chunk(text, max = 180) {
 }
 
 export function createVoice({ getSettings, onListenChange, onInterim, onFinal, onError, onSpeakChange, onBoundary }) {
-  const SR = globalThis.SpeechRecognition || globalThis.webkitSpeechRecognition;
+  const SR = recognitionApi();
   const caps = voiceCapabilities();
   const synth = caps.synthesis ? globalThis.speechSynthesis : null;
   let rec = null;
@@ -185,7 +189,9 @@ export function createVoice({ getSettings, onListenChange, onInterim, onFinal, o
 
   function startListening() {
     if (!SR) {
-      onError('Este navegador no tiene reconocimiento de voz. Usa Chrome o Edge, o escribe tu mensaje.');
+      onError(caps.brave
+        ? 'Brave no incluye el servicio que convierte tu voz en texto. Para hablarme, abre JARVIS en Edge o Chrome. Aquí puedes escribir tu mensaje.'
+        : 'Este navegador no tiene reconocimiento de voz. Usa Edge o Chrome, o escribe tu mensaje.', 'unsupported');
       return false;
     }
     if (!caps.secure) {

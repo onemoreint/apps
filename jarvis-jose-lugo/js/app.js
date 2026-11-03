@@ -94,6 +94,15 @@ async function send(raw, viaVoice = false) {
 }
 
 /* ---------- Voz ---------- */
+async function copyAppLink() {
+  try {
+    await navigator.clipboard.writeText(location.href);
+    toast('Enlace copiado. Pégalo en Edge o Chrome.');
+  } catch {
+    toast(`Copia este enlace: ${location.href}`, { timeout: 15000 });
+  }
+}
+
 const input = $('#composer-input');
 const micBtn = $('#btn-mic');
 
@@ -126,9 +135,18 @@ const voice = createVoice({
       toast(message);
       return;
     }
-    addMessage({ role: 'alert', error: true, text: message });
+    // Pulsar varias veces el micrófono no debe llenar la conversación con el mismo aviso.
+    const last = store.state.messages[store.state.messages.length - 1];
+    if (!(last?.role === 'alert' && last.text === message)) addMessage({ role: 'alert', error: true, text: message });
     scrollChatToEnd();
-    setState('error');
+    if (code === 'unsupported' || code === 'network') {
+      toast('Para hablar con JARVIS, abre este enlace en Edge o Chrome.', {
+        timeout: 12000,
+        actions: [{ label: 'Copiar enlace', run: copyAppLink }],
+      });
+    }
+    // Un navegador sin voz no es un fallo de conexión: el reactor sigue en espera.
+    if (code !== 'unsupported') setState('error');
   },
   onSpeakChange(on) {
     const current = document.body.dataset.state;
@@ -697,6 +715,12 @@ function registerServiceWorker() {
 
 /* ---------- Inicio ---------- */
 document.addEventListener('visibilitychange', () => reactor.pause(document.hidden));
+// Limpia avisos repetidos guardados por versiones anteriores.
+if (store.state.messages.some((m, i, all) => m.role === 'alert' && all[i - 1]?.role === 'alert' && all[i - 1].text === m.text)) {
+  store.update((s) => {
+    s.messages = s.messages.filter((m, i, all) => !(m.role === 'alert' && all[i - 1]?.role === 'alert' && all[i - 1].text === m.text));
+  });
+}
 ui.renderAll();
 renderMute();
 tick();

@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>JARVIS – José Lugo AI Assistant</title>
+  <meta name="description" content="Asistente personal con voz, tareas, recordatorios, memoria local y acciones con autorización.">
+  <meta name="theme-color" content="#03101f">
+  <meta name="robots" content="noindex">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="JARVIS">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="preload" href="assets/fonts/chakra-petch-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/saira-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-state="idle" data-view="chat">
+  <a class="skip" href="#composer-input">Ir al campo de mensaje</a>
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#mark"/></svg>
+      <span class="brand-name">JARVIS</span>
+    </div>
+    <div class="greeting">
+      <p id="greeting-text">Hola</p>
+      <p id="date-text" class="greeting-date"></p>
+    </div>
+    <p id="clock" class="clock" aria-hidden="true"></p>
+    <button id="conn-chip" class="conn" type="button" data-status="local" title="Ver la conexión de IA">
+      <span class="conn-dot" aria-hidden="true"></span>
+      <span id="conn-text">Modo local, sin IA</span>
+    </button>
+    <div class="tools">
+      <button id="btn-mute" class="icon-btn" type="button" aria-pressed="false" aria-label="Silenciar la voz de JARVIS" title="Silenciar la voz de JARVIS"></button>
+      <button id="btn-help" class="icon-btn" type="button" aria-label="Abrir ayuda y comandos" title="Ayuda y comandos"></button>
+      <button id="btn-settings" class="icon-btn" type="button" aria-label="Abrir configuración" title="Configuración"></button>
+    </div>
+  </header>
+
+  <main class="deck">
+    <section class="core" data-view-name="chat" aria-label="Conversación con JARVIS">
+      <div class="stage">
+        <svg class="energy" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true">
+          <path class="energy-base" d="M0 70 H130 L190 130 H360"/><path class="energy-flow" d="M0 70 H130 L190 130 H360"/>
+          <path class="energy-base" d="M0 240 H90 L150 180 H360"/><path class="energy-flow flow-b" d="M0 240 H90 L150 180 H360"/>
+          <path class="energy-base" d="M1000 70 H870 L810 130 H640"/><path class="energy-flow flow-c" d="M1000 70 H870 L810 130 H640"/>
+          <path class="energy-base" d="M1000 240 H910 L850 180 H640"/><path class="energy-flow flow-d" d="M1000 240 H910 L850 180 H640"/>
+        </svg>
+        <div id="reactor" class="reactor" role="img" aria-label="Estado de JARVIS: en espera"></div>
+        <div class="state-read">
+          <p id="state-label" class="state-label" aria-live="polite">En espera</p>
+          <p id="insight" class="insight"></p>
+        </div>
+      </div>
+
+      <div id="chat-log" class="chat-log" role="log" aria-live="polite" aria-label="Historial de conversación" tabindex="0"></div>
+
+      <form id="composer" class="composer" autocomplete="off">
+        <button id="btn-mic" class="mic" type="button" aria-pressed="false" aria-label="Hablar con JARVIS" title="Hablar con JARVIS"></button>
+        <label class="sr" for="composer-input">Mensaje para JARVIS</label>
+        <textarea id="composer-input" rows="1" placeholder="Escribe un mensaje" enterkeyhint="send"></textarea>
+        <button id="btn-send" class="send" type="submit" aria-label="Enviar mensaje" title="Enviar mensaje"></button>
+      </form>
+    </section>
+
+    <section class="panel" data-view-name="tasks" aria-labelledby="h-tasks">
+      <header class="panel-head">
+        <h2 id="h-tasks">Tareas</h2>
+        <span id="count-tasks" class="count"></span>
+        <div class="seg" role="group" aria-label="Filtrar tareas">
+          <button type="button" data-task-filter="pending" aria-pressed="true">Pendientes</button>
+          <button type="button" data-task-filter="done" aria-pressed="false">Hechas</button>
+        </div>
+      </header>
+      <form id="task-form" class="quick-add">
+        <label class="sr" for="task-input">Nueva tarea</label>
+        <input id="task-input" type="text" maxlength="300" placeholder="Nueva tarea" autocomplete="off">
+        <label class="urgent-toggle" title="Marcar como urgente"><input id="task-urgent" type="checkbox"><span>Urgente</span></label>
+        <button class="btn-add" type="submit">Agregar</button>
+      </form>
+      <ul id="task-list" class="items"></ul>
+    </section>
+
+    <section class="panel" data-view-name="reminders" aria-labelledby="h-reminders">
+      <header class="panel-head">
+        <h2 id="h-reminders">Recordatorios</h2>
+        <span id="count-reminders" class="count"></span>
+      </header>
+      <form id="reminder-form" class="quick-add stacked">
+        <label class="sr" for="reminder-input">Qué recordar</label>
+        <input id="reminder-input" type="text" maxlength="300" placeholder="Qué quieres recordar" autocomplete="off">
+        <label class="sr" for="reminder-when">Cuándo</label>
+        <input id="reminder-when" type="datetime-local">
+        <button class="btn-add" type="submit">Crear</button>
+      </form>
+      <ul id="reminder-list" class="items"></ul>
+      <p class="panel-foot">Avisan con la app abierta. Para un aviso seguro con la app cerrada, envíalo a Google Calendar.</p>
+    </section>
+
+    <section class="panel" data-view-name="memory" aria-labelledby="h-memory">
+      <header class="panel-head">
+        <h2 id="h-memory">Memoria</h2>
+        <span id="count-memory" class="count"></span>
+        <div class="seg" role="group" aria-label="Tipo de memoria">
+          <button type="button" data-memory-tab="notes" aria-pressed="true">Notas</button>
+          <button type="button" data-memory-tab="prefs" aria-pressed="false">Preferencias</button>
+        </div>
+      </header>
+      <form id="memory-form" class="quick-add">
+        <label class="sr" for="memory-input">Nuevo registro</label>
+        <input id="memory-input" type="text" maxlength="2000" placeholder="Nueva nota o idea" autocomplete="off">
+        <button class="btn-add" type="submit">Guardar</button>
+      </form>
+      <label class="sr" for="memory-search">Buscar en la memoria</label>
+      <input id="memory-search" class="search" type="search" placeholder="Buscar en la memoria" autocomplete="off">
+      <ul id="memory-list" class="items"></ul>
+      <p class="panel-foot">Se guarda solo en este dispositivo y no se sincroniza con otros equipos.</p>
+    </section>
+
+    <section class="panel panel-auth" data-view-name="auth" aria-labelledby="h-auth">
+      <header class="panel-head">
+        <h2 id="h-auth">Autorizaciones</h2>
+        <span id="count-auth" class="count"></span>
+        <div class="seg" role="group" aria-label="Ver autorizaciones">
+          <button type="button" data-auth-tab="pending" aria-pressed="true">Pendientes</button>
+          <button type="button" data-auth-tab="history" aria-pressed="false">Historial</button>
+        </div>
+      </header>
+      <div id="auth-list" class="auth-list"></div>
+    </section>
+  </main>
+
+  <nav class="tabbar" aria-label="Secciones">
+    <button type="button" data-nav="chat" aria-current="page"><span class="tab-ic" data-ic="chat"></span>Conversar</button>
+    <button type="button" data-nav="tasks"><span class="tab-ic" data-ic="tasks"></span>Tareas<span class="badge" data-badge="tasks" hidden></span></button>
+    <button type="button" data-nav="reminders"><span class="tab-ic" data-ic="bell"></span>Avisos<span class="badge" data-badge="reminders" hidden></span></button>
+    <button type="button" data-nav="memory"><span class="tab-ic" data-ic="memory"></span>Memoria</button>
+    <button type="button" data-nav="auth"><span class="tab-ic" data-ic="shield"></span>Permisos<span class="badge alert" data-badge="auth" hidden></span></button>
+  </nav>
+
+  <div id="toasts" class="toasts" role="status" aria-live="polite"></div>
+
+  <dialog id="dlg-settings" class="sheet" aria-labelledby="settings-title">
+    <header class="sheet-head">
+      <h2 id="settings-title">Configuración</h2>
+      <button type="button" class="icon-btn" data-close aria-label="Cerrar configuración"></button>
+    </header>
+    <div class="sheet-body">
+      <section>
+        <h3>Asistente</h3>
+        <label class="field"><span>Cómo debe llamarte</span><input id="set-owner" type="text" maxlength="40"></label>
+        <label class="field"><span>Indicativo para WhatsApp</span><input id="set-country" type="text" inputmode="numeric" maxlength="4"></label>
+      </section>
+
+      <section>
+        <h3>Voz</h3>
+        <label class="field"><span>JARVIS responde en voz alta</span>
+          <select id="set-speech">
+            <option value="always">Siempre</option>
+            <option value="voice">Solo cuando uso el micrófono</option>
+            <option value="never">Nunca</option>
+          </select>
+        </label>
+        <label class="field"><span>Acento que debe reconocer</span>
+          <select id="set-lang">
+            <option value="es-CO">Español de Colombia</option>
+            <option value="es-VE">Español de Venezuela</option>
+            <option value="es-MX">Español de México</option>
+            <option value="es-US">Español de Estados Unidos</option>
+            <option value="es-ES">Español de España</option>
+          </select>
+        </label>
+        <label class="field"><span>Voz de JARVIS</span><select id="set-voice"></select></label>
+        <label class="field"><span>Velocidad</span><input id="set-rate" type="range" min="0.7" max="1.4" step="0.05"></label>
+        <label class="field"><span>Tono</span><input id="set-pitch" type="range" min="0.6" max="1.3" step="0.05"></label>
+        <button id="btn-test-voice" type="button" class="btn-line">Probar la voz</button>
+        <p class="hint">En Chrome, el reconocimiento de voz envía el audio a los servidores de Google para convertirlo en texto.</p>
+      </section>
+
+      <section id="ai-section">
+        <h3>Inteligencia artificial</h3>
+        <p class="hint">Sin backend, JARVIS funciona en modo local: reconoce comandos con reglas y no usa ningún modelo de IA. Para conversar con Claude necesitas tu propio backend y una cuenta de la API de Anthropic, que cobra por uso.</p>
+        <label class="check"><input id="set-ai-enabled" type="checkbox"><span>Usar mi backend para lo que el modo local no entienda</span></label>
+        <label class="field"><span>Dirección del backend</span><input id="set-ai-url" type="url" placeholder="https://jarvis.tu-cuenta.workers.dev" autocomplete="off" spellcheck="false"></label>
+        <label class="field"><span>Código de acceso a tu backend</span><input id="set-ai-token" type="password" autocomplete="off" spellcheck="false"></label>
+        <p class="hint">Este código es solo para tu backend. Nunca pegues aquí una clave de API.</p>
+        <label class="check"><input id="set-ai-share" type="checkbox"><span>Compartir mis tareas, notas y preferencias con la IA</span></label>
+        <button id="btn-test-ai" type="button" class="btn-line">Guardar y probar la conexión</button>
+        <p id="ai-result" class="result" role="status"></p>
+      </section>
+
+      <section>
+        <h3>Instalación y avisos</h3>
+        <button id="btn-install" type="button" class="btn-line">Instalar JARVIS</button>
+        <p id="install-note" class="hint"></p>
+        <button id="btn-notify" type="button" class="btn-line">Activar notificaciones</button>
+        <p id="notify-note" class="hint"></p>
+      </section>
+
+      <section>
+        <h3>Tus datos</h3>
+        <p class="hint">Todo se guarda en este navegador. Si borras los datos del navegador, se pierde; exporta una copia para conservarlo o pasarlo a otro equipo.</p>
+        <div class="row">
+          <button id="btn-export" type="button" class="btn-line">Exportar copia</button>
+          <button id="btn-import" type="button" class="btn-line">Importar copia</button>
+          <input id="file-import" type="file" accept="application/json,.json" hidden>
+        </div>
+        <button id="btn-clear-chat" type="button" class="btn-line">Borrar la conversación</button>
+        <button id="btn-reset" type="button" class="btn-danger">Borrar todos los datos</button>
+      </section>
+
+      <section>
+        <h3>Compatibilidad de este navegador</h3>
+        <ul id="diag" class="diag"></ul>
+      </section>
+    </div>
+  </dialog>
+
+  <dialog id="dlg-help" class="sheet" aria-labelledby="help-title">
+    <header class="sheet-head">
+      <h2 id="help-title">Ayuda y comandos</h2>
+      <button type="button" class="icon-btn" data-close aria-label="Cerrar ayuda"></button>
+    </header>
+    <div class="sheet-body">
+      <p class="hint">Toca un ejemplo para probarlo. También puedes decirlo con el micrófono. Los comandos funcionan sin conexión y sin IA.</p>
+      <div id="help-groups"></div>
+    </div>
+  </dialog>
+
+  <dialog id="dlg-confirm" class="confirm" aria-labelledby="confirm-title">
+    <h2 id="confirm-title"></h2>
+    <p id="confirm-text"></p>
+    <div class="row end">
+      <button id="confirm-no" type="button" class="btn-line">Cancelar</button>
+      <button id="confirm-yes" type="button" class="btn-danger"></button>
+    </div>
+  </dialog>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="mark" viewBox="0 0 32 32">
+      <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="18 4 8 4"/>
+      <path d="M16 6.5l3 5.3h-6zM24.2 21l-6.1-.1 3-5.2zM7.8 21l3-5.3 3.1 5.2z" fill="currentColor"/>
+      <circle cx="16" cy="16.6" r="2" fill="currentColor"/>
+    </symbol>
+  </svg>
+
+  <script type="module" src="js/app.js"></script>
+  <noscript><p class="noscript">JARVIS necesita JavaScript para funcionar. Actívalo en tu navegador.</p></noscript>
+</body>
+</html>

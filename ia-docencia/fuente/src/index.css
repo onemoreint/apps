@@ -1,0 +1,324 @@
+/* FUTURE EDUCATION AI. Oscuro por decisión: un solo mundo visual, sin tema claro.
+   Capas: fondo fijo (gradientes + partículas), contenido, y controles fijos. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@property --spin {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+:root {
+  color-scheme: dark;
+  --ink: #080b16;
+  --electric: #1769ff;
+  --neon: #00c8ff;
+  --violet: #8747ff;
+  --tech: #f5f7ff;
+  --wa: #25d366;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--ink);
+  color: var(--tech);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--neon);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 41;
+  background: var(--ink);
+}
+
+[id] {
+  scroll-margin-top: 88px;
+}
+
+@layer components {
+  .wrap {
+    width: 100%;
+    max-width: 76rem;
+    margin-inline: auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  @media (min-width: 640px) {
+    .wrap {
+      padding-left: max(32px, env(safe-area-inset-left, 0px));
+      padding-right: max(32px, env(safe-area-inset-right, 0px));
+    }
+  }
+  .band {
+    position: relative;
+    padding-block: clamp(4.5rem, 10vw, 7.5rem);
+  }
+  .band-rule::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 200, 255, 0.45), rgba(135, 71, 255, 0.45), transparent);
+  }
+  .h-display {
+    font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.015em;
+    line-height: 1.04;
+    text-wrap: balance;
+  }
+  .h-section {
+    font-size: clamp(1.8rem, 4.6vw, 3.25rem);
+    max-width: 20ch;
+  }
+  .body-lg {
+    font-size: clamp(1.02rem, 1.5vw, 1.15rem);
+    line-height: 1.65;
+    color: theme("colors.mute");
+    max-width: 62ch;
+  }
+  .grad-text {
+    background: linear-gradient(95deg, var(--neon), #5f9bff 48%, #b08bff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Vidrio: el relleno ya es legible por sí solo; el desenfoque solo se suma en pantallas grandes. */
+  .glass {
+    background: linear-gradient(150deg, rgba(38, 54, 110, 0.5), rgba(14, 21, 46, 0.72));
+    border: 1px solid rgba(143, 170, 255, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  }
+  @media (min-width: 1024px) {
+    .glass {
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+    }
+  }
+
+  /* Botones */
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    min-height: 3.25rem;
+    padding: 0.8rem 1.6rem;
+    border-radius: 0.8rem;
+    font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    text-align: center;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.25s ease, background-color 0.2s ease, border-color 0.2s ease;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+  .btn:active {
+    transform: translateY(0) scale(0.98);
+  }
+  .btn-primary {
+    color: #fff;
+    background: linear-gradient(100deg, #1460ee, #6f36ef);
+    isolation: isolate;
+    box-shadow: 0 10px 36px -10px rgba(23, 105, 255, 0.85);
+  }
+  /* Borde luminoso giratorio */
+  .btn-primary::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    z-index: -1;
+    border-radius: inherit;
+    background: conic-gradient(from var(--spin), var(--neon), var(--violet), #ffffff, var(--electric), var(--neon));
+    animation: spin 5s linear infinite;
+  }
+  .btn-primary::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: linear-gradient(100deg, #1460ee, #6f36ef);
+  }
+  .btn-ghost {
+    color: var(--tech);
+    border: 1px solid rgba(143, 170, 255, 0.42);
+    background: rgba(12, 19, 40, 0.6);
+  }
+  .btn-ghost:hover {
+    border-color: var(--neon);
+    box-shadow: 0 0 26px -8px var(--neon);
+  }
+  .btn-wa {
+    color: #04200f;
+    background: var(--wa);
+    box-shadow: 0 0 0 1px rgba(37, 211, 102, 0.5), 0 0 34px -4px rgba(37, 211, 102, 0.65);
+  }
+  .btn-wa:hover {
+    box-shadow: 0 0 0 1px rgba(37, 211, 102, 0.9), 0 0 56px -2px rgba(37, 211, 102, 0.9);
+  }
+
+  /* Campos del formulario */
+  .field {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: 0.6rem;
+    color: var(--tech);
+    background: rgba(8, 11, 22, 0.75);
+    border: 1px solid rgba(143, 170, 255, 0.32);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .field:hover {
+    border-color: rgba(143, 170, 255, 0.6);
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--neon);
+    box-shadow: 0 0 0 3px rgba(0, 200, 255, 0.22);
+  }
+  .field[aria-invalid="true"] {
+    border-color: #ff8a9b;
+  }
+
+  .skip-link {
+    position: fixed;
+    left: 12px;
+    top: -60px;
+    z-index: 100;
+    padding: 0.6rem 1rem;
+    border-radius: 0.5rem;
+    color: var(--ink);
+    background: var(--tech);
+    font-weight: 600;
+  }
+  .skip-link:focus {
+    top: 12px;
+  }
+}
+
+/* Fondo fijo: gradientes radiales que se desplazan, sin filtros costosos. */
+.aurora {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+}
+.aurora-a {
+  width: 90vmax;
+  height: 90vmax;
+  left: -38vmax;
+  top: -34vmax;
+  background: radial-gradient(closest-side, rgba(23, 105, 255, 0.24), transparent);
+  animation: drift-a 26s ease-in-out infinite alternate;
+}
+.aurora-b {
+  width: 80vmax;
+  height: 80vmax;
+  right: -36vmax;
+  bottom: -30vmax;
+  background: radial-gradient(closest-side, rgba(135, 71, 255, 0.2), transparent);
+  animation: drift-b 32s ease-in-out infinite alternate;
+}
+.cursor-light {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 640px;
+  height: 640px;
+  margin: -320px 0 0 -320px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(0, 200, 255, 0.13), rgba(23, 105, 255, 0.05) 55%, transparent);
+  will-change: transform;
+}
+
+/* Inclinación 3D de las tarjetas de herramientas */
+.tilt {
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.2s ease-out, border-color 0.2s ease;
+}
+.tilt:hover {
+  border-color: rgba(0, 200, 255, 0.6);
+}
+
+/* Trazo de circuito en movimiento */
+.circuit-flow {
+  stroke-dasharray: 6 12;
+  animation: flow 1.6s linear infinite;
+}
+.wa-ring {
+  animation: ring 2.8s ease-out infinite;
+}
+
+@keyframes spin {
+  to {
+    --spin: 360deg;
+  }
+}
+@keyframes flow {
+  to {
+    stroke-dashoffset: -36;
+  }
+}
+@keyframes drift-a {
+  to {
+    transform: translate(16vw, 12vh) scale(1.1);
+  }
+}
+@keyframes drift-b {
+  to {
+    transform: translate(-14vw, -16vh) scale(1.08);
+  }
+}
+@keyframes ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  70%,
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+  .tilt {
+    transform: none;
+  }
+}

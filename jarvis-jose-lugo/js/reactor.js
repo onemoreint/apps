@@ -65,9 +65,15 @@ export function createReactor(host) {
   let raf = 0;
   let amp = 0;
   let spike = 0;
+  let lastPulse = 0;
 
   function frame(ms) {
     const t = ms / 1000;
+    // Muchas voces en línea no avisan cada palabra: se mantiene el pulso mientras habla.
+    if (state === 'speaking' && ms - lastPulse > 280) {
+      spike = Math.max(spike, 0.4 + Math.random() * 0.4);
+      lastPulse = ms;
+    }
     const target = state === 'listening' ? 7 + Math.sin(t * 2.1) * 3 : 5 + spike * 16;
     amp += (target - amp) * 0.14;
     spike *= 0.93;
@@ -93,6 +99,7 @@ export function createReactor(host) {
     /** La síntesis de voz avisa en cada palabra: el reactor reacciona a la voz real. */
     pulse() {
       spike = 1;
+      lastPulse = performance.now();
     },
     pause(hidden) {
       if (hidden && raf) {

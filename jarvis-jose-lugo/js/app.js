@@ -4,7 +4,7 @@ import { store, uid } from './store.js';
 import { createAuthorizer } from './actions.js';
 import { createBrain } from './brain.js';
 import { createReactor, STATE_LABELS } from './reactor.js';
-import { createVoice } from './voice.js';
+import { createVoice, rankVoice, voiceTips, NATURAL_SCORE } from './voice.js';
 import { createReminderWatcher, showSystemNotification } from './reminders.js';
 import { createUI, h, icon, toast, confirmDialog } from './ui.js';
 import { COMMAND_GROUPS } from './engine-local.js';
@@ -33,6 +33,8 @@ function setState(state) {
 }
 
 /* ---------- Conversación ---------- */
+const voiceSample = () => `${greetingWord()}, ${store.state.settings.ownerName}. Así sonaré cuando te hable. ¿Te gusta esta voz?`;
+
 function greetingWord(date = new Date()) {
   const hour = date.getHours();
   if (hour >= 5 && hour < 12) return 'Buenos días';
@@ -406,17 +408,24 @@ function syncSettingsForm() {
 
 function renderVoiceOptions() {
   const select = $('#set-voice');
+  const note = $('#voice-note');
   const voices = voice.spanishVoices();
+  const { lang, voiceURI } = store.state.settings;
   select.replaceChildren();
   if (!voices.length) {
     select.append(h('option', { value: '' }, voice.caps.synthesis ? 'Sin voces en español en este dispositivo' : 'Voz no disponible en este navegador'));
     select.disabled = true;
+    note.textContent = voice.caps.synthesis ? voiceTips() : '';
     return;
   }
+  const isNatural = (v) => rankVoice(v, lang) >= NATURAL_SCORE;
   select.disabled = false;
-  select.append(h('option', { value: '' }, 'Automática'));
-  voices.forEach((v) => select.append(h('option', { value: v.voiceURI }, `${v.name} (${v.lang})`)));
-  select.value = voices.some((v) => v.voiceURI === store.state.settings.voiceURI) ? store.state.settings.voiceURI : '';
+  select.append(h('option', { value: '' }, `Automática: ${voices[0].name}`));
+  voices.forEach((v) => select.append(h('option', { value: v.voiceURI }, `${isNatural(v) ? 'Natural: ' : ''}${v.name} (${v.lang})`)));
+  select.value = voices.some((v) => v.voiceURI === voiceURI) ? voiceURI : '';
+  note.textContent = voices.some(isNatural)
+    ? 'Las voces marcadas como Natural suelen sonar mejor. Elige una para escucharla.'
+    : `Este dispositivo no parece tener voces naturales. ${voiceTips()}`;
 }
 voice.onVoicesChanged = renderVoiceOptions;
 
@@ -430,6 +439,7 @@ bindSetting('#set-country', 'change', (s, el) => { if (/^\d{1,4}$/.test(el.value
 bindSetting('#set-speech', 'change', (s, el) => { s.speechMode = el.value; });
 bindSetting('#set-lang', 'change', (s, el) => { s.lang = el.value; });
 bindSetting('#set-voice', 'change', (s, el) => { s.voiceURI = el.value; });
+$('#set-voice').addEventListener('change', () => voice.speak(voiceSample()));
 bindSetting('#set-rate', 'change', (s, el) => { s.rate = parseFloat(el.value); });
 bindSetting('#set-pitch', 'change', (s, el) => { s.pitch = parseFloat(el.value); });
 
@@ -439,7 +449,7 @@ $('#btn-test-voice').addEventListener('click', () => {
     return;
   }
   if (!voice.spanishVoices().length) toast('No hay voces en español instaladas; se usará la predeterminada.');
-  voice.speak(`${greetingWord()}, ${store.state.settings.ownerName}. Esta es mi voz.`);
+  voice.speak(voiceSample());
 });
 
 function aiResult(message, kind = 'ok') {

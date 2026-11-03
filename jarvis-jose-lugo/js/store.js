@@ -12,7 +12,7 @@ const defaults = () => ({
     lang: 'es-CO',
     voiceURI: '',
     rate: 1,
-    pitch: 0.95,
+    pitch: 1,
     countryCode: '57',
     ai: { enabled: false, url: '', token: '', shareMemory: false },
   },
@@ -83,7 +83,8 @@ function cleanSettings(s, base) {
   if (/^es(-[A-Z0-9]{2,3})?$/.test(s.lang || '')) out.lang = s.lang;
   if (typeof s.voiceURI === 'string') out.voiceURI = s.voiceURI.slice(0, 200);
   if (Number.isFinite(s.rate)) out.rate = Math.min(1.6, Math.max(0.6, s.rate));
-  if (Number.isFinite(s.pitch)) out.pitch = Math.min(1.6, Math.max(0.5, s.pitch));
+  // 0.95 era el tono predeterminado anterior, que hacía la voz menos natural.
+  if (Number.isFinite(s.pitch) && s.pitch !== 0.95) out.pitch = Math.min(1.6, Math.max(0.5, s.pitch));
   if (/^\d{1,4}$/.test(s.countryCode || '')) out.countryCode = s.countryCode;
   return out;
 }

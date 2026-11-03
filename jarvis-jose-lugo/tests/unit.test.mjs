@@ -7,6 +7,8 @@ import { createAuthorizer, ACTIONS } from '../js/actions.js';
 import { respondLocal } from '../js/engine-local.js';
 import { validateConfig } from '../js/engine-remote.js';
 import worker from '../backend/worker.js';
+import { speakableText, rankVoice } from '../js/voice.js';
+import { tidyText } from '../js/dateparse.js';
 
 // Martes 3 de noviembre de 2026, 5:17 p. m.
 const NOW = new Date(2026, 10, 3, 17, 17, 0);
@@ -256,4 +258,31 @@ test('backend: convierte la respuesta de Claude y no expone la clave', async () 
   } finally {
     globalThis.fetch = realFetch;
   }
+});
+
+test('voz: el texto se lee como se diría en voz alta', () => {
+  assert.equal(speakableText('Son las 3:00 p. m.'), 'Son las 3 de la tarde');
+  assert.equal(speakableText('A las 8:30 p. m.'), 'A las 8 y media de la noche');
+  assert.equal(speakableText('Cita 12:00 p. m.'), 'Cita 12 del día');
+  assert.equal(speakableText('Soy JARVIS, sin IA.'), 'Soy Jarvis, sin inteligencia artificial.');
+  assert.equal(speakableText('Tienes 2 tareas:\n1. Llamar (urgente)\n2. Pagar'), 'Tienes 2 tareas: primero: Llamar, urgente. segundo: Pagar');
+});
+
+test('voz: se prefiere la más natural', () => {
+  const list = [
+    { name: 'Eddy (español (México))', lang: 'es-MX' },
+    { name: 'Paulina', lang: 'es-MX' },
+    { name: 'Google español', lang: 'es-ES', localService: false },
+    { name: 'Microsoft Salome Online (Natural) - Spanish (Colombia)', lang: 'es-CO', localService: false },
+    { name: 'Mónica (Premium)', lang: 'es-ES' },
+  ].sort((a, b) => rankVoice(b) - rankVoice(a));
+  assert.match(list[0].name, /Salome/);
+  assert.match(list[1].name, /Premium/);
+  assert.match(list[2].name, /Google/);
+  assert.match(list[4].name, /Eddy/);
+});
+
+test('el punto doble tras p. m. se corrige, también con espacios especiales', () => {
+  assert.equal(tidyText('hoy, 3:00 p. m..'), 'hoy, 3:00 p. m.');
+  assert.equal(tidyText('a las 3 p. m.. Te aviso'), 'a las 3 p. m. Te aviso');
 });

@@ -18,10 +18,10 @@ const VOICE_MOCK = () => {
   window.webkitSpeechRecognition=SR; window.SpeechRecognition=SR;
   window.__hear=(t)=>{const r=window.__rec; r.onresult({results:[[{transcript:t}]]}); r.stop();};
   window.__micError=(e)=>{const r=window.__rec; r.onerror({error:e}); r.stop();};
-  const voices=[{name:'Paulina',lang:'es-MX',voiceURI:'paulina'}];
+  const voices=[{name:'Eddy (español (México))',lang:'es-MX',voiceURI:'eddy'},{name:'Paulina',lang:'es-MX',voiceURI:'paulina'},{name:'Microsoft Salome Online (Natural) - Spanish (Colombia)',lang:'es-CO',voiceURI:'salome',localService:false}];
   window.SpeechSynthesisUtterance=class{constructor(t){this.text=t;}};
   const synth={speaking:false,getVoices:()=>voices,cancel(){this.q&&clearTimeout(this.q);this.speaking=false;},addEventListener(){},
-    speak(u){window.__spoken.push(u.text);this.speaking=true;setTimeout(()=>u.onstart&&u.onstart(),5);setTimeout(()=>u.onboundary&&u.onboundary(),20);this.q=setTimeout(()=>{this.speaking=false;u.onend&&u.onend();},window.__speakMs||60);}};
+    speak(u){window.__spoken.push(u.text);window.__voice=u.voice&&u.voice.name;this.speaking=true;setTimeout(()=>u.onstart&&u.onstart(),5);setTimeout(()=>u.onboundary&&u.onboundary(),20);this.q=setTimeout(()=>{this.speaking=false;u.onend&&u.onend();},window.__speakMs||60);}};
   Object.defineProperty(window,'speechSynthesis',{value:synth,configurable:true});
 };
 
@@ -66,6 +66,7 @@ const lastMsg=(page)=>page.locator('.msg-jarvis').last().innerText();
   check('no finge entender',(await lastMsg(page)).includes('sin un modelo de IA'));
   check('etiqueta origen local',(await lastMsg(page)).includes('Modo local, sin IA'));
   check('habló en voz alta',(await page.evaluate(()=>window.__spoken.length))>0);
+  check('elige la voz más natural',/Salome/.test(await page.evaluate(()=>window.__voice)));
 
   // XSS: el texto del usuario nunca se interpreta
   await say(page,'Agrega tarea <img src=x onerror="window.__xss=1"> revisar');
@@ -170,6 +171,10 @@ const lastMsg=(page)=>page.locator('.msg-jarvis').last().innerText();
   check('rechaza clave de API',(await page.innerText('#ai-result')).includes('clave de API'));
   check('no guardó la clave',!(await page.evaluate(()=>localStorage.getItem('jarvis.v1'))).includes('sk-ant'));
   check('diagnóstico',(await page.innerText('#diag')).includes('Reconocimiento de voz'));
+  check('lista marca voces naturales',(await page.locator('#set-voice option').nth(1).innerText()).startsWith('Natural: Microsoft Salome'));
+  await page.selectOption('#set-voice','paulina'); await page.waitForTimeout(40);
+  check('elegir una voz la reproduce y se recuerda',await page.evaluate(()=>window.__voice==='Paulina'&&JSON.parse(localStorage.getItem('jarvis.v1')).settings.voiceURI==='paulina'));
+  await page.selectOption('#set-voice','');
   await page.fill('#set-owner','Jefe'); await page.locator('#set-owner').blur(); await page.waitForTimeout(50);
   check('nombre configurable',(await page.innerText('#greeting-text')).includes('Jefe'));
   await page.fill('#set-owner','José'); await page.locator('#set-owner').blur();

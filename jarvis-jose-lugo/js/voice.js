@@ -18,16 +18,69 @@ export function voiceCapabilities() {
   };
 }
 
-/** Quita elementos visuales para que suenen bien al leerlos. */
+const ORDINALS = ['primero', 'segundo', 'tercero', 'cuarto', 'quinto', 'sexto', 'séptimo', 'octavo', 'noveno', 'décimo'];
+
+function spokenTime(_, hour, minute, meridiem) {
+  const h = parseInt(hour, 10);
+  const pm = meridiem.toLowerCase() === 'p';
+  let part = 'de la mañana';
+  if (pm) part = h === 12 ? 'del día' : h >= 7 ? 'de la noche' : 'de la tarde';
+  else if (h === 12) part = 'de la noche';
+  const m = minute ? parseInt(minute, 10) : 0;
+  const mins = m === 0 ? '' : m === 30 ? ' y media' : m === 15 ? ' y cuarto' : ` y ${m}`;
+  return `${h}${mins} ${part}`;
+}
+
+/** Reescribe el texto como se diría en voz alta: horas, listas y siglas sin leer los signos. */
 export function speakableText(text) {
   return String(text)
-    .replace(/https?:\/\/\S+/g, 'enlace')
+    .replace(/https?:\/\/\S+/g, 'el enlace')
+    .replace(/(\d{1,2})(?::(\d{2}))?\s*([ap])\.\s*m\.?/gi, spokenTime)
     .replace(/^[•*-]\s*/gm, '')
-    .replace(/^(\d+)\.\s+/gm, '$1: ')
+    .replace(/^(\d{1,2})\.\s+/gm, (_, n) => `${ORDINALS[parseInt(n, 10) - 1] || n}: `)
+    .replace(/\s*\(([^)]+)\)/g, ', $1')
+    .replace(/\+(\d)/g, 'más $1')
+    .replace(/\bJARVIS\b/g, 'Jarvis')
+    .replace(/\bIA\b/g, 'inteligencia artificial')
     .replace(/[«»"]/g, '')
-    .replace(/\n+/g, '. ')
+    .replace(/:\s*\n+/g, ': ')
+    .replace(/([^.!?:])\s*\n+/g, '$1. ')
+    .replace(/\n+/g, ' ')
     .replace(/\.\s*\./g, '.')
     .trim();
+}
+
+const NOVELTY = /\b(albert|bad news|bahh|bells|boing|bubbles|cellos|eddy|flo|fred|good news|grandma|grandpa|jester|junior|kathy|organ|ralph|reed|rocko|sandy|shelley|superstar|trinoids|whisper|wobble|zarvox|abuel[ao])\b/i;
+const LATAM = /^es[-_](419|CO|VE|MX|US|AR|CL|PE|EC)/i;
+
+/** Puntúa una voz según lo natural que suele sonar. El navegador no informa la calidad, se deduce del nombre. */
+export function rankVoice(voice, lang = 'es-CO') {
+  const name = voice.name || '';
+  let score = 0;
+  if (/natural|neural/i.test(name)) score += 100;
+  else if (/premium/i.test(name)) score += 95;
+  else if (/siri|enhanced|mejorada/i.test(name)) score += 85;
+  else if (/\bonline\b/i.test(name)) score += 80;
+  else if (/google/i.test(name)) score += 65;
+  if (NOVELTY.test(name)) score -= 60;
+  if (/espeak|compact|pico\b/i.test(name)) score -= 40;
+  if (voice.localService === false) score += 5;
+  const code = (voice.lang || '').replace('_', '-').toLowerCase();
+  if (code === lang.toLowerCase()) score += 10;
+  else if (LATAM.test(voice.lang || '')) score += 6;
+  return score;
+}
+
+/** 50 o más significa que la voz probablemente suena natural. */
+export const NATURAL_SCORE = 50;
+
+export function voiceTips() {
+  const ua = globalThis.navigator?.userAgent || '';
+  if (/Android/.test(ua)) return 'Para mejorarla en Android: abre Ajustes, busca «Salida de texto a voz», elige Servicios de voz de Google, instala Español y selecciona una voz. Luego reinicia Chrome.';
+  if (/iPhone|iPad|iPod/.test(ua)) return 'Para mejorarla en iPhone: abre Ajustes, Accesibilidad, Contenido leído, Voces, Español, y descarga una voz Mejorada o Premium.';
+  if (/Macintosh/.test(ua) && !/Edg\//.test(ua)) return 'Para mejorarla en Mac: abre JARVIS en Microsoft Edge, que suele incluir voces Natural gratuitas, o descarga una voz Mejorada en Ajustes del Sistema, Accesibilidad, Contenido leído. Chrome a veces no muestra las voces descargadas; Safari sí.';
+  if (/Edg\//.test(ua)) return 'Busca en la lista una voz con la marca Natural.';
+  return 'Para mejorarla: abre JARVIS en Microsoft Edge, que suele incluir voces Natural gratuitas, o instala una voz en español en tu sistema.';
 }
 
 function chunk(text, max = 180) {
@@ -59,17 +112,17 @@ export function createVoice({ getSettings, onListenChange, onInterim, onFinal, o
 
   function spanishVoices() {
     if (!synth) return [];
-    return synth.getVoices().filter((v) => /^es([-_]|$)/i.test(v.lang));
+    const { lang } = getSettings();
+    return synth.getVoices()
+      .filter((v) => /^es([-_]|$)/i.test(v.lang))
+      .sort((a, b) => rankVoice(b, lang) - rankVoice(a, lang));
   }
 
   function chooseVoice() {
-    const { voiceURI, lang } = getSettings();
+    const { voiceURI } = getSettings();
     const voices = spanishVoices();
     if (!voices.length) return null;
-    return voices.find((v) => v.voiceURI === voiceURI)
-      || voices.find((v) => v.lang.replace('_', '-').toLowerCase() === lang.toLowerCase())
-      || voices.find((v) => /419|CO|MX|US|VE/i.test(v.lang))
-      || voices[0];
+    return voices.find((v) => v.voiceURI === voiceURI) || voices[0];
   }
 
   function setSpeaking(value) {

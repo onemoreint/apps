@@ -299,4 +299,4 @@ export function formatWhen(ts, now = new Date()) {
 }
 
 /** Evita el punto doble cuando una frase termina en «p. m.». */
-export const tidyText = (text) => String(text).replace(/([ap])\. m\.\./g, '$1. m.');
+export const tidyText = (text) => String(text).replace(/([ap])\.(\s)m\.\./g, '$1.$2m.');

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https: data:; media-src https:; connect-src https://api.zeno.fm https://itunes.apple.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https: data:; media-src https: blob:; connect-src https:; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>BE MUSIC</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -783,14 +783,14 @@ const ESTADOS={
   'error':['Sin señal','No se pudo abrir la transmisión. Revisa tu conexión o inténtalo de nuevo.'],
   'fragmento':['Escuchando un fragmento','Pulsa el botón para volver al vivo.']
 };
-let estado='sin-url',intencion=false,reintentos=0,tReintento=null,tVigia=null,cancion=null;
+let detalleError=null,estado='sin-url',intencion=false,reintentos=0,tReintento=null,tVigia=null,cancion=null;
 const ESPERAS=[2000,5000,10000];
 function fijar(e){
   estado=e;
   const suena=e==='en-vivo'||e==='conectando'||e==='reconectando'||e==='fragmento';
   document.body.dataset.estado=e;
   document.body.dataset.suena=suena?'si':'no';
-  const[a,b]=ESTADOS[e];
+  const[a,b0]=ESTADOS[e];const b=e==='error'&&detalleError?detalleError:b0;
   $$('[data-b="estado"]').forEach(n=>n.textContent=a);
   $$('[data-b="estado-detalle"]').forEach(n=>n.textContent=b);
   $$('[data-accion="alternar"]').forEach(n=>n.setAttribute('aria-label',e==='fragmento'?'Volver al vivo':suena?'Pausar BE MUSIC':'Reproducir BE MUSIC en vivo'));
@@ -804,35 +804,76 @@ function conectar(){
   if(!u){fijar('sin-url');return}
   intencion=true;
   if(estado!=='reconectando')fijar('conectando');
+  cerrarHls();
   audio.crossOrigin=BEMUSIC.transmision.analizadorReal?'anonymous':null;
+  vigilar();
+  if(/\.m3u8(\?|$)/i.test(u)&&!audio.canPlayType('application/vnd.apple.mpegurl')){conectarHls(u);return}
   audio.src=u;
   iniciarAnalizador();
-  vigilar();
+  sonar();
+}
+function sonar(){
   const pr=audio.play();
   if(pr)pr.catch(err=>{
     if(err.name==='NotAllowedError'){intencion=false;limpiarTiempos();fijar('pausa')}
     else if(err.name!=='AbortError')fallo();
   });
 }
+/* Señales HLS (.m3u8): Chrome, Edge y Firefox las abren con hls.js, que se descarga solo si hace falta */
+const HLS_JS={src:'https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js',integrity:'sha384-9v3HcdYrO3D+OPDTjZ40RXocgE4GtXVCd3/mCS62JsM93JXgI1afJVuwjFvsu6ni'};
+let hls=null,turnoHls=0,promesaHls=null;
+function cargarHls(){
+  if(window.Hls)return Promise.resolve();
+  return promesaHls||(promesaHls=new Promise((ok,mal)=>{
+    const t=h('script',{src:HLS_JS.src,integrity:HLS_JS.integrity,crossorigin:'anonymous',onload:ok,onerror(){promesaHls=null;mal()}});
+    document.head.append(t);
+  }));
+}
+function cerrarHls(){turnoHls++;if(hls){hls.destroy();hls=null}}
+async function conectarHls(u){
+  const turno=++turnoHls;
+  try{await cargarHls()}catch{fallo(null,'No se pudo cargar el lector de señales HLS. Revisa tu conexión.');return}
+  if(turno!==turnoHls||!intencion)return;
+  if(!window.Hls.isSupported()){fallo(4,'Este navegador no puede abrir señales .m3u8.');return}
+  hls=new window.Hls({enableWorker:false});
+  hls.on(window.Hls.Events.ERROR,(_,d)=>{
+    if(!d.fatal)return;
+    const bloqueo=d.type===window.Hls.ErrorTypes.NETWORK_ERROR&&d.response&&d.response.code===0;
+    cerrarHls();
+    fallo(bloqueo?4:null,bloqueo?'El servidor de esa señal no responde o no permite reproducirla desde otra web (CORS).':'No se pudo leer la señal .m3u8.');
+  });
+  hls.on(window.Hls.Events.MANIFEST_PARSED,()=>sonar());
+  hls.loadSource(u);
+  hls.attachMedia(audio);
+}
 function detener(sig='pausa'){
   intencion=false;limpiarTiempos();reintentos=0;
+  cerrarHls();
   audio.pause();audio.removeAttribute('src');audio.load();
   fijar(urlActiva()?sig:'sin-url');
 }
-function fallo(){
+let yaSono=false;
+function fallo(codigo,motivo){
   if(!intencion){if(estado==='fragmento'){fijar('error')}return}
   limpiarTiempos();
+  /* Si nunca sonó y el navegador rechaza la dirección, reintentar no sirve */
+  if(codigo===4&&!yaSono){
+    intencion=false;reintentos=0;cerrarHls();audio.removeAttribute('src');
+    detalleError=motivo||'Esa dirección no entrega audio que el navegador pueda reproducir. Revisa que sea la URL de la señal y no la de una página.';
+    fijar('error');return;
+  }
+  detalleError=motivo||null;
   if(reintentos<ESPERAS.length){
     const espera=ESPERAS[reintentos++];
     fijar('reconectando');
     tReintento=setTimeout(conectar,espera);
-  }else{intencion=false;reintentos=0;audio.removeAttribute('src');fijar('error')}
+  }else{intencion=false;reintentos=0;cerrarHls();audio.removeAttribute('src');fijar('error')}
 }
 function vigilar(){clearTimeout(tVigia);tVigia=setTimeout(()=>{if(intencion)fallo()},15000)}
-audio.addEventListener('playing',()=>{clearTimeout(tVigia);if(intencion){reintentos=0;fijar('en-vivo')}});
+audio.addEventListener('playing',()=>{clearTimeout(tVigia);if(intencion){reintentos=0;yaSono=true;detalleError=null;fijar('en-vivo')}});
 audio.addEventListener('waiting',()=>{if(intencion)vigilar()});
 audio.addEventListener('stalled',()=>{if(intencion)vigilar()});
-audio.addEventListener('error',()=>{if(audio.getAttribute('src'))fallo()});
+audio.addEventListener('error',()=>{if(hls)return;if(audio.getAttribute('src'))fallo(audio.error&&audio.error.code)});
 audio.addEventListener('ended',()=>{if(intencion)fallo();else if(estado==='fragmento')detener()});
 addEventListener('online',()=>{if(estado==='reconectando'||(estado==='error'&&intencion)){reintentos=0;conectar()}});
 
@@ -843,7 +884,7 @@ function alternar(){
   if(estado==='sin-url')$('#url-prueba')?.focus();
 }
 function reproducirFragmento(u,x){
-  intencion=false;limpiarTiempos();
+  intencion=false;limpiarTiempos();cerrarHls();
   audio.crossOrigin=null;
   audio.src=u;
   fragmentoInfo=x;fijar('fragmento');
@@ -1044,13 +1085,21 @@ $('#form-prueba').addEventListener('submit',e=>{
   const v=$('#url-prueba').value.trim(),aviso=$('#aviso-prueba');
   let ok=null;try{const p=new URL(v);if(p.protocol==='https:')ok=p.href}catch{}
   if(!ok){aviso.textContent='Pega una URL completa que empiece por https://';return}
-  urlPrueba=ok;guardar('bm_url_prueba',ok);
+  const problema=revisarUrl(ok);
+  if(problema){aviso.textContent=problema;return}
+  urlPrueba=ok;guardar('bm_url_prueba',ok);yaSono=false;detalleError=null;
   if(intencion)detener('listo');
   fijar('listo');conectarMetadatos();
   aviso.textContent='URL guardada solo en este navegador. Conectando…';
   conectar();
 });
 
+function revisarUrl(u){
+  const p=new URL(u),host=p.hostname.toLowerCase();
+  if(host==='zeno.fm'||host==='www.zeno.fm'||host==='tools.zeno.fm')return 'Esa es una página de Zeno, no la señal. La señal empieza por https://stream.zeno.fm/ y está en tu cuenta de Zeno, en los datos de la emisora.';
+  if(/\.(m3u|pls)(\?|$)/i.test(p.pathname))return 'Eso es una lista de canales, no una señal. Pega la URL de una sola señal.';
+  return null;
+}
 function pintarTodo(){
   pintarDial();pintarAhora();pintarProgramacion();pintarChart();pintarPlaylist();pintarMarcas();pintarPista();
   $$('[data-muestra]').forEach(n=>n.hidden=!muestras);

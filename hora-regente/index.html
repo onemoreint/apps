@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Calculadora gratis de horas planetarias en español, con dial de 24 horas, 125 ciudades y guías por planeta.">
+<meta name="author" content="José Lugo">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Hora Regente</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Marcellus&family=Noto+Sans+Symbols:wght@400;500&display=swap">
+<style>
+/* Layout: panel de almanaque; a la izquierda los mandos, a la derecha un dial con las 24 horas desiguales del día, debajo las dos columnas de horas. */
+:root{
+  --bg:#EEF1F6;--surface:#FBFCFE;--ink:#141B3C;--muted:#535D7D;--line:#D3D9E6;
+  --accent:#1F3FB8;--accent-ink:#FFFFFF;--soft:#E3E8F6;
+  --good:#17643F;--good-bg:#E0F2E8;--avoid:#9C2F26;--avoid-bg:#F9E6E3;
+  --p-sol:#A8600A;--p-luna:#4556A6;--p-mercurio:#0B7283;--p-venus:#B0215F;--p-marte:#BD2F1D;--p-jupiter:#6A3DC0;--p-saturno:#4E5A6E;
+  --display:"Marcellus","Palatino Linotype",Georgia,serif;
+  --body:"Figtree","Segoe UI",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --glyph:"Noto Sans Symbols","Segoe UI Symbol","Apple Symbols",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0C1128;--surface:#141A38;--ink:#EDF0FA;--muted:#A5AECD;--line:#2B3359;
+  --accent:#93A9FF;--accent-ink:#0C1128;--soft:#1F2852;
+  --good:#7FDCAB;--good-bg:#143427;--avoid:#FFA396;--avoid-bg:#3C1C1A;
+  --p-sol:#F2B04A;--p-luna:#AAB7F3;--p-mercurio:#4FCCDD;--p-venus:#F380B4;--p-marte:#FF8C78;--p-jupiter:#BA9CF6;--p-saturno:#B4BECD;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0C1128;--surface:#141A38;--ink:#EDF0FA;--muted:#A5AECD;--line:#2B3359;
+  --accent:#93A9FF;--accent-ink:#0C1128;--soft:#1F2852;
+  --good:#7FDCAB;--good-bg:#143427;--avoid:#FFA396;--avoid-bg:#3C1C1A;
+  --p-sol:#F2B04A;--p-luna:#AAB7F3;--p-mercurio:#4FCCDD;--p-venus:#F380B4;--p-marte:#FF8C78;--p-jupiter:#BA9CF6;--p-saturno:#B4BECD;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--body)}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(30px,4.4vw,44px)}
+h2{font-size:clamp(23px,3vw,29px)}
+h3{font-size:20px}
+p{margin:0}
+.gl{font-family:var(--glyph);font-weight:500;line-height:1}
+.label{font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* Cabecera */
+.top{border-bottom:1px solid var(--line);background:var(--surface)}
+.top .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 24px;padding-block:12px}
+.brand{font:22px var(--display);color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:9px}
+.brand .gl{color:var(--p-sol)}
+.nav{display:flex;flex-wrap:wrap;gap:2px 18px}
+.nav a{color:var(--muted);text-decoration:none;font-weight:500;font-size:15px;padding:4px 0;border-bottom:2px solid transparent}
+.nav a:hover{color:var(--ink)}
+.nav a[aria-current="page"]{color:var(--accent);border-color:var(--accent)}
+main.wrap{display:grid;gap:28px;padding-block:28px 48px}
+main.wrap>*{min-width:0}
+
+/* Intro */
+.intro{display:grid;gap:8px}
+.intro p{color:var(--muted);max-width:62ch}
+.crumbs{font-size:14px;color:var(--muted)}
+
+/* Panel */
+.panel{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);grid-template-areas:"controls now" "detail now";grid-template-rows:auto 1fr;gap:20px;align-items:start}
+.controls{display:grid;gap:20px;min-width:0;grid-area:controls}
+#now-card{grid-area:now}
+.now-detail{grid-area:detail;align-self:stretch;align-content:start}
+.ctl-row{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:20px}
+.field{display:grid;gap:8px;align-content:start;min-width:0;position:relative}
+.field-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:3px 10px;font-size:13px;font-weight:500;cursor:pointer;color:var(--muted)}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.input{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:9px 12px;min-width:0}
+.hint{font-size:13px;color:var(--muted)}
+.results{display:grid;background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.results button{border:0;background:none;text-align:left;padding:8px 12px;cursor:pointer;display:flex;justify-content:space-between;gap:12px}
+.results button+button{border-top:1px solid var(--line)}
+.results button:hover,.results button:focus-visible{background:var(--soft)}
+.results small{color:var(--muted)}
+.linkbtn{background:none;border:0;padding:0;color:var(--accent);cursor:pointer;font-size:14px;font-weight:500;text-decoration:underline;text-underline-offset:2px}
+.custom summary{cursor:pointer;color:var(--accent);font-size:14px;font-weight:500}
+.custom-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+.custom-grid label{display:grid;gap:4px;font-size:13px;color:var(--muted);min-width:0}
+.custom-grid .full{grid-column:1/-1}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:6px;padding:9px 14px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block}
+.error{color:var(--avoid);font-size:14px}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.week button{border:0;background:none;padding:10px 2px;display:grid;gap:5px;justify-items:center;cursor:pointer;color:var(--muted);font-size:13px;min-width:0}
+.week button+button{border-left:1px solid var(--line)}
+.week button:hover{background:var(--soft)}
+.week .gl{font-size:21px;color:var(--c)}
+.week small{font-size:12px}
+.week button[aria-pressed="true"]{background:var(--soft);color:var(--ink);font-weight:600}
+
+/* Dial */
+.now{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px;display:grid;gap:14px;min-width:0}
+.now-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;align-items:baseline}
+.dial{width:100%;max-width:290px;margin:0 auto;display:block}
+.dial path{stroke:var(--surface);stroke-width:1.5}
+.dial text{font-family:var(--glyph);font-size:14px;text-anchor:middle;dominant-baseline:central}
+.dial .big{font-size:46px;font-weight:500}
+.dial .name{font:17px var(--display)}
+.dial .range{font:12px var(--mono);fill:var(--muted)}
+.dial .needle{stroke:var(--ink);stroke-width:2.5;stroke-linecap:round}
+.dial .pin{fill:var(--ink)}
+.sunline{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px;font-size:14px}
+.sunline div{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding-bottom:4px}
+.sunline span:first-child{color:var(--muted)}
+.ruler{display:flex;justify-content:space-between;gap:12px;align-items:center;font-weight:600}
+.ruler b{color:var(--c);font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.ruler .gl{font-size:19px}
+.tags{display:grid;gap:7px}
+.tagset{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.tag{font-size:13px;border-radius:5px;padding:2px 8px;line-height:1.4}
+.tag.good{background:var(--good-bg);color:var(--good)}
+.tag.avoid{background:var(--avoid-bg);color:var(--avoid)}
+.tagset .label{width:100%}
+.note{font-size:13px;color:var(--muted)}
+
+/* Horas */
+.table-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 20px;margin-bottom:14px}
+.table-head>div{min-width:0}
+.tz{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;padding:4px 11px;font-size:13px;font-weight:600;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.col{display:grid;gap:7px;min-width:0;align-content:start}
+.col-title{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 10px;align-items:baseline;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.col-title h3{font-size:19px}
+.hour{background:var(--surface);border:1px solid var(--line);border-radius:6px}
+.hour summary{list-style:none;display:grid;grid-template-columns:auto minmax(0,1fr) auto 18px;align-items:center;gap:10px;padding:9px 12px;cursor:pointer}
+.hour summary::-webkit-details-marker{display:none}
+.hour:hover{border-color:var(--c)}
+.hour .n{font:13px var(--mono);color:var(--muted)}
+.hour .pname{color:var(--c);font-weight:600;min-width:0}
+.hour .time{font:13.5px var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.hour .gl{color:var(--c);font-size:17px;text-align:center}
+.hour-body{padding:2px 12px 12px;border-top:1px solid var(--line);padding-top:10px}
+.hour.is-now{border-color:var(--c);box-shadow:inset 0 0 0 1px var(--c);background:var(--soft)}
+.hour.is-now .pname::after{content:"Ahora";margin-left:8px;font:600 11px var(--body);letter-spacing:.05em;text-transform:uppercase;color:var(--ink)}
+.polar{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px}
+
+/* Contenido */
+.section{display:grid;gap:12px;padding-top:24px;border-top:1px solid var(--line);min-width:0}
+.prose{display:grid;gap:12px;max-width:68ch}
+.prose ol,.prose ul{margin:0;padding-left:22px;display:grid;gap:6px}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.three>div{display:grid;gap:6px;align-content:start;min-width:0}
+.calc{font:14px/1.7 var(--mono);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;overflow-x:auto;white-space:pre}
+.order{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:15px}
+.order span{color:var(--c);display:inline-flex;gap:5px;align-items:center;font-weight:600}
+.order i{color:var(--muted);font-style:normal}
+.linkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.linkgrid a{display:grid;gap:1px;padding:9px 12px;background:var(--surface);border:1px solid var(--line);border-radius:6px;text-decoration:none;color:var(--ink);font-weight:500;min-width:0}
+.linkgrid a:hover{border-color:var(--accent)}
+.linkgrid small{color:var(--muted);font-weight:400;font-size:13px}
+.faq{display:grid;max-width:78ch}
+.faq details{border-bottom:1px solid var(--line);padding:10px 0}
+.faq summary{cursor:pointer;font-weight:600}
+.faq p{margin-top:6px;color:var(--muted)}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.facts div{background:var(--surface);padding:12px 14px;display:grid;gap:3px;min-width:0}
+.facts strong{font-weight:600;overflow-wrap:anywhere}
+.nexts{display:grid;gap:6px;max-width:480px}
+.nexts div{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 14px;border-bottom:1px solid var(--line);padding-bottom:4px;font-size:15px}
+
+/* Pie */
+.foot{border-top:1px solid var(--line);background:var(--surface)}
+.foot .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 28px;padding-block:20px;font-size:14px;color:var(--muted)}
+.sign strong{color:var(--ink);font:18px var(--display)}
+.sign{display:grid;gap:2px;user-select:text}
+
+@media (max-width:940px){
+  .panel{grid-template-columns:minmax(0,1fr);grid-template-areas:"now" "detail" "controls";grid-template-rows:none}
+}
+@media (max-width:760px){
+  .cols,.three{grid-template-columns:minmax(0,1fr)}
+  .ctl-row{grid-template-columns:minmax(0,1fr)}
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (prefers-reduced-motion:no-preference){.hour{transition:border-color .15s}}
+</style>
+
+<header class="top"><div class="wrap">
+  <a class="brand" href="#calculadora"><span class="gl" aria-hidden="true">&#9737;&#xFE0E;</span>Hora Regente</a>
+  <nav class="nav" id="nav" aria-label="Principal"></nav>
+</div></header>
+<main class="wrap" id="app"></main>
+<footer class="foot"><div class="wrap">
+  <div class="sign"><strong>José Lugo</strong><span>+57 312 638 7467</span><span>jose.lugocdv@gmail.com</span></div>
+  <div style="max-width:52ch">Las horas planetarias son una tradición simbólica de la astrología. Esta herramienta las calcula con datos astronómicos, pero no sustituye el consejo médico, legal o financiero.</div>
+</div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.js"></script>
+<script>
+/* ---------- Datos ---------- */
+const VS='︎';
+const PLANETS={
+  saturno:{name:'Saturno',art:'de Saturno',glyph:'♄'+VS,dia:'sábado',
+    good:['Ordenar cuentas','Trabajo de largo aliento','Cerrar pendientes','Poner límites'],
+    avoid:['Estrenar proyectos','Improvisar','Pedir favores'],
+    text:'Saturno es el planeta más lento que la tradición podía ver a simple vista, y por eso quedó asociado con el tiempo, la estructura y las consecuencias. Su hora se reserva para lo que pide paciencia: revisar números, escribir procedimientos, terminar lo que lleva semanas abierto.'},
+  jupiter:{name:'Júpiter',art:'de Júpiter',glyph:'♃'+VS,dia:'jueves',
+    good:['Pedir oportunidades','Estudios superiores','Asuntos legales','Planear el crecimiento'],
+    avoid:['Recortar gastos','Prometer de más','Detalles minuciosos'],
+    text:'La astrología clásica llama a Júpiter el gran benéfico. Se relaciona con la abundancia, la ley, la enseñanza y la confianza. Su hora suele elegirse para presentar propuestas, buscar mentores o trazar planes de expansión.'},
+  marte:{name:'Marte',art:'de Marte',glyph:'♂'+VS,dia:'martes',
+    good:['Hacer ejercicio','Decisiones difíciles','Competir','Arrancar lo que aplazas'],
+    avoid:['Negociar acuerdos delicados','Discutir en caliente','Actuar con prisa'],
+    text:'Marte representa el impulso, el corte y el conflicto. Su hora tiene fama de intensa: sirve para entrenar, defender una posición o dar el primer paso, y conviene evitarla cuando se necesita tacto.'},
+  sol:{name:'Sol',art:'del Sol',glyph:'☉'+VS,dia:'domingo',
+    good:['Presentarte en público','Reunirte con autoridades','Liderar equipos','Mostrar tus logros'],
+    avoid:['Trabajar a escondidas','Delegar lo importante','Alardear'],
+    text:'El Sol simboliza la vitalidad, la identidad y el reconocimiento. Su hora se usa para dar la cara: una presentación, una reunión con quien decide, un lanzamiento que quieres que se vea.'},
+  venus:{name:'Venus',art:'de Venus',glyph:'♀'+VS,dia:'viernes',
+    good:['Citas y vínculos','Arte y diseño','Reconciliarse','Cuidar tu imagen'],
+    avoid:['Pleitos','Compras por impulso','Trabajo pesado'],
+    text:'Venus, el pequeño benéfico, rige la atracción, la armonía y el gusto. Su hora acompaña lo que une a las personas y lo que se disfruta con los sentidos: una conversación pendiente, un encuentro, una pieza de diseño.'},
+  mercurio:{name:'Mercurio',art:'de Mercurio',glyph:'☿'+VS,dia:'miércoles',
+    good:['Escribir y estudiar','Enviar propuestas','Vender','Trámites y viajes cortos'],
+    avoid:['Firmar sin leer','Chismes','Tareas de pura fuerza'],
+    text:'Mercurio es el mensajero: palabras, comercio, cálculo y movimiento. Su hora se elige para redactar, aprender, llamar a clientes o resolver papeleo. Es la más práctica para el trabajo de oficina.'},
+  luna:{name:'Luna',art:'de la Luna',glyph:'☽'+VS,dia:'lunes',
+    good:['Hogar y familia','Escuchar la intuición','Atender al público','Descansar'],
+    avoid:['Decisiones definitivas','Confrontar','Arriesgar dinero'],
+    text:'La Luna cambia de forma cada noche, y la tradición la vincula con el ánimo, la memoria y la vida cotidiana. Su hora favorece lo doméstico y el trato cercano, y pide prudencia con lo que no se puede deshacer.'}
+};
+const ORDER=['saturno','jupiter','marte','sol','venus','mercurio','luna'];
+const WEEK_RULER=['sol','luna','marte','mercurio','jupiter','venus','saturno'];
+const DAYS=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+const DAYS_S=['dom','lun','mar','mié','jue','vie','sáb'];
+const MONTHS=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const MONTHS_S=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+
+const RAW={
+'Sudamérica':`Medellín|Colombia|6.2476|-75.5658|America/Bogota
+Bogotá|Colombia|4.7110|-74.0721|America/Bogota
+Cali|Colombia|3.4516|-76.5320|America/Bogota
+Barranquilla|Colombia|10.9685|-74.7813|America/Bogota
+Cartagena|Colombia|10.3910|-75.4794|America/Bogota
+Bucaramanga|Colombia|7.1193|-73.1227|America/Bogota
+La Estrella|Colombia|6.1576|-75.6431|America/Bogota
+Caracas|Venezuela|10.4806|-66.9036|America/Caracas
+Maracay|Venezuela|10.2469|-67.5958|America/Caracas
+Valencia (Venezuela)|Venezuela|10.1620|-68.0077|America/Caracas
+Maracaibo|Venezuela|10.6427|-71.6125|America/Caracas
+Barquisimeto|Venezuela|10.0678|-69.3474|America/Caracas
+Quito|Ecuador|-0.1807|-78.4678|America/Guayaquil
+Guayaquil|Ecuador|-2.1710|-79.9224|America/Guayaquil
+Lima|Perú|-12.0464|-77.0428|America/Lima
+La Paz|Bolivia|-16.4897|-68.1193|America/La_Paz
+Santiago|Chile|-33.4489|-70.6693|America/Santiago
+Buenos Aires|Argentina|-34.6037|-58.3816|America/Argentina/Buenos_Aires
+Montevideo|Uruguay|-34.9011|-56.1645|America/Montevideo
+Asunción|Paraguay|-25.2637|-57.5759|America/Asuncion
+São Paulo|Brasil|-23.5505|-46.6333|America/Sao_Paulo
+Río de Janeiro|Brasil|-22.9068|-43.1729|America/Sao_Paulo`,
+'Centroamérica y Caribe':`Panamá|Panamá|8.9824|-79.5199|America/Panama
+San José|Costa Rica|9.9281|-84.0907|America/Costa_Rica
+Managua|Nicaragua|12.1150|-86.2362|America/Managua
+Tegucigalpa|Honduras|14.0723|-87.1921|America/Tegucigalpa
+San Salvador|El Salvador|13.6929|-89.2182|America/El_Salvador
+Ciudad de Guatemala|Guatemala|14.6349|-90.5069|America/Guatemala
+La Habana|Cuba|23.1136|-82.3666|America/Havana
+Santo Domingo|República Dominicana|18.4861|-69.9312|America/Santo_Domingo
+San Juan|Puerto Rico|18.4655|-66.1057|America/Puerto_Rico`,
+'Norteamérica':`Ciudad de México|México|19.4326|-99.1332|America/Mexico_City
+Guadalajara|México|20.6597|-103.3496|America/Mexico_City
+Monterrey|México|25.6866|-100.3161|America/Monterrey
+Nueva York|Estados Unidos|40.7128|-74.0060|America/New_York
+Los Ángeles|Estados Unidos|34.0522|-118.2437|America/Los_Angeles
+Miami|Estados Unidos|25.7617|-80.1918|America/New_York
+Chicago|Estados Unidos|41.8781|-87.6298|America/Chicago
+Houston|Estados Unidos|29.7604|-95.3698|America/Chicago
+Dallas|Estados Unidos|32.7767|-96.7970|America/Chicago
+Phoenix|Estados Unidos|33.4484|-112.0740|America/Phoenix
+San Francisco|Estados Unidos|37.7749|-122.4194|America/Los_Angeles
+Seattle|Estados Unidos|47.6062|-122.3321|America/Los_Angeles
+Denver|Estados Unidos|39.7392|-104.9903|America/Denver
+Washington D. C.|Estados Unidos|38.9072|-77.0369|America/New_York
+Boston|Estados Unidos|42.3601|-71.0589|America/New_York
+Atlanta|Estados Unidos|33.7490|-84.3880|America/New_York
+Toronto|Canadá|43.6532|-79.3832|America/Toronto
+Montreal|Canadá|45.5017|-73.5673|America/Toronto
+Vancouver|Canadá|49.2827|-123.1207|America/Vancouver`,
+'Europa':`Madrid|España|40.4168|-3.7038|Europe/Madrid
+Barcelona|España|41.3874|2.1686|Europe/Madrid
+Sevilla|España|37.3891|-5.9845|Europe/Madrid
+Valencia (España)|España|39.4699|-0.3763|Europe/Madrid
+Lisboa|Portugal|38.7223|-9.1393|Europe/Lisbon
+Londres|Reino Unido|51.5074|-0.1278|Europe/London
+Edimburgo|Reino Unido|55.9533|-3.1883|Europe/London
+Dublín|Irlanda|53.3498|-6.2603|Europe/Dublin
+París|Francia|48.8566|2.3522|Europe/Paris
+Bruselas|Bélgica|50.8503|4.3517|Europe/Brussels
+Ámsterdam|Países Bajos|52.3676|4.9041|Europe/Amsterdam
+Berlín|Alemania|52.5200|13.4050|Europe/Berlin
+Múnich|Alemania|48.1351|11.5820|Europe/Berlin
+Zúrich|Suiza|47.3769|8.5417|Europe/Zurich
+Roma|Italia|41.9028|12.4964|Europe/Rome
+Milán|Italia|45.4642|9.1900|Europe/Rome
+Viena|Austria|48.2082|16.3738|Europe/Vienna
+Praga|Chequia|50.0755|14.4378|Europe/Prague
+Varsovia|Polonia|52.2297|21.0122|Europe/Warsaw
+Budapest|Hungría|47.4979|19.0402|Europe/Budapest
+Bucarest|Rumanía|44.4268|26.1025|Europe/Bucharest
+Belgrado|Serbia|44.7866|20.4489|Europe/Belgrade
+Atenas|Grecia|37.9838|23.7275|Europe/Athens
+Estambul|Turquía|41.0082|28.9784|Europe/Istanbul
+Copenhague|Dinamarca|55.6761|12.5683|Europe/Copenhagen
+Estocolmo|Suecia|59.3293|18.0686|Europe/Stockholm
+Oslo|Noruega|59.9139|10.7522|Europe/Oslo
+Helsinki|Finlandia|60.1699|24.9384|Europe/Helsinki`,
+'África':`Lagos|Nigeria|6.5244|3.3792|Africa/Lagos
+El Cairo|Egipto|30.0444|31.2357|Africa/Cairo
+Johannesburgo|Sudáfrica|-26.2041|28.0473|Africa/Johannesburg
+Ciudad del Cabo|Sudáfrica|-33.9249|18.4241|Africa/Johannesburg
+Nairobi|Kenia|-1.2921|36.8219|Africa/Nairobi
+Dar es-Salam|Tanzania|-6.7924|39.2083|Africa/Dar_es_Salaam
+Argel|Argelia|36.7538|3.0588|Africa/Algiers
+Casablanca|Marruecos|33.5731|-7.5898|Africa/Casablanca
+Adís Abeba|Etiopía|9.0250|38.7469|Africa/Addis_Ababa
+Acra|Ghana|5.6037|-0.1870|Africa/Accra
+Kampala|Uganda|0.3476|32.5825|Africa/Kampala
+Túnez|Túnez|36.8065|10.1815|Africa/Tunis`,
+'Oriente Medio':`Dubái|Emiratos Árabes Unidos|25.2048|55.2708|Asia/Dubai
+Teherán|Irán|35.6892|51.3890|Asia/Tehran
+Riad|Arabia Saudí|24.7136|46.6753|Asia/Riyadh
+Amán|Jordania|31.9454|35.9284|Asia/Amman
+Mascate|Omán|23.5880|58.3829|Asia/Muscat
+Doha|Catar|25.2854|51.5310|Asia/Qatar
+Kuwait|Kuwait|29.3759|47.9774|Asia/Kuwait
+Tel Aviv|Israel|32.0853|34.7818|Asia/Jerusalem
+Beirut|Líbano|33.8938|35.5018|Asia/Beirut`,
+'Asia':`Tokio|Japón|35.6762|139.6503|Asia/Tokyo
+Osaka|Japón|34.6937|135.5023|Asia/Tokyo
+Seúl|Corea del Sur|37.5665|126.9780|Asia/Seoul
+Pekín|China|39.9042|116.4074|Asia/Shanghai
+Shanghái|China|31.2304|121.4737|Asia/Shanghai
+Hong Kong|China|22.3193|114.1694|Asia/Hong_Kong
+Taipéi|Taiwán|25.0330|121.5654|Asia/Taipei
+Manila|Filipinas|14.5995|120.9842|Asia/Manila
+Singapur|Singapur|1.3521|103.8198|Asia/Singapore
+Kuala Lumpur|Malasia|3.1390|101.6869|Asia/Kuala_Lumpur
+Yakarta|Indonesia|-6.2088|106.8456|Asia/Jakarta
+Bangkok|Tailandia|13.7563|100.5018|Asia/Bangkok
+Hanói|Vietnam|21.0278|105.8342|Asia/Ho_Chi_Minh
+Ciudad Ho Chi Minh|Vietnam|10.8231|106.6297|Asia/Ho_Chi_Minh
+Daca|Bangladés|23.8103|90.4125|Asia/Dhaka
+Nueva Delhi|India|28.6139|77.2090|Asia/Kolkata
+Bombay|India|19.0760|72.8777|Asia/Kolkata
+Bangalore|India|12.9716|77.5946|Asia/Kolkata
+Colombo|Sri Lanka|6.9271|79.8612|Asia/Colombo
+Karachi|Pakistán|24.8607|67.0011|Asia/Karachi
+Lahore|Pakistán|31.5204|74.3587|Asia/Karachi`,
+'Oceanía':`Sídney|Australia|-33.8688|151.2093|Australia/Sydney
+Melbourne|Australia|-37.8136|144.9631|Australia/Melbourne
+Brisbane|Australia|-27.4698|153.0251|Australia/Brisbane
+Perth|Australia|-31.9505|115.8605|Australia/Perth
+Auckland|Nueva Zelanda|-36.8485|174.7633|Pacific/Auckland`};
+const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const slugify=s=>norm(s).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+const CITIES=[];
+for(const region in RAW)for(const line of RAW[region].split('\n')){
+  const [name,country,lat,lng,tz]=line.split('|');
+  CITIES.push({slug:slugify(name),name,country,lat:+lat,lng:+lng,tz,region});
+}
+const bySlug=s=>CITIES.find(c=>c.slug===s);
+const QUICK=['medellin','caracas','ciudad-de-mexico','madrid','buenos-aires','nueva-york'];
+
+/* ---------- Motor de cálculo ---------- */
+const fmtCache={};
+function partsIn(tz,ms){
+  const f=fmtCache[tz]||(fmtCache[tz]=new Intl.DateTimeFormat('en-US',{timeZone:tz,hourCycle:'h23',year:'numeric',month:'numeric',day:'numeric',hour:'numeric',minute:'numeric',second:'numeric'}));
+  const o={};for(const p of f.formatToParts(new Date(ms)))o[p.type]=+p.value;return o;
+}
+function tzOffset(tz,ms){
+  const p=partsIn(tz,ms);
+  return Date.UTC(p.year,p.month-1,p.day,p.hour,p.minute,p.second)-Math.floor(ms/1000)*1000;
+}
+const ymdOf=(y,m,d)=>y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+const parseYmd=s=>s.split('-').map(Number);
+function todayIn(tz,ms=Date.now()){const p=partsIn(tz,ms);return ymdOf(p.year,p.month,p.day)}
+function addDays(ymd,n){const [y,m,d]=parseYmd(ymd);const t=new Date(Date.UTC(y,m-1,d+n));return ymdOf(t.getUTCFullYear(),t.getUTCMonth()+1,t.getUTCDate())}
+function weekdayOf(ymd){const [y,m,d]=parseYmd(ymd);return new Date(Date.UTC(y,m-1,d)).getUTCDay()}
+function localNoon(ymd,tz){const [y,m,d]=parseYmd(ymd);const u=Date.UTC(y,m-1,d,12);return new Date(u-tzOffset(tz,u))}
+function sunOf(ymd,place){return SunCalc.getTimes(localNoon(ymd,place.tz),place.lat,place.lng)}
+const valid=d=>d instanceof Date&&!isNaN(d);
+const dayCache=new Map();
+function planetaryDay(ymd,place){
+  const key=ymd+'|'+place.lat+'|'+place.lng+'|'+place.tz;
+  if(dayCache.has(key))return dayCache.get(key);
+  const a=sunOf(ymd,place),b=sunOf(addDays(ymd,1),place);
+  let res=null;
+  if(valid(a.sunrise)&&valid(a.sunset)&&valid(b.sunrise)&&a.sunset>a.sunrise&&b.sunrise>a.sunset){
+    const sr=+a.sunrise,ss=+a.sunset,nx=+b.sunrise,dh=(ss-sr)/12,nh=(nx-ss)/12;
+    const ruler=WEEK_RULER[weekdayOf(ymd)];
+    let idx=ORDER.indexOf(ruler);
+    const hours=[];
+    for(let i=0;i<24;i++){
+      const day=i<12,start=day?sr+i*dh:ss+(i-12)*nh,end=day?sr+(i+1)*dh:ss+(i-11)*nh;
+      hours.push({n:day?i+1:i-11,part:day?'dia':'noche',planet:ORDER[(idx+i)%7],start,end});
+    }
+    res={ymd,ruler,sunrise:sr,sunset:ss,next:nx,dayHour:dh,nightHour:nh,hours};
+  }
+  dayCache.set(key,res);return res;
+}
+function currentHour(place,now=Date.now()){
+  const today=todayIn(place.tz,now);
+  let d=planetaryDay(today,place);
+  if(d&&now<d.sunrise)d=planetaryDay(addDays(today,-1),place);
+  if(!d)return null;
+  const h=d.hours.find(x=>now>=x.start&&now<x.end);
+  return h?{day:d,hour:h}:null;
+}
+
+/* ---------- Formato ---------- */
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function t(ms,tz){
+  const p=partsIn(tz,ms),mm=String(p.minute).padStart(2,'0');
+  if(state.fmt==='24')return String(p.hour).padStart(2,'0')+':'+mm;
+  return (p.hour%12||12)+':'+mm+(p.hour<12?' am':' pm');
+}
+function dur(ms){const s=Math.round(ms/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),r=s%60;
+  return h?h+' h '+String(m).padStart(2,'0')+' min':m+' min '+String(r).padStart(2,'0')+' s'}
+function longDate(ymd){const [y,m,d]=parseYmd(ymd);return DAYS[weekdayOf(ymd)]+', '+d+' de '+MONTHS[m-1]+' de '+y}
+function shortDate(ymd){const [,m,d]=parseYmd(ymd);return DAYS_S[weekdayOf(ymd)]+' '+d+' '+MONTHS_S[m-1]}
+function utcLabel(tz,ms){const o=Math.round(tzOffset(tz,ms)/60000),a=Math.abs(o),h=Math.floor(a/60),m=a%60;return 'UTC'+(o<0?'−':'+')+h+(m?':'+String(m).padStart(2,'0'):'')}
+function coords(p){return Math.abs(p.lat).toFixed(4)+'°'+(p.lat<0?'S':'N')+', '+Math.abs(p.lng).toFixed(4)+'°'+(p.lng<0?'O':'E')}
+const placeLabel=p=>p.country?p.name+', '+p.country:p.name;
+
+/* ---------- Estado ---------- */
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+function initialPlace(){
+  const saved=store.get('hr-place');
+  if(saved){try{const p=JSON.parse(saved);if(p&&typeof p.lat==='number')return p}catch(e){}}
+  let tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){}
+  return CITIES.find(c=>c.tz===tz)||bySlug('medellin');
+}
+const state={place:initialPlace(),date:null,fmt:store.get('hr-fmt')==='24'?'24':'12',error:''};
+const selDate=()=>state.date||todayIn(state.place.tz);
+function setPlace(p){state.place=p;state.date=null;state.error='';store.set('hr-place',JSON.stringify(p))}
+
+/* ---------- Piezas ---------- */
+const col=k=>'--c:var(--p-'+k+')';
+const glyphEl=k=>'<span class="gl" aria-hidden="true">'+PLANETS[k].glyph+'</span>';
+function tagsHtml(k){const p=PLANETS[k];return '<div class="tags"><div class="tagset"><span class="label">Favorece</span>'+p.good.map(x=>'<span class="tag good">'+x+'</span>').join('')+'</div><div class="tagset"><span class="label">Mejor evitar</span>'+p.avoid.map(x=>'<span class="tag avoid">'+x+'</span>').join('')+'</div></div>'}
+function hourRow(h,tz){
+  const p=PLANETS[h.planet];
+  return '<details class="hour" data-start="'+h.start+'" data-end="'+h.end+'" style="'+col(h.planet)+'"><summary><span class="n">'+String(h.n).padStart(2,'0')+'</span><span class="pname">'+p.name+'</span><span class="time">'+t(h.start,tz)+' – '+t(h.end,tz)+'</span>'+glyphEl(h.planet)+'</summary><div class="hour-body">'+tagsHtml(h.planet)+'</div></details>';
+}
+function hourColumns(d,tz){
+  return '<div class="cols"><div class="col"><div class="col-title"><h3>Horas de día</h3><span class="hint">'+dur(d.dayHour)+' cada una</span></div>'+d.hours.filter(h=>h.part==='dia').map(h=>hourRow(h,tz)).join('')+'</div><div class="col"><div class="col-title"><h3>Horas de noche</h3><span class="hint">'+dur(d.nightHour)+' cada una</span></div>'+d.hours.filter(h=>h.part==='noche').map(h=>hourRow(h,tz)).join('')+'</div></div>';
+}
+function polarBox(p,ymd){return '<div class="polar"><strong>El Sol no cruza el horizonte en esta fecha.</strong><p class="hint">En '+esc(p.name)+' hay día o noche polar el '+longDate(ymd)+', así que no se pueden dividir el día y la noche en doce partes. Prueba otra fecha o ubicación.</p></div>'}
+function pt(cx,cy,r,a){return [cx+r*Math.cos(a),cy+r*Math.sin(a)]}
+function dial(d,cur,tz){
+  const cx=160,cy=160,R=154,r=104,span=d.next-d.sunrise,toA=ms=>{const frac=(ms-d.sunrise)/span;return dayStart+frac*2*Math.PI};
+  const dayFrac=(d.sunset-d.sunrise)/span,dayStart=-Math.PI/2-dayFrac*Math.PI;
+  let out='<svg class="dial" viewBox="0 0 320 320" role="img" aria-label="Dial con las 24 horas planetarias de la fecha elegida. El arco superior es el día y el inferior la noche.">';
+  const nowMs=cur?Date.now():0,inSpan=cur&&nowMs>=d.sunrise&&nowMs<d.next;
+  for(const h of d.hours){
+    const a0=toA(h.start),a1=toA(h.end),[x0,y0]=pt(cx,cy,R,a0),[x1,y1]=pt(cx,cy,R,a1),[x2,y2]=pt(cx,cy,r,a1),[x3,y3]=pt(cx,cy,r,a0);
+    const on=inSpan&&nowMs>=h.start&&nowMs<h.end,mid=(a0+a1)/2,[tx,ty]=pt(cx,cy,(R+r)/2,mid);
+    const op=on?1:(h.part==='dia'?.14:.3);
+    out+='<path style="fill:var(--p-'+h.planet+');fill-opacity:'+op+'" d="M'+x0.toFixed(2)+' '+y0.toFixed(2)+'A'+R+' '+R+' 0 0 1 '+x1.toFixed(2)+' '+y1.toFixed(2)+'L'+x2.toFixed(2)+' '+y2.toFixed(2)+'A'+r+' '+r+' 0 0 0 '+x3.toFixed(2)+' '+y3.toFixed(2)+'Z"><title>'+PLANETS[h.planet].name+' · '+t(h.start,tz)+' – '+t(h.end,tz)+'</title></path>';
+    out+='<text x="'+tx.toFixed(1)+'" y="'+ty.toFixed(1)+'" style="fill:'+(on?'var(--surface)':'var(--p-'+h.planet+')')+'" pointer-events="none">'+PLANETS[h.planet].glyph+'</text>';
+  }
+  if(inSpan){const a=toA(nowMs),[x0,y0]=pt(cx,cy,r-6,a),[x1,y1]=pt(cx,cy,R+2,a);out+='<line class="needle" x1="'+x0.toFixed(1)+'" y1="'+y0.toFixed(1)+'" x2="'+x1.toFixed(1)+'" y2="'+y1.toFixed(1)+'"/><circle class="pin" cx="'+x0.toFixed(1)+'" cy="'+y0.toFixed(1)+'" r="3.5"/>'}
+  const center=inSpan?cur.hour:null;
+  if(center){
+    const P=PLANETS[center.planet];
+    out+='<text class="big" x="160" y="136" style="fill:var(--p-'+center.planet+')">'+P.glyph+'</text><text class="name" x="160" y="174" style="fill:var(--ink)">'+P.name+'</text><text class="range" x="160" y="196">'+t(center.start,tz)+' – '+t(center.end,tz)+'</text>';
+  }else{
+    const P=PLANETS[d.ruler];
+    out+='<text class="big" x="160" y="136" style="fill:var(--p-'+d.ruler+')">'+P.glyph+'</text><text class="name" x="160" y="174" style="fill:var(--ink)">Día '+P.art+'</text><text class="range" x="160" y="196">'+shortDate(d.ymd)+'</text>';
+  }
+  return out+'</svg>';
+}
+function nowCardInner(place){
+  const ymd=selDate(),d=planetaryDay(ymd,place),cur=currentHour(place),tz=place.tz,now=Date.now();
+  let html='<div class="now-head"><span class="label">Hora actual</span><span class="hint">'+esc(place.name)+' · <span class="mono">'+t(now,tz)+'</span></span></div>';
+  if(!d)return html+polarBox(place,ymd);
+  html+=dial(d,cur,tz);
+  html+='<div class="sunline"><div><span>Amanecer</span><span class="mono">'+t(d.sunrise,tz)+'</span></div><div><span>Atardecer</span><span class="mono">'+t(d.sunset,tz)+'</span></div><div><span>Día</span><span class="mono">'+dur(d.sunset-d.sunrise)+'</span></div><div><span>Noche</span><span class="mono">'+dur(d.next-d.sunset)+'</span></div></div>';
+  if(cur){
+    const k=cur.day.ruler;
+    html+='<div class="ruler" style="'+col(k)+'"><span>Regente del día</span><b>'+PLANETS[k].name+' '+glyphEl(k)+'</b></div>';
+    if(cur.day.ymd!==todayIn(tz))html+='<p class="note">Aún no amanece: esta hora pertenece a la noche del '+DAYS[weekdayOf(cur.day.ymd)]+'.</p>';
+  }
+  if(ymd!==todayIn(tz))html+='<p class="note">El dial muestra el '+longDate(ymd)+'. La hora actual se sigue calculando con la fecha de hoy.</p>';
+  return html;
+}
+function nowDetailInner(place){
+  const cur=currentHour(place),tz=place.tz;
+  if(!cur)return '<p class="hint">En esta ubicación no hay una hora planetaria activa ahora mismo.</p>';
+  const h=cur.hour,left=dur(h.end-Date.now()).replace(/ \d+ s$/,'').replace(/^0 min.*/,'menos de un minuto');
+  return '<div class="ruler" style="'+col(h.planet)+'"><span>Ahora rige</span><b>'+PLANETS[h.planet].name+' '+glyphEl(h.planet)+'</b></div><p class="hint">Hora '+h.n+' de '+(h.part==='dia'?'día':'noche')+'. Termina a las <span class="mono">'+t(h.end,tz)+'</span>, dentro de '+left+'.</p>'+tagsHtml(h.planet);
+}
+function chaldeanOrder(){return '<div class="order">'+ORDER.map(k=>'<span style="'+col(k)+'">'+glyphEl(k)+PLANETS[k].name+'</span>').join('<i aria-hidden="true">→</i>')+'</div>'}
+function cityLinks(list){return '<div class="linkgrid">'+list.map(c=>'<a href="#ciudad-'+c.slug+'">'+esc(c.name)+'<small>'+esc(c.country)+'</small></a>').join('')+'</div>'}
+
+/* ---------- Guías ---------- */
+const GUIDES={
+ 'que-son':{title:'Qué son las horas planetarias',sum:'De dónde salen, por qué no duran 60 minutos y cómo funciona el orden caldeo.',body:()=>`<div class="prose"><p>Durante siglos, griegos y romanos midieron el tiempo con horas que cambiaban de tamaño. Partían la luz del día en doce tramos y la oscuridad en otros doce. En junio, en Atenas, una hora de día era larga y una de noche corta. En diciembre ocurría lo contrario.</p><p>La astrología helenística asignó a cada uno de esos tramos uno de los siete astros móviles que se veían sin telescopio. Los ordenó según la distancia que les atribuía a la Tierra, del más lejano al más cercano. Esa lista se conoce como orden caldeo.</p></div>${chaldeanOrder()}<div class="prose"><p>La secuencia nunca se interrumpe. Como 24 dividido entre 7 deja un resto de 3, la primera hora de cada día cae tres puestos más adelante. Ese salto explica el orden de los días: Sol, Luna, Marte, Mercurio, Júpiter, Venus, Saturno. Muchos idiomas lo conservan en sus nombres: lunes viene de Luna, martes de Marte, miércoles de Mercurio, jueves de Júpiter y viernes de Venus.</p><p>Hoy es una práctica simbólica. No hay evidencia científica de que la hora influya en los resultados de lo que haces, y conviene usarla como un ritual de organización y no como un criterio para decisiones de salud, dinero o seguridad.</p></div>`},
+ 'calcular':{title:'Cómo se calculan paso a paso',sum:'El método completo con los datos de hoy para tu ubicación.',body:()=>workedExample()},
+ 'usar':{title:'Cómo usarlas en tu semana',sum:'Una forma práctica de repartir tareas según el carácter de cada planeta.',body:()=>`<div class="prose"><p>La manera más sencilla de empezar es elegir una sola tarea importante de la semana y buscar la hora que le corresponde. Abre la calculadora, mira la columna de día y reserva ese tramo en tu calendario.</p><ul><li><strong>Vender o escribir:</strong> horas de Mercurio.</li><li><strong>Presentar o dar la cara:</strong> horas del Sol.</li><li><strong>Proponer un negocio o pedir una oportunidad:</strong> horas de Júpiter.</li><li><strong>Conversaciones de pareja o trabajo creativo:</strong> horas de Venus.</li><li><strong>Entrenar o tomar una decisión difícil:</strong> horas de Marte.</li><li><strong>Contabilidad y cierres:</strong> horas de Saturno.</li><li><strong>Familia y descanso:</strong> horas de la Luna.</li></ul><p>Para reforzar la elección, la tradición recomienda que coincidan el día y la hora: una hora de Venus en viernes, o una de Júpiter en jueves. Si tu agenda no lo permite, sigue con tu plan. Una reunión bien preparada en cualquier hora vale más que una mal preparada en la hora ideal.</p></div>`},
+ 'dias':{title:'Los siete días y sus regentes',sum:'Qué planeta gobierna cada día de la semana y qué se le suele encargar.',body:()=>'<div class="linkgrid">'+WEEK_RULER.map((k,i)=>'<a href="#guia-'+k+'" style="'+col(k)+'"><span>'+DAYS[i][0].toUpperCase()+DAYS[i].slice(1)+' · <span style="color:var(--c)">'+glyphEl(k)+' '+PLANETS[k].name+'</span></span><small>'+PLANETS[k].good.slice(0,2).join(', ')+'</small></a>').join('')+'</div><div class="prose"><p>El regente manda desde el amanecer de ese día hasta el amanecer siguiente. Por eso la madrugada del jueves, antes de que salga el Sol, todavía pertenece al miércoles.</p></div>'}
+};
+function workedExample(){
+  const p=state.place,ymd=todayIn(p.tz),d=planetaryDay(ymd,p);
+  if(!d)return polarBox(p,ymd);
+  const tz=p.tz,dm=Math.round((d.sunset-d.sunrise)/60000),nm=Math.round((d.next-d.sunset)/60000);
+  return '<div class="prose"><p>Solo necesitas tres horas del reloj: el amanecer de hoy, el atardecer de hoy y el amanecer de mañana. Este ejemplo usa los datos de hoy en '+esc(p.name)+'.</p></div><div class="calc">Amanecer         '+t(d.sunrise,tz)+'\nAtardecer         '+t(d.sunset,tz)+'\nAmanecer mañana   '+t(d.next,tz)+'\n\nLuz del día       '+dm+' min ÷ 12 = '+dur(d.dayHour)+'\nNoche             '+nm+' min ÷ 12 = '+dur(d.nightHour)+'</div><div class="prose"><ol><li>Busca las tres horas para tu ciudad y fecha.</li><li>Divide cada tramo entre 12 para saber cuánto dura una hora de día y una de noche.</li><li>Empieza por el regente del día. Hoy es '+DAYS[weekdayOf(ymd)]+', así que la primera hora es de '+PLANETS[d.ruler].name+'.</li><li>Sigue el orden caldeo y vuelve a empezar al llegar a la Luna.</li></ol></div>'+chaldeanOrder();
+}
+function nextHoursOf(k,place){
+  const now=Date.now(),today=todayIn(place.tz),out=[];
+  for(let i=-1;i<7&&out.length<5;i++){
+    const d=planetaryDay(addDays(today,i),place);if(!d)continue;
+    for(const h of d.hours)if(h.planet===k&&h.end>now&&out.length<5)out.push(h);
+  }
+  return out;
+}
+function dayLabelOf(ms,tz){return shortDate(todayIn(tz,ms))}
+
+/* ---------- Vistas ---------- */
+function viewCalc(){
+  const p=state.place,ymd=selDate(),today=todayIn(p.tz),d=planetaryDay(ymd,p),tz=p.tz;
+  const wk=weekdayOf(ymd),week=[];for(let i=0;i<7;i++)week.push(addDays(ymd,i-wk));
+  const rel=[['Hoy',today],['Ayer',addDays(today,-1)],['Mañana',addDays(today,1)]];
+  const quick=QUICK.map(bySlug);
+  const featured=['medellin','bogota','caracas','ciudad-de-mexico','madrid','buenos-aires','lima','miami'].map(bySlug);
+  return `<section class="intro"><h1>Calculadora de horas planetarias</h1><p>Mira qué planeta rige cada hora del día y de la noche en cualquier lugar del mundo, con el amanecer y el atardecer reales de esa fecha.</p></section>
+  <section class="panel">
+    <div class="controls">
+      <div class="ctl-row">
+        <div class="field">
+          <span class="label">Ubicación</span>
+          <div class="chips">${quick.map(c=>'<button class="chip" data-city="'+c.slug+'" aria-pressed="'+(p.slug===c.slug)+'">'+esc(c.name)+'</button>').join('')}</div>
+          <input class="input" id="place-search" type="search" placeholder="Busca entre ${CITIES.length} ciudades" autocomplete="off" aria-label="Buscar ciudad">
+          <div class="results" id="place-results" hidden></div>
+          <p class="hint"><strong>${esc(placeLabel(p))}</strong> · ${coords(p)}</p>
+          <details class="custom" id="custom-box"${state.error?' open':''}>
+            <summary>Otra ubicación</summary>
+            <form id="custom-form" class="custom-grid">
+              <label class="full">Nombre (opcional)<input class="input" id="c-name" maxlength="40" value="${p.slug?'':esc(p.name)}"></label>
+              <label>Latitud<input class="input" id="c-lat" inputmode="decimal" placeholder="6.1576" value="${p.slug?'':p.lat}"></label>
+              <label>Longitud<input class="input" id="c-lng" inputmode="decimal" placeholder="-75.6431" value="${p.slug?'':p.lng}"></label>
+              <label class="full">Zona horaria<select class="input" id="c-tz">${tzOptions(p.tz)}</select></label>
+              ${state.error?'<p class="error full" role="alert">'+esc(state.error)+'</p>':''}
+              <div class="full chips" style="align-items:center;gap:14px"><button class="btn" type="submit">Calcular aquí</button><button class="linkbtn" type="button" id="geo-btn" hidden>Usar mi ubicación</button></div>
+            </form>
+          </details>
+        </div>
+        <div class="field">
+          <div class="field-head"><label class="label" for="date-input">Fecha</label><div class="chips">${rel.map(r=>'<button class="chip" data-date="'+r[1]+'" aria-pressed="'+(ymd===r[1])+'">'+r[0]+'</button>').join('')}</div></div>
+          <input class="input" id="date-input" type="date" value="${ymd}">
+          <p class="hint">${longDate(ymd)[0].toUpperCase()+longDate(ymd).slice(1)}</p>
+        </div>
+      </div>
+      <div class="week" role="group" aria-label="Días de la semana">${week.map(w=>{const k=WEEK_RULER[weekdayOf(w)],[,m,dd]=parseYmd(w);return '<button data-date="'+w+'" aria-pressed="'+(w===ymd)+'" style="'+col(k)+'" title="Día de '+PLANETS[k].name+'"><span>'+DAYS_S[weekdayOf(w)]+'</span>'+glyphEl(k)+'<small>'+dd+' '+MONTHS_S[m-1]+'</small></button>'}).join('')}</div>
+    </div>
+    <div class="now" id="now-card">${nowCardInner(p)}</div>
+    <div class="now now-detail" id="now-detail">${nowDetailInner(p)}</div>
+  </section>
+  <section>
+    <div class="table-head"><div><h2>Horas del ${longDate(ymd)}</h2><span class="hint">${esc(placeLabel(p))}</span></div>
+      <div class="tz"><span>${esc(tz)} (${utcLabel(tz,+localNoon(ymd,tz))})</span>${fmtToggle()}</div></div>
+    ${d?hourColumns(d,tz):polarBox(p,ymd)}
+    <p class="hint" style="margin-top:10px">Toca una hora para ver qué favorece y qué conviene evitar.</p>
+  </section>
+  <section class="section"><h2>Cómo usar la calculadora</h2><div class="prose"><ol><li>Elige una ciudad o escribe tus coordenadas en «Otra ubicación».</li><li>Deja la fecha de hoy o elige otro día para planificar.</li><li>Busca en las columnas el planeta que encaja con lo que quieres hacer.</li></ol></div></section>
+  <section class="section"><h2>Qué son las horas planetarias</h2><div class="prose"><p>Es una forma antigua de medir el tiempo. El día se reparte en doce tramos iguales entre el amanecer y el atardecer, y la noche en otros doce hasta el siguiente amanecer. Por eso una hora planetaria casi nunca dura 60 minutos. Cada tramo queda a cargo de uno de los siete astros clásicos, siempre en el mismo orden.</p></div>${chaldeanOrder()}<p><a href="#guia-que-son">Leer la guía completa</a></p></section>
+  <section class="section"><h2>Cómo se calculan a mano</h2>${workedExample()}</section>
+  <section class="section"><h2>Para qué se usan</h2><div class="three"><div><h3>Planificar el trabajo</h3><p>Reparte las tareas por afinidad: mensajes y ventas en horas de Mercurio, cierres y cuentas en horas de Saturno.</p></div><div><h3>Astrología electiva</h3><p>Quien sigue esta tradición busca horas de planetas benéficos, como Júpiter y Venus, para empezar algo importante.</p></div><div><h3>Ritual y práctica espiritual</h3><p>Muchas prácticas hacen coincidir su intención con el planeta de la hora: Venus para el amor, Júpiter para la abundancia.</p></div></div></section>
+  <section class="section"><h2>Horas planetarias por ciudad</h2>${cityLinks(featured)}<p><a href="#ciudades">Ver las ${CITIES.length} ciudades</a></p></section>
+  <section class="section"><h2>Guías</h2>${guideLinks()}<p><a href="#guias">Ver todas las guías</a></p></section>
+  <section class="section" id="preguntas"><h2>Preguntas frecuentes</h2>${faqHtml()}</section>`;
+}
+function tzOptions(sel){
+  let list=[];try{list=Intl.supportedValuesOf('timeZone')}catch(e){list=[...new Set(CITIES.map(c=>c.tz))].sort()}
+  if(!list.includes(sel))list=[sel,...list];
+  return list.map(z=>'<option value="'+esc(z)+'"'+(z===sel?' selected':'')+'>'+esc(z)+'</option>').join('');
+}
+function fmtToggle(){return '<span class="seg" role="group" aria-label="Formato de hora"><button data-fmt="12" aria-pressed="'+(state.fmt==='12')+'">12 h</button><button data-fmt="24" aria-pressed="'+(state.fmt==='24')+'">24 h</button></span>'}
+function guideLinks(){
+  const keys=Object.keys(GUIDES);
+  return '<div class="linkgrid">'+keys.map(k=>'<a href="#guia-'+k+'">'+GUIDES[k].title+'<small>'+GUIDES[k].sum+'</small></a>').join('')+'</div>';
+}
+const FAQ=[
+ ['¿Por qué una hora planetaria no dura 60 minutos?','Porque resulta de dividir la luz del día, y luego la noche, entre doce. Esos dos tramos cambian con la estación y la latitud. Cerca del ecuador rondan los 60 minutos todo el año.'],
+ ['¿Tengo que saber a qué hora amanece?','No. La calculadora obtiene el amanecer y el atardecer a partir de las coordenadas y la fecha.'],
+ ['¿Qué planetas entran en el sistema?','Los siete astros clásicos: Sol, Luna, Mercurio, Venus, Marte, Júpiter y Saturno. Urano, Neptuno y Plutón se descubrieron mucho después y no forman parte de esta tradición.'],
+ ['¿Tiene base científica?','No. El cálculo del Sol es astronomía, pero el significado de cada hora es una tradición simbólica. No hay estudios que demuestren su efecto.'],
+ ['¿Por qué de madrugada aparece el regente de ayer?','Porque el día planetario empieza al amanecer. Hasta que salga el Sol sigues en la noche del día anterior, aunque el reloj ya marque la nueva fecha.'],
+ ['¿Por qué cambia la duración entre verano e invierno?','En verano hay más luz, así que las horas de día se alargan y las de noche se acortan. En invierno sucede lo contrario, y la diferencia crece a medida que te alejas del ecuador.'],
+ ['¿Cómo elijo la mejor hora para una tarea?','Piensa en la naturaleza de la tarea y busca el planeta afín: Mercurio para comunicar, Venus para los vínculos, Marte para actuar. Toca cualquier hora de la lista para ver sus usos.'],
+ ['¿Mi ciudad no aparece, qué hago?','Abre «Otra ubicación» y escribe la latitud, la longitud y la zona horaria. Puedes copiar las coordenadas de cualquier mapa en línea.']
+];
+function faqHtml(){return '<div class="faq">'+FAQ.map(q=>'<details><summary>'+q[0]+'</summary><p>'+q[1]+'</p></details>').join('')+'</div>'}
+function viewCities(){
+  let html='<section class="intro"><p class="crumbs"><a href="#calculadora">Inicio</a> / Ciudades</p><h1>Horas planetarias por ciudad</h1><p>Elige una ciudad para ver las horas de hoy con sus coordenadas y su zona horaria.</p></section>';
+  for(const region in RAW)html+='<section class="section"><h2>'+region+'</h2>'+cityLinks(CITIES.filter(c=>c.region===region))+'</section>';
+  return html+'<section class="section"><p>¿No encuentras tu ciudad? Usa <a href="#calculadora">la calculadora</a> y escribe tus coordenadas en «Otra ubicación».</p></section>';
+}
+function viewCity(c){
+  const ymd=todayIn(c.tz),d=planetaryDay(ymd,c),tz=c.tz;
+  const others=CITIES.filter(x=>x.region===c.region&&x.slug!==c.slug).slice(0,6);
+  const cur=currentHour(c);
+  let body='<section class="intro"><p class="crumbs"><a href="#calculadora">Inicio</a> / <a href="#ciudades">Ciudades</a> / '+esc(c.name)+'</p><h1>Horas planetarias en '+esc(c.name)+' hoy</h1><p>'+longDate(ymd)[0].toUpperCase()+longDate(ymd).slice(1)+' · '+esc(c.country)+' · '+coords(c)+'</p></section>';
+  if(!d)return body+polarBox(c,ymd);
+  body+='<section class="facts"><div><span class="label">Amanecer</span><strong class="mono">'+t(d.sunrise,tz)+'</strong></div><div><span class="label">Atardecer</span><strong class="mono">'+t(d.sunset,tz)+'</strong></div><div style="'+col(d.ruler)+'"><span class="label">Regente del día</span><strong style="color:var(--c)">'+glyphEl(d.ruler)+' '+PLANETS[d.ruler].name+'</strong></div><div><span class="label">Zona horaria</span><strong>'+esc(tz)+' ('+utcLabel(tz,Date.now())+')</strong></div></section>';
+  if(cur)body+='<section class="now" id="now-city" style="'+col(cur.hour.planet)+'"><div class="now-head"><span class="label">Hora actual</span><span class="hint mono">'+t(cur.hour.start,tz)+' – '+t(cur.hour.end,tz)+'</span></div><div class="ruler"><span style="font:24px var(--display)">Ahora rige '+PLANETS[cur.hour.planet].name+'</span><b style="font-size:26px">'+glyphEl(cur.hour.planet)+'</b></div>'+tagsHtml(cur.hour.planet)+'</section>';
+  body+='<section><div class="table-head"><h2>Horas de hoy</h2><div class="tz">'+fmtToggle()+'<button class="linkbtn" data-open-city="'+c.slug+'">Abrir en la calculadora</button></div></div>'+hourColumns(d,tz)+'</section>';
+  body+='<section class="section"><h2>Preguntas sobre '+esc(c.name)+'</h2><div class="faq"><details open><summary>¿Cuándo empiezan hoy las horas planetarias en '+esc(c.name)+'?</summary><p>Al amanecer, a las '+t(d.sunrise,tz)+', con una hora de '+PLANETS[d.ruler].name+'. Cada hora de día dura '+dur(d.dayHour)+' y cada hora de noche '+dur(d.nightHour)+'.</p></details><details><summary>¿Qué planeta rige hoy?</summary><p>'+PLANETS[d.ruler].name+', porque hoy es '+DAYS[weekdayOf(ymd)]+'. Su regencia dura hasta el próximo amanecer.</p></details><details><summary>¿Con qué datos se calcula?</summary><p>Con las coordenadas de la ciudad ('+coords(c)+') y su zona horaria ('+esc(tz)+'). El Sol se calcula para esas coordenadas, y ese resultado se reparte en 12 horas de día y 12 de noche.</p></details></div></section>';
+  body+='<section class="section"><h2>Otras ciudades de '+c.region+'</h2>'+cityLinks(others)+'</section>';
+  return body;
+}
+function viewGuides(){
+  return '<section class="intro"><p class="crumbs"><a href="#calculadora">Inicio</a> / Guías</p><h1>Guías de horas planetarias</h1><p>Lo esencial del sistema y una ficha para cada planeta.</p></section><section class="section"><h2>Para empezar</h2>'+guideLinks()+'</section><section class="section"><h2>Los siete planetas</h2><div class="linkgrid">'+ORDER.map(k=>'<a href="#guia-'+k+'" style="'+col(k)+'"><span><span style="color:var(--c)">'+glyphEl(k)+'</span> Hora '+PLANETS[k].art+'</span><small>'+PLANETS[k].good.slice(0,2).join(', ')+'</small></a>').join('')+'</div></section>';
+}
+function viewGuide(key){
+  const crumbs='<p class="crumbs"><a href="#calculadora">Inicio</a> / <a href="#guias">Guías</a></p>';
+  if(GUIDES[key])return '<section class="intro">'+crumbs+'<h1>'+GUIDES[key].title+'</h1><p>'+GUIDES[key].sum+'</p></section><section style="display:grid;gap:14px">'+GUIDES[key].body()+'</section>';
+  const P=PLANETS[key],place=state.place,tz=place.tz,nx=nextHoursOf(key,place);
+  return '<section class="intro" style="'+col(key)+'">'+crumbs+'<h1><span class="gl" style="color:var(--c)" aria-hidden="true">'+P.glyph+'</span> Hora '+P.art+'</h1><p>Su día es el '+P.dia+'.</p></section><section class="section"><div class="prose"><p>'+P.text+'</p></div>'+tagsHtml(key)+'</section><section class="section"><h2>Próximas horas '+P.art+'</h2><p class="hint">En '+esc(place.name)+'. Cambia la ciudad en <a href="#calculadora">la calculadora</a>.</p><div class="nexts">'+nx.map(h=>'<div><span>'+dayLabelOf(h.start,tz)+'</span><span class="mono">'+t(h.start,tz)+' – '+t(h.end,tz)+'</span></div>').join('')+'</div></section><section class="section"><h2>Los otros planetas</h2><div class="linkgrid">'+ORDER.filter(k=>k!==key).map(k=>'<a href="#guia-'+k+'" style="'+col(k)+'"><span><span style="color:var(--c)">'+glyphEl(k)+'</span> '+PLANETS[k].name+'</span></a>').join('')+'</div></section>';
+}
+function viewAbout(){
+  return '<section class="intro"><p class="crumbs"><a href="#calculadora">Inicio</a> / Acerca de</p><h1>Acerca de Hora Regente</h1></section><section class="section" style="border:0;padding:0"><div class="prose"><p>Hora Regente calcula las horas planetarias en español para cualquier lugar del mundo. Funciona en tu navegador, sin registro.</p><p>El amanecer y el atardecer se obtienen con <a href="https://github.com/mourner/suncalc">SunCalc</a>, una biblioteca abierta de cálculo solar. El resultado es un cálculo astronómico y puede diferir uno o dos minutos de otras fuentes por el relieve o la refracción local.</p><p>La interpretación de cada hora resume una tradición astrológica. Es contenido simbólico: no predice resultados ni reemplaza a un profesional.</p><p>Tu ubicación y tus preferencias se guardan solo en este navegador.</p></div></section>';
+}
+
+/* ---------- Render ---------- */
+const NAV=[['calculadora','Calculadora'],['preguntas','Preguntas'],['ciudades','Ciudades'],['guias','Guías'],['acerca','Acerca de']];
+function route(){
+  const h=location.hash.slice(1);
+  if(h.startsWith('ciudad-')&&bySlug(h.slice(7)))return {v:'city',c:bySlug(h.slice(7)),nav:'ciudades'};
+  if(h==='ciudades')return {v:'cities',nav:'ciudades'};
+  if(h==='guias')return {v:'guides',nav:'guias'};
+  if(h.startsWith('guia-')&&(GUIDES[h.slice(5)]||PLANETS[h.slice(5)]))return {v:'guide',k:h.slice(5),nav:'guias'};
+  if(h==='acerca')return {v:'about',nav:'acerca'};
+  if(h==='preguntas')return {v:'calc',nav:'preguntas'};
+  return {v:'calc',nav:'calculadora'};
+}
+const app=document.getElementById('app');
+function render(){
+  if(typeof SunCalc==='undefined'){app.innerHTML='<div class="polar"><strong>No se pudo cargar el cálculo solar.</strong><p class="hint">Revisa tu conexión a internet y vuelve a abrir la página.</p></div>';return}
+  const r=route();
+  document.getElementById('nav').innerHTML=NAV.map(n=>'<a href="#'+n[0]+'"'+(n[0]===r.nav?' aria-current="page"':'')+'>'+n[1]+'</a>').join('');
+  app.innerHTML=r.v==='city'?viewCity(r.c):r.v==='cities'?viewCities():r.v==='guides'?viewGuides():r.v==='guide'?viewGuide(r.k):r.v==='about'?viewAbout():viewCalc();
+  markNow();
+  const geo=document.getElementById('geo-btn');
+  if(geo){let ok=!!navigator.geolocation;try{if(document.featurePolicy&&!document.featurePolicy.allowsFeature('geolocation'))ok=false}catch(e){}geo.hidden=!ok}
+}
+function markNow(){const now=Date.now();document.querySelectorAll('.hour[data-start]').forEach(el=>el.classList.toggle('is-now',now>=+el.dataset.start&&now<+el.dataset.end))}
+function tick(){
+  const card=document.getElementById('now-card');
+  if(card)card.innerHTML=nowCardInner(state.place);
+  const detail=document.getElementById('now-detail');
+  if(detail)detail.innerHTML=nowDetailInner(state.place);
+  markNow();
+}
+function showResults(q){
+  const box=document.getElementById('place-results');if(!box)return;
+  const n=norm(q.trim());
+  if(!n){box.hidden=true;box.innerHTML='';return}
+  const hits=CITIES.filter(c=>norm(c.name).includes(n)||norm(c.country).includes(n)).slice(0,7);
+  box.innerHTML=hits.length?hits.map(c=>'<button type="button" data-city="'+c.slug+'">'+esc(c.name)+'<small>'+esc(c.country)+'</small></button>').join(''):'<div class="hint" style="padding:8px 12px">No está en la lista. Abre «Otra ubicación» y escribe sus coordenadas.</div>';
+  box.hidden=false;
+}
+
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.city){setPlace(bySlug(b.dataset.city));render()}
+  else if(b.dataset.date){state.date=b.dataset.date===todayIn(state.place.tz)?null:b.dataset.date;render()}
+  else if(b.dataset.fmt){state.fmt=b.dataset.fmt;store.set('hr-fmt',state.fmt);render()}
+  else if(b.dataset.openCity){setPlace(bySlug(b.dataset.openCity));location.hash='calculadora'}
+  else if(b.id==='geo-btn'){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      let tz='UTC';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone}catch(err){}
+      setPlace({name:'Mi ubicación',lat:+pos.coords.latitude.toFixed(4),lng:+pos.coords.longitude.toFixed(4),tz,country:''});render();
+    },()=>{state.error='No pudimos leer tu ubicación. Escribe la latitud y la longitud a mano.';render()},{timeout:10000});
+  }
+});
+document.addEventListener('input',e=>{if(e.target.id==='place-search')showResults(e.target.value)});
+document.addEventListener('change',e=>{
+  if(e.target.id==='date-input'&&e.target.value&&/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)){state.date=e.target.value===todayIn(state.place.tz)?null:e.target.value;render()}
+});
+document.addEventListener('keydown',e=>{
+  if(e.target.id==='place-search'&&e.key==='Enter'){const first=document.querySelector('#place-results button');if(first){e.preventDefault();first.click()}}
+});
+document.addEventListener('submit',e=>{
+  if(e.target.id!=='custom-form')return;
+  e.preventDefault();
+  const lat=parseFloat(document.getElementById('c-lat').value.replace(',','.')),lng=parseFloat(document.getElementById('c-lng').value.replace(',','.')),tz=document.getElementById('c-tz').value,name=document.getElementById('c-name').value.trim()||'Mi ubicación';
+  if(!isFinite(lat)||Math.abs(lat)>90){state.error='La latitud debe ser un número entre -90 y 90. Usa negativos para el sur.';render();return}
+  if(!isFinite(lng)||Math.abs(lng)>180){state.error='La longitud debe ser un número entre -180 y 180. Usa negativos para el oeste.';render();return}
+  setPlace({name,lat,lng,tz,country:''});render();
+});
+window.addEventListener('hashchange',()=>{
+  render();
+  if(location.hash==='#preguntas'){const s=document.getElementById('preguntas');if(s)s.scrollIntoView()}
+  else window.scrollTo(0,0);
+});
+render();
+if(location.hash==='#preguntas'){const s=document.getElementById('preguntas');if(s)s.scrollIntoView()}
+setInterval(tick,20000);
+</script>
+</body>
+</html>

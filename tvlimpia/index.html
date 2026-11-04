@@ -267,8 +267,8 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);padding-top:
     <a href="https://github.com/udhaykumarbala/cleanyourtv-app" rel="noopener">su app para celular</a>,
     <a href="https://github.com/lasharor/cleanyourtv-WebOS" rel="noopener">CleanYourTV for LG webOS</a> y
     <a href="https://github.com/simbasjungles/free-my-tv" rel="noopener">Free My TV</a>.
-    Enlaza además el <a href="https://github.com/MinatoXmohith/Google-TV-Ad-Free-Home-Screen-Modern-UI" rel="noopener">panel estilo Apple TV</a> de mkdziner (MIT). También recomienda <a href="https://alogus.github.io/Borealis/" rel="noopener">Borealis</a> de Alogus Tov, gratuito solo para uso no comercial (licencia PolyForm Noncommercial 1.0.0); TV Limpia no lo distribuye ni lo modifica, solo enlaza a su página oficial.
-    No tiene relación con esos proyectos ni con ningún fabricante. Los nombres de marcas pertenecen a sus dueños. Cambiar el software de tu TV es bajo tu responsabilidad y puede afectar la garantía.</p>
+    Enlaza además <a href="https://github.com/MinatoXmohith/Google-TV-Ad-Free-Home-Screen-Modern-UI" rel="noopener">Lumen</a>, el panel estilo Apple TV de mkdziner (MIT). También recomienda <a href="https://alogus.github.io/Borealis/" rel="noopener">Borealis</a> de Alogus Tov, gratuito solo para uso no comercial (licencia PolyForm Noncommercial 1.0.0); TV Limpia no lo distribuye ni lo modifica, solo enlaza a su página oficial.
+    No tiene relación con esos proyectos ni con ningún fabricante. Los nombres de marcas pertenecen a sus dueños. Cambiar el software de tu TV es bajo tu responsabilidad y puede afectar la garantía. Guía revisada el 4 de noviembre de 2026, con Clean Your TV v3.3.0.</p>
 </footer>
 
 <script>
@@ -317,37 +317,39 @@ var S={
     {to:'help',ic:'hand',b:'Prefiero que lo hagan por mí',s:'Te acompañamos paso a paso'}
   ]},
   'and-phone':{title:'Limpia tu TV desde el celular',help:'Unos diez minutos. El TV y el celular deben estar en el mismo Wi-Fi.',
-    warnAndroid:true,steps:[
+    warn:'phone',after:'phone',steps:[
     {h:'Activa el modo desarrollador en el TV',p:'Ve a <span class="path">Ajustes → Preferencias del dispositivo → Información</span> (en Google TV: <span class="path">Ajustes → Sistema → Información</span>) y presiona OK sobre <span class="path">Compilación</span> siete veces seguidas.'},
-    {h:'Activa la depuración',p:'Vuelve atrás, entra a <span class="path">Opciones para desarrolladores</span> y enciende <span class="path">Depuración USB</span>. Si ves <span class="path">Depuración por red</span> o <span class="path">ADB por red</span>, enciéndela también.'},
+    {h:'Activa la depuración',p:'Vuelve atrás, entra a <span class="path">Opciones para desarrolladores</span> y enciende <span class="path">Depuración USB</span>. Si ves <span class="path">Depuración por red</span> o <span class="path">ADB por red</span>, enciéndela también. Si tu TV solo ofrece depuración inalámbrica con código, necesitarás un computador una vez: la app te muestra qué hacer.'},
     {h:'Instala la app en tu celular',p:'Descarga el archivo APK más reciente y ábrelo para instalarlo. Si el celular pregunta, permite instalar apps de esta fuente.',
       links:[{t:'Descargar la app',u:'https://github.com/udhaykumarbala/cleanyourtv-app/releases/latest',primary:true}]},
     {h:'Toca Conectar',p:'La app encuentra el TV en tu Wi-Fi. En la pantalla del TV aparece «¿Permitir depuración?»: marca <span class="path">Permitir siempre</span> y presiona OK.'},
-    {h:'Revisa el plan',p:'La app te muestra qué va a apagar y qué deja intacto. Todavía no cambia nada. Si usas alguna app de la lista, desmárcala.'},
-    {h:'Toca «Make it clean»',p:'La app guarda un punto de restauración, apaga la publicidad y pone la pantalla de inicio limpia. Si algo falla, el TV vuelve solo a su pantalla original.'},
-    {h:'Apaga la depuración al terminar',p:'En <span class="path">Opciones para desarrolladores</span>, apaga la depuración USB y por red. Así nadie más en tu red puede controlar el TV.'}
+    {h:'Revisa el plan',p:'La app te muestra qué va a apagar y qué deja intacto. Todavía no cambia nada. También te dice si tu TV recibirá la pantalla nueva o solo la limpieza, y en algunos Google TV te avisa si el botón de Ajustes del control puede dejar de funcionar. Si usas alguna app de la lista, desmárcala.'},
+    {h:'Toca «Make it clean»',p:'La app guarda un punto de restauración y apaga las apps de publicidad y rastreo. Si tu TV lo admite, también pone la pantalla de inicio limpia; si esa pantalla no se confirma en 150 segundos, el TV vuelve solo a la original.'},
+    {h:'Apaga la depuración al terminar',p:'La app apaga la depuración por red al terminar, salvo que elijas dejarla. En <span class="path">Opciones para desarrolladores</span>, confirma que estén apagadas la depuración USB, por red e inalámbrica, revoca las autorizaciones de depuración USB y reinicia el TV. Así nadie más en tu red puede controlarlo, y la pantalla limpia sigue funcionando.'}
   ]},
   'and-remote':{title:'Pantalla de inicio nueva con el control',help:'Con Borealis, una pantalla de inicio gratuita para uso personal. Unos diez minutos y conexión a internet.',
-    note:'<strong>Ten en cuenta.</strong> Borealis está en beta y su autor lo probó en un TV con Android TV 11. Cambia la pantalla de inicio, pero no apaga las apps de publicidad y rastreo del fabricante; para eso usa la opción del celular o del computador.',
+    note:'<strong>Ten en cuenta.</strong> Borealis está en beta; su autor reporta pruebas en Android TV 9, 11 y 14. Si el TV lo permite, se vuelve tu pantalla de inicio y apaga el launcher original y algunas apps. Para una limpieza más completa de la publicidad y el rastreo, usa la opción del celular o del computador.',
     steps:[
     {h:'Instala Downloader',p:'Abre la tienda de apps del TV, busca <span class="path">Downloader</span> de AFTVnews e instálala.'},
     {h:'Permite que Downloader instale apps',p:'Cuando el TV lo pida, activa el permiso para instalar apps de fuentes desconocidas en Downloader. Si no aparece, búscalo en los ajustes de seguridad del TV.'},
     {h:'Escribe el código de Borealis',p:'Abre Downloader, escribe el código <span class="path">3357424</span> e instala Borealis. Antes de instalar, confirma el código en la página oficial del proyecto.',
       links:[{t:'Página oficial de Borealis',u:'https://alogus.github.io/Borealis/',primary:true}]},
     {h:'Activa la depuración y abre Borealis',p:'Activa el modo desarrollador (presiona OK siete veces sobre <span class="path">Compilación</span> en <span class="path">Información</span>) y enciende <span class="path">Depuración USB</span>. Luego abre Borealis y sigue la bienvenida.'},
-    {h:'Si no queda como pantalla de inicio',p:'Su autor recomienda instalarlo una vez desde un computador, con su guía oficial.',
+    {h:'Si no queda como pantalla de inicio',p:'Si el TV no permite la depuración, Borealis pasa a su Plan B, aún experimental: en <span class="path">Ajustes → Accesibilidad</span> enciende Borealis y se abrirá con el botón de inicio. Su autor también ofrece una guía para instalarlo una vez desde un computador.',
       links:[{t:'Guía de instalación',u:'https://github.com/Alogus/Borealis/blob/main/INSTALL.md'}]},
-    {h:'Para volver atrás',p:'En los ajustes de Borealis elige <span class="path">Original</span> y el TV vuelve a su pantalla de inicio de siempre.'}
+    {h:'Para volver atrás o desinstalar',p:'En Borealis entra a <span class="path">Ajustes → Launcher → Original</span> y espera a que diga que terminó. <strong>Hazlo siempre antes de desinstalarlo:</strong> si lo desinstalas primero, las apps apagadas siguen así y el TV puede quedarse en el logo de inicio.'}
   ],ownHelp:'<div class="help"><h2>¿Algo no funciona con Borealis?</h2><p>Repórtalo a su autor: así el arreglo llega a todos en la siguiente versión.</p><a class="btn primary" href="https://github.com/Alogus/Borealis/issues" target="_blank" rel="noopener">Reportar en Borealis</a></div>'},
-  'and-pc':{title:'Limpia tu TV con un computador',help:'Un asistente de IA hace el trabajo por ti en unos quince minutos.',warnAndroid:true,steps:[
+  'and-pc':{title:'Limpia tu TV con un computador',help:'Un asistente de IA hace el trabajo por ti en unos quince minutos.',warn:'pc',after:'pc',
+    note:'<strong>Lo que necesita el computador.</strong> Python 3, JDK 17 a 22 y Android SDK 34 con build-tools 34: con ellos se compila la pantalla de inicio. ¿Sin asistente de IA? Mira las <a href="https://cleanyour.tv/app" target="_blank" rel="noopener">apps de la comunidad</a> para Mac y Windows.',
+    steps:[
     {h:'Activa el modo desarrollador y la depuración en el TV',p:'<span class="path">Ajustes → Preferencias del dispositivo → Información</span>, presiona OK siete veces sobre <span class="path">Compilación</span>. Luego en <span class="path">Opciones para desarrolladores</span> enciende <span class="path">Depuración USB</span> y, si aparece, la depuración por red.'},
     {h:'Descarga el proyecto en tu computador',p:'Desde la página del proyecto, botón <span class="path">Code → Download ZIP</span>, y descomprímelo.',
       links:[{t:'Abrir Clean Your TV',u:'https://github.com/Gathin23/cleanyourtv',primary:true}]},
     {h:'Abre la carpeta con un asistente de IA',p:'Por ejemplo Claude Code. Pega el texto del archivo <span class="path">PROMPT.md</span> que viene en la carpeta y escribe el modelo de tu TV.'},
     {h:'Acepta en el TV y responde las preguntas',p:'Marca <span class="path">Permitir siempre</span> cuando el TV lo pida. El asistente te pregunta qué apps usas y cuáles quieres en el dock, y comprueba cada paso.'},
-    {h:'Apaga la depuración al terminar',p:'En <span class="path">Opciones para desarrolladores</span>, apaga la depuración USB y por red.'},
-    {h:'Opcional: panel estilo Apple TV',p:'Si prefieres una pantalla con saludo, clima, música en reproducción y tendencias, hay una versión de Clean Your TV hecha por mkdziner. Está probada solo en un TCL BeyondTV con Android TV 9 y su lista de limpieza es de ese modelo: en otro TV usa la lista de tu modelo del proyecto original.',
-      links:[{t:'Ver el panel estilo Apple TV',u:'https://github.com/MinatoXmohith/Google-TV-Ad-Free-Home-Screen-Modern-UI'}]}
+    {h:'Apaga la depuración al terminar',p:'En <span class="path">Opciones para desarrolladores</span>, apaga la depuración USB, por red e inalámbrica, revoca las autorizaciones de depuración USB y reinicia el TV. La pantalla limpia sigue funcionando sin depuración.'},
+    {h:'Opcional: Lumen, panel estilo Apple TV',p:'Si prefieres una pantalla con clima y música en reproducción, Lumen de mkdziner es una app propia basada en Clean Your TV. Sus tendencias están apagadas por ahora. Está probada solo en un TCL BeyondTV con Android TV 9 y su lista de limpieza es de ese modelo: en otro TV usa la lista de tu modelo del proyecto original.',
+      links:[{t:'Ver Lumen',u:'https://github.com/MinatoXmohith/Google-TV-Ad-Free-Home-Screen-Modern-UI'}]}
   ]},
 
   /* LG */
@@ -359,29 +361,43 @@ var S={
   'lg-nor':{title:'Quita la publicidad de tu LG',help:'Solo con el control remoto. Los nombres de los menús pueden variar un poco según la versión.',steps:[
     {h:'Apaga las promociones de la pantalla de inicio',p:'<span class="path">Ajustes → General → Sistema → Ajustes adicionales → Ajustes de la pantalla de inicio</span>. Apaga <span class="path">Promoción de inicio</span> y <span class="path">Recomendación de contenido</span>.'},
     {h:'Apaga el rastreo de lo que ves',p:'<span class="path">Ajustes → Soporte → Privacidad y términos → Acuerdos de usuario</span>. Desmarca <span class="path">Información de visualización</span> y <span class="path">Recomendaciones basadas en intereses</span>.'},
-    {h:'Opcional: una pantalla de inicio limpia',p:'Free My TV instala una pantalla estilo Apple TV con el modo desarrollador oficial de LG, sin root. Necesitas un computador la primera vez y renovar el modo desarrollador cada 40 días aprox.',
+    {h:'Opcional: una pantalla de inicio limpia',p:'Free My TV instala una pantalla sin publicidad con el modo desarrollador oficial de LG, sin root (webOS 3 o más reciente). Necesitas un computador con Python 3 la primera vez y renovar el modo desarrollador cada 40 días aprox.',
       links:[{t:'Ver Free My TV',u:'https://github.com/simbasjungles/free-my-tv'}]}
   ]},
-  'lg-root':{title:'Pantalla limpia para LG con root',help:'Con CleanYourTV for LG webOS. Probado por su autor en un LG OLED G2 con webOS 25; en otros modelos no está garantizado.',steps:[
-    {h:'Necesitas un computador una sola vez',p:'La instalación se hace por SSH como root, desde un computador en el mismo Wi-Fi. Estamos preparando una versión con botones que se instale desde Homebrew Channel.'},
-    {h:'Sigue la guía del proyecto',p:'El instalador te pregunta tres cosas: quitar publicidad, instalar notificaciones con imagen e iniciar ahora. Puedes dejar las respuestas que trae por defecto.',
-      links:[{t:'Abrir CleanYourTV webOS',u:'https://github.com/lasharor/cleanyourtv-WebOS',primary:true}]},
-    {h:'Para volver atrás, desde el TV',p:'En la cuadrícula de apps, el último recuadro es <span class="path">Restore LG Home</span>. También puedes reiniciar en el modo a prueba de fallos de Homebrew Channel.'}
+  'lg-root':{title:'Pantalla limpia para LG con root',help:'Con CleanYourTV for LG webOS, para webOS 5 o más reciente (modelos de 2020 en adelante). El TV necesita internet para la descarga.',
+    note:'<strong>Ten en cuenta.</strong> Su autor lo probó en un LG OLED65G26LA con webOS 25 y publica una lista de otros TV reportados. Si tu firmware no está en la lista, la instalación puede detenerse y ofrecerte seguir de todos modos.',
+    steps:[
+    {h:'Instálalo desde Homebrew Channel',p:'Abre Homebrew Channel, entra al engranaje de arriba y elige <span class="path">Add repository</span>. Escribe la dirección que aparece en la guía oficial. Luego busca <span class="path">CleanYourTV</span> en la lista y elige <span class="path">Install</span>. No necesitas computador.',
+      links:[{t:'Abrir la guía de instalación',u:'https://lasharor.github.io/cleanyourtv-WebOS/install/',primary:true},{t:'Ver TV probados',u:'https://lasharor.github.io/cleanyourtv-WebOS/tested-tvs/'}]},
+    {h:'Configúralo desde el TV',p:'Abre <span class="path">CleanYourTV</span>, elige las opciones y presiona <span class="path">Set up now</span>. Tarda cerca de un minuto y la pantalla parpadea una vez. Si la pantalla nueva no arranca, el TV vuelve solo a la de LG.'},
+    {h:'Para volver atrás, desde el TV',p:'En la app <span class="path">CleanYourTV</span>, apaga <span class="path">CleanYourTV as Home</span>. Para quitar todo, elige <span class="path">Uninstall</span>. También puedes reiniciar en el modo a prueba de fallos de Homebrew Channel.'}
   ]},
 
   /* SAMSUNG */
   samsung:{title:'Quita la publicidad de tu Samsung',help:'Samsung no permite cambiar la pantalla de inicio, pero sí apagar el rastreo y gran parte de la publicidad. Los menús varían según el año del TV.',steps:[
     {h:'Apaga la información de visualización',p:'<span class="path">Ajustes → General y privacidad → Términos y privacidad</span> (o <span class="path">Soporte → Términos y políticas</span>). Desactiva <span class="path">Servicios de información de visualización</span>.'},
     {h:'Apaga la publicidad personalizada',p:'En el mismo menú, desactiva <span class="path">Publicidad basada en intereses</span> y, si no usas comandos de voz, <span class="path">Servicios de reconocimiento de voz</span>.'},
-    {h:'Evita que se abran apps solas',p:'<span class="path">Ajustes → General → Funciones inteligentes</span>. Apaga <span class="path">Ejecutar automáticamente Smart Hub</span> y la ejecución automática de la última app si no la quieres.'}
+    {h:'Evita que se abran apps solas',p:'<span class="path">Ajustes → General → Funciones inteligentes</span>. Apaga <span class="path">Ejecutar automáticamente Smart Hub</span> y la ejecución automática de la última app si no la quieres.'},
+    {h:'Opcional: una pantalla sin publicidad como app',p:'Free My TV se instala con el modo desarrollador de Samsung, sin root, en TV con Tizen de 2015 o más recientes; algunos modelos rechazan la instalación. Necesitas un computador en el mismo Wi-Fi. Se abre como una app más: la pantalla de inicio de Samsung sigue ahí.',
+      links:[{t:'Ver Free My TV para Samsung',u:'https://github.com/simbasjungles/free-my-tv#samsung-tvs-tizen'}]}
   ]},
 
   /* OTROS */
   other:{title:'Otras marcas',help:'Roku, Hisense VIDAA, Vizio y similares no permiten cambiar la pantalla de inicio.',steps:[
-    {h:'Busca los ajustes de privacidad',p:'En casi todos están en <span class="path">Ajustes → Privacidad</span>. Apaga lo que diga «información de visualización», «reconocimiento de contenido» (ACR) o «publicidad personalizada».'},
+    {h:'Busca los ajustes de privacidad',p:'En casi todos están en <span class="path">Ajustes → Privacidad</span>. Apaga lo que diga «información de visualización», «reconocimiento de contenido» (ACR) o «publicidad personalizada».',
+      links:[{t:'Ver la guía de Clean Your TV',u:'https://cleanyour.tv/not-android'}]},
     {h:'Alternativa: conecta un dispositivo Google TV',p:'Un Chromecast con Google TV u otro reproductor Google TV por HDMI se puede limpiar con los pasos de Android desde tu celular.',
       links:[{t:'Ver los pasos de Android',go:'android'}]}
   ]}
+};
+
+var WARN={
+  phone:'<strong>Antes de empezar.</strong> La app no cambia la pantalla de inicio en todos los TV. En la mayoría de los Google TV, en Chromecast, Google TV Streamer, Fire TV, algunos Kalley y PRISM+ y en los modelos que aún no conoce, solo apaga publicidad de fondo, rastreo y apps: la pantalla original se queda, con los anuncios que ella misma muestra. <a href="https://udhaykumarbala.github.io/cleanyourtv-app/tvs/" target="_blank" rel="noopener">Mira qué hace en tu modelo</a>.',
+  pc:'<strong>Antes de empezar.</strong> En Fire TV solo se apaga la publicidad y se conserva la pantalla de inicio original, y algunos TCL del mercado chino no aceptan otra pantalla. <a href="https://cleanyour.tv/tvs" target="_blank" rel="noopener">Busca tu modelo</a> para ver qué se probó.'
+};
+var AFTER={
+  phone:'<strong>Si el TV se actualiza.</strong> Una actualización del fabricante puede volver a encender las apps y traer la pantalla original. Enciende otra vez la depuración y abre la app para revisarlo.<br><br><strong>Para deshacer.</strong> Desde la app puedes volver a encender una app o todo, con el punto de restauración.',
+  pc:'<strong>Conserva la carpeta del proyecto.</strong> Ahí está lo que necesitas para revisar o deshacer los cambios.<br><br><strong>Si el TV se actualiza.</strong> Una actualización del fabricante puede volver a encender las apps y traer la pantalla original. <a href="https://github.com/Gathin23/cleanyourtv/blob/main/docs/firmware-updates.md" target="_blank" rel="noopener">Sigue la guía</a> o pídele al asistente que lo revise.<br><br><strong>Para deshacer.</strong> Pídele al asistente que restaure el TV o sigue la <a href="https://github.com/Gathin23/cleanyourtv/blob/main/docs/restore.md" target="_blank" rel="noopener">guía de restauración</a>.'
 };
 
 var app=document.getElementById('app');
@@ -413,7 +429,7 @@ function render(id,push){
     if(id==='home')h+='<ul class="safe"><li>No se desinstala nada: las apps se apagan y se pueden volver a encender.</li><li>Cada paso se puede deshacer.</li><li>Tus apps de streaming siguen funcionando.</li></ul>';
   }else{
     if(d.note)h+='<div class="note">'+d.note+'</div>';
-    if(d.warnAndroid)h+='<div class="note"><strong>Antes de empezar.</strong> En algunos equipos solo se apaga la publicidad y se conserva la pantalla de inicio original: Fire TV, Chromecast con Google TV, Google TV Streamer y algunos Kalley y PRISM+. <a href="https://cleanyour.tv/tvs" rel="noopener">Busca tu modelo</a> para ver qué se probó.</div>';
+    if(d.warn)h+='<div class="note">'+WARN[d.warn]+' Los sitios oficiales de Clean Your TV son cleanyour.tv y su GitHub; cleanyourtv.com y clean-your-tv.net no lo son.</div>';
     h+='<div class="prog" role="status"><div class="track"><div class="fill"></div></div><span></span></div>';
     h+='<div class="party"><b>¡Tu TV quedó limpio!</b><span>Completaste todos los pasos.</span></div>';
     h+='<ol class="steps">';
@@ -426,7 +442,9 @@ function render(id,push){
       });h+='</div>';}
       h+='<label class="check"><input type="checkbox" data-key="'+key+'"'+(done?' checked':'')+'><span class="box">'+tick+'</span>Hecho</label></li>';
     });
-    h+='</ol>'+(d.ownHelp||helpBlock(false));
+    h+='</ol>';
+    if(d.after)h+='<div class="note">'+AFTER[d.after]+'</div>';
+    h+=d.ownHelp||helpBlock(false);
   }
   app.innerHTML='<section class="screen">'+h+'</section>';
   updProg(false);

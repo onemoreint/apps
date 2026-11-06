@@ -28,11 +28,11 @@ jobs:
       - name: Resumen de errores
         if: always()
         run: |
-          # Los avisos ::error:: se leen en la página pública de la compilación.
+          # Los avisos se leen en la página pública de la compilación.
           cat swift-test.log xcodebuild.log 2>/dev/null \
             | grep -E '(error:|: failed|failed \(|Executed [0-9]+ test|BUILD FAILED|BUILD SUCCEEDED)' \
             | sed -E "s#/Users/runner/work/apps/apps/##g" | awk '!seen[$0]++' | head -45 \
-            | while IFS= read -r line; do echo "::error::${line:0:600}"; done
+            | while IFS= read -r line; do echo "::notice::${line:0:600}"; done
       - name: Detener si algo falló
         if: steps.tests.outcome != 'success' || steps.app.outcome != 'success'
         run: exit 1

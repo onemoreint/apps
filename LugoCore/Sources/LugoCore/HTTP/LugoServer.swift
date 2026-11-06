@@ -622,7 +622,8 @@ public final class LugoServer: @unchecked Sendable {
                 throw HTTPError(status: 404, message: "Ese archivo ya no está disponible.")
             }
             return DownloadFile(
-                name: url.lastPathComponent,
+                // macOS puede dar los acentos descompuestos; el teléfono los espera compuestos.
+                name: url.lastPathComponent.precomposedStringWithCanonicalMapping,
                 url: url,
                 size: Int64(info.st_size),
                 modified: Date(timeIntervalSince1970: Self.modificationSeconds(info))

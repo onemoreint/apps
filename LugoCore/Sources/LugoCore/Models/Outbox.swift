@@ -32,7 +32,7 @@ public final class Outbox: @unchecked Sendable {
             let item = OutboxItem(
                 id: UUID(),
                 url: url,
-                name: url.lastPathComponent,
+                name: url.lastPathComponent.precomposedStringWithCanonicalMapping,
                 sizeBytes: size.int64Value
             )
             items.append(item)

@@ -41,6 +41,9 @@ jobs:
           codesign --verify --deep --verbose=2 "dist/LUGO CONNECT.app"
           codesign -d --entitlements :- "dist/LUGO CONNECT.app"
           lipo -archs "dist/LUGO CONNECT.app/Contents/MacOS/LUGO CONNECT"
+      - name: Probar la app real
+        continue-on-error: true
+        run: ./Scripts/ci_smoke_test.sh
       - name: Crear instalador
         run: ./Scripts/make_dmg.sh
       - uses: actions/upload-artifact@v4

@@ -13,10 +13,29 @@ jobs:
       - name: Versión de Xcode
         run: xcodebuild -version
       - name: Pruebas del núcleo
+        id: tests
+        continue-on-error: true
         working-directory: LugoCore
-        run: swift test
+        run: |
+          set -o pipefail
+          swift test 2>&1 | tee ../swift-test.log
       - name: Compilar la app
-        run: ./Scripts/build_app.sh
+        id: app
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          ./Scripts/build_app.sh 2>&1 | tee xcodebuild.log
+      - name: Resumen de errores
+        if: always()
+        run: |
+          # Los avisos ::error:: se leen en la página pública de la compilación.
+          cat swift-test.log xcodebuild.log 2>/dev/null \
+            | grep -E '(error:|: failed|failed \(|Executed [0-9]+ test|BUILD FAILED|BUILD SUCCEEDED)' \
+            | sed -E "s#/Users/runner/work/apps/apps/##g" | awk '!seen[$0]++' | head -45 \
+            | while IFS= read -r line; do echo "::error::${line:0:600}"; done
+      - name: Detener si algo falló
+        if: steps.tests.outcome != 'success' || steps.app.outcome != 'success'
+        run: exit 1
       - name: Comprobar firma y permisos
         run: |
           codesign --verify --deep --verbose=2 "dist/LUGO CONNECT.app"

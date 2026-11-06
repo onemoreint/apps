@@ -15,7 +15,8 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/webp" href="img/logo.webp">
-<link rel="apple-touch-icon" href="img/logo.webp">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="fonts/sansita-latin-900-italic.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 @font-face{font-family:"Sansita";font-weight:800;font-style:normal;font-display:swap;src:url(fonts/sansita-latin-800-normal.woff2) format("woff2")}
@@ -54,8 +55,9 @@ a{color:inherit}
 
 /* Portada */
 .hero .wrap{display:flex;align-items:center;gap:18px;padding-block:22px 18px}
-.hero img{width:clamp(128px,36vw,190px);height:auto;flex:none}
-.hero div{min-width:0}
+.logo{position:relative;flex:none;width:clamp(128px,36vw,190px)}
+.logo img{position:relative;width:100%;height:auto}
+.hero .wrap>div:last-child{min-width:0}
 .hero h1{font:italic 900 clamp(46px,14vw,76px)/.95 var(--display);color:var(--gold)}
 .hero p{margin-top:8px;color:var(--cream);font-size:16px;line-height:1.35;max-width:32ch}
 .tricolor{display:grid;grid-template-rows:repeat(3,3px)}
@@ -82,7 +84,8 @@ h2{font:italic 800 clamp(30px,8vw,40px)/1.05 var(--display);color:var(--cream)}
 
 /* Plato */
 .dish{display:flex;flex-direction:column;gap:12px;min-width:0}
-.dish img{width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;border-radius:12px;background:var(--surface)}
+.ph{overflow:hidden;border-radius:12px;background:var(--surface)}
+.dish img{width:100%;height:auto;aspect-ratio:16/10;object-fit:cover}
 .dish .kicker{font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
 .dish h3{font:800 26px/1.1 var(--display)}
 .dish .desc{margin-top:4px;color:var(--muted);font-size:15.5px;line-height:1.4}
@@ -184,16 +187,93 @@ legend small{font-weight:400;color:var(--muted);font-size:14px}
 .sent{color:var(--wa);font-size:14.5px;font-weight:600;line-height:1.35}
 .toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:7;padding:9px 16px;border-radius:999px;background:var(--cream);color:var(--ink);font-weight:600;font-size:14.5px;max-width:calc(100% - 32px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}dialog[open]{animation:none}.add{transition:none}}
+
+/* Mejoras: acceso a WhatsApp, asistente, sugerencias y efectos */
+@property --spin{syntax:"<angle>";inherits:false;initial-value:0deg}
+.wa-link{display:inline-flex;align-items:center;gap:7px;margin-top:10px;min-height:40px;padding:0 13px 0 10px;border-radius:999px;background:var(--wa);color:var(--wa-ink);font-weight:700;font-size:15px;text-decoration:none;font-variant-numeric:tabular-nums}
+.wa-link svg{width:21px;height:21px;flex:none}
+.actions{display:flex;flex-direction:column;gap:10px;padding-block:0 18px}
+.ask{position:relative;display:block;width:100%;padding:2px;border-radius:15px;background:conic-gradient(from var(--spin),var(--gold),var(--chili),var(--ve-b),var(--wa),var(--gold));animation:spin 4s linear infinite;text-align:left}
+.ask-in{display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:12px;padding:12px 16px;border-radius:13px;background:var(--surface)}
+.ask-in b{font:italic 800 23px/1.1 var(--display);color:var(--gold)}
+.ask-in small{grid-row:2;color:var(--cream);font-size:14.5px}
+.ask-in i{grid-row:1/3;grid-column:2;font-style:normal;font-size:27px;color:var(--gold);animation:twinkle 2.4s ease-in-out infinite}
+.again-btn{display:flex;justify-content:space-between;gap:12px;width:100%;min-height:50px;align-items:center;padding:0 16px;border-radius:13px;background:var(--surface-2);font-weight:600;font-size:15.5px}
+.again-btn span:last-child{font-variant-numeric:tabular-nums;color:var(--gold);font-weight:700;flex:none}
+.halo{position:absolute;inset:6%;border-radius:50%;background:radial-gradient(circle,rgba(236,184,79,.42),rgba(242,107,44,.16) 50%,transparent 72%);filter:blur(10px);animation:breathe 4.5s ease-in-out infinite}
+.steam{position:absolute;left:44%;top:3%;width:26%;height:18%;pointer-events:none}
+.steam i{position:absolute;bottom:0;width:9px;height:36px;border-radius:50%;background:rgba(247,238,221,.55);filter:blur(5px);opacity:0;animation:steam 3.4s ease-in infinite}
+.steam i:nth-child(1){left:8%}
+.steam i:nth-child(2){left:42%;animation-delay:1.1s}
+.steam i:nth-child(3){left:76%;animation-delay:2.2s}
+.fx .ph img{opacity:0;transform:scale(1.08);transition:opacity .7s ease-out,transform 1.1s cubic-bezier(.2,.7,.2,1)}
+.fx .ph.in img{opacity:1;transform:none}
+.new{position:relative;overflow:hidden}
+.new>*{position:relative;z-index:1}
+.new::after{content:"";position:absolute;top:-30%;bottom:-30%;left:-40%;width:28%;transform:skewX(-18deg);background:linear-gradient(90deg,transparent,rgba(255,250,235,.72),transparent);animation:shine 5s ease-in-out infinite;pointer-events:none;z-index:0}
+.flyer{position:fixed;z-index:30;border-radius:50%;object-fit:cover;pointer-events:none;background:var(--chili);box-shadow:0 8px 24px rgba(0,0,0,.6)}
+.fab{position:fixed;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:7;display:grid;place-items:center;width:56px;height:56px;border-radius:50%;background:var(--wa);color:var(--wa-ink);box-shadow:0 8px 24px rgba(0,0,0,.55);transition:bottom .2s}
+.fab svg{width:32px;height:32px}
+.has-cart .fab{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+main{padding-bottom:128px}
+footer{padding-bottom:110px}
+.install{align-self:flex-start;margin-top:8px;min-height:44px;padding:0 16px;border-radius:999px;background:var(--surface-2);color:var(--cream);font-weight:600}
+.plus-p{color:var(--gold);font-weight:600;font-size:14px}
+.chip:has(input:checked) .plus-p{color:var(--ink)}
+.upsell{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:var(--surface-2)}
+.upsell p{flex:1;min-width:0;font-size:15px;line-height:1.3}
+.up-yes{flex:none;min-height:40px;padding:0 14px;border-radius:999px;background:var(--chili);color:var(--ink);font-weight:700;font-size:15px}
+.up-no{flex:none;width:32px;height:32px;color:var(--muted)}
+.ask-dots{display:flex;gap:6px;padding:0 var(--gut-r) 12px var(--gut-l)}
+.ask-dots i{flex:1;height:4px;border-radius:4px;background:var(--line);transition:background .25s}
+.ask-dots i.on{background:var(--gold)}
+#askBody{min-height:300px}
+.ask-q{margin:0;font:italic 800 28px/1.1 var(--display)}
+.ask-opts{display:grid;gap:10px}
+.ask-o{min-height:58px;padding:0 18px;border:1.5px solid var(--line);border-radius:13px;text-align:left;font-weight:600;font-size:17px;background:var(--bg);animation:rise .28s ease-out backwards}
+.ask-o:nth-child(2){animation-delay:.05s}.ask-o:nth-child(3){animation-delay:.1s}.ask-o:nth-child(4){animation-delay:.15s}
+.ask-o:hover,.ask-o:active{border-color:var(--gold);background:var(--surface-2)}
+.thinking{display:flex;align-items:center;gap:7px;padding-block:24px;color:var(--muted)}
+.thinking i{width:9px;height:9px;border-radius:50%;background:var(--gold);animation:dot 1s ease-in-out infinite}
+.thinking i:nth-child(2){animation-delay:.15s}.thinking i:nth-child(3){animation-delay:.3s}
+.thinking span{margin-left:6px}
+.rec-why{font-size:17px;line-height:1.4;min-height:3em}
+.rec-list{display:flex;flex-direction:column;gap:12px;animation:rise .3s ease-out}
+.rec-l{display:flex;justify-content:space-between;gap:12px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.rec-l b{display:block;font-weight:600}
+.rec-l small{display:block;color:var(--muted);font-size:13.5px;line-height:1.3}
+.rec-l>span{flex:none;font-variant-numeric:tabular-nums;font-weight:600}
+.rec-act{display:flex;flex-direction:column;gap:6px;animation:rise .3s ease-out}
+.rec-act .primary{justify-content:center;width:100%}
+.party{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:5}
+.party i{position:absolute;width:9px;height:13px;border-radius:2px}
+@keyframes spin{to{--spin:360deg}}
+@keyframes twinkle{50%{transform:scale(.72) rotate(30deg);opacity:.6}}
+@keyframes breathe{50%{transform:scale(1.14);opacity:.65}}
+@keyframes steam{0%{transform:translateY(8px) scaleX(.7);opacity:0}30%{opacity:.75}100%{transform:translateY(-34px) translateX(6px) scaleX(1.6);opacity:0}}
+@keyframes shine{0%,62%{left:-40%}100%{left:120%}}
+@keyframes rise{from{transform:translateY(10px);opacity:0}}
+@keyframes dot{50%{transform:translateY(-6px);opacity:.5}}
+@media(prefers-reduced-motion:reduce){.ask,.ask-in i,.halo,.steam i,.new::after,.ask-o,.thinking i,.rec-list,.rec-act{animation:none}.steam{display:none}.new::after{display:none}.fab{transition:none}}
 </style>
 </head>
 <body>
 <header class="hero">
   <div class="wrap">
-    <img src="img/logo.webp" width="640" height="609" alt="Logo de Delicias Eliana B&amp;A">
+    <div class="logo">
+      <span class="halo" aria-hidden="true"></span>
+      <img src="img/logo.webp" width="640" height="609" alt="Logo de Delicias Eliana B&amp;A">
+      <span class="steam" aria-hidden="true"><i></i><i></i><i></i></span>
+    </div>
     <div>
       <h1>Menú</h1>
       <p>Elige tus platos, arma el pedido y envíalo por WhatsApp.</p>
+      <a class="wa-link" href="https://wa.me/573002699192?text=Hola%2C%20quiero%20hacer%20un%20pedido" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp al 300 269 9192"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.8 4.9-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-2.9.8.8-2.8-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.6-1.1.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s1 2.5 1.1 2.7c.1.2 1.9 2.9 4.6 4.1 1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.2-.3-.2-.5-.3Z"/></svg><span>300 269 9192</span></a>
     </div>
+  </div>
+  <div class="wrap actions">
+    <button type="button" class="ask" id="askOpen"><span class="ask-in"><b>¿Qué pido hoy?</b><small>Te recomiendo en 3 toques</small><i aria-hidden="true">✦</i></span></button>
+    <div class="again" id="again" hidden><button type="button" class="again-btn" id="againBtn"></button></div>
   </div>
   <div class="tricolor" aria-hidden="true"><i></i><i></i><i></i></div>
 </header>
@@ -226,7 +306,7 @@ legend small{font-weight:400;color:var(--muted);font-size:14px}
   </div></section>
 
   <section id="adicionales"><div class="wrap">
-    <h2>Adicionales</h2>
+    <div><h2>Adicionales</h2><p class="sub">Para ponerlos en un plato, elígelos al tocar Agregar. Aquí los pides aparte.</p></div>
     <div class="list" data-list="adicionales"></div>
   </div></section>
 
@@ -238,10 +318,13 @@ legend small{font-weight:400;color:var(--muted);font-size:14px}
 
 <footer><div class="wrap">
   <strong>¡Gracias por preferirnos!</strong>
-  <span>WhatsApp: <a href="https://wa.me/573002699192" target="_blank" rel="noopener">300 269 9192</a></span>
+  <span>WhatsApp: <a href="https://wa.me/573002699192?text=Hola%2C%20quiero%20hacer%20un%20pedido" target="_blank" rel="noopener">300 269 9192</a></span>
+  <span id="howWas" hidden><a href="https://wa.me/573002699192?text=Hola%2C%20quiero%20contarles%20c%C3%B3mo%20me%20fue%20con%20mi%20pedido%3A%20" target="_blank" rel="noopener">Cuéntanos cómo te fue con tu pedido</a></span>
+  <button type="button" class="install" id="install" hidden>Instalar el menú en mi celular</button>
 </div></footer>
 
 <div class="toast" id="toast" role="status" hidden></div>
+<a class="fab" href="https://wa.me/573002699192?text=Hola%2C%20quiero%20hacer%20un%20pedido" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp al 300 269 9192"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.8 4.9-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-2.9.8.8-2.8-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.6-1.1.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s1 2.5 1.1 2.7c.1.2 1.9 2.9 4.6 4.1 1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.2-.3-.2-.5-.3Z"/></svg></a>
 <div class="bar" id="bar" hidden><button type="button" id="openCart"><span id="barCount"></span><span id="barTotal"></span></button></div>
 
 <dialog id="itemSheet" aria-labelledby="itemTitle">
@@ -268,6 +351,7 @@ legend small{font-weight:400;color:var(--muted);font-size:14px}
       <div class="lines" id="lines"></div>
       <button type="button" class="empty-link" id="clear">Vaciar pedido</button>
     </div>
+    <div class="upsell" id="upsell" hidden></div>
     <div class="field" id="fName">
       <label for="cName">Tu nombre</label>
       <input id="cName" autocomplete="name" placeholder="¿A nombre de quién?">
@@ -296,6 +380,15 @@ legend small{font-weight:400;color:var(--muted);font-size:14px}
     <a class="primary wa" id="send" href="https://wa.me/573002699192" target="_blank" rel="noopener"><span>Enviar pedido por WhatsApp</span></a>
     <p class="sent" id="sent" role="status" hidden>Abrimos WhatsApp con tu pedido. Toca enviar allá para que nos llegue.</p>
   </div>
+</dialog>
+
+<dialog id="askSheet" aria-labelledby="askTitle">
+  <div class="sheet-h">
+    <div><h3 id="askTitle">¿Qué pido hoy?</h3><p id="askStep"></p></div>
+    <button type="button" class="close" data-close aria-label="Cerrar">✕</button>
+  </div>
+  <div class="ask-dots" id="askDots" aria-hidden="true"></div>
+  <div class="sheet-b" id="askBody" aria-live="polite"></div>
 </dialog>
 
 <script>
@@ -333,23 +426,53 @@ var EXTRAS=[
  {id:'g-400',sec:'gaseosas',name:'Gaseosa 400 ml',p:4000},
  {id:'g-1500',sec:'gaseosas',name:'Gaseosa litro y medio',p:9000}
 ];
+var ADDONS=EXTRAS.filter(function(x){return x.sec==='adicionales'});
 var $=function(s,r){return (r||document).querySelector(s)};
 var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
 var money=function(n){return '$'+String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.')};
 var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
 var byId=function(id){return MENU.filter(function(m){return m.id===id})[0]};
+var extraById=function(id){return EXTRAS.filter(function(x){return x.id===id})[0]};
+var calm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* Líneas del pedido: el precio siempre sale del menú actual */
+function unitPrice(l){
+  var x=extraById(l.id);
+  if(x)return x.p;
+  var m=byId(l.id); if(!m)return null;
+  var o=m.opts.filter(function(v){return v.k===(l.opt||'')})[0]; if(!o)return null;
+  return (l.extras||[]).reduce(function(a,e){var v=extraById(e);return a+(v?v.p:0)},o.p);
+}
+function keyOf(l){return [l.id,l.opt||'',(l.sabores||[]).join('+'),(l.salsas||[]).join('+'),(l.extras||[]).join('+')].join('|')}
+function clean(list){
+  return (list||[]).map(function(l){
+    var m=byId(l.id), x=extraById(l.id), o=m&&m.opts.filter(function(v){return v.k===(l.opt||'')})[0];
+    var p=unitPrice(l); if(p===null||!(l.q>0))return null;
+    var n={id:l.id,name:m?m.name:x.name,opt:l.opt||'',optNote:o&&o.note||'',p:p,q:l.q,sabores:l.sabores||[],salsas:l.salsas||[],extras:l.extras||[]};
+    n.key=keyOf(n);
+    return n;
+  }).filter(Boolean);
+}
+function mk(id,opt,q,sabores,extras){return {id:id,opt:opt||'',q:q||1,sabores:sabores||[],salsas:[],extras:extras||[]}}
 
 /* Estado */
-var cart=[], form={name:'',entrega:'Domicilio',addr:''};
-try{var s=JSON.parse(localStorage.getItem(KEY)||'{}');if(Array.isArray(s.cart))cart=s.cart;if(s.form)form=Object.assign(form,s.form)}catch(e){}
-function save(){try{localStorage.setItem(KEY,JSON.stringify({cart:cart,form:form}))}catch(e){}}
+var cart=[], last=null, form={name:'',entrega:'Domicilio',addr:''};
+try{
+  var s=JSON.parse(localStorage.getItem(KEY)||'{}');
+  cart=clean(s.cart);
+  if(s.form)form=Object.assign(form,s.form);
+  if(s.last){var ll=clean(s.last);if(ll.length)last=ll}
+}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({cart:cart,form:form,last:last}))}catch(e){}}
 var count=function(){return cart.reduce(function(a,l){return a+l.q},0)};
-var total=function(){return cart.reduce(function(a,l){return a+l.q*l.p},0)};
+var sum=function(list){return list.reduce(function(a,l){return a+l.q*l.p},0)};
+var total=function(){return sum(cart)};
 function qtyOf(id){return cart.reduce(function(a,l){return a+(l.id===id?l.q:0)},0)}
-function addLine(l){
-  var key=[l.id,l.opt,(l.sabores||[]).join('+'),(l.salsas||[]).join('+')].join('|');
-  var hit=cart.filter(function(x){return x.key===key})[0];
-  if(hit)hit.q+=l.q;else{l.key=key;cart.push(l)}
+function addLines(lines){
+  clean(lines).forEach(function(l){
+    var hit=cart.filter(function(x){return x.key===l.key})[0];
+    if(hit)hit.q+=l.q;else cart.push(l);
+  });
   changed();
 }
 function setQty(key,d){
@@ -368,7 +491,7 @@ function dishHTML(m){
   if(m.feature){
     return '<article class="new"><div><p class="lbl">Lo nuevo</p><h3>'+esc(m.name)+'</h3></div><p class="desc">'+esc(m.desc)+'</p><div class="buy"><div class="prices">'+priceHTML(m)+'</div>'+btn+'</div></article>';
   }
-  return '<article class="dish"><img src="img/'+m.img+'.jpg" width="960" height="600" loading="lazy" alt="'+esc(m.name)+': '+esc(m.desc)+'">'+
+  return '<article class="dish"><div class="ph"><img src="img/'+m.img+'.jpg" width="960" height="600" loading="lazy" alt="'+esc(m.name)+': '+esc(m.desc)+'"></div>'+
     '<div>'+(m.kicker?'<p class="kicker">'+esc(m.kicker)+'</p>':'')+'<h3>'+esc(m.name)+'</h3><p class="desc">'+esc(m.desc)+'</p></div>'+
     '<div class="buy"><div class="prices">'+priceHTML(m)+'</div>'+btn+'</div></article>';
 }
@@ -386,6 +509,59 @@ function renderExtras(){
   });
 }
 
+/* Efectos */
+function reveal(){
+  var ph=$$('.ph');
+  if(calm||!('IntersectionObserver' in window)){ph.forEach(function(p){p.classList.add('in')});return}
+  document.documentElement.classList.add('fx');
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target)}});
+  },{rootMargin:'0px 0px -8% 0px'});
+  ph.forEach(function(p){io.observe(p)});
+}
+function fly(fromEl,src){
+  var bar=$('#openCart');
+  if(calm||!fromEl||!bar||!fromEl.isConnected)return;
+  var a=fromEl.getBoundingClientRect(), b=bar.getBoundingClientRect();
+  if(!a.width||!b.width)return;
+  var size=64, el=document.createElement(src?'img':'span');
+  el.className='flyer'; if(src){el.src=src;el.alt=''}
+  el.style.width=el.style.height=size+'px';
+  el.style.left=(a.left+a.width/2-size/2)+'px'; el.style.top=(a.top+a.height/2-size/2)+'px';
+  document.body.appendChild(el);
+  var dx=(b.left+b.width/2)-(a.left+a.width/2), dy=(b.top+b.height/2)-(a.top+a.height/2);
+  var anim=el.animate([
+    {transform:'translate(0,0) scale(1)',opacity:1},
+    {transform:'translate('+dx*.55+'px,'+(dy*.35-50)+'px) scale(.85)',opacity:1,offset:.55},
+    {transform:'translate('+dx+'px,'+dy+'px) scale(.2)',opacity:.3}
+  ],{duration:620,easing:'cubic-bezier(.4,0,.3,1)'});
+  anim.onfinish=function(){
+    el.remove();
+    bar.animate([{transform:'scale(1)'},{transform:'scale(1.045)'},{transform:'scale(1)'}],{duration:260});
+  };
+}
+function celebrate(){
+  if(calm)return;
+  var colors=['#ecb84f','#f26b2c','#f6c500','#1d3f9e','#d3202c','#f7eedd'];
+  var box=document.createElement('div'); box.className='party'; box.setAttribute('aria-hidden','true');
+  $('#cartSheet').appendChild(box);
+  var w=box.clientWidth||360, h=box.clientHeight||600;
+  for(var i=0;i<44;i++){
+    var p=document.createElement('i');
+    p.style.background=colors[i%colors.length];
+    p.style.left=(w/2)+'px'; p.style.top=(h-70)+'px';
+    box.appendChild(p);
+    var ang=Math.random()*Math.PI-Math.PI, dist=120+Math.random()*(h*.55);
+    var x=Math.cos(ang)*dist*.8, y=Math.sin(ang)*dist;
+    p.animate([
+      {transform:'translate(0,0) rotate(0)',opacity:1},
+      {transform:'translate('+x+'px,'+y+'px) rotate('+(Math.random()*540)+'deg)',opacity:1,offset:.65},
+      {transform:'translate('+x*1.1+'px,'+(y+140)+'px) rotate('+(Math.random()*900)+'deg)',opacity:0}
+    ],{duration:1100+Math.random()*500,easing:'cubic-bezier(.15,.7,.3,1)',fill:'forwards'});
+  }
+  setTimeout(function(){box.remove()},1800);
+}
+
 /* Toast */
 var toastT;
 function toast(t){var el=$('#toast');el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(function(){el.hidden=true},1800)}
@@ -393,25 +569,25 @@ function toast(t){var el=$('#toast');el.textContent=t;el.hidden=false;clearTimeo
 /* Hojas */
 function openSheet(d){$('html').classList.add('locked');d.showModal()}
 $$('dialog').forEach(function(d){
-  d.addEventListener('close',function(){$('html').classList.remove('locked')});
+  d.addEventListener('close',function(){if(!$('dialog[open]'))$('html').classList.remove('locked')});
   d.addEventListener('click',function(e){if(e.target===d||e.target.closest('[data-close]'))d.close()});
 });
 
-/* Hoja de opciones */
-var cur=null, qty=1;
+/* Hoja de opciones del plato */
+var cur=null, qty=1, srcBtn=null;
 function curPrice(){
-  var o=$('input[name="opt"]:checked',$('#itemForm'));
-  return cur.opts[o?+o.value:0].p;
+  var f=$('#itemForm'), o=$('input[name="opt"]:checked',f);
+  var base=cur.opts[o?+o.value:0].p;
+  return $$('input[name="extra"]:checked',f).reduce(function(a,e){return a+extraById(e.value).p},base);
 }
 function refreshItem(){$('#qVal').textContent=qty;$('#itemPrice').textContent=money(curPrice()*qty)}
-function openItem(m){
-  cur=m;qty=1;
+function openItem(m,btn){
+  cur=m;qty=1;srcBtn=btn;
   $('#itemTitle').textContent=m.name;
   $('#itemDesc').textContent=m.desc;
   var h='';
   if(m.opts.length>1){
-    var isPapas=!!m.salsas;
-    h+='<fieldset><legend>'+(isPapas?'Tamaño':'¿Sola o en combo?')+'</legend>'+m.opts.map(function(o,i){
+    h+='<fieldset><legend>'+(m.salsas?'Tamaño':'¿Sola o en combo?')+'</legend>'+m.opts.map(function(o,i){
       return '<label class="opt"><input type="radio" name="opt" value="'+i+'"'+(i===0?' checked':'')+'><span>'+esc(o.k)+(o.note?'<small>'+esc(o.note)+'</small>':'')+'</span><b>'+money(o.p)+'</b></label>';
     }).join('')+'</fieldset>';
   }
@@ -427,7 +603,11 @@ function openItem(m){
       return '<label class="chip"><input type="checkbox" name="salsa" value="'+esc(s)+'">'+esc(s)+'</label>';
     }).join('')+'</div></fieldset>';
   }
+  h+='<fieldset><legend>Agrégale a este plato <small>opcional</small></legend><div class="chips">'+ADDONS.map(function(x){
+    return '<label class="chip"><input type="checkbox" name="extra" value="'+x.id+'">'+esc(x.name)+' <span class="plus-p">+'+money(x.p)+'</span></label>';
+  }).join('')+'</div></fieldset>';
   $('#itemBody').innerHTML=h;
+  $('#itemBody').scrollTop=0;
   refreshItem();
   openSheet($('#itemSheet'));
 }
@@ -441,10 +621,13 @@ $('#itemForm').addEventListener('submit',function(e){
   var o=cur.opts[oi?+oi.value:0];
   var sabores=[];
   if(cur.sabores)for(var i=1;i<=cur.sabores;i++)sabores.push($('input[name="sabor'+i+'"]:checked',f).value);
-  var salsas=$$('input[name="salsa"]:checked',f).map(function(x){return x.value});
-  addLine({id:cur.id,name:cur.name,opt:o.k,optNote:o.note||'',p:o.p,q:qty,sabores:sabores,salsas:salsas});
+  var l=mk(cur.id,o.k,qty,sabores,$$('input[name="extra"]:checked',f).map(function(x){return x.value}));
+  l.salsas=$$('input[name="salsa"]:checked',f).map(function(x){return x.value});
   $('#itemSheet').close();
+  addLines([l]);
   toast(cur.name+' agregado');
+  var card=srcBtn&&srcBtn.closest('.dish');
+  fly(card?$('img',card):srcBtn,cur.img?'img/'+cur.img+'.jpg':null);
 });
 
 /* Clics del menú */
@@ -452,37 +635,133 @@ document.addEventListener('click',function(e){
   var t=e.target.closest('[data-add],[data-xp],[data-xm]');
   if(!t)return;
   if(t.dataset.add){
-    var m=byId(t.dataset.add);
-    if(m.opts.length===1&&!m.sabores&&!m.salsas){
-      addLine({id:m.id,name:m.name,opt:'',optNote:'',p:m.opts[0].p,q:1,sabores:[],salsas:[]});
-      toast(m.name+' agregado');
-    } else openItem(m);
+    openItem(byId(t.dataset.add),t);
   } else if(t.dataset.xp){
-    var x=EXTRAS.filter(function(v){return v.id===t.dataset.xp})[0];
-    addLine({id:x.id,name:x.name,opt:'',optNote:'',p:x.p,q:1,sabores:[],salsas:[]});
-    refocus(x.id,'xp');
+    var id=t.dataset.xp;
+    addLines([mk(id)]);
+    refocus(id,'xp');
+    fly($('[data-xp="'+id+'"]'),null);
   } else {
-    var id=t.dataset.xm, l=cart.filter(function(v){return v.id===id})[0];
+    var xid=t.dataset.xm, l=cart.filter(function(v){return v.id===xid})[0];
     if(l)setQty(l.key,-1);
-    refocus(id,qtyOf(id)?'xm':'xp');
+    refocus(xid,qtyOf(xid)?'xm':'xp');
   }
 });
 function refocus(id,kind){var b=$('[data-'+kind+'="'+id+'"]');if(b)b.focus({preventScroll:true})}
+
+/* ¿Qué pido hoy? */
+var ASK=[
+ {k:'n',q:'¿Cuántos van a comer?',o:[['1','Solo yo'],['2','Dos'],['3','3 o 4'],['5','5 o más']]},
+ {k:'h',q:'¿Cuánta hambre hay?',o:[['a','Un antojo'],['m','Con hambre'],['g','Mucha hambre']]},
+ {k:'s',q:'¿Carne o pollo?',o:[['carne','Carne'],['pollo','Pollo'],['mix','De todo un poco']]}
+];
+function recommend(a){
+  var mix=a.s==='mix', A=a.s==='pollo'?'catira':'pelua', F=a.s==='pollo'?'Pollo':'Carne', X=a.s==='pollo'?'x-pollo':'x-carne';
+  var CP=function(q){return mk('cpersonal','',q,mix?['Carne','Pollo']:[F,F])};
+  var G=function(id){return mk(id,'Grande')};
+  var T={
+   '1a':mix?[mk('lokas','Personal')]:[mk(A,'Sola')],
+   '1m':mix?[CP(1)]:[mk(A,'Combo')],
+   '1g':mix?[G('lokas'),mk('g-400')]:[mk(A,'Combo',1,[],[X])],
+   '2a':mix?[G('lokas')]:[mk(A,'Sola',2)],
+   '2m':[CP(2)],
+   '2g':mix?[mk('pelua','Combo'),mk('catira','Combo')]:[mk(A,'Combo',2)],
+   '3a':mix?[mk('cespecial'),mk('g-1500')]:[CP(2)],
+   '3m':mix?[mk('cespecial'),G('lokas'),mk('g-1500')]:[CP(3)],
+   '3g':mix?[mk('cespecial'),G('lokas'),G('salchipollo'),mk('g-1500')]:[mk(A,'Combo',4)],
+   '5a':mix?[mk('cespecial'),G('lokas'),mk('g-1500')]:[CP(3)],
+   '5m':mix?[mk('cespecial','',2),mk('g-1500','',2)]:[CP(5)],
+   '5g':mix?[mk('cespecial','',2),G('lokas'),G('salchipollo'),mk('g-1500','',2)]:[mk(A,'Combo',5)]
+  };
+  var who={'1':'Para ti','2':'Para dos','3':'Para 3 o 4','5':'Para 5 o más'}[a.n];
+  var hun={a:'con un antojo',m:'con hambre',g:'con mucha hambre'}[a.h];
+  var fav={carne:'y ganas de carne',pollo:'y ganas de pollo',mix:'y ganas de probar de todo'}[a.s];
+  var why=who+' '+hun+' '+fav+', esto es lo que te recomiendo.'+(a.n==='5'?' Calculé para 5: si son más, sube las cantidades en tu pedido.':'');
+  return {why:why,lines:clean(T[a.n+a.h])};
+}
+var ans={}, step=0, typeT=null;
+function renderAsk(){
+  clearTimeout(typeT);
+  var b=$('#askBody');
+  $('#askStep').textContent=step<ASK.length?'Paso '+(step+1)+' de '+ASK.length:'Tu recomendación';
+  $('#askDots').innerHTML=ASK.map(function(_,i){return '<i class="'+(i<=step?'on':'')+'"></i>'}).join('');
+  if(step<ASK.length){
+    var q=ASK[step];
+    b.innerHTML='<h4 class="ask-q">'+esc(q.q)+'</h4><div class="ask-opts">'+q.o.map(function(o){
+      return '<button type="button" class="ask-o" data-a="'+o[0]+'">'+esc(o[1])+'</button>';
+    }).join('')+'</div>';
+    return;
+  }
+  b.innerHTML='<div class="thinking" role="status"><i></i><i></i><i></i><span>Armando tu pedido…</span></div>';
+  typeT=setTimeout(showRec,calm?0:750);
+}
+function showRec(){
+  var r=recommend(ans);
+  $('#askBody').innerHTML='<p class="rec-why" id="recWhy" aria-label="'+esc(r.why)+'"></p>'+
+    '<div class="rec-list" id="recList" hidden>'+r.lines.map(function(l){
+      var sub=lineSub(l);
+      return '<div class="rec-l"><div><b>'+l.q+' × '+esc(l.name)+'</b>'+sub.map(function(s){return '<small>'+esc(s)+'</small>'}).join('')+'</div><span>'+money(l.p*l.q)+'</span></div>';
+    }).join('')+'<div class="total"><span>Total</span><span>'+money(sum(r.lines))+'</span></div></div>'+
+    '<div class="rec-act" id="recAct" hidden><button type="button" class="primary" id="recAdd"><span>Agregar a mi pedido</span></button><button type="button" class="empty-link" id="recAgain">Volver a empezar</button></div>';
+  var el=$('#recWhy'), i=0;
+  function done(){$('#recList').hidden=false;$('#recAct').hidden=false;$('#recAdd').focus({preventScroll:true})}
+  if(calm){el.textContent=r.why;done();return}
+  (function type(){
+    el.textContent=r.why.slice(0,++i);
+    if(i<r.why.length)typeT=setTimeout(type,16);else done();
+  })();
+}
+$('#askOpen').addEventListener('click',function(){ans={};step=0;renderAsk();openSheet($('#askSheet'))});
+$('#askBody').addEventListener('click',function(e){
+  var o=e.target.closest('[data-a]');
+  if(o){ans[ASK[step].k]=o.dataset.a;step++;renderAsk();return}
+  if(e.target.closest('#recAgain')){ans={};step=0;renderAsk();return}
+  if(e.target.closest('#recAdd')){
+    addLines(recommend(ans).lines);
+    $('#askSheet').close();
+    clearArm();openSheet($('#cartSheet'));
+  }
+});
+$('#askSheet').addEventListener('close',function(){clearTimeout(typeT)});
 
 /* Pedido */
 function lineSub(l){
   var a=[];
   if(l.opt)a.push(l.opt+(l.optNote?' ('+l.optNote.toLowerCase()+')':''));
+  if(l.id.indexOf('x-')===0)a.push('Aparte');
   if(l.sabores&&l.sabores.length)a.push('Sabores: '+l.sabores.join(' y '));
-  if(l.salsas&&l.salsas.length)a.push('Salsas: '+l.salsas.join(', '));
+  var m=byId(l.id);
+  if(m&&m.salsas)a.push('Salsas: '+(l.salsas.length?l.salsas.join(', '):'por confirmar'));
+  if(l.extras&&l.extras.length)a.push('Extras: '+l.extras.map(function(e){return extraById(e).name}).join(', '));
   return a;
 }
+var upsellOff=false;
+function suggestion(){
+  if(upsellOff||!cart.length)return null;
+  var drink=cart.some(function(l){return l.id.indexOf('g-')===0||l.opt==='Combo'||l.id==='cpersonal'});
+  if(!drink)return extraById(count()>=3?'g-1500':'g-250');
+  var papa=cart.some(function(l){var m=byId(l.id);return l.id==='x-papa'||l.opt==='Combo'||l.id==='cpersonal'||(m&&m.sec==='papas')});
+  if(!papa)return extraById('x-papa');
+  return null;
+}
+function renderUpsell(){
+  var s=suggestion(), box=$('#upsell');
+  box.hidden=!s;
+  if(!s)return;
+  box.innerHTML='<p>¿Le agregas <b>'+esc(s.name.toLowerCase())+'</b> por <b>'+money(s.p)+'</b>?</p><button type="button" class="up-yes" data-up="'+s.id+'">Agregar</button><button type="button" class="up-no" aria-label="No, gracias">✕</button>';
+}
+$('#upsell').addEventListener('click',function(e){
+  var y=e.target.closest('[data-up]');
+  if(y){addLines([mk(y.dataset.up)]);return}
+  if(e.target.closest('.up-no')){upsellOff=true;renderUpsell()}
+});
 function renderCart(){
   $('#lines').innerHTML=cart.map(function(l){
     return '<div class="line"><div class="t"><b>'+esc(l.name)+'</b>'+lineSub(l).map(function(s){return '<small>'+esc(s)+'</small>'}).join('')+'<em>'+money(l.p*l.q)+'</em></div>'+
       '<span class="stepper"><button type="button" data-lm="'+esc(l.key)+'" aria-label="Quitar uno de '+esc(l.name)+'">−</button><output>'+l.q+'</output><button type="button" class="plus" data-lp="'+esc(l.key)+'" aria-label="Agregar uno de '+esc(l.name)+'">+</button></span></div>';
   }).join('');
   $('#cartTotal').textContent=money(total());
+  renderUpsell();
 }
 function message(){
   var dom=form.entrega==='Domicilio';
@@ -490,10 +769,13 @@ function message(){
   if(dom)out.push('*Dirección:* '+form.addr.trim());
   out.push('');
   cart.forEach(function(l){
-    out.push('• '+l.q+' × '+l.name+(l.opt?' ('+l.opt+')':'')+': '+money(l.p*l.q));
+    var tag=l.opt?' ('+l.opt+')':(l.id.indexOf('x-')===0?' (aparte)':'');
+    out.push('• '+l.q+' × '+l.name+tag+': '+money(l.p*l.q));
     if(l.optNote)out.push('   '+l.optNote);
-    if(l.sabores&&l.sabores.length)out.push('   Sabores: '+l.sabores.join(' y '));
-    if(l.salsas&&l.salsas.length)out.push('   Salsas: '+l.salsas.join(', '));
+    if(l.sabores.length)out.push('   Sabores: '+l.sabores.join(' y '));
+    var m=byId(l.id);
+    if(m&&m.salsas)out.push('   Salsas: '+(l.salsas.length?l.salsas.join(', '):'por confirmar'));
+    if(l.extras.length)out.push('   Extras: '+l.extras.map(function(e){return extraById(e).name}).join(', '));
   });
   out.push('','*Total: '+money(total())+'*'+(dom?' + domicilio':''));
   var n=$('#cNote').value.trim();
@@ -505,19 +787,33 @@ function refreshSend(){
   var dom=form.entrega==='Domicilio';
   $('#fAddr').hidden=!dom;$('#domNote').hidden=!dom;
 }
+function renderAgain(){
+  var show=!!last&&cart.length===0;
+  $('#again').hidden=!show;
+  if(show){
+    $('#againBtn').innerHTML='<span>Repetir mi último pedido</span><span>'+money(sum(last))+'</span>';
+  }
+  $('#howWas').hidden=!last;
+}
 function changed(){
   save();
   var c=count();
   $('#bar').hidden=c===0;
+  document.body.classList.toggle('has-cart',c>0);
   $('#barCount').textContent='Ver pedido ('+c+')';
   $('#barTotal').textContent=money(total());
   $$('[data-count]').forEach(function(el){var q=qtyOf(el.dataset.count);el.hidden=!q;el.textContent=q});
   renderExtras();
   renderCart();
   refreshSend();
+  renderAgain();
   $('#sent').hidden=true;
   if(c===0&&$('#cartSheet').open)$('#cartSheet').close();
 }
+$('#againBtn').addEventListener('click',function(){
+  addLines(last.map(function(l){return Object.assign({},l)}));
+  clearArm();openSheet($('#cartSheet'));
+});
 $('#openCart').addEventListener('click',function(){clearArm();openSheet($('#cartSheet'))});
 $('#lines').addEventListener('click',function(e){
   var t=e.target.closest('[data-lp],[data-lm]');if(!t)return;
@@ -547,25 +843,42 @@ $('#send').addEventListener('click',function(e){
   }
   if(!ok){e.preventDefault();return}
   refreshSend();
+  last=cart.map(function(l){return Object.assign({},l)});
+  save();
   $('#sent').hidden=false;
+  celebrate();
 });
+
+/* Instalar en el celular */
+var installEvt=null;
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();installEvt=e;$('#install').hidden=false});
+window.addEventListener('appinstalled',function(){installEvt=null;$('#install').hidden=true;toast('Menú instalado')});
+$('#install').addEventListener('click',function(){
+  if(!installEvt)return;
+  installEvt.prompt();
+  installEvt.userChoice.then(function(){installEvt=null;$('#install').hidden=true});
+});
+if('serviceWorker' in navigator&&location.protocol!=='file:'){
+  window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});
+}
 
 /* Categoría activa */
 var links=$$('#cats a');
 if('IntersectionObserver' in window){
-  var io=new IntersectionObserver(function(es){
+  var spy=new IntersectionObserver(function(es){
     es.forEach(function(en){
       if(!en.isIntersecting)return;
       links.forEach(function(a){
         var on=a.getAttribute('href')==='#'+en.target.id;
         a.classList.toggle('on',on);
-        if(on)a.scrollIntoView({block:'nearest',inline:'center'});
+        if(on)$('#cats').scrollTo({left:a.offsetLeft-$('#cats').clientWidth/2+a.offsetWidth/2,behavior:calm?'auto':'smooth'});
       });
     });
   },{rootMargin:'-30% 0px -65% 0px'});
-  $$('main section').forEach(function(s){io.observe(s)});
+  $$('main section').forEach(function(s){spy.observe(s)});
 }
 links[0].classList.add('on');
+reveal();
 changed();
 })();
 </script>

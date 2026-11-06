@@ -383,6 +383,46 @@ html.intro{overflow:hidden}
 @keyframes btStep{from{transform:translateY(0) rotate(-1.800deg)}to{transform:translateY(-5px) rotate(1.800deg)}}
 @keyframes btPop{from{opacity:0;transform:scale(.8) translateY(8px)}}
 @media(prefers-reduced-motion:reduce){.bt-all,.bt-head,.bt-eyes,.talk .bt-open,.talk .bt-stache,.talk .bt-head,.walk,.walk .bt-all,.w-bubble,.w-acts button,.tada .bt-stars{animation:none}.waiter,.bt-up,.bt-arm,.bt-lid{transition:none}}
+
+/* Adicionales y gaseosas */
+.addons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media(min-width:560px){.addons{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:960px){.addons{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.addon,.gas-c{position:relative;min-width:0}
+.addon-b{position:relative;display:grid;width:100%;padding:0 0 11px;border-radius:14px;background:var(--surface);text-align:left;overflow:hidden;box-shadow:inset 0 0 0 1.5px var(--line);transition:box-shadow .2s,transform .14s}
+.addon-b:active,.gas-b:active{transform:scale(.96)}
+.addon.on .addon-b,.gas-c.on .gas-b{box-shadow:inset 0 0 0 2.5px var(--gold),0 0 22px rgba(236,184,79,.28)}
+.addon-ph{display:block;overflow:hidden}
+.addon-ph img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.addon.on .addon-ph img{transform:scale(1.1)}
+.addon-n{padding:9px 12px 0;font-weight:600;font-size:15.5px;line-height:1.2;padding-right:44px}
+.addon-p{padding:2px 12px 0;color:var(--gold);font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
+.addon-plus,.gas-plus{position:absolute;right:9px;bottom:10px;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--chili);color:var(--ink);font-size:21px;font-weight:600;line-height:1}
+.addon-q{position:absolute;top:8px;right:8px;z-index:2;display:grid;place-items:center;min-width:32px;height:32px;padding:0 6px;border-radius:999px;background:var(--gold);color:var(--ink);font-weight:800;font-variant-numeric:tabular-nums;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.45);animation:pop .3s cubic-bezier(.2,1.5,.4,1)}
+.addon-m{position:absolute;top:8px;left:8px;z-index:2;width:36px;height:36px;border-radius:50%;background:rgba(12,10,8,.88);color:var(--cream);font-size:21px;font-weight:600;line-height:1;box-shadow:inset 0 0 0 1.5px var(--line)}
+.gas-box{display:flex;flex-direction:column;gap:12px;--liq:#2b0f07}
+.brand{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:14px;background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--line)}
+.brand button{min-height:48px;border-radius:10px;font-weight:700;font-size:16px;color:var(--muted);transition:background .2s,color .2s}
+.brand button.on{background:var(--gold);color:var(--ink)}
+.flavors{display:flex;flex-wrap:wrap;gap:8px}
+.flavors button{display:inline-flex;align-items:center;gap:7px;min-height:42px;padding:0 13px;border-radius:999px;box-shadow:inset 0 0 0 1.5px var(--line);font-weight:600;font-size:15px}
+.flavors button i{width:14px;height:14px;border-radius:50%}
+.flavors button.on{background:var(--surface-2);box-shadow:inset 0 0 0 2px var(--gold)}
+.gas-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;max-width:720px}
+.gas-b{position:relative;display:grid;justify-items:center;width:100%;padding:12px 6px 50px;border-radius:14px;background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--line);transition:box-shadow .2s,transform .14s;text-align:center}
+.gas-b b{margin-top:8px;font-size:14.5px;font-weight:700;line-height:1.15}
+.gas-p{color:var(--gold);font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
+.gas-bt{display:flex;align-items:flex-end;justify-content:center;width:100%;height:150px}
+.bot{display:block;width:auto;max-width:100%;overflow:visible;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+.liq{fill:var(--liq);transition:fill .4s}
+.lab{fill:var(--cream)}.lab2{fill:var(--gold)}
+.cap{fill:var(--gold)}
+.bub{fill:rgba(255,255,255,.55);animation:bub 2.6s ease-in infinite}
+.bub.b1{animation-delay:.8s}.bub.b2{animation-delay:1.6s}
+.gas-plus{left:50%;right:auto;margin-left:-17px;bottom:9px}
+.ref{margin:0;color:var(--muted);font-size:13.5px}
+@keyframes bub{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(-78px);opacity:0}}
+@media(prefers-reduced-motion:reduce){.bub,.addon-q{animation:none}.addon-ph img,.addon-b,.gas-b,.brand button,.liq{transition:none}}
 </style>
 </head>
 <body>
@@ -448,13 +488,13 @@ html.intro{overflow:hidden}
   </div></section>
 
   <section id="adicionales"><div class="wrap">
-    <div><h2>Adicionales</h2><p class="sub">Para ponerlos en un plato, elígelos al tocar Agregar. Aquí los pides aparte.</p></div>
-    <div class="list" data-list="adicionales"></div>
+    <div><h2>Adicionales</h2><p class="sub">Toca para agregar. Don Beto te pregunta si lo pone en tu plato.</p></div>
+    <div class="addons" data-list="adicionales"></div>
   </div></section>
 
   <section id="gaseosas"><div class="wrap">
-    <h2>Gaseosas</h2>
-    <div class="list" data-list="gaseosas"></div>
+    <div><h2>Gaseosas</h2><p class="sub">Elige la marca y toca el tamaño.</p></div>
+    <div class="gas-box" data-list="gaseosas"></div>
   </div></section>
 </main>
 
@@ -564,17 +604,23 @@ var MENU=[
   opts:[{k:'Personal',p:25000},{k:'Grande',p:42000}],salsas:true}
 ];
 var EXTRAS=[
- {id:'x-maiz',sec:'adicionales',name:'Maíz',p:3000},
- {id:'x-tocineta',sec:'adicionales',name:'Tocineta',p:4000},
- {id:'x-queso',sec:'adicionales',name:'Queso',p:4000},
- {id:'x-carne',sec:'adicionales',name:'Carne',p:6000},
- {id:'x-pollo',sec:'adicionales',name:'Pollo',p:6000},
- {id:'x-papa',sec:'adicionales',name:'Porción de papa',p:6000},
- {id:'g-250',sec:'gaseosas',name:'Gaseosa 250 ml',p:3000},
- {id:'g-400',sec:'gaseosas',name:'Gaseosa 400 ml',p:4000},
- {id:'g-1500',sec:'gaseosas',name:'Gaseosa litro y medio',p:9000}
+ {id:'x-maiz',sec:'adicionales',name:'Maíz',p:3000,img:'add-maiz'},
+ {id:'x-tocineta',sec:'adicionales',name:'Tocineta',p:4000,img:'add-tocineta'},
+ {id:'x-queso',sec:'adicionales',name:'Queso',p:4000,img:'add-queso'},
+ {id:'x-carne',sec:'adicionales',name:'Carne',p:6000,img:'add-carne'},
+ {id:'x-pollo',sec:'adicionales',name:'Pollo',p:6000,img:'add-pollo'},
+ {id:'x-papa',sec:'adicionales',name:'Porción de papa',p:6000,img:'add-papa'},
+ {id:'g-250',sec:'gaseosas',name:'Gaseosa 250 ml',size:'250 ml',h:62,p:3000},
+ {id:'g-400',sec:'gaseosas',name:'Gaseosa 400 ml',size:'400 ml',h:78,p:4000},
+ {id:'g-1500',sec:'gaseosas',name:'Gaseosa litro y medio',size:'Litro y medio',h:100,p:9000}
 ];
 var ADDONS=EXTRAS.filter(function(x){return x.sec==='adicionales'});
+var DRINKS=EXTRAS.filter(function(x){return x.sec==='gaseosas'});
+var FLAVORS=[{k:'Manzana',c:'#d4a23c'},{k:'Colombiana',c:'#c2641a'},{k:'Uva',c:'#5b2a8c'},{k:'Naranja',c:'#ee8a1c'}];
+var COLA='#2b0f07', GASES=['Coca-Cola'].concat(FLAVORS.map(function(f){return 'Postobón '+f.k}));
+var gasBrand='Coca-Cola', gasFlavor='Manzana';
+function gasSel(){return gasBrand==='Coca-Cola'?'Coca-Cola':'Postobón '+gasFlavor}
+function gasColor(){return gasBrand==='Coca-Cola'?COLA:FLAVORS.filter(function(f){return f.k===gasFlavor})[0].c}
 var $=function(s,r){return (r||document).querySelector(s)};
 var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
 var money=function(n){return '$'+String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.')};
@@ -592,12 +638,12 @@ function unitPrice(l){
   var o=m.opts.filter(function(v){return v.k===(l.opt||'')})[0]; if(!o)return null;
   return (l.extras||[]).reduce(function(a,e){var v=extraById(e);return a+(v?v.p:0)},o.p);
 }
-function keyOf(l){return [l.id,l.opt||'',(l.sabores||[]).join('+'),(l.salsas||[]).join('+'),(l.extras||[]).join('+')].join('|')}
+function keyOf(l){return [l.id,l.opt||'',(l.sabores||[]).join('+'),(l.salsas||[]).join('+'),(l.extras||[]).join('+'),l.gas||''].join('|')}
 function clean(list){
   return (list||[]).map(function(l){
     var m=byId(l.id), x=extraById(l.id), o=m&&m.opts.filter(function(v){return v.k===(l.opt||'')})[0];
     var p=unitPrice(l); if(p===null||!(l.q>0))return null;
-    var n={id:l.id,name:m?m.name:x.name,opt:l.opt||'',optNote:o&&o.note||'',p:p,q:l.q,sabores:l.sabores||[],salsas:l.salsas||[],extras:l.extras||[]};
+    var n={id:l.id,name:m?m.name:x.name,opt:l.opt||'',optNote:o&&o.note||'',p:p,q:l.q,sabores:l.sabores||[],salsas:l.salsas||[],extras:l.extras||[],gas:l.gas||''};
     n.key=keyOf(n);
     return n;
   }).filter(Boolean);
@@ -647,20 +693,58 @@ function dishHTML(m){
 $$('[data-items]').forEach(function(g){
   g.innerHTML=MENU.filter(function(m){return m.sec===g.dataset.items}).map(dishHTML).join('');
 });
+function bottle(id,hh){
+  var cid='bc-'+id, bub=[0,1,2].map(function(i){return '<circle class="bub b'+i+'" cx="'+(24+i*7)+'" cy="118" r="'+(1.4+i*.3)+'"/>'}).join('');
+  return '<svg class="bot" viewBox="0 0 60 140" style="height:'+hh+'%" aria-hidden="true"><defs><clipPath id="'+cid+'"><path d="M23 18h14v10c0 6 12 12 12 26v70c0 6-4 10-10 10H21c-6 0-10-4-10-10V54c0-14 12-20 12-26z"/></clipPath></defs>'+
+    '<path d="M23 18h14v10c0 6 12 12 12 26v70c0 6-4 10-10 10H21c-6 0-10-4-10-10V54c0-14 12-20 12-26z" fill="rgba(247,238,221,.1)"/>'+
+    '<g clip-path="url(#'+cid+')"><rect class="liq" x="8" y="34" width="44" height="104"/>'+bub+'<rect x="9" y="72" width="42" height="30" class="lab"/><rect x="9" y="72" width="42" height="2.500" class="lab2"/><rect x="9" y="99.500" width="42" height="2.500" class="lab2"/></g>'+
+    '<path d="M23 18h14v10c0 6 12 12 12 26v70c0 6-4 10-10 10H21c-6 0-10-4-10-10V54c0-14 12-20 12-26z" fill="none" stroke="rgba(247,238,221,.55)" stroke-width="1.400"/>'+
+    '<path d="M18 56c-1 16-1 40-1 62" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2.400" stroke-linecap="round"/>'+
+    '<rect x="21.500" y="6" width="17" height="11" rx="2" class="cap"/></svg>';
+}
+var extrasBuilt=false;
+function buildExtras(){
+  $('[data-list="adicionales"]').innerHTML=ADDONS.map(function(x){
+    return '<div class="addon" data-tile="'+x.id+'"><button type="button" class="addon-b" data-xp="'+x.id+'" aria-label="Agregar '+esc(x.name)+', '+money(x.p)+'"><span class="addon-ph"><img src="img/'+x.img+'.jpg" width="480" height="360" loading="lazy" alt=""></span><span class="addon-n">'+esc(x.name)+'</span><span class="addon-p">+'+money(x.p)+'</span><span class="addon-plus" aria-hidden="true">+</span></button>'+
+      '<span class="addon-q" hidden></span><button type="button" class="addon-m" data-xm="'+x.id+'" aria-label="Quitar '+esc(x.name)+'" hidden>−</button></div>';
+  }).join('');
+  $('[data-list="gaseosas"]').innerHTML=
+    '<div class="brand" role="group" aria-label="Marca"><button type="button" data-brand="Coca-Cola">Coca-Cola</button><button type="button" data-brand="Postobón">Postobón</button></div>'+
+    '<div class="flavors" id="flavors" role="group" aria-label="Sabor de Postobón" hidden>'+FLAVORS.map(function(f){return '<button type="button" data-flavor="'+f.k+'"><i style="background:'+f.c+'"></i>'+f.k+'</button>'}).join('')+'</div>'+
+    '<div class="gas-grid" id="gasGrid">'+DRINKS.map(function(x){
+      return '<div class="gas-c" data-gcard="'+x.id+'"><button type="button" class="gas-b" data-gp="'+x.id+'" aria-label="Agregar '+esc(x.size)+', '+money(x.p)+'"><span class="gas-bt">'+bottle(x.id,x.h)+'</span><b>'+esc(x.size)+'</b><span class="gas-p">'+money(x.p)+'</span><span class="gas-plus" aria-hidden="true">+</span></button><span class="addon-q" hidden></span><button type="button" class="addon-m" data-gm="'+x.id+'" aria-label="Quitar '+esc(x.size)+'" hidden>−</button></div>';
+    }).join('')+'</div><p class="ref" id="gasNow"></p>';
+  extrasBuilt=true;
+}
+function gasQty(id,sel){return cart.reduce(function(a,l){return a+(l.id===id&&l.opt===sel?l.q:0)},0)}
 function renderExtras(){
-  $$('[data-list]').forEach(function(box){
-    box.innerHTML=EXTRAS.filter(function(x){return x.sec===box.dataset.list}).map(function(x){
-      var q=qtyOf(x.id);
-      return '<div class="row"><span class="n">'+esc(x.name)+'</span><span class="p">'+money(x.p)+'</span><span class="stepper">'+
-        (q?'<button type="button" data-xm="'+x.id+'" aria-label="Quitar '+esc(x.name)+'">−</button><output>'+q+'</output>':'')+
-        '<button type="button" class="plus" data-xp="'+x.id+'" aria-label="Agregar '+esc(x.name)+'">+</button></span></div>';
-    }).join('');
+  if(!extrasBuilt)buildExtras();
+  ADDONS.forEach(function(x){
+    var t=$('[data-tile="'+x.id+'"]'),q=qtyOf(x.id);
+    t.classList.toggle('on',q>0);
+    $('.addon-q',t).hidden=!q;$('.addon-q',t).textContent=q;$('.addon-m',t).hidden=!q;
   });
+  var sel=gasSel(),box=$('[data-list="gaseosas"]');
+  box.style.setProperty('--liq',gasColor());
+  $$('[data-brand]',box).forEach(function(b){var on=b.dataset.brand===gasBrand;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
+  $('#flavors').hidden=gasBrand==='Coca-Cola';
+  $$('[data-flavor]',box).forEach(function(b){var on=b.dataset.flavor===gasFlavor;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
+  DRINKS.forEach(function(x){
+    var t=$('[data-gcard="'+x.id+'"]'),q=gasQty(x.id,sel);
+    t.classList.toggle('on',q>0);
+    $('.addon-q',t).hidden=!q;$('.addon-q',t).textContent=q;$('.addon-m',t).hidden=!q;
+    $('.gas-b',t).setAttribute('aria-label','Agregar '+sel+' '+x.size+', '+money(x.p));
+  });
+  $('#gasNow').textContent='Eligiendo: '+sel+'. Botellas de referencia.';
+}
+function refill(){
+  if(calm)return;
+  $$('.liq').forEach(function(r,i){r.animate([{transform:'translateY(70%)'},{transform:'none'}],{duration:620,delay:i*70,easing:'cubic-bezier(.2,.8,.3,1)',fill:'backwards'})});
 }
 
 /* Efectos */
 function reveal(){
-  var ph=$$('.ph'), rv=$$('main h2, .sub, .dish>div:not(.ph), .new, .salsas, .list');
+  var ph=$$('.ph'), rv=$$('main h2, .sub, .dish>div:not(.ph), .new, .salsas, .addons, .gas-box');
   rv.forEach(function(e){if(e.tagName!=='H2')e.classList.add('rv')});
   $$('main h2').forEach(function(e){e.innerHTML='<span>'+e.innerHTML+'</span>'});
   var all=ph.concat(rv);
@@ -844,6 +928,11 @@ function curPrice(){
   var base=cur.opts[o?+o.value:0].p;
   return $$('input[name="extra"]:checked',f).reduce(function(a,e){return a+extraById(e.value).p},base);
 }
+function syncGasField(){
+  var f=$('#fGas');if(!f)return;
+  var o=$('#itemForm input[name="opt"]:checked');
+  f.hidden=!!o&&cur.opts[+o.value].k!=='Combo';
+}
 function refreshItem(){$('#qVal').textContent=qty;roll($('#itemPrice'),curPrice()*qty)}
 function openItem(m,btn){
   cur=m;qty=1;srcBtn=btn;
@@ -867,17 +956,23 @@ function openItem(m,btn){
       return '<label class="chip"><input type="checkbox" name="salsa" value="'+esc(s)+'">'+esc(s)+'</label>';
     }).join('')+'</div></fieldset>';
   }
+  if(m.id==='cpersonal'||m.opts.some(function(o){return o.k==='Combo'})){
+    h+='<fieldset id="fGas"><legend>Gaseosa del combo <small>elige una</small></legend><div class="chips">'+GASES.map(function(s){
+      return '<label class="chip"><input type="radio" name="gas" value="'+esc(s)+'">'+esc(s)+'</label>';
+    }).join('')+'</div></fieldset>';
+  }
   h+='<fieldset><legend>Agrégale a este plato <small>opcional</small></legend><div class="chips">'+ADDONS.map(function(x){
     return '<label class="chip"><input type="checkbox" name="extra" value="'+x.id+'">'+esc(x.name)+' <span class="plus-p">+'+money(x.p)+'</span></label>';
   }).join('')+'</div></fieldset>';
   $('#itemBody').innerHTML=h;
+  syncGasField();
   $('#itemBody').scrollTop=0;
   $('#itemPrice')._v=undefined;
   refreshItem();
   W.item(m);
   openSheet($('#itemSheet'));
 }
-$('#itemForm').addEventListener('change',function(e){refreshItem();W.itemChange(e.target)});
+$('#itemForm').addEventListener('change',function(e){refreshItem();syncGasField();W.itemChange(e.target)});
 $('#qMinus').addEventListener('click',function(){if(qty>1){qty--;refreshItem()}});
 $('#qPlus').addEventListener('click',function(){qty++;refreshItem()});
 $('#itemForm').addEventListener('submit',function(e){
@@ -889,6 +984,8 @@ $('#itemForm').addEventListener('submit',function(e){
   if(cur.sabores)for(var i=1;i<=cur.sabores;i++)sabores.push($('input[name="sabor'+i+'"]:checked',f).value);
   var l=mk(cur.id,o.k,qty,sabores,$$('input[name="extra"]:checked',f).map(function(x){return x.value}));
   l.salsas=$$('input[name="salsa"]:checked',f).map(function(x){return x.value});
+  var gf=$('#fGas'),gi=gf&&!gf.hidden&&$('input[name="gas"]:checked',f);
+  if(gi)l.gas=gi.value;
   $('#itemSheet').close();
   addLines([l]);
   if(!W.added(l))toast(cur.name+' agregado');
@@ -899,15 +996,32 @@ $('#itemForm').addEventListener('submit',function(e){
 
 /* Clics del menú */
 document.addEventListener('click',function(e){
-  var t=e.target.closest('[data-add],[data-xp],[data-xm]');
+  var t=e.target.closest('[data-add],[data-xp],[data-xm],[data-gp],[data-gm],[data-brand],[data-flavor]');
   if(!t)return;
   if(t.dataset.add){
     openItem(byId(t.dataset.add),t);
+  } else if(t.dataset.brand){
+    gasBrand=t.dataset.brand;renderExtras();refill();
+    W.tip(gasBrand==='Coca-Cola'?'Coca-Cola, muy bien. ¿De qué tamaño?':'Postobón. Dime el sabor y el tamaño.');
+  } else if(t.dataset.flavor){
+    gasFlavor=t.dataset.flavor;renderExtras();refill();
+  } else if(t.dataset.gp){
+    var did=t.dataset.gp,sel=gasSel();
+    addLines([mk(did,sel)]);
+    var bt=$('.bot',t);
+    if(!calm&&bt)bt.animate([{transform:'none'},{transform:'translateY(-9px) rotate(-5deg)'},{transform:'rotate(4deg)'},{transform:'none'}],{duration:420,easing:'ease-out'});
+    var rg=t.getBoundingClientRect();burst(rg.left+rg.width/2,rg.top+rg.height/2,8);
+    fly(t,null);
+    W.tip(sel+' '+extraById(did).size.toLowerCase()+', ¡anotada!',true);
+  } else if(t.dataset.gm){
+    var gl=cart.filter(function(v){return v.id===t.dataset.gm&&v.opt===gasSel()})[0];
+    if(gl)setQty(gl.key,-1);
   } else if(t.dataset.xp){
     var id=t.dataset.xp;
     addLines([mk(id)]);
-    refocus(id,'xp');
-    fly($('[data-xp="'+id+'"]'),null);
+    var xx=extraById(id),rx=t.getBoundingClientRect();burst(rx.left+rx.width/2,rx.top+rx.height/3,8);
+    fly($('img',t),'img/'+xx.img+'.jpg');
+    W.extra(xx);
   } else {
     var xid=t.dataset.xm, l=cart.filter(function(v){return v.id===xid})[0];
     if(l)setQty(l.key,-1);
@@ -1002,6 +1116,8 @@ function lineSub(l){
   var m=byId(l.id);
   if(m&&m.salsas)a.push('Salsas: '+(l.salsas.length?l.salsas.join(', '):'por confirmar'));
   if(l.extras&&l.extras.length)a.push('Extras: '+l.extras.map(function(e){return extraById(e).name}).join(', '));
+  if(l.opt==='Combo'||l.id==='cpersonal')a.push('Gaseosa: '+(l.gas||'por confirmar'));
+  if(l.id.indexOf('g-')===0&&!l.opt)a.push('Marca: por confirmar');
   return a;
 }
 var upsellOff=false;
@@ -1045,6 +1161,8 @@ function message(){
     var m=byId(l.id);
     if(m&&m.salsas)out.push('   Salsas: '+(l.salsas.length?l.salsas.join(', '):'por confirmar'));
     if(l.extras.length)out.push('   Extras: '+l.extras.map(function(e){return extraById(e).name}).join(', '));
+    if(l.opt==='Combo'||l.id==='cpersonal')out.push('   Gaseosa: '+(l.gas||'por confirmar'));
+    if(l.id.indexOf('g-')===0&&!l.opt)out.push('   Marca: por confirmar');
   });
   out.push('','*Total: '+money(total())+'*'+(dom?' + domicilio':''));
   var n=$('#cNote').value.trim();
@@ -1193,6 +1311,7 @@ var W=(function(){
   }
   function hide(){
     clearTimeout(hideT);bub.hidden=true;acts.innerHTML='';clearInterval(txt._t);el.classList.remove('talk');
+    rest();
     clearTimeout(idleT);idleT=setTimeout(sectionLine,8000);
   }
   function say(t,o){
@@ -1233,8 +1352,8 @@ var W=(function(){
     arepas:'La Pelúa es de carne y la Catira de pollo. ¿Cuál te provoca?',
     combos:'¿Vienen varios? El Combo Especial trae 5 arepas medianas de pollo y carne.',
     papas:'Mira lo nuevo: el Salchipollo trae pollo, salchicha, tocineta y chorizo ahumado.',
-    adicionales:'Si quieres un extra dentro de un plato, lo eliges al tocar Agregar.',
-    gaseosas:'¿Algo de tomar? Hay de 250 ml, 400 ml y litro y medio.'
+    adicionales:'Toca un adicional y yo te ayudo a ponerlo en tu plato.',
+    gaseosas:'¿Algo de tomar? Elige Coca-Cola o Postobón, y el tamaño.'
   };
   function sectionLine(){
     if(!curSec||seen[curSec]||!bub.hidden||Date.now()-lastSay<7000)return;
@@ -1243,15 +1362,16 @@ var W=(function(){
   function watch(){
     if(!('IntersectionObserver' in window))return;
     var io=new IntersectionObserver(function(es){
-      es.forEach(function(en){if(en.isIntersecting){curSec=en.target.id;sectionLine()}});
+      es.forEach(function(en){if(en.isIntersecting){curSec=en.target.id;rest();sectionLine()}});
     },{rootMargin:'-35% 0px -55% 0px'});
     $$('main section').forEach(function(s){io.observe(s)});
     addEventListener('scroll',function(){
       if(gone||calm)return;
       if(bub.hidden)el.classList.add('duck');
-      clearTimeout(el._s);el._s=setTimeout(function(){el.classList.remove('duck')},650);
+      clearTimeout(el._s);el._s=setTimeout(rest,650);
     },{passive:true});
   }
+  function rest(){el.classList.toggle('duck',bub.hidden&&!calm&&(curSec==='adicionales'||curSec==='gaseosas'))}
   function hasDrink(){return cart.some(function(l){return l.id.indexOf('g-')===0||l.opt==='Combo'||l.id==='cpersonal'})}
   function render(){
     el.classList.toggle('gone',gone);
@@ -1288,6 +1408,7 @@ var W=(function(){
     item:function(m){mini('wmItem',ITEM[m.id]||('¿La personal o la grande? Y dime qué salsas te provocan.'))},
     itemChange:function(t){
       if(t.name==='extra'&&t.checked)mini('wmItem','Extra de '+extraById(t.value).name.toLowerCase()+', anotado.');
+      else if(t.name==='gas')mini('wmItem',t.value+' para el combo, ¡anotada!');
       else if(t.name==='salsa'&&t.checked)mini('wmItem','Salsa de '+t.value.toLowerCase()+', ¡anotada!');
       else if(t.name==='opt'){var k=cur.opts[+t.value].k;mini('wmItem',k==='Combo'?'¡Eso! Combo con papas y gaseosa.':k==='Sola'?'Perfecto, la arepa sola.':'Listo, tamaño '+k.toLowerCase()+'.')}
     },
@@ -1306,6 +1427,21 @@ var W=(function(){
         return say('¡Buena elección! ¿Algo de tomar con eso?',{mood:'tada',acts:[{label:'Gaseosa 400 ml · $4.000',fn:function(){addLines([mk('g-400')]);say('Gaseosa anotada.',{mood:'tada'})}},{label:'No, gracias',fn:function(){}}]});
       }
       return say('¡Anotado! Cuando quieras, revisamos tu pedido.',{mood:'tada',acts:[{label:'Ver mi pedido',fn:function(){$('#openCart').click()}}]});
+    },
+    tip:function(t,tada){say(t,tada?{mood:'tada'}:{})},
+    extra:function(x){
+      var name=x.name.toLowerCase();
+      var ds=cart.filter(function(l){return byId(l.id)&&l.extras.indexOf(x.id)<0});
+      var d=ds[ds.length-1];
+      if(!d)return say(name.charAt(0).toUpperCase()+name.slice(1)+' anotado, va aparte.',{mood:'tada'});
+      say('¿Le pongo '+name+' a '+d.name+' o lo dejo aparte?',{mood:'tada',acts:[{label:'Ponlo en '+d.name,fn:function(){
+        var one=cart.filter(function(l){return l.id===x.id})[0],dish=cart.filter(function(l){return l.key===d.key})[0];
+        if(!one||!dish)return;
+        var copy={id:dish.id,opt:dish.opt,q:1,sabores:dish.sabores,salsas:dish.salsas,extras:dish.extras.concat(x.id),gas:dish.gas};
+        cart=cart.map(function(l){if(l.key===one.key||l.key===dish.key)l.q-=1;return l}).filter(function(l){return l.q>0});
+        addLines([copy]);
+        say('¡Listo! Ya va en '+d.name+'.',{mood:'tada'});
+      }},{label:'Déjalo aparte',fn:function(){}}]});
     },
     cart:function(){mini('wmCart',form.name.trim()?form.name.trim().split(' ')[0]+', revisemos tu pedido antes de enviarlo.':'Revisemos tu pedido. Solo me falta tu nombre y cómo lo quieres.')},
     cartLine:function(t){mini('wmCart',t)},

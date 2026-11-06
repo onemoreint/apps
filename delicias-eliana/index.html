@@ -333,6 +333,56 @@ html.intro{overflow:hidden}
 @keyframes ring{0%{transform:scale(1);opacity:.75}100%{transform:scale(1.28,1.5);opacity:0}}
 @keyframes nudge{0%,90%,100%{transform:none}92%{transform:rotate(-2.5deg)}94%{transform:rotate(2.5deg)}96%{transform:rotate(-1.5deg)}98%{transform:rotate(1.5deg)}}
 @media(prefers-reduced-motion:reduce){.hero::before,.hero h1,.enter .hero h1,.enter .hero p,.enter .wa-link,.enter .actions,.enter .tricolor i,.fab,.fab::before,.fab::after,.sparks i,.fx .ph.in::after{animation:none}.hero h1{background:none;color:var(--gold)}.fab-t{transition:none}}
+
+/* Don Beto */
+.waiter{position:fixed;left:max(4px,env(safe-area-inset-left,0px));bottom:calc(80px + env(safe-area-inset-bottom,0px));z-index:7;width:99px;height:140px;transition:transform .32s cubic-bezier(.3,.8,.3,1),bottom .2s}
+.has-cart .waiter{bottom:calc(146px + env(safe-area-inset-bottom,0px))}
+.waiter.duck{transform:translateX(-66%)}
+.waiter.gone{left:max(16px,env(safe-area-inset-left,0px));width:50px;height:50px}
+.w-btn,.w-peek{display:block;width:100%;height:100%;padding:0}
+.w-peek{border-radius:50%;background:var(--surface-2);overflow:hidden;box-shadow:0 0 0 2px var(--gold),0 6px 18px rgba(0,0,0,.5)}
+.bt{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 4px 8px rgba(0,0,0,.45))}
+.bt-all{transform-origin:70px 214px;animation:btBreath 3.2s ease-in-out infinite}
+.bt-up{transform-origin:70px 134px;transition:transform .35s cubic-bezier(.3,.8,.3,1)}
+.bt-head{transform-origin:70px 72px;animation:btHead 6s ease-in-out infinite}
+.bt-eyes{transform-origin:70px 40px;animation:btBlink 4.6s linear infinite}
+.bt-arm{transform-origin:91px 87px;transition:transform .35s cubic-bezier(.3,1.3,.5,1)}
+.bt-lid{transform-origin:124px 73px;transition:transform .4s cubic-bezier(.3,1.4,.5,1)}
+.bt-stars{opacity:0;transition:opacity .25s}
+.bt-open{transform-origin:70.5px 57px;transform:scaleY(0)}
+.talk .bt-open{animation:btTalk .24s ease-in-out infinite alternate}
+.talk .bt-smile{opacity:0}
+.talk .bt-stache{animation:btStache .24s ease-in-out infinite alternate}
+.talk .bt-head{animation:btNod .9s ease-in-out infinite}
+.tada .bt-arm{transform:rotate(-13deg)}
+.tada .bt-lid{transform:translateY(-21px) rotate(-11deg)}
+.tada .bt-stars{opacity:1;animation:twinkle .7s ease-in-out infinite}
+.bow .bt-up{transform:rotate(11deg)}
+.walk{animation:btWalkIn 1s cubic-bezier(.25,.8,.3,1) backwards}
+.walk .bt-all{animation:btStep .25s ease-in-out 4 alternate}
+.w-bubble{position:fixed;left:max(100px,calc(env(safe-area-inset-left,0px) + 100px));bottom:calc(150px + env(safe-area-inset-bottom,0px));z-index:7;width:min(calc(100vw - 118px),260px);padding:11px 13px;border-radius:14px 14px 14px 3px;background:var(--cream);color:var(--ink);box-shadow:0 10px 28px rgba(0,0,0,.55);pointer-events:none;animation:btPop .28s cubic-bezier(.2,1.3,.4,1)}
+.has-cart .w-bubble{bottom:calc(216px + env(safe-area-inset-bottom,0px))}
+.w-bubble p{margin:0;font-size:15px;line-height:1.32;font-weight:500;min-height:1.32em}
+.w-acts{display:flex;flex-wrap:wrap;gap:6px}
+.w-acts:not(:empty){margin-top:9px}
+.w-acts button{pointer-events:auto;min-height:38px;padding:0 12px;border-radius:999px;background:var(--ink);color:var(--cream);font-weight:600;font-size:14px;animation:btPop .25s ease-out backwards}
+.w-acts button:nth-child(n+2){background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.w-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);margin:0}
+.wm{display:flex;align-items:center;gap:10px;padding:0 var(--gut-r) 12px var(--gut-l)}
+.wm-av{flex:none;width:50px;height:50px;border-radius:50%;background:var(--surface-2);box-shadow:0 0 0 2px var(--gold);overflow:hidden}
+.wm-t{flex:1;min-width:0;min-height:2.6em;display:flex;align-items:center;margin:0;padding:7px 11px;border-radius:12px 12px 12px 3px;background:var(--cream);color:var(--ink);font-size:14.5px;line-height:1.3;font-weight:500}
+.wm .bt{filter:none}
+@media(max-height:600px){.waiter{width:72px;height:102px}.w-bubble{left:78px;width:min(calc(100vw - 92px),260px);bottom:calc(112px + env(safe-area-inset-bottom,0px))}}
+@keyframes btBreath{50%{transform:scaleY(1.012) translateY(-1px)}}
+@keyframes btHead{0%,70%,100%{transform:none}80%{transform:rotate(-3deg)}90%{transform:rotate(2deg)}}
+@keyframes btBlink{0%,94%,100%{transform:none}97%{transform:scaleY(.08)}}
+@keyframes btTalk{from{transform:scaleY(.18)}to{transform:scaleY(1)}}
+@keyframes btStache{from{transform:none}to{transform:translateY(-1px)}}
+@keyframes btNod{50%{transform:rotate(1.6deg) translateY(.8px)}}
+@keyframes btWalkIn{from{transform:translateX(-125%)}}
+@keyframes btStep{from{transform:translateY(0) rotate(-1.800deg)}to{transform:translateY(-5px) rotate(1.800deg)}}
+@keyframes btPop{from{opacity:0;transform:scale(.8) translateY(8px)}}
+@media(prefers-reduced-motion:reduce){.bt-all,.bt-head,.bt-eyes,.talk .bt-open,.talk .bt-stache,.talk .bt-head,.walk,.walk .bt-all,.w-bubble,.w-acts button,.tada .bt-stars{animation:none}.waiter,.bt-up,.bt-arm,.bt-lid{transition:none}}
 </style>
 </head>
 <body>
@@ -416,6 +466,9 @@ html.intro{overflow:hidden}
 </div></footer>
 
 <div class="toast" id="toast" role="status" hidden></div>
+<div class="waiter" id="waiter" hidden></div>
+<div class="w-bubble" id="wBubble" hidden><p id="wText"></p><div class="w-acts" id="wActs"></div></div>
+<p class="w-sr" id="wSr" role="status"></p>
 <a class="fab" href="https://wa.me/573002699192?text=Hola%2C%20quiero%20hacer%20un%20pedido" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp al 300 269 9192"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.8 4.9-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-2.9.8.8-2.8-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.6-1.1.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s1 2.5 1.1 2.7c.1.2 1.9 2.9 4.6 4.1 1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.2-.3-.2-.5-.3Z"/></svg><span class="fab-t">Pedir por WhatsApp</span></a>
 <div class="bar" id="bar" hidden><button type="button" id="openCart"><span id="barCount"></span><span id="barTotal"></span></button></div>
 
@@ -425,6 +478,7 @@ html.intro{overflow:hidden}
       <div><h3 id="itemTitle"></h3><p id="itemDesc"></p></div>
       <button type="button" class="close" data-close aria-label="Cerrar">✕</button>
     </div>
+    <div class="wm" id="wmItem"><span class="wm-av"></span><p class="wm-t"></p></div>
     <div class="sheet-b" id="itemBody"></div>
     <div class="sheet-f">
       <div class="qty-row"><span>Cantidad</span><span class="stepper"><button type="button" id="qMinus" aria-label="Quitar uno">−</button><output id="qVal">1</output><button type="button" class="plus" id="qPlus" aria-label="Agregar uno">+</button></span></div>
@@ -438,6 +492,7 @@ html.intro{overflow:hidden}
     <h3 id="cartTitle">Tu pedido</h3>
     <button type="button" class="close" data-close aria-label="Cerrar">✕</button>
   </div>
+  <div class="wm" id="wmCart"><span class="wm-av"></span><p class="wm-t"></p></div>
   <div class="sheet-b">
     <div>
       <div class="lines" id="lines"></div>
@@ -480,6 +535,7 @@ html.intro{overflow:hidden}
     <button type="button" class="close" data-close aria-label="Cerrar">✕</button>
   </div>
   <div class="ask-dots" id="askDots" aria-hidden="true"></div>
+  <div class="wm" id="wmAsk"><span class="wm-av"></span><p class="wm-t"></p></div>
   <div class="sheet-b" id="askBody" aria-live="polite"></div>
 </dialog>
 
@@ -703,6 +759,7 @@ function scrollFx(){
 function boot(){
   document.documentElement.classList.add('enter');
   reveal();embers();scrollFx();
+  W.start();
 }
 function intro(){
   var d=document.documentElement,sp=$('#splash');
@@ -817,9 +874,10 @@ function openItem(m,btn){
   $('#itemBody').scrollTop=0;
   $('#itemPrice')._v=undefined;
   refreshItem();
+  W.item(m);
   openSheet($('#itemSheet'));
 }
-$('#itemForm').addEventListener('change',refreshItem);
+$('#itemForm').addEventListener('change',function(e){refreshItem();W.itemChange(e.target)});
 $('#qMinus').addEventListener('click',function(){if(qty>1){qty--;refreshItem()}});
 $('#qPlus').addEventListener('click',function(){qty++;refreshItem()});
 $('#itemForm').addEventListener('submit',function(e){
@@ -833,7 +891,7 @@ $('#itemForm').addEventListener('submit',function(e){
   l.salsas=$$('input[name="salsa"]:checked',f).map(function(x){return x.value});
   $('#itemSheet').close();
   addLines([l]);
-  toast(cur.name+' agregado');
+  if(!W.added(l))toast(cur.name+' agregado');
   if(srcBtn&&srcBtn.isConnected){var bb=srcBtn.getBoundingClientRect();burst(bb.left+bb.width/2,bb.top+bb.height/2,10)}
   var card=srcBtn&&srcBtn.closest('.dish');
   fly(card?$('img',card):srcBtn,cur.img?'img/'+cur.img+'.jpg':null);
@@ -896,6 +954,7 @@ function renderAsk(){
   $('#askDots').innerHTML=ASK.map(function(_,i){return '<i class="'+(i<=step?'on':'')+'"></i>'}).join('');
   if(step<ASK.length){
     var q=ASK[step];
+    W.ask(['Te ayudo con gusto. Son tres preguntas.','¡Perfecto! Sigamos.','Última pregunta.'][step]);
     b.innerHTML='<h4 class="ask-q">'+esc(q.q)+'</h4><div class="ask-opts">'+q.o.map(function(o){
       return '<button type="button" class="ask-o" data-a="'+o[0]+'">'+esc(o[1])+'</button>';
     }).join('')+'</div>';
@@ -906,6 +965,7 @@ function renderAsk(){
 }
 function showRec(){
   var r=recommend(ans);
+  W.ask('Esto es lo que yo te serviría.');
   $('#askBody').innerHTML='<p class="rec-why" id="recWhy" aria-label="'+esc(r.why)+'"></p>'+
     '<div class="rec-list" id="recList" hidden>'+r.lines.map(function(l){
       var sub=lineSub(l);
@@ -928,7 +988,7 @@ $('#askBody').addEventListener('click',function(e){
   if(e.target.closest('#recAdd')){
     addLines(recommend(ans).lines);
     $('#askSheet').close();
-    clearArm();openSheet($('#cartSheet'));
+    clearArm();W.cart();openSheet($('#cartSheet'));
   }
 });
 $('#askSheet').addEventListener('close',function(){clearTimeout(typeT)});
@@ -1021,9 +1081,9 @@ function changed(){
 }
 $('#againBtn').addEventListener('click',function(){
   addLines(last.map(function(l){return Object.assign({},l)}));
-  clearArm();openSheet($('#cartSheet'));
+  clearArm();W.cart();openSheet($('#cartSheet'));
 });
-$('#openCart').addEventListener('click',function(){clearArm();openSheet($('#cartSheet'))});
+$('#openCart').addEventListener('click',function(){clearArm();W.cart();openSheet($('#cartSheet'))});
 $('#lines').addEventListener('click',function(e){
   var t=e.target.closest('[data-lp],[data-lm]');if(!t)return;
   var k=t.dataset.lp||t.dataset.lm, kind=t.dataset.lp?'lp':'lm';
@@ -1039,10 +1099,12 @@ clearBtn.addEventListener('click',function(){
 });
 $('#cName').value=form.name;$('#cAddr').value=form.addr;
 $(form.entrega==='Domicilio'?'#eDom':'#eRec').checked=true;
+$('#cName').addEventListener('change',function(e){var n=e.target.value.trim().split(' ')[0];if(n)W.cartLine('¡Mucho gusto, '+n+'!')});
+$('#cAddr').addEventListener('focus',function(){W.cartLine('Dame una referencia para que el domicilio llegue sin vueltas.')});
 $('#cName').addEventListener('input',function(e){form.name=e.target.value;$('#eName').hidden=true;$('#fName').classList.remove('bad');save();refreshSend()});
 $('#cAddr').addEventListener('input',function(e){form.addr=e.target.value;$('#eAddr').hidden=true;$('#fAddr').classList.remove('bad');save();refreshSend()});
 $('#cNote').addEventListener('input',refreshSend);
-$$('input[name="entrega"]').forEach(function(r){r.addEventListener('change',function(){form.entrega=r.value;save();refreshSend()})});
+$$('input[name="entrega"]').forEach(function(r){r.addEventListener('change',function(){form.entrega=r.value;save();refreshSend();W.cartLine(r.value==='Domicilio'?'¿A dónde te lo llevamos?':'Perfecto, para recoger.')})});
 $('#send').addEventListener('click',function(e){
   var ok=true;
   if(!form.name.trim()){ok=false;$('#eName').hidden=false;$('#fName').classList.add('bad');$('#cName').focus()}
@@ -1050,13 +1112,207 @@ $('#send').addEventListener('click',function(e){
     $('#eAddr').hidden=false;$('#fAddr').classList.add('bad');
     if(ok)$('#cAddr').focus();ok=false;
   }
-  if(!ok){e.preventDefault();return}
+  if(!ok){e.preventDefault();W.cartLine(!form.name.trim()?'Me falta tu nombre para anotar el pedido.':'Me falta la dirección para el domicilio.');return}
   refreshSend();
   last=cart.map(function(l){return Object.assign({},l)});
   save();
   $('#sent').hidden=false;
+  W.sent();
   celebrate();
 });
+
+/* Don Beto, el mesero */
+var W=(function(){
+  var KEYV='de-voz',KEYG='de-mesero';
+  function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
+  function put(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+  function svg(box){
+    return '<svg class="bt" viewBox="'+box+'" aria-hidden="true"><g class="bt-all">'+
+    '<ellipse cx="70" cy="214" rx="34" ry="4" fill="#000" opacity=".45"/>'+
+    '<path d="M54 132h15l-1 72H55zM71 132h15l-1 72H72z" fill="#3b4266"/><path d="M61 134l-1 68M78 134l1 68" stroke="#ecb84f" stroke-width="1.4" opacity=".75"/>'+
+    '<path d="M52 203h17v8H46q-2-6 6-8zM71 203h17q8 2 6 8H71z" fill="#8a5a2f"/>'+
+    '<g class="bt-up">'+
+      '<path d="M47 80q23-10 46 0l2 56H45z" fill="#fbf6ea"/>'+
+      '<path d="M47 81l17-6 6 28 6-28 17 6 2 53q-25 12-50 0z" fill="#1d3f9e"/>'+
+      '<path d="M46 124q24 11 48 0l1 10q-25 12-50 0z" fill="#d3202c"/><path d="M46 118q24 11 48 0l.3 6q-24 11-48 0z" fill="#f6c500"/>'+
+      '<circle cx="70" cy="108" r="2.1" fill="#ecb84f"/><circle cx="70" cy="116" r="2.1" fill="#ecb84f"/>'+
+      '<g class="bt-towel"><path d="M49 86l-12 37" stroke="#fbf6ea" stroke-width="13" stroke-linecap="round"/><circle cx="35" cy="128" r="6.5" fill="#efc197"/><path d="M26 121h21l3 34q-13 6-26 0z" fill="#fff"/><path d="M26 121h21l.7 7H25.500z" fill="#e4d9bf"/></g>'+
+      '<g class="bt-arm"><path d="M91 87l18 19 14-22" fill="none" stroke="#fbf6ea" stroke-width="12.500" stroke-linecap="round" stroke-linejoin="round"/><circle cx="124" cy="80" r="6.500" fill="#efc197"/>'+
+        '<ellipse cx="124" cy="75" rx="27" ry="4.500" fill="#d9dde6"/><ellipse cx="124" cy="74" rx="27" ry="3" fill="#f1f3f8"/>'+
+        '<ellipse class="bt-food" cx="124" cy="68" rx="15" ry="6" fill="#e8b65a"/><path class="bt-food" d="M112 69q12 5 24 0l-1 2q-11 4-22 0z" fill="#7a3f1d"/>'+
+        '<g class="bt-lid"><path d="M100 73a24 24 0 0 1 48 0z" fill="#bfc6d3"/><path d="M106 69a19 19 0 0 1 13-14" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".85"/><circle cx="124" cy="46" r="3.800" fill="#ecb84f"/></g>'+
+        '<g class="bt-stars" fill="#ecb84f"><path d="M104 44l1.800 4 4 1.800-4 1.800-1.800 4-1.800-4-4-1.800 4-1.800zM146 38l1.500 3.300 3.300 1.500-3.300 1.500-1.500 3.300-1.500-3.300-3.300-1.500 3.300-1.500z"/></g>'+
+      '</g>'+
+      '<g class="bt-head">'+
+        '<path d="M63 62h14v18q-7 5-14 0z" fill="#e5b58a"/>'+
+        '<path d="M60 76l10 8 10-8 3 7-13 6-13-6z" fill="#fff"/>'+
+        '<path d="M70 85l-13-7v14zM70 85l13-7v14z" fill="#ecb84f"/><rect x="66.500" y="81.500" width="7" height="7" rx="2" fill="#c98f2c"/>'+
+        '<ellipse cx="47" cy="45" rx="4.500" ry="7" fill="#efc197"/><ellipse cx="93" cy="45" rx="4.500" ry="7" fill="#efc197"/>'+
+        '<ellipse cx="70" cy="42" rx="23" ry="27" fill="#f4cda6"/>'+
+        '<path d="M46 40q-3-27 25-28 25 0 24 27-5-13-13-15-16 7-31 3-3 5-5 13z" fill="#3a2316"/>'+
+        '<path d="M57 33q5-3 10 0M74 33q5-3 10 0" fill="none" stroke="#3a2316" stroke-width="2.300" stroke-linecap="round"/>'+
+        '<g class="bt-eyes"><ellipse cx="62" cy="40" rx="2.900" ry="3.800" fill="#21140c"/><ellipse cx="79" cy="40" rx="2.900" ry="3.800" fill="#21140c"/><circle cx="63" cy="38.800" r="1" fill="#fff"/><circle cx="80" cy="38.800" r="1" fill="#fff"/></g>'+
+        '<path d="M70 42q3 5 1 8" fill="none" stroke="#c98d62" stroke-width="1.800" stroke-linecap="round"/>'+
+        '<ellipse cx="55" cy="49" rx="4.500" ry="2.800" fill="#ef9f83" opacity=".5"/><ellipse cx="85" cy="49" rx="4.500" ry="2.800" fill="#ef9f83" opacity=".5"/>'+
+        '<ellipse class="bt-open" cx="70.500" cy="59" rx="5.500" ry="4.500" fill="#6e1d17"/>'+
+        '<path class="bt-smile" d="M63 58q7.500 5 15 0" fill="none" stroke="#6e1d17" stroke-width="1.800" stroke-linecap="round"/>'+
+        '<path class="bt-stache" d="M70.500 52q-5-3-10 0-5 3-9-1 1 7 8 6 7 0 11-3 4 3 11 3 7 1 8-6-4 4-9 1-5-3-10 0z" fill="#3a2316"/>'+
+      '</g>'+
+    '</g></g></svg>';
+  }
+  var el=$('#waiter'),bub=$('#wBubble'),txt=$('#wText'),acts=$('#wActs'),sr=$('#wSr');
+  var gone=get(KEYG)==='no',voice=get(KEYV)==='si'&&('speechSynthesis' in window);
+  var started=false,typeT=null,hideT=null,moodT=null,idleT=null,lastSay=0,seen={},curSec=null;
+  $$('.wm-av').forEach(function(a){a.innerHTML=svg('38 8 66 66')});
+  function speak(t){
+    if(!voice)return;
+    try{
+      speechSynthesis.cancel();
+      var u=new SpeechSynthesisUtterance(t);u.lang='es-CO';u.rate=1.03;u.pitch=.92;
+      var v=speechSynthesis.getVoices().filter(function(x){return /^es/i.test(x.lang)});
+      var pick=v.filter(function(x){return /CO|VE|MX|419|US/.test(x.lang)})[0]||v[0];
+      if(pick)u.voice=pick;
+      speechSynthesis.speak(u);
+    }catch(e){}
+  }
+  function typeInto(node,host,t,after){
+    clearInterval(node._t);
+    host.classList.add('talk');
+    if(calm){node.textContent=t;host.classList.remove('talk');if(after)after();return}
+    var i=0;node.textContent='';
+    node._t=setInterval(function(){
+      i+=1;node.textContent=t.slice(0,i);
+      if(i>=t.length){clearInterval(node._t);host.classList.remove('talk');if(after)after()}
+    },22);
+  }
+  function mood(m,ms){
+    el.classList.remove('tada','bow');
+    if(!m)return;
+    void el.offsetWidth;el.classList.add(m);
+    clearTimeout(moodT);moodT=setTimeout(function(){el.classList.remove(m)},ms||1900);
+  }
+  function hide(){
+    clearTimeout(hideT);bub.hidden=true;acts.innerHTML='';clearInterval(txt._t);el.classList.remove('talk');
+    clearTimeout(idleT);idleT=setTimeout(sectionLine,8000);
+  }
+  function say(t,o){
+    o=o||{};
+    if(!started||gone||$('dialog[open]'))return false;
+    clearTimeout(hideT);clearTimeout(idleT);
+    el.classList.remove('duck');
+    lastSay=Date.now();
+    bub.hidden=false;acts.innerHTML='';sr.textContent=t;
+    speak(t);
+    if(o.mood)mood(o.mood,o.ms);
+    typeInto(txt,el,t,function(){
+      (o.acts||[]).forEach(function(a){
+        var b=document.createElement('button');b.type='button';b.textContent=a.label;
+        b.addEventListener('click',function(){hide();a.fn()});
+        acts.appendChild(b);
+      });
+    });
+    hideT=setTimeout(hide,(o.acts?11000:5000)+t.length*22);
+    return true;
+  }
+  function mini(id,t){
+    var box=$('#'+id);if(!box)return;
+    sr.textContent=t;speak(t);
+    typeInto($('.wm-t',box),box,t);
+  }
+  function hello(){
+    var h=new Date().getHours(),g=h<12?'¡Buenos días!':h<19?'¡Buenas tardes!':'¡Buenas noches!';
+    if(last&&!cart.length){
+      say(g+' Qué bueno verte de nuevo. ¿Te repito el último pedido?',{mood:'tada',acts:[{label:'Sí, repítelo',fn:function(){$('#againBtn').click()}},{label:'Ver el menú',fn:function(){}}]});
+    }else if(cart.length){
+      say(g+' Aquí sigue tu pedido, cuando quieras lo revisamos.',{mood:'tada',acts:[{label:'Ver mi pedido',fn:function(){$('#openCart').click()}}]});
+    }else{
+      say(g+' Soy Don Beto, tu mesero. ¿Te ayudo a elegir?',{mood:'tada',acts:[{label:'Ayúdame a elegir',fn:function(){$('#askOpen').click()}},{label:'Miro primero',fn:function(){}}]});
+    }
+  }
+  var LINES={
+    arepas:'La Pelúa es de carne y la Catira de pollo. ¿Cuál te provoca?',
+    combos:'¿Vienen varios? El Combo Especial trae 5 arepas medianas de pollo y carne.',
+    papas:'Mira lo nuevo: el Salchipollo trae pollo, salchicha, tocineta y chorizo ahumado.',
+    adicionales:'Si quieres un extra dentro de un plato, lo eliges al tocar Agregar.',
+    gaseosas:'¿Algo de tomar? Hay de 250 ml, 400 ml y litro y medio.'
+  };
+  function sectionLine(){
+    if(!curSec||seen[curSec]||!bub.hidden||Date.now()-lastSay<7000)return;
+    if(say(LINES[curSec]))seen[curSec]=true;
+  }
+  function watch(){
+    if(!('IntersectionObserver' in window))return;
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(en){if(en.isIntersecting){curSec=en.target.id;sectionLine()}});
+    },{rootMargin:'-35% 0px -55% 0px'});
+    $$('main section').forEach(function(s){io.observe(s)});
+    addEventListener('scroll',function(){
+      if(gone||calm)return;
+      if(bub.hidden)el.classList.add('duck');
+      clearTimeout(el._s);el._s=setTimeout(function(){el.classList.remove('duck')},650);
+    },{passive:true});
+  }
+  function hasDrink(){return cart.some(function(l){return l.id.indexOf('g-')===0||l.opt==='Combo'||l.id==='cpersonal'})}
+  function render(){
+    el.classList.toggle('gone',gone);
+    el.innerHTML=gone?'<button type="button" class="w-peek" aria-label="Llamar a Don Beto">'+svg('38 8 66 66')+'</button>':'<button type="button" class="w-btn" aria-label="Hablar con Don Beto">'+svg('0 0 156 220')+'</button>';
+  }
+  function setVoice(on){
+    voice=on;put(KEYV,on?'si':'no');
+    if(!on)try{speechSynthesis.cancel()}catch(e){}
+  }
+  el.addEventListener('click',function(){
+    if(gone){gone=false;put(KEYG,'si');render();say('Aquí estoy. ¿En qué te ayudo?',{mood:'tada'});return}
+    var a=[{label:'Ayúdame a elegir',fn:function(){$('#askOpen').click()}}];
+    if(cart.length)a.push({label:'Ver mi pedido',fn:function(){$('#openCart').click()}});
+    if('speechSynthesis' in window)a.push(voice?{label:'Hablar sin voz',fn:function(){setVoice(false);say('Listo, sigo por escrito.')}}:{label:'Háblame con voz',fn:function(){setVoice(true);say('Con mucho gusto. Ahora te hablo en voz alta.')}});
+    a.push({label:'Puedes retirarte',fn:function(){gone=true;put(KEYG,'no');if(voice)setVoice(false);render()}});
+    say('A la orden. ¿En qué te ayudo?',{acts:a,mood:'tada'});
+  });
+  var ITEM={
+    pelua:'En combo te llevas papas y gaseosa por $7.000 más.',
+    catira:'En combo te llevas papas y gaseosa por $7.000 más.',
+    cpersonal:'Dime de qué sabor quieres cada arepa.',
+    cespecial:'Son 5 arepas medianas. Si quieres, le agregas algo más.'
+  };
+  render();
+  return {
+    isGone:function(){return gone},
+    start:function(){
+      if(started)return;started=true;
+      el.hidden=false;
+      if(!calm&&!gone){el.classList.add('walk');setTimeout(function(){el.classList.remove('walk')},1050)}
+      setTimeout(hello,calm?200:1000);
+      watch();
+    },
+    item:function(m){mini('wmItem',ITEM[m.id]||('¿La personal o la grande? Y dime qué salsas te provocan.'))},
+    itemChange:function(t){
+      if(t.name==='extra'&&t.checked)mini('wmItem','Extra de '+extraById(t.value).name.toLowerCase()+', anotado.');
+      else if(t.name==='salsa'&&t.checked)mini('wmItem','Salsa de '+t.value.toLowerCase()+', ¡anotada!');
+      else if(t.name==='opt'){var k=cur.opts[+t.value].k;mini('wmItem',k==='Combo'?'¡Eso! Combo con papas y gaseosa.':k==='Sola'?'Perfecto, la arepa sola.':'Listo, tamaño '+k.toLowerCase()+'.')}
+    },
+    added:function(l){
+      var m=byId(l.id);
+      if(m&&l.opt==='Sola'){
+        return say('¡Excelente elección! ¿Te la paso a combo con papas y gaseosa por $7.000 más?',{mood:'tada',acts:[{label:'Sí, en combo',fn:function(){
+          var hit=cart.filter(function(x){return x.key===keyOf(l)})[0];
+          if(!hit)return;
+          var q=hit.q;setQty(hit.key,-q);addLines([{id:l.id,opt:'Combo',q:q,sabores:l.sabores,salsas:l.salsas,extras:l.extras}]);
+          say('¡Hecho! Quedó en combo.',{mood:'tada'});
+        }},{label:'Así está bien',fn:function(){}}]});
+      }
+      if(m&&m.salsas&&!l.salsas.length)return say('Anotado. Como no elegiste salsas, las confirmamos por WhatsApp.',{mood:'tada'});
+      if(!hasDrink()){
+        return say('¡Buena elección! ¿Algo de tomar con eso?',{mood:'tada',acts:[{label:'Gaseosa 400 ml · $4.000',fn:function(){addLines([mk('g-400')]);say('Gaseosa anotada.',{mood:'tada'})}},{label:'No, gracias',fn:function(){}}]});
+      }
+      return say('¡Anotado! Cuando quieras, revisamos tu pedido.',{mood:'tada',acts:[{label:'Ver mi pedido',fn:function(){$('#openCart').click()}}]});
+    },
+    cart:function(){mini('wmCart',form.name.trim()?form.name.trim().split(' ')[0]+', revisemos tu pedido antes de enviarlo.':'Revisemos tu pedido. Solo me falta tu nombre y cómo lo quieres.')},
+    cartLine:function(t){mini('wmCart',t)},
+    ask:function(t){mini('wmAsk',t)},
+    sent:function(){mini('wmCart','¡Gracias! Toca enviar en WhatsApp para que la cocina lo reciba.')}
+  };
+})();
 
 /* Instalar en el celular */
 var installEvt=null;

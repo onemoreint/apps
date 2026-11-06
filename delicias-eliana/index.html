@@ -28,6 +28,7 @@
 @font-face{font-family:"Figtree";font-weight:500;font-style:normal;font-display:swap;src:url(fonts/figtree-latin-500-normal.woff2) format("woff2")}
 @font-face{font-family:"Figtree";font-weight:600;font-style:normal;font-display:swap;src:url(fonts/figtree-latin-600-normal.woff2) format("woff2")}
 @font-face{font-family:"Figtree";font-weight:700;font-style:normal;font-display:swap;src:url(fonts/figtree-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Caveat";font-weight:700;font-style:normal;font-display:swap;src:url(fonts/caveat-latin-700-normal.woff2) format("woff2")}
 /* Layout: una sola columna de platos con foto protagonista; barra de categorías fija y pedido siempre a un toque. */
 :root{
   color-scheme:dark;
@@ -423,6 +424,81 @@ html.intro{overflow:hidden}
 .ref{margin:0;color:var(--muted);font-size:13.5px}
 @keyframes bub{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(-78px);opacity:0}}
 @media(prefers-reduced-motion:reduce){.bub,.addon-q{animation:none}.addon-ph img,.addon-b,.gas-b,.brand button,.liq{transition:none}}
+
+/* Plato en vivo */
+.stage-w{position:sticky;top:-4px;z-index:3;margin-top:-4px;padding-block:4px 6px;background:var(--surface)}
+.stage{position:relative;height:clamp(104px,18dvh,150px);border-radius:12px;overflow:hidden;background:linear-gradient(120deg,var(--gold),#d99a2e);display:grid;place-items:center}
+.stage>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .45s cubic-bezier(.2,1.3,.4,1)}
+.stage>img.big{transform:scale(1.14)}
+.st-name{position:relative;font:italic 900 clamp(30px,10vw,44px)/1 var(--display);color:var(--ink)}
+.st-layer{position:absolute;inset:0}
+.st-token{position:absolute;width:42px;height:42px;transform:translate(-50%,-50%);border-radius:50%;overflow:hidden;box-shadow:0 0 0 2px var(--cream),0 4px 12px rgba(0,0,0,.55)}
+.st-token img{width:100%;height:100%;object-fit:cover;display:block}
+.st-b{display:flex;justify-content:center;align-items:flex-end;padding-block:3px;background:var(--surface-2)}
+.st-b .bot{height:100%;filter:none}
+.st-sauce{position:absolute;left:0;right:0;height:17%;pointer-events:none}
+.st-sauce svg{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
+.st-sauce path{fill:none;stroke-width:3.4;stroke-linecap:round;vector-effect:non-scaling-stroke;stroke-width:6px;stroke-dasharray:1;animation:sauce .7s ease-out both}
+.st-p{position:absolute;right:8px;bottom:8px;padding:4px 11px;border-radius:999px;background:rgba(12,10,8,.86);color:var(--gold);font-weight:700;font-size:16px;font-variant-numeric:tabular-nums}
+@keyframes sauce{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+/* Comanda */
+.comanda{--paper:#fbf3df;--rule:#a9bddb;--hand:"Caveat","Segoe Print","Comic Sans MS",cursive;position:relative;padding:20px 14px 14px 34px;border-radius:4px 4px 10px 10px;color:var(--ink);background:linear-gradient(90deg,transparent 25px,rgba(211,32,44,.45) 25px,rgba(211,32,44,.45) 26.5px,transparent 26.5px),var(--paper);background-color:var(--paper);box-shadow:0 8px 22px rgba(0,0,0,.45);transform:rotate(-.4deg)}
+.comanda::before{content:"";position:absolute;left:0;right:0;top:0;height:12px;background:radial-gradient(circle at 10px 6px,var(--surface) 3.6px,transparent 4px) 0 0/20px 12px repeat-x;border-bottom:1px dashed rgba(25,11,3,.25)}
+.c-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding-bottom:5px;border-bottom:2px solid var(--ink);font:700 27px/1.05 var(--hand)}
+.c-head small{font-size:19px;font-weight:700;opacity:.72;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.comanda .line{border-bottom:1.3px solid var(--rule);padding-block:8px}
+.comanda .t b{font:700 23px/1.05 var(--hand)}
+.comanda .t small{color:#5f4c37;font:700 18px/1.1 var(--hand)}
+.comanda .t em{font:700 21px/1.15 var(--hand);color:#b32317}
+.comanda .stepper button,.comanda .stepper button.plus{background:rgba(25,11,3,.1);color:var(--ink)}
+.comanda .stepper output{color:var(--ink);font:700 24px/1 var(--hand)}
+.c-total{display:flex;justify-content:space-between;align-items:center;padding-top:9px;font:700 28px/1 var(--hand)}
+.c-t{position:relative;display:inline-block;padding-bottom:9px}
+.c-t b{font-weight:700;font-size:31px}
+.c-t svg{position:absolute;left:-4px;right:-4px;bottom:0;width:calc(100% + 8px);height:11px;overflow:visible}
+#cLine{fill:none;stroke:#b32317;stroke-width:2;stroke-linecap:round;stroke-dasharray:1;vector-effect:non-scaling-stroke}
+.upsell{transform:none}
+/* Don Beto lleva el pedido */
+.carry{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:calc(30px + env(safe-area-inset-bottom,0px));background:rgba(8,6,4,.78);pointer-events:none;overflow:hidden}
+.carry p{position:absolute;left:0;right:0;top:32%;margin:0;padding-inline:20px;text-align:center;color:var(--cream);font:italic 800 clamp(26px,8vw,36px)/1.1 var(--display)}
+.carry-w{position:relative;width:190px;height:268px;margin-left:8vw}
+.carry-w .bt-all{animation:btStep .22s ease-in-out infinite alternate}
+.carry-n{position:absolute;left:68%;top:9%;display:grid;gap:3px;width:40px;padding:6px 5px;background:#fbf3df;border-radius:2px;box-shadow:0 2px 6px rgba(0,0,0,.45);transform:rotate(5deg)}
+.carry-n i{height:2px;background:#8094b5}
+/* Visor de fotos */
+.ph{cursor:zoom-in}
+.ph-z{position:absolute;right:9px;top:9px;z-index:2;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:rgba(12,10,8,.72);color:var(--cream)}
+.ph-z svg{width:19px;height:19px}
+#lb{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;margin:0;border-radius:0;background:#000}
+#lb[open]{display:block;animation:none}
+#lb::backdrop{background:#000}
+.lb-track{display:flex;width:100%;height:100%;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior:contain}
+.lb-track::-webkit-scrollbar{display:none}
+.lb-track.fixed{overflow:hidden}
+.lb-s{flex:0 0 100%;display:flex;width:100%;height:100%;margin:0;scroll-snap-align:center;overflow:hidden;padding-bottom:104px;cursor:zoom-in;touch-action:pan-x pan-y pinch-zoom}
+.lb-s img{margin:auto;width:100%;height:auto;max-height:100%;object-fit:contain}
+.lb-s.zoom{overflow:auto;cursor:zoom-out;padding-bottom:0}
+.lb-s.zoom img{flex:none;width:260%;max-width:none;max-height:none}
+.lb-close{position:absolute;right:max(14px,env(safe-area-inset-right,0px));top:calc(14px + env(safe-area-inset-top,0px));z-index:2;color:var(--cream);background:rgba(37,31,23,.88)}
+.lb-nav{position:absolute;top:calc(50% - 74px);z-index:2;width:44px;height:44px;border-radius:50%;background:rgba(37,31,23,.78);color:var(--cream);font-size:28px;line-height:1}
+.lb-nav.prev{left:max(10px,env(safe-area-inset-left,0px))}
+.lb-nav.next{right:max(10px,env(safe-area-inset-right,0px))}
+.lb-nav:disabled{opacity:.25}
+.lb-bar{position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px max(16px,env(safe-area-inset-right,0px)) calc(14px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:linear-gradient(to top,#000 70%,transparent);color:var(--cream)}
+.lb-info{display:grid;min-width:0}
+.lb-info b{font:800 23px/1.1 var(--display)}
+.lb-info span{color:var(--gold);font-weight:700;font-variant-numeric:tabular-nums}
+.lb-info small{color:var(--muted);font-size:13px}
+/* Sonido y deslizar */
+.snd{position:absolute;right:max(10px,env(safe-area-inset-right,0px));top:10px;z-index:2;width:40px;height:40px;display:grid;place-items:center;border-radius:50%;background:rgba(37,31,23,.8);color:var(--gold)}
+.snd svg{width:21px;height:21px}
+.snd .snd-off{display:none}
+.snd.off{color:var(--muted)}
+.snd.off .snd-on{display:none}
+.snd.off .snd-off{display:block}
+.swipe-note{font-size:13.5px}
+@media(hover:hover) and (pointer:fine){.swipe-note{display:none}}
+@media(prefers-reduced-motion:reduce){.st-sauce path{animation:none;stroke-dasharray:none}.stage>img{transition:none}}
 </style>
 </head>
 <body>
@@ -440,6 +516,7 @@ html.intro{overflow:hidden}
 </div>
 <header class="hero">
   <canvas id="embers" aria-hidden="true"></canvas>
+  <button type="button" class="snd" id="snd" aria-pressed="true" aria-label="Silenciar sonido"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9v6h4l5 4V5L8 9z"/><path class="snd-on" d="M16 8.500a5 5 0 0 1 0 7M18.500 6a8.500 8.500 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path class="snd-off" d="M16.500 9.500l5 5M21.500 9.500l-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
   <div class="wrap">
     <div class="logo">
       <span class="halo" aria-hidden="true"></span>
@@ -472,7 +549,7 @@ html.intro{overflow:hidden}
 
 <main>
   <section id="arepas"><div class="wrap">
-    <div><h2>Arepas grandes</h2><p class="sub">Solas o en combo con papas y gaseosa.</p></div>
+    <div><h2>Arepas grandes</h2><p class="sub">Solas o en combo con papas y gaseosa.</p><p class="sub swipe-note">Desliza de lado para cambiar de categoría.</p></div>
     <div class="grid" data-items="arepas"></div>
   </div></section>
 
@@ -535,7 +612,11 @@ html.intro{overflow:hidden}
   <div class="wm" id="wmCart"><span class="wm-av"></span><p class="wm-t"></p></div>
   <div class="sheet-b">
     <div>
-      <div class="lines" id="lines"></div>
+      <div class="comanda">
+        <div class="c-head"><span>Comanda</span><small id="cFor">Mesero: Don Beto</small></div>
+        <div class="lines" id="lines"></div>
+        <div class="c-total"><span>Total</span><span class="c-t"><b id="cTotal"></b><svg viewBox="0 0 120 12" preserveAspectRatio="none" aria-hidden="true"><path id="cLine" pathLength="1" d="M3 6q28-6 56-1t58-1M8 10q40-4 104-2"/></svg></span></div>
+      </div>
       <button type="button" class="empty-link" id="clear">Vaciar pedido</button>
     </div>
     <div class="upsell" id="upsell" hidden></div>
@@ -567,6 +648,14 @@ html.intro{overflow:hidden}
     <a class="primary wa" id="send" href="https://wa.me/573002699192" target="_blank" rel="noopener"><span>Enviar pedido por WhatsApp</span></a>
     <p class="sent" id="sent" role="status" hidden>Abrimos WhatsApp con tu pedido. Toca enviar allá para que nos llegue.</p>
   </div>
+</dialog>
+
+<dialog id="lb" aria-label="Fotos de los platos">
+  <div class="lb-track" id="lbTrack"></div>
+  <button type="button" class="close lb-close" data-close aria-label="Cerrar">✕</button>
+  <button type="button" class="lb-nav prev" id="lbPrev" aria-label="Foto anterior">‹</button>
+  <button type="button" class="lb-nav next" id="lbNext" aria-label="Foto siguiente">›</button>
+  <div class="lb-bar"><div class="lb-info"><b id="lbName"></b><span id="lbPrice"></span><small>Toca dos veces para acercar</small></div><button type="button" class="add" id="lbAdd">Agregar</button></div>
 </dialog>
 
 <dialog id="askSheet" aria-labelledby="askTitle">
@@ -664,6 +753,7 @@ var sum=function(list){return list.reduce(function(a,l){return a+l.q*l.p},0)};
 var total=function(){return sum(cart)};
 function qtyOf(id){return cart.reduce(function(a,l){return a+(l.id===id?l.q:0)},0)}
 function addLines(lines){
+  ding(1);haptic(15);
   clean(lines).forEach(function(l){
     var hit=cart.filter(function(x){return x.key===l.key})[0];
     if(hit)hit.q+=l.q;else cart.push(l);
@@ -671,6 +761,7 @@ function addLines(lines){
   changed();
 }
 function setQty(key,d){
+  haptic(d>0?15:8);
   cart=cart.map(function(l){if(l.key===key)l.q+=d;return l}).filter(function(l){return l.q>0});
   changed();
 }
@@ -686,7 +777,7 @@ function dishHTML(m){
   if(m.feature){
     return '<article class="new"><span class="sparks" aria-hidden="true"><i>✦</i><i>✦</i><i>✦</i></span><div><p class="lbl">Lo nuevo</p><h3>'+esc(m.name)+'</h3></div><p class="desc">'+esc(m.desc)+'</p><div class="buy"><div class="prices">'+priceHTML(m)+'</div>'+btn+'</div></article>';
   }
-  return '<article class="dish"><div class="ph"><img src="img/'+m.img+'.jpg" width="960" height="600" loading="lazy" alt="'+esc(m.name)+': '+esc(m.desc)+'"></div>'+
+  return '<article class="dish"><div class="ph" data-ph="'+m.id+'" role="button" tabindex="0" aria-label="Ver foto de '+esc(m.name)+' en grande"><span class="ph-z" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.500" cy="10.500" r="6.500" fill="none" stroke="currentColor" stroke-width="2.200"/><path d="M15.500 15.500L21 21M10.500 7.500v6M7.500 10.500h6" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round"/></svg></span><img src="img/'+m.img+'.jpg" width="960" height="600" loading="lazy" alt="'+esc(m.name)+': '+esc(m.desc)+'"></div>'+
     '<div>'+(m.kicker?'<p class="kicker">'+esc(m.kicker)+'</p>':'')+'<h3>'+esc(m.name)+'</h3><p class="desc">'+esc(m.desc)+'</p></div>'+
     '<div class="buy"><div class="prices">'+priceHTML(m)+'</div>'+btn+'</div></article>';
 }
@@ -928,12 +1019,47 @@ function curPrice(){
   var base=cur.opts[o?+o.value:0].p;
   return $$('input[name="extra"]:checked',f).reduce(function(a,e){return a+extraById(e.value).p},base);
 }
+var SAUCE={'Tomate':'#c8241c','Queso cheddar':'#f39a1d','Leña':'#6b3417','Piña':'#f5d33f','De la casa':'#f6e7c1'};
+var SLOTS={'x-maiz':[16,62],'x-tocineta':[36,28],'x-queso':[58,60],'x-carne':[76,26],'x-pollo':[30,70],'x-papa':[64,22],'c-papa':[84,62],'c-gas':[10,24]};
+function gasHex(g){if(!g||g==='Coca-Cola')return COLA;var f=FLAVORS.filter(function(v){return 'Postobón '+v.k===g})[0];return f?f.c:COLA}
+function syncStage(){
+  var layer=$('#stLayer'),f=$('#itemForm');if(!layer)return;
+  var want={};
+  $$('input[name="extra"]:checked',f).forEach(function(x){var e=extraById(x.value);want[x.value]={t:'token',img:e.img}});
+  var salsas=$$('input[name="salsa"]:checked',f).map(function(x){return x.value});
+  salsas.forEach(function(s,i){want['s-'+s]={t:'sauce',c:SAUCE[s],i:SALSAS.indexOf(s)}});
+  var o=$('input[name="opt"]:checked',f),k=o?cur.opts[+o.value].k:'';
+  if(k==='Combo'){want['c-papa']={t:'token',img:'add-papa'};want['c-gas']={t:'bottle'}}
+  var im=$('#stImg');if(im)im.classList.toggle('big',k==='Grande');
+  $$('[data-k]',layer).forEach(function(n){
+    if(want[n.dataset.k])return;
+    if(calm){n.remove();return}
+    n.animate([{opacity:1,transform:n.style.transform||'none'},{opacity:0,transform:'scale(.2)'}],{duration:180}).onfinish=function(){n.remove()};
+  });
+  Object.keys(want).forEach(function(key){
+    var w=want[key],n=$('[data-k="'+key+'"]',layer);
+    if(n){if(w.t==='bottle'){var gi=$('input[name="gas"]:checked',f);n.style.setProperty('--liq',gasHex(gi&&gi.value))}return}
+    n=document.createElement('span');n.dataset.k=key;
+    if(w.t==='sauce'){
+      n.className='st-sauce';n.style.top=(6+w.i*17)+'%';
+      n.innerHTML='<svg viewBox="0 0 100 20" preserveAspectRatio="none"><path pathLength="1" d="M4 10q8-11 16 0t16 0 16 0 16 0 16 0 12 0" stroke="'+w.c+'"/></svg>';
+      layer.appendChild(n);
+      return;
+    }
+    var p=SLOTS[key]||[50,50];
+    n.className='st-token'+(w.t==='bottle'?' st-b':'');n.style.left=p[0]+'%';n.style.top=p[1]+'%';
+    if(w.t==='bottle'){var g0=$('input[name="gas"]:checked',f);n.style.setProperty('--liq',gasHex(g0&&g0.value));n.innerHTML=bottle('st',100)}
+    else n.innerHTML='<img src="img/'+w.img+'.jpg" alt="">';
+    layer.appendChild(n);
+    if(!calm)n.animate([{transform:'translate(-50%,-190px) rotate(-30deg)',opacity:.4},{transform:'translate(-50%,-50%) rotate(6deg) scale(1.12)',opacity:1,offset:.72},{transform:'translate(-50%,-50%) scale(.95)',offset:.86},{transform:'translate(-50%,-50%)'}],{duration:520,easing:'cubic-bezier(.45,.05,.7,.4)'});
+  });
+}
 function syncGasField(){
   var f=$('#fGas');if(!f)return;
   var o=$('#itemForm input[name="opt"]:checked');
   f.hidden=!!o&&cur.opts[+o.value].k!=='Combo';
 }
-function refreshItem(){$('#qVal').textContent=qty;roll($('#itemPrice'),curPrice()*qty)}
+function refreshItem(){$('#qVal').textContent=qty;roll($('#itemPrice'),curPrice()*qty);var sp=$('#stP');if(sp)roll(sp,curPrice()*qty)}
 function openItem(m,btn){
   cur=m;qty=1;srcBtn=btn;
   $('#itemTitle').textContent=m.name;
@@ -964,6 +1090,7 @@ function openItem(m,btn){
   h+='<fieldset><legend>Agrégale a este plato <small>opcional</small></legend><div class="chips">'+ADDONS.map(function(x){
     return '<label class="chip"><input type="checkbox" name="extra" value="'+x.id+'">'+esc(x.name)+' <span class="plus-p">+'+money(x.p)+'</span></label>';
   }).join('')+'</div></fieldset>';
+  h='<div class="stage-w"><div class="stage" id="stage">'+(m.img?'<img id="stImg" src="img/'+m.img+'.jpg" alt="">':'<span class="st-name">'+esc(m.name)+'</span>')+'<span class="st-layer" id="stLayer"></span><span class="st-p" id="stP"></span></div></div>'+h;
   $('#itemBody').innerHTML=h;
   syncGasField();
   $('#itemBody').scrollTop=0;
@@ -972,7 +1099,7 @@ function openItem(m,btn){
   W.item(m);
   openSheet($('#itemSheet'));
 }
-$('#itemForm').addEventListener('change',function(e){refreshItem();syncGasField();W.itemChange(e.target)});
+$('#itemForm').addEventListener('change',function(e){refreshItem();syncGasField();syncStage();W.itemChange(e.target)});
 $('#qMinus').addEventListener('click',function(){if(qty>1){qty--;refreshItem()}});
 $('#qPlus').addEventListener('click',function(){qty++;refreshItem()});
 $('#itemForm').addEventListener('submit',function(e){
@@ -1102,7 +1229,7 @@ $('#askBody').addEventListener('click',function(e){
   if(e.target.closest('#recAdd')){
     addLines(recommend(ans).lines);
     $('#askSheet').close();
-    clearArm();W.cart();openSheet($('#cartSheet'));
+    clearArm();W.cart();openSheet($('#cartSheet'));writeAll();
   }
 });
 $('#askSheet').addEventListener('close',function(){clearTimeout(typeT)});
@@ -1140,12 +1267,39 @@ $('#upsell').addEventListener('click',function(e){
   if(y){addLines([mk(y.dataset.up)]);return}
   if(e.target.closest('.up-no')){upsellOff=true;renderUpsell()}
 });
+var wrote={};
+function inkIn(el,delay){
+  if(calm||!el)return;
+  el.animate([{clipPath:'inset(-4px 100% -4px -2px)'},{clipPath:'inset(-4px -6px -4px -2px)'}],{duration:480,delay:delay||0,easing:'ease-out',fill:'backwards'});
+}
+function setFor(){var n=form.name.trim();$('#cFor').textContent=n?'Para: '+n.split(' ')[0]:'Mesero: Don Beto'}
+function drawLine(delay){
+  if(calm)return;
+  $('#cLine').animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:620,delay:delay||0,easing:'ease-out',fill:'backwards'});
+}
+function writeNew(){
+  var open=$('#cartSheet').open,next={};
+  $$('#lines .line').forEach(function(x){
+    next[x.dataset.key]=1;
+    if(open&&!wrote[x.dataset.key])inkIn($('.t',x));
+  });
+  if(open&&Object.keys(next).length!==Object.keys(wrote).length)drawLine(120);
+  wrote=next;
+}
+function writeAll(){
+  var ls=$$('#lines .line');
+  ls.forEach(function(x,i){inkIn($('.t',x),80+Math.min(i,6)*130)});
+  drawLine(180+Math.min(ls.length,6)*130);
+}
 function renderCart(){
   $('#lines').innerHTML=cart.map(function(l){
-    return '<div class="line"><div class="t"><b>'+esc(l.name)+'</b>'+lineSub(l).map(function(s){return '<small>'+esc(s)+'</small>'}).join('')+'<em>'+money(l.p*l.q)+'</em></div>'+
+    return '<div class="line" data-key="'+esc(l.key)+'"><div class="t"><b>'+esc(l.name)+'</b>'+lineSub(l).map(function(s){return '<small>'+esc(s)+'</small>'}).join('')+'<em>'+money(l.p*l.q)+'</em></div>'+
       '<span class="stepper"><button type="button" data-lm="'+esc(l.key)+'" aria-label="Quitar uno de '+esc(l.name)+'">−</button><output>'+l.q+'</output><button type="button" class="plus" data-lp="'+esc(l.key)+'" aria-label="Agregar uno de '+esc(l.name)+'">+</button></span></div>';
   }).join('');
   roll($('#cartTotal'),total());
+  roll($('#cTotal'),total());
+  setFor();
+  writeNew();
   renderUpsell();
 }
 function message(){
@@ -1199,9 +1353,9 @@ function changed(){
 }
 $('#againBtn').addEventListener('click',function(){
   addLines(last.map(function(l){return Object.assign({},l)}));
-  clearArm();W.cart();openSheet($('#cartSheet'));
+  clearArm();W.cart();openSheet($('#cartSheet'));writeAll();
 });
-$('#openCart').addEventListener('click',function(){clearArm();W.cart();openSheet($('#cartSheet'))});
+$('#openCart').addEventListener('click',function(){clearArm();W.cart();openSheet($('#cartSheet'));writeAll()});
 $('#lines').addEventListener('click',function(e){
   var t=e.target.closest('[data-lp],[data-lm]');if(!t)return;
   var k=t.dataset.lp||t.dataset.lm, kind=t.dataset.lp?'lp':'lm';
@@ -1219,7 +1373,7 @@ $('#cName').value=form.name;$('#cAddr').value=form.addr;
 $(form.entrega==='Domicilio'?'#eDom':'#eRec').checked=true;
 $('#cName').addEventListener('change',function(e){var n=e.target.value.trim().split(' ')[0];if(n)W.cartLine('¡Mucho gusto, '+n+'!')});
 $('#cAddr').addEventListener('focus',function(){W.cartLine('Dame una referencia para que el domicilio llegue sin vueltas.')});
-$('#cName').addEventListener('input',function(e){form.name=e.target.value;$('#eName').hidden=true;$('#fName').classList.remove('bad');save();refreshSend()});
+$('#cName').addEventListener('input',function(e){form.name=e.target.value;setFor();$('#eName').hidden=true;$('#fName').classList.remove('bad');save();refreshSend()});
 $('#cAddr').addEventListener('input',function(e){form.addr=e.target.value;$('#eAddr').hidden=true;$('#fAddr').classList.remove('bad');save();refreshSend()});
 $('#cNote').addEventListener('input',refreshSend);
 $$('input[name="entrega"]').forEach(function(r){r.addEventListener('change',function(){form.entrega=r.value;save();refreshSend();W.cartLine(r.value==='Domicilio'?'¿A dónde te lo llevamos?':'Perfecto, para recoger.')})});
@@ -1237,6 +1391,9 @@ $('#send').addEventListener('click',function(e){
   $('#sent').hidden=false;
   W.sent();
   celebrate();
+  carry();
+  ding(2);
+  haptic([20,50,30]);
 });
 
 /* Don Beto, el mesero */
@@ -1386,6 +1543,7 @@ var W=(function(){
     var a=[{label:'Ayúdame a elegir',fn:function(){$('#askOpen').click()}}];
     if(cart.length)a.push({label:'Ver mi pedido',fn:function(){$('#openCart').click()}});
     if('speechSynthesis' in window)a.push(voice?{label:'Hablar sin voz',fn:function(){setVoice(false);say('Listo, sigo por escrito.')}}:{label:'Háblame con voz',fn:function(){setVoice(true);say('Con mucho gusto. Ahora te hablo en voz alta.')}});
+    a.push({label:sndOn?'Silenciar campanita':'Activar campanita',fn:function(){$('#snd').click()}});
     a.push({label:'Puedes retirarte',fn:function(){gone=true;put(KEYG,'no');if(voice)setVoice(false);render()}});
     say('A la orden. ¿En qué te ayudo?',{acts:a,mood:'tada'});
   });
@@ -1443,11 +1601,113 @@ var W=(function(){
         say('¡Listo! Ya va en '+d.name+'.',{mood:'tada'});
       }},{label:'Déjalo aparte',fn:function(){}}]});
     },
+    full:function(){return svg('0 0 156 220')},
     cart:function(){mini('wmCart',form.name.trim()?form.name.trim().split(' ')[0]+', revisemos tu pedido antes de enviarlo.':'Revisemos tu pedido. Solo me falta tu nombre y cómo lo quieres.')},
     cartLine:function(t){mini('wmCart',t)},
     ask:function(t){mini('wmAsk',t)},
     sent:function(){mini('wmCart','¡Gracias! Toca enviar en WhatsApp para que la cocina lo reciba.')}
   };
+})();
+
+/* Sonido y vibración */
+var sndOn=true,actx=null;
+try{sndOn=localStorage.getItem('de-sonido')!=='no'}catch(e){}
+function paintSnd(){var b=$('#snd');b.classList.toggle('off',!sndOn);b.setAttribute('aria-pressed',sndOn);b.setAttribute('aria-label',sndOn?'Silenciar sonido':'Activar sonido')}
+function ding(n){
+  if(!sndOn)return;
+  try{
+    actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+    if(actx.state==='suspended')actx.resume();
+    for(var i=0;i<(n||1);i++){
+      [[1568,.2],[3136,.07]].forEach(function(p){
+        var t=actx.currentTime+i*.17,o=actx.createOscillator(),g=actx.createGain();
+        o.type='sine';o.frequency.value=p[0];
+        g.gain.setValueAtTime(p[1],t);g.gain.exponentialRampToValueAtTime(.0001,t+.5);
+        o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+.52);
+      });
+    }
+  }catch(e){}
+}
+function haptic(p){try{if(navigator.vibrate)navigator.vibrate(p)}catch(e){}}
+$('#snd').addEventListener('click',function(){
+  sndOn=!sndOn;try{localStorage.setItem('de-sonido',sndOn?'si':'no')}catch(e){}
+  paintSnd();if(sndOn)ding(1);
+});
+paintSnd();
+
+/* Don Beto lleva el pedido */
+function carry(){
+  var d=$('#cartSheet');
+  if(calm||$('.carry',d))return;
+  var c=document.createElement('div');c.className='carry';c.setAttribute('aria-hidden','true');
+  c.innerHTML='<p>Llevando tu pedido a la cocina…</p><div class="carry-w">'+W.full()+'<span class="carry-n"><i></i><i></i><i></i></span></div>';
+  d.appendChild(c);
+  var f=c.animate([{opacity:0},{opacity:1,offset:.1},{opacity:1,offset:.86},{opacity:0}],{duration:2300,fill:'forwards'});
+  $('.carry-n',c).animate([{transform:'translateY(-180px) rotate(-20deg) scale(1.5)',opacity:0},{transform:'rotate(5deg)',opacity:1}],{duration:420,delay:180,easing:'cubic-bezier(.3,1.2,.5,1)',fill:'backwards'});
+  $('.carry-w',c).animate([{transform:'translateX(0)'},{transform:'translateX(0)',offset:.26},{transform:'translateX(calc(100vw + 30px))'}],{duration:2300,easing:'ease-in'});
+  f.onfinish=function(){c.remove()};
+}
+
+/* Fotos a pantalla completa */
+var PHOTOS=MENU.filter(function(m){return m.img}),lbI=0;
+$('#lbTrack').innerHTML=PHOTOS.map(function(m){return '<figure class="lb-s" data-id="'+m.id+'"><img src="img/'+m.img+'.jpg" loading="lazy" alt="'+esc(m.name)+'"></figure>'}).join('');
+function lbUnzoom(){$$('.lb-s.zoom').forEach(function(s){s.classList.remove('zoom');s.scrollTo(0,0)});$('#lbTrack').classList.remove('fixed')}
+function lbCaption(){
+  var m=PHOTOS[lbI];$('#lbName').textContent=m.name;
+  var ps=m.opts.map(function(o){return o.p});
+  $('#lbPrice').textContent=ps.length>1?money(Math.min.apply(0,ps))+' a '+money(Math.max.apply(0,ps)):money(ps[0]);
+  $('#lbPrev').disabled=lbI===0;$('#lbNext').disabled=lbI===PHOTOS.length-1;
+}
+function lbGo(i,smooth){
+  lbI=Math.max(0,Math.min(PHOTOS.length-1,i));lbUnzoom();
+  var t=$('#lbTrack');t.scrollTo({left:lbI*t.clientWidth,behavior:smooth&&!calm?'smooth':'instant'});lbCaption();
+}
+function lbOpen(id){
+  openSheet($('#lb'));
+  lbGo(PHOTOS.map(function(m){return m.id}).indexOf(id),false);
+}
+document.addEventListener('click',function(e){var p=e.target.closest('[data-ph]');if(p)lbOpen(p.dataset.ph)});
+document.addEventListener('keydown',function(e){
+  var p=e.target.closest&&e.target.closest('[data-ph]');
+  if(p&&(e.key==='Enter'||e.key===' ')){e.preventDefault();lbOpen(p.dataset.ph)}
+  if($('#lb').open){if(e.key==='ArrowRight')lbGo(lbI+1,true);if(e.key==='ArrowLeft')lbGo(lbI-1,true)}
+});
+$('#lbTrack').addEventListener('scroll',function(){
+  var t=$('#lbTrack'),i=Math.round(t.scrollLeft/(t.clientWidth||1));
+  if(i!==lbI&&!t.classList.contains('fixed')){lbI=i;lbCaption()}
+},{passive:true});
+$('#lbPrev').addEventListener('click',function(){lbGo(lbI-1,true)});
+$('#lbNext').addEventListener('click',function(){lbGo(lbI+1,true)});
+var lbTap=0;
+function lbZoom(s,x,y){
+  var on=s.classList.toggle('zoom');$('#lbTrack').classList.toggle('fixed',on);
+  if(on){var r=s.getBoundingClientRect();s.scrollTo({left:s.scrollWidth*((x-r.left)/r.width)-r.width/2,top:s.scrollHeight*((y-r.top)/r.height)-r.height/2})}
+}
+$('#lbTrack').addEventListener('click',function(e){
+  var s=e.target.closest('.lb-s');if(!s)return;
+  var now=Date.now();
+  if(now-lbTap<320){lbZoom(s,e.clientX,e.clientY);lbTap=0}else lbTap=now;
+});
+$('#lb').addEventListener('close',lbUnzoom);
+$('#lbAdd').addEventListener('click',function(){
+  var m=PHOTOS[lbI];$('#lb').close();openItem(m,$('[data-add="'+m.id+'"]'));
+});
+
+/* Deslizar entre categorías */
+(function(){
+  var x0=0,y0=0,t0=0,many=false,order=$$('main section');
+  var main=$('main');
+  main.addEventListener('touchstart',function(e){many=e.touches.length>1;var p=e.touches[0];x0=p.clientX;y0=p.clientY;t0=Date.now()},{passive:true});
+  main.addEventListener('touchend',function(e){
+    if(many)return;
+    var p=e.changedTouches[0],dx=p.clientX-x0,dy=p.clientY-y0;
+    if(Date.now()-t0>600||Math.abs(dx)<70||Math.abs(dx)<Math.abs(dy)*2.2)return;
+    var on=$('#cats a.on'),i=order.map(function(s){return '#'+s.id}).indexOf(on?on.getAttribute('href'):'#arepas');
+    var n=order[i+(dx<0?1:-1)];if(!n)return;
+    n.scrollIntoView({behavior:calm?'auto':'smooth'});
+    haptic(10);
+    var a=$('#cats a[href="#'+n.id+'"]');if(a)toast(a.textContent+(dx<0?' ›':''));
+  },{passive:true});
 })();
 
 /* Instalar en el celular */

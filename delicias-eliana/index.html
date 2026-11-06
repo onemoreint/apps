@@ -400,30 +400,25 @@ html.intro{overflow:hidden}
 .addon-p{padding:2px 12px 0;color:var(--gold);font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
 .addon-plus,.gas-plus{position:absolute;right:9px;bottom:10px;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--chili);color:var(--ink);font-size:21px;font-weight:600;line-height:1}
 .addon-q{position:absolute;top:8px;right:8px;z-index:2;display:grid;place-items:center;min-width:32px;height:32px;padding:0 6px;border-radius:999px;background:var(--gold);color:var(--ink);font-weight:800;font-variant-numeric:tabular-nums;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.45);animation:pop .3s cubic-bezier(.2,1.5,.4,1)}
+.gas-c .addon-m{box-shadow:0 2px 8px rgba(0,0,0,.35)}
 .addon-m{position:absolute;top:8px;left:8px;z-index:2;width:36px;height:36px;border-radius:50%;background:rgba(12,10,8,.88);color:var(--cream);font-size:21px;font-weight:600;line-height:1;box-shadow:inset 0 0 0 1.5px var(--line)}
-.gas-box{display:flex;flex-direction:column;gap:12px;--liq:#2b0f07}
-.brand{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:14px;background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--line)}
-.brand button{min-height:48px;border-radius:10px;font-weight:700;font-size:16px;color:var(--muted);transition:background .2s,color .2s}
-.brand button.on{background:var(--gold);color:var(--ink)}
-.flavors{display:flex;flex-wrap:wrap;gap:8px}
-.flavors button{display:inline-flex;align-items:center;gap:7px;min-height:42px;padding:0 13px;border-radius:999px;box-shadow:inset 0 0 0 1.5px var(--line);font-weight:600;font-size:15px}
-.flavors button i{width:14px;height:14px;border-radius:50%}
-.flavors button.on{background:var(--surface-2);box-shadow:inset 0 0 0 2px var(--gold)}
+.gas-box{display:flex;flex-direction:column;gap:12px}
+.gas-pick{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;max-width:720px}
+.gas-pick button{display:grid;gap:5px;justify-items:center;min-width:0;padding:0;color:var(--muted);transition:color .2s}
+.gas-pick span{display:flex;align-items:center;justify-content:center;width:100%;height:92px;padding:5px 3px;border-radius:12px;background:#fff;box-shadow:0 0 0 2px transparent;transition:box-shadow .2s,transform .2s}
+.gas-pick img{height:100%;width:auto;max-width:100%;object-fit:contain}
+.gas-pick small{font-size:12px;font-weight:600;line-height:1.1;text-align:center}
+.gas-pick button.on{color:var(--cream)}
+.gas-pick button.on span{box-shadow:0 0 0 3px var(--gold),0 0 18px rgba(236,184,79,.4);transform:translateY(-2px)}
 .gas-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;max-width:720px}
-.gas-b{position:relative;display:grid;justify-items:center;width:100%;padding:12px 6px 50px;border-radius:14px;background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--line);transition:box-shadow .2s,transform .14s;text-align:center}
+.gas-b{position:relative;display:grid;justify-items:center;width:100%;padding:7px 7px 50px;border-radius:14px;background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--line);transition:box-shadow .2s,transform .14s;text-align:center}
 .gas-b b{margin-top:8px;font-size:14.5px;font-weight:700;line-height:1.15}
 .gas-p{color:var(--gold);font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
-.gas-bt{display:flex;align-items:flex-end;justify-content:center;width:100%;height:150px}
-.bot{display:block;width:auto;max-width:100%;overflow:visible;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
-.liq{fill:var(--liq);transition:fill .4s}
-.lab{fill:var(--cream)}.lab2{fill:var(--gold)}
-.cap{fill:var(--gold)}
-.bub{fill:rgba(255,255,255,.55);animation:bub 2.6s ease-in infinite}
-.bub.b1{animation-delay:.8s}.bub.b2{animation-delay:1.6s}
+.gas-bt{display:flex;align-items:flex-end;justify-content:center;width:100%;height:158px;padding:7px 4px;border-radius:10px;background:#fff}
+.gas-img{display:block;width:auto;max-width:100%;object-fit:contain}
 .gas-plus{left:50%;right:auto;margin-left:-17px;bottom:9px}
 .ref{margin:0;color:var(--muted);font-size:13.5px}
-@keyframes bub{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(-78px);opacity:0}}
-@media(prefers-reduced-motion:reduce){.bub,.addon-q{animation:none}.addon-ph img,.addon-b,.gas-b,.brand button,.liq{transition:none}}
+@media(prefers-reduced-motion:reduce){.addon-q{animation:none}.addon-ph img,.addon-b,.gas-b,.gas-pick span{transition:none}}
 
 /* Plato en vivo */
 .stage-w{position:sticky;top:-4px;z-index:3;margin-top:-4px;padding-block:4px 6px;background:var(--surface)}
@@ -434,8 +429,8 @@ html.intro{overflow:hidden}
 .st-layer{position:absolute;inset:0}
 .st-token{position:absolute;width:42px;height:42px;transform:translate(-50%,-50%);border-radius:50%;overflow:hidden;box-shadow:0 0 0 2px var(--cream),0 4px 12px rgba(0,0,0,.55)}
 .st-token img{width:100%;height:100%;object-fit:cover;display:block}
-.st-b{display:flex;justify-content:center;align-items:flex-end;padding-block:3px;background:var(--surface-2)}
-.st-b .bot{height:100%;filter:none}
+.st-b{background:#fff;padding:3px}
+.st-b img{object-fit:contain}
 .st-sauce{position:absolute;left:0;right:0;height:17%;pointer-events:none}
 .st-sauce svg{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
 .st-sauce path{fill:none;stroke-width:3.4;stroke-linecap:round;vector-effect:non-scaling-stroke;stroke-width:6px;stroke-dasharray:1;animation:sauce .7s ease-out both}
@@ -570,7 +565,7 @@ html.intro{overflow:hidden}
   </div></section>
 
   <section id="gaseosas"><div class="wrap">
-    <div><h2>Gaseosas</h2><p class="sub">Elige la marca y toca el tamaño.</p></div>
+    <div><h2>Gaseosas</h2><p class="sub">Elige tu gaseosa y toca el tamaño.</p></div>
     <div class="gas-box" data-list="gaseosas"></div>
   </div></section>
 </main>
@@ -705,11 +700,16 @@ var EXTRAS=[
 ];
 var ADDONS=EXTRAS.filter(function(x){return x.sec==='adicionales'});
 var DRINKS=EXTRAS.filter(function(x){return x.sec==='gaseosas'});
-var FLAVORS=[{k:'Manzana',c:'#d4a23c'},{k:'Colombiana',c:'#c2641a'},{k:'Uva',c:'#5b2a8c'},{k:'Naranja',c:'#ee8a1c'}];
-var COLA='#2b0f07', GASES=['Coca-Cola'].concat(FLAVORS.map(function(f){return 'Postobón '+f.k}));
-var gasBrand='Coca-Cola', gasFlavor='Manzana';
-function gasSel(){return gasBrand==='Coca-Cola'?'Coca-Cola':'Postobón '+gasFlavor}
-function gasColor(){return gasBrand==='Coca-Cola'?COLA:FLAVORS.filter(function(f){return f.k===gasFlavor})[0].c}
+var GAS=[
+ {k:'Coca-Cola',img:{'g-250':'coca-400','g-400':'coca-400','g-1500':'coca-15'}},
+ {k:'Sprite',img:{'g-250':'sprite-15','g-400':'sprite-15','g-1500':'sprite-15'}},
+ {k:'Quatro',img:{'g-250':'quatro-250','g-400':'quatro-250','g-1500':'quatro-250'}},
+ {k:'Premio',img:{'g-250':'premio-400','g-400':'premio-400','g-1500':'premio-400'}},
+ {k:'Colombiana',img:{'g-250':'colombiana','g-400':'colombiana','g-1500':'colombiana'}}
+];
+var GASES=GAS.map(function(g){return g.k}), gasCur='Coca-Cola';
+function gasSel(){return gasCur}
+function gasImg(k,id){var g=GAS.filter(function(v){return v.k===k})[0]||GAS[0];return 'img/gas-'+g.img[id||'g-400']+'.jpg'}
 var $=function(s,r){return (r||document).querySelector(s)};
 var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
 var money=function(n){return '$'+String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.')};
@@ -732,6 +732,8 @@ function clean(list){
   return (list||[]).map(function(l){
     var m=byId(l.id), x=extraById(l.id), o=m&&m.opts.filter(function(v){return v.k===(l.opt||'')})[0];
     var p=unitPrice(l); if(p===null||!(l.q>0))return null;
+    if(l.id.indexOf('g-')===0&&GASES.indexOf(l.opt)<0)l.opt='';
+    if(l.gas&&GASES.indexOf(l.gas)<0)l.gas='';
     var n={id:l.id,name:m?m.name:x.name,opt:l.opt||'',optNote:o&&o.note||'',p:p,q:l.q,sabores:l.sabores||[],salsas:l.salsas||[],extras:l.extras||[],gas:l.gas||''};
     n.key=keyOf(n);
     return n;
@@ -784,15 +786,6 @@ function dishHTML(m){
 $$('[data-items]').forEach(function(g){
   g.innerHTML=MENU.filter(function(m){return m.sec===g.dataset.items}).map(dishHTML).join('');
 });
-function bottle(id,hh){
-  var cid='bc-'+id, bub=[0,1,2].map(function(i){return '<circle class="bub b'+i+'" cx="'+(24+i*7)+'" cy="118" r="'+(1.4+i*.3)+'"/>'}).join('');
-  return '<svg class="bot" viewBox="0 0 60 140" style="height:'+hh+'%" aria-hidden="true"><defs><clipPath id="'+cid+'"><path d="M23 18h14v10c0 6 12 12 12 26v70c0 6-4 10-10 10H21c-6 0-10-4-10-10V54c0-14 12-20 12-26z"/></clipPath></defs>'+
-    '<path d="M23 18h14v10c0 6 12 12 12 26v70c0 6-4 10-10 10H21c-6 0-10-4-10-10V54c0-14 12-20 12-26z" fill="rgba(247,238,221,.1)"/>'+
-    '<g clip-path="url(#'+cid+')"><rect class="liq" x="8" y="34" width="44" height="104"/>'+bub+'<rect x="9" y="72" width="42" height="30" class="lab"/><rect x="9" y="72" width="42" height="2.500" class="lab2"/><rect x="9" y="99.500" width="42" height="2.500" class="lab2"/></g>'+
-    '<path d="M23 18h14v10c0 6 12 12 12 26v70c0 6-4 10-10 10H21c-6 0-10-4-10-10V54c0-14 12-20 12-26z" fill="none" stroke="rgba(247,238,221,.55)" stroke-width="1.400"/>'+
-    '<path d="M18 56c-1 16-1 40-1 62" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2.400" stroke-linecap="round"/>'+
-    '<rect x="21.500" y="6" width="17" height="11" rx="2" class="cap"/></svg>';
-}
 var extrasBuilt=false;
 function buildExtras(){
   $('[data-list="adicionales"]').innerHTML=ADDONS.map(function(x){
@@ -800,10 +793,11 @@ function buildExtras(){
       '<span class="addon-q" hidden></span><button type="button" class="addon-m" data-xm="'+x.id+'" aria-label="Quitar '+esc(x.name)+'" hidden>−</button></div>';
   }).join('');
   $('[data-list="gaseosas"]').innerHTML=
-    '<div class="brand" role="group" aria-label="Marca"><button type="button" data-brand="Coca-Cola">Coca-Cola</button><button type="button" data-brand="Postobón">Postobón</button></div>'+
-    '<div class="flavors" id="flavors" role="group" aria-label="Sabor de Postobón" hidden>'+FLAVORS.map(function(f){return '<button type="button" data-flavor="'+f.k+'"><i style="background:'+f.c+'"></i>'+f.k+'</button>'}).join('')+'</div>'+
+    '<div class="gas-pick" role="group" aria-label="Elige la gaseosa">'+GAS.map(function(g){
+      return '<button type="button" data-gas="'+g.k+'" aria-label="'+g.k+'"><span><img src="'+gasImg(g.k,'g-400')+'" loading="lazy" alt=""></span><small>'+g.k+'</small></button>';
+    }).join('')+'</div>'+
     '<div class="gas-grid" id="gasGrid">'+DRINKS.map(function(x){
-      return '<div class="gas-c" data-gcard="'+x.id+'"><button type="button" class="gas-b" data-gp="'+x.id+'" aria-label="Agregar '+esc(x.size)+', '+money(x.p)+'"><span class="gas-bt">'+bottle(x.id,x.h)+'</span><b>'+esc(x.size)+'</b><span class="gas-p">'+money(x.p)+'</span><span class="gas-plus" aria-hidden="true">+</span></button><span class="addon-q" hidden></span><button type="button" class="addon-m" data-gm="'+x.id+'" aria-label="Quitar '+esc(x.size)+'" hidden>−</button></div>';
+      return '<div class="gas-c" data-gcard="'+x.id+'"><button type="button" class="gas-b" data-gp="'+x.id+'" aria-label="Agregar '+esc(x.size)+', '+money(x.p)+'"><span class="gas-bt"><img class="gas-img" src="'+gasImg(gasCur,x.id)+'" style="height:'+x.h+'%" alt=""></span><b>'+esc(x.size)+'</b><span class="gas-p">'+money(x.p)+'</span><span class="gas-plus" aria-hidden="true">+</span></button><span class="addon-q" hidden></span><button type="button" class="addon-m" data-gm="'+x.id+'" aria-label="Quitar '+esc(x.size)+'" hidden>−</button></div>';
     }).join('')+'</div><p class="ref" id="gasNow"></p>';
   extrasBuilt=true;
 }
@@ -816,21 +810,19 @@ function renderExtras(){
     $('.addon-q',t).hidden=!q;$('.addon-q',t).textContent=q;$('.addon-m',t).hidden=!q;
   });
   var sel=gasSel(),box=$('[data-list="gaseosas"]');
-  box.style.setProperty('--liq',gasColor());
-  $$('[data-brand]',box).forEach(function(b){var on=b.dataset.brand===gasBrand;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
-  $('#flavors').hidden=gasBrand==='Coca-Cola';
-  $$('[data-flavor]',box).forEach(function(b){var on=b.dataset.flavor===gasFlavor;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
+  $$('[data-gas]',box).forEach(function(b){var on=b.dataset.gas===gasCur;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
   DRINKS.forEach(function(x){
     var t=$('[data-gcard="'+x.id+'"]'),q=gasQty(x.id,sel);
+    var gi=$('.gas-img',t),gs=gasImg(sel,x.id);if(gi.getAttribute('src')!==gs)gi.setAttribute('src',gs);
     t.classList.toggle('on',q>0);
     $('.addon-q',t).hidden=!q;$('.addon-q',t).textContent=q;$('.addon-m',t).hidden=!q;
     $('.gas-b',t).setAttribute('aria-label','Agregar '+sel+' '+x.size+', '+money(x.p));
   });
-  $('#gasNow').textContent='Eligiendo: '+sel+'. Botellas de referencia.';
+  $('#gasNow').textContent='Eligiendo: '+sel+'. Fotos de referencia.';
 }
 function refill(){
   if(calm)return;
-  $$('.liq').forEach(function(r,i){r.animate([{transform:'translateY(70%)'},{transform:'none'}],{duration:620,delay:i*70,easing:'cubic-bezier(.2,.8,.3,1)',fill:'backwards'})});
+  $$('.gas-img').forEach(function(r,i){r.animate([{transform:'translateY(14px) scale(.86)',opacity:.2},{transform:'none',opacity:1}],{duration:380,delay:i*60,easing:'cubic-bezier(.2,1.2,.4,1)',fill:'backwards'})});
 }
 
 /* Efectos */
@@ -1021,7 +1013,6 @@ function curPrice(){
 }
 var SAUCE={'Tomate':'#c8241c','Queso cheddar':'#f39a1d','Leña':'#6b3417','Piña':'#f5d33f','De la casa':'#f6e7c1'};
 var SLOTS={'x-maiz':[16,62],'x-tocineta':[36,28],'x-queso':[58,60],'x-carne':[76,26],'x-pollo':[30,70],'x-papa':[64,22],'c-papa':[84,62],'c-gas':[10,24]};
-function gasHex(g){if(!g||g==='Coca-Cola')return COLA;var f=FLAVORS.filter(function(v){return 'Postobón '+v.k===g})[0];return f?f.c:COLA}
 function syncStage(){
   var layer=$('#stLayer'),f=$('#itemForm');if(!layer)return;
   var want={};
@@ -1029,7 +1020,7 @@ function syncStage(){
   var salsas=$$('input[name="salsa"]:checked',f).map(function(x){return x.value});
   salsas.forEach(function(s,i){want['s-'+s]={t:'sauce',c:SAUCE[s],i:SALSAS.indexOf(s)}});
   var o=$('input[name="opt"]:checked',f),k=o?cur.opts[+o.value].k:'';
-  if(k==='Combo'){want['c-papa']={t:'token',img:'add-papa'};want['c-gas']={t:'bottle'}}
+  if(k==='Combo'){want['c-papa']={t:'token',img:'add-papa'};want['c-gas']={t:'gas'}}
   var im=$('#stImg');if(im)im.classList.toggle('big',k==='Grande');
   $$('[data-k]',layer).forEach(function(n){
     if(want[n.dataset.k])return;
@@ -1038,7 +1029,7 @@ function syncStage(){
   });
   Object.keys(want).forEach(function(key){
     var w=want[key],n=$('[data-k="'+key+'"]',layer);
-    if(n){if(w.t==='bottle'){var gi=$('input[name="gas"]:checked',f);n.style.setProperty('--liq',gasHex(gi&&gi.value))}return}
+    if(n){if(w.t==='gas'){var gi=$('input[name="gas"]:checked',f);$('img',n).src=gasImg(gi?gi.value:'Coca-Cola')}return}
     n=document.createElement('span');n.dataset.k=key;
     if(w.t==='sauce'){
       n.className='st-sauce';n.style.top=(6+w.i*17)+'%';
@@ -1047,8 +1038,8 @@ function syncStage(){
       return;
     }
     var p=SLOTS[key]||[50,50];
-    n.className='st-token'+(w.t==='bottle'?' st-b':'');n.style.left=p[0]+'%';n.style.top=p[1]+'%';
-    if(w.t==='bottle'){var g0=$('input[name="gas"]:checked',f);n.style.setProperty('--liq',gasHex(g0&&g0.value));n.innerHTML=bottle('st',100)}
+    n.className='st-token'+(w.t==='gas'?' st-b':'');n.style.left=p[0]+'%';n.style.top=p[1]+'%';
+    if(w.t==='gas'){var g0=$('input[name="gas"]:checked',f);n.innerHTML='<img src="'+gasImg(g0?g0.value:'Coca-Cola')+'" alt="">'}
     else n.innerHTML='<img src="img/'+w.img+'.jpg" alt="">';
     layer.appendChild(n);
     if(!calm)n.animate([{transform:'translate(-50%,-190px) rotate(-30deg)',opacity:.4},{transform:'translate(-50%,-50%) rotate(6deg) scale(1.12)',opacity:1,offset:.72},{transform:'translate(-50%,-50%) scale(.95)',offset:.86},{transform:'translate(-50%,-50%)'}],{duration:520,easing:'cubic-bezier(.45,.05,.7,.4)'});
@@ -1123,19 +1114,17 @@ $('#itemForm').addEventListener('submit',function(e){
 
 /* Clics del menú */
 document.addEventListener('click',function(e){
-  var t=e.target.closest('[data-add],[data-xp],[data-xm],[data-gp],[data-gm],[data-brand],[data-flavor]');
+  var t=e.target.closest('[data-add],[data-xp],[data-xm],[data-gp],[data-gm],[data-gas]');
   if(!t)return;
   if(t.dataset.add){
     openItem(byId(t.dataset.add),t);
-  } else if(t.dataset.brand){
-    gasBrand=t.dataset.brand;renderExtras();refill();
-    W.tip(gasBrand==='Coca-Cola'?'Coca-Cola, muy bien. ¿De qué tamaño?':'Postobón. Dime el sabor y el tamaño.');
-  } else if(t.dataset.flavor){
-    gasFlavor=t.dataset.flavor;renderExtras();refill();
+  } else if(t.dataset.gas){
+    gasCur=t.dataset.gas;renderExtras();refill();haptic(10);
+    W.tip(gasCur+', muy bien. ¿De qué tamaño?');
   } else if(t.dataset.gp){
     var did=t.dataset.gp,sel=gasSel();
     addLines([mk(did,sel)]);
-    var bt=$('.bot',t);
+    var bt=$('.gas-img',t);
     if(!calm&&bt)bt.animate([{transform:'none'},{transform:'translateY(-9px) rotate(-5deg)'},{transform:'rotate(4deg)'},{transform:'none'}],{duration:420,easing:'ease-out'});
     var rg=t.getBoundingClientRect();burst(rg.left+rg.width/2,rg.top+rg.height/2,8);
     fly(t,null);
@@ -1244,7 +1233,7 @@ function lineSub(l){
   if(m&&m.salsas)a.push('Salsas: '+(l.salsas.length?l.salsas.join(', '):'por confirmar'));
   if(l.extras&&l.extras.length)a.push('Extras: '+l.extras.map(function(e){return extraById(e).name}).join(', '));
   if(l.opt==='Combo'||l.id==='cpersonal')a.push('Gaseosa: '+(l.gas||'por confirmar'));
-  if(l.id.indexOf('g-')===0&&!l.opt)a.push('Marca: por confirmar');
+  if(l.id.indexOf('g-')===0&&!l.opt)a.push('Sabor: por confirmar');
   return a;
 }
 var upsellOff=false;
@@ -1316,7 +1305,7 @@ function message(){
     if(m&&m.salsas)out.push('   Salsas: '+(l.salsas.length?l.salsas.join(', '):'por confirmar'));
     if(l.extras.length)out.push('   Extras: '+l.extras.map(function(e){return extraById(e).name}).join(', '));
     if(l.opt==='Combo'||l.id==='cpersonal')out.push('   Gaseosa: '+(l.gas||'por confirmar'));
-    if(l.id.indexOf('g-')===0&&!l.opt)out.push('   Marca: por confirmar');
+    if(l.id.indexOf('g-')===0&&!l.opt)out.push('   Sabor: por confirmar');
   });
   out.push('','*Total: '+money(total())+'*'+(dom?' + domicilio':''));
   var n=$('#cNote').value.trim();
@@ -1510,7 +1499,7 @@ var W=(function(){
     combos:'¿Vienen varios? El Combo Especial trae 5 arepas medianas de pollo y carne.',
     papas:'Mira lo nuevo: el Salchipollo trae pollo, salchicha, tocineta y chorizo ahumado.',
     adicionales:'Toca un adicional y yo te ayudo a ponerlo en tu plato.',
-    gaseosas:'¿Algo de tomar? Elige Coca-Cola o Postobón, y el tamaño.'
+    gaseosas:'¿Algo de tomar? Elige tu gaseosa y luego el tamaño.'
   };
   function sectionLine(){
     if(!curSec||seen[curSec]||!bub.hidden||Date.now()-lastSay<7000)return;

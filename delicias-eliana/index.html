@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Delicias Eliana B&amp;A · Menú</title>
+<meta name="description" content="Arepas grandes, combos, papas y salchipollo. Arma tu pedido y envíalo por WhatsApp.">
+<meta name="theme-color" content="#0c0a08">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Delicias Eliana B&amp;A · Menú">
+<meta property="og:description" content="Arepas grandes, combos, papas y salchipollo. Arma tu pedido y envíalo por WhatsApp.">
+<meta property="og:url" content="https://onemoreint.github.io/apps/delicias-eliana/">
+<meta property="og:image" content="https://onemoreint.github.io/apps/delicias-eliana/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/webp" href="img/logo.webp">
+<link rel="apple-touch-icon" href="img/logo.webp">
+<link rel="preload" href="fonts/sansita-latin-900-italic.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Sansita";font-weight:800;font-style:normal;font-display:swap;src:url(fonts/sansita-latin-800-normal.woff2) format("woff2")}
+@font-face{font-family:"Sansita";font-weight:800;font-style:italic;font-display:swap;src:url(fonts/sansita-latin-800-italic.woff2) format("woff2")}
+@font-face{font-family:"Sansita";font-weight:900;font-style:italic;font-display:swap;src:url(fonts/sansita-latin-900-italic.woff2) format("woff2")}
+@font-face{font-family:"Figtree";font-weight:400;font-style:normal;font-display:swap;src:url(fonts/figtree-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Figtree";font-weight:500;font-style:normal;font-display:swap;src:url(fonts/figtree-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Figtree";font-weight:600;font-style:normal;font-display:swap;src:url(fonts/figtree-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Figtree";font-weight:700;font-style:normal;font-display:swap;src:url(fonts/figtree-latin-700-normal.woff2) format("woff2")}
+/* Layout: una sola columna de platos con foto protagonista; barra de categorías fija y pedido siempre a un toque. */
+:root{
+  color-scheme:dark;
+  --bg:#0c0a08; --surface:#191510; --surface-2:#251f17; --line:#3a3125;
+  --cream:#f7eedd; --muted:#b9ac97;
+  --gold:#ecb84f; --chili:#f26b2c; --ink:#190b03;
+  --wa:#25d366; --wa-ink:#04210f;
+  --ve-y:#f6c500; --ve-b:#1d3f9e; --ve-r:#d3202c;
+  --display:"Sansita","Trebuchet MS",Georgia,serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --gut-l:max(16px,env(safe-area-inset-left,0px));
+  --gut-r:max(16px,env(safe-area-inset-right,0px));
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html.locked{overflow:hidden}
+body{margin:0;background:var(--bg);color:var(--cream);font:400 16px/1.5 var(--body)}
+img{display:block;max-width:100%}
+h1,h2,h3,p{margin:0}
+h1,h2,h3{text-wrap:balance}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1040px;margin-inline:auto;padding-left:var(--gut-l);padding-right:var(--gut-r)}
+
+/* Portada */
+.hero .wrap{display:flex;align-items:center;gap:18px;padding-block:22px 18px}
+.hero img{width:clamp(128px,36vw,190px);height:auto;flex:none}
+.hero div{min-width:0}
+.hero h1{font:italic 900 clamp(46px,14vw,76px)/.95 var(--display);color:var(--gold)}
+.hero p{margin-top:8px;color:var(--cream);font-size:16px;line-height:1.35;max-width:32ch}
+.tricolor{display:grid;grid-template-rows:repeat(3,3px)}
+.tricolor i:nth-child(1){background:var(--ve-y)}
+.tricolor i:nth-child(2){background:var(--ve-b)}
+.tricolor i:nth-child(3){background:var(--ve-r)}
+
+/* Categorías */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.cats{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);border-bottom:1px solid var(--line)}
+.cats .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.cats .wrap::-webkit-scrollbar{display:none}
+.cats a{flex:none;padding:14px 8px 12px;text-decoration:none;font-weight:600;font-size:15px;color:var(--muted);border-bottom:3px solid transparent}
+.cats a.on{color:var(--cream);border-bottom-color:var(--chili)}
+
+/* Secciones */
+main{padding-bottom:112px}
+section{scroll-margin-top:60px;padding-block:30px 8px}
+section>.wrap{display:flex;flex-direction:column;gap:22px}
+h2{font:italic 800 clamp(30px,8vw,40px)/1.05 var(--display);color:var(--cream)}
+.sub{margin-top:4px;color:var(--muted);font-size:15px}
+.grid{display:grid;gap:30px 26px;grid-template-columns:1fr}
+@media(min-width:720px){.grid{grid-template-columns:1fr 1fr}.grid[data-items="papas"]{grid-template-columns:repeat(3,1fr)}}
+
+/* Plato */
+.dish{display:flex;flex-direction:column;gap:12px;min-width:0}
+.dish img{width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;border-radius:12px;background:var(--surface)}
+.dish .kicker{font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+.dish h3{font:800 26px/1.1 var(--display)}
+.dish .desc{margin-top:4px;color:var(--muted);font-size:15.5px;line-height:1.4}
+.buy{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.prices{display:flex;gap:18px;flex-wrap:wrap}
+.price small{display:block;color:var(--muted);font-size:13px;line-height:1.3}
+.price b{font-weight:700;font-size:20px;font-variant-numeric:tabular-nums}
+.add{display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 20px;border-radius:999px;background:var(--chili);color:var(--ink);font-weight:700;font-size:16px;transition:transform .12s}
+.add:active{transform:scale(.96)}
+.count{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 6px;border-radius:999px;background:var(--ink);color:var(--cream);font-size:13px;font-variant-numeric:tabular-nums}
+
+/* Lo nuevo */
+.new{background:var(--gold);color:var(--ink);border-radius:14px;padding:22px 20px;display:flex;flex-direction:column;gap:14px;grid-column:1/-1}
+.new .lbl{font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+.new h3{font:italic 900 clamp(44px,13vw,72px)/.95 var(--display)}
+.new .desc{font-size:16px;line-height:1.4;max-width:58ch;font-weight:500}
+.new .price small{color:var(--ink)}
+.new .add{background:var(--ink);color:var(--cream)}
+.new .count{background:var(--gold);color:var(--ink)}
+
+/* Salsas */
+.salsas{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;padding-block:14px;border-block:1px solid var(--line);font-size:15px}
+.salsas b{color:var(--gold);font-weight:700}
+
+/* Listas de adicionales */
+.lists{display:grid;gap:30px 26px;grid-template-columns:1fr}
+@media(min-width:720px){.lists{grid-template-columns:1fr 1fr}}
+.list{display:flex;flex-direction:column;min-width:0}
+.row{display:flex;align-items:center;gap:12px;min-height:60px;border-bottom:1px solid var(--line)}
+.row:first-child{border-top:1px solid var(--line)}
+.row .n{flex:1;min-width:0;font-weight:500;font-size:17px}
+.row .p{font-weight:600;font-variant-numeric:tabular-nums}
+.stepper{display:inline-flex;align-items:center;gap:2px;flex:none}
+.stepper button{width:40px;height:40px;border-radius:50%;background:var(--surface-2);color:var(--cream);font-size:21px;font-weight:600;line-height:1}
+.stepper button.plus{background:var(--chili);color:var(--ink)}
+.stepper output{min-width:28px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+
+/* Pie */
+footer{border-top:1px solid var(--line);padding-block:26px;color:var(--muted);font-size:15px}
+footer .wrap{display:flex;flex-direction:column;gap:6px}
+footer strong{font:italic 800 22px/1.2 var(--display);color:var(--cream)}
+footer a{color:var(--gold);font-weight:600}
+
+/* Barra del pedido */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:8;padding:10px var(--gut-r) calc(10px + env(safe-area-inset-bottom,0px)) var(--gut-l);background:linear-gradient(to top,var(--bg) 62%,transparent)}
+.bar button{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;max-width:560px;margin-inline:auto;min-height:56px;padding:0 20px;border-radius:14px;background:var(--wa);color:var(--wa-ink);font-weight:700;font-size:17px;box-shadow:0 8px 26px rgba(0,0,0,.55)}
+.bar span{font-variant-numeric:tabular-nums}
+
+/* Hojas */
+dialog{width:100%;max-width:560px;max-height:92dvh;margin:auto auto 0;padding:0;border:0;border-radius:18px 18px 0 0;background:var(--surface);color:var(--cream);overflow:hidden}
+dialog[open]{display:flex;flex-direction:column;animation:up .2s ease-out}
+dialog::backdrop{background:rgba(0,0,0,.72)}
+@keyframes up{from{transform:translateY(24px);opacity:.4}}
+.sheet-h{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px var(--gut-r) 12px var(--gut-l)}
+.sheet-h h3{font:800 25px/1.1 var(--display)}
+.sheet-h p{margin-top:4px;color:var(--muted);font-size:15px;line-height:1.35}
+.close{flex:none;width:40px;height:40px;border-radius:50%;background:var(--surface-2);font-size:20px;line-height:1}
+.sheet-b{flex:1;min-height:0;overflow-y:auto;padding:4px var(--gut-r) 16px var(--gut-l);display:flex;flex-direction:column;gap:20px}
+.sheet-f{padding:12px var(--gut-r) calc(14px + env(safe-area-inset-bottom,0px)) var(--gut-l);border-top:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;gap:10px}
+fieldset{border:0;margin:0;padding:0;min-width:0;display:flex;flex-direction:column;gap:8px}
+legend{padding:0 0 8px;font-weight:700;font-size:15px}
+legend small{font-weight:400;color:var(--muted);font-size:14px}
+.opt{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:54px;padding:8px 14px;border:1.5px solid var(--line);border-radius:12px;cursor:pointer}
+.opt span small{display:block;color:var(--muted);font-size:13.5px;line-height:1.3}
+.opt b{font-variant-numeric:tabular-nums;flex:none}
+.opt input,.chip input{position:absolute;opacity:0;width:1px;height:1px}
+.opt:has(input:checked){border-color:var(--gold);background:var(--surface-2)}
+.opt:has(input:focus-visible),.chip:has(input:focus-visible){outline:3px solid var(--gold);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative;padding:9px 14px;min-height:42px;border:1.5px solid var(--line);border-radius:999px;cursor:pointer;font-size:15px;font-weight:500}
+.chip:has(input:checked){background:var(--gold);border-color:var(--gold);color:var(--ink);font-weight:700}
+.primary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:54px;padding:0 20px;border-radius:14px;background:var(--chili);color:var(--ink);font-weight:700;font-size:17px;text-decoration:none}
+.primary.wa{background:var(--wa);color:var(--wa-ink)}
+.primary span{font-variant-numeric:tabular-nums}
+.qty-row{display:flex;align-items:center;justify-content:space-between;gap:12px;font-weight:700}
+
+/* Pedido */
+.line{display:flex;align-items:center;gap:10px;padding-block:10px;border-bottom:1px solid var(--line)}
+.line .t{flex:1;min-width:0}
+.line .t b{display:block;font-weight:600;line-height:1.25}
+.line .t small{display:block;color:var(--muted);font-size:13.5px;line-height:1.3}
+.line .t em{font-style:normal;font-variant-numeric:tabular-nums;font-size:14.5px}
+.line .stepper button{width:36px;height:36px;font-size:19px}
+.line .stepper button.plus{background:var(--surface-2);color:var(--cream)}
+.lines{display:flex;flex-direction:column}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-weight:700;font-size:15px}
+.field input,.field textarea{width:100%;min-height:48px;padding:11px 13px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);font-size:16px}
+.field textarea{min-height:70px;resize:vertical}
+.field input:focus,.field textarea:focus{outline:0;border-color:var(--gold)}
+.field.bad input{border-color:var(--chili)}
+.err{color:#ff9b6c;font-size:14px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.two .opt{justify-content:center;text-align:center;font-weight:600}
+.total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-weight:700;font-size:18px}
+.total span:last-child{font-variant-numeric:tabular-nums;font-size:22px}
+.fine{color:var(--muted);font-size:13.5px;line-height:1.35}
+.empty-link{align-self:flex-start;color:var(--muted);font-size:14px;text-decoration:underline;padding:6px 0}
+.sent{color:var(--wa);font-size:14.5px;font-weight:600;line-height:1.35}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:7;padding:9px 16px;border-radius:999px;background:var(--cream);color:var(--ink);font-weight:600;font-size:14.5px;max-width:calc(100% - 32px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}dialog[open]{animation:none}.add{transition:none}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <img src="img/logo.webp" width="640" height="609" alt="Logo de Delicias Eliana B&amp;A">
+    <div>
+      <h1>Menú</h1>
+      <p>Elige tus platos, arma el pedido y envíalo por WhatsApp.</p>
+    </div>
+  </div>
+  <div class="tricolor" aria-hidden="true"><i></i><i></i><i></i></div>
+</header>
+
+<nav class="cats" aria-label="Categorías del menú">
+  <div class="wrap" id="cats">
+    <a href="#arepas">Arepas</a>
+    <a href="#combos">Combos</a>
+    <a href="#papas">Papas</a>
+    <a href="#adicionales">Adicionales</a>
+    <a href="#gaseosas">Gaseosas</a>
+  </div>
+</nav>
+
+<main>
+  <section id="arepas"><div class="wrap">
+    <div><h2>Arepas grandes</h2><p class="sub">Solas o en combo con papas y gaseosa.</p></div>
+    <div class="grid" data-items="arepas"></div>
+  </div></section>
+
+  <section id="combos"><div class="wrap">
+    <h2>Combos de arepas</h2>
+    <div class="grid" data-items="combos"></div>
+  </div></section>
+
+  <section id="papas"><div class="wrap">
+    <div><h2>Papas</h2><p class="sub">Con papas a la francesa y queso mozzarella en todas.</p></div>
+    <div class="grid" data-items="papas"></div>
+    <div class="salsas"><b>Salsas disponibles</b><span>Tomate · Queso cheddar · Leña · Piña · De la casa</span></div>
+  </div></section>
+
+  <section id="adicionales"><div class="wrap">
+    <h2>Adicionales</h2>
+    <div class="list" data-list="adicionales"></div>
+  </div></section>
+
+  <section id="gaseosas"><div class="wrap">
+    <h2>Gaseosas</h2>
+    <div class="list" data-list="gaseosas"></div>
+  </div></section>
+</main>
+
+<footer><div class="wrap">
+  <strong>¡Gracias por preferirnos!</strong>
+  <span>WhatsApp: <a href="https://wa.me/573002699192" target="_blank" rel="noopener">300 269 9192</a></span>
+</div></footer>
+
+<div class="toast" id="toast" role="status" hidden></div>
+<div class="bar" id="bar" hidden><button type="button" id="openCart"><span id="barCount"></span><span id="barTotal"></span></button></div>
+
+<dialog id="itemSheet" aria-labelledby="itemTitle">
+  <form method="dialog" id="itemForm" style="display:contents">
+    <div class="sheet-h">
+      <div><h3 id="itemTitle"></h3><p id="itemDesc"></p></div>
+      <button type="button" class="close" data-close aria-label="Cerrar">✕</button>
+    </div>
+    <div class="sheet-b" id="itemBody"></div>
+    <div class="sheet-f">
+      <div class="qty-row"><span>Cantidad</span><span class="stepper"><button type="button" id="qMinus" aria-label="Quitar uno">−</button><output id="qVal">1</output><button type="button" class="plus" id="qPlus" aria-label="Agregar uno">+</button></span></div>
+      <button type="submit" class="primary" id="itemAdd"><span>Agregar al pedido</span><span id="itemPrice"></span></button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="cartSheet" aria-labelledby="cartTitle">
+  <div class="sheet-h">
+    <h3 id="cartTitle">Tu pedido</h3>
+    <button type="button" class="close" data-close aria-label="Cerrar">✕</button>
+  </div>
+  <div class="sheet-b">
+    <div>
+      <div class="lines" id="lines"></div>
+      <button type="button" class="empty-link" id="clear">Vaciar pedido</button>
+    </div>
+    <div class="field" id="fName">
+      <label for="cName">Tu nombre</label>
+      <input id="cName" autocomplete="name" placeholder="¿A nombre de quién?">
+      <span class="err" id="eName" hidden>Escribe tu nombre para enviar el pedido.</span>
+    </div>
+    <fieldset>
+      <legend>¿Cómo lo quieres?</legend>
+      <div class="two">
+        <label class="opt"><input type="radio" name="entrega" id="eDom" value="Domicilio" checked><span>A domicilio</span></label>
+        <label class="opt"><input type="radio" name="entrega" id="eRec" value="Para recoger"><span>Para recoger</span></label>
+      </div>
+    </fieldset>
+    <div class="field" id="fAddr">
+      <label for="cAddr">Dirección de entrega</label>
+      <input id="cAddr" autocomplete="street-address" placeholder="Barrio, calle, número y referencia">
+      <span class="err" id="eAddr" hidden>Escribe la dirección para el domicilio.</span>
+    </div>
+    <div class="field">
+      <label for="cNote">Nota para la cocina <small style="font-weight:400;color:var(--muted)">(opcional)</small></label>
+      <textarea id="cNote" placeholder="Ej.: una arepa sin queso"></textarea>
+    </div>
+  </div>
+  <div class="sheet-f">
+    <div class="total"><span>Total</span><span id="cartTotal"></span></div>
+    <p class="fine" id="domNote">El valor del domicilio no está incluido. Te lo confirmamos por WhatsApp.</p>
+    <a class="primary wa" id="send" href="https://wa.me/573002699192" target="_blank" rel="noopener"><span>Enviar pedido por WhatsApp</span></a>
+    <p class="sent" id="sent" role="status" hidden>Abrimos WhatsApp con tu pedido. Toca enviar allá para que nos llegue.</p>
+  </div>
+</dialog>
+
+<script>
+(function(){
+'use strict';
+var WA='573002699192', KEY='delicias-eliana-v1';
+var SALSAS=['Tomate','Queso cheddar','Leña','Piña','De la casa'];
+var COMBO_NOTE='Con papas y gaseosa';
+var MENU=[
+ {id:'pelua',sec:'arepas',kicker:'Arepa grande #1',name:'Pelúa',desc:'Carne desmechada con queso mozzarella.',img:'pelua',
+  opts:[{k:'Sola',p:22000},{k:'Combo',p:29000,note:COMBO_NOTE}]},
+ {id:'catira',sec:'arepas',kicker:'Arepa grande #2',name:'Catira',desc:'Pollo desmechado con full mozzarella.',img:'catira',
+  opts:[{k:'Sola',p:22000},{k:'Combo',p:29000,note:COMBO_NOTE}]},
+ {id:'cpersonal',sec:'combos',name:'Combo Personal',desc:'2 arepas medianas del sabor de tu preferencia, papas a la francesa y gaseosa.',img:'combo-personal',
+  opts:[{k:'',p:28000}],sabores:2},
+ {id:'cespecial',sec:'combos',name:'Combo Especial',desc:'5 arepas medianas de pollo y carne de res desmechada, con queso mozzarella.',img:'combo-especial',
+  opts:[{k:'',p:40000}]},
+ {id:'salchipollo',sec:'papas',feature:true,name:'Salchipollo',desc:'Papas a la francesa, pollo desmechado, queso mozzarella, tocineta, salchicha, maíz, chorizo ahumado y salsas al gusto.',
+  opts:[{k:'Personal',p:25000},{k:'Grande',p:42000}],salsas:true},
+ {id:'sencillas',sec:'papas',name:'Papas Sencillas',desc:'Papas a la francesa, queso mozzarella, tocineta, maíz y salsas al gusto.',img:'sencillas',
+  opts:[{k:'Personal',p:17000},{k:'Grande',p:32000}],salsas:true},
+ {id:'salchipapas',sec:'papas',name:'Salchipapas',desc:'Papas a la francesa, queso mozzarella, tocineta, salchicha, chorizo ahumado y salsas al gusto.',img:'salchipapas',
+  opts:[{k:'Personal',p:20000},{k:'Grande',p:38000}],salsas:true},
+ {id:'lokas',sec:'papas',name:'Papas Lokas',desc:'Papas a la francesa, queso mozzarella, tocineta, maíz, pollo y carne desmechada, y salsas al gusto.',img:'lokas',
+  opts:[{k:'Personal',p:25000},{k:'Grande',p:42000}],salsas:true}
+];
+var EXTRAS=[
+ {id:'x-maiz',sec:'adicionales',name:'Maíz',p:3000},
+ {id:'x-tocineta',sec:'adicionales',name:'Tocineta',p:4000},
+ {id:'x-queso',sec:'adicionales',name:'Queso',p:4000},
+ {id:'x-carne',sec:'adicionales',name:'Carne',p:6000},
+ {id:'x-pollo',sec:'adicionales',name:'Pollo',p:6000},
+ {id:'x-papa',sec:'adicionales',name:'Porción de papa',p:6000},
+ {id:'g-250',sec:'gaseosas',name:'Gaseosa 250 ml',p:3000},
+ {id:'g-400',sec:'gaseosas',name:'Gaseosa 400 ml',p:4000},
+ {id:'g-1500',sec:'gaseosas',name:'Gaseosa litro y medio',p:9000}
+];
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var money=function(n){return '$'+String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.')};
+var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+var byId=function(id){return MENU.filter(function(m){return m.id===id})[0]};
+
+/* Estado */
+var cart=[], form={name:'',entrega:'Domicilio',addr:''};
+try{var s=JSON.parse(localStorage.getItem(KEY)||'{}');if(Array.isArray(s.cart))cart=s.cart;if(s.form)form=Object.assign(form,s.form)}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({cart:cart,form:form}))}catch(e){}}
+var count=function(){return cart.reduce(function(a,l){return a+l.q},0)};
+var total=function(){return cart.reduce(function(a,l){return a+l.q*l.p},0)};
+function qtyOf(id){return cart.reduce(function(a,l){return a+(l.id===id?l.q:0)},0)}
+function addLine(l){
+  var key=[l.id,l.opt,(l.sabores||[]).join('+'),(l.salsas||[]).join('+')].join('|');
+  var hit=cart.filter(function(x){return x.key===key})[0];
+  if(hit)hit.q+=l.q;else{l.key=key;cart.push(l)}
+  changed();
+}
+function setQty(key,d){
+  cart=cart.map(function(l){if(l.key===key)l.q+=d;return l}).filter(function(l){return l.q>0});
+  changed();
+}
+
+/* Render del menú */
+function priceHTML(m){
+  return m.opts.map(function(o){
+    return '<div class="price">'+(o.k?'<small>'+esc(o.k)+'</small>':'')+'<b>'+money(o.p)+'</b></div>';
+  }).join('');
+}
+function dishHTML(m){
+  var btn='<button type="button" class="add" data-add="'+m.id+'" aria-label="Agregar '+esc(m.name)+'">Agregar<span class="count" data-count="'+m.id+'" hidden></span></button>';
+  if(m.feature){
+    return '<article class="new"><div><p class="lbl">Lo nuevo</p><h3>'+esc(m.name)+'</h3></div><p class="desc">'+esc(m.desc)+'</p><div class="buy"><div class="prices">'+priceHTML(m)+'</div>'+btn+'</div></article>';
+  }
+  return '<article class="dish"><img src="img/'+m.img+'.jpg" width="960" height="600" loading="lazy" alt="'+esc(m.name)+': '+esc(m.desc)+'">'+
+    '<div>'+(m.kicker?'<p class="kicker">'+esc(m.kicker)+'</p>':'')+'<h3>'+esc(m.name)+'</h3><p class="desc">'+esc(m.desc)+'</p></div>'+
+    '<div class="buy"><div class="prices">'+priceHTML(m)+'</div>'+btn+'</div></article>';
+}
+$$('[data-items]').forEach(function(g){
+  g.innerHTML=MENU.filter(function(m){return m.sec===g.dataset.items}).map(dishHTML).join('');
+});
+function renderExtras(){
+  $$('[data-list]').forEach(function(box){
+    box.innerHTML=EXTRAS.filter(function(x){return x.sec===box.dataset.list}).map(function(x){
+      var q=qtyOf(x.id);
+      return '<div class="row"><span class="n">'+esc(x.name)+'</span><span class="p">'+money(x.p)+'</span><span class="stepper">'+
+        (q?'<button type="button" data-xm="'+x.id+'" aria-label="Quitar '+esc(x.name)+'">−</button><output>'+q+'</output>':'')+
+        '<button type="button" class="plus" data-xp="'+x.id+'" aria-label="Agregar '+esc(x.name)+'">+</button></span></div>';
+    }).join('');
+  });
+}
+
+/* Toast */
+var toastT;
+function toast(t){var el=$('#toast');el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(function(){el.hidden=true},1800)}
+
+/* Hojas */
+function openSheet(d){$('html').classList.add('locked');d.showModal()}
+$$('dialog').forEach(function(d){
+  d.addEventListener('close',function(){$('html').classList.remove('locked')});
+  d.addEventListener('click',function(e){if(e.target===d||e.target.closest('[data-close]'))d.close()});
+});
+
+/* Hoja de opciones */
+var cur=null, qty=1;
+function curPrice(){
+  var o=$('input[name="opt"]:checked',$('#itemForm'));
+  return cur.opts[o?+o.value:0].p;
+}
+function refreshItem(){$('#qVal').textContent=qty;$('#itemPrice').textContent=money(curPrice()*qty)}
+function openItem(m){
+  cur=m;qty=1;
+  $('#itemTitle').textContent=m.name;
+  $('#itemDesc').textContent=m.desc;
+  var h='';
+  if(m.opts.length>1){
+    var isPapas=!!m.salsas;
+    h+='<fieldset><legend>'+(isPapas?'Tamaño':'¿Sola o en combo?')+'</legend>'+m.opts.map(function(o,i){
+      return '<label class="opt"><input type="radio" name="opt" value="'+i+'"'+(i===0?' checked':'')+'><span>'+esc(o.k)+(o.note?'<small>'+esc(o.note)+'</small>':'')+'</span><b>'+money(o.p)+'</b></label>';
+    }).join('')+'</fieldset>';
+  }
+  if(m.sabores){
+    for(var i=1;i<=m.sabores;i++){
+      h+='<fieldset><legend>Sabor de la arepa '+i+'</legend><div class="two">'+['Carne','Pollo'].map(function(s,j){
+        return '<label class="opt"><input type="radio" name="sabor'+i+'" value="'+s+'"'+(j===0?' checked':'')+'><span>'+s+'</span></label>';
+      }).join('')+'</div></fieldset>';
+    }
+  }
+  if(m.salsas){
+    h+='<fieldset><legend>Salsas <small>al gusto, elige las que quieras</small></legend><div class="chips">'+SALSAS.map(function(s){
+      return '<label class="chip"><input type="checkbox" name="salsa" value="'+esc(s)+'">'+esc(s)+'</label>';
+    }).join('')+'</div></fieldset>';
+  }
+  $('#itemBody').innerHTML=h;
+  refreshItem();
+  openSheet($('#itemSheet'));
+}
+$('#itemForm').addEventListener('change',refreshItem);
+$('#qMinus').addEventListener('click',function(){if(qty>1){qty--;refreshItem()}});
+$('#qPlus').addEventListener('click',function(){qty++;refreshItem()});
+$('#itemForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var f=$('#itemForm');
+  var oi=$('input[name="opt"]:checked',f);
+  var o=cur.opts[oi?+oi.value:0];
+  var sabores=[];
+  if(cur.sabores)for(var i=1;i<=cur.sabores;i++)sabores.push($('input[name="sabor'+i+'"]:checked',f).value);
+  var salsas=$$('input[name="salsa"]:checked',f).map(function(x){return x.value});
+  addLine({id:cur.id,name:cur.name,opt:o.k,optNote:o.note||'',p:o.p,q:qty,sabores:sabores,salsas:salsas});
+  $('#itemSheet').close();
+  toast(cur.name+' agregado');
+});
+
+/* Clics del menú */
+document.addEventListener('click',function(e){
+  var t=e.target.closest('[data-add],[data-xp],[data-xm]');
+  if(!t)return;
+  if(t.dataset.add){
+    var m=byId(t.dataset.add);
+    if(m.opts.length===1&&!m.sabores&&!m.salsas){
+      addLine({id:m.id,name:m.name,opt:'',optNote:'',p:m.opts[0].p,q:1,sabores:[],salsas:[]});
+      toast(m.name+' agregado');
+    } else openItem(m);
+  } else if(t.dataset.xp){
+    var x=EXTRAS.filter(function(v){return v.id===t.dataset.xp})[0];
+    addLine({id:x.id,name:x.name,opt:'',optNote:'',p:x.p,q:1,sabores:[],salsas:[]});
+    refocus(x.id,'xp');
+  } else {
+    var id=t.dataset.xm, l=cart.filter(function(v){return v.id===id})[0];
+    if(l)setQty(l.key,-1);
+    refocus(id,qtyOf(id)?'xm':'xp');
+  }
+});
+function refocus(id,kind){var b=$('[data-'+kind+'="'+id+'"]');if(b)b.focus({preventScroll:true})}
+
+/* Pedido */
+function lineSub(l){
+  var a=[];
+  if(l.opt)a.push(l.opt+(l.optNote?' ('+l.optNote.toLowerCase()+')':''));
+  if(l.sabores&&l.sabores.length)a.push('Sabores: '+l.sabores.join(' y '));
+  if(l.salsas&&l.salsas.length)a.push('Salsas: '+l.salsas.join(', '));
+  return a;
+}
+function renderCart(){
+  $('#lines').innerHTML=cart.map(function(l){
+    return '<div class="line"><div class="t"><b>'+esc(l.name)+'</b>'+lineSub(l).map(function(s){return '<small>'+esc(s)+'</small>'}).join('')+'<em>'+money(l.p*l.q)+'</em></div>'+
+      '<span class="stepper"><button type="button" data-lm="'+esc(l.key)+'" aria-label="Quitar uno de '+esc(l.name)+'">−</button><output>'+l.q+'</output><button type="button" class="plus" data-lp="'+esc(l.key)+'" aria-label="Agregar uno de '+esc(l.name)+'">+</button></span></div>';
+  }).join('');
+  $('#cartTotal').textContent=money(total());
+}
+function message(){
+  var dom=form.entrega==='Domicilio';
+  var out=['*Pedido para Delicias Eliana B&A*','','*Nombre:* '+form.name.trim(),'*Entrega:* '+form.entrega];
+  if(dom)out.push('*Dirección:* '+form.addr.trim());
+  out.push('');
+  cart.forEach(function(l){
+    out.push('• '+l.q+' × '+l.name+(l.opt?' ('+l.opt+')':'')+': '+money(l.p*l.q));
+    if(l.optNote)out.push('   '+l.optNote);
+    if(l.sabores&&l.sabores.length)out.push('   Sabores: '+l.sabores.join(' y '));
+    if(l.salsas&&l.salsas.length)out.push('   Salsas: '+l.salsas.join(', '));
+  });
+  out.push('','*Total: '+money(total())+'*'+(dom?' + domicilio':''));
+  var n=$('#cNote').value.trim();
+  if(n)out.push('','*Nota:* '+n);
+  return out.join('\n');
+}
+function refreshSend(){
+  $('#send').href='https://wa.me/'+WA+'?text='+encodeURIComponent(message());
+  var dom=form.entrega==='Domicilio';
+  $('#fAddr').hidden=!dom;$('#domNote').hidden=!dom;
+}
+function changed(){
+  save();
+  var c=count();
+  $('#bar').hidden=c===0;
+  $('#barCount').textContent='Ver pedido ('+c+')';
+  $('#barTotal').textContent=money(total());
+  $$('[data-count]').forEach(function(el){var q=qtyOf(el.dataset.count);el.hidden=!q;el.textContent=q});
+  renderExtras();
+  renderCart();
+  refreshSend();
+  $('#sent').hidden=true;
+  if(c===0&&$('#cartSheet').open)$('#cartSheet').close();
+}
+$('#openCart').addEventListener('click',function(){clearArm();openSheet($('#cartSheet'))});
+$('#lines').addEventListener('click',function(e){
+  var t=e.target.closest('[data-lp],[data-lm]');if(!t)return;
+  var k=t.dataset.lp||t.dataset.lm, kind=t.dataset.lp?'lp':'lm';
+  setQty(k,t.dataset.lp?1:-1);
+  var b=$$('[data-'+kind+']').filter(function(x){return x.dataset[kind]===k})[0];
+  if(b)b.focus({preventScroll:true});
+});
+var armed=false, clearBtn=$('#clear');
+function clearArm(){armed=false;clearBtn.textContent='Vaciar pedido'}
+clearBtn.addEventListener('click',function(){
+  if(!armed){armed=true;clearBtn.textContent='Toca otra vez para vaciar';return}
+  clearArm();cart=[];changed();
+});
+$('#cName').value=form.name;$('#cAddr').value=form.addr;
+$(form.entrega==='Domicilio'?'#eDom':'#eRec').checked=true;
+$('#cName').addEventListener('input',function(e){form.name=e.target.value;$('#eName').hidden=true;$('#fName').classList.remove('bad');save();refreshSend()});
+$('#cAddr').addEventListener('input',function(e){form.addr=e.target.value;$('#eAddr').hidden=true;$('#fAddr').classList.remove('bad');save();refreshSend()});
+$('#cNote').addEventListener('input',refreshSend);
+$$('input[name="entrega"]').forEach(function(r){r.addEventListener('change',function(){form.entrega=r.value;save();refreshSend()})});
+$('#send').addEventListener('click',function(e){
+  var ok=true;
+  if(!form.name.trim()){ok=false;$('#eName').hidden=false;$('#fName').classList.add('bad');$('#cName').focus()}
+  if(form.entrega==='Domicilio'&&!form.addr.trim()){
+    $('#eAddr').hidden=false;$('#fAddr').classList.add('bad');
+    if(ok)$('#cAddr').focus();ok=false;
+  }
+  if(!ok){e.preventDefault();return}
+  refreshSend();
+  $('#sent').hidden=false;
+});
+
+/* Categoría activa */
+var links=$$('#cats a');
+if('IntersectionObserver' in window){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){
+      if(!en.isIntersecting)return;
+      links.forEach(function(a){
+        var on=a.getAttribute('href')==='#'+en.target.id;
+        a.classList.toggle('on',on);
+        if(on)a.scrollIntoView({block:'nearest',inline:'center'});
+      });
+    });
+  },{rootMargin:'-30% 0px -65% 0px'});
+  $$('main section').forEach(function(s){io.observe(s)});
+}
+links[0].classList.add('on');
+changed();
+})();
+</script>
+</body>
+</html>

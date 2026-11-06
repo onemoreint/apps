@@ -1,0 +1,31 @@
+name: Compilar LUGO CONNECT
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Versión de Xcode
+        run: xcodebuild -version
+      - name: Pruebas del núcleo
+        working-directory: LugoCore
+        run: swift test
+      - name: Compilar la app
+        run: ./Scripts/build_app.sh
+      - name: Comprobar firma y permisos
+        run: |
+          codesign --verify --deep --verbose=2 "dist/LUGO CONNECT.app"
+          codesign -d --entitlements :- "dist/LUGO CONNECT.app"
+          lipo -archs "dist/LUGO CONNECT.app/Contents/MacOS/LUGO CONNECT"
+      - name: Crear instalador
+        run: ./Scripts/make_dmg.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LUGO-CONNECT-dmg
+          path: dist/LUGO-CONNECT.dmg
+          retention-days: 30

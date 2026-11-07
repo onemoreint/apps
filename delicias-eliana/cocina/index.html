@@ -333,17 +333,25 @@ function card(o){
 
 /* Carga */
 var known=null, armed={};
+var since=null, fullAt=0;
 function load(){
   clearTimeout(timer);
   if(!key)return;
-  rpc('de_staff_orders',{p_key:key}).then(function(r){
+  var full=!since||Date.now()-fullAt>15*60e3;
+  rpc(full?'de_staff_orders':'de_staff_changes',full?{p_key:key}:{p_key:key,p_since:since}).then(function(r){
     if(r.error){if(/Clave/.test(r.error)){logout(r.error)}else{fails++;conn()}return}
-    fails=0;lastOk=Date.now();
-    var fresh=r.orders||[];
-    var ids={};fresh.forEach(function(o){ids[o.id]=1});
-    if(known){var nuevos=fresh.filter(function(o){return !known[o.id]&&o.status==='nuevo'});if(nuevos.length){toast('Nuevo pedido #'+nuevos[0].code);if(tab!=='nuevos'){tab='nuevos';paintTabs()}}}
-    known=ids;orders=fresh;render();conn();
-  }).catch(function(){fails++;conn()}).then(function(){timer=setTimeout(load,fails?Math.min(30000,4000*fails):4000)});
+    fails=0;lastOk=Date.now();since=r.now;if(full)fullAt=Date.now();
+    var got=r.orders||[], before=orders;
+    if(full)orders=got;
+    else if(got.length){var m={};orders.forEach(function(o){m[o.id]=o});got.forEach(function(o){m[o.id]=o});orders=Object.keys(m).map(function(k){return m[k]})}
+    var cut=Date.now()-24*3600e3;
+    orders=orders.filter(function(o){return new Date(o.created_at)>cut||(o.status!=='entregado'&&o.status!=='cancelado')}).sort(function(x,y){return new Date(y.created_at)-new Date(x.created_at)});
+    var ids={};orders.forEach(function(o){ids[o.id]=1});
+    if(known){var nuevos=orders.filter(function(o){return !known[o.id]&&o.status==='nuevo'});if(nuevos.length){toast('Nuevo pedido #'+nuevos[0].code);if(tab!=='nuevos'){tab='nuevos';paintTabs()}}}
+    known=ids;
+    if(full||got.length||before.length!==orders.length)render();
+    conn();
+  }).catch(function(){fails++;conn()}).then(function(){timer=setTimeout(load,fails?Math.min(30000,5000*fails):5000)});
 }
 function conn(){
   var el=$('#conn'),off=fails>1;

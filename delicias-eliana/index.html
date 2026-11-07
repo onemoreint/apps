@@ -695,15 +695,15 @@ html.intro{overflow:hidden}
     </div>
     <div class="upsell" id="upsell" hidden></div>
     <div class="field" id="fName">
-      <label for="cName">Tu nombre</label>
-      <input id="cName" autocomplete="name" placeholder="¿A nombre de quién?">
-      <span class="err" id="eName" hidden>Escribe tu nombre para enviar el pedido.</span>
+      <label for="cName">Nombre de quien recibe</label>
+      <input id="cName" autocomplete="name" placeholder="Nombre y apellido" required>
+      <span class="err" id="eName" hidden>Escribe el nombre de quien recibe el pedido.</span>
     </div>
     <div class="field" id="fPhone">
-      <label for="cPhone">Tu WhatsApp</label>
-      <input id="cPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Ej.: 300 123 4567">
-      <span class="fine">Para avisarte cómo va tu pedido.</span>
-      <span class="err" id="ePhone" hidden>Escribe tu número de WhatsApp completo, con al menos 10 dígitos.</span>
+      <label for="cPhone">Teléfono / WhatsApp de quien recibe</label>
+      <input id="cPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Ej.: 300 123 4567" required>
+      <span class="fine">Para entregar el pedido y avisarte cómo va.</span>
+      <span class="err" id="ePhone" hidden>Escribe el número completo de quien recibe, con al menos 10 dígitos.</span>
     </div>
     <fieldset>
       <legend>¿Cómo lo quieres?</legend>
@@ -1467,6 +1467,7 @@ function sigOf(){return JSON.stringify([cart.map(function(l){return [l.key,l.q]}
 function newCode(){var a='ABCDEFGHJKMNPQRSTUVWXYZ23456789',s='',r=new Uint8Array(5);crypto.getRandomValues(r);for(var i=0;i<5;i++)s+=a[r[i]%a.length];return s}
 function newToken(){if(crypto.randomUUID)return crypto.randomUUID();var b=new Uint8Array(16);crypto.getRandomValues(b);b[6]=b[6]&15|64;b[8]=b[8]&63|128;var x=Array.prototype.map.call(b,function(v){return (v+256).toString(16).slice(1)}).join('');return x.slice(0,8)+'-'+x.slice(8,12)+'-'+x.slice(12,16)+'-'+x.slice(16,20)+'-'+x.slice(20)}
 function orderId(){var s=sigOf();if(!pend||pend.sig!==s)pend={sig:s,code:newCode(),token:newToken()};return pend}
+function nameOk(){var n=(form.name||'').trim();return n.length>=2&&/[A-Za-zÁÉÍÓÚÑáéíóúñ]/.test(n)}
 function phoneNorm(){
   var d=(form.phone||'').replace(/\D/g,'');
   if(d.length===10&&d[0]==='3')d='57'+d;
@@ -1475,7 +1476,7 @@ function phoneNorm(){
 }
 function message(){
   var dom=form.entrega==='Domicilio';
-  var out=['*Pedido #'+orderId().code+' para Delicias Eliana B&A*','','*Nombre:* '+form.name.trim(),'*WhatsApp:* '+(phoneNorm()||'-'),'*Entrega:* '+form.entrega];
+  var out=['*Pedido #'+orderId().code+' para Delicias Eliana B&A*','','*Recibe:* '+form.name.trim(),'*Teléfono:* +'+phoneNorm(),'*Entrega:* '+form.entrega];
   if(dom)out.push('*Dirección:* '+form.addr.trim());
   out.push('');
   cart.forEach(function(l){
@@ -1555,7 +1556,7 @@ $('#cNote').addEventListener('input',refreshSend);
 $$('input[name="entrega"]').forEach(function(r){r.addEventListener('change',function(){form.entrega=r.value;save();refreshSend();W.cartLine(r.value==='Domicilio'?'¿A dónde te lo llevamos?':'Perfecto, para recoger.')})});
 $('#send').addEventListener('click',function(e){
   var ok=true;
-  if(!form.name.trim()){ok=false;$('#eName').hidden=false;$('#fName').classList.add('bad');$('#cName').focus()}
+  if(!nameOk()){ok=false;$('#eName').hidden=false;$('#fName').classList.add('bad');$('#cName').focus()}
   if(!phoneNorm()){
     $('#ePhone').hidden=false;$('#fPhone').classList.add('bad');
     if(ok)$('#cPhone').focus();ok=false;
@@ -1568,7 +1569,7 @@ $('#send').addEventListener('click',function(e){
     $('#ePay').hidden=false;$('#fPay').classList.add('bad');
     if(ok)$('#fPay').scrollIntoView({block:'center',behavior:calm?'auto':'smooth'});ok=false;
   }
-  if(!ok){e.preventDefault();W.cartLine(!form.name.trim()?'Me falta tu nombre para anotar el pedido.':!phoneNorm()?'Déjame tu WhatsApp para avisarte cómo va.':(form.entrega==='Domicilio'&&!form.addr.trim())?'Me falta la dirección para el domicilio.':'Dime cómo vas a pagar.');return}
+  if(!ok){e.preventDefault();W.cartLine(!nameOk()?'Me falta el nombre de quien recibe.':!phoneNorm()?'Déjame tu WhatsApp para avisarte cómo va.':(form.entrega==='Domicilio'&&!form.addr.trim())?'Me falta la dirección para el domicilio.':'Dime cómo vas a pagar.');return}
   refreshSend();
   last=cart.map(function(l){return Object.assign({},l)});
   save();

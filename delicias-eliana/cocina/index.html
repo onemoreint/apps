@@ -410,7 +410,7 @@ function tkInt(o){
   var dom=o.entrega==='Domicilio';
   return '<div class="tk"><h1>COMANDA DE COCINA</h1><div class="num">#'+esc(o.code)+'</div>'+
     '<div class="row2"><span>'+new Date(o.created_at).toLocaleDateString('es-CO')+'</span><span>'+hhmm(o.created_at)+'</span></div>'+
-    '<div class="hr2"></div><div><b>'+(dom?'DOMICILIO':'PARA RECOGER')+'</b></div><div>Cliente: '+esc(o.name)+'</div>'+(o.phone?'<div>Tel: +'+esc(o.phone)+'</div>':'')+(dom?'<div>Dir: '+esc(o.address||'-')+'</div>':'')+
+    '<div class="hr2"></div><div><b>'+(dom?'DOMICILIO':'PARA RECOGER')+'</b></div><div>Recibe: '+esc(o.name)+'</div>'+(o.phone?'<div>Tel: +'+esc(o.phone)+'</div>':'')+(dom?'<div>Dir: '+esc(o.address||'-')+'</div>':'')+
     '<div class="hr"></div>'+itemsTk(o,true)+(o.note?'<div class="box">NOTA: '+esc(o.note)+'</div>':'')+
     '<div class="hr"></div><div class="tot"><span>TOTAL</span><span>'+money(o.total)+'</span></div>'+(dom?'<div>+ valor del domicilio</div>':'')+
     (o.pago?'<div class="box">PAGO: '+esc(o.pago)+'</div>':'')+
@@ -419,7 +419,7 @@ function tkInt(o){
 function tkBag(o){
   var dom=o.entrega==='Domicilio';
   return '<div class="tk"><img class="logo" src="../img/logo-ticket.png" alt=""><h1>DELICIAS ELIANA B&amp;A</h1>'+
-    '<div class="c">Pedido</div><div class="num">#'+esc(o.code)+'</div><div class="c"><b>Para: '+esc(o.name)+'</b></div>'+(dom?'<div class="c">'+esc(o.address||'')+'</div>':'<div class="c">Para recoger</div>')+
+    '<div class="c">Pedido</div><div class="num">#'+esc(o.code)+'</div><div class="c"><b>Recibe: '+esc(o.name)+'</b></div>'+(o.phone?'<div class="c"><b>Tel: +'+esc(o.phone)+'</b></div>':'')+(dom?'<div class="c">'+esc(o.address||'')+'</div>':'<div class="c">Para recoger</div>')+
     '<div class="hr"></div>'+(o.items||[]).map(function(it){return '<div class="it"><span class="chk"></span><span class="q">'+it.q+'x</span><div class="d"><b>'+esc(it.name)+'</b>'+(it.opt?'<div>'+esc(it.opt)+'</div>':'')+'</div></div>'}).join('')+
     '<div class="hr"></div><div class="tot"><span>TOTAL</span><span>'+money(o.total)+'</span></div>'+(dom?'<div>+ valor del domicilio</div>':'')+
     (o.pago?(/^Efectivo/.test(o.pago)?'<div class="box">COBRAR EN EFECTIVO'+(/paga con/.test(o.pago)?'<br>'+esc(o.pago.replace(/^Efectivo · /,'')).replace(/ · /g,'<br>'):'')+'</div>':'<div>Pago: '+esc(o.pago.replace(/ \(.*\)$/,''))+'</div>'):'')+
@@ -429,8 +429,8 @@ function plain(o,kind){
   var W=cfg.paper==='80'?42:32, line='-'.repeat(W), dom=o.entrega==='Domicilio', out=[];
   function c(t){t=String(t);var p=Math.max(0,Math.floor((W-t.length)/2));return ' '.repeat(p)+t}
   function lr(a,b){a=String(a);b=String(b);var s=W-a.length-b.length;return s>0?a+' '.repeat(s)+b:a+'\n'+' '.repeat(Math.max(0,W-b.length))+b}
-  if(kind==='int'){out.push(c('COMANDA DE COCINA'),c('#'+o.code),lr(new Date(o.created_at).toLocaleDateString('es-CO'),hhmm(o.created_at)),line,dom?'DOMICILIO':'PARA RECOGER','Cliente: '+o.name);if(o.phone)out.push('Tel: +'+o.phone);if(dom)out.push('Dir: '+(o.address||'-'))}
-  else{out.push(c('DELICIAS ELIANA B&A'),c('Pedido #'+o.code),c('Para: '+o.name),dom?c(o.address||''):c('Para recoger'))}
+  if(kind==='int'){out.push(c('COMANDA DE COCINA'),c('#'+o.code),lr(new Date(o.created_at).toLocaleDateString('es-CO'),hhmm(o.created_at)),line,dom?'DOMICILIO':'PARA RECOGER','Recibe: '+o.name);if(o.phone)out.push('Tel: +'+o.phone);if(dom)out.push('Dir: '+(o.address||'-'))}
+  else{out.push(c('DELICIAS ELIANA B&A'),c('Pedido #'+o.code),c('Recibe: '+o.name),c('Tel: +'+(o.phone||'-')),dom?c(o.address||''):c('Para recoger'))}
   out.push(line);
   (o.items||[]).forEach(function(it){out.push(kind==='int'?lr(it.q+'x '+it.name,money(it.p*it.q)):'[ ] '+it.q+'x '+it.name);(kind==='int'?subs(it):it.opt?[[it.opt]]:[]).forEach(function(s){out.push('   - '+s[0])})});
   if(kind==='int'&&o.note)out.push(line,'NOTA: '+o.note);

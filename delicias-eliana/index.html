@@ -524,6 +524,44 @@ html.intro{overflow:hidden}
 @keyframes blink{50%{opacity:.35}}
 @keyframes ring2{0%{box-shadow:0 0 0 0 rgba(236,184,79,.6)}70%,100%{box-shadow:0 0 0 12px rgba(236,184,79,0)}}
 @media(prefers-reduced-motion:reduce){.track-btn,.track-btn i,.steps .now i{animation:none}}
+
+/* Formas de pago */
+.pay-hero{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:14px;padding:22px 18px;border-radius:18px;background:radial-gradient(120% 90% at 0% 0%,rgba(236,184,79,.28),transparent 60%),radial-gradient(90% 80% at 100% 100%,rgba(29,63,158,.4),transparent 65%),var(--surface);box-shadow:inset 0 0 0 1.5px rgba(236,184,79,.45)}
+.pay-eyebrow{font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.pay-hero h2{margin-top:-8px}
+.pay-grid{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:760px){.pay-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.pay-card{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:14px;background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--line);min-width:0}
+.pay-card.bancolombia{box-shadow:inset 0 0 0 1.5px rgba(246,197,0,.55)}
+.pay-card.breb{box-shadow:inset 0 0 0 1.5px rgba(111,147,255,.55)}
+.pay-card.efectivo{box-shadow:inset 0 0 0 1.5px rgba(37,211,102,.5)}
+.pay-h{display:flex;align-items:center;gap:11px}
+.pay-ic{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--surface-2);font-size:23px;flex:none}
+.pay-h h3{font:800 23px/1.05 var(--display)}
+.pay-tag{display:inline-block;margin-top:3px;padding:2px 9px;border-radius:999px;background:var(--surface-2);color:var(--muted);font-size:12.5px;font-weight:700}
+.pay-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 11px;border-radius:11px;background:var(--surface-2);min-width:0}
+.pay-row span{min-width:0}
+.pay-row small{display:block;color:var(--muted);font-size:12.5px;line-height:1.2}
+.pay-row b{display:block;font-size:17px;font-variant-numeric:tabular-nums;letter-spacing:.02em;overflow-wrap:anywhere}
+.copy{flex:none;min-height:38px;padding:0 14px;border-radius:999px;background:var(--gold);color:var(--ink);font-weight:700;font-size:14px;transition:background .2s}
+.copy.ok{background:var(--wa);color:var(--wa-ink)}
+.qr-btn{align-self:flex-start;min-height:38px;padding:0 14px;border-radius:999px;box-shadow:inset 0 0 0 1.5px var(--line);font-weight:600;font-size:14px}
+.pay-qr{margin:0;display:grid;justify-items:center;gap:6px}
+.pay-qr img{width:170px;height:170px;padding:8px;border-radius:12px;background:#fff}
+.pay-qr figcaption{color:var(--muted);font-size:13px}
+.pay-cash{color:var(--cream);font-size:15.5px}
+.pay-opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.pay-opt{justify-content:center;text-align:center;padding:10px 6px;min-height:76px}
+.pay-opt span{display:grid;justify-items:center;gap:2px;font-weight:700;font-size:14.5px}
+.pay-opt i{font-style:normal;font-size:21px}
+.pay-opt small{color:var(--muted);font-weight:500;font-size:12px}
+#fPay.bad .pay-opt{border-color:var(--chili)}
+.pay-box{display:flex;flex-direction:column;gap:10px;padding:13px;border-radius:13px;background:var(--surface-2)}
+.pay-box .pay-row{background:var(--bg)}
+.pay-lead{font-weight:600;font-size:15px}
+.pay-qr-in{display:flex;align-items:center;gap:12px}
+.pay-qr-in img{flex:none;width:120px;height:120px;padding:6px;border-radius:10px;background:#fff}
+@media(prefers-reduced-motion:reduce){.copy{transition:none}}
 </style>
 </head>
 <body>
@@ -570,6 +608,7 @@ html.intro{overflow:hidden}
     <a href="#papas">Papas</a>
     <a href="#adicionales">Adicionales</a>
     <a href="#gaseosas">Gaseosas</a>
+    <a href="#pagos">Pagos</a>
   </div>
 </nav>
 
@@ -598,6 +637,15 @@ html.intro{overflow:hidden}
   <section id="gaseosas"><div class="wrap">
     <div><h2>Gaseosas</h2><p class="sub">Elige tu gaseosa y toca el tamaño.</p></div>
     <div class="gas-box" data-list="gaseosas"></div>
+  </div></section>
+
+  <section id="pagos"><div class="wrap">
+    <div class="pay-hero">
+      <p class="pay-eyebrow">Formas de pago</p>
+      <h2>Paga como prefieras</h2>
+      <p class="sub">Transferencia a Bancolombia, llave Bre-B o efectivo al recibir. Toca para copiar los datos.</p>
+      <div class="pay-grid" id="payGrid"></div>
+    </div>
   </div></section>
 </main>
 
@@ -669,6 +717,12 @@ html.intro{overflow:hidden}
       <input id="cAddr" autocomplete="street-address" placeholder="Barrio, calle, número y referencia">
       <span class="err" id="eAddr" hidden>Escribe la dirección para el domicilio.</span>
     </div>
+    <fieldset id="fPay">
+      <legend>¿Cómo vas a pagar?</legend>
+      <div class="pay-opts" id="payOpts"></div>
+      <span class="err" id="ePay" hidden>Elige cómo vas a pagar.</span>
+    </fieldset>
+    <div class="pay-box" id="payBox" hidden></div>
     <div class="field">
       <label for="cNote">Nota para la cocina <small style="font-weight:400;color:var(--muted)">(opcional)</small></label>
       <textarea id="cNote" placeholder="Ej.: una arepa sin queso"></textarea>
@@ -792,7 +846,7 @@ function clean(list){
 function mk(id,opt,q,sabores,extras){return {id:id,opt:opt||'',q:q||1,sabores:sabores||[],salsas:[],extras:extras||[]}}
 
 /* Estado */
-var cart=[], last=null, form={name:'',phone:'',entrega:'Domicilio',addr:''};
+var cart=[], last=null, form={name:'',phone:'',entrega:'Domicilio',addr:'',pago:'',cash:''};
 try{
   var s=JSON.parse(localStorage.getItem(KEY)||'{}');
   cart=clean(s.cart);
@@ -1341,9 +1395,75 @@ function renderCart(){
   writeNew();
   renderUpsell();
 }
+/* Formas de pago */
+var PAY=[
+ {id:'bancolombia',name:'Bancolombia',tag:'Transferencia',icon:'🏦',rows:[['Cuenta de ahorros','02400007268',1],['A nombre de','Brineck Eliana Morales',0]],qr:'qr-cuenta',qrNote:'QR con el número de cuenta',transfer:1},
+ {id:'breb',name:'Bre-B',tag:'Llave',icon:'⚡',rows:[['Llave Bre-B','@brineck138',1]],qr:'qr-breb',qrNote:'QR con la llave Bre-B',transfer:1},
+ {id:'efectivo',name:'Efectivo',tag:'Al recibir',icon:'💵',rows:[],cash:1}
+];
+var payById=function(id){return PAY.filter(function(p){return p.id===id})[0]};
+function rowsHTML(p){
+  return p.rows.map(function(r){
+    return '<div class="pay-row"><span><small>'+esc(r[0])+'</small><b>'+esc(r[1])+'</b></span>'+(r[2]?'<button type="button" class="copy" data-copy="'+esc(r[1])+'">Copiar</button>':'')+'</div>';
+  }).join('');
+}
+function cashParsed(){var d=(form.cash||'').replace(/\D/g,'');return d?parseInt(d,10):0}
+function payDb(){
+  var p=payById(form.pago);if(!p)return '';
+  if(p.cash){var c=cashParsed();return 'Efectivo'+(c?' · paga con '+money(c)+(c>total()?' · cambio '+money(c-total()):''):'')}
+  return p.name+' (transferencia, verificar comprobante)';
+}
+function payMsg(){
+  var p=payById(form.pago);if(!p)return '';
+  if(p.cash){var c=cashParsed();return 'Efectivo al recibir'+(c?', pago con '+money(c):'')}
+  return p.id==='breb'?'Bre-B (llave @brineck138)':'Transferencia Bancolombia ahorros 02400007268';
+}
+function copyText(t,btn){
+  function done(){if(btn){var o=btn.textContent;btn.textContent='¡Copiado!';btn.classList.add('ok');setTimeout(function(){btn.textContent=o;btn.classList.remove('ok')},1600)}toast('Copiado: '+t);haptic(12)}
+  function legacy(){var a=document.createElement('textarea');a.value=t;a.setAttribute('readonly','');a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy');done()}catch(e){toast('Mantén presionado el dato para copiarlo')}a.remove()}
+  try{if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(t).then(done,legacy);else legacy()}catch(e){legacy()}
+}
+document.addEventListener('click',function(e){
+  var c=e.target.closest('[data-copy]');if(c){copyText(c.dataset.copy,c);return}
+  var q=e.target.closest('[data-qr]');if(q){var box=$('#'+q.dataset.qr);if(box){box.hidden=!box.hidden;q.textContent=box.hidden?'Ver QR':'Ocultar QR'}}
+});
+$('#payGrid').innerHTML=PAY.map(function(p){
+  var body=p.cash?'<p class="pay-cash">Paga al recibir tu pedido o al recogerlo. Si necesitas cambio, dinos con cuánto pagas.</p>':rowsHTML(p)+
+    '<button type="button" class="qr-btn" data-qr="qrs-'+p.id+'">Ver QR</button><figure class="pay-qr" id="qrs-'+p.id+'" hidden><img src="img/'+p.qr+'.png" width="170" height="170" alt="'+esc(p.qrNote)+'"><figcaption>'+esc(p.qrNote)+'</figcaption></figure>';
+  return '<article class="pay-card '+p.id+'"><div class="pay-h"><span class="pay-ic" aria-hidden="true">'+p.icon+'</span><div><h3>'+esc(p.name)+'</h3><span class="pay-tag">'+esc(p.tag)+'</span></div></div>'+body+'</article>';
+}).join('');
+$('#payOpts').innerHTML=PAY.map(function(p){
+  return '<label class="opt pay-opt"><input type="radio" name="pago" value="'+p.id+'"><span><i aria-hidden="true">'+p.icon+'</i>'+esc(p.name)+'<small>'+esc(p.tag)+'</small></span></label>';
+}).join('');
+function renderPayBox(){
+  var p=payById(form.pago),box=$('#payBox');
+  $$('input[name="pago"]').forEach(function(r){r.checked=r.value===form.pago});
+  box.hidden=!p;if(!p)return;
+  if(p.cash){
+    var c=cashParsed(),t=total();
+    var info=c?(c<t?'Ese valor es menor que el total del pedido.':c>t?'Te llevamos '+money(c-t)+' de cambio'+(form.entrega==='Domicilio'?', sin contar el domicilio.':'.'):'Pagas exacto.'):'';
+    if(!$('#cCash',box)){
+      box.innerHTML='<div class="field"><label for="cCash">¿Con cuánto pagas? <small style="font-weight:400;color:var(--muted)">(opcional, para el cambio)</small></label><input id="cCash" inputmode="numeric" placeholder="Ej.: 50.000"></div><p class="fine" id="cashInfo"></p>';
+      $('#cCash').value=form.cash||'';
+      $('#cCash').addEventListener('input',function(e){form.cash=e.target.value;save();renderPayBox();refreshSend()});
+    }
+    $('#cashInfo').textContent=info;
+    return;
+  }
+  box.innerHTML='<p class="pay-lead">'+(p.id==='breb'?'Transfiere a esta llave Bre-B desde la app de tu banco:':'Transfiere a esta cuenta de ahorros Bancolombia:')+'</p>'+rowsHTML(p)+
+    '<div class="pay-qr-in"><img src="img/'+p.qr+'.png" width="120" height="120" alt="'+esc(p.qrNote)+'"><p class="fine">'+esc(p.qrNote)+'. Sirve para leerlo desde otro celular.</p></div>'+
+    '<p class="fine">Después de pagar, envía el comprobante por WhatsApp con tu número de pedido.</p>';
+}
+$('#payOpts').addEventListener('change',function(e){
+  if(e.target.name!=='pago')return;
+  form.pago=e.target.value;$('#ePay').hidden=true;$('#fPay').classList.remove('bad');save();renderPayBox();refreshSend();
+  var p=payById(form.pago);
+  W.cartLine(p.cash?'Perfecto, pagas en efectivo al recibir.':p.id==='breb'?'Listo, por Bre-B. Te dejo la llave para copiarla.':'Listo, por Bancolombia. Te dejo la cuenta para copiarla.');
+});
+
 /* Número de pedido: cambia solo si cambia el contenido */
 var pend=null;
-function sigOf(){return JSON.stringify([cart.map(function(l){return [l.key,l.q]}),form.name.trim(),phoneNorm(),form.entrega,form.addr.trim(),$('#cNote').value.trim()])}
+function sigOf(){return JSON.stringify([cart.map(function(l){return [l.key,l.q]}),form.name.trim(),phoneNorm(),form.entrega,form.addr.trim(),$('#cNote').value.trim(),form.pago,form.cash])}
 function newCode(){var a='ABCDEFGHJKMNPQRSTUVWXYZ23456789',s='',r=new Uint8Array(5);crypto.getRandomValues(r);for(var i=0;i<5;i++)s+=a[r[i]%a.length];return s}
 function newToken(){if(crypto.randomUUID)return crypto.randomUUID();var b=new Uint8Array(16);crypto.getRandomValues(b);b[6]=b[6]&15|64;b[8]=b[8]&63|128;var x=Array.prototype.map.call(b,function(v){return (v+256).toString(16).slice(1)}).join('');return x.slice(0,8)+'-'+x.slice(8,12)+'-'+x.slice(12,16)+'-'+x.slice(16,20)+'-'+x.slice(20)}
 function orderId(){var s=sigOf();if(!pend||pend.sig!==s)pend={sig:s,code:newCode(),token:newToken()};return pend}
@@ -1370,6 +1490,7 @@ function message(){
     if(l.id.indexOf('g-')===0&&!l.opt)out.push('   Sabor: por confirmar');
   });
   out.push('','*Total: '+money(total())+'*'+(dom?' + domicilio':''));
+  if(form.pago){out.push('*Pago:* '+payMsg());if(payById(form.pago).transfer)out.push('_Envío el comprobante de pago por este chat._')}
   var n=$('#cNote').value.trim();
   if(n)out.push('','*Nota:* '+n);
   out.push('','_Sigue tu pedido #'+orderId().code+' en el menú._');
@@ -1400,6 +1521,7 @@ function changed(){
   renderCart();
   refreshSend();
   renderAgain();
+  if(form.pago)renderPayBox();
   $('#sent').hidden=true;
   if(c===0&&$('#cartSheet').open)$('#cartSheet').close();
 }
@@ -1442,7 +1564,11 @@ $('#send').addEventListener('click',function(e){
     $('#eAddr').hidden=false;$('#fAddr').classList.add('bad');
     if(ok)$('#cAddr').focus();ok=false;
   }
-  if(!ok){e.preventDefault();W.cartLine(!form.name.trim()?'Me falta tu nombre para anotar el pedido.':!phoneNorm()?'Déjame tu WhatsApp para avisarte cómo va.':'Me falta la dirección para el domicilio.');return}
+  if(!payById(form.pago)){
+    $('#ePay').hidden=false;$('#fPay').classList.add('bad');
+    if(ok)$('#fPay').scrollIntoView({block:'center',behavior:calm?'auto':'smooth'});ok=false;
+  }
+  if(!ok){e.preventDefault();W.cartLine(!form.name.trim()?'Me falta tu nombre para anotar el pedido.':!phoneNorm()?'Déjame tu WhatsApp para avisarte cómo va.':(form.entrega==='Domicilio'&&!form.addr.trim())?'Me falta la dirección para el domicilio.':'Dime cómo vas a pagar.');return}
   refreshSend();
   last=cart.map(function(l){return Object.assign({},l)});
   save();
@@ -1805,12 +1931,12 @@ var T=(function(){
   function place(id,lines,tot){
     act={code:id.code,token:id.token,at:Date.now(),status:'nuevo',history:{nuevo:new Date().toISOString()},entrega:form.entrega,synced:false,
       payload:{p_code:id.code,p_token:id.token,p_name:form.name.trim().slice(0,60),p_phone:phoneNorm(),p_entrega:form.entrega,
-        p_address:form.entrega==='Domicilio'?form.addr.trim().slice(0,200):'',p_note:$('#cNote').value.trim().slice(0,300),p_items:items(lines),p_total:tot}};
+        p_address:form.entrega==='Domicilio'?form.addr.trim().slice(0,200):'',p_note:$('#cNote').value.trim().slice(0,300),p_items:items(lines),p_total:tot,p_pago:payDb()}};
     store();upload();paint();
   }
   function afterSend(){
     if(!act)return;
-    pend=null;cart=[];$('#cNote').value='';
+    pend=null;cart=[];$('#cNote').value='';form.cash='';var cc=$('#cCash');if(cc)cc.value='';
     $('#cartSheet').close();changed();
     setTimeout(open,250);
   }

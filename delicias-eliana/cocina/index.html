@@ -86,6 +86,8 @@ main{padding-block:14px 40px}
 .items .d small{display:block;color:var(--muted);font-size:14px;line-height:1.3}
 .items .d small.warn{color:var(--red)}
 .items .pr{flex:none;font-variant-numeric:tabular-nums;color:var(--muted)}
+.paid{padding:8px 11px;border-radius:10px;background:var(--surface-2);font-weight:700;font-size:15px}
+.paid.cash{background:#12351f;color:#8ff0b4}
 .note{padding:9px 11px;border-radius:10px;background:#3a2410;color:#ffd9a8;font-weight:600}
 .tot{display:flex;justify-content:space-between;font-weight:700;font-size:18px;padding-top:8px;border-top:1px dashed var(--line)}
 .tot span:last-child{font-variant-numeric:tabular-nums}
@@ -328,6 +330,7 @@ function card(o){
     '<div class="who"><b>'+esc(o.name)+'</b>'+(o.phone?'<a href="https://wa.me/'+esc(o.phone)+'" target="_blank" rel="noopener">+'+esc(o.phone)+'</a>':'')+(dom?'<span>'+esc(o.address||'Sin dirección')+'</span>':'')+'</div>'+
     '<ul class="items">'+items+'</ul>'+(o.note?'<p class="note">Nota: '+esc(o.note)+'</p>':'')+
     '<div class="tot"><span>Total'+(dom?' + domicilio':'')+'</span><span>'+money(o.total)+'</span></div>'+
+    (o.pago?'<p class="paid'+(/^Efectivo/.test(o.pago)?' cash':'')+'">Pago: '+esc(o.pago)+'</p>':'')+
     '<div class="acts">'+acts+'</div>'+(tl?'<p class="timeline">'+esc(tl)+'</p>':'')+'</article>';
 }
 
@@ -410,6 +413,7 @@ function tkInt(o){
     '<div class="hr2"></div><div><b>'+(dom?'DOMICILIO':'PARA RECOGER')+'</b></div><div>Cliente: '+esc(o.name)+'</div>'+(o.phone?'<div>Tel: +'+esc(o.phone)+'</div>':'')+(dom?'<div>Dir: '+esc(o.address||'-')+'</div>':'')+
     '<div class="hr"></div>'+itemsTk(o,true)+(o.note?'<div class="box">NOTA: '+esc(o.note)+'</div>':'')+
     '<div class="hr"></div><div class="tot"><span>TOTAL</span><span>'+money(o.total)+'</span></div>'+(dom?'<div>+ valor del domicilio</div>':'')+
+    (o.pago?'<div class="box">PAGO: '+esc(o.pago)+'</div>':'')+
     '<div class="hr"></div><div class="c">Impreso '+hhmm(new Date().toISOString())+' · Registro interno</div></div>';
 }
 function tkBag(o){
@@ -418,6 +422,7 @@ function tkBag(o){
     '<div class="c">Pedido</div><div class="num">#'+esc(o.code)+'</div><div class="c"><b>Para: '+esc(o.name)+'</b></div>'+(dom?'<div class="c">'+esc(o.address||'')+'</div>':'<div class="c">Para recoger</div>')+
     '<div class="hr"></div>'+(o.items||[]).map(function(it){return '<div class="it"><span class="chk"></span><span class="q">'+it.q+'x</span><div class="d"><b>'+esc(it.name)+'</b>'+(it.opt?'<div>'+esc(it.opt)+'</div>':'')+'</div></div>'}).join('')+
     '<div class="hr"></div><div class="tot"><span>TOTAL</span><span>'+money(o.total)+'</span></div>'+(dom?'<div>+ valor del domicilio</div>':'')+
+    (o.pago?(/^Efectivo/.test(o.pago)?'<div class="box">COBRAR EN EFECTIVO'+(/paga con/.test(o.pago)?'<br>'+esc(o.pago.replace(/^Efectivo · /,'')).replace(/ · /g,'<br>'):'')+'</div>':'<div>Pago: '+esc(o.pago.replace(/ \(.*\)$/,''))+'</div>'):'')+
     '<div class="hr"></div><div class="c"><b>¡Gracias por preferirnos!</b><br>Revisa que esté todo completo.<br>Pedidos por WhatsApp: '+WA_BIZ+'</div><img class="qr" src="../img/qr.png" alt=""><div class="c">Escanea y vuelve a pedir</div></div>';
 }
 function plain(o,kind){
@@ -429,7 +434,7 @@ function plain(o,kind){
   out.push(line);
   (o.items||[]).forEach(function(it){out.push(kind==='int'?lr(it.q+'x '+it.name,money(it.p*it.q)):'[ ] '+it.q+'x '+it.name);(kind==='int'?subs(it):it.opt?[[it.opt]]:[]).forEach(function(s){out.push('   - '+s[0])})});
   if(kind==='int'&&o.note)out.push(line,'NOTA: '+o.note);
-  out.push(line,lr('TOTAL',money(o.total)));if(dom)out.push('+ valor del domicilio');
+  out.push(line,lr('TOTAL',money(o.total)));if(dom)out.push('+ valor del domicilio');if(o.pago)out.push('PAGO: '+o.pago);
   out.push(line,kind==='int'?c('Registro interno'):c('Gracias por preferirnos!'));
   if(kind!=='int')out.push(c('WhatsApp '+WA_BIZ));
   return out.join('\n').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\x20-\x7e\n]/g,'')+'\n\n\n\n';
@@ -470,7 +475,7 @@ $('#setClose').addEventListener('click',function(){$('#settings').close()});
 $('#sndBtn').addEventListener('click',function(){cfg.snd=cfg.snd==='1'?'0':'1';put('de-alarma',cfg.snd);paintSet();if(cfg.snd==='1')beep()});
 $('#testPrint').addEventListener('click',function(){
   var now=new Date().toISOString();
-  printTickets([{code:'PRUEB',created_at:now,entrega:'Domicilio',name:'Cliente de prueba',phone:'573001234567',address:'Calle de prueba #1-23',note:'Ticket de prueba',total:51000,
+  printTickets([{code:'PRUEB',created_at:now,entrega:'Domicilio',name:'Cliente de prueba',phone:'573001234567',address:'Calle de prueba #1-23',note:'Ticket de prueba',total:51000,pago:'Efectivo · paga con $60.000 · cambio $9.000',
     items:[{q:1,name:'Papas Lokas',opt:'Grande',p:46000,salsas:['Piña','Leña'],extras:['Tocineta']},{q:1,name:'Gaseosa 400 ml',opt:'Coca-Cola',p:4000}]}],['int','bag']);
 });
 $('#keyForm').addEventListener('submit',function(e){

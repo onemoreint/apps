@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --ink: #080912;
+    --violet: #7857ff;
+    --electric: #28c5ff;
+    --mist: #a5a8b8;
+  }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: hidden; overflow-x: clip; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    @apply bg-ink text-white font-sans antialiased;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    overflow-x: clip;
+  }
+  h1, h2, h3, h4 { @apply font-display tracking-tight; }
+  section[id] { scroll-margin-top: 84px; }
+  ::selection { background: rgba(120, 87, 255, 0.45); color: #fff; }
+  :focus-visible { outline: 2px solid var(--electric); outline-offset: 3px; border-radius: 10px; }
+  img { max-width: 100%; height: auto; }
+  /* Evita que hijos de grid con scroll horizontal ensanchen la columna en móvil */
+  .grid > * { min-width: 0; }
+  input, textarea, select, button { font: inherit; }
+}
+
+@layer components {
+  .container-site { @apply mx-auto w-full max-w-site px-5 sm:px-8; }
+  .glass {
+    background: linear-gradient(135deg, rgba(255,255,255,0.075), rgba(255,255,255,0.025));
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+  }
+  .glass-strong {
+    background: linear-gradient(135deg, rgba(20,23,41,0.86), rgba(13,15,28,0.78));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+  }
+  .text-gradient {
+    background: linear-gradient(100deg, #ffffff 0%, #c9bcff 35%, #7857ff 60%, #28c5ff 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .text-gradient-animated { @apply text-gradient animate-gradient-pan; }
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[12px] font-semibold uppercase tracking-[0.18em] text-electric-300;
+    background: rgba(40, 197, 255, 0.08);
+    border: 1px solid rgba(40, 197, 255, 0.22);
+  }
+  .field {
+    @apply w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-[16px] text-white placeholder:text-mist-700 transition;
+    @apply focus:border-electric-500/70 focus:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-electric-500/25;
+  }
+  .field-error { @apply border-red-400/70 focus:border-red-400 focus:ring-red-400/25; }
+  .label { @apply mb-1.5 block text-sm font-semibold text-mist-300; }
+  .select-arrow {
+    appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='none' stroke='%23A5A8B8' stroke-width='2'><path d='M3 5l4 4 4-4'/></svg>");
+    background-repeat: no-repeat; background-position: right 1rem center; background-size: 14px;
+  }
+  .hairline { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent); height: 1px; }
+}
+
+@layer utilities {
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+  .mask-fade-b { mask-image: linear-gradient(to bottom, black 55%, transparent); -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent); }
+  .mask-radial { mask-image: radial-gradient(ellipse at center, black 30%, transparent 72%); -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 72%); }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+  .pb-safe { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+  .preserve-3d { transform-style: preserve-3d; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}

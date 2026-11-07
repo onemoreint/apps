@@ -1,5 +1,5 @@
 // Primero la red, para que precios y menú estén siempre al día; la copia guardada solo se usa sin conexión.
-var CACHE = 'delicias-eliana-v9';
+var CACHE = 'delicias-eliana-v10';
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(['./', 'img/logo.webp']); }).then(function () { return self.skipWaiting(); }));
 });

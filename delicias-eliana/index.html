@@ -494,6 +494,36 @@ html.intro{overflow:hidden}
 .swipe-note{font-size:13.5px}
 @media(hover:hover) and (pointer:fine){.swipe-note{display:none}}
 @media(prefers-reduced-motion:reduce){.st-sauce path{animation:none;stroke-dasharray:none}.stage>img{transition:none}}
+
+/* Seguimiento */
+.track-btn{display:flex;align-items:center;gap:11px;width:100%;min-height:54px;padding:0 16px;border-radius:13px;background:var(--wa);color:var(--wa-ink);font-weight:700;font-size:15.5px;text-align:left;box-shadow:0 0 0 0 rgba(37,211,102,.5);animation:trk 2.2s ease-out infinite}
+.track-btn span{flex:1;min-width:0}
+.track-btn b{flex:none;padding:5px 12px;border-radius:999px;background:var(--wa-ink);color:var(--wa);font-size:14px}
+.track-btn i{flex:none;width:11px;height:11px;border-radius:50%;background:var(--wa-ink);animation:blink 1.2s ease-in-out infinite}
+.track-btn.done{animation:none;background:var(--surface-2);color:var(--cream)}
+.track-btn.done i{background:var(--gold);animation:none}
+.track-btn.done b{background:var(--gold);color:var(--ink)}
+#trackCode{color:var(--gold);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.steps li{position:relative;display:flex;gap:14px;padding-bottom:20px}
+.steps li:last-child{padding-bottom:4px}
+.steps li::before{content:"";position:absolute;left:15px;top:32px;bottom:0;width:2px;background:var(--line)}
+.steps li:last-child::before{display:none}
+.steps li.ok::before{background:var(--wa)}
+.steps i{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--surface-2);box-shadow:inset 0 0 0 2px var(--line);font-style:normal;font-weight:800;font-size:15px;color:var(--wa-ink)}
+.steps .ok i{background:var(--wa);box-shadow:none}
+.steps .now i{background:var(--gold);box-shadow:0 0 0 0 rgba(236,184,79,.6);animation:ring2 1.6s ease-out infinite}
+.steps .bad i{background:var(--chili);color:var(--ink);animation:none}
+.steps b{display:block;font-weight:700;font-size:16.5px;line-height:1.25}
+.steps .todo b{color:var(--muted);font-weight:600}
+.steps small{display:block;color:var(--muted);font-size:14px;line-height:1.35;margin-top:2px}
+.steps .now small{color:var(--cream)}
+#fPhone .fine{font-size:13.5px}
+.field.bad input#cPhone{border-color:var(--chili)}
+@keyframes trk{0%{box-shadow:0 0 0 0 rgba(37,211,102,.5)}70%,100%{box-shadow:0 0 0 12px rgba(37,211,102,0)}}
+@keyframes blink{50%{opacity:.35}}
+@keyframes ring2{0%{box-shadow:0 0 0 0 rgba(236,184,79,.6)}70%,100%{box-shadow:0 0 0 12px rgba(236,184,79,0)}}
+@media(prefers-reduced-motion:reduce){.track-btn,.track-btn i,.steps .now i{animation:none}}
 </style>
 </head>
 <body>
@@ -526,6 +556,7 @@ html.intro{overflow:hidden}
   </div>
   <div class="wrap actions">
     <button type="button" class="ask" id="askOpen"><span class="ask-in"><b>¿Qué pido hoy?</b><small>Te recomiendo en 3 toques</small><i aria-hidden="true">✦</i></span></button>
+    <button type="button" class="track-btn" id="trackBtn" hidden><i aria-hidden="true"></i><span id="trackBtnT"></span><b>Ver</b></button>
     <div class="again" id="again" hidden><button type="button" class="again-btn" id="againBtn"></button></div>
   </div>
   <div class="tricolor" aria-hidden="true"><i></i><i></i><i></i></div>
@@ -620,6 +651,12 @@ html.intro{overflow:hidden}
       <input id="cName" autocomplete="name" placeholder="¿A nombre de quién?">
       <span class="err" id="eName" hidden>Escribe tu nombre para enviar el pedido.</span>
     </div>
+    <div class="field" id="fPhone">
+      <label for="cPhone">Tu WhatsApp</label>
+      <input id="cPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Ej.: 300 123 4567">
+      <span class="fine">Para avisarte cómo va tu pedido.</span>
+      <span class="err" id="ePhone" hidden>Escribe tu número de WhatsApp completo, con al menos 10 dígitos.</span>
+    </div>
     <fieldset>
       <legend>¿Cómo lo quieres?</legend>
       <div class="two">
@@ -641,7 +678,7 @@ html.intro{overflow:hidden}
     <div class="total"><span>Total</span><span id="cartTotal"></span></div>
     <p class="fine" id="domNote">El valor del domicilio no está incluido. Te lo confirmamos por WhatsApp.</p>
     <a class="primary wa" id="send" href="https://wa.me/573002699192" target="_blank" rel="noopener"><span>Enviar pedido por WhatsApp</span></a>
-    <p class="sent" id="sent" role="status" hidden>Abrimos WhatsApp con tu pedido. Toca enviar allá para que nos llegue.</p>
+    <p class="sent" id="sent" role="status" hidden>Abrimos WhatsApp con tu pedido. Toca enviar allá para confirmarlo.</p>
   </div>
 </dialog>
 
@@ -651,6 +688,19 @@ html.intro{overflow:hidden}
   <button type="button" class="lb-nav prev" id="lbPrev" aria-label="Foto anterior">‹</button>
   <button type="button" class="lb-nav next" id="lbNext" aria-label="Foto siguiente">›</button>
   <div class="lb-bar"><div class="lb-info"><b id="lbName"></b><span id="lbPrice"></span><small>Toca dos veces para acercar</small></div><button type="button" class="add" id="lbAdd">Agregar</button></div>
+</dialog>
+
+<dialog id="trackSheet" aria-labelledby="trackTitle">
+  <div class="sheet-h">
+    <div><h3 id="trackTitle">Tu pedido <span id="trackCode"></span></h3><p id="trackSub"></p></div>
+    <button type="button" class="close" data-close aria-label="Cerrar">✕</button>
+  </div>
+  <div class="wm" id="wmTrack"><span class="wm-av"></span><p class="wm-t"></p></div>
+  <div class="sheet-b">
+    <ol class="steps" id="steps"></ol>
+    <p class="fine" id="trackInfo"></p>
+    <button type="button" class="empty-link" id="trackRetry" hidden>Reintentar conexión</button>
+  </div>
 </dialog>
 
 <dialog id="askSheet" aria-labelledby="askTitle">
@@ -742,7 +792,7 @@ function clean(list){
 function mk(id,opt,q,sabores,extras){return {id:id,opt:opt||'',q:q||1,sabores:sabores||[],salsas:[],extras:extras||[]}}
 
 /* Estado */
-var cart=[], last=null, form={name:'',entrega:'Domicilio',addr:''};
+var cart=[], last=null, form={name:'',phone:'',entrega:'Domicilio',addr:''};
 try{
   var s=JSON.parse(localStorage.getItem(KEY)||'{}');
   cart=clean(s.cart);
@@ -1291,9 +1341,21 @@ function renderCart(){
   writeNew();
   renderUpsell();
 }
+/* Número de pedido: cambia solo si cambia el contenido */
+var pend=null;
+function sigOf(){return JSON.stringify([cart.map(function(l){return [l.key,l.q]}),form.name.trim(),phoneNorm(),form.entrega,form.addr.trim(),$('#cNote').value.trim()])}
+function newCode(){var a='ABCDEFGHJKMNPQRSTUVWXYZ23456789',s='',r=new Uint8Array(5);crypto.getRandomValues(r);for(var i=0;i<5;i++)s+=a[r[i]%a.length];return s}
+function newToken(){if(crypto.randomUUID)return crypto.randomUUID();var b=new Uint8Array(16);crypto.getRandomValues(b);b[6]=b[6]&15|64;b[8]=b[8]&63|128;var x=Array.prototype.map.call(b,function(v){return (v+256).toString(16).slice(1)}).join('');return x.slice(0,8)+'-'+x.slice(8,12)+'-'+x.slice(12,16)+'-'+x.slice(16,20)+'-'+x.slice(20)}
+function orderId(){var s=sigOf();if(!pend||pend.sig!==s)pend={sig:s,code:newCode(),token:newToken()};return pend}
+function phoneNorm(){
+  var d=(form.phone||'').replace(/\D/g,'');
+  if(d.length===10&&d[0]==='3')d='57'+d;
+  else if(d.length===11&&d[0]==='0')d='58'+d.slice(1);
+  return d.length>=10&&d.length<=15?d:'';
+}
 function message(){
   var dom=form.entrega==='Domicilio';
-  var out=['*Pedido para Delicias Eliana B&A*','','*Nombre:* '+form.name.trim(),'*Entrega:* '+form.entrega];
+  var out=['*Pedido #'+orderId().code+' para Delicias Eliana B&A*','','*Nombre:* '+form.name.trim(),'*WhatsApp:* '+(phoneNorm()||'-'),'*Entrega:* '+form.entrega];
   if(dom)out.push('*Dirección:* '+form.addr.trim());
   out.push('');
   cart.forEach(function(l){
@@ -1310,6 +1372,7 @@ function message(){
   out.push('','*Total: '+money(total())+'*'+(dom?' + domicilio':''));
   var n=$('#cNote').value.trim();
   if(n)out.push('','*Nota:* '+n);
+  out.push('','_Sigue tu pedido #'+orderId().code+' en el menú._');
   return out.join('\n');
 }
 function refreshSend(){
@@ -1363,20 +1426,27 @@ $(form.entrega==='Domicilio'?'#eDom':'#eRec').checked=true;
 $('#cName').addEventListener('change',function(e){var n=e.target.value.trim().split(' ')[0];if(n)W.cartLine('¡Mucho gusto, '+n+'!')});
 $('#cAddr').addEventListener('focus',function(){W.cartLine('Dame una referencia para que el domicilio llegue sin vueltas.')});
 $('#cName').addEventListener('input',function(e){form.name=e.target.value;setFor();$('#eName').hidden=true;$('#fName').classList.remove('bad');save();refreshSend()});
+$('#cPhone').value=form.phone||'';
+$('#cPhone').addEventListener('input',function(e){form.phone=e.target.value;$('#ePhone').hidden=true;$('#fPhone').classList.remove('bad');save();refreshSend()});
 $('#cAddr').addEventListener('input',function(e){form.addr=e.target.value;$('#eAddr').hidden=true;$('#fAddr').classList.remove('bad');save();refreshSend()});
 $('#cNote').addEventListener('input',refreshSend);
 $$('input[name="entrega"]').forEach(function(r){r.addEventListener('change',function(){form.entrega=r.value;save();refreshSend();W.cartLine(r.value==='Domicilio'?'¿A dónde te lo llevamos?':'Perfecto, para recoger.')})});
 $('#send').addEventListener('click',function(e){
   var ok=true;
   if(!form.name.trim()){ok=false;$('#eName').hidden=false;$('#fName').classList.add('bad');$('#cName').focus()}
+  if(!phoneNorm()){
+    $('#ePhone').hidden=false;$('#fPhone').classList.add('bad');
+    if(ok)$('#cPhone').focus();ok=false;
+  }
   if(form.entrega==='Domicilio'&&!form.addr.trim()){
     $('#eAddr').hidden=false;$('#fAddr').classList.add('bad');
     if(ok)$('#cAddr').focus();ok=false;
   }
-  if(!ok){e.preventDefault();W.cartLine(!form.name.trim()?'Me falta tu nombre para anotar el pedido.':'Me falta la dirección para el domicilio.');return}
+  if(!ok){e.preventDefault();W.cartLine(!form.name.trim()?'Me falta tu nombre para anotar el pedido.':!phoneNorm()?'Déjame tu WhatsApp para avisarte cómo va.':'Me falta la dirección para el domicilio.');return}
   refreshSend();
   last=cart.map(function(l){return Object.assign({},l)});
   save();
+  T.place(orderId(),cart,total());
   $('#sent').hidden=false;
   W.sent();
   celebrate();
@@ -1486,7 +1556,10 @@ var W=(function(){
   }
   function hello(){
     var h=new Date().getHours(),g=h<12?'¡Buenos días!':h<19?'¡Buenas tardes!':'¡Buenas noches!';
-    if(last&&!cart.length){
+    if(T.live()){
+      var a=T.active();
+      say(g+' Tu pedido #'+a.code+' '+T.label(a.status).toLowerCase()+'. ¿Lo revisamos?',{mood:'tada',acts:[{label:'Ver mi pedido',fn:function(){T.open()}}]});
+    }else if(last&&!cart.length){
       say(g+' Qué bueno verte de nuevo. ¿Te repito el último pedido?',{mood:'tada',acts:[{label:'Sí, repítelo',fn:function(){$('#againBtn').click()}},{label:'Ver el menú',fn:function(){}}]});
     }else if(cart.length){
       say(g+' Aquí sigue tu pedido, cuando quieras lo revisamos.',{mood:'tada',acts:[{label:'Ver mi pedido',fn:function(){$('#openCart').click()}}]});
@@ -1594,6 +1667,8 @@ var W=(function(){
     cart:function(){mini('wmCart',form.name.trim()?form.name.trim().split(' ')[0]+', revisemos tu pedido antes de enviarlo.':'Revisemos tu pedido. Solo me falta tu nombre y cómo lo quieres.')},
     cartLine:function(t){mini('wmCart',t)},
     ask:function(t){mini('wmAsk',t)},
+    track:function(t){mini('wmTrack',t)},
+    tell:function(t,acts){return say(t,{mood:'tada',acts:acts})},
     sent:function(){mini('wmCart','¡Gracias! Toca enviar en WhatsApp para que la cocina lo reciba.')}
   };
 })();
@@ -1627,14 +1702,14 @@ paintSnd();
 /* Don Beto lleva el pedido */
 function carry(){
   var d=$('#cartSheet');
-  if(calm||$('.carry',d))return;
+  if(calm||$('.carry',d)){if(calm)setTimeout(function(){T.afterSend()},300);return}
   var c=document.createElement('div');c.className='carry';c.setAttribute('aria-hidden','true');
   c.innerHTML='<p>Llevando tu pedido a la cocina…</p><div class="carry-w">'+W.full()+'<span class="carry-n"><i></i><i></i><i></i></span></div>';
   d.appendChild(c);
   var f=c.animate([{opacity:0},{opacity:1,offset:.1},{opacity:1,offset:.86},{opacity:0}],{duration:2300,fill:'forwards'});
   $('.carry-n',c).animate([{transform:'translateY(-180px) rotate(-20deg) scale(1.5)',opacity:0},{transform:'rotate(5deg)',opacity:1}],{duration:420,delay:180,easing:'cubic-bezier(.3,1.2,.5,1)',fill:'backwards'});
   $('.carry-w',c).animate([{transform:'translateX(0)'},{transform:'translateX(0)',offset:.26},{transform:'translateX(calc(100vw + 30px))'}],{duration:2300,easing:'ease-in'});
-  f.onfinish=function(){c.remove()};
+  f.onfinish=function(){c.remove();T.afterSend()};
 }
 
 /* Fotos a pantalla completa */
@@ -1697,6 +1772,106 @@ $('#lbAdd').addEventListener('click',function(){
     haptic(10);
     var a=$('#cats a[href="#'+n.id+'"]');if(a)toast(a.textContent+(dx<0?' ›':''));
   },{passive:true});
+})();
+
+/* Seguimiento del pedido */
+var T=(function(){
+  var API='https://nkzjjrbzdfyppsxvcvbg.supabase.co/rest/v1/rpc/', PUB='sb_publishable_tG6MVcZDRJvlAnb5TNEzwQ_04drexLP', AK='de-activo';
+  var DOM=['nuevo','recibido','preparando','salio','en_camino','entregado'], REC=['nuevo','recibido','preparando','listo','entregado'];
+  var L={nuevo:'Pedido enviado',recibido:'Pedido recibido',preparando:'Preparando tu pedido',salio:'Salió de cocina',en_camino:'Va en camino',listo:'Listo para recoger',entregado:'Entregado',cancelado:'Pedido cancelado'};
+  var D={nuevo:'Esperando que la cocina lo confirme.',recibido:'La cocina ya tiene tu pedido.',preparando:'Tus platos se están cocinando.',salio:'Empacado y listo para salir.',en_camino:'El domiciliario va hacia tu dirección.',listo:'Pasa por él cuando quieras.',entregado:'¡Buen provecho!',cancelado:'Escríbenos por WhatsApp si tienes dudas.'};
+  var SAY={recibido:'¡Buenas noticias! La cocina recibió tu pedido.',preparando:'Tu pedido ya está en el fogón.',salio:'¡Tu pedido salió de cocina!',en_camino:'Tu pedido va en camino. ¡Prepárate!',listo:'Tu pedido está listo para recoger.',entregado:'¡Pedido entregado! Gracias por preferirnos.',cancelado:'Tu pedido fue cancelado. Escríbenos por WhatsApp para ayudarte.'};
+  var act=null, timer=null, busy=false, fails=0;
+  try{act=JSON.parse(localStorage.getItem(AK)||'null')}catch(e){}
+  if(act&&(Date.now()-act.at>12*3600e3))act=null;
+  function store(){try{if(act)localStorage.setItem(AK,JSON.stringify(act));else localStorage.removeItem(AK)}catch(e){}}
+  function rpc(fn,body){
+    return fetch(API+fn,{method:'POST',headers:{apikey:PUB,'Content-Type':'application/json'},body:JSON.stringify(body),keepalive:true})
+      .then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j&&j.message||'error');return j})});
+  }
+  function fin(s){return s==='entregado'||s==='cancelado'}
+  function live(){return !!act&&!(fin(act.status)&&act.seen)}
+  function items(lines){
+    return lines.map(function(l){
+      return {q:l.q,name:l.name,opt:l.opt||'',optNote:l.optNote||'',p:l.p,sabores:l.sabores||[],salsas:l.salsas||[],
+        extras:(l.extras||[]).map(function(e){var x=extraById(e);return x?x.name:e}),gas:l.gas||'',
+        salsaPend:!!(byId(l.id)&&byId(l.id).salsas&&!(l.salsas||[]).length),sabor:l.id.indexOf('g-')===0&&!l.opt};
+    });
+  }
+  function upload(){
+    if(!act||act.synced||!act.payload)return Promise.resolve();
+    return rpc('de_create_order',act.payload).then(function(){act.synced=true;delete act.payload;store();fails=0;paint()}).catch(function(){fails++;paint()});
+  }
+  function place(id,lines,tot){
+    act={code:id.code,token:id.token,at:Date.now(),status:'nuevo',history:{nuevo:new Date().toISOString()},entrega:form.entrega,synced:false,
+      payload:{p_code:id.code,p_token:id.token,p_name:form.name.trim().slice(0,60),p_phone:phoneNorm(),p_entrega:form.entrega,
+        p_address:form.entrega==='Domicilio'?form.addr.trim().slice(0,200):'',p_note:$('#cNote').value.trim().slice(0,300),p_items:items(lines),p_total:tot}};
+    store();upload();paint();
+  }
+  function afterSend(){
+    if(!act)return;
+    pend=null;cart=[];$('#cNote').value='';
+    $('#cartSheet').close();changed();
+    setTimeout(open,250);
+  }
+  function poll(){
+    if(!act||busy)return;
+    if(!act.synced){upload();return}
+    busy=true;
+    rpc('de_track',{p_token:act.token}).then(function(r){
+      busy=false;fails=0;
+      var o=r&&r[0];if(!o){paint();return}
+      var prev=act.status;
+      act.status=o.status;act.history=o.history||{};act.entrega=o.entrega;store();
+      if(prev!==o.status){
+        ding(2);haptic([30,60,30]);
+        if($('#trackSheet').open)W.track(SAY[o.status]||L[o.status]);
+        else if(!W.tell(SAY[o.status]||L[o.status],[{label:'Ver mi pedido',fn:open}]))toast(L[o.status]);
+      }
+      paint();
+    }).catch(function(){busy=false;fails++;paint()});
+  }
+  function hhmm(iso){if(!iso)return '';var d=new Date(iso);return d.toLocaleTimeString('es-CO',{hour:'numeric',minute:'2-digit'})}
+  function paint(){
+    var b=$('#trackBtn');
+    b.hidden=!live();
+    if(!act)return;
+    $('#trackBtnT').textContent='Tu pedido #'+act.code+' · '+L[act.status];
+    b.classList.toggle('done',fin(act.status));
+    if(!$('#trackSheet').open)return;
+    $('#trackCode').textContent='#'+act.code;
+    $('#trackSub').textContent=act.entrega==='Domicilio'?'A domicilio':'Para recoger';
+    var flow=act.status==='cancelado'?['nuevo','cancelado']:(act.entrega==='Domicilio'?DOM:REC), cur=flow.indexOf(act.status), hist=act.history||{};
+    $('#steps').innerHTML=flow.map(function(s,i){
+      var st=i<cur?'ok':i===cur?'now':'todo';
+      return '<li class="'+st+(s==='cancelado'?' bad':'')+'"><i aria-hidden="true">'+(i<cur||(i===cur&&fin(s))?(s==='cancelado'?'✕':'✓'):'')+'</i><div><b>'+L[s]+'</b><small>'+(i<=cur?(hhmm(hist[s])||'')+(i===cur?' · '+D[s]:''):'')+'</small></div></li>';
+    }).join('');
+    var info=!act.synced?(fails?'No pudimos conectar el seguimiento. Tu pedido igual llega por WhatsApp.':'Conectando el seguimiento…'):fails>2?'Sin conexión por ahora. Lo intentamos de nuevo solos.':fin(act.status)?'':'Se actualiza solo. Puedes cerrar y volver cuando quieras.';
+    $('#trackInfo').textContent=info;
+    $('#trackRetry').hidden=!(fails&&!act.synced);
+  }
+  function tick(){
+    clearTimeout(timer);
+    if(!live()||fin(act.status)||document.hidden)return;
+    poll();
+    timer=setTimeout(tick,$('#trackSheet').open?6000:20000);
+  }
+  function open(){
+    if(!act)return;
+    openSheet($('#trackSheet'));paint();
+    W.track(act.status==='nuevo'?'Ya le pasé tu pedido a la cocina. Te aviso aquí cada paso.':(SAY[act.status]||L[act.status]));
+    tick();
+  }
+  $('#trackBtn').addEventListener('click',open);
+  $('#trackRetry').addEventListener('click',function(){upload().then(tick)});
+  $('#trackSheet').addEventListener('close',function(){
+    if(act&&fin(act.status)){act.seen=true;store();act=null;store();paint();changed()}
+    tick();
+  });
+  document.addEventListener('visibilitychange',tick);
+  paint();
+  setTimeout(tick,1500);
+  return {place:place,afterSend:afterSend,open:open,live:live,active:function(){return act},label:function(s){return L[s]||s}};
 })();
 
 /* Instalar en el celular */

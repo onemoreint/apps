@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cocina · Delicias Eliana B&amp;A</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0c0a08">
+<link rel="icon" type="image/webp" href="../img/logo.webp">
+<style>
+@font-face{font-family:"Sansita";font-weight:800;font-style:italic;font-display:swap;src:url(../fonts/sansita-latin-800-italic.woff2) format("woff2")}
+@font-face{font-family:"Figtree";font-weight:400;font-display:swap;src:url(../fonts/figtree-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Figtree";font-weight:600;font-display:swap;src:url(../fonts/figtree-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Figtree";font-weight:700;font-display:swap;src:url(../fonts/figtree-latin-700-normal.woff2) format("woff2")}
+/* Panel de cocina: columna de tarjetas por pedido, pestañas por etapa, acción principal grande para usar con una mano. */
+:root{
+  color-scheme:dark;
+  --bg:#0c0a08;--surface:#191510;--surface-2:#251f17;--line:#3a3125;
+  --cream:#f7eedd;--muted:#b9ac97;--gold:#ecb84f;--chili:#f26b2c;--ink:#190b03;
+  --wa:#25d366;--wa-ink:#04210f;--blue:#6f93ff;--red:#ff8a73;
+  --display:"Sansita",Georgia,serif;--body:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --gut-l:max(14px,env(safe-area-inset-left,0px));--gut-r:max(14px,env(safe-area-inset-right,0px));
+  --paper:58mm;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--cream);font:400 16px/1.45 var(--body)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
+h1,h2,h3,p{margin:0}
+.wrap{max-width:980px;margin-inline:auto;padding-left:var(--gut-l);padding-right:var(--gut-r)}
+
+/* Entrada */
+.login{min-height:100dvh;display:grid;place-items:center;padding:24px var(--gut-r) 24px var(--gut-l)}
+.login form{width:100%;max-width:380px;display:flex;flex-direction:column;gap:14px;text-align:center}
+.login img{width:150px;margin:0 auto}
+.login h1{font:italic 800 34px/1.05 var(--display);color:var(--gold)}
+.login p{color:var(--muted)}
+.login input{min-height:54px;padding:0 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);font-size:18px;text-align:center}
+.login input:focus{outline:0;border-color:var(--gold)}
+.big{min-height:56px;border-radius:14px;background:var(--gold);color:var(--ink);font-weight:700;font-size:17px}
+.err{color:var(--red);font-size:15px}
+
+/* Barra */
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.top{display:flex;align-items:center;gap:10px;padding-block:10px}
+.top h1{flex:1;min-width:0;font:italic 800 23px/1.1 var(--display);color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dot{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);white-space:nowrap}
+.dot i{width:9px;height:9px;border-radius:50%;background:var(--wa)}
+.dot.off i{background:var(--red)}
+.ic{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:var(--surface-2);font-size:19px;flex:none}
+.ic.muted{opacity:.45}
+.stats{display:flex;gap:16px;padding-bottom:8px;color:var(--muted);font-size:14px}
+.stats b{color:var(--cream);font-variant-numeric:tabular-nums}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.tabs button{flex:none;display:flex;align-items:center;gap:7px;padding:11px 12px 10px;border-bottom:3px solid transparent;color:var(--muted);font-weight:600}
+.tabs button.on{color:var(--cream);border-bottom-color:var(--chili)}
+.tabs .n{min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--surface-2);font-size:13px;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.tabs .n.hot{background:var(--chili);color:var(--ink)}
+
+/* Pedidos */
+main{padding-block:14px 40px}
+.list{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:760px){.list{grid-template-columns:1fr 1fr}}
+.empty{padding:40px 10px;text-align:center;color:var(--muted)}
+.card{display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:14px;background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--line);min-width:0}
+.card.nuevo{box-shadow:inset 0 0 0 2.5px var(--chili);animation:alert 1.4s ease-in-out infinite}
+.c-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.c-code{font:italic 800 30px/1 var(--display);color:var(--gold);letter-spacing:.02em}
+.c-age{font-size:14px;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.c-age b{display:block;color:var(--cream);font-size:15px}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:13px;font-weight:700;background:var(--surface-2)}
+.pill.st{background:var(--gold);color:var(--ink)}
+.pill.cancelado{background:var(--red);color:var(--ink)}
+.pill.entregado{background:var(--wa);color:var(--wa-ink)}
+.who{display:grid;gap:2px;font-size:15px}
+.who b{font-size:18px}
+.who span{color:var(--muted)}
+.who a{color:var(--gold);font-weight:600;text-decoration:none}
+.items{list-style:none;margin:0;padding:10px 0 0;border-top:1px dashed var(--line);display:grid;gap:8px}
+.items li{display:flex;gap:10px}
+.items .q{flex:none;min-width:30px;font-weight:800;font-size:17px;color:var(--gold)}
+.items .d{flex:1;min-width:0}
+.items .d b{font-weight:700}
+.items .d small{display:block;color:var(--muted);font-size:14px;line-height:1.3}
+.items .d small.warn{color:var(--red)}
+.items .pr{flex:none;font-variant-numeric:tabular-nums;color:var(--muted)}
+.note{padding:9px 11px;border-radius:10px;background:#3a2410;color:#ffd9a8;font-weight:600}
+.tot{display:flex;justify-content:space-between;font-weight:700;font-size:18px;padding-top:8px;border-top:1px dashed var(--line)}
+.tot span:last-child{font-variant-numeric:tabular-nums}
+.acts{display:flex;flex-direction:column;gap:8px}
+.main-b{min-height:56px;border-radius:13px;background:var(--gold);color:var(--ink);font-weight:800;font-size:17px}
+.main-b.go{background:var(--chili)}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.sec{flex:1 1 auto;min-height:44px;padding:0 12px;border-radius:11px;background:var(--surface-2);font-weight:600;font-size:15px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.sec.wa{background:var(--wa);color:var(--wa-ink)}
+.sec.wa.hint{animation:pulse 1.4s ease-in-out infinite}
+.sec.danger{color:var(--red)}
+.timeline{font-size:13px;color:var(--muted)}
+
+/* Ajustes */
+dialog{width:100%;max-width:520px;max-height:92dvh;margin:auto auto 0;padding:0;border:0;border-radius:18px 18px 0 0;background:var(--surface);color:var(--cream)}
+dialog::backdrop{background:rgba(0,0,0,.7)}
+.sheet{display:flex;flex-direction:column;gap:18px;padding:18px var(--gut-r) calc(20px + env(safe-area-inset-bottom,0px)) var(--gut-l)}
+.sheet h2{font:italic 800 26px/1.1 var(--display)}
+.set{display:grid;gap:8px}
+.set>b{font-size:15px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.seg button{min-height:46px;border-radius:11px;background:var(--surface-2);font-weight:600}
+.seg button.on{background:var(--gold);color:var(--ink)}
+.set p{color:var(--muted);font-size:14px}
+.set input{min-height:48px;padding:0 13px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg)}
+.ok{color:var(--wa);font-size:15px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:9;padding:10px 18px;border-radius:999px;background:var(--cream);color:var(--ink);font-weight:700;max-width:calc(100% - 32px)}
+@keyframes alert{50%{box-shadow:inset 0 0 0 2.5px var(--chili),0 0 26px rgba(242,107,44,.45)}}
+@keyframes pulse{50%{transform:scale(1.03)}}
+@media(prefers-reduced-motion:reduce){.card.nuevo,.sec.wa.hint{animation:none}}
+
+/* Tickets */
+#print{display:none}
+@media print{
+  @page{size:var(--paper) auto;margin:0}
+  html,body{background:#fff!important;color:#000!important}
+  body>*:not(#print){display:none!important}
+  #print{display:block}
+}
+.tk{width:var(--tkw,48mm);margin:0 auto;padding:2mm 0 6mm;color:#000;background:#fff;font:600 12px/1.28 "Courier New",ui-monospace,monospace;break-after:page;page-break-after:always}
+.tk:last-child{break-after:auto;page-break-after:auto}
+.tk .c{text-align:center}
+.tk h1{font:900 15px/1.1 Arial,sans-serif;text-align:center;letter-spacing:.04em}
+.tk .num{font:900 30px/1 Arial,sans-serif;text-align:center;margin:2mm 0;letter-spacing:.06em}
+.tk .hr{border-top:1.5px dashed #000;margin:2mm 0}
+.tk .hr2{border-top:2.5px solid #000;margin:2mm 0}
+.tk .it{display:flex;gap:2mm;margin-top:1.5mm}
+.tk .it .q{flex:none;font-weight:900;min-width:7mm}
+.tk .it .d{flex:1;min-width:0}
+.tk .it .d b{font-weight:900}
+.tk .it .d div{font-weight:600;padding-left:1mm}
+.tk .it .p{flex:none}
+.tk .row2{display:flex;justify-content:space-between;gap:2mm}
+.tk .tot{font:900 16px/1.2 Arial,sans-serif;display:flex;justify-content:space-between;border:0;padding:0}
+.tk .box{border:2px solid #000;padding:1.5mm 2mm;margin-top:2mm;font-weight:900}
+.tk img.logo{display:block;width:28mm;margin:0 auto 1mm}
+.tk img.qr{display:block;width:24mm;margin:2mm auto 0}
+.tk .chk{display:inline-block;width:3.2mm;height:3.2mm;border:1.5px solid #000;margin-right:1.5mm;vertical-align:-.4mm}
+</style>
+</head>
+<body>
+
+<section class="login" id="login">
+  <form id="loginForm">
+    <img src="../img/logo.webp" alt="Delicias Eliana B&amp;A">
+    <h1>Panel de cocina</h1>
+    <p>Escribe la clave del negocio para recibir los pedidos en este celular.</p>
+    <label for="key" class="sr" hidden>Clave</label>
+    <input id="key" type="password" autocomplete="current-password" placeholder="Clave" required>
+    <button class="big" type="submit" id="loginBtn">Empezar turno</button>
+    <p class="err" id="loginErr" role="alert" hidden></p>
+  </form>
+</section>
+
+<div id="app" hidden>
+  <header>
+    <div class="wrap">
+      <div class="top">
+        <h1>Cocina · Delicias Eliana</h1>
+        <span class="dot" id="conn" role="status"><i></i><span>En línea</span></span>
+        <button type="button" class="ic" id="sndBtn" aria-label="Silenciar alarma">🔔</button>
+        <button type="button" class="ic" id="setBtn" aria-label="Ajustes">⚙</button>
+      </div>
+      <div class="stats" id="stats"></div>
+      <nav class="tabs" id="tabs" aria-label="Etapas">
+        <button type="button" data-tab="nuevos" class="on">Nuevos <span class="n" id="nNuevos">0</span></button>
+        <button type="button" data-tab="curso">En curso <span class="n" id="nCurso">0</span></button>
+        <button type="button" data-tab="hechos">Terminados <span class="n" id="nHechos">0</span></button>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap"><div class="list" id="list"></div></main>
+</div>
+
+<dialog id="settings" aria-labelledby="setTitle">
+  <div class="sheet">
+    <h2 id="setTitle">Ajustes</h2>
+    <div class="set">
+      <b>Ancho del papel</b>
+      <div class="seg" id="paperSeg"><button type="button" data-paper="58">58 mm</button><button type="button" data-paper="80">80 mm</button></div>
+      <p>Revisa el ancho del rollo de tu impresora térmica.</p>
+    </div>
+    <div class="set">
+      <b>Al aceptar un pedido</b>
+      <div class="seg" id="autoSeg"><button type="button" data-auto="1">Imprimir los 2 tickets</button><button type="button" data-auto="0">No imprimir</button></div>
+    </div>
+    <div class="set">
+      <b>Cómo imprimir</b>
+      <div class="seg" id="modeSeg"><button type="button" data-mode="dialog">Del celular</button><button type="button" data-mode="rawbt">RawBT directo</button></div>
+      <p id="modeHelp"></p>
+    </div>
+    <div class="set">
+      <b>Probar impresora</b>
+      <button type="button" class="sec" id="testPrint">Imprimir ticket de prueba</button>
+    </div>
+    <form class="set" id="keyForm">
+      <b>Cambiar la clave</b>
+      <label for="newKey" hidden>Clave nueva</label>
+      <input id="newKey" type="password" autocomplete="new-password" placeholder="Clave nueva, mínimo 8 caracteres" minlength="8">
+      <button type="submit" class="sec">Guardar clave nueva</button>
+      <p class="err" id="keyErr" hidden></p><p class="ok" id="keyOk" hidden>Clave cambiada. Úsala en los demás celulares.</p>
+    </form>
+    <button type="button" class="sec danger" id="logout">Cerrar turno en este celular</button>
+    <button type="button" class="big" id="setClose">Listo</button>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" hidden></div>
+<div id="print" aria-hidden="true"></div>
+
+<script>
+(function(){
+'use strict';
+var API='https://nkzjjrbzdfyppsxvcvbg.supabase.co/rest/v1/rpc/', PUB='sb_publishable_tG6MVcZDRJvlAnb5TNEzwQ_04drexLP';
+var MENU_URL='https://onemoreint.github.io/apps/delicias-eliana/', WA_BIZ='300 269 9192';
+var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var money=function(n){return '$'+String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.')};
+var esc=function(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+function get(k,d){try{var v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}}
+function put(k,v){try{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){}}
+
+var key=get('de-cocina-clave',''), orders=[], tab='nuevos', fails=0, lastOk=0, timer=null, justSet={};
+var cfg={paper:get('de-papel','58'),auto:get('de-autoimp','1'),mode:get('de-modo','dialog'),snd:get('de-alarma','1')};
+
+function rpc(fn,body){
+  return fetch(API+fn,{method:'POST',headers:{apikey:PUB,'Content-Type':'application/json'},body:JSON.stringify(body)})
+    .then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error((j&&j.message)||'Error de conexión');return j})});
+}
+
+/* Sonido, vibración y pantalla encendida */
+var actx=null, wake=null;
+function beep(){
+  if(cfg.snd!=='1')return;
+  try{
+    actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+    [0,.22,.44].forEach(function(dt,i){
+      var t=actx.currentTime+dt,o=actx.createOscillator(),g=actx.createGain();
+      o.type='square';o.frequency.value=i===2?1320:988;
+      g.gain.setValueAtTime(.18,t);g.gain.exponentialRampToValueAtTime(.0001,t+.2);
+      o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+.21);
+    });
+  }catch(e){}
+  try{navigator.vibrate&&navigator.vibrate([250,120,250])}catch(e){}
+}
+function keepAwake(){
+  try{if('wakeLock' in navigator&&!document.hidden)navigator.wakeLock.request('screen').then(function(w){wake=w}).catch(function(){})}catch(e){}
+}
+document.addEventListener('visibilitychange',function(){if(!document.hidden){keepAwake();load()}});
+
+var toastT;
+function toast(t){var el=$('#toast');el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(function(){el.hidden=true},2400)}
+
+/* Etapas */
+var L={nuevo:'Nuevo',recibido:'Recibido',preparando:'Preparando',salio:'Salió de cocina',en_camino:'En camino',listo:'Listo para recoger',entregado:'Entregado',cancelado:'Cancelado'};
+function next(o){
+  var dom=o.entrega==='Domicilio';
+  return {nuevo:['recibido','Aceptar pedido'],recibido:['preparando','Empezar a preparar'],
+    preparando:dom?['salio','Salió de cocina']:['listo','Listo para recoger'],
+    salio:['en_camino','Va en camino'],en_camino:['entregado','Entregado'],listo:['entregado','Entregado']}[o.status];
+}
+function waMsg(o,s){
+  var n=(o.name||'').split(' ')[0];
+  var m={recibido:'¡Hola '+n+'! Recibimos tu pedido #'+o.code+' en Delicias Eliana B&A. Ya va para la cocina.',
+    preparando:'¡Hola '+n+'! Tu pedido #'+o.code+' ya se está preparando. 🔥',
+    salio:'¡Hola '+n+'! Tu pedido #'+o.code+' salió de cocina.',
+    en_camino:'¡Hola '+n+'! Tu pedido #'+o.code+' va en camino. 🛵',
+    listo:'¡Hola '+n+'! Tu pedido #'+o.code+' está listo para recoger.',
+    entregado:'¡Gracias por tu pedido, '+n+'! Esperamos que lo disfrutes. Delicias Eliana B&A',
+    cancelado:'Hola '+n+', tuvimos que cancelar tu pedido #'+o.code+'. Escríbenos y te ayudamos.'}[s]||'';
+  if(s!=='entregado'&&s!=='cancelado')m+='\nSíguelo en: '+MENU_URL;
+  return 'https://wa.me/'+o.phone+'?text='+encodeURIComponent(m);
+}
+function ago(iso){var m=Math.max(0,Math.round((Date.now()-new Date(iso))/60000));return m<1?'ahora':m<60?'hace '+m+' min':'hace '+Math.floor(m/60)+' h '+(m%60)+' min'}
+function hhmm(iso){return iso?new Date(iso).toLocaleTimeString('es-CO',{hour:'numeric',minute:'2-digit'}):''}
+function subs(it){
+  var a=[];
+  if(it.opt)a.push([it.opt+(it.optNote?' · '+it.optNote:''),'']);
+  if(it.sabores&&it.sabores.length)a.push(['Sabores: '+it.sabores.join(' y '),'']);
+  if(it.salsas&&it.salsas.length)a.push(['Salsas: '+it.salsas.join(', '),'']);else if(it.salsaPend)a.push(['Salsas: por confirmar','warn']);
+  if(it.extras&&it.extras.length)a.push(['Extras: '+it.extras.join(', '),'']);
+  if(it.gas)a.push(['Gaseosa: '+it.gas,'']);else if(it.opt==='Combo'||/Combo Personal/.test(it.name))a.push(['Gaseosa: por confirmar','warn']);
+  if(it.sabor)a.push(['Sabor: por confirmar','warn']);
+  return a;
+}
+
+/* Lista */
+function group(o){return o.status==='nuevo'?'nuevos':(o.status==='entregado'||o.status==='cancelado')?'hechos':'curso'}
+function render(){
+  var g={nuevos:[],curso:[],hechos:[]};
+  orders.forEach(function(o){g[group(o)].push(o)});
+  g.nuevos.sort(function(a,b){return new Date(a.created_at)-new Date(b.created_at)});
+  g.curso.sort(function(a,b){return new Date(a.created_at)-new Date(b.created_at)});
+  $('#nNuevos').textContent=g.nuevos.length;$('#nNuevos').classList.toggle('hot',g.nuevos.length>0);
+  $('#nCurso').textContent=g.curso.length;$('#nHechos').textContent=g.hechos.length;
+  var today=new Date().toDateString(), hoy=orders.filter(function(o){return new Date(o.created_at).toDateString()===today&&o.status!=='cancelado'});
+  $('#stats').innerHTML='<span>Pedidos hoy: <b>'+hoy.length+'</b></span><span>Vendido hoy: <b>'+money(hoy.reduce(function(a,o){return a+o.total},0))+'</b></span>';
+  document.title=(g.nuevos.length?'('+g.nuevos.length+') Nuevo pedido · ':'')+'Cocina · Delicias Eliana B&A';
+  var list=g[tab];
+  if(!list.length){$('#list').innerHTML='<p class="empty">'+{nuevos:'No hay pedidos nuevos. Cuando llegue uno, suena la alarma.',curso:'No hay pedidos en preparación.',hechos:'Aún no hay pedidos terminados en las últimas 24 horas.'}[tab]+'</p>';return}
+  var focusId=document.activeElement&&document.activeElement.closest&&document.activeElement.closest('[data-id]')&&document.activeElement.closest('[data-id]').dataset.id;
+  $('#list').innerHTML=list.map(card).join('');
+  if(focusId){var f=$('[data-id="'+focusId+'"] button');if(f)f.focus({preventScroll:true})}
+}
+function card(o){
+  var n=next(o), dom=o.entrega==='Domicilio', just=justSet[o.id];
+  var items=(o.items||[]).map(function(it){
+    return '<li><span class="q">'+it.q+'×</span><span class="d"><b>'+esc(it.name)+'</b>'+subs(it).map(function(s){return '<small class="'+s[1]+'">'+esc(s[0])+'</small>'}).join('')+'</span><span class="pr">'+money(it.p*it.q)+'</span></li>';
+  }).join('');
+  var hist=o.history||{}, tl=['nuevo','recibido','preparando','salio','en_camino','listo','entregado','cancelado'].filter(function(s){return hist[s]}).map(function(s){return L[s]+' '+hhmm(hist[s])}).join(' · ');
+  var acts='';
+  if(n)acts+='<button type="button" class="main-b'+(o.status==='nuevo'?' go':'')+'" data-act="next">'+(o.status==='nuevo'&&cfg.auto==='1'?'Aceptar e imprimir':n[1])+'</button>';
+  acts+='<div class="row">';
+  if(o.phone&&just)acts+='<a class="sec wa hint" href="'+waMsg(o,just)+'" target="_blank" rel="noopener" data-act="told">Avisar al cliente: '+esc(L[just])+'</a>';
+  else if(o.phone&&o.status!=='nuevo')acts+='<a class="sec wa" href="'+waMsg(o,o.status)+'" target="_blank" rel="noopener">Avisar por WhatsApp</a>';
+  acts+='<button type="button" class="sec" data-act="p-int">Comanda</button><button type="button" class="sec" data-act="p-bag">Ticket bolsa</button>';
+  if(o.status!=='entregado'&&o.status!=='cancelado')acts+='<button type="button" class="sec danger" data-act="cancel">'+(o.status==='nuevo'?'Rechazar':'Cancelar')+'</button>';
+  acts+='</div>';
+  return '<article class="card '+o.status+'" data-id="'+o.id+'">'+
+    '<div class="c-top"><div><div class="c-code">#'+esc(o.code)+'</div><span class="pill st '+o.status+'">'+L[o.status]+'</span> <span class="pill">'+(dom?'Domicilio':'Para recoger')+'</span></div><div class="c-age"><b>'+hhmm(o.created_at)+'</b>'+ago(o.created_at)+'</div></div>'+
+    '<div class="who"><b>'+esc(o.name)+'</b>'+(o.phone?'<a href="https://wa.me/'+esc(o.phone)+'" target="_blank" rel="noopener">+'+esc(o.phone)+'</a>':'')+(dom?'<span>'+esc(o.address||'Sin dirección')+'</span>':'')+'</div>'+
+    '<ul class="items">'+items+'</ul>'+(o.note?'<p class="note">Nota: '+esc(o.note)+'</p>':'')+
+    '<div class="tot"><span>Total'+(dom?' + domicilio':'')+'</span><span>'+money(o.total)+'</span></div>'+
+    '<div class="acts">'+acts+'</div>'+(tl?'<p class="timeline">'+esc(tl)+'</p>':'')+'</article>';
+}
+
+/* Carga */
+var known=null, armed={};
+function load(){
+  clearTimeout(timer);
+  if(!key)return;
+  rpc('de_staff_orders',{p_key:key}).then(function(r){
+    if(r.error){if(/Clave/.test(r.error)){logout(r.error)}else{fails++;conn()}return}
+    fails=0;lastOk=Date.now();
+    var fresh=r.orders||[];
+    var ids={};fresh.forEach(function(o){ids[o.id]=1});
+    if(known){var nuevos=fresh.filter(function(o){return !known[o.id]&&o.status==='nuevo'});if(nuevos.length){toast('Nuevo pedido #'+nuevos[0].code);if(tab!=='nuevos'){tab='nuevos';paintTabs()}}}
+    known=ids;orders=fresh;render();conn();
+  }).catch(function(){fails++;conn()}).then(function(){timer=setTimeout(load,fails?Math.min(30000,4000*fails):4000)});
+}
+function conn(){
+  var el=$('#conn'),off=fails>1;
+  el.classList.toggle('off',off);
+  $('span',el).textContent=off?'Sin conexión, reintentando':'En línea';
+}
+setInterval(function(){if(orders.some(function(o){return o.status==='nuevo'}))beep()},5000);
+setInterval(function(){if(!$('#app').hidden&&!document.activeElement.closest('.card'))render()},30000);
+
+function set(o,s){
+  return rpc('de_staff_set',{p_key:key,p_id:o.id,p_status:s}).then(function(r){
+    if(r.error)throw new Error(r.error);
+    orders=orders.map(function(x){return x.id===o.id?r.order:x});
+    justSet[o.id]=s;render();return r.order;
+  });
+}
+$('#list').addEventListener('click',function(e){
+  var b=e.target.closest('[data-act]');if(!b)return;
+  var id=+b.closest('[data-id]').dataset.id, o=orders.filter(function(x){return x.id===id})[0];if(!o)return;
+  var a=b.dataset.act;
+  if(a==='told'){delete justSet[id];setTimeout(render,400);return}
+  if(a==='p-int'){printTickets([o],['int']);return}
+  if(a==='p-bag'){printTickets([o],['bag']);return}
+  if(a==='cancel'){
+    if(!armed[id]){armed[id]=1;b.textContent='Toca otra vez para confirmar';setTimeout(function(){delete armed[id];if(b.isConnected)b.textContent=o.status==='nuevo'?'Rechazar':'Cancelar'},3500);return}
+    delete armed[id];b.disabled=true;
+    set(o,'cancelado').then(function(){toast('Pedido #'+o.code+' cancelado')}).catch(function(err){b.disabled=false;toast(err.message)});
+    return;
+  }
+  if(a==='next'){
+    var n=next(o);if(!n)return;
+    b.disabled=true;b.textContent='Guardando…';
+    var wasNew=o.status==='nuevo';
+    if(wasNew&&cfg.auto==='1')printTickets([o],['int','bag']);
+    set(o,n[0]).then(function(r){
+      toast('#'+r.code+': '+L[r.status]);
+      if(wasNew&&tab==='nuevos'&&!orders.some(function(x){return x.status==='nuevo'})){tab='curso';paintTabs();render()}
+    }).catch(function(err){b.disabled=false;b.textContent=n[1];toast(err.message)});
+  }
+});
+
+/* Pestañas */
+function paintTabs(){$$('#tabs button').forEach(function(t){t.classList.toggle('on',t.dataset.tab===tab)})}
+$('#tabs').addEventListener('click',function(e){var t=e.target.closest('[data-tab]');if(!t)return;tab=t.dataset.tab;paintTabs();render();window.scrollTo(0,0)});
+
+/* Impresión */
+function itemsTk(o,price){
+  return (o.items||[]).map(function(it){
+    return '<div class="it"><span class="q">'+it.q+'x</span><div class="d"><b>'+esc(it.name)+'</b>'+subs(it).map(function(s){return '<div>- '+esc(s[0])+'</div>'}).join('')+'</div>'+(price?'<span class="p">'+money(it.p*it.q)+'</span>':'')+'</div>';
+  }).join('');
+}
+function tkInt(o){
+  var dom=o.entrega==='Domicilio';
+  return '<div class="tk"><h1>COMANDA DE COCINA</h1><div class="num">#'+esc(o.code)+'</div>'+
+    '<div class="row2"><span>'+new Date(o.created_at).toLocaleDateString('es-CO')+'</span><span>'+hhmm(o.created_at)+'</span></div>'+
+    '<div class="hr2"></div><div><b>'+(dom?'DOMICILIO':'PARA RECOGER')+'</b></div><div>Cliente: '+esc(o.name)+'</div>'+(o.phone?'<div>Tel: +'+esc(o.phone)+'</div>':'')+(dom?'<div>Dir: '+esc(o.address||'-')+'</div>':'')+
+    '<div class="hr"></div>'+itemsTk(o,true)+(o.note?'<div class="box">NOTA: '+esc(o.note)+'</div>':'')+
+    '<div class="hr"></div><div class="tot"><span>TOTAL</span><span>'+money(o.total)+'</span></div>'+(dom?'<div>+ valor del domicilio</div>':'')+
+    '<div class="hr"></div><div class="c">Impreso '+hhmm(new Date().toISOString())+' · Registro interno</div></div>';
+}
+function tkBag(o){
+  var dom=o.entrega==='Domicilio';
+  return '<div class="tk"><img class="logo" src="../img/logo-ticket.png" alt=""><h1>DELICIAS ELIANA B&amp;A</h1>'+
+    '<div class="c">Pedido</div><div class="num">#'+esc(o.code)+'</div><div class="c"><b>Para: '+esc(o.name)+'</b></div>'+(dom?'<div class="c">'+esc(o.address||'')+'</div>':'<div class="c">Para recoger</div>')+
+    '<div class="hr"></div>'+(o.items||[]).map(function(it){return '<div class="it"><span class="chk"></span><span class="q">'+it.q+'x</span><div class="d"><b>'+esc(it.name)+'</b>'+(it.opt?'<div>'+esc(it.opt)+'</div>':'')+'</div></div>'}).join('')+
+    '<div class="hr"></div><div class="tot"><span>TOTAL</span><span>'+money(o.total)+'</span></div>'+(dom?'<div>+ valor del domicilio</div>':'')+
+    '<div class="hr"></div><div class="c"><b>¡Gracias por preferirnos!</b><br>Revisa que esté todo completo.<br>Pedidos por WhatsApp: '+WA_BIZ+'</div><img class="qr" src="../img/qr.png" alt=""><div class="c">Escanea y vuelve a pedir</div></div>';
+}
+function plain(o,kind){
+  var W=cfg.paper==='80'?42:32, line='-'.repeat(W), dom=o.entrega==='Domicilio', out=[];
+  function c(t){t=String(t);var p=Math.max(0,Math.floor((W-t.length)/2));return ' '.repeat(p)+t}
+  function lr(a,b){a=String(a);b=String(b);var s=W-a.length-b.length;return s>0?a+' '.repeat(s)+b:a+'\n'+' '.repeat(Math.max(0,W-b.length))+b}
+  if(kind==='int'){out.push(c('COMANDA DE COCINA'),c('#'+o.code),lr(new Date(o.created_at).toLocaleDateString('es-CO'),hhmm(o.created_at)),line,dom?'DOMICILIO':'PARA RECOGER','Cliente: '+o.name);if(o.phone)out.push('Tel: +'+o.phone);if(dom)out.push('Dir: '+(o.address||'-'))}
+  else{out.push(c('DELICIAS ELIANA B&A'),c('Pedido #'+o.code),c('Para: '+o.name),dom?c(o.address||''):c('Para recoger'))}
+  out.push(line);
+  (o.items||[]).forEach(function(it){out.push(kind==='int'?lr(it.q+'x '+it.name,money(it.p*it.q)):'[ ] '+it.q+'x '+it.name);(kind==='int'?subs(it):it.opt?[[it.opt]]:[]).forEach(function(s){out.push('   - '+s[0])})});
+  if(kind==='int'&&o.note)out.push(line,'NOTA: '+o.note);
+  out.push(line,lr('TOTAL',money(o.total)));if(dom)out.push('+ valor del domicilio');
+  out.push(line,kind==='int'?c('Registro interno'):c('Gracias por preferirnos!'));
+  if(kind!=='int')out.push(c('WhatsApp '+WA_BIZ));
+  return out.join('\n').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\x20-\x7e\n]/g,'')+'\n\n\n\n';
+}
+function printTickets(list,kinds){
+  if(cfg.mode==='rawbt'){
+    var txt='';list.forEach(function(o){kinds.forEach(function(k){txt+=plain(o,k)+'\x1dV\x42\x00'})});
+    var b64=btoa('\x1b@'+txt);
+    location.href='intent:base64,'+b64+'#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;end;';
+    return;
+  }
+  var html='';list.forEach(function(o){kinds.forEach(function(k){html+=k==='int'?tkInt(o):tkBag(o)})});
+  var p=$('#print');p.innerHTML=html;
+  document.documentElement.style.setProperty('--paper',cfg.paper+'mm');
+  document.documentElement.style.setProperty('--tkw',cfg.paper==='80'?'72mm':'48mm');
+  var imgs=$$('img',p).filter(function(i){return !i.complete});
+  var go=function(){setTimeout(function(){window.print()},60)};
+  if(!imgs.length)go();else{var n=imgs.length;imgs.forEach(function(i){i.onload=i.onerror=function(){if(--n===0)go()}});setTimeout(go,1500)}
+}
+
+/* Ajustes */
+function paintSet(){
+  $$('#paperSeg button').forEach(function(b){b.classList.toggle('on',b.dataset.paper===cfg.paper)});
+  $$('#autoSeg button').forEach(function(b){b.classList.toggle('on',b.dataset.auto===cfg.auto)});
+  $$('#modeSeg button').forEach(function(b){b.classList.toggle('on',b.dataset.mode===cfg.mode)});
+  $('#modeHelp').textContent=cfg.mode==='rawbt'?'Manda el texto directo a la app RawBT, sin ventana de impresión. Imprime sin logo ni tildes.':'Abre la ventana de impresión del celular. Con RawBT instalado, elígela como impresora: sale con logo y QR.';
+  $('#sndBtn').classList.toggle('muted',cfg.snd!=='1');$('#sndBtn').setAttribute('aria-label',cfg.snd==='1'?'Silenciar alarma':'Activar alarma');
+}
+$('#settings').addEventListener('click',function(e){
+  var b=e.target.closest('[data-paper],[data-auto],[data-mode]');if(!b)return;
+  if(b.dataset.paper){cfg.paper=b.dataset.paper;put('de-papel',cfg.paper)}
+  if(b.dataset.auto){cfg.auto=b.dataset.auto;put('de-autoimp',cfg.auto)}
+  if(b.dataset.mode){cfg.mode=b.dataset.mode;put('de-modo',cfg.mode)}
+  paintSet();render();
+});
+$('#setBtn').addEventListener('click',function(){$('#keyErr').hidden=$('#keyOk').hidden=true;$('#settings').showModal()});
+$('#setClose').addEventListener('click',function(){$('#settings').close()});
+$('#sndBtn').addEventListener('click',function(){cfg.snd=cfg.snd==='1'?'0':'1';put('de-alarma',cfg.snd);paintSet();if(cfg.snd==='1')beep()});
+$('#testPrint').addEventListener('click',function(){
+  var now=new Date().toISOString();
+  printTickets([{code:'PRUEB',created_at:now,entrega:'Domicilio',name:'Cliente de prueba',phone:'573001234567',address:'Calle de prueba #1-23',note:'Ticket de prueba',total:51000,
+    items:[{q:1,name:'Papas Lokas',opt:'Grande',p:46000,salsas:['Piña','Leña'],extras:['Tocineta']},{q:1,name:'Gaseosa 400 ml',opt:'Coca-Cola',p:4000}]}],['int','bag']);
+});
+$('#keyForm').addEventListener('submit',function(e){
+  e.preventDefault();var nk=$('#newKey').value;$('#keyErr').hidden=$('#keyOk').hidden=true;
+  rpc('de_staff_change_key',{p_key:key,p_new:nk}).then(function(r){
+    if(r.error){$('#keyErr').textContent=r.error;$('#keyErr').hidden=false;return}
+    key=nk;put('de-cocina-clave',key);$('#newKey').value='';$('#keyOk').hidden=false;
+  }).catch(function(err){$('#keyErr').textContent=err.message;$('#keyErr').hidden=false});
+});
+$('#logout').addEventListener('click',function(){$('#settings').close();logout('')});
+function logout(msg){
+  key='';put('de-cocina-clave',null);clearTimeout(timer);known=null;orders=[];
+  $('#app').hidden=true;$('#login').hidden=false;
+  $('#loginErr').textContent=msg;$('#loginErr').hidden=!msg;
+}
+
+/* Entrada */
+function start(){
+  $('#login').hidden=true;$('#app').hidden=false;paintSet();paintTabs();keepAwake();load();
+  if(!actx||actx.state!=='running')toast('Toca la pantalla una vez para activar la alarma');
+}
+$('#loginForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var k=$('#key').value.trim();if(!k)return;
+  $('#loginBtn').disabled=true;$('#loginBtn').textContent='Entrando…';$('#loginErr').hidden=true;
+  try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume()}catch(err){}
+  rpc('de_staff_orders',{p_key:k}).then(function(r){
+    if(r.error)throw new Error(r.error);
+    key=k;put('de-cocina-clave',k);$('#key').value='';start();
+  }).catch(function(err){$('#loginErr').textContent=/fetch|network/i.test(err.message)?'No hay conexión. Revisa el internet e intenta de nuevo.':err.message;$('#loginErr').hidden=false})
+  .then(function(){$('#loginBtn').disabled=false;$('#loginBtn').textContent='Empezar turno'});
+});
+document.addEventListener('pointerdown',function(){try{if(actx&&actx.state==='suspended')actx.resume()}catch(e){}},{passive:true});
+if(key)start();
+})();
+</script>
+</body>
+</html>

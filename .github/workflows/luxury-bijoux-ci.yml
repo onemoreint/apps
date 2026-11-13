@@ -1,0 +1,43 @@
+name: Luxury Bijoux · regenerar catálogo
+
+# Cuando el panel (/luxury-bijoux/admin/) guarda cambios en luxury-bijoux/data,
+# esta Action regenera las páginas (fichas, categorías, índice de búsqueda, sitemap)
+# y las sube a main. GitHub Pages sirve luxury-bijoux/ tal cual desde la rama main.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'luxury-bijoux/data/products.json'
+      - 'luxury-bijoux/data/categories.json'
+      - 'luxury-bijoux/data/collections.json'
+      - 'luxury-bijoux/data/settings.json'
+      - 'luxury-bijoux/tools/**'
+      - '.github/workflows/luxury-bijoux-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: luxury-bijoux
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generar el sitio
+        run: python3 luxury-bijoux/tools/build.py
+      - name: Subir páginas regeneradas
+        run: |
+          git config user.name "luxury-bijoux-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A luxury-bijoux
+          if git diff --cached --quiet; then echo "Sin cambios"; exit 0; fi
+          git commit -m "Luxury Bijoux: regenerar páginas del catálogo"
+          git pull --rebase origin main
+          git push origin HEAD:main

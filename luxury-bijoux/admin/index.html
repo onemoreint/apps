@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Panel · Luxury Bijoux</title>
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="adm">
+
+<!-- ======== acceso ======== -->
+<section id="login" class="adm-login">
+ <div class="box">
+  <h1>Panel del catálogo</h1>
+  <p>Conecta el repositorio de GitHub donde vive el sitio. Los cambios se guardan como un commit y el sitio se vuelve a publicar solo en 2 a 4 minutos.</p>
+  <form id="login-form" class="adm-form">
+   <label>Repositorio <small>usuario/repositorio</small><input name="repo" required placeholder="tu-usuario/luxury-bijoux" autocomplete="off"></label>
+   <label>Rama<input name="rama" value="main" required></label>
+   <label>Token personal de GitHub <small>se guarda solo en esta pestaña y se borra al cerrarla</small><input name="token" type="password" required autocomplete="off" placeholder="github_pat_…"></label>
+   <p class="err" id="login-err" role="alert"></p>
+   <button class="btn" type="submit">CONECTAR</button>
+  </form>
+  <div class="or"><span>o</span></div>
+  <button class="btn btn--ghost" id="local-mode">TRABAJAR SIN CONEXIÓN A GITHUB</button>
+  <p class="hint">Sin conexión puedes editar todo y luego descargar los archivos actualizados para subirlos a tu hosting.</p>
+  <details class="hint"><summary>¿Cómo creo el token?</summary>
+   <ol>
+    <li>En GitHub abre <b>Settings → Developer settings → Personal access tokens → Fine-grained tokens</b>.</li>
+    <li>Elige <b>Only select repositories</b> y marca solo el repositorio del sitio.</li>
+    <li>En <b>Repository permissions</b> da a <b>Contents</b> el permiso <b>Read and write</b>.</li>
+    <li>Ponle una fecha de vencimiento y copia el token aquí.</li>
+   </ol>
+  </details>
+ </div>
+</section>
+
+<!-- ======== aplicación ======== -->
+<div id="app" hidden>
+ <header class="adm-top">
+  <a class="logo" href="../" target="_blank" rel="noopener"><b>LUXURY BIJOUX</b><span>Panel</span></a>
+  <nav class="adm-tabs" role="tablist">
+   <button role="tab" data-tab="productos" aria-selected="true">Productos</button>
+   <button role="tab" data-tab="categorias">Categorías</button>
+   <button role="tab" data-tab="colecciones">Colecciones</button>
+   <button role="tab" data-tab="ajustes">Ajustes</button>
+   <button role="tab" data-tab="importar">Importar / exportar</button>
+  </nav>
+  <div class="adm-status"><span id="mode"></span><span id="dirty" hidden>Cambios sin publicar</span>
+   <button class="btn" id="publish">PUBLICAR CAMBIOS</button><button class="btn btn--ghost" id="logout">SALIR</button></div>
+ </header>
+
+ <main class="adm-main">
+  <!-- productos -->
+  <section data-panel="productos">
+   <div class="adm-bar">
+    <input type="search" id="p-q" placeholder="Buscar por nombre, referencia o id…" aria-label="Buscar productos">
+    <select id="p-cat" aria-label="Categoría"><option value="">Todas las categorías</option></select>
+    <select id="p-col" aria-label="Colección"><option value="">Todas las colecciones</option></select>
+    <select id="p-flag" aria-label="Estado"><option value="">Todos</option><option value="destacado">Destacados</option><option value="novedad">Novedades</option><option value="oculto">Ocultos</option><option value="agotado">Agotados</option></select>
+    <button class="btn" id="p-new">NUEVO PRODUCTO</button>
+   </div>
+   <p class="adm-count" id="p-count"></p>
+   <div class="adm-list" id="p-list"></div>
+   <div class="adm-pager"><button class="btn btn--ghost" id="p-prev">ANTERIOR</button><span id="p-page"></span><button class="btn btn--ghost" id="p-next">SIGUIENTE</button></div>
+  </section>
+
+  <!-- categorías -->
+  <section data-panel="categorias" hidden>
+   <div class="adm-bar"><p>Las categorías organizan el menú y el catálogo. Una categoría sin productos no se muestra en el sitio.</p><button class="btn" id="c-new">NUEVA CATEGORÍA</button></div>
+   <div id="c-list" class="adm-cards"></div>
+  </section>
+
+  <!-- colecciones -->
+  <section data-panel="colecciones" hidden>
+   <div class="adm-bar"><p>Cada colección corresponde a un catálogo de origen. La fecha ordena «Más recientes».</p><button class="btn" id="k-new">NUEVA COLECCIÓN</button></div>
+   <div id="k-list" class="adm-cards"></div>
+  </section>
+
+  <!-- ajustes -->
+  <section data-panel="ajustes" hidden>
+   <form id="s-form" class="adm-form adm-grid2"></form>
+  </section>
+
+  <!-- importar/exportar -->
+  <section data-panel="importar" hidden>
+   <div class="adm-cards">
+    <div class="adm-card">
+     <h3>Importación masiva</h3>
+     <p>Sube un archivo <b>CSV</b> o <b>JSON</b>. Las filas con un <code>id</code> existente actualizan ese producto; las demás crean productos nuevos. Columnas: <code>id, nombre, referencia, categoria, coleccion, medidas, precios, descripcion, caracteristicas, imagenes, destacado, novedad, oculto, agotado</code>. Separa varias medidas, precios o imágenes con <code>|</code>.</p>
+     <input type="file" id="imp-file" accept=".csv,.json,text/csv,application/json">
+     <p id="imp-msg" class="ok" role="status"></p>
+     <button class="btn btn--ghost" id="tpl">DESCARGAR PLANTILLA CSV</button>
+    </div>
+    <div class="adm-card">
+     <h3>Exportar</h3>
+     <p>Descarga el inventario completo para respaldo o para editarlo en Excel o Google Sheets.</p>
+     <p class="row"><button class="btn btn--ghost" id="exp-csv">EXPORTAR CSV</button><button class="btn btn--ghost" id="exp-json">EXPORTAR JSON</button></p>
+    </div>
+    <div class="adm-card">
+     <h3>Archivos para hosting tradicional</h3>
+     <p>Descarga un ZIP con <code>data/</code> y las fotos nuevas. Cópialo sobre la carpeta <code>site/</code> del proyecto y ejecuta <code>python3 tools/build.py</code> antes de subirlo.</p>
+     <button class="btn" id="exp-zip">DESCARGAR CAMBIOS (ZIP)</button>
+    </div>
+   </div>
+  </section>
+ </main>
+</div>
+
+<!-- editor de producto -->
+<dialog id="editor" class="adm-dialog">
+ <form method="dialog" id="e-form" class="adm-form">
+  <header><h2 id="e-title">Editar producto</h2><button class="icon-btn" value="cancel" aria-label="Cerrar">✕</button></header>
+  <div class="adm-grid2">
+   <label>Nombre<input name="nombre" required></label>
+   <label>Referencia del proveedor<input name="referencia" placeholder="Solo si aparece en el catálogo"></label>
+   <label>Categoría<select name="categoria"></select></label>
+   <label>Colección<select name="coleccion"></select></label>
+   <label>Medidas <small>separadas por |</small><input name="medidas"></label>
+   <label>Precios <small>números, separados por |</small><input name="precios" inputmode="numeric"></label>
+   <label class="full">Descripción breve <small>si la dejas vacía se genera con los datos del catálogo</small><textarea name="descripcion" rows="2"></textarea></label>
+   <label class="full">Características verificadas<textarea name="caracteristicas" rows="2"></textarea></label>
+   <label class="full">Texto original del catálogo<textarea name="detalle" rows="2"></textarea></label>
+   <fieldset class="full flags"><legend>Estado</legend>
+    <label><input type="checkbox" name="destacado"> Destacado</label>
+    <label><input type="checkbox" name="novedad"> Novedad</label>
+    <label><input type="checkbox" name="agotado"> Agotado</label>
+    <label><input type="checkbox" name="oculto"> Oculto</label>
+   </fieldset>
+  </div>
+  <div class="imgs-edit"><h3>Fotografías</h3><div id="e-imgs"></div>
+   <label class="btn btn--ghost upl">SUBIR FOTOS<input type="file" id="e-upload" accept="image/*" multiple hidden></label>
+   <small>Se convierten a WebP en tu navegador, sin deformarse.</small></div>
+  <p class="src" id="e-src"></p>
+  <footer><button class="btn btn--ghost danger" type="button" id="e-del">ELIMINAR</button><span></span><button class="btn btn--ghost" value="cancel">CANCELAR</button><button class="btn" value="save" id="e-save">GUARDAR</button></footer>
+ </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="admin.js"></script>
+</body>
+</html>

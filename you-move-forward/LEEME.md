@@ -1,6 +1,6 @@
 # YOU MOVE FORWARD · Presentación interactiva U-MUVO
 
-Presentación digital de 30 diapositivas construida a partir del PDF «YOU MOVE FORWARD» (Summit Networkers · U-MUVO · One More Global).
+Presentación digital de 34 diapositivas: las 30 del PDF «YOU MOVE FORWARD» (Summit Networkers · U-MUVO · One More Global) más la sección «La nueva era: IA» (3 diapositivas) y el cierre de contacto con José Lugo.
 Funciona sin internet, sin instalar nada y sin servicios pagos.
 
 ```
@@ -34,12 +34,13 @@ ymf/
 | Notas del expositor | N | Botón de notas |
 | Activar / pausar animaciones | A | Ajustes ⚙ |
 | Pantalla negra (pausa) | B | — |
+| Asistente de preguntas | I | Botón ✦ «Pregunta al asistente» (abajo a la izquierda) |
 | Atajos | ? | Menú → Atajos de teclado |
 
 Otras funciones:
 
 - **Barra de progreso:** es la franja de colores inferior de la marca. Al pasar el cursor muestra cada sección y con un clic saltas a ella.
-- **Ajustes ⚙:** tipo de transición (desvanecer, deslizar, acercar o ninguna), animaciones y ocultar los controles en pantalla completa. Se recuerdan en ese navegador.
+- **Ajustes ⚙:** tipo de transición (cinemática, desvanecer, deslizar, acercar o ninguna), animaciones y ocultar los controles en pantalla completa. Se recuerdan en ese navegador.
 - **Modo expositor (P):** abre una segunda ventana con la diapositiva actual, la siguiente, tus notas, un cronómetro y la hora. Lleva la ventana principal al proyector y deja la del expositor en tu portátil. Si el navegador bloquea la ventana emergente, permite ventanas emergentes para el archivo.
 - **Imprimir / PDF (botón de impresora):** en el diálogo elige «Guardar como PDF» y activa «Gráficos de fondo». Sale una diapositiva por página (1920 × 1080).
 - **Compartir:** copia el enlace a la diapositiva actual (por ejemplo `…/index.html#/17`). Solo funciona cuando la presentación está publicada en internet.
@@ -54,14 +55,22 @@ Otras funciones:
 | 9 | Línea de tiempo: con → avanza etapa por etapa hasta la tecnología transdérmica |
 | 11, 12, 13, 14 | Productos y certificado ampliables (clic para hacer zoom) |
 | 13 | Selector de las 7 soluciones con su beneficio |
-| 15 | Animación del modelo tradicional frente a network marketing (botón para repetirla) |
-| 17 | Selección y resumen de cada franquicia |
-| 18, 19, 21, 23, 24, 25, 26 | Cifras con contador animado |
-| 20 | Calculadora del bono de inicio rápido (20 % – 30 %) |
-| 22 | Formar el equipo 4x4 tocando los cuatro círculos |
-| 23 | Árbol binario animado |
-| 24 | Anillos por nivel + simulador del bono uninivel |
-| 26 | Barras proporcionales del matching bonus |
+| 15 | Animación del modelo tradicional frente a network marketing |
+| **16** | **El salto: comparador arrastrable «MLM tradicional» frente a «MLM con IA» + botón «Dar el salto»** |
+| **17** | **Tu equipo de IA: 5 agentes que muestran un ejemplo escribiéndose al tocarlos** |
+| **18** | **Pruébalo en vivo: crea una invitación personalizada para un prospecto y envíala por WhatsApp** |
+| 20 | Selección y resumen de cada franquicia |
+| 21, 22, 24, 26–29 | Cifras con contador animado |
+| 23 | Calculadora del bono de inicio rápido (20 % – 30 %) |
+| 25 | Formar el equipo 4x4 tocando los cuatro círculos (con confeti) |
+| 26 | Árbol binario animado |
+| 27 | Anillos por nivel + simulador del bono uninivel |
+| 29 | Barras proporcionales del matching bonus |
+| **34** | **Comunícate con José Lugo: bandera de Colombia, +57 312 638 7467, WhatsApp, llamar y código QR** |
+
+**Asistente de la presentación (✦):** disponible en todas las diapositivas. Responde preguntas sobre productos, plan de compensación, certificaciones, IA y contacto. Lleva a la diapositiva correspondiente y puede leer las respuestas en voz alta (botón de altavoz). En Chrome también acepta preguntas por voz (micrófono). Funciona sin internet y responde **solo con la información de la presentación**: no es un modelo de IA conectado a la nube. Si no sabe algo, invita a escribirle a José por WhatsApp. Sus respuestas están en el JavaScript, en la lista `KB`.
+
+**Efectos:** red de partículas que reacciona al cursor (sección de IA y contacto), brillo que sigue al cursor, inclinación 3D de tarjetas, botones magnéticos, fotos con paralaje, títulos que se «decodifican», confeti, barra de progreso con destello y transición cinemática. Todo se apaga con la tecla **A** o en Ajustes, y respeta la opción «reducir movimiento» del sistema.
 
 ---
 
@@ -100,3 +109,7 @@ Abre `index.html` con cualquier editor de texto (VS Code, Bloc de notas, TextEdi
 **Colores.** Al inicio del `<style>`, en `:root`: `--navy`, `--blue`, `--cyan` y `--spectrum` (la franja de la marca).
 
 **Agregar una diapositiva.** Copia un bloque `<section class="slide" …>…</section>` completo, pégalo donde la quieras y cambia su `id` por uno nuevo y único (por ejemplo `s31`). El menú, el contador y la barra de progreso se actualizan solos.
+
+**Generador de invitaciones (diap. 18).** Los textos están en el JavaScript, en el objeto `T` (por interés: `salud`, `negocio`, `ambos`; por tono: `cercano`, `pro`). Puedes agregar más versiones a cada lista.
+
+**Contacto (diap. 34).** El número y el mensaje de WhatsApp están en el bloque `<!-- CONTACTO · JOSÉ LUGO -->`. Si cambias el número, cambia también el enlace `wa.me` y regenera el código QR.

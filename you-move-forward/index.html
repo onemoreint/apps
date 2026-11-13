@@ -593,6 +593,191 @@ dialog .act .btn{font-size:14px}
   #progress{height:5px}
 }
 
+
+/* ============ NUEVA ERA: IA (diapositivas oscuras) ============ */
+.dark{background:radial-gradient(120% 90% at 80% 0%,#12306b 0%,#071533 45%,#040b1f 100%);color:#eaf1ff}
+.dark .t{color:#fff}
+.dark .t .g{background:linear-gradient(90deg,#5fd0ff,#8f7bff 60%,#f9c3a9);-webkit-background-clip:text;background-clip:text;color:transparent}
+.dark .lead{color:#b9c8e8}
+.dark .lead b{color:#7fd3ff}
+.dark .mark{color:#cfe0ff}
+.fx-net{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.eyebrow-chip{display:inline-flex;align-items:center;gap:.5em;font-size:calc(var(--u)*.95);font-weight:600;color:#9fe0ff;background:rgba(95,208,255,.10);border:1px solid rgba(95,208,255,.30);padding:.45em 1em;border-radius:999px;margin-bottom:calc(var(--u)*1.6)}
+.eyebrow-chip i{width:8px;height:8px;border-radius:50%;background:#5fd0ff;box-shadow:0 0 12px #5fd0ff;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35;transform:scale(.7)}}
+.ia-wrap{position:absolute;inset:0;z-index:2;padding:calc(var(--u)*6) calc(var(--u)*6) calc(var(--u)*6.5);display:flex;flex-direction:column}
+.ia-head{max-width:calc(var(--u)*60)}
+.ia-head .lead{margin-top:.6em}
+
+/* Comparador antes / ahora */
+.cmpx{position:relative;flex:none;height:calc(var(--u)*21.5);margin-top:calc(var(--u)*2.2);border-radius:22px;overflow:hidden;--x:50%;min-height:calc(var(--u)*30);box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.cmpx .pane{position:absolute;inset:0;padding:calc(var(--u)*2.6) calc(var(--u)*3);display:flex;flex-direction:column}
+.cmpx .before{background:#ece9e2;color:#4b4b4b;clip-path:inset(0 calc(100% - var(--x)) 0 0);z-index:2;filter:saturate(.4)}
+.cmpx .after{background:linear-gradient(135deg,rgba(18,48,107,.92),rgba(36,22,94,.92));color:#eaf1ff;border:1px solid rgba(127,211,255,.25);border-radius:22px}
+.cmpx h4{font-size:calc(var(--u)*1.05);font-weight:700;letter-spacing:.08em;margin-bottom:calc(var(--u)*1.6)}
+.cmpx .after h4{color:#7fd3ff;text-align:right}
+.cmpx ul{list-style:none;display:grid;gap:calc(var(--u)*1.25)}
+.cmpx li{display:flex;gap:1em;align-items:center;font-size:calc(var(--u)*1.35);line-height:1.3}
+.cmpx .after li{justify-content:flex-end;text-align:right}
+.cmpx li svg{width:calc(var(--u)*2.4);height:calc(var(--u)*2.4);flex:none}
+.cmpx .before li svg{color:#8a8a8a}
+.cmpx .after li svg{color:#5fd0ff;filter:drop-shadow(0 0 6px rgba(95,208,255,.6))}
+.cmpx .handle{position:absolute;top:0;bottom:0;left:var(--x);width:3px;background:linear-gradient(#5fd0ff,#8f7bff);z-index:3;transform:translateX(-50%);box-shadow:0 0 18px rgba(95,208,255,.9)}
+.cmpx .handle::after{content:"⇆";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:calc(var(--u)*4.4);height:calc(var(--u)*4.4);min-width:40px;min-height:40px;border-radius:50%;background:#fff;color:var(--deep);display:grid;place-items:center;font-size:calc(var(--u)*1.6);font-weight:700;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.cmpx input[type=range]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;z-index:4;margin:0}
+.cmpx .tag{position:absolute;bottom:calc(var(--u)*1.6);font-size:calc(var(--u)*.9);font-weight:700;padding:.35em .9em;border-radius:999px;z-index:3}
+.cmpx .tag.l{left:calc(var(--u)*2);background:#d8d3c8;color:#555}
+.cmpx .tag.r{right:calc(var(--u)*2);background:rgba(95,208,255,.15);color:#7fd3ff;border:1px solid rgba(95,208,255,.4)}
+.leap{display:flex;gap:10px;margin-top:calc(var(--u)*1.8);flex-wrap:wrap}
+.btn.glow{background:linear-gradient(90deg,#2AA3DA,#6b5cff);box-shadow:0 0 0 0 rgba(95,208,255,.6);animation:glowp 2.4s infinite}
+@keyframes glowp{70%{box-shadow:0 0 0 14px rgba(95,208,255,0)}100%{box-shadow:0 0 0 0 rgba(95,208,255,0)}}
+.btn.line{background:transparent;border:1px solid rgba(255,255,255,.35)}
+.btn.line:hover{background:rgba(255,255,255,.1)}
+
+/* Agentes IA */
+.agents{display:grid;grid-template-columns:repeat(5,1fr);gap:calc(var(--u)*1.4);margin-top:calc(var(--u)*2.4);align-items:start}
+.agent{position:relative;text-align:left;border:1px solid rgba(127,211,255,.22);background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));backdrop-filter:blur(8px);border-radius:18px;padding:calc(var(--u)*1.8) calc(var(--u)*1.5);color:#eaf1ff;cursor:pointer;transition:border-color .3s,background .3s,box-shadow .3s;min-height:calc(var(--u)*17)}
+.agent:hover,.agent[aria-expanded="true"]{border-color:rgba(127,211,255,.7);box-shadow:0 20px 60px rgba(40,120,255,.25),inset 0 0 40px rgba(95,208,255,.08)}
+.agent .orb{width:calc(var(--u)*4.4);height:calc(var(--u)*4.4);border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#2AA3DA,#6b5cff);box-shadow:0 0 24px rgba(95,208,255,.5);margin-bottom:calc(var(--u)*1.4)}
+.agent .orb svg{width:55%;height:55%;color:#fff}
+.agent h3{font-size:calc(var(--u)*1.3);font-weight:700;margin-bottom:.4em}
+.agent p{font-size:calc(var(--u)*.98);color:#b9c8e8;line-height:1.45}
+.agent .run{margin-top:calc(var(--u)*1.2);font-size:calc(var(--u)*.85);font-weight:700;color:#7fd3ff;display:flex;align-items:center;gap:.5em}
+.agent .out{margin-top:calc(var(--u)*1.2);font-size:calc(var(--u)*.92);line-height:1.5;color:#dff4ff;background:rgba(0,0,0,.28);border:1px solid rgba(95,208,255,.25);border-radius:12px;padding:calc(var(--u)*1);min-height:calc(var(--u)*7);max-height:calc(var(--u)*13);overflow:auto;display:none;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.agent[aria-expanded="true"] .out{display:block}
+.caret::after{content:"▌";animation:blink 1s steps(1) infinite;color:#5fd0ff;margin-left:2px}
+@keyframes blink{50%{opacity:0}}
+.foot-note{margin-top:calc(var(--u)*1.6);font-size:calc(var(--u)*.85);color:#7f93bd}
+
+/* Demo en vivo */
+.live{display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--u)*4);margin-top:calc(var(--u)*2.6);flex:1;align-items:center}
+.gen{background:rgba(255,255,255,.06);border:1px solid rgba(127,211,255,.25);border-radius:20px;padding:calc(var(--u)*2.2);backdrop-filter:blur(8px)}
+.gen label{display:block;font-size:calc(var(--u)*.95);font-weight:600;color:#b9c8e8;margin:0 0 .5em}
+.gen input{width:100%;background:rgba(0,0,0,.25);border:1px solid rgba(127,211,255,.3);border-radius:12px;padding:.75em .9em;font-size:calc(var(--u)*1.2);color:#fff;font-weight:600}
+.gen input::placeholder{color:#7f93bd}
+.gen .seg{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:calc(var(--u)*1.6)}
+.gen .seg button{border:1px solid rgba(127,211,255,.35);background:transparent;color:#dbe7ff;border-radius:999px;padding:.55em 1.1em;font-size:calc(var(--u)*.98);font-weight:600;cursor:pointer;transition:.25s}
+.gen .seg button[aria-pressed="true"]{background:linear-gradient(90deg,#2AA3DA,#6b5cff);border-color:transparent;color:#fff}
+.gen .field{margin-bottom:calc(var(--u)*1.6)}
+.phone{justify-self:center;width:min(100%,calc(var(--u)*30));background:#0b141a;border-radius:34px;padding:12px;box-shadow:0 40px 100px rgba(0,0,0,.55),0 0 0 2px rgba(127,211,255,.25)}
+.phone .bar{display:flex;align-items:center;gap:10px;background:#1f2c34;color:#e9edef;border-radius:24px 24px 0 0;padding:12px 14px;font-size:14px;font-weight:600}
+.phone .bar i{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#2AA3DA,#6b5cff);display:grid;place-items:center;font-style:normal;font-size:13px}
+.phone .chat{background:#0b141a url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23ffffff10'/%3E%3C/svg%3E");min-height:calc(var(--u)*27);padding:14px;border-radius:0 0 24px 24px;display:flex;flex-direction:column;justify-content:flex-end}
+.bubble{align-self:flex-end;max-width:92%;background:#005c4b;color:#e9edef;border-radius:12px 12px 2px 12px;padding:10px 12px;font-size:calc(var(--u)*1.02);line-height:1.45;white-space:pre-wrap;min-height:1.5em}
+.bubble.empty{opacity:.5;font-style:italic;background:#1f2c34}
+.thinking{align-self:flex-end;display:none;gap:5px;background:#1f2c34;border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.thinking.on{display:flex}
+.thinking span{width:7px;height:7px;border-radius:50%;background:#8696a0;animation:bob 1s infinite}
+.thinking span:nth-child(2){animation-delay:.15s}.thinking span:nth-child(3){animation-delay:.3s}
+@keyframes bob{50%{transform:translateY(-5px);opacity:.5}}
+.gen .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:calc(var(--u)*1.6)}
+.gen .acts .btn{font-size:calc(var(--u)*1)}
+.btn.wa{background:#25D366;color:#06301a}.btn.wa:hover{background:#2ee673}
+
+/* ============ CONTACTO ============ */
+#contacto .ia-wrap{justify-content:center;align-items:center;text-align:center}
+.flag{width:calc(var(--u)*9);aspect-ratio:3/2;border-radius:8px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.45);transform-origin:left center;animation:wave 3.2s ease-in-out infinite}
+.flag svg{width:100%;height:100%;display:block}
+@keyframes wave{0%,100%{transform:perspective(400px) rotateY(0) skewY(0)}50%{transform:perspective(400px) rotateY(-14deg) skewY(-2deg)}}
+#contacto .call{font-size:calc(var(--u)*1.5);color:#b9c8e8;margin-top:calc(var(--u)*2.4);font-weight:400}
+#contacto .who{font-size:calc(var(--u)*6);font-weight:800;line-height:1;letter-spacing:-.02em;margin-top:.15em;background:linear-gradient(90deg,#fff 0%,#9fe0ff 50%,#f9c3a9 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+#contacto .crank{margin-top:calc(var(--u)*1);font-size:calc(var(--u)*1.15);color:#7fd3ff;font-weight:600;letter-spacing:.06em}
+.phone-line{display:inline-flex;align-items:center;gap:calc(var(--u)*1.4);margin-top:calc(var(--u)*2.6);background:rgba(255,255,255,.07);border:1px solid rgba(127,211,255,.3);border-radius:999px;padding:calc(var(--u)*.9) calc(var(--u)*2.4) calc(var(--u)*.9) calc(var(--u)*1)}
+.phone-line .mini{width:calc(var(--u)*4.2);aspect-ratio:3/2;border-radius:5px;overflow:hidden;flex:none}
+.phone-line b{font-size:calc(var(--u)*3);font-weight:800;color:#fff;letter-spacing:.01em;font-variant-numeric:tabular-nums}
+.c-acts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:calc(var(--u)*2.6)}
+.c-acts .btn{font-size:calc(var(--u)*1.15);padding:.9em 1.6em}
+.c-grid{display:flex;align-items:center;gap:calc(var(--u)*5)}
+.qrbox{background:#fff;border-radius:18px;padding:calc(var(--u)*1.2);box-shadow:0 30px 80px rgba(0,0,0,.45);text-align:center}
+.qrbox .qr{width:calc(var(--u)*15);height:calc(var(--u)*15);display:block}
+.qrbox small{display:block;color:var(--deep);font-size:calc(var(--u)*.9);font-weight:700;margin-top:.5em}
+
+/* ============ ASISTENTE ============ */
+#askBtn{position:fixed;left:14px;bottom:20px;z-index:52;display:flex;align-items:center;gap:8px;height:46px;padding:0 18px 0 14px;border-radius:999px;border:0;cursor:pointer;color:#fff;font-weight:700;font-size:14px;background:linear-gradient(90deg,#2AA3DA,#6b5cff);box-shadow:0 10px 30px rgba(60,90,255,.4);transition:transform .25s,opacity .4s}
+#askBtn:hover{transform:translateY(-2px)}
+#askBtn .spark{width:20px;height:20px;animation:spin 8s linear infinite}
+body.idle #askBtn{opacity:0;pointer-events:none}
+.embed #askBtn,.embed #glow{display:none}
+#ask{position:fixed;left:14px;bottom:76px;width:min(420px,calc(100vw - 28px));height:min(560px,calc(100vh - 110px));z-index:75;border-radius:22px;overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(180deg,#0b1a3d,#050d24);color:#eaf1ff;box-shadow:0 30px 90px rgba(0,0,0,.45),0 0 0 1px rgba(127,211,255,.25);transform:translateY(20px) scale(.97);opacity:0;pointer-events:none;transition:.35s var(--ease)}
+#ask.open{transform:none;opacity:1;pointer-events:auto}
+#ask header{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(127,211,255,.18)}
+#ask header .av{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#2AA3DA,#6b5cff);display:grid;place-items:center;box-shadow:0 0 18px rgba(95,208,255,.5)}
+#ask header .av svg{width:22px;height:22px;color:#fff}
+#ask header b{display:block;font-size:15px}#ask header small{font-size:12px;color:#8fa6d6}
+#ask header .tools{margin-left:auto;display:flex;gap:6px}
+#ask header .tools button{width:34px;height:34px;border-radius:10px;border:1px solid rgba(127,211,255,.25);background:transparent;color:#cfe0ff;cursor:pointer;display:grid;place-items:center}
+#ask header .tools button[aria-pressed="true"]{background:rgba(95,208,255,.18);color:#fff}
+#ask header .tools svg{width:17px;height:17px}
+#askLog{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:88%;padding:10px 13px;border-radius:14px;font-size:14px;line-height:1.5}
+.msg.u{align-self:flex-end;background:#2B5FB5;border-bottom-right-radius:4px}
+.msg.a{align-self:flex-start;background:rgba(255,255,255,.07);border:1px solid rgba(127,211,255,.18);border-bottom-left-radius:4px}
+.msg.a .go{display:inline-flex;margin-top:8px;font-size:12px;font-weight:700;color:#7fd3ff;background:rgba(95,208,255,.12);border:1px solid rgba(95,208,255,.35);border-radius:999px;padding:5px 10px;cursor:pointer}
+.msg.a a{color:#7fd3ff}
+#askChips{display:flex;gap:6px;flex-wrap:wrap;padding:0 16px 10px}
+#askChips button{font-size:12px;border:1px solid rgba(127,211,255,.3);background:transparent;color:#cfe0ff;border-radius:999px;padding:6px 10px;cursor:pointer}
+#askChips button:hover{background:rgba(95,208,255,.12)}
+#askForm{display:flex;gap:8px;padding:12px;border-top:1px solid rgba(127,211,255,.18)}
+#askForm input{flex:1;background:rgba(0,0,0,.25);border:1px solid rgba(127,211,255,.3);border-radius:12px;padding:10px 12px;color:#fff;font-size:14px}
+#askForm button{border:0;border-radius:12px;width:44px;cursor:pointer;color:#fff;background:linear-gradient(135deg,#2AA3DA,#6b5cff)}
+#askForm button svg{width:18px;height:18px}
+#askForm .mic{background:rgba(255,255,255,.08)}
+#askForm .mic.rec{background:#e5484d;animation:glowp 1.4s infinite}
+
+/* ============ EFECTOS GLOBALES ============ */
+#glow{position:fixed;left:0;top:0;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;pointer-events:none;z-index:30;background:radial-gradient(circle,rgba(42,163,218,.13),rgba(118,49,218,.06) 40%,transparent 70%);transform:translate(var(--gx,-999px),var(--gy,-999px));transition:opacity .4s;mix-blend-mode:multiply}
+body.on-dark #glow{mix-blend-mode:screen;background:radial-gradient(circle,rgba(95,208,255,.16),rgba(143,123,255,.08) 40%,transparent 70%)}
+.noanim #glow{display:none}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:88}
+.photo img{translate:calc(var(--mx,0)*-14px) calc(var(--my,0)*-10px);scale:1.04;transition:translate .6s var(--ease)}
+.noanim .photo img{translate:none}
+[data-tilt]{transform-style:preserve-3d;will-change:transform}
+#progress i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);background-size:30% 100%;background-repeat:no-repeat;animation:shine 3.2s linear infinite}
+@keyframes shine{from{background-position:-40% 0}to{background-position:140% 0}}
+.noanim #progress i::after{animation:none;display:none}
+[data-tr="cine"] .slide{transform:scale(1.06);filter:blur(10px);transition:opacity var(--tr) var(--ease),transform var(--tr) var(--ease),filter var(--tr) var(--ease),visibility 0s linear var(--tr)}
+[data-tr="cine"] .slide.active{filter:none;transition:opacity var(--tr) var(--ease),transform var(--tr) var(--ease),filter var(--tr) var(--ease),visibility 0s}
+[data-tr="cine"] .slide.leaving{transform:scale(.96);filter:blur(10px)}
+.scr{font-variant-ligatures:none}
+
+@media (max-width:860px),(orientation:portrait) and (max-width:1100px){
+  .ia-wrap{position:relative;padding:72px 18px 110px;min-height:100%}
+  .cmpx{height:auto;min-height:0;overflow:visible;box-shadow:none;display:grid;gap:12px}
+  .cmpx .pane{position:relative;inset:auto;border-radius:18px}
+  .cmpx .before{clip-path:none;order:1;opacity:calc(.35 + var(--x)*.0065)}
+  .cmpx .after{order:2;opacity:calc(1 - var(--x)*.0065);transform:scale(calc(.96 + (100 - var(--x))*.0004))}
+  .cmpx .after li{justify-content:flex-end;text-align:left;flex-direction:row-reverse}
+  .cmpx .after h4{text-align:left;flex-direction:row}
+  .cmpx .handle,.cmpx .tag,.cmpx input{display:none}
+  .cmpx li{font-size:14px}.cmpx h4{font-size:12px}.cmpx li svg{width:22px;height:22px}
+  .cmpx .pane{padding:18px 14px}
+  .agents{grid-template-columns:1fr 1fr;gap:10px}.agent{min-height:0;padding:14px}.agent h3{font-size:15px}.agent p{font-size:12.5px}.agent .out{font-size:12px}.agent .run{font-size:11px}
+  .agent:last-child{grid-column:1/-1}
+  .live{grid-template-columns:1fr;gap:20px}
+  .gen label{font-size:13px}.gen input{font-size:16px}.gen .seg button{font-size:13px}.gen .acts .btn{font-size:14px}
+  .bubble{font-size:14px}
+  .eyebrow-chip{font-size:12px}
+  .foot-note{font-size:11px}
+  .c-grid{flex-direction:column;gap:22px}
+  .flag{width:90px}#contacto .call{font-size:16px}#contacto .who{font-size:44px}#contacto .crank{font-size:13px}
+  .phone-line b{font-size:24px}.phone-line .mini{width:38px}.phone-line{padding:8px 18px 8px 8px}
+  .c-acts .btn{font-size:15px}
+  .qrbox .qr{width:150px;height:150px}.qrbox small{font-size:12px}
+  #askBtn{bottom:16px;left:12px;height:40px;width:40px;padding:0;justify-content:center;font-size:0;gap:0}
+  #askBtn .spark{width:20px;height:20px}
+  #ask{bottom:66px;height:min(540px,calc(100vh - 140px))}
+  #glow{display:none}
+}
+@media print{
+  .fx-net,#glow,#confetti,#askBtn,#ask,.cmpx input,.gen .acts,.c-acts{display:none!important}
+  .photo img{translate:none!important;scale:1!important}
+  [data-tr] .slide{filter:none!important}
+  .cmpx{--x:50%!important}
+  .agent .out{display:block!important}
+  .flag{animation:none}
+}
+@media (prefers-reduced-motion:reduce){.flag,.eyebrow-chip i,#askBtn .spark,.btn.glow{animation:none}}
+
 /* ============ IMPRESIÓN / EXPORTAR PDF ============ */
 @page{size:1920px 1080px;margin:0}
 @media print{
@@ -653,6 +838,14 @@ dialog .act .btn{font-size:14px}
   <symbol id="i-heroes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="10" r="2.4"/><path d="M5 6l4 5v8M19 6l-4 5v8M9 19h6M12 3v1.5M10.5 3.8H13.5"/><path d="M4 4.5h2M5 3.5v2M18 4.5h2M19 3.5v2"/></symbol>
   <symbol id="i-infinity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 12c-2-2.5-3.5-4-6-4a4 4 0 0 0 0 8c2.5 0 4-1.5 6-4zm0 0c2 2.5 3.5 4 6 4a4 4 0 0 0 0-8c-2.5 0-4 1.5-6 4z"/></symbol>
   <symbol id="i-zoom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4M11 8v6M8 11h6"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.6L19.5 9.5l-5.7 1.9L12 17l-1.8-5.6L4.5 9.5l5.7-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h10l3 3v15H6zM9 8h7M9 12h7M9 16h4M3.5 7v12"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5" stroke-linecap="round"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3a2.6 2.6 0 0 0-.8 1.9 4.5 4.5 0 0 0 1 2.4 10.3 10.3 0 0 0 4 3.5c1.5.6 2 .7 2.8.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2z"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+  <symbol id="i-speaker" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" stroke-linecap="round"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24" fill="currentColor"><path d="M3 20.5 21 12 3 3.5 3 10l12 2-12 2z"/></symbol>
  </defs>
 </svg>
 
@@ -919,6 +1112,100 @@ dialog .act .btn{font-size:14px}
   </div>
   <p class="quote rv">Las mejores ideas no se anuncian. <b>Se comparten</b></p>
   <aside class="notes">Compara: el modelo tradicional pasa por fabricante, publicidad, distribución, tienda y consumidor. En network marketing, U-MUVO llega a las personas sin intermediarios.</aside>
+</section>
+
+
+<!-- IA-1 · EL SALTO (sección nueva, no viene del PDF) -->
+<section class="slide dark" id="ia1" data-title="El salto: MLM con IA" data-section="La nueva era: IA">
+  <canvas class="fx-net" aria-hidden="true"></canvas>
+  <span class="mark">U·MUVO</span>
+  <div class="ia-wrap">
+    <div class="ia-head">
+      <span class="eyebrow-chip rv"><i></i>Inteligencia artificial + network marketing</span>
+      <h2 class="t rv"><span class="scr" data-scramble>La nueva manera de hacer</span><span class="g">network marketing</span></h2>
+      <p class="lead rv">El modelo cambió y las herramientas también. Arrastra la línea para ver el salto.</p>
+      <div class="leap rv"><button class="btn glow" id="leapBtn"><svg viewBox="0 0 24 24"><use href="#i-spark"/></svg>Dar el salto</button><button class="btn line" id="backBtn">Ver el antes</button></div>
+    </div>
+    <div class="cmpx rv" id="cmpx">
+      <div class="pane after">
+        <h4>AHORA · CON IA</h4>
+        <ul>
+          <li>Prospección por intereses en redes sociales<svg viewBox="0 0 24 24"><use href="#i-target"/></svg></li>
+          <li>Mensajes personalizados en segundos<svg viewBox="0 0 24 24"><use href="#i-spark"/></svg></li>
+          <li>Presentación digital interactiva, disponible 24/7<svg viewBox="0 0 24 24"><use href="#i-globe"/></svg></li>
+          <li>Seguimiento organizado con CRM y recordatorios<svg viewBox="0 0 24 24"><use href="#i-chart"/></svg></li>
+          <li>Sistema duplicable: plantillas, IA y entrenamiento<svg viewBox="0 0 24 24"><use href="#i-team"/></svg></li>
+        </ul>
+      </div>
+      <div class="pane before">
+        <h4>ANTES · MLM TRADICIONAL</h4>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><use href="#i-user"/></svg>Lista de familiares y amigos</li>
+          <li><svg viewBox="0 0 24 24"><use href="#i-phone"/></svg>Llamadas en frío y mensajes genéricos</li>
+          <li><svg viewBox="0 0 24 24"><use href="#i-people"/></svg>La misma presentación en cada reunión</li>
+          <li><svg viewBox="0 0 24 24"><use href="#i-note"/></svg>Seguimiento en libreta o de memoria</li>
+          <li><svg viewBox="0 0 24 24"><use href="#i-cycle"/></svg>Duplicación lenta: cada quien a su manera</li>
+        </ul>
+      </div>
+      <div class="handle" aria-hidden="true"></div>
+      <span class="tag l">Antes</span><span class="tag r">Ahora</span>
+      <input type="range" min="0" max="100" value="50" aria-label="Comparar MLM tradicional y MLM con IA">
+    </div>
+  </div>
+  <aside class="notes">Nueva sección: el salto del MLM tradicional al MLM con inteligencia artificial. Arrastra la línea o toca «Dar el salto» para mostrar la diferencia, punto por punto.</aside>
+</section>
+
+<!-- IA-2 · TU EQUIPO DE IA -->
+<section class="slide dark" id="ia2" data-title="Tu equipo de IA" data-section="La nueva era: IA">
+  <canvas class="fx-net" aria-hidden="true"></canvas>
+  <span class="mark">U·MUVO</span>
+  <div class="ia-wrap">
+    <div class="ia-head">
+      <span class="eyebrow-chip rv"><i></i>Agentes trabajando para ti</span>
+      <h2 class="t rv"><span class="scr" data-scramble>Tu equipo de</span><span class="g">inteligencia artificial</span></h2>
+      <p class="lead rv">Así trabaja hoy un networker con herramientas de IA. Toca cada agente para verlo en acción.</p>
+    </div>
+    <div class="agents rv">
+      <button class="agent" data-tilt aria-expanded="false" data-out="Idea de video para hoy:&#10;«¿Te despiertas cansado aunque duermas ocho horas?»&#10;→ Gancho, guion de 30 s y texto para TikTok listos."><div class="orb"><svg viewBox="0 0 24 24"><use href="#i-camera"/></svg></div><h3>Creador de contenido</h3><p>Ideas, guiones y textos para tus redes en minutos.</p><span class="run">▶ Ver en acción</span><div class="out"></div></button>
+      <button class="agent" data-tilt aria-expanded="false" data-out="Analizando comentarios nuevos…&#10;→ Interesados en producto&#10;→ Interesados en el negocio&#10;Lista priorizada lista para contactar."><div class="orb"><svg viewBox="0 0 24 24"><use href="#i-target"/></svg></div><h3>Prospectador</h3><p>Encuentra y ordena a las personas con más interés.</p><span class="run">▶ Ver en acción</span><div class="out"></div></button>
+      <button class="agent" data-tilt aria-expanded="false" data-out="Hoy escribe a Laura: vio la presentación ayer.&#10;Sugerencia: «Laura, ¿qué fue lo que más te llamó la atención?»"><div class="orb"><svg viewBox="0 0 24 24"><use href="#i-chat"/></svg></div><h3>Asistente de seguimiento</h3><p>Te recuerda a quién escribir y qué decir.</p><span class="run">▶ Ver en acción</span><div class="out"></div></button>
+      <button class="agent" data-tilt aria-expanded="false" data-out="Socio: ¿cómo funciona el bono 4x4?&#10;IA: Afilia cuatro personas que sumen 1.000 CV y obtienes activación gratis, producto gratis y un bono extra de USD 200."><div class="orb"><svg viewBox="0 0 24 24"><use href="#i-cap"/></svg></div><h3>Entrenador del equipo</h3><p>Responde las dudas de tus socios con la información del plan.</p><span class="run">▶ Ver en acción</span><div class="out"></div></button>
+      <button class="agent" data-tilt aria-expanded="false" data-out="Resumen semanal:&#10;Tus videos de producto generaron más conversaciones que los de oportunidad.&#10;→ Recomendación: crea dos más esta semana."><div class="orb"><svg viewBox="0 0 24 24"><use href="#i-trend"/></svg></div><h3>Analista de resultados</h3><p>Te muestra qué funciona y dónde enfocarte.</p><span class="run">▶ Ver en acción</span><div class="out"></div></button>
+    </div>
+    <p class="foot-note rv">Ejemplos ilustrativos de cómo se apoya un networker en herramientas de IA.</p>
+  </div>
+  <aside class="notes">Cinco agentes de IA: creador de contenido, prospectador, asistente de seguimiento, entrenador del equipo y analista de resultados. Toca cada tarjeta para mostrar un ejemplo.</aside>
+</section>
+
+<!-- IA-3 · PRUÉBALO EN VIVO -->
+<section class="slide dark" id="ia3" data-title="Pruébalo en vivo" data-section="La nueva era: IA">
+  <canvas class="fx-net" aria-hidden="true"></canvas>
+  <span class="mark">U·MUVO</span>
+  <div class="ia-wrap">
+    <div class="ia-head">
+      <span class="eyebrow-chip rv"><i></i>Demostración en vivo</span>
+      <h2 class="t rv"><span class="scr" data-scramble>Una invitación personalizada</span><span class="g">en segundos</span></h2>
+    </div>
+    <div class="live">
+      <form class="gen rv" id="gen" onsubmit="return false">
+        <div class="field"><label for="gName">Nombre de la persona</label><input id="gName" autocomplete="off" placeholder="Ej.: Laura"></div>
+        <label>¿Qué le interesa?</label>
+        <div class="seg" data-k="int"><button type="button" aria-pressed="true" data-v="salud">Bienestar</button><button type="button" aria-pressed="false" data-v="negocio">Ingresos extra</button><button type="button" aria-pressed="false" data-v="ambos">Ambos</button></div>
+        <label>Tono</label>
+        <div class="seg" data-k="tono"><button type="button" aria-pressed="true" data-v="cercano">Cercano</button><button type="button" aria-pressed="false" data-v="pro">Profesional</button></div>
+        <div class="acts">
+          <button type="button" class="btn glow" id="gGo"><svg viewBox="0 0 24 24"><use href="#i-spark"/></svg>Crear invitación</button>
+          <button type="button" class="btn line" id="gCopy" disabled>Copiar</button>
+          <a class="btn wa" id="gWa" href="#" target="_blank" rel="noopener" aria-disabled="true"><svg viewBox="0 0 24 24"><use href="#i-wa"/></svg>Enviar por WhatsApp</a>
+        </div>
+      </form>
+      <div class="phone rv" aria-live="polite">
+        <div class="bar"><i>✦</i><div>Nueva conversación<br><small style="font-weight:400;color:#8696a0">WhatsApp</small></div></div>
+        <div class="chat"><div class="thinking"><span></span><span></span><span></span></div><div class="bubble empty" id="gOut">Escribe un nombre y toca «Crear invitación».</div></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">Demostración en vivo: pide al público un nombre, elige el interés y el tono, y crea una invitación personalizada lista para enviar por WhatsApp con el enlace a esta presentación.</aside>
 </section>
 
 <!-- 16 · PLAN DE COMPENSACIÓN -->
@@ -1191,9 +1478,32 @@ dialog .act .btn{font-size:14px}
 <!-- 30 · SUMMIT -->
 <section class="slide" id="s30" data-title="Summit Networkers" data-section="Cierre">
   <div class="bg"><img src="assets/img/s30.jpg" alt="Collage en blanco y negro de personas haciendo deporte con el logo de Summit Networkers"></div>
-  <div class="end"><button class="btn ghost" data-go="0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg>Volver al inicio</button><button class="btn ghost" data-share><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/></svg>Compartir presentación</button></div>
+  <div class="end"><button class="btn ghost" data-go="0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg>Volver al inicio</button><button class="btn ghost" data-go-id="contacto"><svg viewBox="0 0 24 24"><use href="#i-wa"/></svg>Contactar a José Lugo</button><button class="btn ghost" data-share><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/></svg>Compartir presentación</button></div>
   <p class="sign30">Creado por José Lugo · Diamante Imperial · +57 312 638 7467</p>
   <aside class="notes">Summit Networkers. Gracias. Abre el espacio para preguntas y próximos pasos.</aside>
+</section>
+
+
+<!-- CONTACTO · JOSÉ LUGO -->
+<section class="slide dark" id="contacto" data-title="Comunícate con José Lugo" data-section="Cierre">
+  <canvas class="fx-net" aria-hidden="true"></canvas>
+  <div class="ia-wrap">
+    <div class="c-grid">
+      <div>
+        <div class="flag rv" style="margin:0 auto" role="img" aria-label="Bandera de Colombia"><svg viewBox="0 0 3 2" preserveAspectRatio="none"><rect width="3" height="1" fill="#FCD116"/><rect y="1" width="3" height=".5" fill="#003893"/><rect y="1.5" width="3" height=".5" fill="#CE1126"/></svg></div>
+        <p class="call rv">Comunícate con</p>
+        <p class="who rv">José Lugo</p>
+        <p class="crank rv">Diamante Imperial · Summit Networkers</p>
+        <div class="phone-line rv"><span class="mini" aria-hidden="true"><svg viewBox="0 0 3 2" preserveAspectRatio="none" width="100%" height="100%"><rect width="3" height="1" fill="#FCD116"/><rect y="1" width="3" height=".5" fill="#003893"/><rect y="1.5" width="3" height=".5" fill="#CE1126"/></svg></span><b>+57 312 638 7467</b></div>
+        <div class="c-acts rv">
+          <a class="btn wa" href="https://wa.me/573126387467?text=Hola%20Jos%C3%A9%2C%20vi%20la%20presentaci%C3%B3n%20YOU%20MOVE%20FORWARD%20y%20quiero%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><use href="#i-wa"/></svg>Escribir por WhatsApp</a>
+          <a class="btn line" href="tel:+573126387467"><svg viewBox="0 0 24 24"><use href="#i-phone"/></svg>Llamar</a>
+        </div>
+      </div>
+      <div class="qrbox rv"><svg class="qr" viewBox="0 0 51 51" shape-rendering="crispEdges" role="img" aria-label="Código QR para escribir a José Lugo por WhatsApp"><rect width="51" height="51" fill="#fff"/><path d="M1,1h1v1h-1zM2,1h1v1h-1zM3,1h1v1h-1zM4,1h1v1h-1zM5,1h1v1h-1zM6,1h1v1h-1zM7,1h1v1h-1zM9,1h1v1h-1zM10,1h1v1h-1zM11,1h1v1h-1zM12,1h1v1h-1zM13,1h1v1h-1zM14,1h1v1h-1zM15,1h1v1h-1zM17,1h1v1h-1zM19,1h1v1h-1zM22,1h1v1h-1zM24,1h1v1h-1zM25,1h1v1h-1zM26,1h1v1h-1zM27,1h1v1h-1zM29,1h1v1h-1zM30,1h1v1h-1zM31,1h1v1h-1zM33,1h1v1h-1zM34,1h1v1h-1zM36,1h1v1h-1zM38,1h1v1h-1zM41,1h1v1h-1zM43,1h1v1h-1zM44,1h1v1h-1zM45,1h1v1h-1zM46,1h1v1h-1zM47,1h1v1h-1zM48,1h1v1h-1zM49,1h1v1h-1zM1,2h1v1h-1zM7,2h1v1h-1zM12,2h1v1h-1zM13,2h1v1h-1zM17,2h1v1h-1zM19,2h1v1h-1zM20,2h1v1h-1zM21,2h1v1h-1zM24,2h1v1h-1zM26,2h1v1h-1zM28,2h1v1h-1zM29,2h1v1h-1zM31,2h1v1h-1zM33,2h1v1h-1zM34,2h1v1h-1zM35,2h1v1h-1zM36,2h1v1h-1zM39,2h1v1h-1zM40,2h1v1h-1zM41,2h1v1h-1zM43,2h1v1h-1zM49,2h1v1h-1zM1,3h1v1h-1zM3,3h1v1h-1zM4,3h1v1h-1zM5,3h1v1h-1zM7,3h1v1h-1zM10,3h1v1h-1zM12,3h1v1h-1zM15,3h1v1h-1zM18,3h1v1h-1zM24,3h1v1h-1zM26,3h1v1h-1zM28,3h1v1h-1zM30,3h1v1h-1zM31,3h1v1h-1zM32,3h1v1h-1zM33,3h1v1h-1zM35,3h1v1h-1zM36,3h1v1h-1zM37,3h1v1h-1zM40,3h1v1h-1zM41,3h1v1h-1zM43,3h1v1h-1zM45,3h1v1h-1zM46,3h1v1h-1zM47,3h1v1h-1zM49,3h1v1h-1zM1,4h1v1h-1zM3,4h1v1h-1zM4,4h1v1h-1zM5,4h1v1h-1zM7,4h1v1h-1zM9,4h1v1h-1zM12,4h1v1h-1zM13,4h1v1h-1zM15,4h1v1h-1zM16,4h1v1h-1zM19,4h1v1h-1zM22,4h1v1h-1zM25,4h1v1h-1zM28,4h1v1h-1zM29,4h1v1h-1zM30,4h1v1h-1zM32,4h1v1h-1zM36,4h1v1h-1zM37,4h1v1h-1zM40,4h1v1h-1zM43,4h1v1h-1zM45,4h1v1h-1zM46,4h1v1h-1zM47,4h1v1h-1zM49,4h1v1h-1zM1,5h1v1h-1zM3,5h1v1h-1zM4,5h1v1h-1zM5,5h1v1h-1zM7,5h1v1h-1zM9,5h1v1h-1zM10,5h1v1h-1zM11,5h1v1h-1zM14,5h1v1h-1zM15,5h1v1h-1zM16,5h1v1h-1zM18,5h1v1h-1zM19,5h1v1h-1zM23,5h1v1h-1zM24,5h1v1h-1zM25,5h1v1h-1zM26,5h1v1h-1zM27,5h1v1h-1zM28,5h1v1h-1zM31,5h1v1h-1zM43,5h1v1h-1zM45,5h1v1h-1zM46,5h1v1h-1zM47,5h1v1h-1zM49,5h1v1h-1zM1,6h1v1h-1zM7,6h1v1h-1zM9,6h1v1h-1zM12,6h1v1h-1zM13,6h1v1h-1zM14,6h1v1h-1zM16,6h1v1h-1zM17,6h1v1h-1zM18,6h1v1h-1zM20,6h1v1h-1zM22,6h1v1h-1zM23,6h1v1h-1zM27,6h1v1h-1zM29,6h1v1h-1zM30,6h1v1h-1zM33,6h1v1h-1zM34,6h1v1h-1zM35,6h1v1h-1zM36,6h1v1h-1zM38,6h1v1h-1zM39,6h1v1h-1zM43,6h1v1h-1zM49,6h1v1h-1zM1,7h1v1h-1zM2,7h1v1h-1zM3,7h1v1h-1zM4,7h1v1h-1zM5,7h1v1h-1zM6,7h1v1h-1zM7,7h1v1h-1zM9,7h1v1h-1zM11,7h1v1h-1zM13,7h1v1h-1zM15,7h1v1h-1zM17,7h1v1h-1zM19,7h1v1h-1zM21,7h1v1h-1zM23,7h1v1h-1zM25,7h1v1h-1zM27,7h1v1h-1zM29,7h1v1h-1zM31,7h1v1h-1zM33,7h1v1h-1zM35,7h1v1h-1zM37,7h1v1h-1zM39,7h1v1h-1zM41,7h1v1h-1zM43,7h1v1h-1zM44,7h1v1h-1zM45,7h1v1h-1zM46,7h1v1h-1zM47,7h1v1h-1zM48,7h1v1h-1zM49,7h1v1h-1zM9,8h1v1h-1zM11,8h1v1h-1zM12,8h1v1h-1zM15,8h1v1h-1zM17,8h1v1h-1zM20,8h1v1h-1zM21,8h1v1h-1zM23,8h1v1h-1zM27,8h1v1h-1zM31,8h1v1h-1zM33,8h1v1h-1zM34,8h1v1h-1zM35,8h1v1h-1zM37,8h1v1h-1zM39,8h1v1h-1zM40,8h1v1h-1zM41,8h1v1h-1zM1,9h1v1h-1zM5,9h1v1h-1zM7,9h1v1h-1zM8,9h1v1h-1zM9,9h1v1h-1zM11,9h1v1h-1zM12,9h1v1h-1zM13,9h1v1h-1zM14,9h1v1h-1zM22,9h1v1h-1zM23,9h1v1h-1zM24,9h1v1h-1zM25,9h1v1h-1zM26,9h1v1h-1zM27,9h1v1h-1zM28,9h1v1h-1zM31,9h1v1h-1zM33,9h1v1h-1zM37,9h1v1h-1zM39,9h1v1h-1zM40,9h1v1h-1zM41,9h1v1h-1zM42,9h1v1h-1zM43,9h1v1h-1zM44,9h1v1h-1zM45,9h1v1h-1zM46,9h1v1h-1zM49,9h1v1h-1zM1,10h1v1h-1zM2,10h1v1h-1zM3,10h1v1h-1zM5,10h1v1h-1zM8,10h1v1h-1zM11,10h1v1h-1zM13,10h1v1h-1zM14,10h1v1h-1zM15,10h1v1h-1zM17,10h1v1h-1zM18,10h1v1h-1zM20,10h1v1h-1zM21,10h1v1h-1zM22,10h1v1h-1zM27,10h1v1h-1zM30,10h1v1h-1zM31,10h1v1h-1zM32,10h1v1h-1zM33,10h1v1h-1zM34,10h1v1h-1zM38,10h1v1h-1zM39,10h1v1h-1zM42,10h1v1h-1zM43,10h1v1h-1zM45,10h1v1h-1zM49,10h1v1h-1zM1,11h1v1h-1zM2,11h1v1h-1zM3,11h1v1h-1zM7,11h1v1h-1zM10,11h1v1h-1zM11,11h1v1h-1zM12,11h1v1h-1zM17,11h1v1h-1zM18,11h1v1h-1zM20,11h1v1h-1zM23,11h1v1h-1zM25,11h1v1h-1zM27,11h1v1h-1zM28,11h1v1h-1zM29,11h1v1h-1zM30,11h1v1h-1zM31,11h1v1h-1zM36,11h1v1h-1zM39,11h1v1h-1zM41,11h1v1h-1zM42,11h1v1h-1zM44,11h1v1h-1zM2,12h1v1h-1zM4,12h1v1h-1zM5,12h1v1h-1zM6,12h1v1h-1zM8,12h1v1h-1zM10,12h1v1h-1zM11,12h1v1h-1zM13,12h1v1h-1zM14,12h1v1h-1zM15,12h1v1h-1zM16,12h1v1h-1zM17,12h1v1h-1zM18,12h1v1h-1zM20,12h1v1h-1zM23,12h1v1h-1zM25,12h1v1h-1zM32,12h1v1h-1zM33,12h1v1h-1zM35,12h1v1h-1zM37,12h1v1h-1zM41,12h1v1h-1zM42,12h1v1h-1zM43,12h1v1h-1zM45,12h1v1h-1zM46,12h1v1h-1zM47,12h1v1h-1zM48,12h1v1h-1zM1,13h1v1h-1zM2,13h1v1h-1zM3,13h1v1h-1zM6,13h1v1h-1zM7,13h1v1h-1zM10,13h1v1h-1zM12,13h1v1h-1zM13,13h1v1h-1zM14,13h1v1h-1zM15,13h1v1h-1zM21,13h1v1h-1zM23,13h1v1h-1zM24,13h1v1h-1zM25,13h1v1h-1zM26,13h1v1h-1zM28,13h1v1h-1zM30,13h1v1h-1zM31,13h1v1h-1zM32,13h1v1h-1zM33,13h1v1h-1zM34,13h1v1h-1zM35,13h1v1h-1zM37,13h1v1h-1zM39,13h1v1h-1zM40,13h1v1h-1zM44,13h1v1h-1zM45,13h1v1h-1zM47,13h1v1h-1zM49,13h1v1h-1zM1,14h1v1h-1zM2,14h1v1h-1zM3,14h1v1h-1zM5,14h1v1h-1zM9,14h1v1h-1zM11,14h1v1h-1zM12,14h1v1h-1zM13,14h1v1h-1zM15,14h1v1h-1zM18,14h1v1h-1zM19,14h1v1h-1zM20,14h1v1h-1zM21,14h1v1h-1zM24,14h1v1h-1zM25,14h1v1h-1zM27,14h1v1h-1zM28,14h1v1h-1zM29,14h1v1h-1zM31,14h1v1h-1zM36,14h1v1h-1zM37,14h1v1h-1zM39,14h1v1h-1zM40,14h1v1h-1zM43,14h1v1h-1zM44,14h1v1h-1zM46,14h1v1h-1zM47,14h1v1h-1zM48,14h1v1h-1zM1,15h1v1h-1zM7,15h1v1h-1zM9,15h1v1h-1zM10,15h1v1h-1zM11,15h1v1h-1zM17,15h1v1h-1zM18,15h1v1h-1zM20,15h1v1h-1zM23,15h1v1h-1zM24,15h1v1h-1zM27,15h1v1h-1zM31,15h1v1h-1zM34,15h1v1h-1zM35,15h1v1h-1zM38,15h1v1h-1zM40,15h1v1h-1zM41,15h1v1h-1zM42,15h1v1h-1zM43,15h1v1h-1zM44,15h1v1h-1zM45,15h1v1h-1zM47,15h1v1h-1zM2,16h1v1h-1zM3,16h1v1h-1zM5,16h1v1h-1zM6,16h1v1h-1zM8,16h1v1h-1zM11,16h1v1h-1zM12,16h1v1h-1zM14,16h1v1h-1zM16,16h1v1h-1zM18,16h1v1h-1zM22,16h1v1h-1zM23,16h1v1h-1zM24,16h1v1h-1zM25,16h1v1h-1zM26,16h1v1h-1zM28,16h1v1h-1zM30,16h1v1h-1zM33,16h1v1h-1zM34,16h1v1h-1zM35,16h1v1h-1zM36,16h1v1h-1zM37,16h1v1h-1zM41,16h1v1h-1zM42,16h1v1h-1zM46,16h1v1h-1zM47,16h1v1h-1zM48,16h1v1h-1zM3,17h1v1h-1zM4,17h1v1h-1zM5,17h1v1h-1zM6,17h1v1h-1zM7,17h1v1h-1zM8,17h1v1h-1zM10,17h1v1h-1zM12,17h1v1h-1zM13,17h1v1h-1zM18,17h1v1h-1zM20,17h1v1h-1zM22,17h1v1h-1zM24,17h1v1h-1zM25,17h1v1h-1zM27,17h1v1h-1zM28,17h1v1h-1zM30,17h1v1h-1zM32,17h1v1h-1zM33,17h1v1h-1zM35,17h1v1h-1zM36,17h1v1h-1zM37,17h1v1h-1zM38,17h1v1h-1zM40,17h1v1h-1zM41,17h1v1h-1zM42,17h1v1h-1zM45,17h1v1h-1zM47,17h1v1h-1zM3,18h1v1h-1zM5,18h1v1h-1zM8,18h1v1h-1zM9,18h1v1h-1zM10,18h1v1h-1zM11,18h1v1h-1zM12,18h1v1h-1zM13,18h1v1h-1zM15,18h1v1h-1zM17,18h1v1h-1zM18,18h1v1h-1zM20,18h1v1h-1zM21,18h1v1h-1zM23,18h1v1h-1zM24,18h1v1h-1zM25,18h1v1h-1zM26,18h1v1h-1zM27,18h1v1h-1zM28,18h1v1h-1zM29,18h1v1h-1zM31,18h1v1h-1zM33,18h1v1h-1zM34,18h1v1h-1zM38,18h1v1h-1zM39,18h1v1h-1zM43,18h1v1h-1zM45,18h1v1h-1zM46,18h1v1h-1zM1,19h1v1h-1zM7,19h1v1h-1zM11,19h1v1h-1zM12,19h1v1h-1zM14,19h1v1h-1zM15,19h1v1h-1zM18,19h1v1h-1zM20,19h1v1h-1zM21,19h1v1h-1zM22,19h1v1h-1zM23,19h1v1h-1zM26,19h1v1h-1zM27,19h1v1h-1zM28,19h1v1h-1zM29,19h1v1h-1zM31,19h1v1h-1zM33,19h1v1h-1zM34,19h1v1h-1zM38,19h1v1h-1zM39,19h1v1h-1zM41,19h1v1h-1zM43,19h1v1h-1zM44,19h1v1h-1zM46,19h1v1h-1zM47,19h1v1h-1zM4,20h1v1h-1zM6,20h1v1h-1zM9,20h1v1h-1zM10,20h1v1h-1zM13,20h1v1h-1zM14,20h1v1h-1zM18,20h1v1h-1zM20,20h1v1h-1zM21,20h1v1h-1zM23,20h1v1h-1zM25,20h1v1h-1zM26,20h1v1h-1zM27,20h1v1h-1zM33,20h1v1h-1zM34,20h1v1h-1zM35,20h1v1h-1zM36,20h1v1h-1zM37,20h1v1h-1zM38,20h1v1h-1zM39,20h1v1h-1zM40,20h1v1h-1zM41,20h1v1h-1zM42,20h1v1h-1zM44,20h1v1h-1zM45,20h1v1h-1zM47,20h1v1h-1zM48,20h1v1h-1zM2,21h1v1h-1zM3,21h1v1h-1zM4,21h1v1h-1zM5,21h1v1h-1zM6,21h1v1h-1zM7,21h1v1h-1zM8,21h1v1h-1zM9,21h1v1h-1zM10,21h1v1h-1zM11,21h1v1h-1zM14,21h1v1h-1zM15,21h1v1h-1zM16,21h1v1h-1zM17,21h1v1h-1zM20,21h1v1h-1zM23,21h1v1h-1zM25,21h1v1h-1zM26,21h1v1h-1zM28,21h1v1h-1zM30,21h1v1h-1zM34,21h1v1h-1zM35,21h1v1h-1zM38,21h1v1h-1zM41,21h1v1h-1zM43,21h1v1h-1zM44,21h1v1h-1zM45,21h1v1h-1zM46,21h1v1h-1zM47,21h1v1h-1zM49,21h1v1h-1zM1,22h1v1h-1zM3,22h1v1h-1zM4,22h1v1h-1zM5,22h1v1h-1zM9,22h1v1h-1zM18,22h1v1h-1zM20,22h1v1h-1zM21,22h1v1h-1zM22,22h1v1h-1zM25,22h1v1h-1zM26,22h1v1h-1zM27,22h1v1h-1zM28,22h1v1h-1zM31,22h1v1h-1zM37,22h1v1h-1zM39,22h1v1h-1zM40,22h1v1h-1zM42,22h1v1h-1zM47,22h1v1h-1zM48,22h1v1h-1zM1,23h1v1h-1zM2,23h1v1h-1zM5,23h1v1h-1zM6,23h1v1h-1zM7,23h1v1h-1zM8,23h1v1h-1zM9,23h1v1h-1zM10,23h1v1h-1zM12,23h1v1h-1zM13,23h1v1h-1zM17,23h1v1h-1zM18,23h1v1h-1zM20,23h1v1h-1zM22,23h1v1h-1zM23,23h1v1h-1zM24,23h1v1h-1zM25,23h1v1h-1zM26,23h1v1h-1zM27,23h1v1h-1zM28,23h1v1h-1zM31,23h1v1h-1zM33,23h1v1h-1zM36,23h1v1h-1zM37,23h1v1h-1zM39,23h1v1h-1zM41,23h1v1h-1zM42,23h1v1h-1zM43,23h1v1h-1zM44,23h1v1h-1zM45,23h1v1h-1zM46,23h1v1h-1zM48,23h1v1h-1zM1,24h1v1h-1zM2,24h1v1h-1zM3,24h1v1h-1zM4,24h1v1h-1zM5,24h1v1h-1zM9,24h1v1h-1zM11,24h1v1h-1zM15,24h1v1h-1zM19,24h1v1h-1zM21,24h1v1h-1zM22,24h1v1h-1zM23,24h1v1h-1zM27,24h1v1h-1zM30,24h1v1h-1zM32,24h1v1h-1zM33,24h1v1h-1zM35,24h1v1h-1zM37,24h1v1h-1zM38,24h1v1h-1zM41,24h1v1h-1zM45,24h1v1h-1zM47,24h1v1h-1zM49,24h1v1h-1zM1,25h1v1h-1zM3,25h1v1h-1zM5,25h1v1h-1zM7,25h1v1h-1zM9,25h1v1h-1zM15,25h1v1h-1zM16,25h1v1h-1zM17,25h1v1h-1zM19,25h1v1h-1zM20,25h1v1h-1zM23,25h1v1h-1zM25,25h1v1h-1zM27,25h1v1h-1zM28,25h1v1h-1zM30,25h1v1h-1zM31,25h1v1h-1zM32,25h1v1h-1zM33,25h1v1h-1zM35,25h1v1h-1zM37,25h1v1h-1zM39,25h1v1h-1zM40,25h1v1h-1zM41,25h1v1h-1zM43,25h1v1h-1zM45,25h1v1h-1zM47,25h1v1h-1zM49,25h1v1h-1zM1,26h1v1h-1zM4,26h1v1h-1zM5,26h1v1h-1zM9,26h1v1h-1zM10,26h1v1h-1zM13,26h1v1h-1zM15,26h1v1h-1zM16,26h1v1h-1zM19,26h1v1h-1zM20,26h1v1h-1zM21,26h1v1h-1zM22,26h1v1h-1zM23,26h1v1h-1zM27,26h1v1h-1zM31,26h1v1h-1zM32,26h1v1h-1zM34,26h1v1h-1zM36,26h1v1h-1zM37,26h1v1h-1zM38,26h1v1h-1zM39,26h1v1h-1zM41,26h1v1h-1zM45,26h1v1h-1zM46,26h1v1h-1zM48,26h1v1h-1zM1,27h1v1h-1zM2,27h1v1h-1zM4,27h1v1h-1zM5,27h1v1h-1zM6,27h1v1h-1zM7,27h1v1h-1zM8,27h1v1h-1zM9,27h1v1h-1zM10,27h1v1h-1zM17,27h1v1h-1zM18,27h1v1h-1zM19,27h1v1h-1zM20,27h1v1h-1zM23,27h1v1h-1zM24,27h1v1h-1zM25,27h1v1h-1zM26,27h1v1h-1zM27,27h1v1h-1zM28,27h1v1h-1zM29,27h1v1h-1zM30,27h1v1h-1zM31,27h1v1h-1zM34,27h1v1h-1zM38,27h1v1h-1zM39,27h1v1h-1zM40,27h1v1h-1zM41,27h1v1h-1zM42,27h1v1h-1zM43,27h1v1h-1zM44,27h1v1h-1zM45,27h1v1h-1zM47,27h1v1h-1zM48,27h1v1h-1zM1,28h1v1h-1zM2,28h1v1h-1zM3,28h1v1h-1zM4,28h1v1h-1zM6,28h1v1h-1zM8,28h1v1h-1zM9,28h1v1h-1zM11,28h1v1h-1zM14,28h1v1h-1zM16,28h1v1h-1zM17,28h1v1h-1zM18,28h1v1h-1zM23,28h1v1h-1zM32,28h1v1h-1zM33,28h1v1h-1zM34,28h1v1h-1zM35,28h1v1h-1zM37,28h1v1h-1zM39,28h1v1h-1zM41,28h1v1h-1zM47,28h1v1h-1zM48,28h1v1h-1zM49,28h1v1h-1zM2,29h1v1h-1zM4,29h1v1h-1zM5,29h1v1h-1zM6,29h1v1h-1zM7,29h1v1h-1zM8,29h1v1h-1zM9,29h1v1h-1zM11,29h1v1h-1zM12,29h1v1h-1zM16,29h1v1h-1zM20,29h1v1h-1zM21,29h1v1h-1zM24,29h1v1h-1zM25,29h1v1h-1zM27,29h1v1h-1zM30,29h1v1h-1zM32,29h1v1h-1zM33,29h1v1h-1zM35,29h1v1h-1zM37,29h1v1h-1zM41,29h1v1h-1zM43,29h1v1h-1zM44,29h1v1h-1zM49,29h1v1h-1zM5,30h1v1h-1zM6,30h1v1h-1zM8,30h1v1h-1zM9,30h1v1h-1zM12,30h1v1h-1zM13,30h1v1h-1zM16,30h1v1h-1zM17,30h1v1h-1zM19,30h1v1h-1zM23,30h1v1h-1zM25,30h1v1h-1zM27,30h1v1h-1zM28,30h1v1h-1zM29,30h1v1h-1zM32,30h1v1h-1zM34,30h1v1h-1zM35,30h1v1h-1zM36,30h1v1h-1zM39,30h1v1h-1zM40,30h1v1h-1zM42,30h1v1h-1zM43,30h1v1h-1zM44,30h1v1h-1zM45,30h1v1h-1zM46,30h1v1h-1zM5,31h1v1h-1zM7,31h1v1h-1zM8,31h1v1h-1zM9,31h1v1h-1zM10,31h1v1h-1zM11,31h1v1h-1zM13,31h1v1h-1zM15,31h1v1h-1zM17,31h1v1h-1zM18,31h1v1h-1zM21,31h1v1h-1zM26,31h1v1h-1zM29,31h1v1h-1zM30,31h1v1h-1zM32,31h1v1h-1zM35,31h1v1h-1zM37,31h1v1h-1zM38,31h1v1h-1zM40,31h1v1h-1zM41,31h1v1h-1zM42,31h1v1h-1zM44,31h1v1h-1zM45,31h1v1h-1zM47,31h1v1h-1zM3,32h1v1h-1zM5,32h1v1h-1zM6,32h1v1h-1zM9,32h1v1h-1zM10,32h1v1h-1zM11,32h1v1h-1zM20,32h1v1h-1zM21,32h1v1h-1zM23,32h1v1h-1zM24,32h1v1h-1zM26,32h1v1h-1zM27,32h1v1h-1zM30,32h1v1h-1zM33,32h1v1h-1zM36,32h1v1h-1zM37,32h1v1h-1zM40,32h1v1h-1zM41,32h1v1h-1zM43,32h1v1h-1zM47,32h1v1h-1zM1,33h1v1h-1zM3,33h1v1h-1zM4,33h1v1h-1zM5,33h1v1h-1zM7,33h1v1h-1zM9,33h1v1h-1zM11,33h1v1h-1zM12,33h1v1h-1zM13,33h1v1h-1zM14,33h1v1h-1zM15,33h1v1h-1zM18,33h1v1h-1zM19,33h1v1h-1zM20,33h1v1h-1zM22,33h1v1h-1zM23,33h1v1h-1zM24,33h1v1h-1zM27,33h1v1h-1zM30,33h1v1h-1zM33,33h1v1h-1zM34,33h1v1h-1zM36,33h1v1h-1zM37,33h1v1h-1zM38,33h1v1h-1zM39,33h1v1h-1zM42,33h1v1h-1zM44,33h1v1h-1zM49,33h1v1h-1zM1,34h1v1h-1zM6,34h1v1h-1zM8,34h1v1h-1zM9,34h1v1h-1zM11,34h1v1h-1zM13,34h1v1h-1zM15,34h1v1h-1zM17,34h1v1h-1zM21,34h1v1h-1zM22,34h1v1h-1zM24,34h1v1h-1zM25,34h1v1h-1zM27,34h1v1h-1zM29,34h1v1h-1zM31,34h1v1h-1zM34,34h1v1h-1zM39,34h1v1h-1zM42,34h1v1h-1zM45,34h1v1h-1zM46,34h1v1h-1zM48,34h1v1h-1zM1,35h1v1h-1zM2,35h1v1h-1zM6,35h1v1h-1zM7,35h1v1h-1zM8,35h1v1h-1zM9,35h1v1h-1zM10,35h1v1h-1zM13,35h1v1h-1zM16,35h1v1h-1zM18,35h1v1h-1zM21,35h1v1h-1zM22,35h1v1h-1zM24,35h1v1h-1zM26,35h1v1h-1zM28,35h1v1h-1zM29,35h1v1h-1zM30,35h1v1h-1zM31,35h1v1h-1zM34,35h1v1h-1zM37,35h1v1h-1zM39,35h1v1h-1zM40,35h1v1h-1zM41,35h1v1h-1zM42,35h1v1h-1zM44,35h1v1h-1zM45,35h1v1h-1zM46,35h1v1h-1zM47,35h1v1h-1zM48,35h1v1h-1zM2,36h1v1h-1zM3,36h1v1h-1zM4,36h1v1h-1zM8,36h1v1h-1zM10,36h1v1h-1zM11,36h1v1h-1zM12,36h1v1h-1zM13,36h1v1h-1zM15,36h1v1h-1zM17,36h1v1h-1zM18,36h1v1h-1zM19,36h1v1h-1zM23,36h1v1h-1zM24,36h1v1h-1zM26,36h1v1h-1zM27,36h1v1h-1zM28,36h1v1h-1zM32,36h1v1h-1zM34,36h1v1h-1zM35,36h1v1h-1zM36,36h1v1h-1zM37,36h1v1h-1zM38,36h1v1h-1zM39,36h1v1h-1zM40,36h1v1h-1zM42,36h1v1h-1zM43,36h1v1h-1zM47,36h1v1h-1zM48,36h1v1h-1zM49,36h1v1h-1zM2,37h1v1h-1zM3,37h1v1h-1zM6,37h1v1h-1zM7,37h1v1h-1zM8,37h1v1h-1zM9,37h1v1h-1zM11,37h1v1h-1zM12,37h1v1h-1zM13,37h1v1h-1zM15,37h1v1h-1zM16,37h1v1h-1zM18,37h1v1h-1zM19,37h1v1h-1zM20,37h1v1h-1zM22,37h1v1h-1zM23,37h1v1h-1zM26,37h1v1h-1zM27,37h1v1h-1zM31,37h1v1h-1zM32,37h1v1h-1zM34,37h1v1h-1zM36,37h1v1h-1zM37,37h1v1h-1zM39,37h1v1h-1zM41,37h1v1h-1zM43,37h1v1h-1zM44,37h1v1h-1zM46,37h1v1h-1zM47,37h1v1h-1zM49,37h1v1h-1zM3,38h1v1h-1zM9,38h1v1h-1zM13,38h1v1h-1zM16,38h1v1h-1zM17,38h1v1h-1zM19,38h1v1h-1zM21,38h1v1h-1zM23,38h1v1h-1zM24,38h1v1h-1zM25,38h1v1h-1zM26,38h1v1h-1zM31,38h1v1h-1zM36,38h1v1h-1zM37,38h1v1h-1zM39,38h1v1h-1zM41,38h1v1h-1zM42,38h1v1h-1zM44,38h1v1h-1zM45,38h1v1h-1zM46,38h1v1h-1zM47,38h1v1h-1zM49,38h1v1h-1zM2,39h1v1h-1zM6,39h1v1h-1zM7,39h1v1h-1zM8,39h1v1h-1zM9,39h1v1h-1zM11,39h1v1h-1zM12,39h1v1h-1zM19,39h1v1h-1zM20,39h1v1h-1zM21,39h1v1h-1zM25,39h1v1h-1zM29,39h1v1h-1zM31,39h1v1h-1zM33,39h1v1h-1zM36,39h1v1h-1zM39,39h1v1h-1zM40,39h1v1h-1zM42,39h1v1h-1zM44,39h1v1h-1zM45,39h1v1h-1zM2,40h1v1h-1zM3,40h1v1h-1zM4,40h1v1h-1zM8,40h1v1h-1zM10,40h1v1h-1zM11,40h1v1h-1zM12,40h1v1h-1zM13,40h1v1h-1zM15,40h1v1h-1zM17,40h1v1h-1zM18,40h1v1h-1zM22,40h1v1h-1zM23,40h1v1h-1zM24,40h1v1h-1zM26,40h1v1h-1zM27,40h1v1h-1zM32,40h1v1h-1zM33,40h1v1h-1zM34,40h1v1h-1zM36,40h1v1h-1zM37,40h1v1h-1zM42,40h1v1h-1zM43,40h1v1h-1zM47,40h1v1h-1zM1,41h1v1h-1zM2,41h1v1h-1zM3,41h1v1h-1zM7,41h1v1h-1zM10,41h1v1h-1zM11,41h1v1h-1zM15,41h1v1h-1zM16,41h1v1h-1zM17,41h1v1h-1zM19,41h1v1h-1zM20,41h1v1h-1zM23,41h1v1h-1zM24,41h1v1h-1zM25,41h1v1h-1zM26,41h1v1h-1zM27,41h1v1h-1zM30,41h1v1h-1zM31,41h1v1h-1zM32,41h1v1h-1zM33,41h1v1h-1zM34,41h1v1h-1zM37,41h1v1h-1zM38,41h1v1h-1zM41,41h1v1h-1zM42,41h1v1h-1zM43,41h1v1h-1zM44,41h1v1h-1zM45,41h1v1h-1zM46,41h1v1h-1zM47,41h1v1h-1zM48,41h1v1h-1zM49,41h1v1h-1zM9,42h1v1h-1zM11,42h1v1h-1zM12,42h1v1h-1zM13,42h1v1h-1zM16,42h1v1h-1zM21,42h1v1h-1zM23,42h1v1h-1zM27,42h1v1h-1zM29,42h1v1h-1zM31,42h1v1h-1zM33,42h1v1h-1zM36,42h1v1h-1zM39,42h1v1h-1zM40,42h1v1h-1zM41,42h1v1h-1zM45,42h1v1h-1zM48,42h1v1h-1zM1,43h1v1h-1zM2,43h1v1h-1zM3,43h1v1h-1zM4,43h1v1h-1zM5,43h1v1h-1zM6,43h1v1h-1zM7,43h1v1h-1zM9,43h1v1h-1zM12,43h1v1h-1zM13,43h1v1h-1zM16,43h1v1h-1zM17,43h1v1h-1zM19,43h1v1h-1zM23,43h1v1h-1zM25,43h1v1h-1zM27,43h1v1h-1zM28,43h1v1h-1zM29,43h1v1h-1zM31,43h1v1h-1zM32,43h1v1h-1zM34,43h1v1h-1zM36,43h1v1h-1zM41,43h1v1h-1zM43,43h1v1h-1zM45,43h1v1h-1zM46,43h1v1h-1zM48,43h1v1h-1zM1,44h1v1h-1zM7,44h1v1h-1zM11,44h1v1h-1zM12,44h1v1h-1zM14,44h1v1h-1zM16,44h1v1h-1zM19,44h1v1h-1zM20,44h1v1h-1zM21,44h1v1h-1zM22,44h1v1h-1zM23,44h1v1h-1zM27,44h1v1h-1zM32,44h1v1h-1zM33,44h1v1h-1zM34,44h1v1h-1zM35,44h1v1h-1zM36,44h1v1h-1zM37,44h1v1h-1zM39,44h1v1h-1zM41,44h1v1h-1zM45,44h1v1h-1zM46,44h1v1h-1zM47,44h1v1h-1zM1,45h1v1h-1zM3,45h1v1h-1zM4,45h1v1h-1zM5,45h1v1h-1zM7,45h1v1h-1zM9,45h1v1h-1zM10,45h1v1h-1zM14,45h1v1h-1zM15,45h1v1h-1zM17,45h1v1h-1zM21,45h1v1h-1zM22,45h1v1h-1zM23,45h1v1h-1zM24,45h1v1h-1zM25,45h1v1h-1zM26,45h1v1h-1zM27,45h1v1h-1zM30,45h1v1h-1zM31,45h1v1h-1zM32,45h1v1h-1zM33,45h1v1h-1zM35,45h1v1h-1zM37,45h1v1h-1zM38,45h1v1h-1zM39,45h1v1h-1zM40,45h1v1h-1zM41,45h1v1h-1zM42,45h1v1h-1zM43,45h1v1h-1zM44,45h1v1h-1zM45,45h1v1h-1zM46,45h1v1h-1zM47,45h1v1h-1zM48,45h1v1h-1zM49,45h1v1h-1zM1,46h1v1h-1zM3,46h1v1h-1zM4,46h1v1h-1zM5,46h1v1h-1zM7,46h1v1h-1zM10,46h1v1h-1zM11,46h1v1h-1zM13,46h1v1h-1zM14,46h1v1h-1zM15,46h1v1h-1zM16,46h1v1h-1zM17,46h1v1h-1zM18,46h1v1h-1zM19,46h1v1h-1zM20,46h1v1h-1zM21,46h1v1h-1zM23,46h1v1h-1zM24,46h1v1h-1zM29,46h1v1h-1zM32,46h1v1h-1zM35,46h1v1h-1zM36,46h1v1h-1zM37,46h1v1h-1zM38,46h1v1h-1zM39,46h1v1h-1zM40,46h1v1h-1zM41,46h1v1h-1zM42,46h1v1h-1zM43,46h1v1h-1zM48,46h1v1h-1zM49,46h1v1h-1zM1,47h1v1h-1zM3,47h1v1h-1zM4,47h1v1h-1zM5,47h1v1h-1zM7,47h1v1h-1zM10,47h1v1h-1zM12,47h1v1h-1zM14,47h1v1h-1zM15,47h1v1h-1zM16,47h1v1h-1zM19,47h1v1h-1zM20,47h1v1h-1zM23,47h1v1h-1zM27,47h1v1h-1zM29,47h1v1h-1zM30,47h1v1h-1zM31,47h1v1h-1zM41,47h1v1h-1zM42,47h1v1h-1zM43,47h1v1h-1zM44,47h1v1h-1zM1,48h1v1h-1zM7,48h1v1h-1zM10,48h1v1h-1zM14,48h1v1h-1zM16,48h1v1h-1zM23,48h1v1h-1zM24,48h1v1h-1zM26,48h1v1h-1zM27,48h1v1h-1zM28,48h1v1h-1zM29,48h1v1h-1zM33,48h1v1h-1zM34,48h1v1h-1zM35,48h1v1h-1zM36,48h1v1h-1zM37,48h1v1h-1zM39,48h1v1h-1zM41,48h1v1h-1zM42,48h1v1h-1zM43,48h1v1h-1zM46,48h1v1h-1zM47,48h1v1h-1zM48,48h1v1h-1zM1,49h1v1h-1zM2,49h1v1h-1zM3,49h1v1h-1zM4,49h1v1h-1zM5,49h1v1h-1zM6,49h1v1h-1zM7,49h1v1h-1zM9,49h1v1h-1zM10,49h1v1h-1zM13,49h1v1h-1zM14,49h1v1h-1zM18,49h1v1h-1zM19,49h1v1h-1zM22,49h1v1h-1zM26,49h1v1h-1zM27,49h1v1h-1zM28,49h1v1h-1zM30,49h1v1h-1zM31,49h1v1h-1zM33,49h1v1h-1zM34,49h1v1h-1zM36,49h1v1h-1zM37,49h1v1h-1zM39,49h1v1h-1zM42,49h1v1h-1zM44,49h1v1h-1zM45,49h1v1h-1zM46,49h1v1h-1zM47,49h1v1h-1zM48,49h1v1h-1zM49,49h1v1h-1z" fill="#0A2F6E"/></svg><small>Escanea y escríbeme</small></div>
+    </div>
+  </div>
+  <aside class="notes">Cierre con llamado a la acción: comunícate con José Lugo por WhatsApp al +57 312 638 7467. El público puede escanear el código QR.</aside>
 </section>
 
 </main>
@@ -1228,7 +1538,7 @@ dialog .act .btn{font-size:14px}
 
 <div class="panel" id="settings" role="dialog" aria-label="Ajustes">
   <h4>Ajustes de la presentación</h4>
-  <div class="row"><label for="trSel">Transición</label><select id="trSel"><option value="fade">Desvanecer</option><option value="slide">Deslizar</option><option value="zoom">Acercar</option><option value="none">Sin transición</option></select></div>
+  <div class="row"><label for="trSel">Transición</label><select id="trSel"><option value="cine">Cinemática</option><option value="fade">Desvanecer</option><option value="slide">Deslizar</option><option value="zoom">Acercar</option><option value="none">Sin transición</option></select></div>
   <div class="row"><span>Animaciones</span><button class="switch" id="animSw" role="switch" aria-checked="true" aria-label="Animaciones"></button></div>
   <div class="row"><span>Ocultar controles al presentar</span><button class="switch" id="idleSw" role="switch" aria-checked="true" aria-label="Ocultar controles"></button></div>
   <div class="row" style="border-bottom:0"><button class="btn" id="sHelp" style="font-size:13px;width:100%;justify-content:center">Ver atajos de teclado</button></div>
@@ -1246,9 +1556,19 @@ dialog .act .btn{font-size:14px}
     <span><kbd>N</kbd></span><span>Notas del expositor</span>
     <span><kbd>A</kbd></span><span>Activar / pausar animaciones</span>
     <span><kbd>B</kbd></span><span>Pantalla negra</span>
+    <span><kbd>I</kbd></span><span>Asistente de preguntas</span>
     <span><kbd>Esc</kbd></span><span>Cerrar paneles</span>
   </div>
 </div>
+
+<button id="askBtn" aria-expanded="false" aria-controls="ask"><svg class="spark" viewBox="0 0 24 24"><use href="#i-spark"/></svg>Pregunta al asistente</button>
+<section id="ask" aria-label="Asistente de la presentación">
+  <header><span class="av"><svg viewBox="0 0 24 24"><use href="#i-spark"/></svg></span><div><b>Asistente U-MUVO</b><small>Responde con la información de esta presentación</small></div>
+    <div class="tools"><button id="askVoice" aria-pressed="false" title="Leer respuestas en voz alta" aria-label="Leer respuestas en voz alta"><svg><use href="#i-speaker"/></svg></button><button id="askClose" aria-label="Cerrar asistente">✕</button></div></header>
+  <div id="askLog" aria-live="polite"></div>
+  <div id="askChips"><button>¿Cuánto cuesta empezar?</button><button>¿Qué es PNG?</button><button>¿Cómo funciona el bono 4x4?</button><button>¿Qué es el Estatus Diamante?</button><button>¿Cómo ayuda la IA?</button><button>Quiero hablar con José</button></div>
+  <form id="askForm"><input placeholder="Escribe tu pregunta…" aria-label="Tu pregunta" autocomplete="off"><button type="button" class="mic" id="askMic" aria-label="Preguntar por voz"><svg><use href="#i-mic"/></svg></button><button aria-label="Enviar"><svg><use href="#i-send"/></svg></button></form>
+</section>
 <div id="notesbar" role="status"><b>Notas del expositor</b><span></span></div>
 <div id="toast" role="status"></div>
 <div id="black"></div>
@@ -1265,7 +1585,7 @@ const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 let idx=0, presenterWin=null;
 
 /* ---------- ajustes ---------- */
-let anim=EMBED?false:store.get('anim',!reduce), tr=store.get('tr','fade'), idleOn=store.get('idle',true);
+let anim=EMBED?false:store.get('anim',!reduce), tr=store.get('tr',matchMedia('(max-width:860px)').matches?'fade':'cine'), idleOn=store.get('idle',true);
 function applySettings(){
   deck.dataset.tr=tr; $('#trSel').value=tr;
   body.classList.toggle('noanim',!anim); $('#animSw').setAttribute('aria-checked',anim);
@@ -1305,7 +1625,7 @@ function go(n,opts={}){
   if(!EMBED&&location.hash!=='#/'+(n+1))history.replaceState(null,'','#/'+(n+1));
   document.title=s.dataset.title+' · YOU MOVE FORWARD';
   $('#notesbar span').textContent=($('.notes',s)||{}).textContent||'';
-  runCounters(s); onEnter[s.id]&&onEnter[s.id](s);
+  runCounters(s); onEnter[s.id]&&onEnter[s.id](s); fxEnter(s);
   if(presenterWin&&!presenterWin.closed&&presenterWin.ymfUpdate)presenterWin.ymfUpdate(n);
   preload(n+1);
 }
@@ -1348,7 +1668,7 @@ const fmtUSD=v=>v.toLocaleString('en-US',{maximumFractionDigits:2});
 $('#qs').addEventListener('input',e=>{const v=parseFloat(e.target.value);$('#s20 output').textContent=(v>0)?('Entre '+fmtUSD(v*.2)+' y '+fmtUSD(v*.3)+' (20 % – 30 % de '+fmtUSD(v)+' CV)'):'Escribe un CV para ver el rango.'});
 /* s22 4x4 */
 const slots=$$('#s22 .slot');
-function upd4(){const k=slots.filter(s=>s.classList.contains('on')).length;$('#s22').classList.toggle('done',k===4);$('#s22 .msg').textContent=k===4?'¡Equipo formado! Cuatro personas que suman 1.000 CV.':(k?k+' de 4 personas afiliadas.':'Toca los cuatro círculos para formar tu primer equipo.');$('#s22 .reset').hidden=!k}
+function upd4(){const k=slots.filter(s=>s.classList.contains('on')).length;$('#s22').classList.toggle('done',k===4);if(k===4)confetti();$('#s22 .msg').textContent=k===4?'¡Equipo formado! Cuatro personas que suman 1.000 CV.':(k?k+' de 4 personas afiliadas.':'Toca los cuatro círculos para formar tu primer equipo.');$('#s22 .reset').hidden=!k}
 slots.forEach(s=>s.onclick=()=>{s.classList.toggle('on');s.setAttribute('aria-pressed',s.classList.contains('on'));upd4()});
 $('#s22 .reset').onclick=()=>{slots.forEach(s=>{s.classList.remove('on');s.setAttribute('aria-pressed','false')});upd4()};
 /* s24 uninivel */
@@ -1372,6 +1692,7 @@ const LV=[10,10,20,12,7,5];
 
 /* ---------- botones UI ---------- */
 $('#bPrev').onclick=prev; $('#bNext').onclick=next; $('#bHome').onclick=()=>go(0);
+$$('[data-go-id]').forEach(b=>b.addEventListener('click',()=>go(slides.findIndex(x=>x.id===b.dataset.goId))));
 $$('[data-go]').forEach(b=>b.addEventListener('click',()=>{const v=b.dataset.go;v==='next'?next():go(+v);closeAll()}));
 $('#slideNum').addEventListener('change',e=>{const v=parseInt(e.target.value,10);if(v)go(v-1);e.target.blur()});
 $('#slideNum').addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter')e.target.dispatchEvent(new Event('change'))});
@@ -1458,7 +1779,8 @@ document.addEventListener('keydown',e=>{
     case 'a':case 'A':$('#animSw').click();break;
     case 'b':case 'B':case '.':$('#black').classList.toggle('on');break;
     case '?':showHelp();break;
-    case 'Escape':closeAll();$('#notesbar').classList.remove('on');break;
+    case 'i':case 'I':toggleAsk();e.preventDefault();break;
+    case 'Escape':closeAll();toggleAsk(false);$('#notesbar').classList.remove('on');break;
   }
   wake();
 });
@@ -1475,6 +1797,134 @@ deck.addEventListener('touchend',e=>{const t=e.changedTouches[0],dx=t.clientX-tx
 let idleT;function wake(){body.classList.remove('idle');clearTimeout(idleT);if(idleOn&&(document.fullscreenElement||document.webkitFullscreenElement))idleT=setTimeout(()=>body.classList.add('idle'),2600)}
 ['mousemove','touchstart','pointerdown'].forEach(ev=>document.addEventListener(ev,wake,{passive:true}));
 document.addEventListener('fullscreenchange',wake);
+
+
+/* =================== EFECTOS =================== */
+const fine=matchMedia('(pointer:fine)').matches;
+const lowPower=matchMedia('(max-width:860px)').matches;
+/* brillo que sigue al cursor + parallax de fotos */
+const glow=document.createElement('div');glow.id='glow';body.append(glow);
+let raf=0,px=0,py=0;
+if(fine)document.addEventListener('pointermove',e=>{px=e.clientX;py=e.clientY;if(raf)return;raf=requestAnimationFrame(()=>{raf=0;glow.style.setProperty('--gx',px+'px');glow.style.setProperty('--gy',py+'px');
+  const s=slides[idx];if(anim&&s){s.style.setProperty('--mx',(px/innerWidth-.5).toFixed(3));s.style.setProperty('--my',(py/innerHeight-.5).toFixed(3))}})},{passive:true});
+/* inclinación 3D */
+function tilt(el,max=8){if(!fine)return;el.addEventListener('pointermove',e=>{if(!anim)return;const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform=`perspective(900px) rotateY(${x*max}deg) rotateX(${-y*max}deg) translateZ(0)`});el.addEventListener('pointerleave',()=>{el.style.transform=''})}
+$$('[data-tilt],.pcts div,.badge,.mrow,.box').forEach(el=>tilt(el,6));
+$$('.pack').forEach(el=>tilt(el,9));
+/* botones magnéticos */
+if(fine)$$('.btn').forEach(b=>{b.addEventListener('pointermove',e=>{if(!anim)return;const r=b.getBoundingClientRect();b.style.translate=`${(e.clientX-r.left-r.width/2)*.18}px ${(e.clientY-r.top-r.height/2)*.25}px`});b.addEventListener('pointerleave',()=>b.style.translate='')});
+/* texto que se decodifica */
+const GL='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+<>/';
+function scramble(el){const fin=el.dataset.final||el.textContent;el.dataset.final=fin;if(!anim){el.textContent=fin;return}let f=0;const tot=26;
+  const tick=()=>{f++;el.textContent=fin.split('').map((c,i)=>c===' '?' ':(i<fin.length*f/tot?c:GL[Math.random()*GL.length|0])).join('');if(f<tot)setTimeout(tick,38);else el.textContent=fin};tick()}
+/* red de partículas (diapositivas de IA) */
+function netFor(canvas){const ctx=canvas.getContext('2d');let W,H,P=[],run=false,mx=-1e4,my=-1e4;const dpr=Math.min(2,devicePixelRatio||1);
+  const size=()=>{W=canvas.clientWidth;H=canvas.clientHeight;canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);const n=lowPower?38:Math.min(110,Math.round(W*H/15000));P=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*1.6+.6}))};
+  canvas.parentElement.addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top},{passive:true});
+  const frame=()=>{if(!run)return;ctx.clearRect(0,0,W,H);
+    for(const p of P){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;const dx=mx-p.x,dy=my-p.y,d=Math.hypot(dx,dy);if(d<160){p.x+=dx*.006;p.y+=dy*.006}}
+    for(let i=0;i<P.length;i++){const a=P[i];for(let j=i+1;j<P.length;j++){const b=P[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<130){ctx.strokeStyle=`rgba(95,208,255,${(1-d/130)*.35})`;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()}}
+      const dm=Math.hypot(a.x-mx,a.y-my);if(dm<180){ctx.strokeStyle=`rgba(143,123,255,${(1-dm/180)*.6})`;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(mx,my);ctx.stroke()}
+      ctx.fillStyle='rgba(180,230,255,.9)';ctx.beginPath();ctx.arc(a.x,a.y,a.r,0,7);ctx.fill()}
+    requestAnimationFrame(frame)};
+  return{start(){if(run)return;size();run=true;if(anim)frame();else{run=true;frame();run=false}},stop(){run=false}}}
+const nets=new Map();$$('.fx-net').forEach(c=>nets.set(c.closest('.slide'),netFor(c)));
+addEventListener('resize',()=>{const n=nets.get(slides[idx]);if(n){n.stop();n.start()}});
+/* confeti */
+const cf=document.createElement('canvas');cf.id='confetti';body.append(cf);
+function confetti(){if(!anim||EMBED)return;const ctx=cf.getContext('2d');cf.width=innerWidth;cf.height=innerHeight;const C=['#31AEDA','#2B5FB5','#7631DA','#F9C3A9','#FCD116','#ffffff'];
+  const ps=Array.from({length:160},()=>({x:innerWidth/2+(Math.random()-.5)*200,y:innerHeight*.55,vx:(Math.random()-.5)*16,vy:-Math.random()*16-6,s:Math.random()*7+4,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:C[Math.random()*C.length|0]}));let t=0;
+  const f=()=>{t++;ctx.clearRect(0,0,cf.width,cf.height);for(const p of ps){p.vy+=.38;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);ctx.restore()}if(t<170)requestAnimationFrame(f);else ctx.clearRect(0,0,cf.width,cf.height)};f()}
+window.YMF.confetti=confetti;
+
+/* =================== IA-1 · comparador =================== */
+const cmpx=$('#cmpx'),rng=$('#cmpx input');
+const setX=v=>{cmpx.style.setProperty('--x',v+'%');rng.value=v};
+rng.addEventListener('input',()=>setX(+rng.value));
+function sweep(from,to,ms=1800){if(!anim){setX(to);return}const t0=performance.now();const f=n=>{const p=Math.min(1,(n-t0)/ms),e=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;setX(from+(to-from)*e);if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
+$('#leapBtn').onclick=()=>{sweep(+rng.value,0,1400);setTimeout(()=>confetti(),anim?1300:0)};
+$('#backBtn').onclick=()=>sweep(+rng.value,100,1400);
+
+/* =================== IA-2 · agentes =================== */
+function typeInto(el,text,speed=16,done){el.classList.add('caret');if(!anim){el.textContent=text;el.classList.remove('caret');done&&done();return}let i=0;el.textContent='';const t=()=>{i+=2;el.textContent=text.slice(0,i);if(i<text.length)el._t=setTimeout(t,speed);else{el.classList.remove('caret');done&&done()}};clearTimeout(el._t);t()}
+$$('#ia2 .agent').forEach(a=>a.addEventListener('click',()=>{const open=a.getAttribute('aria-expanded')==='true';a.setAttribute('aria-expanded',!open);if(!open)typeInto($('.out',a),a.dataset.out)}));
+
+/* =================== IA-3 · generador de invitaciones =================== */
+const gState={int:'salud',tono:'cercano'};let gVar=0;
+$$('#gen .seg').forEach(g=>$$('button',g).forEach(b=>b.onclick=()=>{$$('button',g).forEach(x=>x.setAttribute('aria-pressed',x===b));gState[g.dataset.k]=b.dataset.v}));
+const deckURL=()=>/^https?:/.test(location.protocol)?location.href.split('#')[0]:'';
+const T={
+ salud:{cercano:[n=>`¡Hola ${n}! 👋 Me acordé de ti porque estoy usando una tecnología de bienestar que se aplica sobre la piel: la tecnología transdérmica. Te comparto una presentación corta para que la veas con calma{L} ¿Me cuentas qué te parece?`,n=>`${n}, ¿cómo vas? 😊 Estoy conociendo productos de bienestar que se absorben por la piel y pensé en ti. Mira esta presentación de 5 minutos{L} Luego me dices qué te llamó la atención.`],
+        pro:[n=>`Hola ${n}, un gusto saludarte. Quiero compartirte la propuesta de bienestar de U-MUVO, basada en tecnología transdérmica. Puedes revisarla aquí{L} Quedo atento a tus comentarios.`]},
+ negocio:{cercano:[n=>`¡Hola ${n}! 👋 Estoy construyendo un negocio internacional con U-MUVO y un sistema que usa inteligencia artificial para trabajar más simple. Pensé en ti porque sé que buscas ingresos extra. Mira esta presentación{L} ¿Hablamos 10 minutos esta semana?`,n=>`${n}, ¿te gustaría generar ingresos desde tu celular? 📱 Estoy en un proyecto con U-MUVO y herramientas de IA que facilitan todo. Te dejo la presentación{L} Si te hace sentido, te explico en una llamada corta.`],
+        pro:[n=>`Hola ${n}. Estoy expandiendo un equipo con U-MUVO, una empresa con operación en América, Europa y Asia, apoyado en herramientas de inteligencia artificial. Te comparto la presentación del modelo{L} ¿Te parece si agendamos 15 minutos para revisarlo?`]},
+ ambos:{cercano:[n=>`¡Hola ${n}! 👋 Encontré algo que une bienestar y una oportunidad de ingresos: U-MUVO, con tecnología que se absorbe por la piel y un sistema apoyado en IA. Mira la presentación{L} ¿Qué parte te interesa más, el producto o el negocio?`],
+        pro:[n=>`Hola ${n}. Te comparto una propuesta que combina productos de bienestar con tecnología transdérmica y un modelo de negocio internacional apoyado en inteligencia artificial{L} Con gusto resuelvo tus preguntas.`]}};
+const gOut=$('#gOut'),gThink=$('#ia3 .thinking');let gMsg='';
+$('#gGo').onclick=()=>{const name=($('#gName').value.trim()||'amigo').replace(/\s+/g,' ').slice(0,40);const list=T[gState.int][gState.tono];const fn=list[gVar++%list.length];
+  const u=deckURL();gMsg=fn(name).replace('{L}',u?': '+u:'.')+'\n\n— José Lugo · +57 312 638 7467';
+  gOut.classList.remove('empty');gOut.textContent='';gThink.classList.add('on');$('#gCopy').disabled=true;
+  setTimeout(()=>{gThink.classList.remove('on');typeInto(gOut,gMsg,14,()=>{$('#gCopy').disabled=false;const w=$('#gWa');w.href='https://wa.me/?text='+encodeURIComponent(gMsg);w.removeAttribute('aria-disabled')})},anim?900:0);
+  $('#gGo').lastChild.textContent='Crear otra versión'};
+$('#gCopy').onclick=async()=>{try{await navigator.clipboard.writeText(gMsg);toast('Invitación copiada')}catch(e){toast('No se pudo copiar automáticamente: selecciona el texto del mensaje')}};
+$('#gWa').addEventListener('click',e=>{if($('#gWa').hasAttribute('aria-disabled')){e.preventDefault();toast('Primero crea la invitación')}});
+$('#gName').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('#gGo').click()}});
+
+/* =================== ASISTENTE DE LA PRESENTACIÓN =================== */
+const norm=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9%+ ]/g,' ');
+const KB=[
+ {k:'precio cuesta cuanto valor inversion activar activacion franquicia paquete paquetes 100qv 300qv 500qv 700qv empezar iniciar entrar',s:'s17',a:'Hay cuatro opciones para activar tu franquicia personal: 100QV por USD 140 (11 % de bono de equipo); 300QV por USD 390 (13 % y USD 64 en productos de regalo); 500QV por USD 650 (15 % y USD 128 de regalo); 700QV por USD 920 (17 % y USD 256 de regalo).'},
+ {k:'diamante estatus 1000 qv 1280 rapido mas rapida',s:'s18',a:'El Estatus Diamante es de 1.000 QV por USD 1,280: 19 % de bono de equipo, 6 niveles de por vida, 3 meses de activación gratis, promociones exclusivas, envío gratis y USD 384 en productos de regalo.'},
+ {k:'png energia dolor inflamacion ginseng primer dispositivo',s:'s11',a:'PNG es el primer dispositivo transdérmico: menos dolor, menos estrés, más energía y bienestar. Ingredientes: ginseng rojo coreano, germanio orgánico, glucosamina, iones de plata y saponinas.'},
+ {k:'glutanad nad glutation rejuvenecimiento envejecimiento celular snaprelease',s:'s12',a:'GlutaNAD+ BOOST, con tecnología SnapRelease, optimiza tus niveles de NAD+, da protección antioxidante (NRF2) y apoya energía, vitalidad y claridad mental. Ingredientes: NMN, nano glutatión, quercetina, astaxantina y vitaminas B6, B12, A y D3.'},
+ {k:'productos producto lineas dekamin melatonin omevia gentlemen ladies b12 slimstyle colageno solucion necesidad catalogo',s:'s13',a:'Además de PNG y GlutaNAD+, hay soluciones para cada necesidad: Dekamin (sistema inmunológico), Melatonin Plus (descanso), Omevia (corazón), Gentlemen & Ladies (equilibrio hormonal), B12 Plus (enfoque), Slimstyle (ansiedad) y Colágeno (envejecimiento).'},
+ {k:'transdermico transdermica piel parche absorcion absorbe tecnologia tds nexgen como funciona',s:'s10',a:'La piel es el órgano más grande del cuerpo y una vía natural para absorber ingredientes activos: absorción directa, mayor biodisponibilidad, liberación continua y una tecnología segura y efectiva. La plataforma se llama TDS NEXGEN™.'},
+ {k:'certificado certificaciones fda iso gmp invima registro seguro calidad vegano',s:'s14',a:'Los productos cuentan con certificado GMP, ISO, ISO 13485, son dermatológicamente probados, veganos, libres de crueldad animal, parabenos y metales pesados, con registros internacionales y registro FDA.'},
+ {k:'empresa compania one more global umuvo u muvo quien donde pais estados unidos',s:'s4',a:'One More Global es el grupo empresarial; U-MUVO forma parte de él y opera desde Estados Unidos para América, Europa y Asia, con cinco líneas de bienestar y cuidado personal.'},
+ {k:'fundador ceo dueno alper karpuz',s:'s6',a:'El fundador y CEO de U-MUVO es Alper Volkan Karpuz.'},
+ {k:'marcas marca monau byon quantic velenique',s:'s7',a:'El ecosistema tiene cinco marcas: TDS NEXGEN, SnapRelease, MONAU, BYON QUANTIC y VELENIQUE.'},
+ {k:'paises envio envios internacional clientes mundo',s:'s19',a:'Hay envío a más de 100 países y promociones especiales para tus clientes.'},
+ {k:'inicio rapido bono directos afiliados 20 30',s:'s20',a:'El bono de inicio rápido te paga entre el 20 % y el 30 % del CV de tus afiliados directos.'},
+ {k:'2 dos personas gratis 65 activacion siguiente mes diferente',s:'s21',a:'Si 2 personas se afilian, tu siguiente mes tiene activación gratis y además recibes 65 QV en productos de regalo. Repites el proceso cada mes.'},
+ {k:'4x4 cuatro 200 primer equipo',s:'s22',a:'Bono 4x4: afilia cuatro personas que sumen 1.000 CV y ganas activación gratis, producto gratis y un bono extra de USD 200.'},
+ {k:'equipo binario izquierda derecha semanal 60000 60 000 11 13 15 17 19',s:'s23',a:'El bono de equipo es binario (equipo izquierda y derecha) y va del 11 % al 19 % según tu opción; el potencial de ganancia semanal es de hasta USD 60,000.'},
+ {k:'uninivel niveles recompras 64 infinito 22 nivel',s:'s24',a:'Bono uninivel como Diamante: nivel 1 10 %, nivel 2 10 %, nivel 3 20 %, nivel 4 12 %, nivel 5 7 % y nivel 6 5 % (64 % en total), más hasta un 22 % adicional desde el nivel 7 al infinito de todas las recompras.'},
+ {k:'rango rangos avance recalificacion 40000 25000 reconocimiento',s:'s25',a:'Avance de rango: desde USD 100 hasta USD 40,000. Recalificación: desde USD 50 hasta USD 25,000. Ejemplo Diamond: USD 3,000 de avance y USD 1,500 de recalificación.'},
+ {k:'matching igualacion bono 50 25',s:'s26',a:'Matching bonus: ganas sobre lo que genera tu equipo cada semana en el bono de equipo: nivel 1 hasta 50 %, nivel 2 25 %, nivel 3 20 % y nivel 4 15 %.'},
+ {k:'pagos plan compensacion ganar gano ingresos dinero cuanto gano como gano',s:'s16',a:'El plan de compensación tiene hasta seis pagos al mes: inicio rápido, bono de equipo, uninivel, matching, avance de rango y recalificación, además de bonos como el 4x4. ¿De cuál quieres el detalle?'},
+ {k:'viajes viaje promociones incentivos',s:'s27',a:'Hay viajes y promociones: destinos exclusivos, incentivos especiales, experiencias memorables y beneficios para tu comunidad.'},
+ {k:'summit sistema comunidad educacion entrenamiento mentoria liderazgo acompanamiento',s:'s28',a:'El sistema Summit Networkers te acompaña con comunidad, educación (entrenamientos y mentorías), herramientas simples y duplicables, y desarrollo de liderazgo.'},
+ {k:'ia inteligencia artificial nueva manera salto tecnologia redes digital automatizar',s:'ia1',a:'La nueva manera de hacer network marketing combina el sistema con herramientas de IA: prospección por intereses en redes, mensajes personalizados en segundos, presentación digital 24/7, seguimiento organizado y un sistema duplicable.'},
+ {k:'invitacion invitar mensaje whatsapp prospecto escribir',s:'ia3',a:'Puedes crear una invitación personalizada en segundos en la diapositiva «Pruébalo en vivo».'},
+ {k:'contacto contactar hablar jose lugo telefono numero llamar asesor registrarme registro unirme quiero',s:'contacto',a:'Comunícate con José Lugo por WhatsApp al <a href="https://wa.me/573126387467" target="_blank" rel="noopener">+57 312 638 7467</a> 🇨🇴. Él te guía para empezar.'}
+];
+const KBn=KB.map(e=>({...e,t:[...new Set(norm(e.k).split(/\s+/).filter(Boolean))]}));
+function answer(q){const w=norm(q).split(/\s+/).filter(x=>x.length>1||/\d/.test(x));let best=null,bs=0;
+  for(const e of KBn){let s=0;for(const x of w){for(const t of e.t){if(t===x)s+=3;else if(x.length>3&&(t.startsWith(x.slice(0,5))||x.startsWith(t.slice(0,5))))s+=1}}if(s>bs){bs=s;best=e}}
+  return bs>=2?best:null}
+const ask=$('#ask'),log=$('#askLog');let voice=store.get('voice',false);
+const sayable=t=>t.replace(/<[^>]+>/g,'').replace(/USD/g,'dólares').replace(/%/g,' por ciento').replace(/QV/g,' Q V').replace(/CV/g,' C V');
+function speak(t){if(!voice||!('speechSynthesis' in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(sayable(t));u.lang='es-ES';const v=speechSynthesis.getVoices().find(v=>/es[-_](CO|MX|US|419)/i.test(v.lang))||speechSynthesis.getVoices().find(v=>/^es/i.test(v.lang));if(v)u.voice=v;u.rate=1.02;speechSynthesis.speak(u)}
+function addMsg(html,who,slideId){const d=document.createElement('div');d.className='msg '+who;d.innerHTML=html;if(slideId){const i=slides.findIndex(s=>s.id===slideId);if(i>=0){const b=document.createElement('button');b.className='go';b.textContent='Ver diapositiva '+(i+1)+' →';b.onclick=()=>{go(i);if(innerWidth<860)toggleAsk(false)};d.append(document.createElement('br'),b)}}log.append(d);log.scrollTop=log.scrollHeight;return d}
+function handle(q){q=q.trim();if(!q)return;addMsg(q.replace(/</g,'&lt;'),'u');const typing=addMsg('<span class="caret">Pensando</span>','a');
+  setTimeout(()=>{typing.remove();const r=answer(q);if(r){const d=addMsg('','a',r.s);const span=document.createElement('span');d.prepend(span);if(anim&&!/<a /.test(r.a)){typeInto(span,r.a,10)}else span.innerHTML=r.a;speak(r.a)}
+    else{const t='No tengo ese dato en esta presentación. Te recomiendo escribirle directamente a José Lugo por WhatsApp: <a href="https://wa.me/573126387467" target="_blank" rel="noopener">+57 312 638 7467</a> 🇨🇴';addMsg(t,'a');speak(t)}},anim?650:0)}
+function toggleAsk(on){on=on??!ask.classList.contains('open');ask.classList.toggle('open',on);$('#askBtn').setAttribute('aria-expanded',on);if(on){if(!log.children.length)addMsg('¡Hola! Soy el asistente de esta presentación. Pregúntame por los productos, el plan de compensación o cómo empezar. Respondo con la información de estas diapositivas.','a');setTimeout(()=>$('#askForm input').focus(),250)}}
+$('#askBtn').onclick=()=>toggleAsk();$('#askClose').onclick=()=>toggleAsk(false);
+$('#askForm').addEventListener('submit',e=>{e.preventDefault();const i=$('#askForm input');handle(i.value);i.value=''});
+$('#askForm input').addEventListener('keydown',e=>e.stopPropagation());
+$$('#askChips button').forEach(b=>b.onclick=()=>handle(b.textContent));
+const vBtn=$('#askVoice');vBtn.setAttribute('aria-pressed',voice);vBtn.onclick=()=>{voice=!voice;store.set('voice',voice);vBtn.setAttribute('aria-pressed',voice);if(!voice&&'speechSynthesis' in window)speechSynthesis.cancel();toast(voice?'Respuestas en voz alta activadas':'Voz desactivada')};
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition,mic=$('#askMic');
+if(!SR)mic.hidden=true;else{let rec=null;mic.onclick=()=>{if(rec){rec.stop();return}rec=new SR();rec.lang='es-CO';rec.interimResults=false;mic.classList.add('rec');rec.onresult=e=>handle(e.results[0][0].transcript);rec.onerror=()=>toast('No se pudo usar el micrófono. Escribe tu pregunta.');rec.onend=()=>{mic.classList.remove('rec');rec=null};rec.start()}}
+
+/* al entrar a cada diapositiva */
+Object.assign(onEnter,{
+  ia1(){setX(100);setTimeout(()=>{if(slides[idx].id==='ia1')sweep(100,50,1600)},anim?900:0)},
+  contacto(){setTimeout(()=>confetti(),anim?700:0)}
+});
+function fxEnter(s){nets.forEach((n,sl)=>sl===s?n.start():n.stop());$$('[data-scramble]',s).forEach(el=>setTimeout(()=>scramble(el),anim?250:0));body.classList.toggle('on-dark',s.classList.contains('dark')||s.id==='s30')}
+window.YMF.fxEnter=fxEnter;
 
 /* ---------- hash e inicio ---------- */
 function fromHash(){const m=location.hash.match(/#\/(\d+)/);return m?Math.max(0,Math.min(N-1,parseInt(m[1],10)-1)):0}

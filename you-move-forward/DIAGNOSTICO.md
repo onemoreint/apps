@@ -68,3 +68,16 @@ Se respetó el orden real del PDF; ya coincidía con la secuencia comercial (ape
 Ambas muestran el aviso de que son ejemplos ilustrativos, que no representan ingresos garantizados y que las condiciones están en el plan oficial.
 
 **Recomendación.** El PDF incluye afirmaciones de salud (por ejemplo «reduce la inflamación», «dispositivo médico clase 1») y de ingresos (por ejemplo «hasta USD 60,000 semanales», «hasta USD 40,000»). Se reprodujeron sin cambios. Antes de usarlas en público, confírmalas con el material oficial vigente de U-MUVO.
+
+## Ampliación solicitada por José Lugo (nov 2026)
+
+Se añadieron 4 diapositivas que **no están en el PDF original**:
+
+- Sección «La nueva era: IA», ubicada después de «La economía ha cambiado»: el salto del MLM tradicional al MLM con IA, el equipo de agentes de IA y la demostración en vivo del generador de invitaciones.
+- Diapositiva final de contacto: José Lugo, +57 312 638 7467, con la bandera de Colombia.
+
+Los ejemplos de esta sección son ilustrativos. No atribuyen a U-MUVO ni a Summit Networkers herramientas, cifras ni resultados que el PDF no mencione.
+
+El asistente de preguntas responde solo con datos de la presentación.
+
+Con la sección nueva, las diapositivas del plan de compensación se recorrieron 3 posiciones (por ejemplo, «Activa tu franquicia personal» pasó de la 17 a la 20).

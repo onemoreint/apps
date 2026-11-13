@@ -799,6 +799,41 @@ body.on-dark #glow{mix-blend-mode:screen;background:radial-gradient(circle,rgba(
   .photo.fade::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#fff 0,rgba(255,255,255,0) 22%)}
 }
 @media (prefers-reduced-motion:reduce){.slide{transition-duration:.01ms!important}}
+
+/* ===== Teléfono: lectura cómoda con los controles flotantes ===== */
+@media (max-width:860px),(orientation:portrait) and (max-width:1100px){
+  html,body{height:100dvh}
+  /* bandas que separan el contenido de los botones superiores e inferiores */
+  body::before,body::after{content:"";position:fixed;left:0;right:0;z-index:30;pointer-events:none;transition:background .4s}
+  body::before{top:0;height:calc(64px + env(safe-area-inset-top));background:linear-gradient(rgba(255,255,255,.96) 55%,rgba(255,255,255,0))}
+  body::after{bottom:0;height:calc(92px + env(safe-area-inset-bottom));background:linear-gradient(rgba(255,255,255,0),rgba(255,255,255,.97) 50%)}
+  body.on-dark::before{background:linear-gradient(rgba(8,18,48,.96) 55%,rgba(8,18,48,0))}
+  body.on-dark::after{background:linear-gradient(rgba(8,18,48,0),rgba(8,18,48,.97) 50%)}
+  body.embed::before,body.embed::after{display:none}
+  #tl,#tr{top:calc(12px + env(safe-area-inset-top))}
+  #br,#bc,#bl{bottom:calc(18px + env(safe-area-inset-bottom))}
+  #askBtn{bottom:calc(16px + env(safe-area-inset-bottom))}
+  /* espacio final para que lo último no quede bajo los botones */
+  .slide::after{content:"";display:block;height:calc(40px + env(safe-area-inset-bottom));flex:none}
+  .slide{scroll-behavior:smooth;overscroll-behavior:contain}
+  /* indicación de que la lámina continúa hacia abajo */
+  #more{position:fixed;left:50%;bottom:calc(74px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:45;display:flex;align-items:center;gap:6px;
+    padding:6px 12px;border-radius:999px;background:rgba(20,40,90,.86);color:#fff;font-size:12px;font-weight:600;letter-spacing:.02em;
+    box-shadow:0 8px 24px rgba(10,20,50,.25);opacity:0;pointer-events:none;transition:opacity .35s,transform .35s}
+  #more.on{opacity:1;pointer-events:auto}
+  #more svg{width:14px;height:14px;animation:nudge 1.6s ease-in-out infinite}
+  @keyframes nudge{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+  /* Bono uninivel: anillos más compactos y etiquetas legibles */
+  #s24 .rings{height:300px}
+  #s24 .rings .rl{font-size:15px}
+  /* teléfono en horizontal: aprovechar el ancho */
+  @media (orientation:landscape) and (max-height:500px){
+    .photo{height:62vh}
+    .t{font-size:26px!important}.t.xl{font-size:28px!important}
+    body::before{height:56px}body::after{height:70px}
+  }
+}
+@media (prefers-reduced-motion:reduce){#more svg{animation:none}}
 </style>
 </head>
 <body>
@@ -849,6 +884,7 @@ body.on-dark #glow{mix-blend-mode:screen;background:radial-gradient(circle,rgba(
  </defs>
 </svg>
 
+<button id="more" type="button" aria-label="Ver el resto de la diapositiva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>Desliza para ver más</button>
 <main id="deck" aria-live="polite">
 
 <!-- ======================================================
@@ -1856,6 +1892,17 @@ function fromHash(){const m=location.hash.match(/#\/(\d+)/);return m?Math.max(0,
 window.addEventListener('hashchange',()=>go(fromHash()));
 applySettings(); idx=fromHash(); go(idx,{force:true});
 window.addEventListener('beforeprint',()=>slides.forEach(s=>$$('[data-count]',s).forEach(el=>el.textContent=el.dataset.final)));
+})();
+
+/* ---------- teléfono: aviso de que la lámina continúa ---------- */
+(()=>{const more=document.getElementById('more');if(!more)return;
+  const cur=()=>document.querySelector('.slide.active');
+  const check=()=>{const s=cur();if(!s){more.classList.remove('on');return}
+    const left=s.scrollHeight-s.clientHeight-s.scrollTop;more.classList.toggle('on',s.scrollHeight>s.clientHeight+40&&left>60)};
+  more.addEventListener('click',()=>{const s=cur();if(s)s.scrollBy({top:s.clientHeight*.7,behavior:'smooth'})});
+  document.querySelectorAll('.slide').forEach(s=>s.addEventListener('scroll',check,{passive:true}));
+  new MutationObserver(()=>setTimeout(check,450)).observe(document.getElementById('deck'),{subtree:true,attributes:true,attributeFilter:['class']});
+  addEventListener('resize',check);setTimeout(check,800);
 })();
 </script>
 </body>

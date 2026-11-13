@@ -1,6 +1,6 @@
 # YOU MOVE FORWARD · Presentación interactiva U-MUVO
 
-Presentación digital de 34 diapositivas: las 30 del PDF «YOU MOVE FORWARD» (Summit Networkers · U-MUVO · One More Global) más la sección «La nueva era: IA» (3 diapositivas) y el cierre de contacto con José Lugo.
+Presentación digital de 32 diapositivas: las 30 del PDF «YOU MOVE FORWARD» (Summit Networkers · U-MUVO · One More Global) más la diapositiva «El salto: MLM con IA» y el cierre de contacto con José Lugo.
 Funciona sin internet, sin instalar nada y sin servicios pagos.
 
 ```
@@ -57,16 +57,14 @@ Otras funciones:
 | 13 | Selector de las 7 soluciones con su beneficio |
 | 15 | Animación del modelo tradicional frente a network marketing |
 | **16** | **El salto: comparador arrastrable «MLM tradicional» frente a «MLM con IA» + botón «Dar el salto»** |
-| **17** | **Tu equipo de IA: 5 agentes que muestran un ejemplo escribiéndose al tocarlos** |
-| **18** | **Pruébalo en vivo: crea una invitación personalizada para un prospecto y envíala por WhatsApp** |
-| 20 | Selección y resumen de cada franquicia |
-| 21, 22, 24, 26–29 | Cifras con contador animado |
-| 23 | Calculadora del bono de inicio rápido (20 % – 30 %) |
-| 25 | Formar el equipo 4x4 tocando los cuatro círculos (con confeti) |
-| 26 | Árbol binario animado |
-| 27 | Anillos por nivel + simulador del bono uninivel |
-| 29 | Barras proporcionales del matching bonus |
-| **34** | **Comunícate con José Lugo: bandera de Colombia, +57 312 638 7467, WhatsApp, llamar y código QR** |
+| 18 | Selección y resumen de cada franquicia |
+| 19, 20, 22, 24–27 | Cifras con contador animado |
+| 21 | Calculadora del bono de inicio rápido (20 % – 30 %) |
+| 23 | Formar el equipo 4x4 tocando los cuatro círculos (con confeti) |
+| 24 | Árbol binario animado |
+| 25 | Anillos por nivel + simulador del bono uninivel |
+| 27 | Barras proporcionales del matching bonus |
+| **32** | **Comunícate con José Lugo: bandera de Colombia, +57 312 638 7467, WhatsApp, llamar y código QR** |
 
 **Asistente de la presentación (✦):** disponible en todas las diapositivas. Responde preguntas sobre productos, plan de compensación, certificaciones, IA y contacto. Lleva a la diapositiva correspondiente y puede leer las respuestas en voz alta (botón de altavoz). En Chrome también acepta preguntas por voz (micrófono). Funciona sin internet y responde **solo con la información de la presentación**: no es un modelo de IA conectado a la nube. Si no sabe algo, invita a escribirle a José por WhatsApp. Sus respuestas están en el JavaScript, en la lista `KB`.
 
@@ -112,4 +110,4 @@ Abre `index.html` con cualquier editor de texto (VS Code, Bloc de notas, TextEdi
 
 **Generador de invitaciones (diap. 18).** Los textos están en el JavaScript, en el objeto `T` (por interés: `salud`, `negocio`, `ambos`; por tono: `cercano`, `pro`). Puedes agregar más versiones a cada lista.
 
-**Contacto (diap. 34).** El número y el mensaje de WhatsApp están en el bloque `<!-- CONTACTO · JOSÉ LUGO -->`. Si cambias el número, cambia también el enlace `wa.me` y regenera el código QR.
+**Contacto (diap. 32).** El número y el mensaje de WhatsApp están en el bloque `<!-- CONTACTO · JOSÉ LUGO -->`. Si cambias el número, cambia también el enlace `wa.me` y regenera el código QR.

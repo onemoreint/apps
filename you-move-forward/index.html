@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>YOU MOVE FORWARD · U-MUVO · Summit Networkers</title>
+<meta name="description" content="Presentación de oportunidad U-MUVO — One More Global. Sistema Summit Networkers.">
+<meta name="theme-color" content="#0A2F6E">
+<meta property="og:title" content="YOU MOVE FORWARD · U-MUVO">
+<meta property="og:description" content="Presentación de oportunidad U-MUVO — Sistema Summit Networkers.">
+<meta property="og:image" content="assets/img/s29.jpg">
+<style>
+/* ============ TIPOGRAFÍA (local, sin internet) ============ */
+@font-face{font-family:M;font-weight:300;font-display:swap;src:url(assets/fonts/montserrat-latin-300-normal.woff2) format("woff2")}
+@font-face{font-family:M;font-weight:400;font-display:swap;src:url(assets/fonts/montserrat-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:M;font-weight:500;font-display:swap;src:url(assets/fonts/montserrat-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:M;font-weight:600;font-display:swap;src:url(assets/fonts/montserrat-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:M;font-weight:700;font-display:swap;src:url(assets/fonts/montserrat-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:M;font-weight:800;font-display:swap;src:url(assets/fonts/montserrat-latin-800-normal.woff2) format("woff2")}
+
+/* ============ IDENTIDAD (colores tomados del PDF) ============ */
+:root{
+  --ink:#1E2026; --soft:#4A4E5A; --mute:#8A8F9C; --line:#E4E7EE; --paper:#fff; --mist:#F4F6FA;
+  --navy:#00357F; --deep:#0A2F6E; --blue:#2B5FB5; --cyan:#2AA3DA;
+  --grad:linear-gradient(90deg,#2AA3DA 0%,#2B5FB5 100%);
+  --spectrum:linear-gradient(90deg,#31AEDA 0%,#458FDA 30%,#7631DA 62%,#9A5BD0 78%,#F9C3A9 100%);
+  /* unidad de lienzo: 1u = 1% del ancho de un lienzo 16:9 que cabe en pantalla */
+  --u:min(1vw,1.7778vh);
+  --ease:cubic-bezier(.2,.7,.1,1);
+  --tr:700ms;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#0d1220;overflow:hidden}
+body{font-family:M,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+button,input,select{font:inherit;color:inherit}
+img{display:block;max-width:100%}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:3px;border-radius:6px}
+
+/* ============ ESCENARIO Y DIAPOSITIVAS ============ */
+#deck{position:fixed;inset:0;overflow:hidden;background:var(--paper)}
+.slide{position:absolute;inset:0;background:var(--paper);overflow:hidden;visibility:hidden;opacity:0;
+  transition:opacity var(--tr) var(--ease),transform var(--tr) var(--ease),visibility 0s linear var(--tr);z-index:1}
+.slide.active{visibility:visible;opacity:1;transform:none;transition:opacity var(--tr) var(--ease),transform var(--tr) var(--ease),visibility 0s;z-index:2}
+[data-tr="slide"] .slide{transform:translateX(6%)}
+[data-tr="slide"].back .slide{transform:translateX(-6%)}
+[data-tr="slide"] .slide.leaving{transform:translateX(-6%)}
+[data-tr="slide"].back .slide.leaving{transform:translateX(6%)}
+[data-tr="zoom"] .slide{transform:scale(1.04)}
+[data-tr="zoom"] .slide.leaving{transform:scale(.97)}
+[data-tr="none"] .slide{transition:none!important}
+.notes{display:none}
+
+/* Fotos laterales (recortes originales del PDF) */
+.photo{position:absolute;top:0;right:0;bottom:0;width:var(--pw,55%);overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover;object-position:var(--pos,center)}
+.photo.fade img{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 18%);mask-image:linear-gradient(90deg,transparent 0,#000 18%)}
+.slide.active .photo img,.slide.active .bg img{animation:drift 14s ease-out both}
+@keyframes drift{from{transform:scale(1.045)}to{transform:scale(1)}}
+.bg{position:absolute;inset:0}.bg img{width:100%;height:100%;object-fit:cover;object-position:var(--pos,center)}
+
+.content{position:absolute;top:0;bottom:0;left:0;width:var(--cw,48%);padding:0 calc(var(--u)*3) 0 calc(var(--u)*7);display:flex;flex-direction:column;justify-content:center;z-index:3}
+.content > *{max-width:calc(var(--u)*44)}
+.wide > *{max-width:none}
+
+/* Marca y pie */
+.mark{position:absolute;top:calc(var(--u)*5.6);right:calc(var(--u)*5.6);z-index:5;font-weight:400;letter-spacing:.32em;font-size:calc(var(--u)*1.05);color:var(--ink)}
+.mark.on-dark{color:#fff}
+.ymf{position:absolute;right:calc(var(--u)*4.6);bottom:calc(var(--u)*3.3);z-index:5;font-size:calc(var(--u)*.8);letter-spacing:.04em;color:#fff;font-weight:500;opacity:.92}
+.ymf.dark{color:var(--soft)}
+
+/* Tipografía de títulos (tratamiento original del PDF: 2 líneas, la 2.ª con degradado) */
+.t{font-weight:700;line-height:1.06;letter-spacing:-.015em;font-size:calc(var(--u)*3.6)}
+.t.xl{font-size:calc(var(--u)*4.4)}
+.t.md{font-size:calc(var(--u)*3)}
+.t .g,.gtext{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.t span{display:block}
+.rule{width:calc(var(--u)*4);height:2px;background:var(--blue);margin:calc(var(--u)*1.8) 0;border-radius:2px}
+.lead{font-size:calc(var(--u)*1.3);line-height:1.5;color:var(--soft);font-weight:400}
+.lead b,.list b,.small b{color:var(--blue);font-weight:700}
+.small{font-size:calc(var(--u)*1);line-height:1.5;color:var(--soft)}
+.blue{color:var(--blue)}
+
+/* Revelado progresivo */
+.rv{opacity:0;transform:translateY(calc(var(--u)*1.4));transition:opacity .7s var(--ease) var(--d,0ms),transform .7s var(--ease) var(--d,0ms)}
+.slide.active .rv{opacity:1;transform:none}
+.noanim .rv{opacity:1!important;transform:none!important;transition:none!important}
+.noanim .slide.active .photo img,.noanim .slide.active .bg img{animation:none}
+
+/* ============ COMPONENTES ============ */
+.feat{display:grid;grid-template-columns:calc(var(--u)*4.4) 1fr;gap:calc(var(--u)*1.4);align-items:center;padding:calc(var(--u)*1.1) 0}
+.feat + .feat{border-top:1px solid var(--line)}
+.ico{width:calc(var(--u)*4.4);height:calc(var(--u)*4.4);border-radius:50%;background:var(--mist);display:grid;place-items:center;color:var(--blue)}
+.ico svg{width:52%;height:52%}
+.feat h3{font-size:calc(var(--u)*1.3);font-weight:700;color:var(--ink)}
+.feat p{font-size:calc(var(--u)*1.02);color:var(--soft);margin-top:.2em;line-height:1.4}
+
+/* Pilares (desplegables con salto a sección) */
+.pillar{width:100%;text-align:left;background:none;border:0;cursor:pointer;border-radius:12px}
+.pillar .more{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s var(--ease)}
+.pillar .more > div{overflow:hidden}
+.pillar[aria-expanded="true"] .more{grid-template-rows:1fr}
+.pillar .go{display:inline-flex;align-items:center;gap:.5em;margin-top:.7em;font-size:calc(var(--u)*.95);font-weight:600;color:#fff;background:var(--navy);padding:.55em 1em;border-radius:999px}
+.pillar:hover h3{color:var(--blue)}
+.pillar .chev{transition:transform .3s}
+.pillar[aria-expanded="true"] .chev{transform:rotate(90deg)}
+
+.checks{list-style:none;display:grid;gap:calc(var(--u)*.75)}
+.checks li{display:flex;gap:.7em;align-items:flex-start;font-size:calc(var(--u)*1.3);line-height:1.35;color:var(--soft)}
+.checks li b{color:var(--ink);font-weight:700}
+.checks.blue li b{color:var(--blue)}
+.checks svg{flex:none;width:1.05em;height:1.05em;margin-top:.17em;color:var(--blue)}
+.ingr{margin-top:calc(var(--u)*2);padding-top:calc(var(--u)*1.6);border-top:1px solid #c9ced8}
+.ingr h4{font-size:calc(var(--u)*1.15);font-weight:700;margin-bottom:.6em}
+.chips{display:flex;flex-wrap:wrap;gap:.45em}
+.chip{font-size:calc(var(--u)*.95);padding:.4em .85em;border-radius:999px;background:var(--mist);color:var(--ink);border:1px solid var(--line)}
+
+.zoomable{cursor:zoom-in}
+.zoomhint{position:absolute;right:8px;bottom:8px;background:rgba(10,47,110,.85);color:#fff;border-radius:999px;font-size:calc(var(--u)*.8);padding:.35em .8em;display:flex;gap:.4em;align-items:center;pointer-events:none}
+
+/* Botones generales */
+.btn{display:inline-flex;align-items:center;gap:.55em;border:0;cursor:pointer;border-radius:999px;padding:.8em 1.4em;font-weight:600;font-size:calc(var(--u)*1.05);background:var(--navy);color:#fff;transition:transform .2s,background .2s}
+.btn:hover{background:var(--blue);transform:translateY(-1px)}
+.btn.ghost{background:rgba(255,255,255,.14);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.35)}
+.btn.ghost:hover{background:rgba(255,255,255,.26)}
+.btn svg{width:1.1em;height:1.1em}
+
+/* Calculadoras */
+.calc{margin-top:calc(var(--u)*2);background:var(--mist);border:1px solid var(--line);border-radius:16px;padding:calc(var(--u)*1.6)}
+.calc label{display:block;font-size:calc(var(--u)*.95);font-weight:600;color:var(--soft);margin-bottom:.5em}
+.calc input{width:100%;border:1px solid #cfd5e1;border-radius:10px;padding:.65em .8em;font-size:calc(var(--u)*1.25);background:#fff;font-weight:600}
+.calc output{display:block;margin-top:.8em;font-size:calc(var(--u)*1.3);font-weight:700;color:var(--navy)}
+.calc .disc{margin-top:.8em;font-size:calc(var(--u)*.78);color:var(--mute);line-height:1.45}
+
+/* ============ CROMO / UI DE PRESENTACIÓN ============ */
+#progress{position:fixed;left:0;right:0;bottom:0;height:calc(var(--u)*.55);min-height:5px;z-index:40;background:#e9ecf3}
+#progress i{position:absolute;inset:0;background:var(--spectrum);transform-origin:left;transform:scaleX(var(--p,0));transition:transform .6s var(--ease)}
+#progress button{position:absolute;top:-8px;bottom:-2px;border:0;background:transparent;cursor:pointer;padding:0}
+#progress button:hover::after{content:attr(data-label);position:absolute;bottom:22px;left:50%;transform:translateX(-50%);white-space:nowrap;background:var(--deep);color:#fff;font-size:12px;padding:5px 9px;border-radius:6px}
+
+.ui{position:fixed;z-index:50;display:flex;gap:6px;align-items:center;transition:opacity .4s,transform .4s}
+.ui button,.ui .count{height:42px;min-width:42px;border-radius:999px;border:1px solid rgba(20,30,60,.10);background:rgba(255,255,255,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:grid;place-items:center;cursor:pointer;color:var(--deep);box-shadow:0 4px 18px rgba(10,30,80,.10)}
+.ui button:hover{background:#fff;color:var(--blue)}
+.ui svg{width:19px;height:19px}
+#tl{top:14px;left:14px}#tr{top:14px;right:14px}
+#br{right:14px;bottom:20px}
+.ui .count{display:flex;align-items:center;padding:0 14px;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;cursor:default;min-width:76px}
+.ui .count input{width:2.4em;border:0;background:transparent;text-align:right;font-weight:700;color:var(--deep)}
+body.idle .ui{opacity:0;pointer-events:none}
+body.idle{cursor:none}
+.embed .ui,.embed #progress{display:none}
+
+/* Paneles laterales */
+.drawer{position:fixed;top:0;bottom:0;left:0;width:min(380px,90vw);background:#fff;z-index:70;transform:translateX(-102%);transition:transform .45s var(--ease);box-shadow:0 0 60px rgba(0,0,0,.25);display:flex;flex-direction:column}
+.drawer.open{transform:none}
+.drawer header{padding:22px 22px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
+.drawer header img{height:30px;filter:brightness(0) saturate(100%) invert(13%) sepia(60%) saturate(3000%) hue-rotate(208deg) brightness(70%)}
+.drawer nav{overflow:auto;padding:10px 12px 20px;flex:1}
+.drawer h5{font-size:12px;font-weight:700;color:var(--blue);padding:16px 10px 6px;letter-spacing:.02em}
+.drawer a{display:flex;gap:12px;padding:9px 10px;border-radius:10px;text-decoration:none;color:var(--ink);font-size:14px;align-items:center}
+.drawer a span{color:var(--mute);font-variant-numeric:tabular-nums;font-size:12px;width:20px;text-align:right}
+.drawer a:hover{background:var(--mist)}
+.drawer a[aria-current="true"]{background:var(--deep);color:#fff}.drawer a[aria-current="true"] span{color:#bcd}
+.drawer footer{padding:14px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap}
+.drawer footer button{flex:1;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;color:var(--deep)}
+.drawer footer button:hover{background:var(--mist)}
+.drawer .sign{flex-basis:100%;font-size:12px;color:var(--mute);text-align:center;margin-top:4px}.drawer .sign b{color:var(--deep)}.drawer .sign a{color:var(--blue);text-decoration:none}
+#s30 .sign30{position:absolute;left:0;right:0;bottom:calc(var(--u)*3);text-align:center;color:rgba(255,255,255,.62);font-size:calc(var(--u)*.85);letter-spacing:.04em;z-index:3}
+.scrim{position:fixed;inset:0;background:rgba(5,15,40,.45);z-index:60;opacity:0;pointer-events:none;transition:opacity .35s}
+.scrim.on{opacity:1;pointer-events:auto}
+
+.panel{position:fixed;z-index:70;right:14px;top:66px;width:min(330px,92vw);background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.25);padding:18px;display:none}
+.panel.open{display:block}
+.panel h4{font-size:15px;margin-bottom:12px}
+.panel .row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:14px}
+.panel select{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:#fff}
+.switch{position:relative;width:44px;height:26px;border-radius:99px;background:#cfd5e1;border:0;cursor:pointer;transition:background .2s}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s}
+.switch[aria-checked="true"]{background:var(--blue)}.switch[aria-checked="true"]::after{transform:translateX(18px)}
+.keys{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;font-size:13px;color:var(--soft)}
+kbd{font:600 12px M,sans-serif;background:var(--mist);border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:2px 7px;color:var(--ink);white-space:nowrap}
+
+#notesbar{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);width:min(820px,92vw);background:rgba(10,20,45,.92);color:#e9eefb;border-radius:14px;padding:16px 20px;font-size:15px;line-height:1.5;z-index:55;opacity:0;pointer-events:none;transition:.3s}
+#notesbar.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+#notesbar b{color:#7fc8ff;font-weight:600;font-size:12px;display:block;margin-bottom:4px}
+
+#toast{position:fixed;left:50%;top:22px;transform:translate(-50%,-30px);background:var(--deep);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;z-index:90;opacity:0;transition:.3s;pointer-events:none;max-width:92vw;text-align:center}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+#black{position:fixed;inset:0;background:#000;z-index:80;display:none}
+#black.on{display:block}
+
+#lightbox{position:fixed;inset:0;z-index:85;background:rgba(6,12,30,.92);display:none;place-items:center;overflow:hidden;cursor:zoom-in}
+#lightbox.on{display:grid}
+#lightbox img{max-width:92vw;max-height:88vh;transition:transform .35s var(--ease);border-radius:6px;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+#lightbox.z{cursor:zoom-out}#lightbox.z img{transform:scale(2.2)}
+#lightbox .x{position:absolute;top:16px;right:16px}
+#lightbox p{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:#c7d3ee;font-size:13px}
+
+/* ============ DIAPOSITIVAS ESPECÍFICAS ============ */
+/* 1 Portada */
+#s1{background:linear-gradient(100deg,#e3e4e8 0%,#eeeff2 40%,#f5f5f7 100%)}
+#s1 .logo{width:calc(var(--u)*24);filter:brightness(0) saturate(100%) invert(13%) sepia(60%) saturate(2800%) hue-rotate(208deg) brightness(62%)}
+#s1 .tag{margin-top:calc(var(--u)*2.4);font-size:calc(var(--u)*1.1);letter-spacing:.32em;color:var(--soft);font-weight:500}
+#s1 .start{margin-top:calc(var(--u)*4)}
+
+/* 4 One More Global */
+#s4 .om{width:calc(var(--u)*25);margin-bottom:calc(var(--u)*2.2)}
+/* 7 marcas */
+#s7 .cols{position:absolute;inset:0;display:flex}
+#s7 .col{flex:1;position:relative;overflow:hidden;border:0;padding:0;cursor:pointer;transition:flex .6s var(--ease);background:#ddd}
+#s7 .col img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}
+#s7 .col:hover,#s7 .col:focus-visible,#s7 .col.on{flex:1.6}
+#s7 .col .cap{position:absolute;left:0;right:0;bottom:0;padding:calc(var(--u)*5) calc(var(--u)*1.4) calc(var(--u)*2.4);background:linear-gradient(transparent,rgba(5,20,55,.78));color:#fff;text-align:left;opacity:0;transform:translateY(12px);transition:.45s var(--ease)}
+#s7 .col:hover .cap,#s7 .col:focus-visible .cap,#s7 .col.on .cap{opacity:1;transform:none}
+#s7 .cap b{display:block;font-size:calc(var(--u)*1.5);font-weight:700}
+#s7 .cap small{font-size:calc(var(--u)*.9);opacity:.85}
+#s7 .hint{position:absolute;left:50%;bottom:calc(var(--u)*2.6);transform:translateX(-50%);z-index:4;background:rgba(255,255,255,.85);border-radius:999px;font-size:calc(var(--u)*.9);padding:.45em 1em;color:var(--deep);pointer-events:none;transition:opacity .4s}
+#s7.touched .hint{opacity:0}
+
+/* 8 */
+#s8 .tds{position:absolute;left:calc(var(--u)*5.5);bottom:calc(var(--u)*5);width:calc(var(--u)*13);z-index:4}
+/* 9 Línea de tiempo */
+#s9 .wrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:calc(var(--u)*6.5) calc(var(--u)*6) calc(var(--u)*4);text-align:center}
+#s9 .lead{max-width:calc(var(--u)*50);margin-top:calc(var(--u)*1.4)}
+.tl{position:relative;display:grid;grid-template-columns:repeat(6,1fr);width:min(100%,calc(var(--u)*82));margin-top:calc(var(--u)*3.4)}
+.tl::before{content:"";position:absolute;left:4%;right:-6%;top:calc(var(--u)*9.4);height:2px;background:linear-gradient(90deg,#cdd3df,#cdd3df 70%,#8db5f0)}
+.tl .bar{position:absolute;left:4%;top:calc(var(--u)*9.4);height:2px;background:var(--blue);width:var(--w,0%);transition:width .9s var(--ease);box-shadow:0 0 12px rgba(43,95,181,.6)}
+.step{background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:calc(var(--u)*1.2);position:relative;padding:0 4px}
+.step img{width:calc(var(--u)*7.2);height:calc(var(--u)*7.2);border-radius:50%;transition:transform .35s var(--ease),box-shadow .35s;mix-blend-mode:multiply}
+.step.last img{width:calc(var(--u)*9.6);height:calc(var(--u)*9.6);margin-top:calc(var(--u)*-2.4)}
+.step i{width:calc(var(--u)*.85);height:calc(var(--u)*.85);border-radius:50%;background:#6a7080;position:relative;z-index:2;transition:.3s}
+.step span{font-size:calc(var(--u)*1);color:var(--soft);font-weight:500;line-height:1.25}
+.step.on img{transform:scale(1.08)}
+.step.on i{background:var(--blue);box-shadow:0 0 0 6px rgba(43,95,181,.15)}
+.step.on span{color:var(--blue);font-weight:700}
+.step.last span{color:var(--navy);font-weight:800;font-size:calc(var(--u)*1.15)}
+.step.last em{font-style:normal;font-size:calc(var(--u)*.88);color:var(--soft);display:block;margin-top:.3em;font-weight:400}
+#s9 .foot{margin-top:calc(var(--u)*3.4);display:flex;gap:calc(var(--u)*2);align-items:center;border:1px solid #d7dbe4;border-radius:12px;padding:calc(var(--u)*1.4) calc(var(--u)*3);text-align:left;background:#fff;box-shadow:0 6px 24px rgba(20,40,90,.06)}
+#s9 .foot svg{width:calc(var(--u)*3.4);height:calc(var(--u)*3.4);color:var(--blue);flex:none}
+
+/* 10 */
+#s10 .feat{padding:calc(var(--u)*.8) 0}
+#s10 .feat + .feat{border:0}
+/* 11 PNG / 12 GlutaNAD */
+#s11 .name{font-size:calc(var(--u)*5.6);font-weight:800;line-height:1}
+#s11 .sub{font-size:calc(var(--u)*2);font-weight:700;margin-top:.15em}
+#s11 .lead{margin:.4em 0 calc(var(--u)*2)}
+.prod{position:absolute;z-index:2;display:block;border:0;background:none;padding:0}
+#s11 .prod{right:calc(var(--u)*6);top:calc(var(--u)*5);height:calc(var(--u)*50);width:auto}
+#s11 .prod img{height:100%;width:auto;mix-blend-mode:multiply}
+.medical{position:absolute;right:calc(var(--u)*3.6);top:calc(var(--u)*6.4);width:calc(var(--u)*9.5);z-index:4}
+#s12{background:linear-gradient(180deg,#f7f8fa,#eef0f4)}
+#s12 .content{left:auto;right:0;width:50%;padding-left:0;padding-right:calc(var(--u)*5)}
+#s12 .snap{width:calc(var(--u)*15);margin:calc(var(--u)*1.4) 0 calc(var(--u)*2)}
+#s12 .prod{left:calc(var(--u)*7);top:50%;translate:0 -50%;width:calc(var(--u)*36)}
+#s12 .prod img{width:100%;mix-blend-mode:multiply;filter:drop-shadow(0 30px 40px rgba(10,40,100,.18))}
+#s12 .usa{position:absolute;left:calc(var(--u)*4.8);bottom:calc(var(--u)*4.4);width:calc(var(--u)*5.4)}
+
+/* 13 Soluciones */
+#s13 .top{position:absolute;left:calc(var(--u)*6.4);top:calc(var(--u)*7);z-index:3;max-width:calc(var(--u)*50)}
+#s13 .stage{position:absolute;left:calc(var(--u)*7);right:calc(var(--u)*7);bottom:calc(var(--u)*7.5)}
+#s13 .stage img{width:100%;mix-blend-mode:multiply}
+#s13 .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:calc(var(--u)*1.6)}
+#s13 .tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:.55em 1em;font-size:calc(var(--u)*.95);font-weight:700;color:var(--deep);cursor:pointer;transition:.25s}
+#s13 .tab[aria-selected="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+#s13 .detail{min-height:calc(var(--u)*5.5);display:flex;align-items:center;gap:calc(var(--u)*1.6);margin-bottom:calc(var(--u)*1.4)}
+#s13 .detail b{font-size:calc(var(--u)*2.1);font-weight:800;color:var(--navy)}
+#s13 .detail span{font-size:calc(var(--u)*1.4);color:var(--soft);border-left:2px solid var(--cyan);padding-left:calc(var(--u)*1.4)}
+#s13 .pin{position:absolute;top:calc(var(--u)*-1.2);width:2px;height:calc(var(--u)*5);background:var(--blue);left:var(--x);transition:left .5s var(--ease)}
+#s13 .pin::before{content:"";position:absolute;top:-6px;left:-5px;width:12px;height:12px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 6px rgba(43,95,181,.18)}
+#s13 .tds{position:absolute;left:calc(var(--u)*5.5);bottom:calc(var(--u)*2.6);width:calc(var(--u)*11)}
+
+/* 14 Certificaciones */
+#s14 .content{width:52%;justify-content:flex-start;padding-top:calc(var(--u)*5)}
+#s14 .content > *{max-width:none}
+.badges{display:grid;grid-template-columns:repeat(4,1fr);gap:calc(var(--u)*1.4) calc(var(--u)*1.2);margin-top:calc(var(--u)*2.4)}
+.badge{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.5em;font-size:calc(var(--u)*.82);font-weight:700;line-height:1.25;color:var(--ink)}
+.badge img{width:calc(var(--u)*6.4);height:calc(var(--u)*6.4);mix-blend-mode:multiply;transition:transform .3s var(--ease)}
+.badge:hover img{transform:scale(1.08) rotate(-3deg)}
+#s14 h4{font-size:calc(var(--u)*.95);font-weight:700;margin:calc(var(--u)*2.2) 0 calc(var(--u)*1);padding-bottom:.6em;border-bottom:1px solid #c9ced8}
+#s14 .reg{width:100%;mix-blend-mode:multiply}
+#s14 .fda{position:absolute;left:0;bottom:calc(var(--u)*2.6);width:52%;background:#eef2f9;display:flex;gap:calc(var(--u)*1.6);align-items:center;padding:calc(var(--u)*1.3) calc(var(--u)*7)}
+#s14 .fda svg{width:calc(var(--u)*3.6);height:calc(var(--u)*3.6);color:var(--blue);flex:none}
+#s14 .fda b{color:var(--blue);font-size:calc(var(--u)*1.05);display:block}
+#s14 .cert{position:absolute;right:calc(var(--u)*6);top:52%;translate:0 -50%;rotate:-3deg;width:calc(var(--u)*29);border:0;background:none;padding:0;transition:transform .7s var(--ease),opacity .7s,rotate .5s var(--ease),scale .5s var(--ease)}
+#s14 .cert:hover{rotate:0deg;scale:1.02}
+#s14 .cert img{width:100%;mix-blend-mode:multiply}
+#s14 .scope{position:absolute;inset:0 0 0 auto;width:42%;background:radial-gradient(ellipse at 70% 40%,#e9ebef,#fff 70%)}
+
+/* 15 Economía */
+#s15 .content{width:36%}
+#s15 .cmp{position:absolute;left:42%;right:6%;top:13%;bottom:22%;display:grid;grid-template-columns:1fr 1px 1fr}
+#s15 .cmp > div:nth-child(2){background:#cfd5e1}
+#s15 .side{display:flex;flex-direction:column;align-items:center}
+#s15 .side h4{font-size:calc(var(--u)*1.2);font-weight:700;color:var(--soft);margin-bottom:calc(var(--u)*2.4)}
+#s15 .side.nm h4{color:var(--blue)}
+#s15 .chain{display:flex;flex-direction:column;gap:calc(var(--u)*.6)}
+#s15 .node{display:flex;align-items:center;gap:calc(var(--u)*1.6);opacity:.25;transition:opacity .4s var(--ease) var(--d2,0ms)}
+#s15 .node img{width:calc(var(--u)*4.6);height:calc(var(--u)*4.6);border-radius:50%;mix-blend-mode:multiply}
+#s15 .node span{font-weight:700;color:#555b67;font-size:calc(var(--u)*1.15)}
+#s15 .arrow{width:2px;height:calc(var(--u)*1.4);background:#aab;margin-left:calc(var(--u)*2.2)}
+#s15.play .node{opacity:1}
+#s15 .direct{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding-bottom:calc(var(--u)*1)}
+#s15 .direct .um{letter-spacing:.32em;font-size:calc(var(--u)*1.6);font-weight:400}
+#s15 .direct .line{position:relative;flex:1;width:2px;margin:calc(var(--u)*2) 0;background:repeating-linear-gradient(var(--blue) 0 6px,transparent 6px 11px);transform-origin:top;transform:scaleY(0);transition:transform 1.2s var(--ease) .4s}
+#s15.play .direct .line{transform:scaleY(1)}
+#s15 .direct .line em{position:absolute;left:calc(var(--u)*1.2);top:50%;transform:translateY(-50%) rotate(-90deg);transform-origin:left;white-space:nowrap;font-style:normal;font-size:calc(var(--u)*.85);letter-spacing:.28em;color:var(--soft)}
+#s15 .direct img{width:calc(var(--u)*4.6);height:calc(var(--u)*4.6);border-radius:50%;box-shadow:0 6px 20px rgba(20,40,90,.12)}
+#s15 .replay{margin-top:calc(var(--u)*2.4)}
+#s15 .quote{position:absolute;bottom:calc(var(--u)*6.5);left:0;right:0;text-align:center;font-size:calc(var(--u)*1.75);color:var(--ink)}
+#s15 .quote b{color:var(--blue)}
+
+/* 17 Franquicias */
+#s17 .wrap{position:absolute;inset:0;padding:calc(var(--u)*8) calc(var(--u)*5) calc(var(--u)*4)}
+.packs{display:grid;grid-template-columns:repeat(4,1fr);gap:calc(var(--u)*1.8);margin-top:calc(var(--u)*4)}
+.pack{border:0;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:stretch;text-align:center}
+.pack .card{background:#fff;border-radius:18px;box-shadow:0 10px 34px rgba(20,40,90,.10);padding:calc(var(--u)*2.4) calc(var(--u)*1.6) 0;overflow:hidden;transition:transform .35s var(--ease),box-shadow .35s;border:2px solid transparent;min-height:calc(var(--u)*17)}
+.pack .qv{font-size:calc(var(--u)*3.1);font-weight:800;color:var(--blue);padding-bottom:calc(var(--u)*1.2);border-bottom:1px solid var(--line)}
+.pack .pct{font-size:calc(var(--u)*3);font-weight:800;color:var(--blue);margin-top:calc(var(--u)*1)}
+.pack .pl{font-size:calc(var(--u)*.85);color:var(--soft);margin-bottom:calc(var(--u)*1.4)}
+.pack .gift{background:var(--navy);color:#fff;margin:0 calc(var(--u)*-1.6);display:flex;justify-content:center;align-items:center;gap:.7em;padding:calc(var(--u)*.9);font-size:calc(var(--u)*.85)}
+.pack .gift b{font-size:calc(var(--u)*1.25)}
+.pack .price{margin-top:calc(var(--u)*1.8);font-size:calc(var(--u)*1.8);font-weight:800;color:var(--blue)}
+.pack:hover .card{transform:translateY(-4px)}
+.pack[aria-pressed="true"] .card{border-color:var(--blue);transform:translateY(-8px);box-shadow:0 22px 50px rgba(20,60,140,.20)}
+.pick{margin-top:calc(var(--u)*3);display:flex;align-items:center;gap:calc(var(--u)*2);font-size:calc(var(--u)*1.15);color:var(--soft);min-height:calc(var(--u)*3)}
+.pick b{color:var(--navy)}
+
+/* 18 Diamante */
+#s18 .content{width:58%}
+#s18 .content > *{max-width:calc(var(--u)*52)}
+.dia{margin-top:calc(var(--u)*2.6);background:var(--navy);color:#fff;border-radius:14px;display:grid;grid-template-columns:auto 1fr;position:relative}
+.dia .l{display:flex;gap:calc(var(--u)*1.6);align-items:center;padding:calc(var(--u)*2.2) calc(var(--u)*2.4);border-right:1px solid rgba(255,255,255,.35);margin:calc(var(--u)*1.4) 0}
+.dia .l svg{width:calc(var(--u)*6);height:calc(var(--u)*6)}
+.dia .l small{font-size:calc(var(--u)*1.05);font-weight:500}
+.dia .l strong{display:block;font-size:calc(var(--u)*3.2);font-weight:800;line-height:1.05}
+.dia ul{list-style:none;padding:calc(var(--u)*2) calc(var(--u)*2.2) calc(var(--u)*5);display:grid;gap:.6em;font-size:calc(var(--u)*1.2)}
+.dia .gift{position:absolute;right:0;bottom:calc(var(--u)*1.4);background:#fff;color:var(--navy);display:flex;gap:.7em;align-items:center;padding:.6em 1.2em;border-radius:6px 0 0 6px;font-size:calc(var(--u)*.95)}
+.dia .gift b{font-size:calc(var(--u)*1.25)}
+#s18 .price{font-size:calc(var(--u)*2.1);font-weight:800;color:var(--blue);text-align:right;margin-top:calc(var(--u)*1.2)}
+#s18 .note{display:flex;align-items:center;gap:1em;margin-top:calc(var(--u)*1.4);font-size:calc(var(--u)*1.05);color:var(--soft)}
+#s18 .note svg{width:calc(var(--u)*3.2);height:calc(var(--u)*3.2);color:var(--blue);flex:none}
+
+/* 19 */
+.box{border:1px solid #dfe3ea;border-radius:12px;padding:calc(var(--u)*1.6) calc(var(--u)*2);display:grid;grid-template-columns:calc(var(--u)*4.4) 1fr;gap:calc(var(--u)*1.6);align-items:center;margin-top:calc(var(--u)*1.4);background:#fff}
+.box svg{width:100%;color:var(--blue)}
+.box p{font-size:calc(var(--u)*1.12);line-height:1.4;color:var(--soft)}
+.box p:first-child{color:var(--ink)}
+/* 20 */
+#s20 .big{font-size:calc(var(--u)*7.4);font-weight:800;color:var(--blue);line-height:1;letter-spacing:-.02em;white-space:nowrap}
+#s20 .content{width:58%}
+#s20 .calc{max-width:calc(var(--u)*40)}
+/* 21 */
+.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:start;margin-top:calc(var(--u)*3);text-align:center;gap:calc(var(--u)*.6)}
+.flow img{width:calc(var(--u)*7.4);height:calc(var(--u)*7.4);border-radius:50%;margin:0 auto calc(var(--u)*1.2)}
+.flow .op{color:var(--navy);font-weight:800;font-size:calc(var(--u)*2.2);padding-top:calc(var(--u)*2.6)}
+.flow .op.arr{color:#b8bec9;font-weight:300}
+.flow strong{display:block;font-size:calc(var(--u)*3.6);font-weight:800;color:var(--navy);line-height:1}
+.flow strong.t2{font-size:calc(var(--u)*1.75);color:var(--ink);line-height:1.1}
+.flow strong.t2 i{font-style:normal;color:var(--blue);display:block}
+.flow strong small{font-size:calc(var(--u)*1.2);color:var(--blue)}
+.flow span{display:block;font-size:calc(var(--u)*1);color:var(--soft);margin-top:.4em;line-height:1.3}
+.flow span b{display:block;color:var(--ink);font-weight:700;text-transform:none}
+.repeat{display:grid;grid-template-columns:calc(var(--u)*7) 1fr;gap:calc(var(--u)*2);align-items:center;border-top:1px solid #d6dbe4;margin-top:calc(var(--u)*2.6);padding-top:calc(var(--u)*2)}
+.repeat svg{width:calc(var(--u)*5.6);height:calc(var(--u)*5.6);color:var(--blue)}
+.slide.active .repeat svg{animation:spin 6s linear infinite}
+.noanim .repeat svg{animation:none!important}
+@keyframes spin{to{transform:rotate(360deg)}}
+.repeat h4{font-size:calc(var(--u)*1.1);font-weight:700;margin-bottom:.3em}
+/* 22 4x4 */
+.slots{display:flex;gap:calc(var(--u)*1.2);margin:calc(var(--u)*2.4) 0 calc(var(--u)*1)}
+.slot{width:calc(var(--u)*5.2);height:calc(var(--u)*5.2);border-radius:50%;border:2px dashed #b9c3d6;background:#fff;cursor:pointer;display:grid;place-items:center;color:#b9c3d6;transition:.3s var(--ease)}
+.slot svg{width:52%;height:52%}
+.slot.on{border-style:solid;border-color:var(--blue);background:var(--blue);color:#fff;transform:scale(1.06)}
+.slotlbl{font-size:calc(var(--u)*.95);color:var(--soft)}
+.rewards{list-style:none;display:grid;gap:calc(var(--u)*1.3);margin-top:calc(var(--u)*2)}
+.rewards li{display:flex;gap:1em;align-items:center;font-size:calc(var(--u)*1.6);color:var(--ink);font-weight:400;transition:.4s var(--ease)}
+.rewards svg{width:calc(var(--u)*2.6);height:calc(var(--u)*2.6);color:var(--blue);flex:none}
+.rewards b{font-weight:800}
+#s22 .rewards li{opacity:.35}
+#s22.done .rewards li{opacity:1}
+#s22 .reset{font-size:calc(var(--u)*.9);background:none;border:0;color:var(--blue);cursor:pointer;text-decoration:underline;margin-left:1em}
+/* 23 Bono de equipo */
+#s23 .content{width:62%;justify-content:center}
+#s23 .content > *{max-width:calc(var(--u)*56)}
+#s23 svg.tree{width:calc(var(--u)*48);margin:calc(var(--u)*1.6) 0 calc(var(--u)*1)}
+.tree path{stroke:var(--navy);stroke-width:2.2;fill:none;stroke-dasharray:240;stroke-dashoffset:240;transition:stroke-dashoffset 1.2s var(--ease) .3s}
+.slide.active .tree path{stroke-dashoffset:0}
+.noanim .tree path{transition:none;stroke-dashoffset:0}
+.tree text{font:400 13px M,sans-serif;fill:var(--soft)}.tree text.b{font-weight:700;fill:var(--ink)}
+.pcts{display:grid;grid-template-columns:repeat(5,1fr);gap:calc(var(--u)*1)}
+.pcts div{background:#fff;border-radius:10px;box-shadow:0 6px 22px rgba(20,40,90,.08);text-align:center;padding:calc(var(--u)*1.4) .4em;position:relative}
+.pcts b{display:block;font-size:calc(var(--u)*2);font-weight:800;color:var(--navy)}
+.pcts span{font-size:calc(var(--u)*.85);color:var(--soft)}
+.pcts .d{background:transparent;box-shadow:0 6px 22px rgba(20,40,90,.08)}
+.pcts .d b{background:var(--blue);color:#fff;margin:0 -.4em .4em;padding:.15em 0}
+.pcts .d::before{content:"";position:absolute;top:calc(var(--u)*-3.4);left:50%;transform:translateX(-50%);width:calc(var(--u)*2.6);height:calc(var(--u)*2.6);background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232B5FB5' stroke-width='1.3'%3E%3Cpath d='M6 3h12l4 6-10 12L2 9z'/%3E%3Cpath d='M2 9h20M12 21 8 9l4-6 4 6z'/%3E%3C/svg%3E") center/contain no-repeat}
+.potential{display:flex;align-items:center;gap:calc(var(--u)*1.6);margin-top:calc(var(--u)*2.2);font-size:calc(var(--u)*1.6);color:var(--blue)}
+.potential b{font-weight:800}
+.potential i{width:calc(var(--u)*5.2);height:calc(var(--u)*5.2);border-radius:50%;background:var(--blue);display:grid;place-items:center;color:#fff;flex:none}
+.potential i svg{width:50%;height:50%}
+
+/* 24 Uninivel */
+#s24 .content{width:26%;padding-left:calc(var(--u)*5)}
+#s24 .rings{position:absolute;left:20%;top:0;width:50%;bottom:calc(var(--u)*7)}
+#s24 .rings svg{width:100%;height:100%}
+.ring{fill:rgba(43,95,181,.045);stroke:rgba(43,95,181,.10);cursor:pointer;transition:fill .3s}
+.ring.on{fill:rgba(42,163,218,.20);stroke:var(--cyan)}
+.rl{font:700 14px M,sans-serif;fill:var(--deep);text-anchor:middle;pointer-events:none}
+.rl.p{font-size:17px;fill:var(--navy);font-weight:800}
+.youc{fill:var(--navy)}
+#s24 .card{position:absolute;right:calc(var(--u)*2.4);top:calc(var(--u)*6.4);width:28%;background:#f6f7f9;border:1px solid #e1e4ea;border-radius:14px;padding:calc(var(--u)*1.6)}
+#s24 .card header{display:flex;gap:1em;align-items:center;margin-bottom:calc(var(--u)*1.4)}
+#s24 .card header i{width:calc(var(--u)*4.4);height:calc(var(--u)*4.4);background:var(--navy);border-radius:50%;display:grid;place-items:center;color:#fff}
+#s24 .card header i svg{width:55%}
+#s24 .card header small{font-size:calc(var(--u)*.95);color:var(--soft)}
+#s24 .card header b{display:block;font-size:calc(var(--u)*1.9);color:var(--blue);font-weight:800;line-height:1}
+#s24 .grid{display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--u)*1.2)}
+#s24 .lv{display:grid;gap:calc(var(--u)*.6)}
+#s24 .lv button{display:flex;gap:.8em;align-items:center;background:#fff;border:2px solid transparent;border-radius:8px;padding:calc(var(--u)*.7) calc(var(--u)*.9);cursor:pointer;text-align:left;transition:.25s}
+#s24 .lv button.on{border-color:var(--cyan);transform:translateX(4px)}
+#s24 .lv svg{width:calc(var(--u)*2);height:calc(var(--u)*2);color:var(--navy);flex:none}
+#s24 .lv b{display:block;font-size:calc(var(--u)*1.05);color:var(--navy)}
+#s24 .lv span{font-size:calc(var(--u)*.95);color:var(--blue);font-weight:700}
+#s24 .tot{display:flex;flex-direction:column;justify-content:center;text-align:center;border-left:1px solid #d3d8e1;padding-left:calc(var(--u)*1);font-size:calc(var(--u)*.85);color:var(--soft)}
+#s24 .tot b{display:block;color:var(--ink)}
+#s24 .tot strong{font-size:calc(var(--u)*4.6);color:var(--blue);font-weight:800;line-height:1.05}
+#s24 .inf{position:absolute;left:24%;width:44%;bottom:calc(var(--u)*3);display:flex;align-items:center;gap:calc(var(--u)*1.6);background:#f6f7f9;border:1px solid #e1e4ea;border-radius:10px;padding:calc(var(--u)*1) calc(var(--u)*1.6)}
+#s24 .inf i{width:calc(var(--u)*4);height:calc(var(--u)*4);border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;flex:none;font-style:normal;font-size:calc(var(--u)*2)}
+#s24 .inf .k{text-align:center;padding-right:calc(var(--u)*1.6);border-right:1px solid #ccd;color:var(--blue)}
+#s24 .inf .k small{font-size:calc(var(--u)*.85);font-weight:700;display:block}
+#s24 .inf .k b{font-size:calc(var(--u)*2.2);font-weight:800}
+#s24 .inf p{font-size:calc(var(--u)*1.08);color:var(--soft);line-height:1.35}
+#s24 .inf p b{color:var(--blue)}
+#s24 .calcbtn{margin-top:calc(var(--u)*2.2)}
+dialog{border:0;border-radius:18px;padding:0;width:min(560px,94vw);box-shadow:0 30px 80px rgba(0,0,0,.35);margin:auto}
+dialog::backdrop{background:rgba(5,15,40,.55)}
+dialog .in{padding:24px}
+dialog h3{font-size:19px;margin-bottom:4px}
+dialog .sub{font-size:13px;color:var(--soft);margin-bottom:16px;line-height:1.45}
+dialog table{width:100%;border-collapse:collapse;font-size:14px}
+dialog td,dialog th{padding:7px 6px;border-bottom:1px solid var(--line);text-align:left}
+dialog th{font-size:12px;color:var(--mute);font-weight:600}
+dialog td input{width:100%;border:1px solid #cfd5e1;border-radius:8px;padding:6px 8px;font-weight:600}
+dialog td.r,dialog th.r{text-align:right;font-variant-numeric:tabular-nums}
+dialog tfoot td{font-weight:800;color:var(--navy);font-size:16px;border:0;padding-top:12px}
+dialog .disc{font-size:12px;color:var(--mute);margin-top:14px;line-height:1.5}
+dialog .act{display:flex;justify-content:flex-end;margin-top:14px}
+dialog .act .btn{font-size:14px}
+
+/* 25 Rango */
+#s25 .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0) 32%,rgba(255,255,255,0) 70%,rgba(10,30,70,.25))}
+#s25 .head{position:absolute;top:calc(var(--u)*4.4);left:0;right:0;text-align:center;z-index:3}
+#s25 .head .t{font-size:calc(var(--u)*3.4)}
+#s25 .head p{font-size:calc(var(--u)*1.25);color:var(--ink);margin-top:.5em}
+#s25 .head p b{font-weight:700}
+.rank{position:absolute;top:30%;width:calc(var(--u)*21);background:rgba(255,255,255,.66);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:14px;text-align:center;padding:calc(var(--u)*4.2) calc(var(--u)*1.2) calc(var(--u)*1.6);z-index:3}
+.rank.a{left:calc(var(--u)*6)}.rank.b{right:calc(var(--u)*6)}
+.rank i{position:absolute;top:calc(var(--u)*-3.4);left:50%;transform:translateX(-50%);width:calc(var(--u)*6.4);height:calc(var(--u)*6.4);border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.75)}
+.rank i svg{width:50%;height:50%}
+.rank h4{font-size:calc(var(--u)*1.6);font-weight:800}
+.rank.a h4,.rank.a strong,.rank.a .ar{color:#F07A2B}.rank.a i{color:#F07A2B}
+.rank.b h4,.rank.b strong,.rank.b .ar{color:var(--cyan)}.rank.b i{color:var(--blue)}
+.rank small{display:block;font-size:calc(var(--u)*1.15);color:var(--ink);margin-top:.6em}
+.rank strong{display:block;font-size:calc(var(--u)*2.3);font-weight:800;line-height:1.15}
+.rank .ar{font-size:calc(var(--u)*1.8);line-height:1}
+.rank p{font-size:calc(var(--u)*1.1);color:var(--ink);margin-top:calc(var(--u)*1.2);line-height:1.35}
+.diamond{position:absolute;left:50%;bottom:calc(var(--u)*3.4);translate:-50% 0;display:flex;align-items:center;gap:calc(var(--u)*1.8);background:rgba(10,40,110,.80);backdrop-filter:blur(10px);color:#fff;border-radius:10px;padding:calc(var(--u)*1) calc(var(--u)*2.4);z-index:3;white-space:nowrap}
+.diamond .n{display:flex;align-items:center;gap:.6em;font-weight:700;font-size:calc(var(--u)*1.2);padding-right:calc(var(--u)*1.8);border-right:1px solid rgba(255,255,255,.4)}
+.diamond .n svg{width:calc(var(--u)*2.6);height:calc(var(--u)*2.6)}
+.diamond div small{display:block;font-size:calc(var(--u)*1.05);opacity:.9}
+.diamond div b{font-size:calc(var(--u)*1.8);font-weight:800}
+.diamond .sep{font-size:calc(var(--u)*1.4)}
+/* 26 Matching */
+#s26 .content{width:46%;padding-left:calc(var(--u)*12)}
+.match{position:absolute;right:calc(var(--u)*11);top:50%;translate:0 -50%;width:calc(var(--u)*35)}
+.match > small{display:block;text-align:right;padding-right:calc(var(--u)*5);font-size:calc(var(--u)*1.1);color:var(--soft);margin-bottom:calc(var(--u)*.8)}
+.mrow{position:relative;display:grid;grid-template-columns:1fr 1px 1fr;align-items:center;background:#fff;border-radius:14px;box-shadow:0 8px 26px rgba(20,40,90,.10);height:calc(var(--u)*5.6);margin-bottom:calc(var(--u)*1.6);overflow:hidden}
+.mrow::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(42,163,218,.10),rgba(43,95,181,.16));transform-origin:left;transform:scaleX(0);transition:transform 1s var(--ease) var(--d,0ms)}
+.slide.active .mrow::before{transform:scaleX(var(--s))}
+.noanim .mrow::before{transition:none;transform:scaleX(var(--s))}
+.mrow span{font-size:calc(var(--u)*2.1);font-weight:300;text-align:center;position:relative}
+.mrow i{height:55%;background:#d5dae3}
+.mrow b{font-size:calc(var(--u)*3.3);font-weight:800;color:var(--blue);text-align:center;position:relative}
+/* 27-28 */
+.ilist{list-style:none;display:grid;gap:calc(var(--u)*1.5);margin-top:calc(var(--u)*.4)}
+.ilist li{display:flex;gap:1em;align-items:center;font-size:calc(var(--u)*1.3);color:var(--ink)}
+.ilist svg{width:calc(var(--u)*2.4);height:calc(var(--u)*2.4);color:var(--blue);flex:none}
+.pill4{display:grid;grid-template-columns:repeat(4,1fr);margin-top:calc(var(--u)*2.6);text-align:center}
+.pill4 > div{padding:0 calc(var(--u)*.8)}
+.pill4 > div + div{border-left:1px solid #d4d9e2}
+.pill4 svg{width:calc(var(--u)*4.4);height:calc(var(--u)*4.4);color:var(--blue);margin:0 auto calc(var(--u)*.8)}
+.pill4 b{display:block;font-size:calc(var(--u)*1.3);font-weight:700}
+.pill4 span{font-size:calc(var(--u)*.98);color:var(--soft);line-height:1.3;display:block;margin-top:.2em}
+.motto{margin-top:calc(var(--u)*2.8);font-size:calc(var(--u)*1.55);color:var(--ink)}
+.motto b{color:var(--blue);font-weight:700}
+/* 29-30 */
+#s29 .content{width:55%;justify-content:flex-start;padding-top:calc(var(--u)*10)}
+#s29 .content > *{max-width:none}
+#s29 .t{font-size:calc(var(--u)*3.2)}
+#s29 p{font-size:calc(var(--u)*1.25);margin-top:calc(var(--u)*3)}
+#s29 .q{font-size:calc(var(--u)*3.4);font-weight:800;margin-top:.15em}
+#s30{background:#111}
+#s30 .end{position:absolute;left:0;right:0;bottom:calc(var(--u)*6);display:flex;justify-content:center;gap:12px;z-index:3}
+
+/* ============ MÓVIL / VERTICAL ============ */
+@media (max-width:860px),(orientation:portrait) and (max-width:1100px){
+  :root{--u:min(1.9vw,9px)}
+  .slide{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+  .photo{position:relative;width:100%!important;height:40vh;left:auto;right:auto}
+  .photo.fade img{-webkit-mask-image:linear-gradient(180deg,#000 70%,transparent);mask-image:linear-gradient(180deg,#000 70%,transparent)}
+  .content{position:relative;width:100%!important;padding:20px 22px 110px!important;justify-content:flex-start;left:auto!important;right:auto!important;top:auto;bottom:auto}
+  .content > *{max-width:none!important}
+  .t{font-size:30px!important}.t.xl{font-size:34px!important}
+  .lead{font-size:16px}.small{font-size:14px}
+  .feat h3{font-size:16px}.feat p{font-size:14px}.checks li{font-size:15px}
+  .mark{display:none}
+  .ymf{display:none}
+  .chip{font-size:13px}.btn{font-size:15px}
+  .calc input,.calc output{font-size:17px}.calc label{font-size:13px}.calc .disc{font-size:11px}
+  #s1 .content{position:absolute;top:auto;bottom:0;padding-bottom:120px!important;background:linear-gradient(transparent,rgba(240,241,244,.96) 35%)}
+  #s1 .photo{height:70vh}
+  #s1 .logo{width:220px}#s1 .tag{font-size:12px}
+  #s4 .om{width:220px}
+  #s7 .cols{position:relative;height:100%;flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x mandatory}
+  #s7 .col{flex:0 0 72vw!important;scroll-snap-align:center}
+  #s7 .col .cap{opacity:1;transform:none}#s7 .cap b{font-size:20px}#s7 .cap small{font-size:13px}
+  #s7 .hint{display:none}
+  #s8 .tds{position:relative;left:22px;bottom:auto;width:150px;margin:-90px 0 40px}
+  #s9 .wrap{position:relative;padding:70px 22px 110px}
+  #s9 .lead{font-size:15px}
+  .tl{grid-template-columns:repeat(3,1fr);row-gap:28px}.tl::before,.tl .bar{display:none}
+  .step img{width:76px;height:76px}.step.last img{width:92px;height:92px;margin:0}.step span{font-size:13px}.step.last span{font-size:14px}.step.last em{font-size:12px}
+  #s9 .foot{padding:14px;font-size:14px}#s9 .foot svg{width:34px;height:34px}
+  #s11 .prod,#s12 .prod{position:relative;right:auto;left:auto;top:auto;translate:none;height:auto;width:min(80vw,380px);margin:70px auto 0}
+  #s11 .prod img{width:100%;height:auto}
+  #s11 .name{font-size:52px}#s11 .sub{font-size:20px}
+  .medical{display:none}
+  #s11 .content{padding-top:76px!important}
+  #s12 .content{width:100%}#s12 .snap{width:150px}#s12 .usa{position:relative;left:22px;bottom:auto;width:60px;margin:-90px 0 40px}
+  #s13 .top{position:relative;left:auto;top:auto;padding:70px 22px 0}
+  #s13 .stage{position:relative;left:auto;right:auto;bottom:auto;padding:0 22px 40px}
+  #s13 .tab{font-size:13px}#s13 .detail b{font-size:20px}#s13 .detail span{font-size:15px}
+  #s13 .pin{display:none}#s13 .tds{position:relative;left:22px;bottom:auto;width:120px;margin-bottom:100px}
+  #s14 .content{padding-top:70px!important}
+  .badges{grid-template-columns:repeat(4,1fr);gap:14px 8px}.badge{font-size:10px}.badge img{width:60px;height:60px}
+  #s14 h4{font-size:13px}
+  #s14 .scope{display:none}
+  #s14 .cert{position:relative;right:auto;top:auto;translate:none;rotate:-2deg;width:min(86vw,420px);margin:0 auto 20px;display:block}
+  #s14 .fda{position:relative;width:100%;bottom:auto;padding:16px 22px 110px;font-size:14px}#s14 .fda b{font-size:15px}#s14 .fda svg{width:40px;height:40px}
+  #s15 .content{padding-top:70px!important}
+  #s15 .cmp{position:relative;left:auto;right:auto;top:auto;bottom:auto;padding:0 16px;gap:10px}
+  #s15 .node img{width:44px;height:44px}#s15 .node span{font-size:13px}#s15 .side h4{font-size:13px;text-align:center}
+  #s15 .direct .um{font-size:16px}#s15 .direct img{width:48px;height:48px}#s15 .direct .line em{font-size:10px}
+  #s15 .quote{position:relative;bottom:auto;padding:30px 22px 110px;font-size:18px}
+  #s17 .wrap{position:relative;padding:70px 22px 110px}
+  .packs{grid-template-columns:1fr 1fr;gap:14px}
+  .pack .qv{font-size:28px}.pack .pct{font-size:26px}.pack .pl,.pack .gift{font-size:12px}.pack .gift b{font-size:14px}.pack .price{font-size:20px}.pack .card{min-height:0;padding-top:16px}
+  .pick{font-size:15px;flex-wrap:wrap}
+  .dia{grid-template-columns:1fr}.dia .l{border:0;border-bottom:1px solid rgba(255,255,255,.3);margin:0 16px;padding:18px 0}
+  .dia .l strong{font-size:34px}.dia .l small{font-size:13px}.dia ul{font-size:15px;padding:16px 18px 70px}.dia .gift{font-size:13px}.dia .gift b{font-size:16px}
+  #s18 .price{font-size:24px}#s18 .note{font-size:14px}
+  .box p{font-size:15px}.box{grid-template-columns:42px 1fr}
+  #s20 .big{font-size:56px}
+  .flow img{width:64px;height:64px}.flow strong{font-size:34px}.flow strong.t2{font-size:16px}.flow span{font-size:12px}.flow .op{font-size:20px;padding-top:20px}
+  .repeat h4{font-size:14px}.repeat{grid-template-columns:56px 1fr}.repeat svg{width:46px;height:46px}
+  .slot{width:52px;height:52px}.slotlbl{font-size:13px}.rewards li{font-size:18px}.rewards svg{width:28px;height:28px}
+  #s23 svg.tree{width:100%}.pcts{grid-template-columns:repeat(3,1fr);row-gap:30px}.pcts b{font-size:22px}.pcts span{font-size:11px}.potential{font-size:17px}.potential i{width:48px;height:48px}
+  #s24 .content{padding-top:70px!important}
+  #s24 .rings{position:relative;left:auto;width:100%;height:360px;bottom:auto}
+  #s24 .card{position:relative;right:auto;top:auto;width:auto;margin:0 16px 14px}
+  #s24 .card header b{font-size:22px}#s24 .card header small{font-size:12px}#s24 .lv b{font-size:14px}#s24 .lv span{font-size:13px}#s24 .tot{font-size:12px}#s24 .tot strong{font-size:44px}
+  #s24 .inf{position:relative;left:auto;width:auto;bottom:auto;margin:0 16px 110px}#s24 .inf p{font-size:13px}#s24 .inf .k b{font-size:22px}#s24 .inf .k small{font-size:11px}
+  #s25 .bg{position:fixed}
+  #s25 .head{position:relative;top:auto;padding:70px 16px 20px}#s25 .head .t{font-size:28px!important}#s25 .head p{font-size:14px}
+  .rank{position:relative;top:auto;left:auto!important;right:auto!important;width:auto;margin:50px 22px 0;font-size:14px}
+  .rank h4{font-size:18px}.rank strong{font-size:24px}.rank small,.rank p{font-size:14px}.rank i{width:58px;height:58px;top:-30px}
+  .diamond{position:relative;left:auto;bottom:auto;translate:none;margin:24px 16px 110px;flex-wrap:wrap;justify-content:center;white-space:normal;gap:12px}
+  .diamond .n{font-size:15px;border:0}.diamond div small{font-size:12px}.diamond div b{font-size:20px}
+  #s26 .content{padding-top:80px!important}
+  .match{position:relative;right:auto;top:auto;translate:none;width:auto;margin:0 22px 110px}
+  .mrow{height:60px}.mrow span{font-size:20px}.mrow b{font-size:28px}.match > small{font-size:13px}
+  .ilist li{font-size:16px}.ilist svg{width:28px;height:28px}
+  .pill4{grid-template-columns:1fr 1fr;row-gap:22px}.pill4 > div:nth-child(3){border-left:0}.pill4 b{font-size:16px}.pill4 span{font-size:13px}.pill4 svg{width:44px;height:44px}
+  .motto{font-size:17px}
+  #s29 .bg img{object-position:62% center}
+  #s29 .content{position:absolute;padding-top:90px!important}
+  #s29 .t{font-size:28px!important}#s29 p{font-size:15px}#s29 .q{font-size:32px}
+  #s30 .sign30{bottom:84px;font-size:11px;padding:0 16px}
+  #s30 .end{bottom:130px;flex-wrap:wrap;padding:0 16px}
+  .ui button,.ui .count{height:40px;min-width:40px}
+  #tr .opt{display:none}
+  #br{bottom:16px;right:50%;transform:translateX(50%)}
+  #progress{height:5px}
+}
+
+/* ============ IMPRESIÓN / EXPORTAR PDF ============ */
+@page{size:1920px 1080px;margin:0}
+@media print{
+  html,body{overflow:visible;height:auto;background:#fff}
+  :root{--u:19.2px}
+  #deck{position:static}
+  .slide{position:relative!important;visibility:visible!important;opacity:1!important;transform:none!important;width:1920px;height:1080px;page-break-after:always;break-after:page;overflow:hidden!important}
+  .rv{opacity:1!important;transform:none!important}
+  .photo img,.bg img{animation:none!important}
+  .ui,#progress,.drawer,.scrim,.panel,#notesbar,#toast,#black,#lightbox,.zoomhint,#s7 .hint,#s30 .end,.calcbtn,.calc,#s22 .reset{display:none!important}
+  #s15 .node{opacity:1}#s15 .direct .line{transform:none}
+  .tree path{stroke-dashoffset:0}
+  .mrow::before{transform:scaleX(var(--s))!important}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .t .g,.gtext{background:none!important;color:#2580C9!important;-webkit-text-fill-color:#2580C9}
+  .match{translate:none!important;top:calc(var(--u)*13)!important}
+  .mrow{break-inside:avoid}
+  .photo.fade img{-webkit-mask-image:none;mask-image:none}
+  .photo.fade::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#fff 0,rgba(255,255,255,0) 22%)}
+}
+@media (prefers-reduced-motion:reduce){.slide{transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<!-- Iconos reutilizables (SVG) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <defs>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="m7.5 12.3 3 3 6-6.3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-diamond" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M12 21 8 9l4-6 4 6z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5c3 3 3 16 0 19M12 2.5c-3 3-3 16 0 19"/></symbol>
+  <symbol id="i-micro" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M6 21h12M9 21v-3a6 6 0 0 1 6-6M10 4l4 2-3 6-4-2zM13.5 3.2l1.8.9M12 14l2 1"/></symbol>
+  <symbol id="i-dna" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M4 20c6-4 10-12 16-16M4 4c2 2 4 3 6 4M14 16c2 1 4 2 6 4M7 9.5l3-3M10 13l4-4M13.5 17.5l3-3"/></symbol>
+  <symbol id="i-office" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="9.5"/><path d="M5 7c3 1 4 4 3 6s1 4 1 6M14 3c-1 3 2 4 4 4s2 3 1 5-1 4-3 6"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/><path d="m12 12 7-7M17 3v2h2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M12 2.5 4 5.5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10v-6z"/><path d="M12 8v7M8.5 11.5h7"/></symbol>
+  <symbol id="i-money" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><circle cx="13" cy="8" r="5"/><path d="M13 5.5v5M11.5 6.8c0-.8.7-1.2 1.5-1.2s1.5.4 1.5 1.1-3 1-3 2.2c0 .7.7 1.1 1.5 1.1s1.5-.4 1.5-1.2M2 17l3-2 4 1h4l3-2h3c1 0 1 1.5 0 2l-5 3H8l-3 1"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="3"/><circle cx="5.5" cy="9.5" r="2.3"/><circle cx="18.5" cy="9.5" r="2.3"/><path d="M6.5 19c0-3.6 2.5-6 5.5-6s5.5 2.4 5.5 6zM1 18.5c0-2.6 1.6-4.4 4-4.4 1 0 1.8.3 2.4.8A7.6 7.6 0 0 0 5.4 18.5zM23 18.5c0-2.6-1.6-4.4-4-4.4-1 0-1.8.3-2.4.8a7.6 7.6 0 0 1 2 3.6z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></symbol>
+  <symbol id="i-bio" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M8 4s3 3.5 3 5.5a3 3 0 0 1-6 0C5 7.5 8 4 8 4zM16 4s3 3.5 3 5.5a3 3 0 0 1-6 0C13 7.5 16 4 16 4zM3 17c3 0 3 2 6 2s3-2 6-2 3 2 6 2"/></symbol>
+  <symbol id="i-cycle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><circle cx="12" cy="12" r="3.5"/><path d="M12 3a9 9 0 0 1 9 9M12 21a9 9 0 0 1-9-9M19 9l2 3 2-3M5 15l-2-3-2 3"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.7 3h10.6A2 2 0 0 0 19 18l-5-9V3M7.5 14h9"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></symbol>
+  <symbol id="i-gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v9h14v-9M12 8v13M12 8S10 3 7.5 4 9 8 12 8zM12 8s2-5 4.5-4S15 8 12 8z"/></symbol>
+  <symbol id="i-verified" viewBox="0 0 24 24" fill="currentColor"><path d="m12 1.5 2.6 1.9 3.2-.2 1 3.1 2.7 1.8-1 3.1 1 3.1-2.7 1.8-1 3.1-3.2-.2L12 22.5l-2.6-1.9-3.2.2-1-3.1L2.5 15.9l1-3.1-1-3.1 2.7-1.8 1-3.1 3.2.2z"/><path d="m8 12 3 3 5-6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M3 9h18v12H3zM2 6h20v3H2zM12 6v15"/><path d="m9 13 2 2 4-4" stroke-linecap="round"/></symbol>
+  <symbol id="i-coins" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="8" cy="6" rx="5" ry="2"/><path d="M3 6v4c0 1.1 2.2 2 5 2s5-.9 5-2V6M3 10v4c0 1.1 2.2 2 5 2M3 14v4c0 1.1 2.2 2 5 2"/><rect x="11" y="13" width="11" height="8" rx="1.5"/><circle cx="16.5" cy="17" r="1.8"/></symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 6-6 4 4 8-8M15 7h6v6"/></symbol>
+  <symbol id="i-climb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><circle cx="18" cy="6" r="3.5"/><circle cx="18" cy="6" r="1.2"/><path d="m14 10 3-3M9 5a1.5 1.5 0 1 0 0-.1M8 8l-2 5 4 2-1 5M8 8l3 3 3-1M6 13l-3 1M3 21h4v-3h4v-3h4"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M4 20V14M9 20v-9M14 20v-6M19 20V8M3 13l6-5 4 3 7-7M16 4h4v4"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5c3 3 3 16 0 19M12 2.5c-3 3-3 16 0 19"/><path d="M17 4.5a2.5 2.5 0 0 1 5 0c0 2-2.5 4-2.5 4S17 6.5 17 4.5z" fill="#fff"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2.5" y="6.5" width="19" height="13" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M8 6.5 9.5 4h5L16 6.5"/></symbol>
+  <symbol id="i-cheer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><circle cx="6" cy="10" r="2"/><circle cx="12" cy="10" r="2"/><circle cx="18" cy="10" r="2"/><path d="M2 20c0-3 2-5 4-5s3 1 4 2 2 1 2 1 1 0 2-1 2-2 4-2 4 2 4 5M3 6l-1-2M12 5V3M21 6l1-2M7.5 4.5l-.5-1.5M16.5 4.5l.5-1.5"/></symbol>
+  <symbol id="i-cap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="m12 4 11 5-11 5L1 9z"/><path d="M6 11.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-4.5M21 9.5v5M21 14.5a1 1 0 1 0 0 2"/></symbol>
+  <symbol id="i-summit" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21 9 9l3 4 3-3 8 11z"/><path d="M12 3v6M12 3h5l-1 1.5 1 1.5h-5" stroke="currentColor" stroke-width="1.2" fill="none"/></symbol>
+  <symbol id="i-team" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="10" r="2.2"/><circle cx="7" cy="12" r="1.8"/><circle cx="17" cy="12" r="1.8"/><path d="M8 18c0-2.4 1.8-4 4-4s4 1.6 4 4M3.5 16.5C4 15 5.4 14 7 14M20.5 16.5C20 15 18.6 14 17 14"/></symbol>
+  <symbol id="i-heroes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="10" r="2.4"/><path d="M5 6l4 5v8M19 6l-4 5v8M9 19h6M12 3v1.5M10.5 3.8H13.5"/><path d="M4 4.5h2M5 3.5v2M18 4.5h2M19 3.5v2"/></symbol>
+  <symbol id="i-infinity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 12c-2-2.5-3.5-4-6-4a4 4 0 0 0 0 8c2.5 0 4-1.5 6-4zm0 0c2 2.5 3.5 4 6 4a4 4 0 0 0 0-8c-2.5 0-4 1.5-6 4z"/></symbol>
+  <symbol id="i-zoom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4M11 8v6M8 11h6"/></symbol>
+ </defs>
+</svg>
+
+<main id="deck" aria-live="polite">
+
+<!-- ======================================================
+     CÓMO EDITAR: cada diapositiva es un <section class="slide">.
+     · data-title  = nombre en el menú
+     · data-section = sección del menú
+     · <aside class="notes"> = notas del expositor (tecla N / modo expositor)
+     · Las imágenes están en assets/img/ (cambia el src para reemplazarlas)
+     ====================================================== -->
+
+<!-- 1 · PORTADA -->
+<section class="slide" id="s1" data-title="Portada" data-section="Apertura">
+  <div class="photo" style="--pw:57%"><img src="assets/img/s01.jpg" alt="Tres profesionales conversando frente a un ventanal con vista a la ciudad" fetchpriority="high"></div>
+  <div class="content">
+    <img class="logo rv" src="assets/img/logo-summit.png" alt="Summit Networkers">
+    <p class="tag rv">YOU MOVE FORWARD</p>
+    <div class="start rv"><button class="btn" data-go="next"><svg><use href="#i-arrow"/></svg>Comenzar</button></div>
+  </div>
+  <aside class="notes">Bienvenida. Summit Networkers presenta YOU MOVE FORWARD, la oportunidad U-MUVO.</aside>
+</section>
+
+<!-- 2 · PREGUNTA -->
+<section class="slide" id="s2" data-title="¿Cómo sería tu vida?" data-section="Apertura">
+  <div class="photo fade" style="--pw:54%"><img src="assets/img/s02.jpg" alt="Tres amigos sonrientes contemplando el amanecer desde una montaña"></div>
+  <span class="mark">U·MUVO</span>
+  <div class="content">
+    <h2 class="t xl rv"><span>¿Si el tiempo y el dinero no fueran un problema,</span><span class="g">cómo sería tu vida?</span></h2>
+  </div>
+  <span class="ymf">YOU MOVE FORWARD</span>
+  <aside class="notes">Pregunta abierta al público. Deja unos segundos para que cada persona imagine su respuesta.</aside>
+</section>
+
+<!-- 3 · PILARES -->
+<section class="slide" id="s3" data-title="Pilares para el éxito" data-section="Apertura">
+  <div class="photo fade" style="--pw:58%"><img src="assets/img/s03.jpg" alt="Excursionista frente a una montaña con un sendero iluminado hasta la cima"></div>
+  <div class="content">
+    <h2 class="t rv"><span>Pilares para</span><span class="g">el éxito</span></h2>
+    <div class="rule rv"></div>
+    <div>
+      <button class="pillar rv" aria-expanded="false" data-jump="s4"><div class="feat"><span class="ico"><svg><use href="#i-target"/></svg></span><div><h3>Oportunidad Global <svg class="chev" width="10" height="10" viewBox="0 0 10 10"><path d="M3 1l4 4-4 4" stroke="currentColor" fill="none" stroke-width="1.6"/></svg></h3><p>Una empresa en expansión</p><div class="more"><div><span class="go">Ver la empresa</span></div></div></div></div></button>
+      <button class="pillar rv" aria-expanded="false" data-jump="s7"><div class="feat"><span class="ico"><svg><use href="#i-shield"/></svg></span><div><h3>Productos innovadores <svg class="chev" width="10" height="10" viewBox="0 0 10 10"><path d="M3 1l4 4-4 4" stroke="currentColor" fill="none" stroke-width="1.6"/></svg></h3><p>Tecnología avanzada para transformar vidas.</p><div class="more"><div><span class="go">Ver los productos</span></div></div></div></div></button>
+      <button class="pillar rv" aria-expanded="false" data-jump="s16"><div class="feat"><span class="ico"><svg><use href="#i-money"/></svg></span><div><h3>Plan de compensación <svg class="chev" width="10" height="10" viewBox="0 0 10 10"><path d="M3 1l4 4-4 4" stroke="currentColor" fill="none" stroke-width="1.6"/></svg></h3><p>Un modelo justo, escalable y lucrativo.</p><div class="more"><div><span class="go">Ver el plan</span></div></div></div></div></button>
+      <button class="pillar rv" aria-expanded="false" data-jump="s28"><div class="feat"><span class="ico"><svg><use href="#i-people"/></svg></span><div><h3>Comunidad y sistema <svg class="chev" width="10" height="10" viewBox="0 0 10 10"><path d="M3 1l4 4-4 4" stroke="currentColor" fill="none" stroke-width="1.6"/></svg></h3><p>Acompañamiento, formación y crecimiento.</p><div class="more"><div><span class="go">Ver el sistema</span></div></div></div></div></button>
+    </div>
+  </div>
+  <span class="ymf">YOU MOVE FORWARD</span>
+  <aside class="notes">Los cuatro pilares: oportunidad global, productos innovadores, plan de compensación, comunidad y sistema. Toca cada pilar para abrirlo y saltar a su sección.</aside>
+</section>
+
+<!-- 4 · ONE MORE GLOBAL -->
+<section class="slide" id="s4" data-title="One More Global" data-section="La empresa">
+  <div class="photo fade" style="--pw:50%"><img src="assets/img/s04.jpg" alt="Edificio corporativo curvo con el nombre U-MUVO en la fachada"></div>
+  <div class="content">
+    <img class="om rv" src="assets/img/logo-1more.png" alt="1MORE — One More Global">
+    <p class="lead rv" style="color:var(--ink)">One More Global es el grupo empresarial que reúne distintas iniciativas bajo una visión común. U-MUVO forma parte de ese grupo y opera desde Estados Unidos para América, Europa y Asia.</p>
+    <p class="lead rv" style="color:var(--ink);margin-top:1em">Bajo U-MUVO reunimos cinco líneas de bienestar y cuidado personal.</p>
+  </div>
+  <span class="ymf">YOU MOVE FORWARD</span>
+  <aside class="notes">One More Global es el grupo empresarial. U-MUVO opera desde Estados Unidos para América, Europa y Asia, con cinco líneas de bienestar y cuidado personal.</aside>
+</section>
+
+<!-- 5 · U-MUVO -->
+<section class="slide" id="s5" data-title="U-MUVO" data-section="La empresa">
+  <div class="photo fade" style="--pw:44%"><img src="assets/img/s05.jpg" alt="El planeta Tierra de noche con conexiones luminosas entre continentes"></div>
+  <div class="content">
+    <p class="rv" style="font-size:calc(var(--u)*4.4);letter-spacing:.3em;font-weight:400;margin-bottom:calc(var(--u)*2.4)">U·MUVO</p>
+    <div class="feat rv"><span class="ico"><svg><use href="#i-globe"/></svg></span><div><h3>Alcance internacional</h3><p>En plena expansión global desde USA</p></div></div>
+    <div class="feat rv"><span class="ico"><svg><use href="#i-micro"/></svg></span><div><h3>Pioneros en bienestar transdérmico</h3><p>TDS NEXGEN™ es nuestra plataforma de aplicación sobre la piel</p></div></div>
+    <div class="feat rv"><span class="ico"><svg><use href="#i-dna"/></svg></span><div><h3>Ecosistema de marcas</h3><p>Cinco líneas de bienestar y cuidado personal.</p></div></div>
+    <div class="feat rv"><span class="ico"><svg><use href="#i-office"/></svg></span><div><h3>Infraestructura internacional</h3><p>Oficinas y operaciones en expansión.</p></div></div>
+  </div>
+  <span class="ymf">YOU MOVE FORWARD</span>
+  <aside class="notes">Alcance internacional desde USA. Pioneros en bienestar transdérmico con la plataforma TDS NEXGEN. Cinco líneas de bienestar. Oficinas y operaciones en expansión.</aside>
+</section>
+
+<!-- 6 · FUNDADOR -->
+<section class="slide" id="s6" data-title="Fundador y CEO" data-section="La empresa">
+  <div class="photo" style="--pw:54%"><img src="assets/img/s06.jpg" alt="Alper Volkan Karpuz, fundador y CEO de U-MUVO" style="object-position:40% center"></div>
+  <span class="mark">U·MUVO</span>
+  <div class="content">
+    <h2 class="t rv"><span>La innovación comienza cuando alguien decide</span><span class="g">construir algo que todavía no existe</span></h2>
+    <div class="rule rv"></div>
+    <p class="rv" style="font-size:calc(var(--u)*1.35);font-weight:700">Alper Volkan Karpuz</p>
+    <p class="rv lead" style="font-size:calc(var(--u)*1.15);line-height:1.3">Fundador y CEO<br>U-MUVO</p>
+  </div>
+  <span class="ymf">YOU MOVE FORWARD</span>
+  <aside class="notes">Presenta a Alper Volkan Karpuz, fundador y CEO de U-MUVO, con su frase sobre la innovación.</aside>
+</section>
+
+<!-- 7 · MARCAS -->
+<section class="slide" id="s7" data-title="Nuestras cinco marcas" data-section="Tecnología y productos">
+  <div class="cols">
+    <button class="col" aria-label="TDS NEXGEN"><img src="assets/img/marca0.jpg" alt=""><div class="cap"><b>TDS NEXGEN™</b><small>Powered by</small></div></button>
+    <button class="col" aria-label="SnapRelease"><img src="assets/img/marca1.jpg" alt=""><div class="cap"><b>SnapRelease™</b></div></button>
+    <button class="col" aria-label="MONAU"><img src="assets/img/marca2.jpg" alt=""><div class="cap"><b>MONAU</b></div></button>
+    <button class="col" aria-label="BYON QUANTIC"><img src="assets/img/marca3.jpg" alt=""><div class="cap"><b>BYON QUANTIC™</b></div></button>
+    <button class="col" aria-label="VELENIQUE"><img src="assets/img/marca4.jpg" alt=""><div class="cap"><b>VELENIQUE™</b></div></button>
+  </div>
+  <span class="hint">Toca o pasa el cursor sobre cada marca</span>
+  <aside class="notes">Las cinco marcas del ecosistema U-MUVO: TDS NEXGEN, SnapRelease, MONAU, BYON QUANTIC y VELENIQUE.</aside>
+</section>
+
+<!-- 8 · EL FUTURO SE ABSORBE -->
+<section class="slide" id="s8" data-title="El futuro se absorbe" data-section="Tecnología y productos">
+  <div class="photo fade" style="--pw:52%"><img src="assets/img/s08.jpg" alt="Mujer con los ojos cerrados y un parche transdérmico en el hombro"></div>
+  <span class="mark">U·MUVO</span>
+  <div class="content" style="--cw:52%">
+    <h2 class="t xl rv"><span>El futuro no se toma</span><span class="g">El futuro se absorbe</span></h2>
+    <div class="rule rv"></div>
+    <p class="lead rv">Pioneros en la tecnología que está transformando la forma de complementar el bienestar</p>
+  </div>
+  <img class="tds rv" src="assets/img/logo-tds.png" alt="Powered by TDS NEXGEN">
+  <span class="ymf">YOU MOVE FORWARD</span>
+  <aside class="notes">El futuro no se toma, el futuro se absorbe. U-MUVO es pionera en la tecnología que transforma la forma de complementar el bienestar.</aside>
+</section>
+
+<!-- 9 · EVOLUCIÓN (línea de tiempo) -->
+<section class="slide" id="s9" data-title="La evolución del bienestar" data-section="Tecnología y productos" style="background:#f8f9fb">
+  <span class="mark">U·MUVO</span>
+  <div class="wrap">
+    <h2 class="t rv"><span>La evolución del bienestar</span><span class="g">nunca se detiene</span></h2>
+    <p class="lead rv" style="color:var(--ink)">Durante décadas, la ciencia ha transformado la forma de complementar nuestra nutrición. Hoy comienza una nueva etapa: <b>la tecnología transdérmica.</b></p>
+    <div class="tl rv" role="list">
+      <div class="bar"></div>
+      <button class="step" role="listitem"><img src="assets/img/evo0.jpg" alt=""><i></i><span>BATIDOS</span></button>
+      <button class="step" role="listitem"><img src="assets/img/evo1.jpg" alt=""><i></i><span>CAFÉS Y TÉS</span></button>
+      <button class="step" role="listitem"><img src="assets/img/evo2.jpg" alt=""><i></i><span>CÁPSULAS</span></button>
+      <button class="step" role="listitem"><img src="assets/img/evo3.jpg" alt=""><i></i><span>JUGOS</span></button>
+      <button class="step" role="listitem"><img src="assets/img/evo4.jpg" alt=""><i></i><span>SUPLEMENTOS AVANZADOS</span></button>
+      <button class="step last" role="listitem"><img src="assets/img/evo5.jpg" alt=""><i></i><span>TECNOLOGÍA TRANSDÉRMICA<em>Tecnología que optimiza la absorción de ingredientes activos.</em></span></button>
+    </div>
+    <div class="foot rv"><svg><use href="#i-heroes"/></svg><p class="lead" style="color:var(--ink);font-size:calc(var(--u)*1.2)">Cada generación ha cambiado la forma de complementar la nutrición.<br><b>Hoy comienza la siguiente.</b></p></div>
+  </div>
+  <aside class="notes">Recorre la línea de tiempo con las flechas o tocando cada etapa: batidos, cafés y tés, cápsulas, jugos, suplementos avanzados y, hoy, la tecnología transdérmica.</aside>
+</section>
+
+<!-- 10 · ¿POR QUÉ LA PIEL? -->
+<section class="slide" id="s10" data-title="¿Por qué la piel?" data-section="Tecnología y productos" style="background:#f9fafb">
+  <div class="photo fade" style="--pw:55%"><img src="assets/img/s10.jpg" alt="Corte de las capas de la piel con un parche que libera ingredientes activos"></div>
+  <span class="mark">U·MUVO</span>
+  <div class="content">
+    <h2 class="t rv"><span>¿Por qué</span><span class="g" style="padding-left:1.95em">la piel?</span></h2>
+    <p class="lead rv" style="color:var(--ink);margin:calc(var(--u)*2) 0 calc(var(--u)*1.4)">La piel es el órgano más grande del cuerpo y una vía natural para la <b>absorción de ingredientes activos</b></p>
+    <div style="padding-left:calc(var(--u)*2)">
+      <div class="feat rv"><span class="ico"><svg><use href="#i-drop"/></svg></span><div><h3>Absorción directa</h3><p>Los nutrientes llegan directamente al torrente sanguíneo.</p></div></div>
+      <div class="feat rv"><span class="ico"><svg><use href="#i-bio"/></svg></span><div><h3>Mayor biodisponibilidad</h3><p>Optimiza el aprovechamiento de los ingredientes activos.</p></div></div>
+      <div class="feat rv"><span class="ico"><svg><use href="#i-cycle"/></svg></span><div><h3>Liberación continua</h3><p>Tecnología que libera de forma constante y controlada.</p></div></div>
+      <div class="feat rv"><span class="ico"><svg><use href="#i-flask"/></svg></span><div><h3>Segura y efectiva</h3><p>Tecnología clínicamente probada, diseñada para toda la familia.</p></div></div>
+    </div>
+  </div>
+  <span class="ymf">YOU MOVE FORWARD</span>
+  <aside class="notes">Cuatro razones: absorción directa, mayor biodisponibilidad, liberación continua, segura y efectiva.</aside>
+</section>
+
+<!-- 11 · PNG -->
+<section class="slide" id="s11" data-title="PNG" data-section="Tecnología y productos">
+  <img class="medical" src="assets/img/logo-medical.png" alt="Class 1 Medical Device">
+  <div class="content" style="--cw:50%">
+    <p class="name gtext rv">PNG</p>
+    <p class="sub rv">El primer dispositivo transdérmico</p>
+    <p class="lead rv" style="color:var(--ink)">Menos dolor, menos estrés, más energía y bienestar</p>
+    <ul class="checks rv" style="padding-left:calc(var(--u)*3)">
+      <li><svg><use href="#i-check"/></svg><span>Reduce la <b>inflamación</b> y alivia el dolor</span></li>
+      <li><svg><use href="#i-check"/></svg><span>Disminuye el <b>cortisol (estrés)</b></span></li>
+      <li><svg><use href="#i-check"/></svg><span>Aumenta la <b>energía diaria</b></span></li>
+      <li><svg><use href="#i-check"/></svg><span>Mejora la <b>movilidad y flexibilidad</b></span></li>
+      <li><svg><use href="#i-check"/></svg><span>Acelera la <b>recuperación física</b></span></li>
+      <li><svg><use href="#i-check"/></svg><span>Refuerza el <b>sistema inmunológico</b></span></li>
+      <li><svg><use href="#i-check"/></svg><span>Apoya la <b>salud cardiovascular</b></span></li>
+    </ul>
+    <div class="ingr rv"><h4>Ingredientes:</h4><div class="chips"><span class="chip">Ginseng Rojo Coreano</span><span class="chip">Germanio Orgánico</span><span class="chip">Glucosamina</span><span class="chip">Iones de plata</span><span class="chip">Saponinas</span></div></div>
+  </div>
+  <button class="prod zoomable rv" data-zoom="assets/img/png-pack.jpg" aria-label="Ampliar empaque PNG"><img src="assets/img/png-pack.jpg" alt="Empaque de PNG revitalise your life de One More International con ginseng"><span class="zoomhint"><svg width="14" height="14"><use href="#i-zoom"/></svg>Ampliar</span></button>
+  <aside class="notes">PNG, el primer dispositivo transdérmico. Siete beneficios e ingredientes: ginseng rojo coreano, germanio orgánico, glucosamina, iones de plata y saponinas.</aside>
+</section>
+
+<!-- 12 · GLUTANAD+ BOOST -->
+<section class="slide" id="s12" data-title="GlutaNAD+ BOOST" data-section="Tecnología y productos">
+  <span class="mark">U·MUVO</span>
+  <button class="prod zoomable rv" data-zoom="assets/img/glutanad-box.jpg" aria-label="Ampliar caja GlutaNAD+ BOOST"><img src="assets/img/glutanad-box.jpg" alt="Caja de GlutaNAD+ BOOST, 30 strips, tecnología SnapRelease"><span class="zoomhint"><svg width="14" height="14"><use href="#i-zoom"/></svg>Ampliar</span></button>
+  <img class="usa" src="assets/img/made-usa.jpg" alt="Made in USA">
+  <div class="content">
+    <h2 class="t rv"><span>La ciencia del</span><span class="g">rejuvenecimiento celular</span></h2>
+    <img class="snap rv" src="assets/img/logo-snaprelease.png" alt="SnapRelease">
+    <ul class="checks blue rv">
+      <li><svg><use href="#i-check"/></svg><span>Optimiza tus niveles de <b>NAD+</b></span></li>
+      <li><svg><use href="#i-check"/></svg><span>Protección antioxidante activa <b>(NRF2)</b></span></li>
+      <li><svg><use href="#i-check"/></svg><span>Disminuye el <b>estrés y la inflamación celular</b></span></li>
+      <li><svg><use href="#i-check"/></svg><span>Retrasa el <b>envejecimiento</b> (edad biológica)</span></li>
+      <li><svg><use href="#i-check"/></svg><span>Incrementa tu <b>energía y vitalidad</b></span></li>
+      <li><svg><use href="#i-check"/></svg><span>Potencia tu <b>enfoque y claridad mental</b></span></li>
+    </ul>
+    <div class="ingr rv" style="border:0;padding-top:0;margin-top:calc(var(--u)*3)"><h4 class="blue">Ingredientes:</h4><div class="chips"><span class="chip">NMN</span><span class="chip">Nano Glutatión</span><span class="chip">Quercetina</span><span class="chip">Astaxantina</span><span class="chip">vitamina B6</span><span class="chip">vitamina B12</span><span class="chip">vitamina A</span><span class="chip">vitamina D3</span></div></div>
+  </div>
+  <aside class="notes">GlutaNAD+ BOOST con tecnología SnapRelease: seis beneficios para el rejuvenecimiento celular y sus ingredientes.</aside>
+</section>
+
+<!-- 13 · SOLUCIONES -->
+<section class="slide" id="s13" data-title="Una solución para cada necesidad" data-section="Tecnología y productos">
+  <img class="medical" src="assets/img/logo-medical.png" alt="Class 1 Medical Device">
+  <div class="top">
+    <h2 class="t rv"><span>Una solución</span><span class="g">para cada necesidad</span></h2>
+    <p class="lead rv" style="color:var(--ink);margin-top:.6em">Soluciones específicas para <b style="color:var(--ink)">cada etapa de tu bienestar.</b><br>Bienestar, longevidad y calidad de vida.</p>
+  </div>
+  <div class="stage rv">
+    <div class="tabs" role="tablist" aria-label="Productos"></div>
+    <div class="detail" aria-live="polite"><b></b><span></span></div>
+    <div style="position:relative"><span class="pin"></span><button class="zoomable" data-zoom="assets/img/productos.jpg" style="border:0;background:none;padding:0;display:block;width:100%;position:relative" aria-label="Ampliar línea de productos"><img src="assets/img/productos.jpg" alt="Línea de parches: Dekamin, Melatonin Plus, Omevia, Gentlemen &amp; Ladies, B12 Plus, Slimstyle y Colágeno"><span class="zoomhint"><svg width="14" height="14"><use href="#i-zoom"/></svg>Ampliar</span></button></div>
+  </div>
+  <img class="tds" src="assets/img/logo-tds.png" alt="Powered by TDS NEXGEN">
+  <aside class="notes">Siete soluciones: Dekamin, Melatonin Plus, Omevia, Gentlemen &amp; Ladies, B12 Plus, Slimstyle y Colágeno. Toca cada nombre para destacarlo.</aside>
+</section>
+
+<!-- 14 · CERTIFICACIONES -->
+<section class="slide" id="s14" data-title="Ciencia y calidad" data-section="Tecnología y productos">
+  <div class="scope"></div>
+  <img class="medical" src="assets/img/logo-medical.png" alt="Class 1 Medical Device">
+  <div class="content">
+    <h2 class="t rv"><span>Ciencia y calidad</span><span class="g">en cada detalle</span></h2>
+    <div class="badges rv">
+      <div class="badge"><img src="assets/img/badge0.jpg" alt="">CERTIFICADO GMP</div>
+      <div class="badge"><img src="assets/img/badge1.jpg" alt="">CERTIFICADO ISO</div>
+      <div class="badge"><img src="assets/img/badge2.jpg" alt="">ISO 13485</div>
+      <div class="badge"><img src="assets/img/badge3.jpg" alt="">DERMATOLÓGICAMENTE PROBADO</div>
+      <div class="badge"><img src="assets/img/badge4.jpg" alt="">PRODUCTO VEGANO</div>
+      <div class="badge"><img src="assets/img/badge5.jpg" alt="">LIBRE DE CRUELDAD ANIMAL</div>
+      <div class="badge"><img src="assets/img/badge6.jpg" alt="">LIBRE DE PARABENOS</div>
+      <div class="badge"><img src="assets/img/badge7.jpg" alt="">LIBRE DE METALES PESADOS</div>
+    </div>
+    <h4 class="rv">REGISTROS Y CERTIFICACIONES INTERNACIONALES</h4>
+    <img class="reg rv" src="assets/img/registros.jpg" alt="FDA Registered, Unión Europea, INVIMA, Ministerio de Salud Pública Ecuador / ARCSA, SENASAG Bolivia">
+  </div>
+  <div class="fda rv"><svg><use href="#i-shield"/></svg><p class="small"><b>REGISTRO FDA</b>Cumplimos con los más altos estándares internacionales de seguridad, calidad y eficacia.</p></div>
+  <button class="cert zoomable rv" data-zoom="assets/img/certificado.jpg" aria-label="Ampliar certificado de registro"><img src="assets/img/certificado.jpg" alt="Certificate of Registration 2026 de One More Medikal Sanayi ve Dis Ticaret Anonim Sirketi"><span class="zoomhint"><svg width="14" height="14"><use href="#i-zoom"/></svg>Ampliar certificado</span></button>
+  <aside class="notes">Certificaciones: GMP, ISO, ISO 13485, dermatológicamente probado, vegano, libre de crueldad animal, de parabenos y de metales pesados. Registros internacionales y certificado de registro FDA (amplíalo para mostrarlo).</aside>
+</section>
+
+<!-- 15 · LA ECONOMÍA HA CAMBIADO -->
+<section class="slide" id="s15" data-title="La economía ha cambiado" data-section="El modelo">
+  <div class="content">
+    <h2 class="t rv"><span>La economía</span><span class="g">ha cambiado</span></h2>
+    <div class="rule rv"></div>
+    <p class="lead rv" style="color:var(--ink)">Antes, las marcas dependían de intermediarios.</p>
+    <p class="lead rv" style="color:var(--ink);margin-top:1em">Hoy, las personas <b>conectan directamente con otras personas</b></p>
+    <div class="replay rv"><button class="btn" data-replay>Ver el recorrido otra vez</button></div>
+  </div>
+  <div class="cmp">
+    <div class="side"><h4>MODELO TRADICIONAL</h4>
+      <div class="chain">
+        <div class="node" style="--d2:0ms"><img src="assets/img/trad0.jpg" alt=""><span>Fabricante</span></div><div class="arrow"></div>
+        <div class="node" style="--d2:250ms"><img src="assets/img/trad1.jpg" alt=""><span>Publicidad</span></div><div class="arrow"></div>
+        <div class="node" style="--d2:500ms"><img src="assets/img/trad2.jpg" alt=""><span>Distribución</span></div><div class="arrow"></div>
+        <div class="node" style="--d2:750ms"><img src="assets/img/trad3.jpg" alt=""><span>Tienda</span></div><div class="arrow"></div>
+        <div class="node" style="--d2:1000ms"><img src="assets/img/trad4.jpg" alt=""><span>Consumidor</span></div>
+      </div>
+    </div>
+    <div></div>
+    <div class="side nm"><h4>NETWORK MARKETING</h4>
+      <div class="direct"><span class="um">U·MUVO</span><span class="line"><em>SIN INTERMEDIARIOS</em></span><img src="assets/img/trad5.jpg" alt="Personas conectadas"></div>
+    </div>
+  </div>
+  <p class="quote rv">Las mejores ideas no se anuncian. <b>Se comparten</b></p>
+  <aside class="notes">Compara: el modelo tradicional pasa por fabricante, publicidad, distribución, tienda y consumidor. En network marketing, U-MUVO llega a las personas sin intermediarios.</aside>
+</section>
+
+<!-- 16 · PLAN DE COMPENSACIÓN -->
+<section class="slide" id="s16" data-title="Plan de compensación" data-section="Plan de compensación">
+  <div class="photo fade" style="--pw:66%"><img src="assets/img/s16.jpg" alt="Pareja feliz con los brazos abiertos frente al mar"></div>
+  <span class="mark">U·MUVO</span>
+  <div class="content" style="--cw:38%">
+    <h2 class="t rv"><span>Plan de</span><span class="g">compensación</span></h2>
+    <p class="lead rv" style="color:var(--ink);margin-top:.6em">Hasta seis pagos al mes</p>
+    <div class="rule rv"></div>
+  </div>
+  <span class="ymf">YOU MOVE FORWARD</span>
+  <aside class="notes">El plan de compensación ofrece hasta seis pagos al mes.</aside>
+</section>
+
+<!-- 17 · FRANQUICIA PERSONAL -->
+<section class="slide" id="s17" data-title="Activa tu franquicia personal" data-section="Plan de compensación" style="background:#f8f9fb">
+  <span class="mark">U·MUVO</span>
+  <div class="wrap">
+    <h2 class="t rv"><span>Activa tu</span><span class="g">franquicia personal</span></h2>
+    <p class="lead rv" style="color:var(--ink)">Elige la opción que mejor se adapte a tus objetivos</p>
+    <div class="packs rv" role="group" aria-label="Opciones de franquicia">
+      <button class="pack" aria-pressed="false" data-qv="100QV" data-pct="11%" data-gift="" data-price="USD 140"><div class="card"><div class="qv">100QV</div><div class="pct">11%</div><div class="pl">Bono de equipo</div></div><div class="price">USD 140</div></button>
+      <button class="pack" aria-pressed="false" data-qv="300QV" data-pct="13%" data-gift="USD 64" data-price="USD 390"><div class="card"><div class="qv">300QV</div><div class="pct">13%</div><div class="pl">Bono de equipo</div><div class="gift">Productos de regalo <b>→ USD 64</b></div></div><div class="price">USD 390</div></button>
+      <button class="pack" aria-pressed="false" data-qv="500QV" data-pct="15%" data-gift="USD 128" data-price="USD 650"><div class="card"><div class="qv">500QV</div><div class="pct">15%</div><div class="pl">Bono de equipo</div><div class="gift">Productos de regalo <b>→ USD 128</b></div></div><div class="price">USD 650</div></button>
+      <button class="pack" aria-pressed="false" data-qv="700QV" data-pct="17%" data-gift="USD 256" data-price="USD 920"><div class="card"><div class="qv">700QV</div><div class="pct">17%</div><div class="pl">Bono de equipo</div><div class="gift">Productos de regalo <b>→ USD 256</b></div></div><div class="price">USD 920</div></button>
+    </div>
+    <p class="pick rv" aria-live="polite">Toca una opción para destacarla. La opción de 1.000 QV (Estatus Diamante) está en la siguiente diapositiva.</p>
+  </div>
+  <aside class="notes">Cuatro opciones de franquicia: 100QV con 11% de bono de equipo por USD 140; 300QV con 13% y USD 64 en productos de regalo por USD 390; 500QV con 15% y USD 128 de regalo por USD 650; 700QV con 17% y USD 256 de regalo por USD 920.</aside>
+</section>
+
+<!-- 18 · ESTATUS DIAMANTE -->
+<section class="slide" id="s18" data-title="Estatus Diamante" data-section="Plan de compensación">
+  <div class="photo" style="--pw:39.4%"><img src="assets/img/s18.jpg" alt="Hombre de traje mirando el horizonte al amanecer"></div>
+  <span class="mark on-dark" style="color:var(--ink)">U·MUVO</span>
+  <div class="content">
+    <h2 class="t rv"><span>La forma más rápida de construir tu negocio</span><span class="g">Estatus Diamante</span></h2>
+    <p class="lead rv" style="color:var(--ink);margin-top:.5em">Acelera y maximiza tus resultados desde el día uno</p>
+    <div class="dia rv">
+      <div class="l"><svg><use href="#i-diamond"/></svg><div><small>Estatus Diamante</small><strong>1.000 QV<br><span data-count="19" data-final="19%">19%</span></strong></div></div>
+      <ul><li>6 niveles de por vida</li><li>3 meses activación gratis</li><li>Promociones exclusivas</li><li>Envío gratis</li></ul>
+      <div class="gift">Productos de regalo → <b>USD 384</b></div>
+    </div>
+    <p class="price rv"><span data-count="1280" data-final="USD 1,280">USD 1,280</span></p>
+    <p class="note rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="10"/><path d="M7 12h10M13 8l4 4-4 4"/></svg>La forma más rápida de construir tu negocio.</p>
+  </div>
+  <span class="ymf">YOU MOVE FORWARD</span>
+  <aside class="notes">Estatus Diamante: 1.000 QV, 19% de bono de equipo, 6 niveles de por vida, 3 meses de activación gratis, promociones exclusivas, envío gratis y USD 384 en productos de regalo. Inversión: USD 1,280.</aside>
+</section>
+
+<!-- 19 · CLIENTES EN TODO EL MUNDO -->
+<section class="slide" id="s19" data-title="Clientes en todo el mundo" data-section="Plan de compensación">
+  <div class="photo" style="--pw:54.7%"><img src="assets/img/s19.jpg" alt="Mujer sonriente revisando su teléfono" style="object-position:30% center"></div>
+  <span class="mark">U·MUVO</span>
+  <div class="content">
+    <h2 class="t rv"><span>Conéctate con clientes</span><span class="g">en todo el mundo</span></h2>
+    <p class="lead rv" style="color:var(--ink);margin-top:.4em">Expande tu negocio a nivel global y lleva bienestar a más personas.</p>
+    <div class="rule rv" style="margin-bottom:calc(var(--u)*1)"></div>
+    <div class="box rv"><svg viewBox="0 0 24 24"><use href="#i-pin"/></svg><div><p>Envío a más de <b class="blue"><span data-count="100" data-final="100 países">100 países</span></b></p><p>Lleva bienestar a cualquier parte del mundo</p></div></div>
+    <div class="box rv"><svg viewBox="0 0 24 24"><use href="#i-team"/></svg><div><p><b class="blue">Promociones</b> especiales para clientes</p><p>Ofertas exclusivas diseñadas para apoyar y premiar a tus clientes.</p></div></div>
+  </div>
+  <aside class="notes">Envío a más de 100 países y promociones especiales para clientes.</aside>
+</section>
+
+<!-- 20 · BONO DE INICIO RÁPIDO -->
+<section class="slide" id="s20" data-title="Bono de inicio rápido" data-section="Plan de compensación">
+  <div class="photo" style="--pw:41.4%"><img src="assets/img/s20.jpg" alt="Mujer relajada con una taza de café en una sala luminosa"></div>
+  <span class="mark">U·MUVO</span>
+  <div class="content">
+    <h2 class="t rv"><span>Bono de</span><span class="g">inicio rápido</span></h2>
+    <p class="lead rv" style="color:var(--ink);margin-top:calc(var(--u)*3)">Gana entre un</p>
+    <p class="big rv">20% - 30%</p>
+    <p class="lead rv" style="color:var(--ink);text-align:right;max-width:calc(var(--u)*30)">del CV de tus afiliados directos</p>
+    <form class="calc rv" onsubmit="return false">
+      <label for="qs">Calcula el rango: CV de tus afiliados directos</label>
+      <input id="qs" type="number" min="0" step="1" inputmode="numeric" placeholder="Ej.: 500">
+      <output for="qs">Escribe un CV para ver el rango.</output>
+      <p class="disc">Cálculo ilustrativo: aplica solo los porcentajes de esta diapositiva (20 % y 30 %). Las condiciones de cada porcentaje están en el plan oficial de U-MUVO.</p>
+    </form>
+  </div>
+  <span class="ymf">YOU MOVE FORWARD</span>
+  <aside class="notes">Bono de inicio rápido: entre 20% y 30% del CV de tus afiliados directos. Puedes usar la calculadora para mostrar el rango con un ejemplo.</aside>
+</section>
+
+<!-- 21 · FUNCIONA DIFERENTE -->
+<section class="slide" id="s21" data-title="En U-MUVO funciona diferente" data-section="Plan de compensación">
+  <div class="photo" style="--pw:45.3%"><img src="assets/img/s21.jpg" alt="Hombre sonriente trabajando con un portátil en una sala con vista al mar"></div>
+  <span class="mark">U·MUVO</span>
+  <div class="content" style="--cw:55%">
+    <h2 class="t rv"><span>En U-MUVO</span><span class="g">funciona diferente.</span></h2>
+    <div class="rule rv"></div>
+    <p class="lead rv" style="color:var(--ink)">Tu crecimiento se convierte<br>en <b>libertad y bienestar.</b></p>
+    <div class="flow rv">
+      <div><img src="assets/img/dif0.jpg" alt=""><strong data-count="2" data-final="2">2</strong><span><b>PERSONAS</b>que se afilian</span></div>
+      <div class="op arr">⟶</div>
+      <div><img src="assets/img/dif1.jpg" alt=""><strong class="t2">ACTIVACIÓN<i>GRATIS</i></strong><span>tu siguiente mes</span></div>
+      <div class="op">+</div>
+      <div><img src="assets/img/dif2.jpg" alt=""><strong><span data-count="65" data-final="65" style="display:inline;font-size:inherit;color:inherit;margin:0">65</span> <small>QV</small></strong><span>en productos de regalo</span></div>
+    </div>
+    <div class="repeat rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M20 12a8 8 0 0 1-13.7 5.6M4 12a8 8 0 0 1 13.7-5.6"/><path d="M18 3v4h-4M6 21v-4h4"/></svg><div><h4>REPITE EL PROCESO CADA MES.</h4><p class="lead" style="font-size:calc(var(--u)*1.12);color:var(--ink)">Construye tu comunidad, ayuda a más personas y <b>disfruta los beneficios</b> que mereces.</p></div></div>
+  </div>
+  <span class="ymf">YOU MOVE FORWARD</span>
+  <aside class="notes">Dos personas que se afilian te dan activación gratis el siguiente mes más 65 QV en productos de regalo. Repite el proceso cada mes.</aside>
+</section>
+
+<!-- 22 · BONO 4x4 -->
+<section class="slide" id="s22" data-title="Bono 4x4" data-section="Plan de compensación">
+  <div class="photo" style="--pw:49.4%"><img src="assets/img/s22.jpg" alt="Cuatro personas chocando las manos en lo alto al aire libre"></div>
+  <span class="mark">U·MUVO</span>
+  <div class="content" style="--cw:50.6%">
+    <h2 class="t rv"><span>Bono 4x4</span><span class="g">crea tu primer equipo</span></h2>
+    <div class="rule rv"></div>
+    <p class="lead rv" style="color:var(--ink)">Afilia cuatro personas que sumen <b style="color:var(--ink)">1.000 CV</b><br>y gana un <b>bono de $200 Dólares</b></p>
+    <div class="slots rv" role="group" aria-label="Cuatro afiliaciones">
+      <button class="slot" aria-pressed="false" aria-label="Afiliación 1"><svg><use href="#i-user"/></svg></button>
+      <button class="slot" aria-pressed="false" aria-label="Afiliación 2"><svg><use href="#i-user"/></svg></button>
+      <button class="slot" aria-pressed="false" aria-label="Afiliación 3"><svg><use href="#i-user"/></svg></button>
+      <button class="slot" aria-pressed="false" aria-label="Afiliación 4"><svg><use href="#i-user"/></svg></button>
+    </div>
+    <p class="slotlbl rv" aria-live="polite"><span class="msg">Toca los cuatro círculos para formar tu primer equipo.</span><button class="reset" hidden>Reiniciar</button></p>
+    <ul class="rewards">
+      <li><svg viewBox="0 0 24 24"><use href="#i-verified"/></svg>Activación gratis</li>
+      <li><svg viewBox="0 0 24 24"><use href="#i-box"/></svg>Producto gratis</li>
+      <li><svg viewBox="0 0 24 24"><use href="#i-coins"/></svg><span>Bono extra de <b>USD 200</b></span></li>
+    </ul>
+  </div>
+  <span class="ymf">YOU MOVE FORWARD</span>
+  <aside class="notes">Bono 4x4: afilia cuatro personas que sumen 1.000 CV y gana activación gratis, producto gratis y un bono extra de USD 200. Toca los cuatro círculos para mostrar los premios.</aside>
+</section>
+
+<!-- 23 · BONO DE EQUIPO -->
+<section class="slide" id="s23" data-title="Bono de equipo" data-section="Plan de compensación">
+  <div class="photo fade" style="--pw:40.6%"><img src="assets/img/s23.jpg" alt="Dos profesionales sonrientes revisando un portátil"></div>
+  <span class="mark">U·MUVO</span>
+  <div class="content">
+    <h2 class="t rv"><span>Bono</span><span class="g">de equipo</span></h2>
+    <div class="rule rv"></div>
+    <svg class="tree rv" viewBox="0 0 560 120" role="img" aria-label="Estructura binaria: tú al centro, equipo izquierda y equipo derecha">
+      <path d="M170 60h-22M148 60V24H120M148 60V96H120M312 60h-22M390 60h22M412 60V24h28M412 60V96h28M345 60h-22M368 60h22"/>
+      <circle cx="280" cy="60" r="20" fill="none" stroke="#00357F" stroke-width="2.2"/><circle cx="280" cy="54" r="6" fill="none" stroke="#00357F" stroke-width="2"/><path d="M268 72c3-7 21-7 24 0" stroke="#00357F" stroke-width="2" fill="none" style="stroke-dasharray:none"/>
+      <g fill="none" stroke="#00357F" stroke-width="1.6"><circle cx="180" cy="55" r="5"/><path d="M171 70c2-6 16-6 18 0"/><circle cx="380" cy="55" r="5"/><path d="M371 70c2-6 16-6 18 0"/><circle cx="105" cy="19" r="5"/><path d="M96 33c2-6 16-6 18 0"/><circle cx="105" cy="91" r="5"/><path d="M96 105c2-6 16-6 18 0"/><circle cx="455" cy="19" r="5"/><path d="M446 33c2-6 16-6 18 0"/><circle cx="455" cy="91" r="5"/><path d="M446 105c2-6 16-6 18 0"/></g>
+      <g fill="#2B5FB5"><rect x="70" y="16" width="16" height="13" rx="2"/><rect x="70" y="88" width="16" height="13" rx="2"/><rect x="474" y="16" width="16" height="13" rx="2"/><rect x="474" y="88" width="16" height="13" rx="2"/></g>
+      <text x="14" y="58" class="">Equipo</text><text x="14" y="74" class="b">Izquierda</text>
+      <text x="500" y="58">Equipo</text><text x="500" y="74" class="b">Derecha</text>
+    </svg>
+    <div class="pcts rv">
+      <div><b data-count="11" data-final="11%">11%</b><span>Bono de equipo</span></div>
+      <div><b data-count="13" data-final="13%">13%</b><span>Bono de equipo</span></div>
+      <div><b data-count="15" data-final="15%">15%</b><span>Bono de equipo</span></div>
+      <div><b data-count="17" data-final="17%">17%</b><span>Bono de equipo</span></div>
+      <div class="d"><b data-count="19" data-final="19%">19%</b><span>Bono de equipo</span></div>
+    </div>
+    <p class="potential rv"><i><svg><use href="#i-trend"/></svg></i><span>Potencial de ganancia semanal de hasta <b><span data-count="60000" data-final="USD 60,000">USD 60,000</span></b></span></p>
+  </div>
+  <span class="ymf">YOU MOVE FORWARD</span>
+  <aside class="notes">Bono de equipo binario, equipo izquierda y equipo derecha. Porcentajes de 11%, 13%, 15%, 17% y 19% (Diamante). Potencial de ganancia semanal de hasta USD 60,000.</aside>
+</section>
+
+<!-- 24 · BONO UNINIVEL -->
+<section class="slide" id="s24" data-title="Bono Uninivel" data-section="Plan de compensación">
+  <div class="content">
+    <h2 class="t rv"><span>Bono</span><span class="g">Uninivel</span></h2>
+    <div class="rule rv"></div>
+    <p class="lead rv" style="color:var(--ink)">Tu crecimiento<br>no tiene límites</p>
+    <p class="lead rv" style="color:var(--ink);margin-top:1em">Multiplica <b>tu impacto,</b><br>multiplica <b>tus ingresos.</b></p>
+    <div class="calcbtn rv"><button class="btn" id="openUni">Simular el bono uninivel</button></div>
+  </div>
+  <div class="rings rv"><svg viewBox="0 0 600 600" aria-label="Niveles del bono uninivel"></svg></div>
+  <div class="card rv">
+    <header><i><svg viewBox="0 0 24 24"><use href="#i-diamond"/></svg></i><div><small>Estatus</small><b>Diamante</b></div></header>
+    <div class="grid"><div class="lv"></div><div class="tot"><span>TOTAL GANADO COMO</span><b>DIAMANTE</b><strong data-count="64" data-final="64%">64%</strong><span>de comisiones en el bono uninivel</span></div></div>
+  </div>
+  <div class="inf rv"><i><svg width="60%" height="60%"><use href="#i-infinity"/></svg></i><div class="k"><small>INFINITO</small><b>22%</b></div><p>Hasta un <b>22% adicional desde el nivel 7 al infinito de todas las recompras</b></p></div>
+  <dialog id="uniDlg" aria-labelledby="uniT">
+    <div class="in">
+      <h3 id="uniT">Simulador del bono uninivel (Estatus Diamante)</h3>
+      <p class="sub">Escribe el volumen de recompras (CV) de cada nivel. Se aplican los porcentajes de la diapositiva: 10%, 10%, 20%, 12%, 7% y 5%.</p>
+      <table><thead><tr><th>Nivel</th><th>%</th><th>CV del nivel</th><th class="r">Comisión</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="3">Total niveles 1 a 6</td><td class="r" id="uniTot">0</td></tr></tfoot></table>
+      <p class="disc">Ejemplo ilustrativo; no representa ingresos garantizados. No incluye el 22% adicional del nivel 7 al infinito. Los requisitos de calificación y la base de cálculo están en el plan oficial de U-MUVO.</p>
+      <div class="act"><button class="btn" data-close>Cerrar</button></div>
+    </div>
+  </dialog>
+  <aside class="notes">Bono uninivel con Estatus Diamante: nivel 1 10%, nivel 2 10%, nivel 3 20%, nivel 4 12%, nivel 5 7%, nivel 6 5%. En total, 64%. Además, hasta 22% adicional desde el nivel 7 al infinito de todas las recompras. Toca un nivel para resaltarlo.</aside>
+</section>
+
+<!-- 25 · AVANCE DE RANGO -->
+<section class="slide" id="s25" data-title="Avance de rango y recalificación" data-section="Plan de compensación">
+  <div class="bg"><img src="assets/img/s25.jpg" alt="Hombre en la cima de una montaña sobre las nubes"></div>
+  <span class="mark">U·MUVO</span>
+  <div class="head">
+    <h2 class="t rv"><span>Avanza hoy</span><span class="g">transforma tu futuro</span></h2>
+    <p class="rv">Cada nuevo rango representa un reconocimiento<br>económico por tu <b>liderazgo y crecimiento</b></p>
+  </div>
+  <div class="rank a rv"><i><svg><use href="#i-climb"/></svg></i><h4>AVANCE DE RANGO</h4><small>Desde</small><strong>USD 100</strong><div class="ar">↓</div><small style="margin-top:.2em">Hasta</small><strong><span data-count="40000" data-final="USD 40,000">USD 40,000</span></strong><p>Reconocimiento por alcanzar un nuevo rango</p></div>
+  <div class="rank b rv"><i><svg><use href="#i-chart"/></svg></i><h4>RECALIFICACIÓN</h4><small>Desde</small><strong>USD 50</strong><div class="ar">↓</div><small style="margin-top:.2em">Hasta</small><strong><span data-count="25000" data-final="USD 25,000">USD 25,000</span></strong><p>Reconocimiento por mantener tu liderazgo</p></div>
+  <div class="diamond rv"><span class="n"><svg><use href="#i-diamond"/></svg>Diamond</span><div><small>Avance de Rango</small><b>USD 3,000</b></div><span class="sep">›</span><div><small>Bono Recalificación</small><b>USD 1,500</b></div></div>
+  <span class="ymf">YOU MOVE FORWARD</span>
+  <aside class="notes">Avance de rango desde USD 100 hasta USD 40,000. Recalificación desde USD 50 hasta USD 25,000. Ejemplo Diamond: avance de rango USD 3,000 y bono de recalificación USD 1,500.</aside>
+</section>
+
+<!-- 26 · MATCHING BONUS -->
+<section class="slide" id="s26" data-title="Matching bonus" data-section="Plan de compensación">
+  <span class="mark">U·MUVO</span>
+  <div class="content">
+    <h2 class="t rv"><span>Matching</span><span class="g">bonus</span></h2>
+    <div class="rule rv"></div>
+    <p class="lead rv" style="color:var(--ink)">Con el Bono de igualación, gana bonificaciones sobre los ingresos que genera tu equipo de forma semanal en el bono de equipo</p>
+  </div>
+  <div class="match rv">
+    <small>Gana hasta</small>
+    <div class="mrow" style="--s:.5;--d:200ms"><span>Nivel 1</span><i></i><b data-count="50" data-final="50%">50%</b></div>
+    <div class="mrow" style="--s:.25;--d:350ms"><span>Nivel 2</span><i></i><b data-count="25" data-final="25%">25%</b></div>
+    <div class="mrow" style="--s:.2;--d:500ms"><span>Nivel 3</span><i></i><b data-count="20" data-final="20%">20%</b></div>
+    <div class="mrow" style="--s:.15;--d:650ms"><span>Nivel 4</span><i></i><b data-count="15" data-final="15%">15%</b></div>
+  </div>
+  <aside class="notes">Matching bonus o bono de igualación sobre lo que genera tu equipo cada semana en el bono de equipo: nivel 1 hasta 50%, nivel 2 25%, nivel 3 20%, nivel 4 15%.</aside>
+</section>
+
+<!-- 27 · VIAJES -->
+<section class="slide" id="s27" data-title="Viajes y promociones" data-section="Estilo de vida y sistema">
+  <div class="photo" style="--pw:51%"><img src="assets/img/s27.jpg" alt="Mujer disfrutando el sol en un bote entre acantilados y agua turquesa"></div>
+  <span class="mark on-dark" style="color:var(--ink)">U·MUVO</span>
+  <div class="content" style="--cw:49%">
+    <h2 class="t rv"><span>Viajes y</span><span class="g">promociones.</span></h2>
+    <p class="lead rv" style="color:var(--ink);margin-top:.4em">Experiencias exclusivas, incentivos y beneficios que elevan tu estilo de vida.</p>
+    <div class="rule rv"></div>
+    <ul class="ilist">
+      <li class="rv"><svg viewBox="0 0 24 24"><use href="#i-pin"/></svg>Destinos exclusivos</li>
+      <li class="rv"><svg viewBox="0 0 24 24"><use href="#i-gift"/></svg>Incentivos especiales</li>
+      <li class="rv"><svg viewBox="0 0 24 24"><use href="#i-camera"/></svg>Experiencias memorables</li>
+      <li class="rv"><svg viewBox="0 0 24 24"><use href="#i-cheer"/></svg>Beneficios para tu comunidad</li>
+    </ul>
+  </div>
+  <span class="ymf">YOU MOVE FORWARD</span>
+  <aside class="notes">Viajes y promociones: destinos exclusivos, incentivos especiales, experiencias memorables y beneficios para tu comunidad.</aside>
+</section>
+
+<!-- 28 · SISTEMA SUMMIT -->
+<section class="slide" id="s28" data-title="Sistema Summit Networkers" data-section="Estilo de vida y sistema">
+  <div class="photo fade" style="--pw:46%"><img src="assets/img/s28.jpg" alt="Grupo de excursionistas caminando hacia la cima al amanecer"></div>
+  <span class="mark">U·MUVO</span>
+  <div class="content" style="--cw:56%">
+    <h2 class="t rv"><span>Sistema</span><span class="g">Summit Networkers</span></h2>
+    <div class="rule rv"></div>
+    <p class="lead rv" style="color:var(--ink)">Un sistema diseñado para ayudarte a crecer, liderar y alcanzar tus metas</p>
+    <div class="pill4 rv">
+      <div><svg viewBox="0 0 24 24"><use href="#i-team"/></svg><b>Comunidad</b><span>Crecemos juntos</span></div>
+      <div><svg viewBox="0 0 24 24"><use href="#i-cap"/></svg><b>Educación</b><span>Entrenamientos y mentorías</span></div>
+      <div><svg viewBox="0 0 24 24"><use href="#i-target"/></svg><b>Sistema</b><span>Herramientas simples y duplicables</span></div>
+      <div><svg viewBox="0 0 24 24"><use href="#i-summit"/></svg><b>Liderazgo</b><span>Desarrollo personal y resultados</span></div>
+    </div>
+    <p class="motto rv">Conocimiento | Conexión | <b>Liderazgo | Resultados</b></p>
+  </div>
+  <span class="ymf">YOU MOVE FORWARD</span>
+  <aside class="notes">El sistema Summit Networkers: comunidad, educación, sistema y liderazgo. Conocimiento, conexión, liderazgo y resultados.</aside>
+</section>
+
+<!-- 29 · PREGUNTA FINAL -->
+<section class="slide" id="s29" data-title="¿Serás parte de ello?" data-section="Cierre">
+  <div class="bg"><img src="assets/img/s29.jpg" alt="Persona en la cima de una montaña al amanecer sobre un mar de nubes"></div>
+  <div class="content">
+    <h2 class="t rv"><span>La pregunta no es si</span><span>esto será grande</span></h2>
+    <p class="rv">La pregunta correcta es</p>
+    <p class="q gtext rv">¿serás parte de ello?</p>
+  </div>
+  <aside class="notes">Cierre: la pregunta no es si esto será grande; la pregunta correcta es si serás parte de ello.</aside>
+</section>
+
+<!-- 30 · SUMMIT -->
+<section class="slide" id="s30" data-title="Summit Networkers" data-section="Cierre">
+  <div class="bg"><img src="assets/img/s30.jpg" alt="Collage en blanco y negro de personas haciendo deporte con el logo de Summit Networkers"></div>
+  <div class="end"><button class="btn ghost" data-go="0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg>Volver al inicio</button><button class="btn ghost" data-share><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/></svg>Compartir presentación</button></div>
+  <p class="sign30">Creado por José Lugo · Diamante Imperial · +57 312 638 7467</p>
+  <aside class="notes">Summit Networkers. Gracias. Abre el espacio para preguntas y próximos pasos.</aside>
+</section>
+
+</main>
+
+<!-- ============ INTERFAZ ============ -->
+<div id="progress" aria-hidden="true"><i></i></div>
+
+<div class="ui" id="tl">
+  <button id="bMenu" aria-label="Menú de secciones (M)" title="Menú (M)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
+  <button id="bHome" aria-label="Volver al inicio (Inicio)" title="Volver al inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 11 12 4l9 7M5 10v10h5v-6h4v6h5V10"/></svg></button>
+</div>
+<div class="ui" id="tr">
+  <button class="opt" id="bNotes" aria-label="Mostrar notas (N)" title="Notas (N)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 4h14v16H5zM8 9h8M8 13h8M8 17h5"/></svg></button>
+  <button class="opt" id="bPresenter" aria-label="Modo expositor (P)" title="Modo expositor (P)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="2" y="4" width="13" height="10" rx="1"/><rect x="17" y="6" width="5" height="6" rx="1"/><path d="M8.5 14v4M5 20h7"/></svg></button>
+  <button id="bShare" aria-label="Compartir enlace" title="Compartir" data-share><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/></svg></button>
+  <button class="opt" id="bPrint" aria-label="Imprimir o exportar PDF" title="Imprimir / PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M7 8V3h10v5M7 17H4v-8h16v8h-3M7 14h10v7H7z"/></svg></button>
+  <button id="bSettings" aria-label="Ajustes" title="Ajustes" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+  <button id="bFull" aria-label="Pantalla completa (F)" title="Pantalla completa (F)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+</div>
+<div class="ui" id="br">
+  <button id="bPrev" aria-label="Diapositiva anterior (←)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+  <div class="count"><label for="slideNum" class="sr" style="position:absolute;left:-9999px">Ir a la diapositiva</label><input id="slideNum" inputmode="numeric" value="1" aria-label="Número de diapositiva">&nbsp;/&nbsp;<span id="total">30</span></div>
+  <button id="bNext" aria-label="Diapositiva siguiente (→)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Menú de navegación" aria-hidden="true">
+  <header><img src="assets/img/logo-summit.png" alt="Summit Networkers"><button class="ui-x" id="dClose" aria-label="Cerrar menú" style="border:0;background:none;cursor:pointer;font-size:22px;color:var(--deep)">×</button></header>
+  <nav id="toc"></nav>
+  <footer><button data-go="0">Reiniciar</button><button id="dHelp">Atajos de teclado</button><p class="sign">Creado por <b>José Lugo</b> · Diamante Imperial · <a href="https://wa.me/573126387467">+57 312 638 7467</a></p></footer>
+</aside>
+
+<div class="panel" id="settings" role="dialog" aria-label="Ajustes">
+  <h4>Ajustes de la presentación</h4>
+  <div class="row"><label for="trSel">Transición</label><select id="trSel"><option value="fade">Desvanecer</option><option value="slide">Deslizar</option><option value="zoom">Acercar</option><option value="none">Sin transición</option></select></div>
+  <div class="row"><span>Animaciones</span><button class="switch" id="animSw" role="switch" aria-checked="true" aria-label="Animaciones"></button></div>
+  <div class="row"><span>Ocultar controles al presentar</span><button class="switch" id="idleSw" role="switch" aria-checked="true" aria-label="Ocultar controles"></button></div>
+  <div class="row" style="border-bottom:0"><button class="btn" id="sHelp" style="font-size:13px;width:100%;justify-content:center">Ver atajos de teclado</button></div>
+</div>
+<div class="panel" id="help" role="dialog" aria-label="Atajos de teclado" style="top:auto;bottom:80px">
+  <h4>Atajos de teclado</h4>
+  <div class="keys">
+    <span><kbd>→</kbd> <kbd>Espacio</kbd></span><span>Siguiente</span>
+    <span><kbd>←</kbd></span><span>Anterior</span>
+    <span><kbd>Inicio</kbd> / <kbd>Fin</kbd></span><span>Primera / última</span>
+    <span><kbd>número</kbd> + <kbd>Enter</kbd></span><span>Ir a una diapositiva</span>
+    <span><kbd>M</kbd></span><span>Menú de secciones</span>
+    <span><kbd>F</kbd></span><span>Pantalla completa</span>
+    <span><kbd>P</kbd></span><span>Modo expositor</span>
+    <span><kbd>N</kbd></span><span>Notas del expositor</span>
+    <span><kbd>A</kbd></span><span>Activar / pausar animaciones</span>
+    <span><kbd>B</kbd></span><span>Pantalla negra</span>
+    <span><kbd>Esc</kbd></span><span>Cerrar paneles</span>
+  </div>
+</div>
+<div id="notesbar" role="status"><b>Notas del expositor</b><span></span></div>
+<div id="toast" role="status"></div>
+<div id="black"></div>
+<div id="lightbox" role="dialog" aria-label="Imagen ampliada"><img alt=""><div class="ui x"><button aria-label="Cerrar">✕</button></div><p>Toca la imagen para acercar · Esc para cerrar</p></div>
+
+<script>
+(()=>{
+"use strict";
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const deck=$('#deck'), slides=$$('.slide'), N=slides.length, body=document.body;
+const params=new URLSearchParams(location.search), EMBED=params.has('embed');
+const store={get(k,d){try{const v=localStorage.getItem('ymf.'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('ymf.'+k,JSON.stringify(v))}catch(e){}}};
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let idx=0, presenterWin=null;
+
+/* ---------- ajustes ---------- */
+let anim=EMBED?false:store.get('anim',!reduce), tr=store.get('tr','fade'), idleOn=store.get('idle',true);
+function applySettings(){
+  deck.dataset.tr=tr; $('#trSel').value=tr;
+  body.classList.toggle('noanim',!anim); $('#animSw').setAttribute('aria-checked',anim);
+  $('#idleSw').setAttribute('aria-checked',idleOn);
+}
+if(EMBED) body.classList.add('embed');
+
+/* ---------- reveal stagger ---------- */
+slides.forEach(s=>$$('.rv',s).forEach((el,i)=>el.style.setProperty('--d',(120+i*90)+'ms')));
+
+/* ---------- menú (TOC) y marcas de progreso ---------- */
+const toc=$('#toc'); let lastSec='';
+slides.forEach((s,i)=>{
+  if(s.dataset.section!==lastSec){lastSec=s.dataset.section;const h=document.createElement('h5');h.textContent=lastSec;toc.append(h)}
+  const a=document.createElement('a');a.href='#/'+(i+1);a.innerHTML='<span>'+(i+1)+'</span>'+s.dataset.title;
+  a.addEventListener('click',e=>{e.preventDefault();go(i);closeAll()});toc.append(a);
+});
+const secStarts=[];slides.forEach((s,i)=>{if(i===0||s.dataset.section!==slides[i-1].dataset.section)secStarts.push(i)});
+secStarts.forEach(i=>{const b=document.createElement('button');b.style.left=(i/N*100)+'%';b.style.width=((((secStarts.find(x=>x>i)??N)-i)/N)*100)+'%';b.dataset.label=slides[i].dataset.section;b.setAttribute('aria-label','Ir a '+slides[i].dataset.section);b.onclick=()=>go(i);$('#progress').append(b)});
+$('#total').textContent=N;
+
+/* ---------- contador animado ---------- */
+function fmtNum(n,final){const usd=/USD/.test(final), dot=/\d\.\d{3}/.test(final);let s=Math.round(n).toString();if(n>=1000)s=s.replace(/\B(?=(\d{3})+(?!\d))/g,dot?'.':',');return (usd?'USD ':'')+s+(/%/.test(final)?'%':'')+(/países/.test(final)?' países':'')}
+function runCounters(s){$$('[data-count]',s).forEach(el=>{const t=+el.dataset.count,final=el.dataset.final;if(!anim){el.textContent=final;return}const t0=performance.now(),dur=1300+Math.min(800,t/60);el.textContent=fmtNum(0,final);
+  const step=now=>{const p=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-p,3);el.textContent=p<1?fmtNum(t*e,final):final;if(p<1&&s.classList.contains('active'))requestAnimationFrame(step);else el.textContent=final};setTimeout(()=>requestAnimationFrame(step),350)})}
+
+/* ---------- navegación ---------- */
+function go(n,opts={}){
+  n=Math.max(0,Math.min(N-1,n)); if(n===idx&&slides[n].classList.contains('active')&&!opts.force)return;
+  deck.classList.toggle('back',n<idx);
+  const prev=slides[idx]; if(prev&&prev!==slides[n]){prev.classList.remove('active');prev.classList.add('leaving');setTimeout(()=>prev.classList.remove('leaving'),800)}
+  idx=n; const s=slides[n]; s.classList.add('active'); s.scrollTop=0;
+  slides.forEach((x,i)=>x.setAttribute('aria-hidden',i!==n));
+  $('#progress').style.setProperty('--p',(n+1)/N); $('#progress i').style.transform='scaleX('+((n+1)/N)+')';
+  $('#slideNum').value=n+1;
+  $$('#toc a').forEach((a,i)=>a.setAttribute('aria-current',i===n));
+  if(!EMBED&&location.hash!=='#/'+(n+1))history.replaceState(null,'','#/'+(n+1));
+  document.title=s.dataset.title+' · YOU MOVE FORWARD';
+  $('#notesbar span').textContent=($('.notes',s)||{}).textContent||'';
+  runCounters(s); onEnter[s.id]&&onEnter[s.id](s);
+  if(presenterWin&&!presenterWin.closed&&presenterWin.ymfUpdate)presenterWin.ymfUpdate(n);
+  preload(n+1);
+}
+function preload(n){const s=slides[n];if(s)$$('img',s).forEach(i=>{if(i.loading==='lazy')i.loading='eager'})}
+slides.forEach((s,i)=>{if(i>1)$$('img',s).forEach(im=>im.loading='lazy')});
+const next=()=>{ if(stepper())return; go(idx+1)}, prev=()=>go(idx-1);
+window.YMF={go,next,prev,get idx(){return idx},N,slides};
+
+/* pasos internos (línea de tiempo s9) */
+let tlStep=-1;
+function stepper(){const s=slides[idx];if(s.id==='s9'&&tlStep<5){setStep(tlStep+1);return true}return false}
+function setStep(k){tlStep=k;const st=$$('#s9 .step');st.forEach((b,i)=>b.classList.toggle('on',i===k));$('#s9 .bar').style.setProperty('--w',k<0?'0%':(Math.min(k,5)/5*92)+'%')}
+$$('#s9 .step').forEach((b,i)=>b.onclick=()=>setStep(i));
+
+/* acciones por diapositiva */
+const onEnter={
+  s9(){setStep(-1); if(anim)setTimeout(()=>{if(slides[idx].id==='s9'&&tlStep<0)setStep(0)},900); else setStep(5)},
+  s15(s){s.classList.remove('play');void s.offsetWidth;setTimeout(()=>s.classList.add('play'),anim?300:0)},
+};
+
+/* s3 pilares */
+$$('#s3 .pillar').forEach(p=>p.addEventListener('click',e=>{
+  if(p.getAttribute('aria-expanded')==='true'&&e.target.closest('.go')){go(slides.indexOf($('#'+p.dataset.jump)));return}
+  const was=p.getAttribute('aria-expanded')==='true';$$('#s3 .pillar').forEach(q=>q.setAttribute('aria-expanded','false'));p.setAttribute('aria-expanded',!was)}));
+/* s7 marcas */
+$$('#s7 .col').forEach(c=>c.addEventListener('click',()=>{$('#s7').classList.add('touched');const on=c.classList.contains('on');$$('#s7 .col').forEach(x=>x.classList.remove('on'));if(!on)c.classList.add('on')}));
+$$('#s7 .col').forEach(c=>c.addEventListener('mouseenter',()=>$('#s7').classList.add('touched')));
+/* s13 productos */
+const PRODS=[['DEKAMIN','Activa tu sistema inmunológico',8],['MELATONIN PLUS','Descanso reparador',23],['OMEVIA','Fortalece tu corazón',36],['GENTLEMEN &LADIES','Equilibrio hormonal',49],['B12 PLUS','Más enfoque y claridad',64],['SLIMSTYLE','Controla la ansiedad',78],['COLÁGENO','Combate el envejecimiento',93]];
+const tabs=$('#s13 .tabs');
+function selProd(i){$$('.tab',tabs).forEach((t,j)=>t.setAttribute('aria-selected',i===j));$('#s13 .detail b').textContent=PRODS[i][0];$('#s13 .detail span').textContent=PRODS[i][1];$('#s13 .pin').style.setProperty('--x',PRODS[i][2]+'%')}
+PRODS.forEach((p,i)=>{const b=document.createElement('button');b.className='tab';b.role='tab';b.textContent=p[0];b.onclick=()=>selProd(i);tabs.append(b)});selProd(0);
+/* s15 repetir */
+$('#s15 [data-replay]').onclick=()=>onEnter.s15($('#s15'));
+/* s17 franquicias */
+$$('#s17 .pack').forEach(p=>p.onclick=()=>{$$('#s17 .pack').forEach(q=>q.setAttribute('aria-pressed',q===p));const d=p.dataset;
+  $('#s17 .pick').innerHTML='Opción <b>'+d.qv+'</b>: <b>'+d.pct+'</b> de bono de equipo'+(d.gift?', productos de regalo por <b>'+d.gift+'</b>':'')+'. Valor: <b>'+d.price+'</b>.'});
+/* s20 calculadora inicio rápido */
+const fmtUSD=v=>v.toLocaleString('en-US',{maximumFractionDigits:2});
+$('#qs').addEventListener('input',e=>{const v=parseFloat(e.target.value);$('#s20 output').textContent=(v>0)?('Entre '+fmtUSD(v*.2)+' y '+fmtUSD(v*.3)+' (20 % – 30 % de '+fmtUSD(v)+' CV)'):'Escribe un CV para ver el rango.'});
+/* s22 4x4 */
+const slots=$$('#s22 .slot');
+function upd4(){const k=slots.filter(s=>s.classList.contains('on')).length;$('#s22').classList.toggle('done',k===4);$('#s22 .msg').textContent=k===4?'¡Equipo formado! Cuatro personas que suman 1.000 CV.':(k?k+' de 4 personas afiliadas.':'Toca los cuatro círculos para formar tu primer equipo.');$('#s22 .reset').hidden=!k}
+slots.forEach(s=>s.onclick=()=>{s.classList.toggle('on');s.setAttribute('aria-pressed',s.classList.contains('on'));upd4()});
+$('#s22 .reset').onclick=()=>{slots.forEach(s=>{s.classList.remove('on');s.setAttribute('aria-pressed','false')});upd4()};
+/* s24 uninivel */
+const LV=[10,10,20,12,7,5];
+(()=>{const svg=$('#s24 svg'),ns='http://www.w3.org/2000/svg';let h='';
+  const R=[290,250,212,176,140,104];
+  R.forEach((r,i)=>{h+=`<circle class="ring" data-l="${5-i}" cx="300" cy="${r+10}" r="${r}"/>`});
+  h+=`<circle class="youc" cx="300" cy="80" r="56"/><circle cx="300" cy="68" r="12" fill="none" stroke="#fff" stroke-width="3"/><path d="M280 98c4-14 36-14 40 0" stroke="#fff" stroke-width="3" fill="none"/><text x="300" y="120" class="rl" style="fill:#fff;font-size:20px">TU</text>`;
+  const ys=[166,232,302,370,434,494];
+  LV.forEach((p,i)=>{h+=`<text class="rl" x="300" y="${ys[i]}">NIVEL ${i+1}</text><text class="rl p" x="300" y="${ys[i]+20}">${p}%</text>`});
+  svg.innerHTML=h;
+  const lv=$('#s24 .lv');LV.forEach((p,i)=>{const b=document.createElement('button');b.dataset.l=i;b.innerHTML=`<svg viewBox="0 0 24 24"><use href="#i-check"/></svg><span><b>Nivel ${i+1}</b>${p}%</span>`;lv.append(b)});
+  const hl=i=>{$$('#s24 .ring').forEach(r=>r.classList.toggle('on',+r.dataset.l===i));$$('#s24 .lv button').forEach(b=>b.classList.toggle('on',+b.dataset.l===i))};
+  $$('#s24 .lv button').forEach(b=>{b.onclick=()=>hl(+b.dataset.l);b.onmouseenter=()=>hl(+b.dataset.l)});
+  $$('#s24 .ring').forEach(r=>{r.onclick=()=>hl(+r.dataset.l);r.onmouseenter=()=>hl(+r.dataset.l)});
+  const tb=$('#uniDlg tbody');LV.forEach((p,i)=>{tb.insertAdjacentHTML('beforeend',`<tr><td>Nivel ${i+1}</td><td>${p}%</td><td><input type="number" min="0" inputmode="decimal" data-p="${p}" aria-label="CV del nivel ${i+1}" placeholder="0"></td><td class="r">0</td></tr>`)});
+  tb.addEventListener('input',()=>{let t=0;$$('tr',tb).forEach(tr=>{const inp=$('input',tr),v=parseFloat(inp.value)||0,c=v*inp.dataset.p/100;t+=c;tr.lastElementChild.textContent=fmtUSD(c)});$('#uniTot').textContent=fmtUSD(t)});
+  $('#openUni').onclick=()=>{const d=$('#uniDlg');d.showModal?d.showModal():d.setAttribute('open','')};
+  $('#uniDlg [data-close]').onclick=()=>$('#uniDlg').close();
+})();
+
+/* ---------- botones UI ---------- */
+$('#bPrev').onclick=prev; $('#bNext').onclick=next; $('#bHome').onclick=()=>go(0);
+$$('[data-go]').forEach(b=>b.addEventListener('click',()=>{const v=b.dataset.go;v==='next'?next():go(+v);closeAll()}));
+$('#slideNum').addEventListener('change',e=>{const v=parseInt(e.target.value,10);if(v)go(v-1);e.target.blur()});
+$('#slideNum').addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter')e.target.dispatchEvent(new Event('change'))});
+
+const drawer=$('#drawer'),scrim=$('#scrim');
+function openMenu(){drawer.classList.add('open');drawer.setAttribute('aria-hidden','false');scrim.classList.add('on');setTimeout(()=>($('#toc a[aria-current="true"]')||$('#toc a')).focus(),200)}
+function closeAll(){drawer.classList.remove('open');drawer.setAttribute('aria-hidden','true');scrim.classList.remove('on');$('#settings').classList.remove('open');$('#help').classList.remove('open');$('#bSettings').setAttribute('aria-expanded','false')}
+$('#bMenu').onclick=()=>drawer.classList.contains('open')?closeAll():openMenu();$('#dClose').onclick=closeAll;scrim.onclick=closeAll;
+$('#bSettings').onclick=()=>{const o=!$('#settings').classList.contains('open');closeAll();if(o){$('#settings').classList.add('open');$('#bSettings').setAttribute('aria-expanded','true')}};
+const showHelp=()=>{closeAll();$('#help').classList.add('open')};$('#dHelp').onclick=showHelp;$('#sHelp').onclick=showHelp;
+$('#trSel').onchange=e=>{tr=e.target.value;store.set('tr',tr);applySettings()};
+$('#animSw').onclick=()=>{anim=!anim;store.set('anim',anim);applySettings();toast(anim?'Animaciones activadas':'Animaciones en pausa')};
+$('#idleSw').onclick=()=>{idleOn=!idleOn;store.set('idle',idleOn);applySettings()};
+
+function toggleFull(){const d=document;if(!d.fullscreenElement&&!d.webkitFullscreenElement){(d.documentElement.requestFullscreen||d.documentElement.webkitRequestFullscreen||(()=>toast('Tu navegador no permite pantalla completa aquí'))).call(d.documentElement)}else{(d.exitFullscreen||d.webkitExitFullscreen).call(d)}}
+$('#bFull').onclick=toggleFull;
+$('#bNotes').onclick=()=>$('#notesbar').classList.toggle('on');
+$('#bPrint').onclick=()=>{toast('En el diálogo elige «Guardar como PDF» y activa «Gráficos de fondo».');setTimeout(()=>window.print(),600)};
+
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),3200)}
+async function share(){const url=location.href;
+  if(location.protocol==='file:'){toast('Estás abriendo el archivo localmente. Publícalo (por ejemplo en GitHub Pages) para compartir un enlace.');return}
+  if(navigator.share){try{await navigator.share({title:'YOU MOVE FORWARD · U-MUVO',url});return}catch(e){if(e.name==='AbortError')return}}
+  try{await navigator.clipboard.writeText(url);toast('Enlace copiado: '+url)}catch(e){prompt('Copia este enlace:',url)}}
+$$('[data-share]').forEach(b=>b.addEventListener('click',share));
+
+/* ---------- lightbox ---------- */
+const lb=$('#lightbox'),lbImg=$('img',lb);
+$$('[data-zoom]').forEach(b=>b.addEventListener('click',()=>{lbImg.src=b.dataset.zoom;lbImg.alt=($('img',b)||{}).alt||'';lb.classList.remove('z');lb.classList.add('on')}));
+lb.addEventListener('click',e=>{if(e.target.closest('.x')||e.target===lb&&!lb.classList.contains('z')){lb.classList.remove('on');return}
+  if(e.target===lbImg){const r=lbImg.getBoundingClientRect();lbImg.style.transformOrigin=((e.clientX-r.left)/r.width*100)+'% '+((e.clientY-r.top)/r.height*100)+'%';lb.classList.toggle('z')}else lb.classList.remove('z')});
+
+/* ---------- modo expositor ---------- */
+function openPresenter(){
+  if(presenterWin&&!presenterWin.closed){presenterWin.focus();return}
+  presenterWin=window.open('','ymf_presenter','width=1180,height=760');
+  if(!presenterWin){toast('El navegador bloqueó la ventana. Usa las notas con la tecla N.');$('#notesbar').classList.add('on');return}
+  const base=location.href.split('#')[0].split('?')[0];
+  const w=presenterWin,d=w.document;
+  d.open();d.write(`<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>Expositor · YOU MOVE FORWARD</title><style>
+  body{margin:0;font-family:system-ui,sans-serif;background:#0d1426;color:#e8eefc;display:grid;grid-template-columns:1.6fr 1fr;grid-template-rows:auto 1fr auto;gap:16px;padding:18px;height:100vh;box-sizing:border-box}
+  header{grid-column:1/3;display:flex;justify-content:space-between;align-items:center}header b{font-size:20px}#clock,#timer{font-variant-numeric:tabular-nums;font-size:22px;font-weight:600}
+  .f{position:relative;background:#000;border-radius:10px;overflow:hidden;aspect-ratio:16/9}.f iframe{position:absolute;left:0;top:0;width:1920px;height:1080px;border:0;transform-origin:0 0;pointer-events:none}
+  .col{display:flex;flex-direction:column;gap:12px;min-height:0}.lbl{font-size:12px;color:#8fa6d6;margin-bottom:4px}
+  #notes{background:#16203a;border-radius:10px;padding:16px;font-size:20px;line-height:1.5;overflow:auto;flex:1}
+  footer{grid-column:1/3;display:flex;gap:10px;align-items:center}button{background:#22325c;border:0;color:#fff;border-radius:8px;padding:10px 18px;font-size:16px;cursor:pointer}button:hover{background:#2f4680}#pos{margin-left:auto;font-size:18px}
+  </style></head><body><header><b id="title"></b><span>⏱ <span id="timer">00:00</span> &nbsp; 🕒 <span id="clock"></span></span></header>
+  <div class="col"><div class="lbl">Actual</div><div class="f" id="fc"><iframe id="cur"></iframe></div></div>
+  <div class="col"><div class="lbl">Siguiente</div><div class="f" id="fn"><iframe id="nx"></iframe></div><div class="lbl">Notas</div><div id="notes"></div></div>
+  <footer><button id="p">◀ Anterior</button><button id="n">Siguiente ▶</button><button id="r">Reiniciar tiempo</button><span id="pos"></span></footer></body></html>`);d.close();
+  const fit=()=>{['fc','fn'].forEach(id=>{const f=d.getElementById(id);const fr=f.querySelector('iframe');fr.style.transform='scale('+(f.clientWidth/1920)+')'})};
+  const src=n=>base+'?embed=1#/'+(n+1);
+  d.getElementById('cur').src=src(idx);d.getElementById('nx').src=src(Math.min(N-1,idx+1));
+  let t0=Date.now();
+  w.ymfUpdate=n=>{const sl=slides[n];d.getElementById('title').textContent=(n+1)+'. '+sl.dataset.title;d.getElementById('notes').textContent=($('.notes',sl)||{}).textContent||'';d.getElementById('pos').textContent=(n+1)+' / '+N;
+    const c=d.getElementById('cur'),x=d.getElementById('nx');try{c.contentWindow.YMF.go(n,{force:true});x.contentWindow.YMF.go(Math.min(N-1,n+1),{force:true})}catch(e){c.src=src(n);x.src=src(Math.min(N-1,n+1))}};
+  d.getElementById('p').onclick=()=>prev();d.getElementById('n').onclick=()=>next();d.getElementById('r').onclick=()=>t0=Date.now();
+  d.addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();next()}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();prev()}});
+  const tick=()=>{if(w.closed)return;const s=Math.floor((Date.now()-t0)/1000);d.getElementById('timer').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');d.getElementById('clock').textContent=new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});setTimeout(tick,1000)};tick();
+  w.addEventListener('resize',fit);setTimeout(fit,50);w.ymfUpdate(idx);
+  toast('Modo expositor abierto. Lleva esta ventana a la pantalla del público.');
+}
+$('#bPresenter').onclick=openPresenter;
+
+/* ---------- teclado ---------- */
+let numBuf='',numT;
+document.addEventListener('keydown',e=>{
+  if(EMBED)return;
+  if(e.target.matches('input,select,textarea')||$('#uniDlg').open)return;
+  if(e.metaKey||e.ctrlKey||e.altKey)return;
+  const k=e.key;
+  if(lb.classList.contains('on')){if(k==='Escape')lb.classList.remove('on');return}
+  if($('#black').classList.contains('on')&&k!=='b'&&k!=='B'){$('#black').classList.remove('on');return}
+  if(/^\d$/.test(k)){numBuf+=k;clearTimeout(numT);numT=setTimeout(()=>numBuf='',1500);toast('Ir a la diapositiva '+numBuf+' (Enter)');return}
+  if(k==='Enter'&&numBuf){e.preventDefault();go(parseInt(numBuf,10)-1);numBuf='';return}
+  switch(k){
+    case 'ArrowRight':case 'PageDown':case ' ':e.preventDefault();next();break;
+    case 'ArrowLeft':case 'PageUp':e.preventDefault();prev();break;
+    case 'Home':go(0);break;case 'End':go(N-1);break;
+    case 'f':case 'F':toggleFull();break;
+    case 'm':case 'M':drawer.classList.contains('open')?closeAll():openMenu();break;
+    case 'p':case 'P':openPresenter();break;
+    case 'n':case 'N':$('#notesbar').classList.toggle('on');break;
+    case 'a':case 'A':$('#animSw').click();break;
+    case 'b':case 'B':case '.':$('#black').classList.toggle('on');break;
+    case '?':showHelp();break;
+    case 'Escape':closeAll();$('#notesbar').classList.remove('on');break;
+  }
+  wake();
+});
+$('#black').onclick=()=>$('#black').classList.remove('on');
+
+/* ---------- táctil ---------- */
+let tx=0,ty=0,tt0=0;
+deck.addEventListener('touchstart',e=>{const t=e.touches[0];tx=t.clientX;ty=t.clientY;tt0=Date.now()},{passive:true});
+deck.addEventListener('touchend',e=>{const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;
+  if(e.target.closest('#s7 .cols')&&matchMedia('(max-width:860px)').matches)return;
+  if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.4&&Date.now()-tt0<700){dx<0?next():prev()}},{passive:true});
+
+/* ---------- ocultar controles en reposo ---------- */
+let idleT;function wake(){body.classList.remove('idle');clearTimeout(idleT);if(idleOn&&(document.fullscreenElement||document.webkitFullscreenElement))idleT=setTimeout(()=>body.classList.add('idle'),2600)}
+['mousemove','touchstart','pointerdown'].forEach(ev=>document.addEventListener(ev,wake,{passive:true}));
+document.addEventListener('fullscreenchange',wake);
+
+/* ---------- hash e inicio ---------- */
+function fromHash(){const m=location.hash.match(/#\/(\d+)/);return m?Math.max(0,Math.min(N-1,parseInt(m[1],10)-1)):0}
+window.addEventListener('hashchange',()=>go(fromHash()));
+applySettings(); idx=fromHash(); go(idx,{force:true});
+window.addEventListener('beforeprint',()=>slides.forEach(s=>$$('[data-count]',s).forEach(el=>el.textContent=el.dataset.final)));
+})();
+</script>
+</body>
+</html>

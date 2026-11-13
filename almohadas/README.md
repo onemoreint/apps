@@ -74,7 +74,7 @@ Todo se hace desde el panel, sin tocar código:
 
 ## 4. Antes de publicar: lista de verificación
 
-- [ ] Poner los **precios reales** y marcar «Confirmo que estos precios son reales». Los precios actuales ($159.900 → $119.900) son de ejemplo. El precio anterior debe ser uno al que realmente hayas vendido el producto.
+- [ ] Poner los **precios reales** y marcar «Confirmo que estos precios son reales». Los precios actuales ($139.000 → $99.000, combo de 2 almohadas) coinciden con la imagen principal. El precio anterior debe ser uno al que realmente hayas vendido el producto.
 - [ ] Reemplazar las **ilustraciones** por fotos reales del producto. Mientras sean ilustraciones, la tienda muestra la etiqueta «Ilustración de referencia».
 - [ ] Completar la **ficha técnica** (medidas, tela, color, peso) con los datos del proveedor. Las filas vacías no se muestran, y la tienda indica que se confirman por WhatsApp.
 - [ ] Activar el beneficio **«Fácil mantenimiento»** solo si el proveedor confirma cómo se lava.

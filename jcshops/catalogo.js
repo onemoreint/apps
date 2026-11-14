@@ -954,10 +954,10 @@ window.JC_CATALOGO = [
   "id": "t02",
   "nombre": "Chaleco de mezclilla con botones de nudo",
   "categoria": "Chaquetas",
-  "costo": 115068,
-  "costoRegular": 186542,
-  "precio": 307800,
-  "oferta": 189900,
+  "costo": 114674,
+  "costoRegular": 185918,
+  "precio": 306800,
+  "oferta": 189300,
   "nuevo": true,
   "oculto": false,
   "ocasion": [
@@ -1582,5 +1582,2271 @@ window.JC_CATALOGO = [
   "desc": "Chaleco de satén con cuello halter y ruedo asimétrico, con pantalón recto. Para cenas y eventos.",
   "imagenes": [],
   "proveedor": "Temu 606827722935288"
+ },
+ {
+  "id": "u01",
+  "nombre": "Chaleco vaquero lavado estilo coreano",
+  "categoria": "Chalecos",
+  "costo": 52344,
+  "costoRegular": 99975,
+  "precio": 165000,
+  "oferta": 86400,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul claro",
+    "h": "#9DB7D5",
+    "fotos": [
+     "foto:u01-azul-claro-1",
+     "foto:u01-azul-claro-2",
+     "foto:u01-azul-claro-3",
+     "foto:u01-azul-claro-4",
+     "foto:u01-azul-claro-5"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 3,
+   "M": 2,
+   "L": 4,
+   "XL": 0
+  },
+  "desc": "Chaleco de mezclilla sin mangas con lavado desgastado. Combina con jeans o faldas.",
+  "imagenes": [],
+  "proveedor": "Temu 606825273499939"
+ },
+ {
+  "id": "u02",
+  "nombre": "Chaqueta de mezclilla manga corta",
+  "categoria": "Chaquetas",
+  "costo": 57186,
+  "costoRegular": 181836,
+  "precio": 300100,
+  "oferta": 94400,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul denim",
+    "h": "#5F84B0",
+    "fotos": [
+     "foto:u02-azul-denim-1",
+     "foto:u02-azul-denim-2",
+     "foto:u02-azul-denim-3",
+     "foto:u02-azul-denim-4",
+     "foto:u02-azul-denim-5"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 1,
+   "M": 1,
+   "L": 5,
+   "XL": 1
+  },
+  "desc": "Chaqueta corta de mezclilla con manga corta, moderna y fresca.",
+  "imagenes": [],
+  "proveedor": "Temu 601105830116074"
+ },
+ {
+  "id": "u03",
+  "nombre": "Blusa sin mangas cuello alto denim",
+  "categoria": "Blusas",
+  "costo": 99133,
+  "costoRegular": 171399,
+  "precio": 282900,
+  "oferta": 163600,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual",
+   "Oficina"
+  ],
+  "colores": [
+   {
+    "n": "Azul denim",
+    "h": "#5F84B0",
+    "fotos": [
+     "foto:u03-azul-denim-1",
+     "foto:u03-azul-denim-2",
+     "foto:u03-azul-denim-3",
+     "foto:u03-azul-denim-4",
+     "foto:u03-azul-denim-5"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 3,
+   "S": 5,
+   "M": 1,
+   "L": 5,
+   "XL": 0
+  },
+  "desc": "Blusa sin mangas de cuello alto con corte asimétrico y detalles de mezclilla.",
+  "imagenes": [],
+  "proveedor": "Temu 606236225469489"
+ },
+ {
+  "id": "u04",
+  "nombre": "Pantalón Y2K de pierna ancha",
+  "categoria": "Pantalones",
+  "costo": 61609,
+  "costoRegular": 97589,
+  "precio": 161100,
+  "oferta": 101700,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul denim",
+    "h": "#5F84B0",
+    "fotos": [
+     "foto:u04-azul-denim-1",
+     "foto:u04-azul-denim-2",
+     "foto:u04-azul-denim-3"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 2,
+   "M": 1,
+   "L": 1,
+   "XL": 4
+  },
+  "desc": "Pantalón de pierna ancha con cinturilla de bloques de color y cordón.",
+  "imagenes": [],
+  "proveedor": "Temu 605780304605902"
+ },
+ {
+  "id": "u05",
+  "nombre": "Pantalón de sudadera pierna ancha",
+  "categoria": "Pantalones",
+  "costo": 72934,
+  "costoRegular": 124484,
+  "precio": 205400,
+  "oferta": 120400,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual",
+   "Deporte"
+  ],
+  "colores": [
+   {
+    "n": "Negro",
+    "h": "#1B1719",
+    "fotos": [
+     "foto:u05-negro-1",
+     "foto:u05-negro-2",
+     "foto:u05-negro-3",
+     "foto:u05-negro-4"
+    ]
+   },
+   {
+    "n": "Gris",
+    "h": "#8C8C8C",
+    "fotos": [
+     "foto:u05-gris-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 4,
+   "S": 1,
+   "M": 2,
+   "L": 1,
+   "XL": 5
+  },
+  "desc": "Pantalón holgado de pierna ancha con cordón en la cintura alta. Cómodo para el día a día.",
+  "imagenes": [],
+  "proveedor": "Temu 607673026217742"
+ },
+ {
+  "id": "u06",
+  "nombre": "Chaleco de mezclilla retro",
+  "categoria": "Chalecos",
+  "costo": 45316,
+  "costoRegular": 71787,
+  "precio": 118500,
+  "oferta": 74800,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul claro",
+    "h": "#9DB7D5",
+    "fotos": [
+     "foto:u06-azul-claro-1",
+     "foto:u06-azul-claro-2",
+     "foto:u06-azul-claro-3"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 4,
+   "M": 1,
+   "L": 5,
+   "XL": 0
+  },
+  "desc": "Chaleco de mezclilla sin mangas de estilo retro.",
+  "imagenes": [],
+  "proveedor": "Temu 607425797141147"
+ },
+ {
+  "id": "u07",
+  "nombre": "Top de mezclilla con remaches",
+  "categoria": "Blusas",
+  "costo": 65927,
+  "costoRegular": 138836,
+  "precio": 229100,
+  "oferta": 108800,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul oscuro",
+    "h": "#2F4566",
+    "fotos": [
+     "foto:u07-azul-oscuro-1",
+     "foto:u07-azul-oscuro-2",
+     "foto:u07-azul-oscuro-3",
+     "foto:u07-azul-oscuro-4",
+     "foto:u07-azul-oscuro-5"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 1,
+   "M": 2,
+   "L": 5,
+   "XL": 1
+  },
+  "desc": "Top de mezclilla con detalles de remaches.",
+  "imagenes": [],
+  "proveedor": "Temu 606408997216799"
+ },
+ {
+  "id": "u08",
+  "nombre": "Conjunto chaleco y short de mezclilla",
+  "categoria": "Conjuntos",
+  "costo": 81356,
+  "costoRegular": 128862,
+  "precio": 212700,
+  "oferta": 134300,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul denim",
+    "h": "#5F84B0",
+    "fotos": [
+     "foto:u08-azul-denim-1",
+     "foto:u08-azul-denim-2",
+     "foto:u08-azul-denim-3",
+     "foto:u08-azul-denim-4",
+     "foto:u08-azul-denim-5"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 5,
+   "S": 5,
+   "M": 4,
+   "L": 1,
+   "XL": 0
+  },
+  "desc": "Conjunto de dos piezas: chaleco de mezclilla con ruedo deshilachado asimétrico y short.",
+  "imagenes": [],
+  "proveedor": "Temu 607164978567241"
+ },
+ {
+  "id": "u09",
+  "nombre": "Camiseta holgada estampado denim",
+  "categoria": "Blusas",
+  "costo": 18263,
+  "costoRegular": 34831,
+  "precio": 57500,
+  "oferta": 30200,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul claro",
+    "h": "#9DB7D5",
+    "fotos": [
+     "foto:u09-azul-claro-1",
+     "foto:u09-azul-claro-2",
+     "foto:u09-azul-claro-3",
+     "foto:u09-azul-claro-4",
+     "foto:u09-azul-claro-5"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 2,
+   "M": 1,
+   "L": 5,
+   "XL": 2
+  },
+  "desc": "Camiseta holgada de verano con estampado efecto mezclilla (no es tela denim).",
+  "imagenes": [],
+  "proveedor": "Temu 607430897405064"
+ },
+ {
+  "id": "u10",
+  "nombre": "Blusa sin mangas con botones y volantes",
+  "categoria": "Blusas",
+  "costo": 45924,
+  "costoRegular": 74493,
+  "precio": 123000,
+  "oferta": 75800,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul denim",
+    "h": "#5F84B0",
+    "fotos": [
+     "foto:u10-azul-denim-1",
+     "foto:u10-azul-denim-2",
+     "foto:u10-azul-denim-3",
+     "foto:u10-azul-denim-4",
+     "foto:u10-azul-denim-5"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 3,
+   "M": 4,
+   "L": 2,
+   "XL": 5
+  },
+  "desc": "Blusa sin mangas de cuello redondo con botones al frente y volantes.",
+  "imagenes": [],
+  "proveedor": "Temu 607213699615250"
+ },
+ {
+  "id": "u11",
+  "nombre": "Jean de pierna ancha azul claro",
+  "categoria": "Pantalones",
+  "costo": 58932,
+  "costoRegular": 188653,
+  "precio": 311300,
+  "oferta": 97300,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul claro",
+    "h": "#9DB7D5",
+    "fotos": [
+     "foto:u11-azul-claro-1",
+     "foto:u11-azul-claro-2",
+     "foto:u11-azul-claro-3",
+     "foto:u11-azul-claro-4",
+     "foto:u11-azul-claro-5"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 1,
+   "S": 5,
+   "M": 3,
+   "L": 5,
+   "XL": 2
+  },
+  "desc": "Jean elástico de pierna ancha con lavado azul claro.",
+  "imagenes": [],
+  "proveedor": "Temu 606720180983092"
+ },
+ {
+  "id": "u12",
+  "nombre": "Suéter con cuello y puños de mezclilla",
+  "categoria": "Suéteres",
+  "costo": 116576,
+  "costoRegular": 186958,
+  "precio": 308500,
+  "oferta": 192400,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual",
+   "Oficina"
+  ],
+  "colores": [
+   {
+    "n": "Gris",
+    "h": "#8C8C8C",
+    "fotos": [
+     "foto:u12-gris-1",
+     "foto:u12-gris-2",
+     "foto:u12-gris-3"
+    ]
+   },
+   {
+    "n": "Blanco",
+    "h": "#F2F0EA",
+    "fotos": [
+     "foto:u12-blanco-1"
+    ]
+   },
+   {
+    "n": "Azul marino",
+    "h": "#1F2A44",
+    "fotos": [
+     "foto:u12-azul-marino-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 1,
+   "M": 5,
+   "L": 5,
+   "XL": 0
+  },
+  "desc": "Suéter tejido tipo chaqueta con cuello y puños de mezclilla. También disponible en mandarina, rosa roja, cielo azul, caqui, borgoña: pregunta por WhatsApp.",
+  "imagenes": [],
+  "proveedor": "Temu 607222457290259"
+ },
+ {
+  "id": "u13",
+  "nombre": "Chaqueta vaquera oversize cuello alto",
+  "categoria": "Chaquetas",
+  "costo": 158127,
+  "costoRegular": 250474,
+  "precio": 413300,
+  "oferta": 261000,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul",
+    "h": "#5A7FB0",
+    "fotos": [
+     "foto:u13-azul-1",
+     "foto:u13-azul-2",
+     "foto:u13-azul-3"
+    ]
+   },
+   {
+    "n": "Azul profundo",
+    "h": "#2E4470",
+    "fotos": [
+     "foto:u13-azul-profundo-1"
+    ]
+   },
+   {
+    "n": "Gris",
+    "h": "#8C8C8C",
+    "fotos": [
+     "foto:u13-gris-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 2,
+   "M": 3,
+   "L": 1,
+   "XL": 5
+  },
+  "desc": "Chaqueta vaquera oversize de cuello alto con cierre asimétrico. También disponible en azul marino, negro: pregunta por WhatsApp.",
+  "imagenes": [],
+  "proveedor": "Temu 607516662537890"
+ },
+ {
+  "id": "u14",
+  "nombre": "Chaleco tejido con botones asimétricos",
+  "categoria": "Chalecos",
+  "costo": 94614,
+  "costoRegular": 153770,
+  "precio": 253800,
+  "oferta": 156200,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Oficina",
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Beige",
+    "h": "#D8C3A5",
+    "fotos": [
+     "foto:u14-beige-1",
+     "foto:u14-beige-2",
+     "foto:u14-beige-3",
+     "foto:u14-beige-4"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 1,
+   "M": 5,
+   "L": 1,
+   "XL": 5
+  },
+  "desc": "Chaleco sin mangas de cuello redondo con tapeta de botones asimétrica.",
+  "imagenes": [],
+  "proveedor": "Temu 606373228179560"
+ },
+ {
+  "id": "u15",
+  "nombre": "Chaleco corto de mezclilla",
+  "categoria": "Chalecos",
+  "costo": 78818,
+  "costoRegular": 151013,
+  "precio": 249200,
+  "oferta": 130100,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul denim",
+    "h": "#5F84B0",
+    "fotos": [
+     "foto:u15-azul-denim-1",
+     "foto:u15-azul-denim-2",
+     "foto:u15-azul-denim-3",
+     "foto:u15-azul-denim-4"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 2,
+   "M": 4,
+   "L": 5,
+   "XL": 0
+  },
+  "desc": "Chaleco corto de mezclilla sin mangas, para usar solo o en capas.",
+  "imagenes": [],
+  "proveedor": "Temu 606513871597227"
+ },
+ {
+  "id": "u16",
+  "nombre": "Chaqueta cárdigan con cremallera",
+  "categoria": "Chaquetas",
+  "costo": 104951,
+  "costoRegular": 168388,
+  "precio": 277900,
+  "oferta": 173200,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual",
+   "Oficina"
+  ],
+  "colores": [
+   {
+    "n": "Gris",
+    "h": "#8C8C8C",
+    "fotos": [
+     "foto:u16-gris-1",
+     "foto:u16-gris-2",
+     "foto:u16-gris-3"
+    ]
+   },
+   {
+    "n": "Azul marino",
+    "h": "#1F2A44",
+    "fotos": [
+     "foto:u16-azul-marino-1"
+    ]
+   },
+   {
+    "n": "Blanco",
+    "h": "#F2F0EA",
+    "fotos": [
+     "foto:u16-blanco-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 4,
+   "M": 3,
+   "L": 4,
+   "XL": 0
+  },
+  "desc": "Chaqueta tipo suéter con cremallera, cuello y puños de mezclilla. También disponible en caqui, gris claro, café, negro, naranja, rosa, amarillo, rojo oscuro-a, púrpura, rosa roja: pregunta por WhatsApp.",
+  "imagenes": [],
+  "proveedor": "Temu 606281540683097"
+ },
+ {
+  "id": "u17",
+  "nombre": "Chaleco suéter con botones metálicos",
+  "categoria": "Chalecos",
+  "costo": 95303,
+  "costoRegular": 150960,
+  "precio": 249100,
+  "oferta": 157300,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Oficina",
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Trigo",
+    "h": "#D9C39A",
+    "fotos": [
+     "foto:u17-trigo-1",
+     "foto:u17-trigo-2",
+     "foto:u17-trigo-3"
+    ]
+   },
+   {
+    "n": "Gris claro",
+    "h": "#C9C9C6",
+    "fotos": [
+     "foto:u17-gris-claro-1"
+    ]
+   },
+   {
+    "n": "Blanco marfil",
+    "h": "#F1EBDD",
+    "fotos": [
+     "foto:u17-blanco-marfil-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 5,
+   "S": 4,
+   "M": 3,
+   "L": 3,
+   "XL": 2
+  },
+  "desc": "Chaleco tejido suave de cuello redondo, holgado, con botones metálicos laterales. También disponible en rosa, café, negro: pregunta por WhatsApp.",
+  "imagenes": [],
+  "proveedor": "Temu 605661471569004"
+ },
+ {
+  "id": "u18",
+  "nombre": "Camiseta sin mangas básica",
+  "categoria": "Blusas",
+  "costo": 17000,
+  "costoRegular": 47440,
+  "precio": 78300,
+  "oferta": 28100,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Negro",
+    "h": "#1B1719",
+    "fotos": [
+     "foto:u18-negro-1",
+     "foto:u18-negro-2",
+     "foto:u18-negro-3",
+     "foto:u18-negro-4"
+    ]
+   },
+   {
+    "n": "Blanco",
+    "h": "#F2F0EA",
+    "fotos": [
+     "foto:u18-blanco-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 2,
+   "M": 2,
+   "L": 1,
+   "XL": 5
+  },
+  "desc": "Camiseta sin mangas de color sólido, para usar sola o en capas.",
+  "imagenes": [],
+  "proveedor": "Temu 607229168162910"
+ },
+ {
+  "id": "u19",
+  "nombre": "Jean pierna ancha con pedrería",
+  "categoria": "Pantalones",
+  "costo": 82624,
+  "costoRegular": 130877,
+  "precio": 216000,
+  "oferta": 136400,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Noche",
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul claro",
+    "h": "#9DB7D5",
+    "fotos": [
+     "foto:u19-azul-claro-1",
+     "foto:u19-azul-claro-2",
+     "foto:u19-azul-claro-3",
+     "foto:u19-azul-claro-4",
+     "foto:u19-azul-claro-5"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 3,
+   "M": 5,
+   "L": 4,
+   "XL": 3
+  },
+  "desc": "Jean de tiro alto y pierna ancha con pedrería brillante. Incluye cinturón a juego.",
+  "imagenes": [],
+  "proveedor": "Temu 606695384270590"
+ },
+ {
+  "id": "u20",
+  "nombre": "Top de mezclilla con lazo al cuello",
+  "categoria": "Blusas",
+  "costo": 107028,
+  "costoRegular": 182850,
+  "precio": 301800,
+  "oferta": 176600,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul denim",
+    "h": "#5F84B0",
+    "fotos": [
+     "foto:u20-azul-denim-1",
+     "foto:u20-azul-denim-2",
+     "foto:u20-azul-denim-3",
+     "foto:u20-azul-denim-4",
+     "foto:u20-azul-denim-5"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 4,
+   "M": 3,
+   "L": 5,
+   "XL": 1
+  },
+  "desc": "Top de mezclilla con tirantes de lazo al cuello.",
+  "imagenes": [],
+  "proveedor": "Temu 607050390163641"
+ },
+ {
+  "id": "u21",
+  "nombre": "Jean de pierna ancha con adornos metálicos",
+  "categoria": "Pantalones",
+  "costo": 79830,
+  "costoRegular": 139169,
+  "precio": 229700,
+  "oferta": 131800,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul denim",
+    "h": "#5F84B0",
+    "fotos": [
+     "foto:u21-azul-denim-1",
+     "foto:u21-azul-denim-2",
+     "foto:u21-azul-denim-3",
+     "foto:u21-azul-denim-4"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 1,
+   "M": 5,
+   "L": 4,
+   "XL": 2
+  },
+  "desc": "Jean vintage de pierna ancha y recta con adornos metálicos.",
+  "imagenes": [],
+  "proveedor": "Temu 606774539219772"
+ },
+ {
+  "id": "u22",
+  "nombre": "Conjunto camisa y pantalón ancho",
+  "categoria": "Conjuntos",
+  "costo": 75010,
+  "costoRegular": 194509,
+  "precio": 321000,
+  "oferta": 123800,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual",
+   "Oficina"
+  ],
+  "colores": [
+   {
+    "n": "Negro",
+    "h": "#1B1719",
+    "fotos": [
+     "foto:u22-negro-1",
+     "foto:u22-negro-2",
+     "foto:u22-negro-3",
+     "foto:u22-negro-4"
+    ]
+   },
+   {
+    "n": "Celeste",
+    "h": "#8EC5E8",
+    "fotos": [
+     "foto:u22-celeste-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 3,
+   "M": 2,
+   "L": 4,
+   "XL": 4
+  },
+  "desc": "Conjunto de dos piezas: camisa de manga corta y pantalón ancho.",
+  "imagenes": [],
+  "proveedor": "Temu 606277178644853"
+ },
+ {
+  "id": "u23",
+  "nombre": "Chaqueta vaquera con mangas de cuentas",
+  "categoria": "Chaquetas",
+  "costo": 108081,
+  "costoRegular": 150303,
+  "precio": 248000,
+  "oferta": 178400,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Noche",
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul denim",
+    "h": "#5F84B0",
+    "fotos": [
+     "foto:u23-azul-denim-1",
+     "foto:u23-azul-denim-2",
+     "foto:u23-azul-denim-3",
+     "foto:u23-azul-denim-4",
+     "foto:u23-azul-denim-5"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 1,
+   "M": 1,
+   "L": 5,
+   "XL": 5
+  },
+  "desc": "Chaqueta vaquera de manga larga con cuentas bordadas en las mangas.",
+  "imagenes": [],
+  "proveedor": "Temu 606146786110322"
+ },
+ {
+  "id": "u24",
+  "nombre": "Blusa tejida sin mangas con botones",
+  "categoria": "Blusas",
+  "costo": 21321,
+  "costoRegular": 42890,
+  "precio": 70800,
+  "oferta": 35200,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Oficina",
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Blanco",
+    "h": "#F2F0EA",
+    "fotos": [
+     "foto:u24-blanco-1",
+     "foto:u24-blanco-2",
+     "foto:u24-blanco-3"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 3,
+   "M": 3,
+   "L": 3,
+   "XL": 5
+  },
+  "desc": "Blusa sin mangas tejida con botones decorativos en los hombros.",
+  "imagenes": [],
+  "proveedor": "Temu 606936573544669"
+ },
+ {
+  "id": "u25",
+  "nombre": "Suéter con ribete de encaje",
+  "categoria": "Suéteres",
+  "costo": 89901,
+  "costoRegular": 139703,
+  "precio": 230600,
+  "oferta": 148400,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual",
+   "Oficina"
+  ],
+  "colores": [
+   {
+    "n": "Albaricoque",
+    "h": "#E9B48E",
+    "fotos": [
+     "foto:u25-albaricoque-1",
+     "foto:u25-albaricoque-2",
+     "foto:u25-albaricoque-3"
+    ]
+   },
+   {
+    "n": "Negro",
+    "h": "#1B1719",
+    "fotos": [
+     "foto:u25-negro-1"
+    ]
+   },
+   {
+    "n": "Borgoña",
+    "h": "#6E1F2E",
+    "fotos": [
+     "foto:u25-borgona-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 4,
+   "M": 5,
+   "L": 4,
+   "XL": 1
+  },
+  "desc": "Suéter de cuello redondo con ribete de encaje y manga raglán.",
+  "imagenes": [],
+  "proveedor": "Temu 607372781157692"
+ },
+ {
+  "id": "u26",
+  "nombre": "Abrigo estilo Napoleón",
+  "categoria": "Chaquetas",
+  "costo": 82759,
+  "costoRegular": 138992,
+  "precio": 229400,
+  "oferta": 136600,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Oficina",
+   "Evento"
+  ],
+  "colores": [
+   {
+    "n": "Beige",
+    "h": "#D8C3A5",
+    "fotos": [
+     "foto:u26-beige-1",
+     "foto:u26-beige-2",
+     "foto:u26-beige-3",
+     "foto:u26-beige-4"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 1,
+   "M": 3,
+   "L": 4,
+   "XL": 1
+  },
+  "desc": "Abrigo retro de cuello alto con doble cremallera y botones.",
+  "imagenes": [],
+  "proveedor": "Temu 607548606400216"
+ },
+ {
+  "id": "u27",
+  "nombre": "Camiseta halter de tirantes finos",
+  "categoria": "Blusas",
+  "costo": 50082,
+  "costoRegular": 79330,
+  "precio": 130900,
+  "oferta": 82700,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual",
+   "Playa"
+  ],
+  "colores": [
+   {
+    "n": "Caqui",
+    "h": "#C3AE88",
+    "fotos": [
+     "foto:u27-caqui-1",
+     "foto:u27-caqui-2",
+     "foto:u27-caqui-3"
+    ]
+   },
+   {
+    "n": "Negro",
+    "h": "#1B1719",
+    "fotos": [
+     "foto:u27-negro-1"
+    ]
+   },
+   {
+    "n": "Café",
+    "h": "#6B4A35",
+    "fotos": [
+     "foto:u27-cafe-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 1,
+   "M": 3,
+   "L": 5,
+   "XL": 4
+  },
+  "desc": "Camiseta sin mangas de tirantes finos, color liso. También disponible en verde: pregunta por WhatsApp.",
+  "imagenes": [],
+  "proveedor": "Temu 605606425495783"
+ },
+ {
+  "id": "u28",
+  "nombre": "Brasier sin varillas transpirable",
+  "categoria": "Ropa interior",
+  "costo": 34647,
+  "costoRegular": 54881,
+  "precio": 90600,
+  "oferta": 57200,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Marfil",
+    "h": "#F3EDE0",
+    "fotos": [
+     "foto:u28-marfil-1",
+     "foto:u28-marfil-2",
+     "foto:u28-marfil-3",
+     "foto:u28-marfil-4",
+     "foto:u28-marfil-5"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 3,
+   "M": 4,
+   "L": 3,
+   "XL": 0
+  },
+  "desc": "Brasier sin varillas de tejido ligero y elástico.",
+  "imagenes": [],
+  "proveedor": "Temu 606481877452570"
+ },
+ {
+  "id": "u29",
+  "nombre": "Brasier sin costuras escote en V",
+  "categoria": "Ropa interior",
+  "costo": 21983,
+  "costoRegular": 59205,
+  "precio": 97700,
+  "oferta": 36300,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Beige claro",
+    "h": "#E6D3B8",
+    "fotos": [
+     "foto:u29-beige-claro-1",
+     "foto:u29-beige-claro-2",
+     "foto:u29-beige-claro-3"
+    ]
+   },
+   {
+    "n": "Blanco",
+    "h": "#F2F0EA",
+    "fotos": [
+     "foto:u29-blanco-1"
+    ]
+   },
+   {
+    "n": "Negro",
+    "h": "#1B1719",
+    "fotos": [
+     "foto:u29-negro-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 1,
+   "M": 4,
+   "L": 3,
+   "XL": 2
+  },
+  "desc": "Brasier sin costuras con escote en V, suave y con buen soporte.",
+  "imagenes": [],
+  "proveedor": "Temu 601103625668209"
+ },
+ {
+  "id": "u30",
+  "nombre": "Brasier push-up escote profundo",
+  "categoria": "Ropa interior",
+  "costo": 27297,
+  "costoRegular": 60031,
+  "precio": 99100,
+  "oferta": 45100,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Albaricoque",
+    "h": "#E9B48E",
+    "fotos": [
+     "foto:u30-albaricoque-1",
+     "foto:u30-albaricoque-2",
+     "foto:u30-albaricoque-3"
+    ]
+   },
+   {
+    "n": "Azul claro",
+    "h": "#9DB7D5",
+    "fotos": [
+     "foto:u30-azul-claro-1"
+    ]
+   },
+   {
+    "n": "Azul rey",
+    "h": "#2F4FA0",
+    "fotos": [
+     "foto:u30-azul-rey-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 5,
+   "M": 1,
+   "L": 4,
+   "XL": 1
+  },
+  "desc": "Brasier push-up de escote en V profundo, sin varillas y con cierre frontal. También disponible en negro, el rosa: pregunta por WhatsApp.",
+  "imagenes": [],
+  "proveedor": "Temu 605730258127985"
+ },
+ {
+  "id": "u31",
+  "nombre": "Top base cuello alto con encaje",
+  "categoria": "Blusas",
+  "costo": 16745,
+  "costoRegular": 53948,
+  "precio": 89100,
+  "oferta": 27700,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Oficina",
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Blanco",
+    "h": "#F2F0EA",
+    "fotos": [
+     "foto:u31-blanco-1",
+     "foto:u31-blanco-2",
+     "foto:u31-blanco-3"
+    ]
+   },
+   {
+    "n": "Negro",
+    "h": "#1B1719",
+    "fotos": [
+     "foto:u31-negro-1"
+    ]
+   },
+   {
+    "n": "Gris",
+    "h": "#8C8C8C",
+    "fotos": [
+     "foto:u31-gris-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 2,
+   "M": 3,
+   "L": 2,
+   "XL": 2
+  },
+  "desc": "Top de manga larga y cuello alto con ribete de encaje, ideal para capas.",
+  "imagenes": [],
+  "proveedor": "Temu 605664759919636"
+ },
+ {
+  "id": "u32",
+  "nombre": "Suéter holgado con encaje floral",
+  "categoria": "Suéteres",
+  "costo": 126371,
+  "costoRegular": 200172,
+  "precio": 330300,
+  "oferta": 208600,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Rosa palo",
+    "h": "#D8A9A8",
+    "fotos": [
+     "foto:u32-rosa-palo-1",
+     "foto:u32-rosa-palo-2",
+     "foto:u32-rosa-palo-3",
+     "foto:u32-rosa-palo-4",
+     "foto:u32-rosa-palo-5"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 4,
+   "S": 4,
+   "M": 4,
+   "L": 1,
+   "XL": 2
+  },
+  "desc": "Suéter holgado de manga larga con ribete de encaje floral.",
+  "imagenes": [],
+  "proveedor": "Temu 601101347557558"
+ },
+ {
+  "id": "u33",
+  "nombre": "Short cargo con borde enrollado",
+  "categoria": "Shorts",
+  "costo": 35281,
+  "costoRegular": 68106,
+  "precio": 112400,
+  "oferta": 58300,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual",
+   "Playa"
+  ],
+  "colores": [
+   {
+    "n": "Caqui",
+    "h": "#C3AE88",
+    "fotos": [
+     "foto:u33-caqui-1",
+     "foto:u33-caqui-2",
+     "foto:u33-caqui-3"
+    ]
+   },
+   {
+    "n": "Negro",
+    "h": "#1B1719",
+    "fotos": [
+     "foto:u33-negro-1"
+    ]
+   },
+   {
+    "n": "Verde helecho",
+    "h": "#5F6E45",
+    "fotos": [
+     "foto:u33-verde-helecho-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 4,
+   "M": 4,
+   "L": 5,
+   "XL": 3
+  },
+  "desc": "Short estilo cargo con cintura de cordón, borde enrollado y colgante metálico.",
+  "imagenes": [],
+  "proveedor": "Temu 601105240060864"
+ },
+ {
+  "id": "u34",
+  "nombre": "Short de algodón pierna ancha",
+  "categoria": "Shorts",
+  "costo": 27254,
+  "costoRegular": 43177,
+  "precio": 71300,
+  "oferta": 45000,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual",
+   "Playa"
+  ],
+  "colores": [
+   {
+    "n": "Naranja",
+    "h": "#E0742E",
+    "fotos": [
+     "foto:u34-naranja-1",
+     "foto:u34-naranja-2",
+     "foto:u34-naranja-3"
+    ]
+   },
+   {
+    "n": "Blanco",
+    "h": "#F2F0EA",
+    "fotos": [
+     "foto:u34-blanco-1"
+    ]
+   },
+   {
+    "n": "Verde",
+    "h": "#4E7A4A",
+    "fotos": [
+     "foto:u34-verde-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 2,
+   "M": 4,
+   "L": 5,
+   "XL": 3
+  },
+  "desc": "Short de talle alto y pierna ancha con doble botón y cordón ajustable. También disponible en rojo, negro, lino, caqui: pregunta por WhatsApp.",
+  "imagenes": [],
+  "proveedor": "Temu 607351977389786"
+ },
+ {
+  "id": "u35",
+  "nombre": "Falda-short plisada de mezclilla",
+  "categoria": "Shorts",
+  "costo": 52394,
+  "costoRegular": 86092,
+  "precio": 142100,
+  "oferta": 86500,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul claro",
+    "h": "#9DB7D5",
+    "fotos": [
+     "foto:u35-azul-claro-1",
+     "foto:u35-azul-claro-2",
+     "foto:u35-azul-claro-3",
+     "foto:u35-azul-claro-4",
+     "foto:u35-azul-claro-5"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 4,
+   "S": 3,
+   "M": 4,
+   "L": 2,
+   "XL": 2
+  },
+  "desc": "Falda-short de mezclilla plisada de cintura alta, con short por dentro.",
+  "imagenes": [],
+  "proveedor": "Temu 606153446685752"
+ },
+ {
+  "id": "u36",
+  "nombre": "Short utilitario con borlas",
+  "categoria": "Shorts",
+  "costo": 55961,
+  "costoRegular": 88643,
+  "precio": 146300,
+  "oferta": 92400,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Verde helecho",
+    "h": "#5F6E45",
+    "fotos": [
+     "foto:u36-verde-helecho-1",
+     "foto:u36-verde-helecho-2",
+     "foto:u36-verde-helecho-3"
+    ]
+   },
+   {
+    "n": "Albaricoque",
+    "h": "#E9B48E",
+    "fotos": [
+     "foto:u36-albaricoque-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 1,
+   "M": 2,
+   "L": 2,
+   "XL": 2
+  },
+  "desc": "Short utilitario con cintura elástica, puños y borlas metálicas.",
+  "imagenes": [],
+  "proveedor": "Temu 607381471728522"
+ },
+ {
+  "id": "u37",
+  "nombre": "Conjunto chaleco y short de verano",
+  "categoria": "Conjuntos",
+  "costo": 31541,
+  "costoRegular": 49961,
+  "precio": 82500,
+  "oferta": 52100,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual",
+   "Playa"
+  ],
+  "colores": [
+   {
+    "n": "Crudo",
+    "h": "#EFE8DA",
+    "fotos": [
+     "foto:u37-crudo-1",
+     "foto:u37-crudo-2",
+     "foto:u37-crudo-3"
+    ]
+   },
+   {
+    "n": "Oliva",
+    "h": "#7A7A4A",
+    "fotos": [
+     "foto:u37-oliva-1"
+    ]
+   },
+   {
+    "n": "Rosa",
+    "h": "#D98CA0",
+    "fotos": [
+     "foto:u37-rosa-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 2,
+   "M": 1,
+   "L": 4,
+   "XL": 5
+  },
+  "desc": "Conjunto de dos piezas: blusa sin mangas y short con cordón. También disponible en gris profundo, marrón oscuro, verde helecho, marrón rosa, mar azul, acero brillante, colores mezclados: pregunta por WhatsApp.",
+  "imagenes": [],
+  "proveedor": "Temu 607657691818360"
+ },
+ {
+  "id": "u38",
+  "nombre": "Conjunto blusa sin mangas y short",
+  "categoria": "Conjuntos",
+  "costo": 30598,
+  "costoRegular": 48468,
+  "precio": 80000,
+  "oferta": 50500,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual",
+   "Playa"
+  ],
+  "colores": [
+   {
+    "n": "Verde floral",
+    "h": "#A9C6A6",
+    "fotos": [
+     "foto:u38-verde-floral-1",
+     "foto:u38-verde-floral-2",
+     "foto:u38-verde-floral-3"
+    ]
+   },
+   {
+    "n": "Vino y beige",
+    "h": "#7B2D3A",
+    "fotos": [
+     "foto:u38-vino-y-beige-1"
+    ]
+   },
+   {
+    "n": "Verde claro",
+    "h": "#A7C9A0",
+    "fotos": [
+     "foto:u38-verde-claro-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 2,
+   "M": 3,
+   "L": 3,
+   "XL": 1
+  },
+  "desc": "Conjunto de dos piezas de verano: blusa sin mangas estampada y short. También disponible en caqui, rosa pálido, azul claro, gris púrpura, caqui blanco roto, color verde oliva: pregunta por WhatsApp.",
+  "imagenes": [],
+  "proveedor": "Temu 607295840829946"
+ },
+ {
+  "id": "u39",
+  "nombre": "Falda-short con cinturón",
+  "categoria": "Shorts",
+  "costo": 31753,
+  "costoRegular": 50304,
+  "precio": 83100,
+  "oferta": 52400,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual",
+   "Oficina"
+  ],
+  "colores": [
+   {
+    "n": "Negro",
+    "h": "#1B1719",
+    "fotos": [
+     "foto:u39-negro-1",
+     "foto:u39-negro-2",
+     "foto:u39-negro-3"
+    ]
+   },
+   {
+    "n": "Verde",
+    "h": "#4E7A4A",
+    "fotos": [
+     "foto:u39-verde-1"
+    ]
+   },
+   {
+    "n": "Caqui",
+    "h": "#C3AE88",
+    "fotos": [
+     "foto:u39-caqui-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 2,
+   "M": 4,
+   "L": 5,
+   "XL": 3
+  },
+  "desc": "Falda-short de pierna ancha con botones laterales. Incluye cinturón. También disponible en blanco: pregunta por WhatsApp.",
+  "imagenes": [],
+  "proveedor": "Temu 605596761846405"
+ },
+ {
+  "id": "u40",
+  "nombre": "Short con cordones laterales",
+  "categoria": "Shorts",
+  "costo": 70641,
+  "costoRegular": 113092,
+  "precio": 186700,
+  "oferta": 116600,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Negro",
+    "h": "#1B1719",
+    "fotos": [
+     "foto:u40-negro-1",
+     "foto:u40-negro-2"
+    ]
+   },
+   {
+    "n": "Caqui",
+    "h": "#C3AE88",
+    "fotos": [
+     "foto:u40-caqui-1"
+    ]
+   },
+   {
+    "n": "Rojo",
+    "h": "#B3261E",
+    "fotos": [
+     "foto:u40-rojo-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 5,
+   "M": 5,
+   "L": 3,
+   "XL": 2
+  },
+  "desc": "Short de cintura alta con cordones laterales ajustables.",
+  "imagenes": [],
+  "proveedor": "Temu 605571612802068"
+ },
+ {
+  "id": "u41",
+  "nombre": "Conjunto blusa y bermuda",
+  "categoria": "Conjuntos",
+  "costo": 49410,
+  "costoRegular": 117796,
+  "precio": 194400,
+  "oferta": 81600,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual",
+   "Playa"
+  ],
+  "colores": [
+   {
+    "n": "Marrón",
+    "h": "#7A5236",
+    "fotos": [
+     "foto:u41-marron-1",
+     "foto:u41-marron-2",
+     "foto:u41-marron-3"
+    ]
+   },
+   {
+    "n": "Negro",
+    "h": "#1B1719",
+    "fotos": [
+     "foto:u41-negro-1"
+    ]
+   },
+   {
+    "n": "Blanco",
+    "h": "#F2F0EA",
+    "fotos": [
+     "foto:u41-blanco-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 5,
+   "M": 5,
+   "L": 1,
+   "XL": 4
+  },
+  "desc": "Conjunto de dos piezas: blusa de manga corta y bermuda con cordón. También disponible en rojo, borgoña, púrpura, rosa, marrón amarillento: pregunta por WhatsApp.",
+  "imagenes": [],
+  "proveedor": "Temu 601100198598317"
+ },
+ {
+  "id": "u42",
+  "nombre": "Short de mezclilla con cordón",
+  "categoria": "Shorts",
+  "costo": 82036,
+  "costoRegular": 129946,
+  "precio": 214500,
+  "oferta": 135400,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul medio",
+    "h": "#5D7FA8",
+    "fotos": [
+     "foto:u42-azul-medio-1",
+     "foto:u42-azul-medio-2",
+     "foto:u42-azul-medio-3",
+     "foto:u42-azul-medio-4",
+     "foto:u42-azul-medio-5"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 5,
+   "M": 4,
+   "L": 4,
+   "XL": 4
+  },
+  "desc": "Short de mezclilla lavada con cintura elástica y cordón.",
+  "imagenes": [],
+  "proveedor": "Temu 606110010413869"
+ },
+ {
+  "id": "u43",
+  "nombre": "Bermuda estampado de flores",
+  "categoria": "Shorts",
+  "costo": 39268,
+  "costoRegular": 86616,
+  "precio": 143000,
+  "oferta": 64800,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual",
+   "Playa"
+  ],
+  "colores": [
+   {
+    "n": "Floral crema",
+    "h": "#EADFC8",
+    "fotos": [
+     "foto:u43-floral-crema-1",
+     "foto:u43-floral-crema-2",
+     "foto:u43-floral-crema-3"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 4,
+   "M": 1,
+   "L": 4,
+   "XL": 4
+  },
+  "desc": "Bermuda hasta la rodilla con estampado vintage de jardín y flores.",
+  "imagenes": [],
+  "proveedor": "Temu 606712127929862"
+ },
+ {
+  "id": "u44",
+  "nombre": "Short de lino cintura alta",
+  "categoria": "Shorts",
+  "costo": 32289,
+  "costoRegular": 51146,
+  "precio": 84400,
+  "oferta": 53300,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual",
+   "Oficina"
+  ],
+  "colores": [
+   {
+    "n": "Blanco",
+    "h": "#F2F0EA",
+    "fotos": [
+     "foto:u44-blanco-1",
+     "foto:u44-blanco-2"
+    ]
+   },
+   {
+    "n": "Caqui",
+    "h": "#C3AE88",
+    "fotos": [
+     "foto:u44-caqui-1"
+    ]
+   },
+   {
+    "n": "Negro",
+    "h": "#1B1719",
+    "fotos": [
+     "foto:u44-negro-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 1,
+   "M": 2,
+   "L": 1,
+   "XL": 2
+  },
+  "desc": "Short de cintura alta, holgado y fresco, con botón cruzado. También disponible en albaricoque: pregunta por WhatsApp.",
+  "imagenes": [],
+  "proveedor": "Temu 605841507891903"
+ },
+ {
+  "id": "u45",
+  "nombre": "Short Y2K con franja lateral",
+  "categoria": "Shorts",
+  "costo": 64815,
+  "costoRegular": 105601,
+  "precio": 174300,
+  "oferta": 107000,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual",
+   "Deporte"
+  ],
+  "colores": [
+   {
+    "n": "Rosa",
+    "h": "#D98CA0",
+    "fotos": [
+     "foto:u45-rosa-1",
+     "foto:u45-rosa-2",
+     "foto:u45-rosa-3"
+    ]
+   },
+   {
+    "n": "Violeta",
+    "h": "#8A5AA8",
+    "fotos": [
+     "foto:u45-violeta-1"
+    ]
+   },
+   {
+    "n": "Azul eléctrico",
+    "h": "#2E6BE0",
+    "fotos": [
+     "foto:u45-azul-electrico-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 4,
+   "S": 2,
+   "M": 1,
+   "L": 3,
+   "XL": 5
+  },
+  "desc": "Short de cintura alta con cordón y franja lateral. También disponible en amarillo, negro: pregunta por WhatsApp.",
+  "imagenes": [],
+  "proveedor": "Temu 605987419307973"
+ },
+ {
+  "id": "u46",
+  "nombre": "Short cargo caqui",
+  "categoria": "Shorts",
+  "costo": 66747,
+  "costoRegular": 121466,
+  "precio": 200500,
+  "oferta": 110200,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Caqui",
+    "h": "#C3AE88",
+    "fotos": [
+     "foto:u46-caqui-1",
+     "foto:u46-caqui-2",
+     "foto:u46-caqui-3",
+     "foto:u46-caqui-4",
+     "foto:u46-caqui-5"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 1,
+   "S": 1,
+   "M": 1,
+   "L": 5,
+   "XL": 2
+  },
+  "desc": "Short casual de cintura alta con bolsillos tipo cargo.",
+  "imagenes": [],
+  "proveedor": "Temu 605699992036735"
+ },
+ {
+  "id": "u47",
+  "nombre": "Falda-short cargo con cinturón",
+  "categoria": "Shorts",
+  "costo": 52612,
+  "costoRegular": 83338,
+  "precio": 137600,
+  "oferta": 86900,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Verde oliva",
+    "h": "#6B6B3A",
+    "fotos": [
+     "foto:u47-verde-oliva-1",
+     "foto:u47-verde-oliva-2",
+     "foto:u47-verde-oliva-3"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 5,
+   "M": 1,
+   "L": 3,
+   "XL": 5
+  },
+  "desc": "Falda-short de talle alto con short integrado, bolsillos cargo y cinturón.",
+  "imagenes": [],
+  "proveedor": "Temu 606651226674032"
+ },
+ {
+  "id": "u48",
+  "nombre": "Short con franjas laterales",
+  "categoria": "Shorts",
+  "costo": 33693,
+  "costoRegular": 96784,
+  "precio": 159700,
+  "oferta": 55600,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual",
+   "Deporte"
+  ],
+  "colores": [
+   {
+    "n": "Rosa",
+    "h": "#D98CA0",
+    "fotos": [
+     "foto:u48-rosa-1",
+     "foto:u48-rosa-2",
+     "foto:u48-rosa-3"
+    ]
+   },
+   {
+    "n": "Verde claro",
+    "h": "#A7C9A0",
+    "fotos": [
+     "foto:u48-verde-claro-1"
+    ]
+   },
+   {
+    "n": "Blanco",
+    "h": "#F2F0EA",
+    "fotos": [
+     "foto:u48-blanco-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 1,
+   "S": 1,
+   "M": 2,
+   "L": 5,
+   "XL": 4
+  },
+  "desc": "Short corto de verano con franjas de color a los lados. También disponible en negro, café, caqui, verde: pregunta por WhatsApp.",
+  "imagenes": [],
+  "proveedor": "Temu 606256525868959"
+ },
+ {
+  "id": "u49",
+  "nombre": "Short con bolsillos y botón",
+  "categoria": "Shorts",
+  "costo": 63580,
+  "costoRegular": 104730,
+  "precio": 172900,
+  "oferta": 105000,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Caqui",
+    "h": "#C3AE88",
+    "fotos": [
+     "foto:u49-caqui-1",
+     "foto:u49-caqui-2",
+     "foto:u49-caqui-3",
+     "foto:u49-caqui-4",
+     "foto:u49-caqui-5"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 2,
+   "M": 3,
+   "L": 3,
+   "XL": 5
+  },
+  "desc": "Short cómodo de cintura elástica con bolsillos y cierre de botón.",
+  "imagenes": [],
+  "proveedor": "Temu 601100253307005"
+ },
+ {
+  "id": "u50",
+  "nombre": "Short básico con bolsillos",
+  "categoria": "Shorts",
+  "costo": 62586,
+  "costoRegular": 99137,
+  "precio": 163600,
+  "oferta": 103300,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Beige",
+    "h": "#D8C3A5",
+    "fotos": [
+     "foto:u50-beige-1",
+     "foto:u50-beige-2",
+     "foto:u50-beige-3"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 3,
+   "M": 4,
+   "L": 1,
+   "XL": 0
+  },
+  "desc": "Short de color sólido con bolsillos y botón.",
+  "imagenes": [],
+  "proveedor": "Temu 605985070517808"
+ },
+ {
+  "id": "u51",
+  "nombre": "Short de playa en mezclilla",
+  "categoria": "Shorts",
+  "costo": 49853,
+  "costoRegular": 81047,
+  "precio": 133800,
+  "oferta": 82300,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Playa",
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul denim",
+    "h": "#5F84B0",
+    "fotos": [
+     "foto:u51-azul-denim-1",
+     "foto:u51-azul-denim-2",
+     "foto:u51-azul-denim-3",
+     "foto:u51-azul-denim-4",
+     "foto:u51-azul-denim-5"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 1,
+   "M": 4,
+   "L": 4,
+   "XL": 4
+  },
+  "desc": "Short fresco de cintura con cordón para playa y descanso.",
+  "imagenes": [],
+  "proveedor": "Temu 605736885179562"
+ },
+ {
+  "id": "u52",
+  "nombre": "Falda-short con lazos",
+  "categoria": "Shorts",
+  "costo": 32354,
+  "costoRegular": 51249,
+  "precio": 84600,
+  "oferta": 53400,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul claro",
+    "h": "#9DB7D5",
+    "fotos": [
+     "foto:u52-azul-claro-1",
+     "foto:u52-azul-claro-2",
+     "foto:u52-azul-claro-3"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 4,
+   "S": 0,
+   "M": 3,
+   "L": 1,
+   "XL": 2
+  },
+  "desc": "Falda-short de mezclilla azul claro con lazos decorativos y abertura.",
+  "imagenes": [],
+  "proveedor": "Temu 606657367105372"
+ },
+ {
+  "id": "u53",
+  "nombre": "Overol corto de mezclilla",
+  "categoria": "Shorts",
+  "costo": 113169,
+  "costoRegular": 179260,
+  "precio": 295800,
+  "oferta": 186800,
+  "nuevo": true,
+  "oculto": false,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul claro",
+    "h": "#9DB7D5",
+    "fotos": [
+     "foto:u53-azul-claro-1",
+     "foto:u53-azul-claro-2",
+     "foto:u53-azul-claro-3"
+    ]
+   },
+   {
+    "n": "Azul profundo",
+    "h": "#2E4470",
+    "fotos": [
+     "foto:u53-azul-profundo-1"
+    ]
+   },
+   {
+    "n": "Azul medio",
+    "h": "#5D7FA8",
+    "fotos": [
+     "foto:u53-azul-medio-1"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 1,
+   "S": 3,
+   "M": 3,
+   "L": 4,
+   "XL": 2
+  },
+  "desc": "Overol corto (enterizo) de mezclilla con bolsillo al frente.",
+  "imagenes": [],
+  "proveedor": "Temu 601104307811183"
+ },
+ {
+  "id": "u54",
+  "nombre": "Short vaquero para niña",
+  "categoria": "Niñas",
+  "costo": 33827,
+  "costoRegular": 54340,
+  "precio": 89700,
+  "oferta": 55900,
+  "nuevo": true,
+  "oculto": true,
+  "ocasion": [
+   "Casual"
+  ],
+  "colores": [
+   {
+    "n": "Azul claro",
+    "h": "#9DB7D5",
+    "fotos": [
+     "foto:u54-azul-claro-1",
+     "foto:u54-azul-claro-2",
+     "foto:u54-azul-claro-3",
+     "foto:u54-azul-claro-4",
+     "foto:u54-azul-claro-5"
+    ]
+   }
+  ],
+  "stock": {
+   "XS": 0,
+   "S": 5,
+   "M": 1,
+   "L": 2,
+   "XL": 0
+  },
+  "desc": "Short de mezclilla azul claro para niña, con cordón y volantes.",
+  "imagenes": [],
+  "proveedor": "Temu 607262152205017"
  }
 ];

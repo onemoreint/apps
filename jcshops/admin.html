@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>JC Shops · Panel de precios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: herramienta de trabajo tranquila y precisa para la dueña de la tienda.
+   IDEA: la libreta de precios de la boutique: una fila por prenda, cuentas a la vista.
+   PICTURE: la lista misma, con la foto de cada prenda y su ganancia calculada al lado.
+   COLOUR and TYPE: el rosa empolvado de la tienda, tinta cacao, frambuesa para acciones; Jost para cifras, Bodoni para el título.
+   LAYOUT: barra de conexión y margen arriba, lista de prendas, barra fija de cambios abajo; en celular cada prenda es una tarjeta. */
+:root{color-scheme:light;--bg:#FBF5F2;--card:#fff;--soft:#F4E4DF;--ink:#2A1D21;--mut:#7A666B;--acc:#A8475E;--line:#EEDDD7;--ok:#2F6B4A;--warn:#A0611C;--err:#B3261E;--chg:#FFF4D6}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Jost,system-ui,sans-serif;padding-bottom:110px}
+h1,h2{font-family:"Bodoni Moda",Georgia,serif;font-weight:500;margin:0;line-height:1.1}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.wrap{max-width:1280px;margin:0 auto;padding:0 max(3vw,14px)}
+header{background:var(--card);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:14px;flex-wrap:wrap;min-height:68px;padding-block:10px}
+.hd h1{font-size:26px}.hd h1 i{color:var(--acc)}
+.hd a{color:var(--acc);font-size:14px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:5px 11px;border-radius:999px;background:var(--soft)}
+.chip::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--mut)}
+.chip.on{background:#E3F1E8;color:var(--ok)}.chip.on::before{background:var(--ok)}
+.sp{flex:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px;padding:0 16px;border-radius:999px;border:1px solid var(--ink);background:var(--ink);color:#fff;font-weight:500;cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn.line{background:transparent;color:var(--ink)}
+.btn.acc{background:var(--acc);border-color:var(--acc)}
+.btn.sm{min-height:34px;padding:0 12px;font-size:13px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:18px 0}
+.panel h2{font-size:22px;margin-bottom:6px}
+.panel p{margin:0 0 10px;color:var(--mut);max-width:80ch}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.inp{height:42px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:0 12px;font-size:16px}
+.inp.tk{flex:1 1 320px}
+details summary{cursor:pointer;color:var(--acc);font-size:14px;margin-top:6px}
+details ol{margin:8px 0 0;padding-left:20px;color:var(--mut)}
+.tools{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) auto auto;gap:10px;align-items:end}
+.tools label{display:grid;gap:4px;font-size:12px;color:var(--mut)}
+.marg{display:flex;align-items:center;gap:6px}
+.marg .inp{width:90px;text-align:right}
+.chk{display:inline-flex;align-items:center;gap:6px;font-size:14px;min-height:42px;cursor:pointer}
+.chk input{width:18px;height:18px;accent-color:var(--acc)}
+.sum{display:flex;gap:18px;flex-wrap:wrap;font-size:14px;color:var(--mut);margin:6px 0 10px}
+.sum b{color:var(--ink)}
+/* lista */
+.head,.it{display:grid;grid-template-columns:56px minmax(180px,1.6fr) repeat(4,minmax(92px,.8fr)) minmax(118px,.9fr) minmax(190px,1.3fr) 90px;gap:10px;align-items:center}
+.head{font-size:12px;color:var(--mut);padding:8px 12px;position:sticky;top:0;background:var(--bg);z-index:2;border-bottom:1px solid var(--line)}
+.head span{text-align:right}.head span:nth-child(-n+2),.head span:nth-last-child(-n+2){text-align:left}
+.it{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:8px}
+.it.chg{background:var(--chg);border-color:#EBD3A4}
+.it.bad{border-color:var(--err)}
+.it.hid{opacity:.55}
+.it img{width:56px;height:70px;object-fit:cover;border-radius:6px;background:var(--soft)}
+.nm b{display:block;font-weight:500;line-height:1.25}
+.nm small{color:var(--mut);font-size:12px}
+.f{display:grid;gap:2px}
+.f label{display:none;font-size:11px;color:var(--mut)}
+.f input{width:100%;height:38px;border:1px solid var(--line);border-radius:8px;padding:0 8px;text-align:right;font-size:15px;background:#fff;font-variant-numeric:tabular-nums}
+.f input.dif{border-color:var(--warn);background:#FFFBF0}
+.f em{font-style:normal;font-size:11px;color:var(--mut);text-align:right;white-space:nowrap}
+.res{font-size:13px;text-align:right;line-height:1.35;font-variant-numeric:tabular-nums}
+.res span{display:block}
+.res b{color:var(--ok);font-weight:600}
+.res .w{color:var(--err)}
+.stk{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.stk div{display:grid;gap:1px;text-align:center}
+.stk span{font-size:10px;color:var(--mut)}
+.stk input{height:34px;width:100%;border:1px solid var(--line);border-radius:6px;text-align:center;font-size:14px;padding:0}
+.acts{display:grid;gap:4px;font-size:12px}
+.acts label{display:flex;align-items:center;gap:5px;cursor:pointer}
+.acts input{accent-color:var(--acc)}
+.msg{font-size:12px;color:var(--err);grid-column:2/-1}
+/* barra de cambios */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--ink);color:#fff;transform:translateY(110%);transition:transform .3s}
+.bar.on{transform:none}
+.bar .wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-height:72px;padding-block:10px}
+.bar .btn.line{color:#fff;border-color:rgba(255,255,255,.4)}
+.bar .btn.acc{background:#E07A93;border-color:#E07A93;color:#2A1D21}
+#toast{position:fixed;left:50%;top:18px;transform:translate(-50%,-20px);opacity:0;background:var(--ink);color:#fff;padding:11px 18px;border-radius:999px;transition:.3s;z-index:40;max-width:92vw;text-align:center;pointer-events:none}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+.note{font-size:13px;padding:10px 12px;border-radius:10px;background:var(--soft);margin-top:10px}
+.note.ok{background:#E3F1E8;color:var(--ok)}.note.err{background:#FBE4E2;color:var(--err)}
+.empty{padding:40px;text-align:center;color:var(--mut)}
+@media (max-width:1080px){
+ .head{display:none}
+ .it{grid-template-columns:repeat(2,minmax(0,1fr));padding:14px;position:relative}
+ .it img{position:absolute;top:14px;left:14px;width:64px;height:80px}
+ .nm{grid-column:1/-1;padding-left:76px;min-height:80px}
+ .f label{display:block}
+ .f,.res{grid-column:auto}
+ .res{grid-column:1/-1;text-align:left;display:flex;gap:12px;flex-wrap:wrap}
+ .stk{grid-column:1/-1}
+ .acts{grid-column:1/-1;display:flex;gap:16px;flex-wrap:wrap}
+ .tools{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+}
+@media (max-width:520px){.tools{grid-template-columns:minmax(0,1fr)}.hd h1{font-size:22px}}
+</style>
+</head>
+<body>
+<header><div class="wrap hd">
+ <h1>JC <i>Shops</i> · Panel de precios</h1>
+ <span class="chip" id="estado">Sin conexión a GitHub</span>
+ <span class="sp"></span>
+ <a href="./" target="_blank" rel="noopener">Ver la tienda</a>
+</div></header>
+
+<main class="wrap">
+ <section class="panel" aria-labelledby="conT">
+  <h2 id="conT">Conexión</h2>
+  <p>Para publicar los cambios en la tienda, pega tu token de GitHub. Se guarda solo en este navegador. Sin token puedes revisar precios y descargar el archivo, pero no publicar.</p>
+  <div class="row">
+   <label class="sr" for="tk" style="position:absolute;left:-9999px">Token de GitHub</label>
+   <input class="inp tk" id="tk" type="password" placeholder="github_pat_..." autocomplete="off">
+   <button class="btn" id="tkSave">Conectar</button>
+   <button class="btn line" id="tkDel">Olvidar token</button>
+  </div>
+  <details><summary>¿Cómo creo el token?</summary><ol>
+   <li>Entra a <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a>.</li>
+   <li>En <b>Resource owner</b> elige <b>onemoreint</b>; en <b>Repository access</b>, «Only select repositories» → <b>apps</b>.</li>
+   <li>En <b>Permissions → Repository → Contents</b> elige <b>Read and write</b>. Ponle vencimiento (por ejemplo 90 días) y créalo.</li>
+   <li>Copia el token y pégalo aquí. Si la organización exige aprobación, apruébalo en GitHub.</li>
+  </ol></details>
+  <div id="conMsg"></div>
+ </section>
+
+ <section class="panel" aria-labelledby="herT">
+  <h2 id="herT">Prendas y precios</h2>
+  <p>Edita el costo del proveedor y el precio sale solo con tu margen, o escribe el precio a mano. Los cambios se marcan en amarillo hasta que los publiques.</p>
+  <div class="tools">
+   <label>Buscar<input class="inp" id="q" type="search" placeholder="Nombre o código, ej. s01"></label>
+   <label>Categoría<select class="inp" id="cat"><option value="">Todas</option></select></label>
+   <label>Margen sobre el costo<span class="marg"><input class="inp" id="marg" type="number" min="0" max="500" step="1" value="65"> %</span></label>
+   <button class="btn line" id="aplicar" title="Recalcula oferta y precio regular de las prendas visibles">Aplicar margen a las visibles</button>
+  </div>
+  <div class="row" style="margin-top:8px"><label class="chk"><input type="checkbox" id="soloChg"> Ver solo cambios</label><label class="chk"><input type="checkbox" id="soloHid"> Ver solo ocultas</label></div>
+  <div class="sum" id="sum"></div>
+ </section>
+
+ <div class="head" aria-hidden="true"><span></span><span>Prenda</span><span>Costo oferta</span><span>Costo regular</span><span>Precio oferta</span><span>Precio regular</span><span>Ganancia</span><span>Existencias por talla</span><span>Estado</span></div>
+ <div id="list"><div class="empty">Cargando catálogo…</div></div>
+</main>
+
+<div class="bar" id="bar"><div class="wrap">
+ <span id="nChg">0 cambios</span><span class="sp"></span>
+ <button class="btn line sm" id="descartar">Descartar</button>
+ <button class="btn line sm" id="descargar">Descargar catalogo.js</button>
+ <button class="btn acc" id="publicar">Publicar en la tienda</button>
+</div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+{
+/* ===== Configuración del repositorio ===== */
+const GH={owner:'onemoreint',repo:'apps',branch:'main',path:'jcshops/catalogo.js'};
+const TALLAS=['XS','S','M','L','XL'];
+const CABECERA='/* Catálogo de JC Shops. Se edita desde admin.html o a mano (formato JSON). */\nwindow.JC_CATALOGO = ';
+
+const $=s=>document.querySelector(s);
+const fmt=n=>n==null||n===''?'—':'$'+Math.round(n).toLocaleString('es-CO').replace(/,/g,'.');
+const r100=x=>Math.ceil(x/100)*100;
+let orig=[],data=[],sha=null,token='';
+try{token=localStorage.getItem('jc_admin_token')||''}catch(e){}
+let tt;const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2600)};
+const foto=p=>{const f=(p.colores?.[0]?.fotos||[])[0]||p.imagenes?.[0]||'';return f.startsWith('foto:')?'img/'+f.slice(5)+'.jpg':f};
+
+/* ===== Lectura y escritura del archivo ===== */
+const b64dec=s=>new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\n/g,'')),c=>c.charCodeAt(0)));
+function b64enc(str){const u=new TextEncoder().encode(str);let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s)}
+const parse=txt=>JSON.parse(txt.slice(txt.indexOf('['),txt.lastIndexOf(']')+1));
+const serial=arr=>CABECERA+JSON.stringify(arr,null,1)+';\n';
+async function gh(path,opt={}){
+  const r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/${path}`,{...opt,headers:{'Accept':'application/vnd.github+json','Authorization':'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28',...(opt.headers||{})}});
+  const j=await r.json().catch(()=>({}));if(!r.ok){const e=new Error(j.message||r.statusText);e.status=r.status;throw e}return j;
+}
+async function cargar(){
+  let txt;
+  if(token){
+    try{const j=await gh(`contents/${GH.path}?ref=${GH.branch}`);sha=j.sha;txt=b64dec(j.content);estado(true)}
+    catch(e){estado(false);nota(errTxt(e),'err');}
+  }
+  if(!txt){const r=await fetch('catalogo.js?v='+Date.now());if(!r.ok)throw new Error('No se pudo leer catalogo.js');txt=await r.text()}
+  orig=parse(txt);data=JSON.parse(JSON.stringify(orig));
+  const cats=[...new Set(data.map(p=>p.categoria))];$('#cat').innerHTML='<option value="">Todas</option>'+cats.map(c=>`<option>${c}</option>`).join('');
+  render();
+}
+function errTxt(e){
+  if(e.status===401)return 'El token no es válido o venció. Crea uno nuevo.';
+  if(e.status===403)return 'El token no tiene permiso de escritura en onemoreint/apps (Contents: Read and write) o la organización aún no lo aprueba.';
+  if(e.status===404)return 'GitHub no encontró el archivo o el token no tiene acceso al repositorio onemoreint/apps.';
+  if(e.status===409)return 'El catálogo cambió en GitHub mientras editabas. Recarga el panel y vuelve a aplicar tus cambios.';
+  return 'Error de GitHub: '+e.message;
+}
+function estado(ok){const c=$('#estado');c.classList.toggle('on',ok);c.textContent=ok?'Conectado a GitHub':'Sin conexión a GitHub'}
+function nota(m,k){$('#conMsg').innerHTML=m?`<div class="note ${k||''}">${m}</div>`:''}
+
+/* ===== Cálculos ===== */
+const marg=()=>Math.max(0,+$('#marg').value||0)/100;
+function aplicar(p){const m=1+marg();if(p.costo!=null&&p.costo!==''){
+  if(p.costoRegular!=null&&p.costoRegular!==''){p.precio=r100(p.costoRegular*m);p.oferta=r100(p.costo*m)}else{p.precio=r100(p.costo*m);p.oferta=null}
+  if(p.oferta!=null&&p.oferta>=p.precio)p.oferta=null}}
+function errores(p){const e=[];if(!(p.precio>0))e.push('Falta el precio regular.');if(p.oferta!=null&&p.oferta>=p.precio)e.push('La oferta debe ser menor que el precio regular.');return e}
+const igual=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+const cambiada=i=>!igual(data[i],orig[i]);
+
+/* ===== Vista ===== */
+const num=v=>v==null?'':v;
+function fila(p,i){
+  const o=orig[i],chg=cambiada(i),er=errores(p);
+  const vig=p.oferta??p.precio,gan=p.costo!=null?vig-p.costo:null,pm=p.costo?Math.round(gan/p.costo*100):null,desc=p.oferta?Math.round((p.precio-p.oferta)/p.precio*100):0;
+  const inp=(k,lab)=>`<div class="f"><label for="${k}-${i}">${lab}</label><input id="${k}-${i}" data-i="${i}" data-k="${k}" inputmode="numeric" value="${num(p[k])}" class="${p[k]!==o[k]?'dif':''}" placeholder="${k==='oferta'?'sin oferta':''}"><em>${p[k]!==o[k]?'antes '+fmt(o[k]):'&nbsp;'}</em></div>`;
+  return `<div class="it${chg?' chg':''}${er.length?' bad':''}${p.oculto?' hid':''}" data-row="${i}">
+   <img src="${foto(p)}" alt="" loading="lazy">
+   <div class="nm"><b>${p.nombre}</b><small>${p.id} · ${p.categoria} · ${p.proveedor||''}</small></div>
+   ${inp('costo','Costo oferta')}${inp('costoRegular','Costo regular')}${inp('oferta','Precio oferta')}${inp('precio','Precio regular')}
+   <div class="res">${gan!=null?`<span>Ganas <b>${fmt(gan)}</b></span><span>${pm} % sobre costo</span>`:'<span>Sin costo</span>'}${desc?`<span>Descuento ${desc} %</span>`:''}${er.length?`<span class="w">${er.join(' ')}</span>`:''}</div>
+   <div class="stk">${TALLAS.map(t=>`<div><span>${t}</span><input data-i="${i}" data-s="${t}" inputmode="numeric" value="${p.stock?.[t]??0}" aria-label="Existencias talla ${t}"></div>`).join('')}</div>
+   <div class="acts"><label><input type="checkbox" data-i="${i}" data-b="nuevo" ${p.nuevo?'checked':''}> Nuevo</label><label><input type="checkbox" data-i="${i}" data-b="oculto" ${p.oculto?'checked':''}> Ocultar</label><button class="btn line sm" data-calc="${i}">Recalcular</button></div>
+  </div>`;
+}
+function visibles(){const q=$('#q').value.trim().toLowerCase(),c=$('#cat').value,sc=$('#soloChg').checked,sh=$('#soloHid').checked;
+  return data.map((p,i)=>[p,i]).filter(([p,i])=>(!q||(p.nombre+' '+p.id).toLowerCase().includes(q))&&(!c||p.categoria===c)&&(!sc||cambiada(i))&&(!sh||p.oculto))}
+function render(){
+  const v=visibles();$('#list').innerHTML=v.length?v.map(([p,i])=>fila(p,i)).join(''):'<div class="empty">No hay prendas con ese filtro.</div>';
+  resumen();
+}
+function resumen(){
+  const n=data.filter((_,i)=>cambiada(i)).length,bad=data.some(p=>errores(p).length);
+  const act=data.filter(p=>!p.oculto),gan=act.filter(p=>p.costo).map(p=>(p.oferta??p.precio)-p.costo);
+  $('#sum').innerHTML=`<span><b>${data.length}</b> prendas</span><span><b>${act.length}</b> visibles en la tienda</span><span>Ganancia promedio por unidad <b>${fmt(gan.reduce((a,b)=>a+b,0)/Math.max(1,gan.length))}</b></span>`;
+  $('#nChg').textContent=`${n} ${n===1?'prenda cambiada':'prendas cambiadas'}${bad?' · revisa los errores en rojo':''}`;
+  $('#bar').classList.toggle('on',n>0);$('#publicar').disabled=bad||!n;
+}
+function refrescar(i){const el=document.querySelector(`[data-row="${i}"]`);if(!el)return;const f=document.activeElement,id=f&&f.id,pos=f&&f.selectionStart;el.outerHTML=fila(data[i],i);if(id){const n=document.getElementById(id);if(n){n.focus();try{n.setSelectionRange(pos,pos)}catch(_){}}}resumen()}
+
+/* ===== Eventos ===== */
+$('#list').addEventListener('input',e=>{const t=e.target,i=+t.dataset.i;if(isNaN(i))return;const p=data[i];
+  if(t.dataset.k){const v=t.value.replace(/[^\d]/g,'');p[t.dataset.k]=v===''?null:+v;
+    if((t.dataset.k==='costo'||t.dataset.k==='costoRegular'))aplicar(p);refrescar(i)}
+  else if(t.dataset.s){p.stock=p.stock||{};p.stock[t.dataset.s]=Math.max(0,+t.value.replace(/[^\d]/g,'')||0);resumen();t.closest('.it').classList.toggle('chg',cambiada(i))}
+});
+$('#list').addEventListener('change',e=>{const t=e.target,i=+t.dataset.i;if(t.dataset.b){data[i][t.dataset.b]=t.checked;refrescar(i)}});
+$('#list').addEventListener('click',e=>{const b=e.target.closest('[data-calc]');if(!b)return;const i=+b.dataset.calc;if(data[i].costo==null){toast('Escribe primero el costo del proveedor');return}aplicar(data[i]);refrescar(i);toast('Precio recalculado con '+$('#marg').value+' %')});
+['q','cat','soloChg','soloHid'].forEach(id=>$('#'+id).addEventListener('input',render));
+$('#aplicar').addEventListener('click',()=>{const v=visibles().filter(([p])=>p.costo!=null);v.forEach(([p])=>aplicar(p));render();toast(`Margen de ${$('#marg').value} % aplicado a ${v.length} prendas`)});
+$('#descartar').addEventListener('click',()=>{data=JSON.parse(JSON.stringify(orig));render();toast('Cambios descartados')});
+$('#descargar').addEventListener('click',()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([serial(data)],{type:'text/javascript'}));a.download='catalogo.js';a.click();toast('Archivo descargado: súbelo a jcshops/ en GitHub')});
+$('#tkSave').addEventListener('click',async()=>{token=$('#tk').value.trim();if(!token){toast('Pega el token primero');return}
+  try{localStorage.setItem('jc_admin_token',token)}catch(e){}$('#tk').value='';nota('');
+  try{await gh(`contents/${GH.path}?ref=${GH.branch}`);estado(true);nota('Conectado. Ya puedes publicar cambios.','ok');if(!data.some((_,i)=>cambiada(i)))await cargar();else{const j=await gh(`contents/${GH.path}?ref=${GH.branch}`);sha=j.sha}}
+  catch(e){estado(false);nota(errTxt(e),'err')}});
+$('#tkDel').addEventListener('click',()=>{token='';sha=null;try{localStorage.removeItem('jc_admin_token')}catch(e){}estado(false);nota('Token borrado de este navegador.')});
+$('#publicar').addEventListener('click',async()=>{
+  if(!token){nota('Para publicar, conecta tu token de GitHub arriba. También puedes descargar catalogo.js y subirlo a mano.','err');scrollTo({top:0,behavior:'smooth'});return}
+  const b=$('#publicar');b.disabled=true;b.textContent='Publicando…';
+  try{
+    const cur=await gh(`contents/${GH.path}?ref=${GH.branch}`);
+    if(sha&&cur.sha!==sha){const remoto=parse(b64dec(cur.content));if(!igual(remoto,orig))throw Object.assign(new Error('conflict'),{status:409})}
+    const n=data.filter((_,i)=>cambiada(i)).map(p=>p.id);
+    const j=await gh(`contents/${GH.path}`,{method:'PUT',body:JSON.stringify({message:`jcshops: actualizar ${n.length} prendas desde el panel (${n.slice(0,6).join(', ')}${n.length>6?'…':''})`,content:b64enc(serial(data)),sha:cur.sha,branch:GH.branch})});
+    sha=j.content.sha;orig=JSON.parse(JSON.stringify(data));render();
+    nota(`Publicado. La tienda se actualiza en 1 o 2 minutos. <a href="${j.commit.html_url}" target="_blank" rel="noopener">Ver el cambio en GitHub</a> · <a href="./" target="_blank" rel="noopener">Abrir la tienda</a>`,'ok');toast('Cambios publicados');scrollTo({top:0,behavior:'smooth'});
+  }catch(e){nota(errTxt(e),'err');toast('No se pudo publicar')}
+  b.textContent='Publicar en la tienda';resumen();
+});
+addEventListener('beforeunload',e=>{if(data.some((_,i)=>cambiada(i))){e.preventDefault();e.returnValue=''}});
+
+estado(false);
+cargar().catch(e=>{$('#list').innerHTML=`<div class="empty">${e.message}. Abre el panel desde la tienda publicada (jcshops/admin.html).</div>`});
+}
+</script>
+</body>
+</html>

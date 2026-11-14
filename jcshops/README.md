@@ -4,13 +4,19 @@ Tienda web de ropa femenina para compradoras en Colombia. Precios en pesos colom
 
 Es una sola página (`index.html`) sin servidor: el carrito, los favoritos y la paleta elegida se guardan en el navegador de cada clienta.
 
+## Panel de precios
+
+`admin.html` (https://onemoreint.github.io/apps/jcshops/admin.html) muestra todas las prendas con su costo de proveedor, precio de oferta, precio regular, ganancia por unidad y existencias por talla. Al cambiar un costo, los precios se recalculan con el margen elegido (65 % por defecto); también se pueden escribir a mano. Desde ahí se puede ocultar una prenda sin borrarla y marcarla como nueva.
+
+«Publicar en la tienda» guarda los cambios en `catalogo.js` directamente en GitHub. Necesita un token personal de GitHub (fine-grained, solo el repositorio `onemoreint/apps`, permiso *Contents: Read and write*), que se guarda únicamente en el navegador de quien lo usa. Sin token se puede revisar y descargar `catalogo.js` para subirlo a mano. La tienda tarda uno o dos minutos en reflejar los cambios.
+
 ## Qué editar
 
-Todo se edita dentro de `index.html`, en los bloques marcados con comentarios:
+El catálogo vive en `catalogo.js` (JSON). Lo demás se edita dentro de `index.html`, en los bloques marcados con comentarios:
 
 | Qué | Dónde |
 |---|---|
-| Prendas, precios, tallas, existencias y colores | Bloque `CATÁLOGO` (`const CATALOGO = [...]`) |
+| Prendas, costos, precios, tallas, existencias y colores | `catalogo.js` (o el panel `admin.html`). `costo` y `costoRegular` son lo que cobra el proveedor; `oculto: true` la saca de la tienda |
 | Fotos de cada color | `colores[].fotos`, con claves `'foto:nombre'` que apuntan a `window.JC_FOTOS` |
 | Archivos de las fotos | Carpeta `img/` (formato vertical, idealmente 3:4) |
 | WhatsApp, banco, cuenta y llave Bre-B | Bloque `CONFIGURACIÓN DE LA TIENDA` (`const TIENDA = {...}`) |
@@ -28,7 +34,7 @@ Precio de venta = precio del proveedor (Shein / Temu) + 65 %, redondeado a la ce
 
 1. Guarda sus fotos en `img/` (por ejemplo `r06-negro-1.jpg`).
 2. Agrega la clave en `window.JC_FOTOS`: `"r06-negro-1": "img/r06-negro-1.jpg"`.
-3. Agrega la prenda en `CATALOGO` siguiendo el formato de las existentes. Si usas una categoría nueva (por ejemplo `Vestidos`), aparece sola en los menús y filtros.
+3. Agrega la prenda en `catalogo.js` siguiendo el formato de las existentes. Si usas una categoría nueva (por ejemplo `Vestidos`), aparece sola en los menús y filtros.
 
 ## Enlaces para compartir
 

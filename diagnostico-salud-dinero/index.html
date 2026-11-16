@@ -139,6 +139,8 @@ details summary{cursor:pointer;font-weight:700;color:var(--dawn);list-style:none
 details summary::-webkit-details-marker{display:none}
 .video{position:relative;width:100%;max-width:230px;margin:14px auto 0;aspect-ratio:9/16;border-radius:18px;overflow:hidden;background:#000 center/cover no-repeat;border:1px solid var(--line);cursor:pointer}
 .video.wide{max-width:100%;aspect-ratio:16/9}
+.tvids{display:grid;gap:14px;margin-top:4px}
+.tvids .video{margin:0 auto}
 .video .play{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(180deg,rgba(20,15,46,.1),rgba(20,15,46,.7))}
 .video .play i{width:64px;height:64px;border-radius:50%;background:var(--dawn);display:grid;place-items:center;font-style:normal;font-size:24px;color:#2A1500;padding-left:4px}
 .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
@@ -185,7 +187,12 @@ const CONFIG = {
   paquete: { precio: 150, nombre: "Paquete de Inicio", detalle: "2 parches PNG (Painless Night GLU)" },
   // Testimonios reales con permiso. Mientras esté vacío, la sección no se muestra.
   // Formato: { texto: "…", nombre: "Nombre A.", lugar: "Ciudad" }
-  testimonios: []
+  testimonios: [],
+  // Testimonios en video (YouTube). vertical: true para Shorts.
+  testimoniosVideo: [
+    { id: "co30mg27tgo", vertical: false },
+    { id: "l85K8jhJ_K4", vertical: true }
+  ]
 };
 
 /* Productos sugeridos según la necesidad principal.
@@ -571,10 +578,21 @@ function vistaResultado(){
     html += `<div class="block"><h3>Lo que dicen quienes ya empezaron</h3>` +
       CONFIG.testimonios.map(t=>`<p class="quote">“${esc(t.texto)}”<b>${esc(t.nombre)}${t.lugar?", "+esc(t.lugar):""}</b></p>`).join("") + `</div>`;
   }
+  if(CONFIG.testimoniosVideo && CONFIG.testimoniosVideo.length){
+    html += `<div class="block">
+      <h3>Testimonios</h3>
+      <p class="small" style="margin-top:0">Personas que ya usan los productos y trabajan el negocio cuentan su experiencia.</p>
+      <div class="tvids">${CONFIG.testimoniosVideo.map(v=>`
+        <div class="video${v.vertical?"":" wide"}" data-yt="${esc(v.id)}" style="background-image:url(https://i.ytimg.com/vi/${esc(v.id)}/hqdefault.jpg)" role="button" tabindex="0" aria-label="Reproducir testimonio">
+          <div class="play"><i aria-hidden="true">▶</i></div>
+        </div>`).join("")}
+      </div>
+    </div>`;
+  }
   if(CONFIG.videoYoutube){
     html += `<div class="block">
       <h3>${negocio?"Mira la oportunidad en menos de un minuto":"Conoce más en menos de un minuto"}</h3>
-      <div class="video${CONFIG.videoVertical?"":" wide"}" id="vid" style="background-image:url(https://i.ytimg.com/vi/${CONFIG.videoYoutube}/hqdefault.jpg)" role="button" tabindex="0" aria-label="Reproducir video">
+      <div class="video${CONFIG.videoVertical?"":" wide"}" id="vid" data-yt="${CONFIG.videoYoutube}" style="background-image:url(https://i.ytimg.com/vi/${CONFIG.videoYoutube}/hqdefault.jpg)" role="button" tabindex="0" aria-label="Reproducir video">
         <div class="play"><i aria-hidden="true">▶</i></div>
       </div>
     </div>`;
@@ -598,9 +616,10 @@ function vistaResultado(){
   if(b){ const to=+b.dataset.count, t0=performance.now();
     const step=n=>{ const k=Math.min(1,(n-t0)/1100); b.textContent=Math.round(to*(1-Math.pow(1-k,3)))+"%"; if(k<1) requestAnimationFrame(step); };
     requestAnimationFrame(step); }
-  const v=$("#vid");
-  if(v){ const play=()=>{ v.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${CONFIG.videoYoutube}?autoplay=1&playsinline=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="Video de José Lugo"></iframe>`; v.onclick=null; v.onkeydown=null; };
-    v.onclick=play; v.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); play(); } }; }
+  app.querySelectorAll("[data-yt]").forEach(v=>{
+    const play=()=>{ v.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${v.dataset.yt}?autoplay=1&playsinline=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="Video"></iframe>`; v.onclick=null; v.onkeydown=null; };
+    v.onclick=play; v.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); play(); } };
+  });
   $("#cta-compartir").onclick=compartir;
   $("#reiniciar").onclick=()=>{ S.r={}; S.nombre=""; S.pais=""; ir(0); };
 }

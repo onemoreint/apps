@@ -20,6 +20,14 @@ Diagnóstico de 90 segundos que lleva al prospecto a comprar o afiliarse a ONE M
 ## Cómo cambiar datos
 Todo está en el objeto `CONFIG` al inicio del `<script>` de `index.html`: asesor, WhatsApp, enlace, video, paquete y **testimonios** (la sección aparece sola cuando la lista tiene al menos uno).
 
+## Precios en moneda local
+El resultado muestra cada precio en USD y, según el país elegido, su equivalente en moneda local:
+- **Venezuela:** bolívares a tasa Binance P2P (USDT). Respaldo: dólar paralelo.
+- **Colombia:** pesos a la TRM oficial (Superfinanciera).
+- **Perú, México, Chile, España y Turquía:** tasa de mercado. Ecuador y Estados Unidos: solo USD.
+
+Las tasas viven en `tasas.json`. Las actualiza cada 3 horas la Action `diagnostico-tasas.yml`, que ejecuta `tools/tasas.py` (Python estándar, sin claves). Si una fuente falla se conserva el último valor. Para actualizar a mano: Actions → «Diagnóstico Salud + Dinero · tasas» → Run workflow.
+
 ## Fases
 - [x] Fase 1: recorrido, resultado y cierre.
 - [ ] Fase 2: precio en moneda local, testimonios reales y analítica.

@@ -125,6 +125,9 @@ h3{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.2p
 .price{display:flex;align-items:baseline;gap:8px;margin:10px 0 6px}
 .price b{font-family:var(--display);font-size:42px;font-weight:800;letter-spacing:-1px;color:var(--dawn)}
 .price span{color:var(--haze);font-size:14.5px}
+.local{font-size:16px;color:var(--ink);margin:-2px 0 10px}
+.local b{color:var(--pulse);font-variant-numeric:tabular-nums}
+.local small{display:block;color:var(--haze);font-size:13px;margin-top:2px}
 ul.check{list-style:none;display:grid;gap:8px;margin:14px 0 4px}
 ul.check li{padding-left:26px;position:relative;font-size:15.5px}
 ul.check li::before{content:"";position:absolute;left:3px;top:6px;width:6px;height:11px;border:solid var(--pulse);border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
@@ -231,6 +234,42 @@ const Q = {
     {v:"mirando", ic:"👀", t:"Solo estoy averiguando"}]}
 };
 const PAISES = ["Colombia","Venezuela","Estados Unidos","Perú","Ecuador","México","Chile","España","Turquía","Otro"];
+
+/* Moneda de cada país. Ecuador y Estados Unidos usan dólares: no se convierte. */
+const MONEDA = {
+  "Colombia": {cod:"COP", nombre:"pesos colombianos", dec:0, redondeo:100, tasa:"a la TRM"},
+  "Venezuela":{cod:"VES", sim:"Bs", nombre:"bolívares", dec:2, redondeo:1, tasa:"a tasa Binance"},
+  "Perú":     {cod:"PEN", nombre:"soles", dec:2, redondeo:1, tasa:"a tasa de mercado"},
+  "México":   {cod:"MXN", nombre:"pesos mexicanos", dec:0, redondeo:1, tasa:"a tasa de mercado"},
+  "Chile":    {cod:"CLP", nombre:"pesos chilenos", dec:0, redondeo:100, tasa:"a tasa de mercado"},
+  "España":   {cod:"EUR", nombre:"euros", dec:2, redondeo:1, tasa:"a tasa de mercado"},
+  "Turquía":  {cod:"TRY", nombre:"liras turcas", dec:0, redondeo:1, tasa:"a tasa de mercado"}
+};
+
+/* Tasas del dólar: las actualiza cada 3 horas una tarea de GitHub (tools/tasas.py). */
+let TASAS = null;
+fetch("tasas.json", {cache:"no-store"})
+  .then(r => r.ok ? r.json() : null)
+  .then(d => { TASAS = d; if (flujo()[S.paso] === "resultado") vistaResultado(); })
+  .catch(() => {});
+
+function enLocal(usd){
+  const m = MONEDA[S.pais], t = m && TASAS && TASAS.monedas && TASAS.monedas[m.cod];
+  if(!t) return null;
+  let v = usd * t.tasa;
+  if(m.redondeo > 1) v = Math.round(v / m.redondeo) * m.redondeo;
+  const monto = v.toLocaleString("es-CO", {minimumFractionDigits:m.dec, maximumFractionDigits:m.dec});
+  const f = new Date(t.fecha);
+  const fecha = f.toLocaleDateString("es-CO", {day:"numeric", month:"short"});
+  const tasaTxt = t.tasa.toLocaleString("es-CO", {maximumFractionDigits: t.tasa < 10 ? 4 : 2});
+  const etiqueta = t.fuente.includes("respaldo") ? "a tasa de referencia" : m.tasa;
+  return { monto, cod:m.sim||m.cod, nombre:m.nombre, etiqueta, fecha, tasaTxt };
+}
+function localHTML(usd){
+  const l = enLocal(usd);
+  if(!l) return "";
+  return `<p class="local">Equivale a <b>${l.monto} ${l.cod}</b><small>En ${l.nombre}, ${l.etiqueta} del ${l.fecha} (1 USD = ${l.tasaTxt} ${l.cod}).</small></p>`;
+}
 
 /* ============================================================
    EL PULSO: esfera de energía en canvas (violeta → menta → amanecer)
@@ -480,7 +519,7 @@ function vistaResultado(){
       <div class="pick"><span class="pi" aria-hidden="true">${prod.ic}</span>
         <div><h3>Te recomiendo ${prod.nombre}</h3>
         <p>Porque ${prod.por}</p>
-        <p class="small">Precio público de referencia: ${prod.precio} USD.</p></div></div>
+        <p class="small">Precio público de referencia: ${prod.precio} USD${(l=>l?`, unos ${l.monto} ${l.cod} ${l.etiqueta}`:"")(enLocal(prod.precio))}.</p></div></div>
     </div>`;
   }
   if(negocio){
@@ -503,6 +542,7 @@ function vistaResultado(){
   html += `<div class="offer">
       <h3>${esc(CONFIG.paquete.nombre)}: ${esc(CONFIG.paquete.detalle)}</h3>
       <div class="price"><b>${CONFIG.paquete.precio} USD</b><span>pago único</span></div>
+      ${localHTML(CONFIG.paquete.precio)}
       <p>${beneficio}</p>
       <ul class="check">
         <li>Quedas registrado como cliente <b>y</b> socio</li>
@@ -577,6 +617,8 @@ function linkWA(temp){
     L.push(`• Meta: ${txt("meta")}`);
   }
   L.push(`• Empezar: ${txt("cuando")}`);
+  const l = enLocal(CONFIG.paquete.precio);
+  L.push(`• Paquete: ${CONFIG.paquete.precio} USD${l?` (≈ ${l.monto} ${l.cod} ${l.etiqueta})`:""}`);
   L.push("");
   L.push(r.cuando==="mirando" ? "Me gustaría que me explicaras un poco más." : "Quiero que me ayudes a empezar.");
   return `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(L.join("\n"))}`;

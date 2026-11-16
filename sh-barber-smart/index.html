@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#111318">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="description" content="SH BARBER SMART — Agenda, clientes y caja de tu barbería desde el celular. Prototipo de demostración (Fase 1).">
-<title>SH BARBER SMART · Demo</title>
+<meta name="description" content="SH BARBER SMART — Agenda diaria y semanal, clientes y caja de SH Barber Studio.">
+<title>SH Barber Smart · SH Barber Studio</title>
 <style>
 :root{
   --bg:#111318; --card:#202329; --card2:#262a31; --sheet:#1a1d22; --field:#16181d;
@@ -296,10 +296,11 @@ svg{flex:none}
     <span>Agenda inteligente</span><span>Clientes</span><span>Caja diaria</span><span>WhatsApp</span><span>Fidelización</span>
   </div>
   <div class="splash-actions">
-    <button class="btn btn-gold" data-act="enter">Entrar al panel del barbero</button>
+    <button class="btn btn-gold" data-act="enter" data-mode="local">Abrir agenda local</button>
+    <button class="btn btn-dark" data-act="enter" data-mode="demo">Explorar demo</button>
     <button class="btn btn-ghost" data-act="demoInfo">¿Qué incluye esta demo?</button>
   </div>
-  <p class="splash-foot"><span class="barber-pole"></span>Prototipo de demostración · Fase 1 · Datos ficticios<br><span style="opacity:.8">Desarrollado por José Lugo</span></p>
+  <p class="splash-foot"><span class="barber-pole"></span>La agenda local y la demo guardan sus citas por separado.<br><span style="opacity:.8">Desarrollado por José Lugo</span></p>
 </section>
 
 <!-- ============ APLICACIÓN ============ -->
@@ -307,7 +308,7 @@ svg{flex:none}
   <header class="topbar">
     <span id="topMark" class="mark"></span>
     <div class="brand">SH BARBER SMART<small id="topTitle">Inicio</small></div>
-    <button class="demo-badge" data-act="demoInfo" aria-label="Información de la demo">DEMO</button>
+    <button class="demo-badge" id="dataMode" data-act="demoInfo" aria-label="Información sobre los datos">DEMO</button>
   </header>
   <main id="view"></main>
   <button class="fab" id="fab" data-act="fab" aria-label="Crear"></button>
@@ -322,11 +323,10 @@ svg{flex:none}
 'use strict';
 
 /* =========================================================
-   SH BARBER SMART — Prototipo Fase 1
-   Todo funciona en este navegador con localStorage (solo demo).
+   SH BARBER SMART — Agenda local y demostración
    ========================================================= */
 
-const DB_KEY = 'shbarbersmart_demo_v1';
+const DB_KEYS = { demo: 'shbarbersmart_demo_v1', local: 'shbarbersmart_local_v1' };
 const BUSINESS = 'SH Barber Studio';
 const METHODS = ['Efectivo', 'Nequi', 'Daviplata', 'Transferencia', 'Tarjeta'];
 const DAYS = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
@@ -346,9 +346,19 @@ const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 
 const pad = n => String(n).padStart(2, '0');
 const iso = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 const parseD = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
-const today = () => iso(new Date());
+const colombia = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'America/Bogota', year: 'numeric', month: '2-digit', day: '2-digit',
+  hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+});
+function colombiaNow() {
+  return Object.fromEntries(colombia.formatToParts(new Date()).map(p => [p.type, p.value]));
+}
+const today = () => {
+  const { year, month, day } = colombiaNow();
+  return year + '-' + month + '-' + day;
+};
 const addDays = (s, n) => { const d = parseD(s); d.setDate(d.getDate() + n); return iso(d); };
-const nowMin = () => { const d = new Date(); return d.getHours() * 60 + d.getMinutes(); };
+const nowMin = () => { const { hour, minute } = colombiaNow(); return Number(hour) * 60 + Number(minute); };
 const toMin = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
 const toTime = m => pad(Math.floor(m / 60)) + ':' + pad(m % 60);
 const t12 = t => { let [h, m] = t.split(':').map(Number); const ap = h >= 12 ? 'p. m.' : 'a. m.'; h = h % 12 || 12; return `${h}:${pad(m)} ${ap}`; };
@@ -360,6 +370,8 @@ const fmtShort = s => parseD(s).toLocaleDateString('es-CO', { day: 'numeric', mo
 const money = n => '$ ' + Math.round(n || 0).toLocaleString('es-CO');
 const kMoney = n => n >= 1e6 ? (n / 1e6).toFixed(1).replace('.', ',') + 'M' : n >= 1000 ? Math.round(n / 1000) + 'k' : String(n);
 const normPhone = p => { let d = String(p || '').replace(/\D/g, ''); if (d.length === 12 && d.startsWith('57')) d = d.slice(2); return d; };
+const validClientPhone = p => !p.trim() || (/^[+\d\s().-]+$/.test(p) && normPhone(p).length === 10);
+const searchText = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 const fmtPhone = p => p && p.length === 10 ? `${p.slice(0,3)} ${p.slice(3,6)} ${p.slice(6)}` : (p || '');
 const initials = n => n.split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase();
 const relDay = s => { const d = daysBetween(today(), s); if (d === 0) return 'hoy'; if (d === 1) return 'mañana'; if (d === -1) return 'ayer'; return 'el ' + fmtLong(s); };
@@ -416,9 +428,7 @@ function logoSVG(id, size) {
 /* ---------- Datos de demostración ---------- */
 function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 
-function seed() {
-  const rnd = mulberry32(1581);
-  const pick = a => a[Math.floor(rnd() * a.length)];
+function initialData() {
   const settings = {
     barberName: 'Barbero SH',
     barberPhone: '',
@@ -443,6 +453,14 @@ function seed() {
     { id: 's5', name: 'Cejas y diseño', desc: 'Perfilado de cejas o diseño con navaja.', price: 8000, duration: 15, active: true },
     { id: 's6', name: 'Afeitado tradicional', desc: 'Afeitado con navaja, toalla caliente y bálsamo.', price: 22000, duration: 30, active: false }
   ];
+  return { version: 1, settings, services, clients: [], appointments: [], payments: [] };
+}
+
+function seed() {
+  const data = initialData();
+  const { settings, services, appointments, payments } = data;
+  const rnd = mulberry32(1581);
+  const pick = a => a[Math.floor(rnd() * a.length)];
   const names = [
     ['Andrés Restrepo', 'Degradado bajo, raya marcada a la izquierda', true],
     ['Juan Camilo Ríos', 'Tijera arriba, no muy corto', true],
@@ -454,7 +472,7 @@ function seed() {
     ['Sebastián Gil', 'Mid fade, textura arriba', true]
   ];
   const clients = names.map((n, i) => ({ id: 'c' + (i + 1), name: n[0], phone: '30055501' + pad(i + 1), prefs: n[1], consent: n[2], notes: '', createdAt: Date.now() }));
-  const appointments = [], payments = [];
+  data.clients = clients;
   const T = today(), nm = nowMin();
   const active = services.filter(s => s.active);
   for (let off = -42; off <= 6; off++) {
@@ -482,14 +500,33 @@ function seed() {
       }
     });
   }
-  return { version: 1, settings, services, clients, appointments, payments };
+  return data;
 }
 
 let db;
-function load() { try { const raw = localStorage.getItem(DB_KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; } }
-function save() { try { localStorage.setItem(DB_KEY, JSON.stringify(db)); } catch (e) { toast('No se pudo guardar en este navegador (¿modo privado?)', 'err'); } }
-db = load();
-if (!db || !db.version) { db = seed(); save(); }
+let dataMode = 'demo';
+
+function load(mode) {
+  const raw = localStorage.getItem(DB_KEYS[mode]);
+  if (raw === null) return null;
+  const data = JSON.parse(raw);
+  if (!data || data.version !== 1 || !data.settings ||
+      !['services', 'clients', 'appointments', 'payments'].every(key => Array.isArray(data[key]))) {
+    throw new Error('Formato de datos inválido');
+  }
+  return data;
+}
+
+function save(next = db) {
+  try {
+    localStorage.setItem(DB_KEYS[dataMode], JSON.stringify(next));
+    db = next;
+    return true;
+  } catch {
+    toast('No se pudo guardar en este navegador', 'err');
+    return false;
+  }
+}
 
 /* ---------- Accesos a datos ---------- */
 const getClient = id => db.clients.find(c => c.id === id) || { id: '', name: 'Cliente ocasional', phone: '', prefs: '', consent: false };
@@ -562,7 +599,7 @@ function waText(kind, a, c) {
 const WA_LABEL = { confirmacion: 'Confirmación', recordatorio: 'Recordatorio', reprogramacion: 'Reprogramación', agradecimiento: 'Agradecimiento', regreso: 'Invitación a regresar' };
 
 /* ---------- Estado de la interfaz ---------- */
-const ui = { tab: 'inicio', agendaDate: today(), agendaMode: 'dia', cajaPeriod: 'hoy', masSub: null, clientQuery: '' };
+const ui = { tab: 'inicio', agendaDate: today(), agendaMode: 'dia', cajaPeriod: 'hoy', masSub: null, clientQuery: '', appointmentQuery: '' };
 let formState = {};
 let confirmCb = null;
 
@@ -589,7 +626,7 @@ function viewInicio() {
   const attended = todays.filter(a => a.status === 'atendida').length;
   const income = sum(paymentsIn(T, T));
   const upcoming = db.appointments.filter(a => ['pendiente', 'confirmada'].includes(a.status) && (a.date > T || (a.date === T && toMin(a.time) + a.duration > nowMin()))).sort(byDT).slice(0, 5);
-  const hr = new Date().getHours();
+  const hr = Math.floor(nowMin() / 60);
   const greet = hr < 12 ? 'Buenos días' : hr < 19 ? 'Buenas tardes' : 'Buenas noches';
   const unpaid = todays.filter(a => a.status === 'atendida' && !paymentFor(a.id)).length;
   return `
@@ -611,7 +648,7 @@ function viewInicio() {
   <div class="sec-h"><h2>Próximas citas</h2><button class="link" data-act="goAgenda" data-date="${T}">Ver agenda</button></div>
   <div class="list">${upcoming.length ? upcoming.map(a => apptCard(a, true)).join('') :
     `<div class="empty">${ic('calendar', 30)}<p>No hay citas próximas.</p><button class="btn btn-gold btn-sm" style="margin:auto" data-act="newAppt">Crear una cita</button></div>`}</div>
-  <button class="demo-note" data-act="demoInfo">${ic('info', 18)}<span><b>Modo demostración.</b> Los datos son ficticios y se guardan solo en este dispositivo. Toca para ver qué requiere servidor en producción.</span></button>`;
+  <button class="demo-note" data-act="demoInfo">${ic('info', 18)}<span>${dataMode === 'demo' ? '<b>Modo demostración.</b> Los datos de ejemplo se guardan en este navegador.' : '<b>Agenda local.</b> Las citas se guardan en este navegador. Hora de Colombia.'}</span></button>`;
 }
 
 function viewAgenda() {
@@ -652,19 +689,51 @@ function viewAgenda() {
         ${!list.length && !info.closed ? '<div class="wk-line">Sin citas</div>' : ''}</button>`;
     }).join('') + '</div>';
   }
-  return `<div class="ag-head"><h1 class="serif">${month}</h1>
-    <div class="seg"><button class="${ui.agendaMode === 'dia' ? 'on' : ''}" data-act="agMode" data-m="dia">Día</button><button class="${ui.agendaMode === 'semana' ? 'on' : ''}" data-act="agMode" data-m="semana">Semana</button></div></div>
+  return `<div class="search">${ic('search', 19)}
+    <input id="appointmentQuery" type="search" aria-label="Buscar citas" placeholder="Nombre, WhatsApp, servicio o estado" value="${esc(ui.appointmentQuery)}" autocomplete="off"></div>
+  <section id="appointmentMatches" aria-label="Resultados de búsqueda" hidden>
+    <p class="muted tiny" id="appointmentCount" style="margin-bottom:12px" role="status"></p>
+    <div class="list" id="appointmentList"></div>
+  </section>
+  <section id="agendaPeriod" aria-label="Calendario">
+  <div class="ag-head"><h1 class="serif">${month}</h1>
+    <div class="seg"><button class="${ui.agendaMode === 'dia' ? 'on' : ''}" data-act="agMode" data-m="dia" aria-pressed="${ui.agendaMode === 'dia'}">Día</button><button class="${ui.agendaMode === 'semana' ? 'on' : ''}" data-act="agMode" data-m="semana" aria-pressed="${ui.agendaMode === 'semana'}">Semana</button></div></div>
   <div class="week"><button class="icon-btn" data-act="agWeek" data-n="-7" aria-label="Semana anterior">${ic('left', 18)}</button>
     <div class="week-days">${strip}</div>
     <button class="icon-btn" data-act="agWeek" data-n="7" aria-label="Semana siguiente">${ic('right', 18)}</button></div>
   ${D !== T ? `<div style="text-align:center;margin-top:6px"><button class="link" data-act="setDay" data-date="${T}">Volver a hoy</button></div>` : ''}
-  ${body}`;
+  ${body}</section>`;
+}
+
+function findAppointments(query) {
+  const term = searchText(query.trim());
+  const number = /^[+\d\s().-]+$/.test(term) ? normPhone(term) : '';
+  return db.appointments.filter(a => {
+    const c = getClient(a.clientId);
+    const text = searchText([c.name, svcName(a), STATUS[a.status]?.label].join(' '));
+    return text.includes(term) || !!(number && normPhone(c.phone).includes(number));
+  }).sort(byDT);
+}
+
+function renderAppointmentSearch() {
+  const query = ui.appointmentQuery.trim();
+  $('#agendaPeriod').hidden = !!query;
+  $('#appointmentMatches').hidden = !query;
+  if (!query) {
+    $('#appointmentCount').textContent = '';
+    $('#appointmentList').innerHTML = '';
+    return;
+  }
+  const matches = findAppointments(query);
+  $('#appointmentCount').textContent = matches.length + (matches.length === 1 ? ' cita encontrada' : ' citas encontradas');
+  $('#appointmentList').innerHTML = matches.length ? matches.map(a => apptCard(a, true)).join('') :
+    '<div class="empty"><p style="margin:0">No se encontraron citas.</p></div>';
 }
 
 function viewClientes() {
   return `<div class="ag-head" style="margin-bottom:14px"><h1 class="serif">Clientes</h1><button class="btn btn-gold btn-sm" data-act="newClient">${ic('plus', 18)}Nuevo</button></div>
   <div class="search">${ic('search', 19)}<input id="cq" type="search" placeholder="Buscar por nombre o WhatsApp" value="${esc(ui.clientQuery)}" autocomplete="off"></div>
-  <p class="muted tiny" style="margin:0 0 12px">Clientes ficticios de demostración · <span id="ccount"></span></p>
+  <p class="muted tiny" style="margin:0 0 12px">${dataMode === 'demo' ? 'Clientes de demostración · ' : ''}<span id="ccount"></span></p>
   <div class="list" id="clist"></div>`;
 }
 function renderClientList() {
@@ -681,7 +750,7 @@ function renderClientList() {
     return `<button class="cli" data-act="openClient" data-id="${c.id}"><span class="avatar">${esc(initials(c.name))}</span>
       <span class="cli-body"><b>${esc(c.name)} ${reward ? '<span class="chip c-gold">' + ic('gift', 12) + ' Premio</span>' : ''}</b><small>${fmtPhone(c.phone)} · ${st.last ? 'Última visita ' + fmtShort(st.last) : 'Sin visitas aún'}</small></span>
       <span class="cli-side"><b>${st.count}</b>visitas</span></button>`;
-  }).join('') : `<div class="empty">${ic('users', 30)}<p>No encontramos clientes con “${esc(ui.clientQuery)}”.</p><button class="btn btn-gold btn-sm" style="margin:auto" data-act="newClient">Crear cliente</button></div>`;
+  }).join('') : `<div class="empty">${ic('users', 30)}<p>${ui.clientQuery.trim() ? `No encontramos clientes con “${esc(ui.clientQuery)}”.` : 'Aún no hay clientes registrados.'}</p><button class="btn btn-gold btn-sm" style="margin:auto" data-act="newClient">Crear cliente</button></div>`;
 }
 
 function periodRange(p) {
@@ -721,11 +790,11 @@ function viewMas() {
   const sub = ui.masSub;
   const back = t => `<div class="sub-head"><button class="icon-btn" data-act="goMas" data-sub="" aria-label="Volver">${ic('left', 20)}</button><h1 class="serif">${t}</h1></div>`;
   if (sub === 'servicios') {
-    return back('Servicios') + `<div class="alert">${ic('info', 18)}<div>Precios <b>de ejemplo (demostrativos)</b>. Reemplázalos por los precios reales de la barbería.</div></div>
+    return back('Servicios') + `<div class="alert">${ic('info', 18)}<div>Revisa los precios y duraciones del catálogo antes de agendar.</div></div>
     <button class="btn btn-gold" data-act="editSvc" data-id="">${ic('plus', 20)}Nuevo servicio</button>
     <div class="list" style="margin-top:14px">${db.services.map(s => `<div class="card svc ${s.active ? '' : 'inactive'}">
       <div class="svc-body"><b>${esc(s.name)}</b><p>${esc(s.desc || 'Sin descripción')}</p>
-      <div class="svc-meta"><span class="chip c-gold">${money(s.price)} · demo</span><span class="chip c-muted">${ic('clock', 12)} ${s.duration} min</span>${s.active ? '' : '<span class="chip c-cancelada">Inactivo</span>'}</div></div>
+      <div class="svc-meta"><span class="chip c-gold">${money(s.price)}</span><span class="chip c-muted">${ic('clock', 12)} ${s.duration} min</span>${s.active ? '' : '<span class="chip c-cancelada">Inactivo</span>'}</div></div>
       <div style="display:grid;gap:8px;justify-items:end"><button class="switch ${s.active ? 'on' : ''}" data-act="toggleSvc" data-id="${s.id}" aria-label="Activar o desactivar"></button>
       <button class="icon-btn" data-act="editSvc" data-id="${s.id}" aria-label="Editar">${ic('edit', 18)}</button></div></div>`).join('')}</div>`;
   }
@@ -755,7 +824,7 @@ function viewMas() {
       <label class="lbl">Visitas necesarias para el beneficio</label><input type="number" name="visits" min="2" max="30" value="${L.visits}" inputmode="numeric" required>
       <label class="lbl">Beneficio</label><input name="reward" value="${esc(L.reward)}" maxlength="80" required>
       <button class="btn btn-gold" style="margin-top:16px" type="submit">Guardar regla</button></form>
-      <p class="muted tiny" style="margin-top:10px">Regla de ejemplo demostrativa. Cada cita marcada como “Atendida” suma una visita.</p>
+      <p class="muted tiny" style="margin-top:10px">Cada cita marcada como “Atendida” suma una visita.</p>
       <div class="sec-h"><h2>Clientes con beneficio disponible</h2></div>
       <div class="list">${ready.length ? ready.map(({ c, n }) => `<button class="cli" data-act="openClient" data-id="${c.id}"><span class="avatar">${esc(initials(c.name))}</span><span class="cli-body"><b>${esc(c.name)}</b><small>${n} visitas acumuladas</small></span><span class="chip c-gold">${ic('gift', 12)} Premio</span></button>`).join('') : '<div class="empty"><p style="margin:0">Ningún cliente ha completado el ciclo todavía.</p></div>'}</div>`;
   }
@@ -767,17 +836,17 @@ function viewMas() {
   }
   const item = (act, sub2, icn, t, d, cls) => `<button class="menu-item ${cls || ''}" data-act="${act}" ${sub2 ? `data-sub="${sub2}"` : ''}><span class="ic">${ic(icn, 21)}</span><span><b>${t}</b><small>${d}</small></span>${ic('right', 18)}</button>`;
   return `<h1 class="serif" style="font-size:26px;margin-bottom:16px">Más opciones</h1><div class="menu">
-    ${item('goMas', 'servicios', 'scissors', 'Servicios', `${db.services.filter(s => s.active).length} activos · precios demostrativos`)}
+    ${item('goMas', 'servicios', 'scissors', 'Servicios', `${db.services.filter(s => s.active).length} activos`)}
     ${item('goMas', 'horarios', 'clock', 'Horarios y descansos', 'Días de atención y hora de almuerzo')}
     ${item('goMas', 'bloqueos', 'ban', 'Fechas bloqueadas', `${db.settings.blocked.length} fecha(s) bloqueada(s)`)}
     ${item('goMas', 'fidelizacion', 'gift', 'Fidelización', `Cada ${db.settings.loyalty.visits} visitas: beneficio`)}
     ${item('goMas', 'negocio', 'store', 'Datos del barbero', esc(db.settings.barberName))}
-    ${item('demoInfo', '', 'info', 'Demo vs. producción', 'Qué funciona hoy y qué necesita servidor')}
-    ${item('exportData', '', 'download', 'Descargar respaldo', 'Archivo .json con los datos de prueba')}
-    ${item('resetDemo', '', 'refresh', 'Restablecer datos demo', 'Vuelve a los datos ficticios iniciales', 'danger')}
+    ${item('demoInfo', '', 'info', 'Datos y almacenamiento', 'Información sobre esta agenda')}
+    ${item('exportData', '', 'download', 'Descargar respaldo', 'Archivo JSON con los datos de esta agenda')}
+    ${dataMode === 'demo' ? item('resetDemo', '', 'refresh', 'Restablecer datos demo', 'Vuelve a los datos ficticios iniciales', 'danger') : ''}
     ${item('exit', '', 'logout', 'Salir a la pantalla de inicio', 'SH BARBER SMART')}
   </div>
-  <p class="muted tiny" style="text-align:center;margin-top:22px">SH BARBER SMART · Prototipo Fase 1 · v1.0</p>
+  <p class="muted tiny" style="text-align:center;margin-top:22px">SH BARBER SMART · v1.1</p>
   <p class="tiny" style="text-align:center;margin-top:6px;color:var(--muted2)">Desarrollado por <b class="gold">José Lugo</b> · <a href="https://wa.me/573126387467" target="_blank" rel="noopener" style="color:var(--gold)">+57 312 638 7467</a> · jose.lugocdv@gmail.com</p>`;
 }
 
@@ -794,6 +863,7 @@ function render(animate) {
   fab.innerHTML = ic(ui.tab === 'clientes' ? 'userPlus' : ui.tab === 'caja' ? 'wallet' : 'plus', 26);
   fab.setAttribute('aria-label', ui.tab === 'clientes' ? 'Nuevo cliente' : ui.tab === 'caja' ? 'Registrar pago' : 'Nueva cita');
   if (ui.tab === 'clientes') renderClientList();
+  if (ui.tab === 'agenda') renderAppointmentSearch();
 }
 
 /* =========================================================
@@ -824,23 +894,24 @@ function sheetAppt(o) {
   const date = a ? a.date : (o.date && o.date >= T ? o.date : (ui.agendaDate >= T ? ui.agendaDate : T));
   const svcs = db.services.filter(s => s.active || (a && s.id === a.serviceId));
   const svcId = a ? a.serviceId : (svcs[0] || {}).id;
-  const cid = a ? a.clientId : (o.clientId || '');
+  const requestedClient = a ? a.clientId : o.clientId;
+  const cid = db.clients.some(c => c.id === requestedClient) ? requestedClient : (db.clients.length ? '' : '__new');
   formState = { editId: a ? a.id : null, time: a ? a.time : null, origDate: a ? a.date : null, origTime: a ? a.time : null };
   const clients = db.clients.slice().sort((x, y) => x.name.localeCompare(y.name));
   openSheet(head(a ? 'Editar o reprogramar' : 'Nueva cita', a ? esc(getClient(a.clientId).name) : 'Solo verás horarios realmente disponibles') + `
   <form data-form="appt" autocomplete="off">
-    <label class="lbl">Cliente</label>
-    <select name="clientId" required><option value="">Selecciona un cliente…</option><option value="__new" ${!clients.length ? 'selected' : ''}>＋ Cliente nuevo</option>
-      ${clients.map(c => `<option value="${c.id}" ${c.id === cid ? 'selected' : ''}>${esc(c.name)} · ${fmtPhone(c.phone)}</option>`).join('')}</select>
-    <div id="newClient" ${clients.length ? 'hidden' : ''}>
-      <div class="grid2"><div><label class="lbl">Nombre</label><input name="ncName" maxlength="50" placeholder="Nombre y apellido"></div>
-      <div><label class="lbl">WhatsApp</label><input name="ncPhone" inputmode="tel" maxlength="15" placeholder="3001234567"></div></div>
+    <label class="lbl" for="appointmentClient">Cliente</label>
+    <select id="appointmentClient" name="clientId" required><option value="">Selecciona un cliente…</option><option value="__new" ${cid === '__new' ? 'selected' : ''}>＋ Cliente nuevo</option>
+      ${clients.map(c => `<option value="${c.id}" ${c.id === cid ? 'selected' : ''}>${esc(c.name)}${c.phone ? ' · ' + fmtPhone(c.phone) : ''}</option>`).join('')}</select>
+    <div id="newClient" ${cid === '__new' ? '' : 'hidden'}>
+      <div class="grid2"><div><label class="lbl" for="ncName">Nombre</label><input id="ncName" name="ncName" maxlength="50" placeholder="Nombre y apellido"></div>
+      <div><label class="lbl" for="ncPhone">WhatsApp (opcional)</label><input id="ncPhone" name="ncPhone" type="tel" maxlength="20" placeholder="3001234567"></div></div>
       <label class="check-row"><input type="checkbox" name="ncConsent">Autoriza recibir promociones e invitaciones por WhatsApp (Ley 1581 de 2012).</label>
     </div>
-    <label class="lbl">Servicio</label>
-    <select name="serviceId" required>${svcs.map(s => `<option value="${s.id}" ${s.id === svcId ? 'selected' : ''}>${esc(s.name)} · ${money(s.price)} · ${s.duration} min</option>`).join('')}</select>
-    <label class="lbl">Fecha</label>
-    <input type="date" name="date" value="${date}" ${a ? '' : `min="${T}"`} required>
+    <label class="lbl" for="appointmentService">Servicio</label>
+    <select id="appointmentService" name="serviceId" required>${svcs.map(s => `<option value="${s.id}" ${s.id === svcId ? 'selected' : ''}>${esc(s.name)} · ${money(s.price)} · ${s.duration} min</option>`).join('')}</select>
+    <label class="lbl" for="appointmentDate">Fecha</label>
+    <input id="appointmentDate" type="date" name="date" value="${date}" ${a ? '' : `min="${T}"`} required>
     <label class="lbl">Hora disponible</label>
     <div id="slots"></div><input type="hidden" name="time" value="${a ? a.time : ''}">
     ${a ? '' : `<label class="lbl">Estado inicial</label><div class="pills"><label class="pill"><input type="radio" name="status" value="pendiente" checked><span>Pendiente</span></label><label class="pill"><input type="radio" name="status" value="confirmada"><span>Confirmada</span></label></div>`}
@@ -911,7 +982,7 @@ function sheetWA(kind, phone, text, back) {
       <button class="btn btn-dark" data-act="copyWA">Copiar texto</button>
       ${back ? `<button class="btn btn-ghost" data-act="waBack">Volver</button>` : ''}
     </div>
-    <p class="muted tiny" style="margin-top:10px">Demo: los números de los clientes ficticios no existen. Prueba con un cliente que tenga tu propio número.</p>`);
+    ${dataMode === 'demo' ? '<p class="muted tiny" style="margin-top:10px">Para una prueba en WhatsApp, usa tu propio número.</p>' : ''}`);
 }
 
 /* --- Pagos --- */
@@ -938,10 +1009,10 @@ function sheetPayment(o) {
 /* --- Clientes --- */
 function sheetClientForm(id) {
   const c = id ? db.clients.find(x => x.id === id) : null;
-  openSheet(head(c ? 'Editar cliente' : 'Nuevo cliente', 'Datos ficticios en esta demo') + `
+  openSheet(head(c ? 'Editar cliente' : 'Nuevo cliente', dataMode === 'demo' ? 'Datos de demostración' : '') + `
   <form data-form="client"><input type="hidden" name="id" value="${c ? c.id : ''}">
     <label class="lbl">Nombre completo</label><input name="name" maxlength="50" value="${esc(c ? c.name : '')}" required>
-    <label class="lbl">Número de WhatsApp</label><input name="phone" inputmode="tel" maxlength="15" value="${esc(c ? c.phone : '')}" placeholder="3001234567" required>
+    <label class="lbl" for="clientPhone">WhatsApp (opcional)</label><input id="clientPhone" name="phone" type="tel" maxlength="20" value="${esc(c ? c.phone : '')}" placeholder="3001234567">
     <label class="lbl">Preferencias de corte</label><textarea name="prefs" rows="2" maxlength="160" placeholder="Ej. fade bajo, no tocar las patillas">${esc(c ? c.prefs : '')}</textarea>
     <label class="lbl">Notas internas</label><input name="notes" maxlength="120" value="${esc(c ? c.notes : '')}" placeholder="Opcional">
     <label class="check-row"><input type="checkbox" name="consent" ${c && c.consent ? 'checked' : ''}><span>El cliente <b>autoriza</b> recibir promociones e invitaciones por WhatsApp, conforme a la Ley 1581 de 2012. Los mensajes de servicio (confirmaciones y recordatorios) no requieren esta casilla.</span></label>
@@ -1003,6 +1074,12 @@ function sheetService(id) {
 /* --- Demo vs producción --- */
 function sheetDemoInfo() {
   const li = (cls, t) => `<li>${ic(cls === 'ok' ? 'check' : 'lock', 17)}<span>${t}</span></li>`;
+  if (dataMode === 'local' && !$('#shell').hidden) {
+    openSheet(head('Datos de la agenda local') + `
+      <p class="small">Tus citas, clientes y pagos se guardan en este navegador. La demo tiene su propio historial.</p>
+      <div class="sh-actions"><button class="btn btn-gold" data-act="closeSheet">Entendido</button></div>`);
+    return;
+  }
   openSheet(head('¿Qué incluye esta demo?', 'Fase 1 · Prototipo funcional') + `
   <div class="sec-t">Funciona ya en esta demo (en este dispositivo)</div>
   <ul class="feat-list ok">
@@ -1034,13 +1111,34 @@ function sheetDemoInfo() {
    ACCIONES (clics)
    ========================================================= */
 const acts = {
-  enter() { $('#splash').hidden = true; $('#shell').hidden = false; ui.tab = 'inicio'; render(true); },
+  enter(d) {
+    const mode = d.mode === 'local' ? 'local' : 'demo';
+    let saved;
+    try {
+      saved = load(mode);
+    } catch {
+      return toast('No se pudieron leer los datos guardados', 'err');
+    }
+    dataMode = mode;
+    if (saved) db = saved;
+    else {
+      const initial = mode === 'demo' ? seed() : initialData();
+      if (mode === 'local') initial.settings.loyalty.on = false;
+      if (!save(initial)) return;
+    }
+    Object.assign(ui, { tab: 'inicio', agendaDate: today(), agendaMode: 'dia', cajaPeriod: 'hoy',
+      masSub: null, clientQuery: '', appointmentQuery: '' });
+    $('#dataMode').textContent = mode === 'demo' ? 'DEMO' : 'LOCAL';
+    $('#splash').hidden = true;
+    $('#shell').hidden = false;
+    render(true);
+  },
   exit() { $('#shell').hidden = true; $('#splash').hidden = false; window.scrollTo(0, 0); },
   demoInfo: sheetDemoInfo,
   closeSheet,
   confirmYes() { const cb = confirmCb; confirmCb = null; closeSheet(); if (cb) cb(); },
   goTab(d) { ui.tab = d.tab; if (d.tab === 'mas') ui.masSub = null; render(true); },
-  goAgenda(d) { ui.tab = 'agenda'; ui.agendaDate = d.date || today(); ui.agendaMode = d.mode || 'dia'; render(true); },
+  goAgenda(d) { ui.tab = 'agenda'; ui.agendaDate = d.date || today(); ui.agendaMode = d.mode || 'dia'; ui.appointmentQuery = ''; render(true); },
   goCaja(d) { ui.tab = 'caja'; ui.cajaPeriod = d.p || 'hoy'; render(true); },
   goMas(d) { ui.tab = 'mas'; ui.masSub = d.sub || null; render(true); },
   fab() { if (ui.tab === 'clientes') sheetClientForm(); else if (ui.tab === 'caja') sheetPayment(); else sheetAppt({ date: ui.tab === 'agenda' ? ui.agendaDate : today() }); },
@@ -1061,11 +1159,13 @@ const acts = {
     f.querySelectorAll('.slot').forEach(b => b.classList.toggle('on', b === el));
   },
   setStatus(d) {
-    const a = getAppt(d.id); if (!a) return;
+    const a = getAppt(d.id); if (!a || !Object.hasOwn(STATUS, d.s)) return;
     const apply = () => {
       if (d.s !== 'cancelada' && d.s !== 'no_asistio' && ['cancelada', 'no_asistio'].includes(a.status) && !isFree(a.date, toMin(a.time), a.duration, a.id, true))
         return toast('Ese horario ya fue ocupado por otra cita. Reprográmala.', 'err');
-      a.status = d.s; save(); render();
+      const appointments = db.appointments.map(item => item.id === a.id ? { ...item, status: d.s } : item);
+      if (!save({ ...db, appointments })) return;
+      render();
       toast('Estado: ' + STATUS[d.s].label);
       if (d.s === 'atendida' && !paymentFor(a.id)) sheetPayment({ appointmentId: a.id });
       else sheetApptDetail(a.id);
@@ -1127,13 +1227,15 @@ const acts = {
   unblock(d) { db.settings.blocked = db.settings.blocked.filter(b => b.date !== d.date); save(); render(); toast('Fecha desbloqueada'); },
   exportData() {
     const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `sh-barber-smart-demo-${today()}.json`;
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `sh-barber-smart-${dataMode}-${today()}.json`;
     document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
     toast('Respaldo descargado');
   },
   resetDemo() {
+    if (dataMode !== 'demo') return;
     confirmSheet('¿Restablecer la demo?', 'Se borrarán todos los cambios y volverán los datos ficticios iniciales.', 'Sí, restablecer', () => {
-      db = seed(); save(); ui.tab = 'inicio'; ui.agendaDate = today(); ui.masSub = null; render(true); toast('Demo restablecida');
+      if (!save(seed())) return;
+      ui.tab = 'inicio'; ui.agendaDate = today(); ui.masSub = null; render(true); toast('Demo restablecida');
     });
   }
 };
@@ -1150,8 +1252,8 @@ const forms = {
     if (clientId === '__new') {
       const name = E.ncName.value.trim(), phone = normPhone(E.ncPhone.value);
       if (name.length < 2) return toast('Escribe el nombre del cliente', 'err');
-      if (phone.length !== 10) return toast('El WhatsApp debe tener 10 dígitos (ej. 3001234567)', 'err');
-      if (db.clients.some(c => c.phone === phone)) return toast('Ya existe un cliente con ese WhatsApp', 'err');
+      if (!validClientPhone(E.ncPhone.value)) return toast('Revisa el WhatsApp (ej. 3001234567)', 'err');
+      if (phone && db.clients.some(c => c.phone === phone)) return toast('Ya existe un cliente con ese WhatsApp', 'err');
       newC = { id: uid(), name, phone, prefs: '', consent: E.ncConsent.checked, notes: '', createdAt: Date.now() };
     }
     const svc = getSvc(E.serviceId.value); if (!svc) return toast('Selecciona un servicio', 'err');
@@ -1161,18 +1263,27 @@ const forms = {
     const editing = formState.editId;
     const allowPast = !!editing && date === formState.origDate && time === formState.origTime;
     if (!isFree(date, toMin(time), svc.duration, editing, allowPast)) { refreshSlots(); return toast('Ese horario ya no está disponible', 'err'); }
-    if (newC) { db.clients.push(newC); clientId = newC.id; }
+    const clients = newC ? [...db.clients, newC] : db.clients;
+    if (newC) clientId = newC.id;
     if (editing) {
       const a = getAppt(editing);
+      if (!a) return toast('La cita no está disponible', 'err');
       const moved = a.date !== date || a.time !== time;
-      Object.assign(a, { clientId, serviceId: svc.id, date, time, duration: svc.duration, price: a.serviceId === svc.id ? a.price : svc.price, notes: E.notes.value.trim() });
-      if (moved) { a.rescheduled = true; if (['cancelada', 'no_asistio'].includes(a.status)) a.status = 'pendiente'; }
-      save(); ui.agendaDate = date; render();
+      const updated = { ...a, clientId, serviceId: svc.id, date, time, duration: svc.duration,
+        price: a.serviceId === svc.id ? a.price : svc.price, notes: E.notes.value.trim() };
+      if (moved) {
+        updated.rescheduled = true;
+        if (['cancelada', 'no_asistio'].includes(a.status)) updated.status = 'pendiente';
+      }
+      const appointments = db.appointments.map(item => item.id === editing ? updated : item);
+      if (!save({ ...db, clients, appointments })) return;
+      ui.agendaDate = date; render();
       toast(moved ? 'Cita reprogramada' : 'Cambios guardados');
       sheetApptDetail(a.id, moved ? 'reprog' : null);
     } else {
       const a = { id: uid(), clientId, serviceId: svc.id, date, time, duration: svc.duration, price: svc.price, status: (f.querySelector('input[name=status]:checked') || {}).value || 'pendiente', notes: E.notes.value.trim(), createdAt: Date.now() };
-      db.appointments.push(a); save();
+      if (!save({ ...db, clients, appointments: [...db.appointments, a] })) return;
+      ui.appointmentQuery = '';
       ui.tab = 'agenda'; ui.agendaDate = date; ui.agendaMode = 'dia'; render(true);
       toast('Cita agendada ✓');
       sheetApptDetail(a.id, 'new');
@@ -1196,13 +1307,14 @@ const forms = {
     const E = f.elements, id = E.id.value;
     const name = E.name.value.trim(), phone = normPhone(E.phone.value);
     if (name.length < 2) return toast('Escribe el nombre', 'err');
-    if (phone.length !== 10) return toast('El WhatsApp debe tener 10 dígitos (ej. 3001234567)', 'err');
-    if (db.clients.some(c => c.phone === phone && c.id !== id)) return toast('Ya existe un cliente con ese WhatsApp', 'err');
+    if (!validClientPhone(E.phone.value)) return toast('Revisa el WhatsApp (ej. 3001234567)', 'err');
+    if (phone && db.clients.some(c => c.phone === phone && c.id !== id)) return toast('Ya existe un cliente con ese WhatsApp', 'err');
     const data = { name, phone, prefs: E.prefs.value.trim(), notes: E.notes.value.trim(), consent: E.consent.checked };
-    let cid = id;
-    if (id) Object.assign(db.clients.find(c => c.id === id), data);
-    else { cid = uid(); db.clients.push(Object.assign({ id: cid, createdAt: Date.now() }, data)); }
-    save(); render(); toast(id ? 'Cliente actualizado' : 'Cliente creado');
+    const cid = id || uid();
+    const clients = id ? db.clients.map(c => c.id === id ? { ...c, ...data } : c)
+      : [...db.clients, { id: cid, createdAt: Date.now(), ...data }];
+    if (!save({ ...db, clients })) return;
+    render(); toast(id ? 'Cliente actualizado' : 'Cliente creado');
     sheetClient(cid);
   },
   svc(f) {
@@ -1286,6 +1398,7 @@ document.addEventListener('change', e => {
 });
 document.addEventListener('input', e => {
   if (e.target.id === 'cq') { ui.clientQuery = e.target.value; renderClientList(); }
+  if (e.target.id === 'appointmentQuery') { ui.appointmentQuery = e.target.value; renderAppointmentSearch(); }
 });
 
 /* Arranque */

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Diagnóstico Salud + Dinero · José Lugo</title>
+<meta name="description" content="En 90 segundos descubre qué te conviene para tu energía, tu descanso y tus ingresos. Diagnóstico gratuito con José Lugo, ONE MORE International.">
+<meta name="theme-color" content="#0D1B3E">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Diagnóstico Salud + Dinero · José Lugo">
+<meta property="og:description" content="Todos ganan dinero. Pocos lo hacen con salud. Haz tu diagnóstico gratis en 90 segundos.">
+<meta property="og:image" content="https://onemoreint.github.io/apps/diagnostico-salud-dinero/og.jpg">
+<meta property="og:url" content="https://onemoreint.github.io/apps/diagnostico-salud-dinero/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  --navy:#0D1B3E;--navy2:#142650;--navy3:#1d3366;
+  --gold:#C9A84C;--gold2:#E6CC7E;--goldd:rgba(201,168,76,.14);
+  --text:#F4F1EA;--muted:#A9B2C8;--line:rgba(201,168,76,.28);
+  --ok:#2BD58A;--wa:#25D366;--r:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:radial-gradient(1200px 600px at 80% -10%,#24407e 0%,transparent 60%),var(--navy);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:560px;margin:0 auto;padding:20px 18px calc(28px + env(safe-area-inset-bottom))}
+header.top{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.logo{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:grid;place-items:center;color:var(--navy);font-weight:800;font-size:15px;flex:none}
+.brand b{display:block;font-size:15px}.brand span{font-size:12px;color:var(--muted)}
+.progress{height:6px;background:rgba(255,255,255,.08);border-radius:9px;overflow:hidden;margin:4px 0 22px}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .35s ease}
+.screen{display:none;animation:in .35s ease}
+.screen.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+h1{font-size:clamp(28px,7.5vw,38px);line-height:1.12;letter-spacing:-.5px;margin-bottom:14px}
+h1 em{font-style:normal;color:var(--gold2)}
+h2{font-size:clamp(22px,5.8vw,27px);line-height:1.2;margin-bottom:8px}
+h3{font-size:17px;margin-bottom:6px}
+p.lead{color:var(--muted);font-size:17px;margin-bottom:22px}
+.kicker{display:inline-block;font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--gold2);background:var(--goldd);border:1px solid var(--line);padding:5px 11px;border-radius:99px;margin-bottom:14px}
+.hint{color:var(--muted);font-size:14px;margin-bottom:18px}
+.opts{display:grid;gap:12px}
+.opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:rgba(255,255,255,.045);border:1.5px solid rgba(255,255,255,.1);color:var(--text);border-radius:var(--r);padding:16px 16px;font-size:17px;font-family:inherit;cursor:pointer;transition:transform .12s,border-color .2s,background .2s;min-height:64px}
+.opt:hover{border-color:var(--line)}
+.opt:active{transform:scale(.985)}
+.opt.sel{border-color:var(--gold);background:var(--goldd)}
+.opt .ic{font-size:26px;width:36px;text-align:center;flex:none}
+.opt small{display:block;color:var(--muted);font-size:13.5px;margin-top:2px}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;border-radius:var(--r);padding:17px 18px;font-size:17.5px;font-weight:700;font-family:inherit;cursor:pointer;text-decoration:none;transition:transform .12s,filter .2s;min-height:58px}
+.btn:active{transform:scale(.985)}
+.btn.gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);box-shadow:0 10px 30px rgba(201,168,76,.28)}
+.btn.wa{background:var(--wa);color:#05361b}
+.btn.ghost{background:transparent;border:1.5px solid rgba(255,255,255,.18);color:var(--text);font-weight:600}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.stack{display:grid;gap:12px}
+.back{background:none;border:0;color:var(--muted);font-size:15px;font-family:inherit;cursor:pointer;padding:12px 4px;margin-top:10px}
+.trust{display:flex;flex-wrap:wrap;gap:8px 16px;margin:20px 0 6px;color:var(--muted);font-size:14px}
+.trust span::before{content:"✓ ";color:var(--gold2)}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:20px;margin-bottom:16px}
+.card.gold{border-color:var(--line);background:linear-gradient(180deg,rgba(201,168,76,.16),rgba(201,168,76,.04))}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:14px;color:var(--muted);margin-bottom:6px}
+.field input,.field select{width:100%;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.14);color:var(--text);border-radius:14px;padding:15px 14px;font-size:17px;font-family:inherit}
+.field select option{color:#111}
+.field input:focus,.field select:focus{outline:none;border-color:var(--gold)}
+.tag{display:inline-block;font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--goldd);color:var(--gold2);border:1px solid var(--line);margin-bottom:10px}
+.price{display:flex;align-items:baseline;gap:8px;margin:8px 0 4px}
+.price b{font-size:34px;color:var(--gold2)}
+.price span{color:var(--muted);font-size:14px}
+ul.check{list-style:none;display:grid;gap:8px;margin:12px 0 4px}
+ul.check li{padding-left:28px;position:relative;font-size:15.5px}
+ul.check li::before{content:"✓";position:absolute;left:4px;color:var(--ok);font-weight:800}
+ol.steps{list-style:none;counter-reset:s;display:grid;gap:12px;margin-top:10px}
+ol.steps li{counter-increment:s;padding-left:42px;position:relative;font-size:15.5px}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:-2px;width:30px;height:30px;border-radius:50%;background:var(--goldd);border:1px solid var(--line);color:var(--gold2);display:grid;place-items:center;font-weight:800;font-size:14px}
+details{border-top:1px solid rgba(255,255,255,.1);margin-top:14px;padding-top:12px}
+details summary{cursor:pointer;font-weight:700;color:var(--gold2);list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:" ▾"}
+.video{position:relative;width:100%;max-width:240px;margin:12px auto 0;aspect-ratio:9/16;border-radius:16px;overflow:hidden;background:#000 center/cover no-repeat;border:1px solid var(--line);cursor:pointer}
+.video .play{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(180deg,rgba(13,27,62,.15),rgba(13,27,62,.65))}
+.video .play i{width:68px;height:68px;border-radius:50%;background:var(--gold);display:grid;place-items:center;font-style:normal;font-size:26px;color:var(--navy);padding-left:4px}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.quote{font-size:15.5px;font-style:italic}
+.quote b{display:block;font-style:normal;font-size:13.5px;color:var(--muted);margin-top:6px}
+.legal{font-size:12.5px;color:var(--muted);margin-top:22px;line-height:1.55}
+.sign{text-align:center;font-size:12.5px;color:var(--muted);margin-top:18px}
+.sticky{position:sticky;bottom:0;padding:12px 0 calc(6px + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,var(--navy) 35%);margin-top:6px}
+.meter{display:flex;gap:6px;margin:10px 0 2px}
+.meter i{flex:1;height:8px;border-radius:9px;background:rgba(255,255,255,.1)}
+.meter i.f{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#fff;color:var(--navy);padding:10px 16px;border-radius:12px;font-weight:600;font-size:14px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="logo">JL</div>
+    <div class="brand"><b id="advName">José Lugo</b><span id="advRole">Diamante Imperial · ONE MORE International</span></div>
+  </header>
+  <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+  <main id="app"></main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   CONFIGURACIÓN — lo único que cambia de un asesor a otro.
+   (Fase 3: cada socio tendrá su propia configuración.)
+   ============================================================ */
+const CONFIG = {
+  asesor: "José Lugo",
+  rango: "Diamante Imperial · ONE MORE International",
+  whatsapp: "573126387467",
+  enlaceAfiliacion: "https://onemore.global/!aasespa",
+  videoYoutube: "mubQYNk0Umw",
+  paquete: { precio: 150, nombre: "Paquete de Inicio", detalle: "2 × PNG (Painless Night GLU)" },
+  // Testimonios reales con permiso. Mientras esté vacío, la sección no se muestra.
+  // Formato: { texto: "…", nombre: "Nombre A.", lugar: "Ciudad" }
+  testimonios: []
+};
+
+/* Productos sugeridos según la necesidad principal.
+   Texto prudente: apoyo al bienestar, nunca tratamiento. */
+const PRODUCTOS = {
+  energia:  { nombre:"PNG · Painless Night GLU", precio:80, ic:"⚡", por:"es el producto más elegido de la línea, de uso nocturno, pensado para acompañar tu recuperación y que amanezcas con mejor ánimo." },
+  descanso: { nombre:"Melatonin Plus", precio:48, ic:"🌙", por:"está pensado para acompañar tu rutina de descanso nocturno." },
+  peso:     { nombre:"Slim Style", precio:44, ic:"🎯", por:"acompaña un plan de hábitos saludables cuando tu meta es sentirte más liviano." },
+  vitalidad:{ nombre:"B12 Plus", precio:48, ic:"🔆", por:"es un complemento práctico para tus días de mucho ritmo." },
+  piel:     { nombre:"Sornie Collagen", precio:80, ic:"✨", por:"está pensado para tu rutina de cuidado personal y apariencia." }
+};
+
+/* ============================================================
+   PREGUNTAS
+   ============================================================ */
+const Q = {
+  ruta:{ titulo:"¿Qué quieres mejorar hoy?", hint:"Elige una. No hay respuestas malas.", ops:[
+    {v:"salud",  ic:"💪", t:"Mi energía y mi descanso", s:"Sentirme mejor en el día a día"},
+    {v:"dinero", ic:"💼", t:"Mis ingresos", s:"Generar un ingreso extra"},
+    {v:"ambas",  ic:"🚀", t:"Las dos cosas", s:"Salud y dinero al mismo tiempo"}]},
+  manana:{ titulo:"¿Cómo te levantas casi todas las mañanas?", ops:[
+    {v:"bien",    ic:"😊", t:"Descansado y con energía"},
+    {v:"regular", ic:"😐", t:"A veces bien, a veces cansado"},
+    {v:"mal",     ic:"😴", t:"Casi siempre cansado"}]},
+  foco:{ titulo:"¿Qué te gustaría mejorar primero?", ops:[
+    {v:"energia",  ic:"⚡", t:"Más energía durante el día"},
+    {v:"descanso", ic:"🌙", t:"Dormir y descansar mejor"},
+    {v:"peso",     ic:"🎯", t:"Sentirme más liviano"},
+    {v:"vitalidad",ic:"🔆", t:"Ánimo y vitalidad"},
+    {v:"piel",     ic:"✨", t:"Mi piel y apariencia"}]},
+  edad:{ titulo:"¿En qué rango de edad estás?", ops:[
+    {v:"18-39", ic:"🙂", t:"18 a 39 años"},
+    {v:"40-54", ic:"😎", t:"40 a 54 años"},
+    {v:"55-69", ic:"🧑‍🦳", t:"55 a 69 años"},
+    {v:"70+",   ic:"👴", t:"70 años o más"}]},
+  tiempo:{ titulo:"¿Cuánto tiempo podrías dedicarle a un negocio?", ops:[
+    {v:"poco",  ic:"⏱️", t:"3 a 5 horas a la semana"},
+    {v:"medio", ic:"🕐", t:"Alrededor de 1 hora al día"},
+    {v:"mucho", ic:"🔥", t:"Quiero dedicarme en serio"}]},
+  experiencia:{ titulo:"¿Has vendido o hecho redes de mercadeo antes?", ops:[
+    {v:"no",   ic:"🌱", t:"Nunca, sería mi primera vez"},
+    {v:"algo", ic:"🙌", t:"Un poco"},
+    {v:"si",   ic:"🏆", t:"Sí, tengo experiencia"}]},
+  meta:{ titulo:"¿Qué ingreso extra te gustaría construir?", hint:"Es tu meta, no una promesa.", ops:[
+    {v:"100-300",   ic:"🪙", t:"Entre 100 y 300 USD al mes"},
+    {v:"300-1000",  ic:"💵", t:"Entre 300 y 1.000 USD al mes"},
+    {v:"1000+",     ic:"💎", t:"Más de 1.000 USD al mes"}]},
+  cuando:{ titulo:"¿Cuándo te gustaría empezar?", ops:[
+    {v:"hoy",     ic:"✅", t:"Hoy mismo"},
+    {v:"semana",  ic:"📅", t:"Esta semana"},
+    {v:"mirando", ic:"👀", t:"Solo estoy averiguando"}]}
+};
+
+const PAISES = ["Colombia","Venezuela","Estados Unidos","Perú","Ecuador","México","Chile","España","Turquía","Otro"];
+
+/* ============================================================
+   ESTADO Y FLUJO
+   ============================================================ */
+const S = { r:{}, paso:0, nombre:"", pais:"" };
+const $ = s => document.querySelector(s);
+const app = $("#app");
+
+function flujo(){
+  const r = S.r.ruta;
+  const f = ["inicio","ruta"];
+  if(r==="salud"||r==="ambas") f.push("manana","foco","edad");
+  if(r==="dinero"||r==="ambas") f.push("tiempo","experiencia","meta");
+  if(r) f.push("cuando","datos","resultado");
+  return f;
+}
+
+function ir(n){
+  const f = flujo();
+  S.paso = Math.max(0, Math.min(n, f.length-1));
+  const id = f[S.paso];
+  const total = f.length-1;
+  $("#bar").style.width = (id==="inicio"?0:Math.round(S.paso/total*100))+"%";
+  if(id==="inicio") vistaInicio();
+  else if(Q[id]) vistaPregunta(id);
+  else if(id==="datos") vistaDatos();
+  else vistaResultado();
+  window.scrollTo({top:0,behavior:"smooth"});
+  guardar();
+}
+
+function vistaInicio(){
+  app.innerHTML = `
+  <section class="screen on">
+    <span class="kicker">Diagnóstico gratuito · 90 segundos</span>
+    <h1>Todos ganan dinero.<br><em>Pocos lo hacen con salud.</em></h1>
+    <p class="lead">Responde unas preguntas tocando botones y recibe una recomendación personal para tu energía, tu descanso y tus ingresos.</p>
+    <div class="stack">
+      <button class="btn gold" data-go="1">Empezar mi diagnóstico →</button>
+    </div>
+    <div class="trust"><span>Sin registrarte</span><span>No pedimos datos de salud</span><span>Resultado al instante</span></div>
+    <p class="legal">Acompañamiento de ${esc(CONFIG.asesor)}, con más de 16 años formando líderes en Latinoamérica.</p>
+  </section>`;
+  app.querySelector("[data-go]").onclick = () => ir(1);
+}
+
+function vistaPregunta(id){
+  const q = Q[id];
+  app.innerHTML = `
+  <section class="screen on">
+    <h2>${q.titulo}</h2>
+    ${q.hint?`<p class="hint">${q.hint}</p>`:`<p class="hint">&nbsp;</p>`}
+    <div class="opts">${q.ops.map(o=>`
+      <button class="opt${S.r[id]===o.v?" sel":""}" data-v="${o.v}">
+        <span class="ic">${o.ic}</span><span>${o.t}${o.s?`<small>${o.s}</small>`:""}</span>
+      </button>`).join("")}
+    </div>
+    <button class="back" data-back>← Atrás</button>
+  </section>`;
+  app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    S.r[id]=b.dataset.v;
+    b.classList.add("sel");
+    setTimeout(()=>ir(S.paso+1),180);
+  });
+  app.querySelector("[data-back]").onclick=()=>ir(S.paso-1);
+}
+
+function vistaDatos(){
+  app.innerHTML = `
+  <section class="screen on">
+    <span class="kicker">Último paso</span>
+    <h2>Tu resultado está listo</h2>
+    <p class="hint">¿A nombre de quién lo preparo?</p>
+    <div class="field"><label for="nm">Tu nombre</label>
+      <input id="nm" autocomplete="given-name" placeholder="Ej: María" value="${esc(S.nombre)}" maxlength="40"></div>
+    <div class="field"><label for="ps">Tu país</label>
+      <select id="ps"><option value="">Selecciona…</option>${PAISES.map(p=>`<option${S.pais===p?" selected":""}>${p}</option>`).join("")}</select></div>
+    <div class="stack" style="margin-top:6px"><button class="btn gold" id="ver" disabled>Ver mi resultado →</button></div>
+    <button class="back" data-back>← Atrás</button>
+    <p class="legal">Tu nombre solo se usa para personalizar el resultado en esta pantalla. No se guarda en ningún servidor.</p>
+  </section>`;
+  const nm=$("#nm"), ps=$("#ps"), ver=$("#ver");
+  const val=()=>{ S.nombre=nm.value.trim(); S.pais=ps.value; ver.disabled=!(S.nombre.length>=2&&S.pais); };
+  nm.oninput=val; ps.onchange=val; val();
+  ver.onclick=()=>ir(S.paso+1);
+  app.querySelector("[data-back]").onclick=()=>ir(S.paso-1);
+  setTimeout(()=>nm.focus(),250);
+}
+
+/* ============================================================
+   RESULTADO
+   ============================================================ */
+function temperatura(){
+  const r=S.r, c=r.cuando;
+  let p = c==="hoy"?3:c==="semana"?2:0;
+  if(r.ruta==="ambas") p+=1;
+  if(r.manana==="mal") p+=1;
+  if(r.tiempo==="mucho"||r.experiencia==="si") p+=1;
+  if(p>=4) return {k:"listo", e:"🔥", t:"Listo para empezar"};
+  if(p>=2) return {k:"interesado", e:"🌱", t:"Interesado"};
+  return {k:"explorando", e:"👀", t:"Explorando"};
+}
+
+function perfilSalud(){
+  const m=S.r.manana;
+  if(m==="mal") return {nivel:1, txt:"Tu energía está pidiendo atención. La buena noticia: pequeños cambios constantes suelen notarse rápido."};
+  if(m==="regular") return {nivel:2, txt:"Tienes una base, pero tu energía es irregular. Con una rutina más constante puedes sentirte mejor la mayoría de los días."};
+  return {nivel:3, txt:"Tu punto de partida es bueno. El objetivo es mantenerlo y prevenir el desgaste."};
+}
+
+function perfilNegocio(){
+  const r=S.r;
+  const t={poco:"con pocas horas a la semana",medio:"con una hora diaria",mucho:"dedicándote en serio"}[r.tiempo];
+  const e={no:"Empezarías desde cero, con acompañamiento paso a paso.",algo:"Ya tienes nociones: te enseñamos un método simple para duplicarlo.",si:"Tu experiencia te permite avanzar rápido y formar equipo."}[r.experiencia];
+  return `Tu perfil encaja para empezar ${t}. ${e}`;
+}
+
+function vistaResultado(){
+  const r=S.r, nom=esc(S.nombre.split(" ")[0]);
+  const salud = r.ruta!=="dinero", negocio = r.ruta!=="salud";
+  const prod = salud ? PRODUCTOS[r.foco] : null;
+  const temp = temperatura();
+  const ps = salud ? perfilSalud() : null;
+
+  const titulo = r.ruta==="ambas" ? `${nom}, tu camino es <em style="color:var(--gold2);font-style:normal">salud + ingresos</em>`
+               : r.ruta==="salud" ? `${nom}, este es tu plan de bienestar`
+               : `${nom}, este es tu camino de ingresos`;
+
+  let html = `<section class="screen on">
+    <span class="kicker">Tu resultado</span>
+    <h2>${titulo}</h2>
+    <p class="hint">Preparado para ti por ${esc(CONFIG.asesor)}.</p>`;
+
+  if(salud){
+    html += `<div class="card">
+      <h3>Tu energía hoy</h3>
+      <div class="meter">${[1,2,3].map(i=>`<i class="${i<=ps.nivel?"f":""}"></i>`).join("")}</div>
+      <p style="margin-top:10px">${ps.txt}</p>
+    </div>
+    <div class="card">
+      <span class="tag">Recomendado para ti</span>
+      <h3>${prod.ic} ${prod.nombre}</h3>
+      <p>Lo sugiero porque ${prod.por}</p>
+      <p class="hint" style="margin:8px 0 0">Precio público de referencia: ${prod.precio} USD.</p>
+    </div>`;
+  }
+
+  if(negocio){
+    html += `<div class="card">
+      <h3>Tu perfil como socio</h3>
+      <p>${perfilNegocio()}</p>
+      <ol class="steps">
+        <li><b>Semana 1:</b> usas el producto y conoces el sistema con mi acompañamiento.</li>
+        <li><b>Semana 2:</b> compartes este mismo diagnóstico con tus contactos.</li>
+        <li><b>Semanas 3 y 4:</b> ayudas a tus primeros clientes y socios a empezar igual que tú.</li>
+      </ol>
+    </div>`;
+  }
+
+  // Oferta principal
+  const beneficioPack = r.ruta==="salud"
+    ? "Empiezas con el producto estrella y, si algún día quieres, ya quedas habilitado para ganar recomendándolo."
+    : r.ruta==="dinero"
+    ? "Es la forma de entrar al negocio: con este paquete quedas activo como socio y conoces el producto que vas a recomendar."
+    : "Con una sola compra cubres las dos metas: usas el producto para tu bienestar y quedas activo como socio para generar ingresos.";
+  html += `<div class="card gold">
+      <span class="tag">${r.ruta==="salud"?"La mejor forma de empezar":"Tu punto de partida"}</span>
+      <h3>${esc(CONFIG.paquete.nombre)} · ${esc(CONFIG.paquete.detalle)}</h3>
+      <div class="price"><b>${CONFIG.paquete.precio} USD</b><span>pago único</span></div>
+      <p>${beneficioPack}</p>
+      <ul class="check">
+        <li>Quedas registrado como cliente <b>y</b> socio</li>
+        <li>Pagas directo a la compañía, de forma segura</li>
+        <li>Acompañamiento personal de ${esc(CONFIG.asesor)}</li>
+      </ul>
+      <details>
+        <summary>¿Cómo me registro? (5 pasos)</summary>
+        <ol class="steps">
+          <li>Toca <b>«Quiero empezar»</b>: se abre la página oficial de ONE MORE con mi enlace.</li>
+          <li>Elige tu país y completa nombre, teléfono, correo y una contraseña.</li>
+          <li>Escribe el código que llega a tu correo (revisa también la carpeta de spam).</li>
+          <li>Entra a tu oficina virtual y completa tu dirección de envío.</li>
+          <li>En <b>Mercado</b> elige tu paquete, paga con tarjeta o transferencia y envíame captura por WhatsApp.</li>
+        </ol>
+      </details>
+    </div>`;
+
+  // Testimonios (solo si hay)
+  if(CONFIG.testimonios.length){
+    html += `<h3 style="margin:22px 0 10px">Lo que dicen quienes ya empezaron</h3>` +
+      CONFIG.testimonios.map(t=>`<div class="card quote">“${esc(t.texto)}”<b>${esc(t.nombre)}${t.lugar?" · "+esc(t.lugar):""}</b></div>`).join("");
+  }
+
+  // Video
+  if(CONFIG.videoYoutube){
+    html += `<div class="card">
+      <h3>${negocio?"Mira la oportunidad en menos de un minuto":"Conoce más en menos de un minuto"}</h3>
+      <div class="video" id="vid" style="background-image:url(https://i.ytimg.com/vi/${CONFIG.videoYoutube}/hqdefault.jpg)" role="button" aria-label="Reproducir video">
+        <div class="play"><i>▶</i></div>
+      </div>
+    </div>`;
+  }
+
+  // Cierre
+  html += `<div class="sticky stack">
+      <a class="btn gold" id="cta-comprar" href="${CONFIG.enlaceAfiliacion}" target="_blank" rel="noopener">Quiero empezar →</a>
+      <a class="btn wa" id="cta-wa" href="${linkWA(temp)}" target="_blank" rel="noopener">💬 Hablar con ${esc(CONFIG.asesor.split(" ")[0])} por WhatsApp</a>
+    </div>
+    <div class="stack" style="margin-top:6px">
+      <button class="btn ghost" id="cta-compartir">Compartir este diagnóstico</button>
+      <button class="back" id="reiniciar">↺ Hacer un diagnóstico nuevo</button>
+    </div>
+    <p class="legal">Los productos ONE MORE son complementos de bienestar: no son medicamentos ni reemplazan la indicación de tu médico. Si tienes una condición de salud o tomas medicamentos, consulta a tu médico antes de usarlos. Las metas de ingreso son tuyas y no constituyen una promesa: los resultados en el negocio dependen del trabajo y la constancia de cada persona.</p>
+    <p class="sign">Creado por ${esc(CONFIG.asesor)} · ${esc(CONFIG.rango.split(" · ")[0])} · +${CONFIG.whatsapp.replace(/^(\d{2})(\d{3})(\d{3})(\d+)$/,"$1 $2 $3 $4")}</p>
+  </section>`;
+
+  app.innerHTML = html;
+
+  const v=$("#vid");
+  if(v) v.onclick=()=>{ v.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${CONFIG.videoYoutube}?autoplay=1&playsinline=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="Video"></iframe>`; v.onclick=null; };
+  $("#cta-compartir").onclick=compartir;
+  $("#reiniciar").onclick=()=>{ S.r={}; S.nombre=""; S.pais=""; ir(0); };
+}
+
+function linkWA(temp){
+  const r=S.r, L=[];
+  L.push(`Hola ${CONFIG.asesor.split(" ")[0]}, soy ${S.nombre} (${S.pais}). Acabo de hacer el Diagnóstico Salud + Dinero.`);
+  L.push("");
+  L.push(`${temp.e} ${temp.t}`);
+  const ruta={salud:"Mejorar mi energía y descanso",dinero:"Generar ingresos extra",ambas:"Salud e ingresos"}[r.ruta];
+  L.push(`• Quiero: ${ruta}`);
+  if(r.ruta!=="dinero"){
+    L.push(`• Mañanas: ${txt("manana")}`);
+    L.push(`• Prioridad: ${txt("foco")} → ${PRODUCTOS[r.foco].nombre}`);
+    L.push(`• Edad: ${txt("edad")}`);
+  }
+  if(r.ruta!=="salud"){
+    L.push(`• Tiempo: ${txt("tiempo")}`);
+    L.push(`• Experiencia: ${txt("experiencia")}`);
+    L.push(`• Meta: ${txt("meta")}`);
+  }
+  L.push(`• Empezar: ${txt("cuando")}`);
+  L.push("");
+  L.push(r.cuando==="mirando" ? "Me gustaría que me explicaras un poco más." : "Quiero que me ayudes a empezar.");
+  return `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(L.join("\n"))}`;
+}
+function txt(id){ const o=Q[id].ops.find(o=>o.v===S.r[id]); return o?o.t:"—"; }
+
+async function compartir(){
+  const url = location.origin+location.pathname;
+  const data = {title:"Diagnóstico Salud + Dinero", text:"Hice este diagnóstico gratuito de 90 segundos, te puede servir:", url};
+  try{
+    if(navigator.share){ await navigator.share(data); return; }
+    await navigator.clipboard.writeText(`${data.text} ${url}`);
+    toast("Enlace copiado ✓");
+  }catch(e){ /* el usuario canceló */ }
+}
+
+function toast(m){ const t=$("#toast"); t.textContent=m; t.classList.add("on"); setTimeout(()=>t.classList.remove("on"),2200); }
+function esc(s){ return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+/* Progreso local (solo en este dispositivo), por si cierran la pestaña a mitad */
+const KEY="diag-salud-dinero-v1";
+function guardar(){ try{ sessionStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function cargar(){ try{ const d=JSON.parse(sessionStorage.getItem(KEY)||"null"); if(d&&d.r){ Object.assign(S,d); } }catch(e){} }
+
+$("#advName").textContent = CONFIG.asesor;
+$("#advRole").textContent = CONFIG.rango;
+cargar();
+ir(S.paso||0);
+
+if("serviceWorker" in navigator && location.protocol==="https:"){
+  navigator.serviceWorker.register("sw.js").catch(()=>{});
+}
+</script>
+</body>
+</html>

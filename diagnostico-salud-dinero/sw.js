@@ -1,5 +1,5 @@
 // Diagnóstico Salud + Dinero — funciona sin conexión después de la primera visita.
-const CACHE = "diag-salud-dinero-v1";
+const CACHE = "diag-salud-dinero-v2";
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))); self.skipWaiting(); });
 self.addEventListener("activate", e => {

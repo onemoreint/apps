@@ -1,0 +1,38 @@
+name: Diagnóstico Salud + Dinero · tasas
+
+# Cada 3 horas consulta el dólar por país (Binance P2P para Venezuela, TRM para Colombia)
+# y guarda diagnostico-salud-dinero/tasas.json. Solo sube cambios si alguna tasa cambió.
+on:
+  schedule:
+    - cron: '23 */3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: diagnostico-tasas
+  cancel-in-progress: false
+
+jobs:
+  tasas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Consultar tasas
+        run: python3 diagnostico-salud-dinero/tools/tasas.py
+      - name: Subir si cambió
+        run: |
+          git config user.name "diagnostico-tasas-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add diagnostico-salud-dinero/tasas.json
+          if git diff --cached --quiet; then echo "Sin cambios"; exit 0; fi
+          git commit -m "diagnostico-salud-dinero: tasas del $(date -u +'%Y-%m-%d %H:%M') UTC"
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep 5
+          done
+          exit 1

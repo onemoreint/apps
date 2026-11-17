@@ -4,14 +4,6 @@ Plataforma para **Angels Spa** (Calle 10 #17-26, Girardota, Antioquia): portal p
 
 > **Modo demostración:** funciona sin credenciales ni servicios externos. Todos los datos, precios, horarios y fotos son **ficticios** y viven en el navegador. Nada se envía ni se cobra.
 
-## Demo publicada
-
-Versión compilada en la carpeta `angels-spa/` de este repositorio (GitHub Pages):
-- Portal: `https://onemoreint.github.io/apps/angels-spa/`
-- Panel: `https://onemoreint.github.io/apps/angels-spa/#/admin`
-
-Para regenerarla después de cambios: `npm run build:pages` (escribe en `../angels-spa`).
-
 ## Ejecutar localmente
 
 Requisitos: Node.js 20 o superior.

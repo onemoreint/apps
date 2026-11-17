@@ -1,230 +1,308 @@
-import { Link } from 'react-router-dom'
-import { ArrowRight, AtSign, CalendarHeart, Clock, Gift, MapPin, MessageCircle, Navigation, Sparkles } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { AtSign, MapPin, MessageCircle } from 'lucide-react'
 import { useData } from '../data/store'
-import { Card, DemoArt, DemoRibbon, LinkButton, Logo, SectionTitle } from '../components/ui'
+import { DemoRibbon, cx } from '../components/ui'
 import { durationLabel, money } from '../lib/format'
-import { formatDateShort, today } from '../lib/time'
+import { formatDateShort, minToHHMM, today, weekdayName } from '../lib/time'
 import { waLink } from '../lib/whatsapp'
 import { formatPhone } from '../lib/phone'
 import { APP_MODE } from '../data'
+import { Nail, NailFan, POLISHES, SHAPES, type NailShape, type Polish } from './nails'
+import type { AvailabilityRule } from '../types'
+
+const BERENJENA = '#2A1520'
+
+/** "Lunes a viernes: 09:00–13:00 y 14:00–19:00" agrupando días con el mismo horario. */
+function scheduleLines(rules: AvailabilityRule[], staffId?: string) {
+  const order = [1, 2, 3, 4, 5, 6, 0]
+  const byDay = order.map((wd) => ({
+    wd,
+    text: rules
+      .filter((r) => r.weekday === wd && (!staffId || r.staffId === staffId))
+      .sort((a, b) => a.startMin - b.startMin)
+      .map((r) => `${minToHHMM(r.startMin)}–${minToHHMM(r.endMin)}`)
+      .join(' y '),
+  }))
+  const groups: { from: number; to: number; text: string }[] = []
+  for (const d of byDay) {
+    const last = groups[groups.length - 1]
+    if (last && last.text === d.text) last.to = d.wd
+    else groups.push({ from: d.wd, to: d.wd, text: d.text })
+  }
+  const cap = (s: string) => s[0].toUpperCase() + s.slice(1)
+  return groups.map((g) => ({
+    days: g.from === g.to ? cap(weekdayName(g.from)) : `${cap(weekdayName(g.from))} a ${weekdayName(g.to)}`,
+    hours: g.text || 'Cerrado',
+  }))
+}
 
 export function PublicHome() {
   const data = useData()
+  const nav = useNavigate()
   const b = data.business
   const services = data.services.filter((s) => s.active).sort((a, c) => a.order - c.order)
   const t = today()
   const promos = data.promotions.filter((p) => p.active && p.validFrom <= t && p.validTo >= t)
   const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.address)}`
-  const wa = waLink(b.whatsapp, `Hola ${b.name} 💖 Quisiera información para agendar una cita.`)
+  const wa = waLink(b.whatsapp, `Hola ${b.name}, quiero agendar una cita.`)
+  const staff = data.staff.find((s) => s.active)
+  const hours = useMemo(() => scheduleLines(data.availability, staff?.id), [data.availability, staff?.id])
+
+  const [polish, setPolish] = useState<Polish>(POLISHES[0])
+  const [shape, setShape] = useState<NailShape>('almendra')
+  const shapeName = SHAPES.find((s) => s.id === shape)!.name
+  const onDark = polish.dark
+  const [showFloat, setShowFloat] = useState(false)
+  useEffect(() => {
+    const onScroll = () => setShowFloat(window.scrollY > window.innerHeight * 0.8)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+  const design = `Diseño elegido en la web: ${polish.name}, forma ${shapeName.toLowerCase()}.`
 
   return (
-    <div className="min-h-screen bg-ivory text-ink">
+    <div className="min-h-screen bg-white text-berenjena">
       {APP_MODE === 'demo' && <DemoRibbon />}
 
-      {/* Navegación */}
-      <header className="sticky top-0 z-30 border-b border-blush-100/70 bg-ivory/85 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-          <Logo />
-          <nav className="hidden items-center gap-7 text-sm text-ink-600 md:flex" aria-label="Secciones">
-            <a href="#servicios" className="hover:text-rose-700">Servicios</a>
-            <a href="#galeria" className="hover:text-rose-700">Diseños</a>
-            {promos.length > 0 && <a href="#promociones" className="hover:text-rose-700">Promociones</a>}
-            <a href="#ubicacion" className="hover:text-rose-700">Ubicación</a>
-          </nav>
-          <Link to="/reservar" className="inline-flex min-h-[40px] items-center gap-1.5 rounded-full bg-rose-700 px-4 text-sm font-medium text-white shadow-glow transition hover:bg-rose-800">
-            <CalendarHeart className="h-4 w-4" /> Reservar
+      {/* ---------- Portada: el probador de esmaltes ---------- */}
+      <section
+        className={cx('relative overflow-hidden transition-colors duration-700', onDark ? 'text-white' : 'text-berenjena')}
+        style={{ backgroundColor: polish.base }}
+      >
+        <header className="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
+          <Link to="/" className="font-display text-2xl font-semibold italic tracking-tight sm:text-[1.7rem]">
+            Angels Spa
           </Link>
-        </div>
-      </header>
+          <nav className="hidden items-center gap-8 text-[0.95rem] md:flex" aria-label="Secciones">
+            <a href="#servicios" className="underline-offset-8 hover:underline">Servicios</a>
+            <a href="#disenos" className="underline-offset-8 hover:underline">Diseños</a>
+            <a href="#visitanos" className="underline-offset-8 hover:underline">Dónde estamos</a>
+          </nav>
+          <Link
+            to="/reservar"
+            className={cx('inline-flex min-h-[42px] items-center rounded-full px-5 text-[0.95rem] font-medium transition', onDark ? 'bg-white text-berenjena hover:bg-white/90' : 'bg-berenjena text-white hover:bg-berenjena/90')}
+          >
+            Reservar
+          </Link>
+        </header>
 
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-blush/40 blur-3xl" />
-        <div className="pointer-events-none absolute -left-20 bottom-0 h-64 w-64 rounded-full bg-champagne/30 blur-3xl" />
-        <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 pb-14 pt-10 sm:px-6 md:grid-cols-2 md:pb-20 md:pt-16">
-          <div className="animate-fade-up">
-            <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-champagne/50 bg-white/70 px-3 py-1 text-xs font-medium uppercase tracking-[0.25em] text-champagne-700">
-              <Sparkles className="h-3.5 w-3.5" /> {b.city}
-            </p>
-            <h1 className="font-display text-[2.8rem] font-semibold leading-[1.02] sm:text-6xl">
-              Tus manos, <em className="font-medium text-rose-700">nuestra obra</em> de arte.
+        <div className="relative mx-auto grid max-w-6xl grid-cols-1 gap-x-10 gap-y-8 px-5 pb-12 pt-2 sm:px-8 md:grid-cols-[1.05fr_1fr] md:pb-20 md:pt-10">
+          <div className="md:col-start-1 md:row-start-1 md:self-end">
+            <h1 className="font-display text-[2.7rem] font-medium leading-[1.02] tracking-[-0.01em] sm:text-6xl lg:text-[4.6rem]">
+              Ven con una idea, sal con tus uñas listas.
             </h1>
-            <p className="mt-5 max-w-md text-lg text-ink-600">{b.welcome}</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link to="/reservar" className="inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full bg-rose-700 px-8 text-base font-medium text-white shadow-glow transition hover:bg-rose-800">
-                Reservar mi cita <ArrowRight className="h-5 w-5" />
-              </Link>
-              <LinkButton href={wa} external variant="secondary" size="lg">
-                <MessageCircle className="h-5 w-5" /> Escríbenos
-              </LinkButton>
-            </div>
-            <p className="mt-5 flex items-center gap-2 text-sm text-ink-400">
-              <Clock className="h-4 w-4" /> Agenda abierta · Lunes a sábado
+            <p className={cx('mt-5 max-w-md text-lg leading-relaxed', onDark ? 'text-white/85' : 'text-berenjena/80')}>
+              Manicure, pedicure, acrílicas y semipermanentes en Girardota. Prueba aquí el color y la forma que te gustan, y llega con tu diseño ya reservado.
             </p>
           </div>
-          <div className="relative">
-            <div className="aspect-[4/5] overflow-hidden rounded-[2.5rem] border-8 border-white shadow-soft">
-              <DemoArt tone={2} label="Fotografía demostrativa" alt="Espacio para la fotografía principal del salón" />
+          {/* Probador */}
+          <div className="md:col-start-2 md:row-span-2 md:row-start-1 md:self-center">
+            {/* Arco de tocador: el esmalte siempre resalta, sea cual sea el color de fondo */}
+            <div className="mx-auto max-w-[440px] rounded-t-full bg-white px-8 pb-12 pt-20 shadow-[0_30px_60px_-30px_rgba(42,21,32,.45)] sm:px-10 sm:pt-28" role="img" aria-label={`Vista previa: uñas ${shapeName.toLowerCase()} en ${polish.name}`}>
+              <NailFan shape={shape} polish={polish} className="mx-auto max-w-[340px]" />
             </div>
-            <Card className="absolute -bottom-5 -left-3 flex items-center gap-3 px-4 py-3 sm:-left-8">
-              <span className="grid h-10 w-10 place-items-center rounded-full bg-blush-50 text-rose-700">
-                <Sparkles className="h-5 w-5" />
-              </span>
-              <div>
-                <p className="text-sm font-semibold">Manos y pies</p>
-                <p className="text-xs text-ink-400">Cuidado con detalle boutique</p>
-              </div>
-            </Card>
+            <div className="mx-auto mt-8 max-w-[440px]">
+              <fieldset>
+                <legend className={cx('mb-3 text-sm', onDark ? 'text-white/80' : 'text-berenjena/75')}>
+                  Esmalte: <span className="font-medium">{polish.name}</span>
+                </legend>
+                <div className="flex flex-wrap gap-2.5">
+                  {POLISHES.map((p) => (
+                    <button
+                      key={p.id}
+                      onClick={() => setPolish(p)}
+                      aria-label={p.name}
+                      aria-pressed={p.id === polish.id}
+                      className={cx(
+                        'relative h-11 w-11 rounded-full transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+                        p.id === polish.id ? (onDark ? 'ring-2 ring-white ring-offset-2 ring-offset-transparent' : 'ring-2 ring-berenjena ring-offset-2 ring-offset-transparent') : 'hover:scale-105',
+                      )}
+                      style={{ background: p.tip ? `linear-gradient(180deg, ${p.tip} 0 38%, ${p.base} 38%)` : p.base, boxShadow: 'inset 0 0 0 1.5px rgba(255,255,255,.55), 0 1px 3px rgba(42,21,32,.25)' }}
+                    />
+                  ))}
+                </div>
+              </fieldset>
+              <fieldset className="mt-5">
+                <legend className={cx('mb-3 text-sm', onDark ? 'text-white/80' : 'text-berenjena/75')}>
+                  Forma: <span className="font-medium">{shapeName}</span>
+                </legend>
+                <div className="flex flex-wrap gap-2">
+                  {SHAPES.map((s) => {
+                    const active = s.id === shape
+                    const icon = active ? (onDark ? BERENJENA : '#FFFFFF') : onDark ? '#FFFFFF' : BERENJENA
+                    return (
+                      <button
+                        key={s.id}
+                        onClick={() => setShape(s.id)}
+                        aria-pressed={active}
+                        className={cx(
+                          'flex min-h-[42px] items-center gap-1.5 rounded-full border px-3 text-sm transition',
+                          active
+                            ? onDark ? 'border-white bg-white text-berenjena' : 'border-berenjena bg-berenjena text-white'
+                            : onDark ? 'border-white/40 hover:border-white' : 'border-berenjena/30 hover:border-berenjena',
+                        )}
+                      >
+                        <Nail shape={s.id} polish={{ id: 'icono', name: '', base: icon, dark: false }} className="h-5 w-3" />
+                        {s.name}
+                      </button>
+                    )
+                  })}
+                </div>
+              </fieldset>
+            </div>
           </div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center md:col-start-1 md:row-start-2 md:self-start">
+              <button
+                onClick={() => nav(`/reservar?diseno=${encodeURIComponent(design)}`)}
+                className={cx(
+                  'inline-flex min-h-[54px] items-center justify-center rounded-full px-8 text-base font-medium transition focus-visible:outline-none focus-visible:ring-4',
+                  onDark ? 'bg-white text-berenjena hover:bg-white/90 focus-visible:ring-white/40' : 'bg-berenjena text-white hover:bg-berenjena/90 focus-visible:ring-berenjena/30',
+                )}
+              >
+                Reservar con este diseño
+              </button>
+              <a href={wa} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center gap-2 px-2 text-[0.95rem] underline decoration-1 underline-offset-[6px] hover:decoration-2">
+                <MessageCircle className="h-4 w-4" /> Prefiero escribir por WhatsApp
+              </a>
+          </div>
+
         </div>
       </section>
 
-      {/* Servicios */}
-      <section id="servicios" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6">
-        <SectionTitle eyebrow="Catálogo" title="Nuestros servicios" text="Elige tu servicio y reserva en menos de un minuto. Confirmamos tu cita por WhatsApp." />
+      {/* ---------- Carta de servicios ---------- */}
+      <section id="servicios" className="mx-auto max-w-4xl scroll-mt-6 px-5 py-16 sm:px-8 md:py-24">
+        <div className="mb-10 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <h2 className="font-display text-4xl font-medium sm:text-5xl">Servicios</h2>
+          <p className="max-w-xs text-berenjena-600">Elige uno y escoge tu horario. Te confirmamos por WhatsApp.</p>
+        </div>
         {services.length === 0 ? (
-          <p className="text-ink-600">Pronto publicaremos nuestro catálogo.</p>
+          <p className="text-berenjena-600">Pronto publicaremos nuestros servicios.</p>
         ) : (
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <ul>
             {services.map((s) => (
-              <Card key={s.id} className="group flex flex-col overflow-hidden transition hover:-translate-y-1 hover:shadow-glow">
-                <div className="aspect-[4/3]">
-                  <DemoArt tone={s.tone} src={s.imageDataUrl} alt={s.name} label={s.imageDataUrl ? null : 'Demostrativa'} />
+              <li key={s.id} className="border-t border-berenjena/15 py-6 last:border-b">
+                <div className="flex items-baseline gap-3">
+                  <h3 className="font-display text-[1.75rem] font-medium leading-tight sm:text-3xl">{s.name}</h3>
+                  <span className="mb-1.5 hidden flex-1 border-b-2 border-dotted border-berenjena/25 sm:block" aria-hidden />
+                  <span className="ml-auto whitespace-nowrap text-lg font-medium tabular-nums sm:ml-0">{money(s.price)}</span>
                 </div>
-                <div className="flex flex-1 flex-col p-5">
-                  <h3 className="font-display text-2xl font-semibold">{s.name}</h3>
-                  <p className="mt-1 flex-1 text-sm text-ink-600">{s.description}</p>
-                  <div className="mt-4 flex items-center justify-between text-sm">
-                    <span className="flex items-center gap-1 text-ink-400">
-                      <Clock className="h-4 w-4" /> {durationLabel(s.durationMin)}
-                    </span>
-                    <span className="font-semibold text-rose-800">{money(s.price)}</span>
-                  </div>
-                  <Link to={`/reservar?servicio=${s.id}`} className="mt-4 inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-full border border-rose/30 text-sm font-medium text-rose-800 transition group-hover:bg-rose-700 group-hover:text-white">
-                    Reservar <ArrowRight className="h-4 w-4" />
+                <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="max-w-xl text-berenjena-600">
+                    {s.description} <span className="whitespace-nowrap text-berenjena/60">({durationLabel(s.durationMin)})</span>
+                  </p>
+                  <Link to={`/reservar?servicio=${s.id}`} className="inline-flex min-h-[40px] items-center self-start rounded-full border border-berenjena/30 px-4 text-sm font-medium transition hover:border-cereza hover:bg-cereza hover:text-white sm:self-auto">
+                    Reservar {s.name.toLowerCase()}
                   </Link>
                 </div>
-              </Card>
+              </li>
             ))}
-          </div>
+          </ul>
         )}
-        {APP_MODE === 'demo' && <p className="mt-4 text-xs text-ink-400">* Precios y duraciones de ejemplo. El salón los define desde su panel.</p>}
+        {APP_MODE === 'demo' && <p className="mt-4 text-sm text-berenjena/55">Precios y duraciones de ejemplo; el salón los define desde su panel.</p>}
       </section>
 
-      {/* Galería */}
-      <section id="galeria" className="scroll-mt-20 bg-white py-14">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <SectionTitle eyebrow="Inspiración" title="Galería de diseños" text="Algunas ideas para tu próxima cita. Cuéntanos tu diseño favorito al reservar." />
-          {data.gallery.length === 0 ? (
-            <p className="text-ink-600">Muy pronto compartiremos nuestros diseños.</p>
-          ) : (
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3">
-              {data.gallery.map((g, i) => (
-                <figure key={g.id} className={`group relative overflow-hidden rounded-3xl ${i % 5 === 0 ? 'md:row-span-2' : ''}`}>
-                  <div className={i % 5 === 0 ? 'aspect-[3/4] md:h-full md:aspect-auto' : 'aspect-square'}>
-                    <DemoArt tone={g.tone} src={g.imageDataUrl} alt={g.title} label={g.demo ? 'Demostrativa' : null} />
-                  </div>
-                  <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/70 to-transparent p-4 text-white">
-                    <p className="text-[11px] uppercase tracking-widest text-white/80">{g.category}</p>
-                    <p className="font-display text-xl">{g.title}</p>
-                  </figcaption>
-                </figure>
+      {/* ---------- Promociones ---------- */}
+      {promos.length > 0 && (
+        <section className="bg-berenjena text-white">
+          <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8 md:py-16">
+            <h2 className="font-display text-3xl font-medium italic sm:text-4xl">Este mes en el salón</h2>
+            <div className="mt-8 grid grid-cols-1 gap-10 md:grid-cols-2">
+              {promos.map((p) => (
+                <div key={p.id} className="border-l-2 border-[#E8B4C4] pl-5">
+                  <h3 className="font-display text-2xl font-medium">{p.title}</h3>
+                  <p className="mt-2 max-w-md text-white/80">{p.description}</p>
+                  <p className="mt-3 text-sm text-white/60">Hasta el {formatDateShort(p.validTo)}</p>
+                </div>
               ))}
             </div>
-          )}
-          <div className="mt-6 text-center">
-            <LinkButton href={`https://www.instagram.com/${b.instagram}`} external variant="secondary">
-              <AtSign className="h-4 w-4" /> Ver más en Instagram @{b.instagram}
-            </LinkButton>
-          </div>
-        </div>
-      </section>
-
-      {/* Promociones */}
-      {promos.length > 0 && (
-        <section id="promociones" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6">
-          <SectionTitle eyebrow="Para ti" title="Promociones activas" />
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-            {promos.map((p) => (
-              <div key={p.id} className="relative overflow-hidden rounded-4xl bg-gradient-to-br from-rose-700 to-rose p-7 text-white shadow-glow">
-                <Gift className="absolute -right-4 -top-4 h-28 w-28 text-white/10" />
-                <p className="text-xs uppercase tracking-[0.25em] text-white/80">Válida hasta {formatDateShort(p.validTo)}</p>
-                <h3 className="mt-2 font-display text-3xl font-semibold">{p.title}</h3>
-                <p className="mt-2 max-w-md text-white/90">{p.description}</p>
-                <Link to="/reservar" className="mt-5 inline-flex min-h-[44px] items-center gap-2 rounded-full bg-white px-5 text-sm font-medium text-rose-800 hover:bg-ivory">
-                  Quiero esta promo <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-            ))}
           </div>
         </section>
       )}
 
-      {/* Ubicación */}
-      <section id="ubicacion" className="scroll-mt-20 bg-white py-14">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 sm:px-6 md:grid-cols-2 md:items-center">
+      {/* ---------- Diseños ---------- */}
+      <section id="disenos" className="mx-auto max-w-6xl scroll-mt-6 px-5 py-16 sm:px-8 md:py-24">
+        <div className="mb-10 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <h2 className="font-display text-4xl font-medium sm:text-5xl">Diseños para inspirarte</h2>
+          <a href={`https://www.instagram.com/${b.instagram}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 underline decoration-1 underline-offset-[6px] hover:decoration-2">
+            <AtSign className="h-4 w-4" /> Más trabajos en @{b.instagram}
+          </a>
+        </div>
+        {data.gallery.length === 0 ? (
+          <p className="text-berenjena-600">Muy pronto compartiremos nuestros diseños.</p>
+        ) : (
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3">
+            {data.gallery.map((g, i) => {
+              const p = POLISHES[(g.tone + 2) % POLISHES.length]
+              const sh = SHAPES[i % SHAPES.length].id
+              return (
+                <figure key={g.id} className="min-w-0">
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem]" style={{ backgroundColor: g.imageDataUrl ? undefined : `${p.base}2E` }}>
+                    {g.imageDataUrl ? (
+                      <img src={g.imageDataUrl} alt={g.title} className="h-full w-full object-cover" loading="lazy" />
+                    ) : (
+                      <>
+                        <NailFan shape={sh} polish={p} small className="absolute inset-x-5 bottom-[16%]" />
+                        <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-0.5 text-xs text-berenjena-600">Ilustración de muestra</span>
+                      </>
+                    )}
+                  </div>
+                  <figcaption className="mt-3">
+                    <p className="font-display text-xl font-medium">{g.title}</p>
+                    <p className="text-sm text-berenjena-600">{g.category}</p>
+                  </figcaption>
+                </figure>
+              )
+            })}
+          </div>
+        )}
+      </section>
+
+      {/* ---------- Visítanos ---------- */}
+      <section id="visitanos" className="scroll-mt-6 bg-[#F6E3E8]">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 px-5 py-16 sm:px-8 md:grid-cols-[1.3fr_1fr] md:py-24">
           <div>
-            <SectionTitle eyebrow="Visítanos" title="Te esperamos en Girardota" />
-            <ul className="space-y-4 text-ink-600">
-              <li className="flex gap-3">
-                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-rose-700" />
-                <span>{b.address}</span>
-              </li>
-              <li className="flex gap-3">
-                <MessageCircle className="mt-0.5 h-5 w-5 shrink-0 text-rose-700" />
-                <span>WhatsApp {formatPhone(b.whatsapp)}</span>
-              </li>
-              <li className="flex gap-3">
-                <AtSign className="mt-0.5 h-5 w-5 shrink-0 text-rose-700" />
-                <a className="underline-offset-4 hover:underline" href={`https://www.instagram.com/${b.instagram}`} target="_blank" rel="noopener noreferrer">
-                  @{b.instagram}
-                </a>
-              </li>
-            </ul>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <LinkButton href={mapUrl} external variant="secondary">
-                <Navigation className="h-4 w-4" /> Cómo llegar
-              </LinkButton>
-              <LinkButton href={wa} external variant="whatsapp">
-                <MessageCircle className="h-4 w-4" /> WhatsApp
-              </LinkButton>
+            <h2 className="font-display text-4xl font-medium sm:text-5xl">Calle 10 #17-26</h2>
+            <p className="mt-2 text-xl text-berenjena-600">Girardota, Antioquia</p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-berenjena px-6 font-medium text-white hover:bg-berenjena/90">
+                <MapPin className="h-4 w-4" /> Abrir en Google Maps
+              </a>
+              <a href={wa} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-berenjena/30 bg-white px-6 font-medium hover:border-berenjena">
+                <MessageCircle className="h-4 w-4" /> {formatPhone(b.whatsapp)}
+              </a>
             </div>
           </div>
-          <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="group relative block aspect-[4/3] overflow-hidden rounded-4xl border border-blush-100 bg-[radial-gradient(circle_at_center,#F6E1E8,#FFF9F5)]" aria-label="Abrir ubicación en Google Maps">
-            <svg viewBox="0 0 400 300" className="absolute inset-0 h-full w-full text-blush-200" aria-hidden>
-              {Array.from({ length: 9 }).map((_, i) => (
-                <line key={'h' + i} x1="0" x2="400" y1={i * 38} y2={i * 38 + 12} stroke="currentColor" strokeWidth={i % 3 ? 2 : 6} />
+          <div>
+            <h3 className="font-display text-2xl font-medium">Horario de atención</h3>
+            <dl className="mt-4 divide-y divide-berenjena/10">
+              {hours.map((h) => (
+                <div key={h.days} className="flex justify-between gap-4 py-2.5">
+                  <dt>{h.days}</dt>
+                  <dd className={cx('text-right tabular-nums', h.hours === 'Cerrado' && 'text-berenjena/50')}>{h.hours}</dd>
+                </div>
               ))}
-              {Array.from({ length: 11 }).map((_, i) => (
-                <line key={'v' + i} y1="0" y2="300" x1={i * 40} x2={i * 40 - 18} stroke="currentColor" strokeWidth={i % 4 ? 2 : 6} />
-              ))}
-            </svg>
-            <div className="absolute inset-0 grid place-items-center">
-              <div className="flex flex-col items-center">
-                <span className="grid h-14 w-14 place-items-center rounded-full bg-rose-700 text-white shadow-glow transition group-hover:scale-110">
-                  <MapPin className="h-7 w-7" />
-                </span>
-                <span className="mt-3 rounded-full bg-white px-4 py-1.5 text-sm font-medium shadow-soft">Angels Spa · Calle 10 #17-26</span>
-              </div>
-            </div>
-          </a>
+            </dl>
+          </div>
         </div>
       </section>
 
-      <footer className="bg-ink py-10 text-ivory/80">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-5 px-4 text-sm sm:flex-row sm:px-6">
-          <Logo light />
-          <div className="flex flex-wrap items-center justify-center gap-5">
+      <footer className="bg-berenjena text-white/75">
+        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-8 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-8">
+          <p className="font-display text-xl italic text-white">Angels Spa</p>
+          <div className="flex flex-wrap gap-6">
+            <a href={`https://www.instagram.com/${b.instagram}`} target="_blank" rel="noopener noreferrer" className="hover:text-white">Instagram</a>
             <Link to="/privacidad" className="hover:text-white">Tratamiento de datos</Link>
-            <Link to="/admin" className="hover:text-white">Acceso administrativo</Link>
+            <Link to="/admin" className="hover:text-white">Acceso del salón</Link>
           </div>
-          <p className="text-xs text-ivory/50">© {new Date().getFullYear()} Angels Spa · Angels Spa Smart</p>
         </div>
       </footer>
 
-      {/* Botón flotante de WhatsApp */}
-      <a href={wa} target="_blank" rel="noopener noreferrer" aria-label="Escribir por WhatsApp" className="fixed bottom-5 right-5 z-40 grid h-14 w-14 place-items-center rounded-full bg-[#1F8F4E] text-white shadow-xl transition hover:scale-105">
+      <a href={wa} target="_blank" rel="noopener noreferrer" aria-label="Escribir por WhatsApp" tabIndex={showFloat ? 0 : -1} className={cx('fixed bottom-5 right-5 z-40 transition-opacity duration-300', showFloat ? 'opacity-100' : 'pointer-events-none opacity-0')}>
+        <span className="grid h-14 w-14 place-items-center rounded-full bg-[#1F8F4E] text-white shadow-lg transition hover:scale-105">
         <MessageCircle className="h-7 w-7" />
+        </span>
       </a>
     </div>
   )

@@ -42,7 +42,7 @@ describe('Controles de acceso del panel', () => {
 
   it('el portal público no expone datos de clientas', async () => {
     renderAt('#/')
-    expect(await screen.findByRole('heading', { name: /nuestros servicios/i })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Servicios', level: 2 })).toBeInTheDocument()
     expect(screen.queryByText(/Valentina Demo/)).not.toBeInTheDocument()
     expect(screen.getAllByText('Modo demostración').length).toBeGreaterThan(0)
   })

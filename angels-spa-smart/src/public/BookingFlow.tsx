@@ -50,7 +50,7 @@ export function BookingFlow() {
 
   const form = useForm<ContactStep>({
     resolver: zodResolver(contactStepSchema),
-    defaultValues: contact ?? { name: '', phone: '', notes: '', dataTreatment: false as unknown as true, marketing: false, website: '' },
+    defaultValues: contact ?? { name: '', phone: '', notes: params.get('diseno') ?? '', dataTreatment: false as unknown as true, marketing: false, website: '' },
     mode: 'onTouched',
   })
 

@@ -8,19 +8,8 @@ export const cx = (...c: (string | false | null | undefined)[]) => c.filter(Bool
 // ---------- Marca ----------
 export function Logo({ compact = false, light = false }: { compact?: boolean; light?: boolean }) {
   return (
-    <span className="inline-flex items-center gap-2.5" aria-label="Angels Spa">
-      <span className={cx('grid h-9 w-9 place-items-center rounded-full border', light ? 'border-ivory/60 text-ivory' : 'border-rose/40 text-rose-700')}>
-        <svg viewBox="0 0 32 32" className="h-5 w-5" aria-hidden>
-          <path d="M16 6c-2.5 4-7 5.5-10 5 1 5 4.5 8 10 8s9-3 10-8c-3 .5-7.5-1-10-5Z" fill="none" stroke="currentColor" strokeWidth="1.4" />
-          <circle cx="16" cy="23.5" r="2.4" fill="currentColor" />
-        </svg>
-      </span>
-      {!compact && (
-        <span className="leading-none">
-          <span className={cx('block font-display text-[1.45rem] font-semibold tracking-wide', light ? 'text-ivory' : 'text-ink')}>Angels Spa</span>
-          <span className={cx('block text-[0.62rem] uppercase tracking-[0.32em]', light ? 'text-ivory/80' : 'text-champagne-700')}>Nails · Beauty</span>
-        </span>
-      )}
+    <span className={cx('inline-flex items-baseline font-display font-semibold italic tracking-tight', light ? 'text-white' : 'text-berenjena')} aria-label="Angels Spa">
+      {compact ? <span className="text-2xl">A</span> : <span className="text-[1.6rem] leading-none">Angels Spa</span>}
     </span>
   )
 }
@@ -48,7 +37,7 @@ export function DemoArt({ tone = 0, label = 'Imagen demostrativa', src, classNam
           </g>
         ))}
       </svg>
-      {label && <span className="absolute left-2 top-2 rounded-full bg-white/80 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-ink-600 backdrop-blur">{label}</span>}
+      {label && <span className="absolute left-2 top-2 rounded-full bg-white/85 px-2 py-0.5 text-[11px] font-medium text-ink-600 backdrop-blur">{label}</span>}
     </div>
   )
 }
@@ -305,7 +294,7 @@ export function Stat({ label, value, icon: Icon, hint }: { label: string; value:
   return (
     <Card className="p-4 sm:p-5">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-medium uppercase tracking-wider text-ink-400">{label}</p>
+        <p className="text-sm text-ink-600">{label}</p>
         <span className="grid h-8 w-8 place-items-center rounded-full bg-blush-50 text-rose-700">
           <Icon className="h-4 w-4" />
         </span>

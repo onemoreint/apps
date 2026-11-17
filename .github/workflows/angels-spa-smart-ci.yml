@@ -1,0 +1,41 @@
+name: Angels Spa Smart · calidad
+
+# Solo verifica (tipos, pruebas, base de datos, build). No despliega:
+# la demo publicada está compilada en angels-spa/ (npm run build:pages).
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'angels-spa-smart/**'
+      - '.github/workflows/angels-spa-smart-ci.yml'
+  pull_request:
+    paths:
+      - 'angels-spa-smart/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: angels-spa-smart
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: angels-spa-smart/package-lock.json
+      - name: Instalar
+        run: npm ci
+      - name: Tipos (TypeScript estricto)
+        run: npm run typecheck
+      - name: Pruebas unitarias y de interfaz (Vitest)
+        run: npm test
+      - name: Migraciones, RLS y reservas concurrentes (PostgreSQL efímero)
+        run: npm run test:db
+      - name: Build de producción
+        run: npm run build

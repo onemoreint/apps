@@ -131,7 +131,6 @@ footer b{color:#fff}
       <p class="lead">Café con ganoderma y arándano, higiene con turmalina y cuidado femenino de algodón. Escogimos solo lo que más se vende en Colombia, para que tú compres lo que de verdad funciona en el día a día.</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
         <a class="btn b-lime" href="#productos">Ver los más vendidos</a>
-        <a class="btn b-ghost" id="storeHero" href="#">Ir a la tienda oficial</a>
       </div>
       <div class="proof">
         <span><b>4,9 ★</b> pasta dental Herbs · 1.476 calificaciones</span>
@@ -171,7 +170,7 @@ footer b{color:#fff}
   <div>
     <h2>¿Te gustan? También puedes ganar vendiéndolos</h2>
     <p style="color:var(--soft);font-size:17px;max-width:34em">La tienda oficial permite pasar de consumidor a miembro y comprar con precio de distribuidor. Te explico cómo funciona antes de que decidas, sin compromiso.</p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px"><a class="btn b-leaf" id="bizWa" href="#">Quiero información del negocio</a><a class="btn b-ghost" id="storeBiz" href="#">Ver la tienda oficial</a></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px"><a class="btn b-leaf" id="bizWa" href="#">Quiero información del negocio</a></div>
   </div>
   <div class="steps">
     <div class="st"><i>1</i><div><b>Pruebas los productos</b><p>Empiezas con tu canasta de consumo personal.</p></div></div>
@@ -190,7 +189,7 @@ footer b{color:#fff}
 
 <footer><div class="wrap">
   <div><b>Green World · Más vendidos</b><br>Distribuidor independiente</div>
-  <div>WhatsApp: <b id="waTxt"></b><br><a id="storeFoot" href="#">Tienda oficial con mi código</a></div>
+  <div>WhatsApp: <b id="waTxt"></b></div>
 </div></footer>
 
 <div class="bar" id="bar">
@@ -270,7 +269,6 @@ $("#ask").addEventListener("submit",e=>{e.preventDefault();const v=$("#q").value
   if(money){const val=+money[1].replace(/\./g,"");if(val>=40000&&val<=500000){$("#budget").value=val}}
   if(hit.length){sel=new Set(hit.map(h=>h.k));drawNeeds();build();explain()}else{say("Puedo ayudarte con energía, cuidado femenino, piel, sonrisa, arándano o regalos. Toca una opción o escríbelo con tus palabras.")}});
 try{Object.assign(cart,JSON.parse(localStorage.getItem("hgwCart")||"{}"))}catch(e){}
-["storeHero","storeBiz","storeFoot"].forEach(id=>$("#"+id).href=CFG.store);
 $("#navWa").href=waLink("Hola, vi la página de Green World y quiero hacer un pedido.");
 $("#bizWa").href=waLink("Hola, quiero información sobre el negocio de Green World.");
 $("#waTxt").textContent=CFG.waShow;

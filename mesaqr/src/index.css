@@ -146,3 +146,94 @@ dialog.sheet[open] {
     display: none !important;
   }
 }
+
+/* Perspectiva interactiva de producto: profundidad ligera y sin dependencia 3D. */
+.product-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  perspective: 1000px;
+  touch-action: none;
+  cursor: grab;
+  background:
+    radial-gradient(ellipse at 50% 43%, rgb(255 255 255 / .98) 0%, rgb(255 248 235 / .95) 45%, #eee5d9 100%);
+}
+.product-stage--dragging { cursor: grabbing; }
+.product-stage__surface {
+  position: absolute;
+  inset: 5% 5% 9%;
+  transform-style: preserve-3d;
+  transition: transform 180ms cubic-bezier(.2,.8,.2,1);
+  will-change: transform;
+}
+.product-stage__image {
+  display: block;
+  height: 100%;
+  border-radius: 22px;
+  object-fit: cover;
+  box-shadow: 0 22px 42px rgb(26 23 20 / .22);
+  transform: translateZ(24px);
+  backface-visibility: hidden;
+}
+.product-stage__glare {
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  pointer-events: none;
+  background: linear-gradient(125deg, rgb(255 255 255 / .22), transparent 36%, transparent 68%, rgb(255 255 255 / .10));
+  transform: translateZ(27px);
+}
+.product-stage__shadow {
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  bottom: 9%;
+  height: 12%;
+  border-radius: 50%;
+  background: rgb(41 29 18 / .28);
+  filter: blur(18px);
+  transform: rotateX(62deg) translateZ(-16px);
+}
+.product-stage__badge,
+.product-stage__hint {
+  position: absolute;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgb(255 255 255 / .68);
+  border-radius: 999px;
+  background: rgb(255 255 255 / .84);
+  color: #342c24;
+  box-shadow: 0 4px 16px rgb(26 23 20 / .10);
+  backdrop-filter: blur(8px);
+}
+.product-stage__badge {
+  top: 12px;
+  left: 12px;
+  padding: 6px 10px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+.product-stage__hint {
+  right: 12px;
+  bottom: 12px;
+  padding: 7px 11px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.product-stage__arrows {
+  color: var(--brand);
+  font-size: 18px;
+  line-height: 1;
+}
+.product-stage:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: -4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .product-stage__surface { transition: none; }
+}

@@ -3,7 +3,7 @@ import { Check } from 'lucide-react';
 import type { MenuOptionGroup, MenuProduct } from '@/shared/types/menu';
 import { formatDelta, formatUsd, toCents, fromCents } from '@/shared/lib/money';
 import { Sheet } from '@/shared/ui/Sheet';
-import { ProductImage } from '@/shared/ui/ProductImage';
+import { ProductStage } from './ProductStage';
 import { QtyStepper } from '@/shared/ui/QtyStepper';
 import { Price } from '@/shared/ui/Price';
 import type { CartLine, CartOption } from '@/features/cart/cartMath';
@@ -104,7 +104,7 @@ export function ProductSheet({ idx, product, editing, initialNote, onClose, onCo
         </div>
       }
     >
-      <ProductImage src={product.image_url} alt={product.name} eager className="-mx-5 mb-4 aspect-[16/10] w-[calc(100%+2.5rem)] max-w-none" />
+      <ProductStage src={product.image_url} alt={product.name} className="-mx-5 mb-4 aspect-[16/10] w-[calc(100%+2.5rem)] max-w-none" />
       {product.badges.length > 0 && (
         <div className="mb-2 flex flex-wrap gap-1.5">
           {product.badges.map((b) => (

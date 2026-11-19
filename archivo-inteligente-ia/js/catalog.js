@@ -69,30 +69,44 @@
       { id: 'S12.3', nombre: 'Pólizas y mantenimiento', kw: ['poliza', 'seguro', 'mantenimiento', 'vehiculo'] } ] },
   ];
 
-  /* Ficha pública de referencia (consultada en nov. 2026). Los nombres de dependencias
-   * provienen de documentos públicos (SIGEP, decretos, informes de gestión) y pueden
-   * haber cambiado: verificar con la estructura administrativa vigente de cada alcaldía.
-   * Solo se sobrescriben los nombres encontrados; el resto queda genérico. */
+  /* Ficha pública de referencia (consultada en nov. 2026) con la estructura publicada por
+   * cada alcaldía. «Talento Humano» queda genérico porque no figura como secretaría
+   * independiente. Las series documentales siguen siendo de demostración: las TRD de
+   * estas alcaldías no se encontraron publicadas en formato utilizable. */
   const MUNICIPIOS = {
     girardota: {
       id: 'girardota', nombre: 'Girardota', depto: 'Antioquia', etiqueta: 'Alcaldía de Girardota (demostración)',
       ficha: [
         ['Departamento', 'Antioquia'], ['Subregión', 'Valle de Aburrá (Área Metropolitana)'], ['Código DANE', '05308'],
-        ['Población proyectada 2026', '62.138 habitantes (proyección DANE)'], ['Sitio web oficial', 'www.girardota.gov.co'],
+        ['Población proyectada 2026', '62.138 habitantes (proyección DANE)'], ['Periodo de gobierno', '2024–2027'],
+        ['Sitio web oficial', 'www.girardota.gov.co'],
       ],
-      dependencias: { GOB: 'Secretaría de Gobierno y Derechos Humanos', PLA: 'Secretaría de Planeación y Desarrollo Urbano', GA: 'Secretaría de Servicios Administrativos' },
-      fuentes: ['Proyecciones de población DANE (2026)', 'Hojas de vida públicas SIGEP — Función Pública', 'Decretos y documentos OCAD publicados por la Gobernación de Antioquia'],
+      // Directorio de dependencias publicado en girardota.gov.co (consultado nov. 2026)
+      dependencias: {
+        GOB: 'Secretaría de Gobierno y Derechos Humanos', HAC: 'Secretaría de Hacienda y Desarrollo Económico',
+        PLA: 'Secretaría de Planeación, Desarrollo Territorial y Participación Ciudadana', SAL: 'Secretaría de Salud y Protección Social',
+        EDU: 'Secretaría de Educación y Cultura', GA: 'Secretaría de Servicios Administrativos',
+      },
+      otras: ['Secretaría de Agricultura y Desarrollo Rural', 'Secretaría Ambiental y de Desarrollo Sostenible', 'Secretaría de Infraestructura', 'Secretaría de Tránsito y Transporte', 'Subsecretaría de Seguridad y Espacio Público'],
+      fuentes: ['Directorio de dependencias de girardota.gov.co', 'Plan de Desarrollo 2024–2027 publicado en girardota.gov.co', 'Proyecciones de población DANE (2026)'],
     },
     laestrella: {
       id: 'laestrella', nombre: 'La Estrella', depto: 'Antioquia', etiqueta: 'Alcaldía de La Estrella (demostración)',
       ficha: [
         ['Departamento', 'Antioquia'], ['Subregión', 'Valle de Aburrá (Área Metropolitana)'], ['Código DANE', '05380'],
-        ['Población proyectada 2026', '84.068 habitantes (proyección DANE)'], ['Área aproximada', '36,6 km²'], ['Sitio web oficial', 'www.laestrella.gov.co'],
+        ['Población proyectada 2026', '84.068 habitantes (proyección DANE)'], ['Fundación', '1685'], ['Periodo de gobierno', '2024–2027'],
+        ['Sede', 'Calle 80 Sur # 58-78'], ['Proceso documental', 'Documentación y Archivo (líder: Gestión Documental)'],
+        ['Sitio web oficial', 'www.laestrella.gov.co'],
       ],
-      dependencias: { SAL: 'Secretaría de Seguridad Social y Familia', EDU: 'Secretaría de Educación y Cultura', GA: 'Secretaría General' },
-      fuentes: ['Proyecciones de población DANE (2026)', 'Informes de gestión y rendición de cuentas publicados en laestrella.gov.co', 'Hojas de vida públicas SIGEP — Función Pública'],
+      // Gabinete del Plan de Desarrollo 2024–2027 y mapa del sitio de laestrella.gov.co (consultado nov. 2026)
+      dependencias: {
+        GOB: 'Secretaría de Gobierno', HAC: 'Secretaría de Hacienda', PLA: 'Secretaría de Planeación',
+        SAL: 'Secretaría de Salud y Protección Social', EDU: 'Secretaría de Educación y Cultura', GA: 'Secretaría de Servicios Administrativos',
+      },
+      otras: ['Secretaría General', 'Secretaría de Obras Públicas', 'Secretaría de Movilidad', 'Secretaría de Medio Ambiente', 'Secretaría de la Mujer, Diversidades y Familia', 'Secretaría de Desarrollo Económico', 'Secretaría de Vivienda'],
+      fuentes: ['Plan de Desarrollo Territorial 2024–2027 y mapa del sitio de laestrella.gov.co', 'Caracterización del proceso Documentación y Archivo (CA-DA-01 v07, 2023)', 'Proyecciones de población DANE (2026)'],
     },
-    generico: { id: 'generico', nombre: 'Municipio genérico', depto: 'Colombia', etiqueta: 'Administración municipal (demostración)', ficha: [['Uso', 'Plantilla adaptable a cualquier municipio de Colombia']], dependencias: {}, fuentes: [] },
+    generico: { id: 'generico', nombre: 'Municipio genérico', depto: 'Colombia', etiqueta: 'Administración municipal (demostración)', ficha: [['Uso', 'Plantilla adaptable a cualquier municipio de Colombia']], dependencias: {}, otras: [], fuentes: [] },
   };
 
   const ESTADOS = ['Activo', 'Cerrado', 'Transferido'];

@@ -192,7 +192,8 @@
           <section class="card cfg-section"><h3>${icon('map')} Ficha pública de ${st().municipio().nombre}</h3>
             <dl class="kv">${st().municipio().ficha.map(([k, v]) => html`<dt>${k}</dt><dd>${v}</dd>`)}</dl>
             ${Object.keys(st().municipio().dependencias).length ? html`<div class="field"><span>Dependencias con nombre real en la demo</span><ul class="reasons">${Object.values(st().municipio().dependencias).map((n) => html`<li>${n}</li>`)}</ul></div>` : ''}
-            ${st().municipio().fuentes.length ? html`<p class="muted small"><b>Fuentes:</b> ${st().municipio().fuentes.join(' · ')}. Datos públicos de referencia; verifique la estructura administrativa vigente con la alcaldía.</p>` : ''}
+            ${st().municipio().otras && st().municipio().otras.length ? html`<div class="field"><span>Otras dependencias de la alcaldía (no incluidas en los datos demo)</span><ul class="reasons">${st().municipio().otras.map((n) => html`<li>${n}</li>`)}</ul></div>` : ''}
+            ${st().municipio().fuentes.length ? html`<p class="muted small"><b>Fuentes:</b> ${st().municipio().fuentes.join(' · ')}. Estructura tomada de los sitios oficiales en noviembre de 2026. Las series documentales siguen siendo de demostración.</p>` : ''}
           </section>
           <section class="card cfg-section"><h3>${icon('shield')} Identidad visual institucional</h3>
             <p class="muted small">La app no incluye escudos ni logotipos oficiales. Si la alcaldía autoriza por escrito el uso de su imagen para esta presentación, puede cargar el logo aquí: queda guardado <b>solo en este navegador</b>, no se publica y la leyenda «Prototipo demostrativo independiente» se mantiene siempre.</p>

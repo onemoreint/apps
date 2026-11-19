@@ -37,7 +37,7 @@ Al abrirla por primera vez se generan **72 expedientes ficticios** de 7 dependen
 
 ## Datos institucionales por municipio
 
-El selector de municipio carga una **ficha pública de referencia**: departamento, subregión, código DANE, población proyectada 2026 por el DANE y sitio web oficial. También pone los nombres reales de las dependencias que aparecen en documentos públicos (SIGEP, decretos e informes de gestión), con sus fuentes visibles en **Configuración**. Antes de una presentación formal, verifique estos datos con la estructura administrativa vigente.
+El selector de municipio carga una **ficha pública de referencia**: departamento, subregión, código DANE, población proyectada 2026 por el DANE y sitio web oficial. También pone los nombres reales de las secretarías según la estructura publicada en los sitios oficiales (consultados en noviembre de 2026), con sus fuentes visibles en **Configuración**. Las series documentales siguen siendo de demostración, porque las TRD de estas alcaldías no están publicadas en un formato utilizable.
 
 **Logo:** la app no incluye escudos ni logotipos oficiales. Si la alcaldía autoriza por escrito el uso de su imagen, se puede cargar en **Configuración › Identidad visual institucional**. El logo queda solo en ese navegador, no se publica y la leyenda de prototipo se mantiene.
 

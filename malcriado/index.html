@@ -519,6 +519,28 @@ body.panel-abierto #aviso.ver{transform:translate(-50%,0)}
 .firu-campo button:hover{transform:scale(1.08)}
 a.firu-op{text-decoration:none;display:inline-flex;align-items:center}
 
+
+/* ---------- RETRATO REAL DE FIRU (foto que cambia de pose) ---------- */
+.firu-foto{position:relative;overflow:hidden;background:#f3f6f3}
+.firu-foto img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:0;transform:scale(1.06);transition:opacity .5s ease,transform .5s ease;
+}
+.firu-foto[data-cara="feliz"] .foto-feliz{opacity:1;transform:none}
+.firu-foto[data-cara="hambre"] .foto-hambre{opacity:1;transform:none}
+.firu-foto[data-cara="pensando"] .foto-pensando{opacity:1;transform:none}
+.firu-foto[data-cara="sorpresa"] .foto-sorpresa{opacity:1;transform:none}
+.firu-foto[data-cara="celebra"] .foto-celebra{opacity:1;transform:none}
+.firu-foto[data-cara="dormido"] .foto-dormido{opacity:1;transform:none}
+.firu-foto[data-cara="triste"] .foto-triste{opacity:1;transform:none}
+.firu-foto[data-cara="amor"] .foto-amor{opacity:1;transform:none}
+/* las caras sin foto propia toman la más parecida */
+.firu-foto[data-cara="saluda"] .foto-feliz,
+.firu-foto[data-cara="guino"] .foto-hambre,
+.firu-foto[data-cara="picaro"] .foto-hambre{opacity:1;transform:none}
+.firu-cab .av{width:54px;height:54px;background:#f3f6f3}
+.firu-cab .av.firu-foto{padding:0}
+
 @media(min-width:720px){
   .barra-marca{display:block}
   .seccion{padding:70px 24px}
@@ -1763,7 +1785,9 @@ function firuPista(){
 
 /* ---- arranque de Firu ---- */
 $('#firu-btn').innerHTML = '<span class="firu-wrap">' + FIRU_FULL + '</span>';
-$('#firu-av').innerHTML = FIRU_SVG;
+$('#firu-av').classList.add('firu-foto','firu');
+$('#firu-av').setAttribute('data-cara','feliz');
+$('#firu-av').innerHTML = `<img class="foto-feliz" src="img/firu/feliz.jpg" alt="" loading="lazy"><img class="foto-hambre" src="img/firu/hambre.jpg" alt="" loading="lazy"><img class="foto-pensando" src="img/firu/pensando.jpg" alt="" loading="lazy"><img class="foto-sorpresa" src="img/firu/sorpresa.jpg" alt="" loading="lazy"><img class="foto-celebra" src="img/firu/celebra.jpg" alt="" loading="lazy"><img class="foto-dormido" src="img/firu/dormido.jpg" alt="" loading="lazy"><img class="foto-triste" src="img/firu/triste.jpg" alt="" loading="lazy"><img class="foto-amor" src="img/firu/amor.jpg" alt="" loading="lazy">`;
 firuAnimo();
 firuCara(firuHora() === 'noche' ? 'picaro' : 'feliz');
 ['click','scroll','keydown'].forEach(ev=> window.addEventListener(ev, ()=>{

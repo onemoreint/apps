@@ -1,8 +1,8 @@
 // Primero la red, para que precios y carta estén siempre al día; la copia guardada solo se usa sin conexión.
-var CACHE = 'malcriado-v3';
+var CACHE = 'malcriado-v4';
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) {
-    return c.addAll(['./', 'img/waffle.jpg', 'img/palitos.jpg', 'img/almuerzo.jpg']);
+    return c.addAll(['./', 'img/firu/feliz.jpg', 'img/waffle.jpg', 'img/palitos.jpg', 'img/almuerzo.jpg']);
   }).then(function () { return self.skipWaiting(); }));
 });
 self.addEventListener('activate', function (e) {

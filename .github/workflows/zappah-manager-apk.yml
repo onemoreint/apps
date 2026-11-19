@@ -47,6 +47,34 @@ jobs:
       - name: Lint
         run: ./gradlew --no-daemon lintDebug
 
+      - name: Verificar APK (paquete, SDK y permisos declarados)
+        run: |
+          AAPT2=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)aapt2
+          "$AAPT2" dump badging app/build/outputs/apk/debug/app-debug.apk | grep -E "^(package|sdkVersion|targetSdkVersion|application-label|launchable-activity)"
+          echo "--- Permisos ---"
+          "$AAPT2" dump permissions app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Resumen de lint y pruebas
+        if: always()
+        run: |
+          python3 - <<'EOF'
+          import glob, collections, xml.etree.ElementTree as ET
+          for f in glob.glob('app/build/test-results/**/TEST-*.xml', recursive=True):
+              r = ET.parse(f).getroot()
+              print(f"PRUEBAS {r.get('name')}: {r.get('tests')} pruebas, {r.get('failures')} fallos, {r.get('errors')} errores")
+          for f in glob.glob('app/build/reports/lint-results-debug.xml'):
+              issues = list(ET.parse(f).getroot())
+              c = collections.Counter((i.get('severity'), i.get('id')) for i in issues)
+              print(f"LINT: {len(issues)} avisos")
+              for (sev, iid), n in sorted(c.items()):
+                  print(f"  {sev:8} {iid}: {n}")
+              for i in issues:
+                  if i.get('severity') in ('Error', 'Fatal'):
+                      loc = i.find('location')
+                      where = f"{loc.get('file').split('/')[-1]}:{loc.get('line')}" if loc is not None else ''
+                      print(f"  ERROR {i.get('id')} {where} {i.get('message')}")
+          EOF
+
       - name: Renombrar APK
         run: cp app/build/outputs/apk/debug/app-debug.apk zappah-manager-debug.apk
 

@@ -95,3 +95,9 @@ export function cravingMatches(idx: MenuIndex, key: CravingKey): MenuProduct[] {
   }
   return available.filter((p) => p.cravings.includes(key));
 }
+
+/** Productos de la vitrina: disponibles, con los destacados por el restaurante primero. */
+export function vitrinaProducts(idx: MenuIndex, categoryId: string | null): MenuProduct[] {
+  const list = idx.menu.products.filter((p) => p.available && (categoryId === null || p.category_id === categoryId));
+  return [...list.filter((p) => p.featured), ...list.filter((p) => !p.featured)];
+}

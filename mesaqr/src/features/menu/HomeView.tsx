@@ -21,10 +21,11 @@ interface Props {
   onCategory: (categoryId: string) => void;
   onCraving: () => void;
   onAllMenu: () => void;
+  onVitrina: () => void;
 }
 
 /** Inicio: bienvenida, buscador, favoritos de la casa y categorías visuales. */
-export function HomeView({ idx, qtyInCart, onOpen, onQuickAdd, onCategory, onCraving, onAllMenu }: Props) {
+export function HomeView({ idx, qtyInCart, onOpen, onQuickAdd, onCategory, onCraving, onAllMenu, onVitrina }: Props) {
   const { business, categories } = idx.menu;
   const [query, setQuery] = useState('');
   const results = useMemo(() => searchProducts(idx, query), [idx, query]);
@@ -134,7 +135,23 @@ export function HomeView({ idx, qtyInCart, onOpen, onQuickAdd, onCategory, onCra
         </section>
       ) : (
         <>
-          <div className="px-4 pt-4">
+          <div className="space-y-3 px-4 pt-4">
+            <button
+              type="button"
+              onClick={onVitrina}
+              className="vitrina-bg relative flex w-full items-center gap-3 overflow-hidden rounded-2xl px-4 py-3.5 text-left text-white shadow-[0_12px_28px_-14px_rgb(36_16_48/0.9)]"
+            >
+              <span className="text-3xl" aria-hidden>
+                ✨
+              </span>
+              <span className="flex-1">
+                <span className="block font-display text-lg leading-tight font-bold">Modo vitrina</span>
+                <span className="block text-sm text-white/75">Desliza y descubre los platos uno por uno.</span>
+              </span>
+              <span className="font-display text-2xl" aria-hidden>
+                →
+              </span>
+            </button>
             <button
               type="button"
               onClick={onCraving}

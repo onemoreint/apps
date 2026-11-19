@@ -69,10 +69,30 @@
       { id: 'S12.3', nombre: 'Pólizas y mantenimiento', kw: ['poliza', 'seguro', 'mantenimiento', 'vehiculo'] } ] },
   ];
 
+  /* Ficha pública de referencia (consultada en nov. 2026). Los nombres de dependencias
+   * provienen de documentos públicos (SIGEP, decretos, informes de gestión) y pueden
+   * haber cambiado: verificar con la estructura administrativa vigente de cada alcaldía.
+   * Solo se sobrescriben los nombres encontrados; el resto queda genérico. */
   const MUNICIPIOS = {
-    girardota: { id: 'girardota', nombre: 'Girardota', depto: 'Antioquia', etiqueta: 'Alcaldía de Girardota (demostración)' },
-    laestrella: { id: 'laestrella', nombre: 'La Estrella', depto: 'Antioquia', etiqueta: 'Alcaldía de La Estrella (demostración)' },
-    generico: { id: 'generico', nombre: 'Municipio genérico', depto: 'Colombia', etiqueta: 'Administración municipal (demostración)' },
+    girardota: {
+      id: 'girardota', nombre: 'Girardota', depto: 'Antioquia', etiqueta: 'Alcaldía de Girardota (demostración)',
+      ficha: [
+        ['Departamento', 'Antioquia'], ['Subregión', 'Valle de Aburrá (Área Metropolitana)'], ['Código DANE', '05308'],
+        ['Población proyectada 2026', '62.138 habitantes (proyección DANE)'], ['Sitio web oficial', 'www.girardota.gov.co'],
+      ],
+      dependencias: { GOB: 'Secretaría de Gobierno y Derechos Humanos', PLA: 'Secretaría de Planeación y Desarrollo Urbano', GA: 'Secretaría de Servicios Administrativos' },
+      fuentes: ['Proyecciones de población DANE (2026)', 'Hojas de vida públicas SIGEP — Función Pública', 'Decretos y documentos OCAD publicados por la Gobernación de Antioquia'],
+    },
+    laestrella: {
+      id: 'laestrella', nombre: 'La Estrella', depto: 'Antioquia', etiqueta: 'Alcaldía de La Estrella (demostración)',
+      ficha: [
+        ['Departamento', 'Antioquia'], ['Subregión', 'Valle de Aburrá (Área Metropolitana)'], ['Código DANE', '05380'],
+        ['Población proyectada 2026', '84.068 habitantes (proyección DANE)'], ['Área aproximada', '36,6 km²'], ['Sitio web oficial', 'www.laestrella.gov.co'],
+      ],
+      dependencias: { SAL: 'Secretaría de Seguridad Social y Familia', EDU: 'Secretaría de Educación y Cultura', GA: 'Secretaría General' },
+      fuentes: ['Proyecciones de población DANE (2026)', 'Informes de gestión y rendición de cuentas publicados en laestrella.gov.co', 'Hojas de vida públicas SIGEP — Función Pública'],
+    },
+    generico: { id: 'generico', nombre: 'Municipio genérico', depto: 'Colombia', etiqueta: 'Administración municipal (demostración)', ficha: [['Uso', 'Plantilla adaptable a cualquier municipio de Colombia']], dependencias: {}, fuentes: [] },
   };
 
   const ESTADOS = ['Activo', 'Cerrado', 'Transferido'];

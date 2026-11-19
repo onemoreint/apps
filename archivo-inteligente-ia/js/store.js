@@ -7,7 +7,9 @@
   const clone = (o) => JSON.parse(JSON.stringify(o));
   const cfg = () => S.config;
   const catalogo = () => S.config.catalogo;
-  const depName = (id) => (catalogo().dependencias.find((d) => d.id === id) || {}).nombre || id || '—';
+  /** Dependencias con los nombres reales del municipio seleccionado (si se conocen). */
+  const deps = () => { const ov = (municipio().dependencias) || {}; return catalogo().dependencias.map((d) => Object.assign({}, d, { nombre: ov[d.id] || d.nombre })); };
+  const depName = (id) => (deps().find((d) => d.id === id) || {}).nombre || id || '—';
   const serieById = (id) => catalogo().series.find((s) => s.id === id);
   const serieName = (id) => (serieById(id) || {}).nombre || '';
   function subName(id) { for (const s of catalogo().series) { const x = s.subseries.find((u) => u.id === id); if (x) return x.nombre; } return ''; }
@@ -260,11 +262,12 @@
     const base = clone(AI.catalog.DEFAULT_CONFIG);
     S.config = Object.assign(base, obj.config && typeof obj.config === 'object' ? obj.config : {});
     if (!AI.catalog.MUNICIPIOS[S.config.municipio]) S.config.municipio = 'generico';
+    if (S.config.logo && !/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(S.config.logo)) delete S.config.logo;
     if (!S.config.catalogo || !Array.isArray(S.config.catalogo.series)) S.config.catalogo = AI.catalog.defaultCatalogo();
     S.config.ia = Object.assign({ modo: 'demo', endpoint: '', autorizado: false }, S.config.ia, { autorizado: false });
     await Promise.all([AI.db.putMany('expedientes', S.expedientes), AI.db.putMany('transferencias', S.transferencias), AI.db.putMany('auditoria', S.auditoria), AI.db.putMany('acciones', S.acciones), saveConfig()]);
     await audit('sistema', { id: 'backup', codigo: 'Respaldo' }, 'Importación de respaldo', `${S.expedientes.length} expedientes importados`);
   }
 
-  AI.store = { load, resetDemo, saveConfig, audit, cfg, catalogo, depName, serieById, serieName, subName, expById, trById, municipio, sanitizeExp, validateExp, suggestCode, saveExpediente, changeEstado, isPendienteClasif, faltantes, enTransferenciaActiva, motivoNoElegible, saveTransferencia, advanceTransferencia, computeAlertas, addAccion, exportBackup, importBackup, TR_ACTIVAS };
+  AI.store = { deps, load, resetDemo, saveConfig, audit, cfg, catalogo, depName, serieById, serieName, subName, expById, trById, municipio, sanitizeExp, validateExp, suggestCode, saveExpediente, changeEstado, isPendienteClasif, faltantes, enTransferenciaActiva, motivoNoElegible, saveTransferencia, advanceTransferencia, computeAlertas, addAccion, exportBackup, importBackup, TR_ACTIVAS };
 })();

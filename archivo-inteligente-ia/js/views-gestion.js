@@ -28,7 +28,7 @@
       case 'general':
         return Object.assign(base, { stats: stats4, narr: [`El inventario filtrado contiene ${E.length} expedientes; ${pct(cnt(st().isPendienteClasif), E.length)}% está pendiente de clasificación y ${pct(incompl.length, E.length)}% tiene información incompleta.`], headers: expHead, rows: E.slice().sort((a, b) => a.codigo.localeCompare(b.codigo)).map(expRow) });
       case 'dependencia': {
-        const deps = st().catalogo().dependencias.filter((d) => !dep || d.id === dep);
+        const deps = st().deps().filter((d) => !dep || d.id === dep);
         const rows = deps.map((d) => { const de = E.filter((e) => e.dependencia === d.id); return [d.nombre, de.length, de.filter((e) => e.estado === 'Activo').length, de.filter((e) => e.estado === 'Cerrado').length, de.filter((e) => e.estado === 'Transferido').length, de.filter(st().isPendienteClasif).length, de.filter((e) => st().faltantes(e).length).length, T.filter((t) => t.dependencia === d.id && t.estado !== 'Completada').length, alertas.filter((a) => a.dependencia === d.id).length]; });
         const top = rows.slice().sort((a, b) => b[8] - a[8])[0];
         return Object.assign(base, { stats: stats4, narr: [top && top[8] ? `La dependencia con más alertas abiertas es ${top[0]} (${top[8]}).` : 'No hay alertas abiertas en el alcance seleccionado.'], headers: ['Dependencia', 'Total', 'Activos', 'Cerrados', 'Transferidos', 'Sin clasificar', 'Incompletos', 'Transf. pendientes', 'Alertas abiertas'], rows });
@@ -55,7 +55,7 @@
           rows: alertas.map((a) => [a.severidad, a.tipo, a.ref, st().depName(a.dependencia), a.detalle, a.responsable || 'Sin asignar', a.acciones.length ? a.acciones[a.acciones.length - 1].descripcion : '']),
         });
       default: { // ejecutivo
-        const deps = st().catalogo().dependencias;
+        const deps = st().deps();
         const pc = cnt(st().isPendienteClasif);
         const comp = E.length - incompl.length;
         const trComp = T.filter((t) => t.estado === 'Completada').length;
@@ -77,7 +77,7 @@
   function reportHtml(r) {
     const m = st().municipio();
     return html`<div class="card report" id="report-doc">
-      <div class="report-head"><div><h2>${r.titulo}</h2><p class="muted">${m.etiqueta} · ${r.filtro}</p></div><div class="muted small" style="text-align:right">Generado: ${AI.fmtDateTime(new Date().toISOString())}<br>Por: ${st().cfg().usuario}</div></div>
+      <div class="report-head"><div class="row" style="align-items:flex-start;flex-wrap:nowrap">${st().cfg().logo ? html`<img src="${st().cfg().logo}" alt="" style="height:48px;max-width:120px;object-fit:contain">` : ''}<div><h2>${r.titulo}</h2><p class="muted">${m.etiqueta} · ${r.filtro}</p></div></div><div class="muted small" style="text-align:right">Generado: ${AI.fmtDateTime(new Date().toISOString())}<br>Por: ${st().cfg().usuario}</div></div>
       <div class="stats">${r.stats.map((s) => html`<div class="stat"><b>${s.v}</b><span>${s.l}</span></div>`)}</div>
       <div class="narr">${r.narr.map((p) => html`<p>${p}</p>`)}</div>
       <div class="table-wrap"><table class="tbl"><thead><tr>${r.headers.map((h) => html`<th>${h}</th>`)}</tr></thead><tbody>${r.rows.length ? r.rows.map((row) => html`<tr>${row.map((c) => html`<td>${c === '' || c === undefined ? '—' : c}</td>`)}</tr>`) : html`<tr><td colspan="${r.headers.length}" class="muted">Sin registros.</td></tr>`}</tbody></table></div>
@@ -189,6 +189,17 @@
             <div class="notice">${icon('shield')}<div>Este prototipo <b>no tiene autenticación ni control de acceso</b>. El perfil solo identifica quién hizo cada cambio en la demostración.</div></div>
             <div><button class="btn primary" data-action="cfg-save-demo">${icon('check')} Guardar</button></div>
           </section>
+          <section class="card cfg-section"><h3>${icon('map')} Ficha pública de ${st().municipio().nombre}</h3>
+            <dl class="kv">${st().municipio().ficha.map(([k, v]) => html`<dt>${k}</dt><dd>${v}</dd>`)}</dl>
+            ${Object.keys(st().municipio().dependencias).length ? html`<div class="field"><span>Dependencias con nombre real en la demo</span><ul class="reasons">${Object.values(st().municipio().dependencias).map((n) => html`<li>${n}</li>`)}</ul></div>` : ''}
+            ${st().municipio().fuentes.length ? html`<p class="muted small"><b>Fuentes:</b> ${st().municipio().fuentes.join(' · ')}. Datos públicos de referencia; verifique la estructura administrativa vigente con la alcaldía.</p>` : ''}
+          </section>
+          <section class="card cfg-section"><h3>${icon('shield')} Identidad visual institucional</h3>
+            <p class="muted small">La app no incluye escudos ni logotipos oficiales. Si la alcaldía autoriza por escrito el uso de su imagen para esta presentación, puede cargar el logo aquí: queda guardado <b>solo en este navegador</b>, no se publica y la leyenda «Prototipo demostrativo independiente» se mantiene siempre.</p>
+            ${c.logo ? html`<div class="row"><img src="${c.logo}" alt="Logo cargado localmente" style="height:56px;max-width:180px;object-fit:contain;border:1px solid var(--border);border-radius:10px;padding:4px;background:#fff"><button class="btn danger sm" data-action="cfg-logo-del">${icon('x')} Quitar logo</button></div>` : ''}
+            <label class="check"><input type="checkbox" id="cfg-logo-auth"> Cuento con autorización de la entidad para usar su imagen institucional en esta demostración.</label>
+            <label class="btn" style="align-self:flex-start">${icon('upload')} Cargar logo (PNG, JPG o WEBP · máx. 300 KB)<input type="file" id="cfg-logo" accept="image/png,image/jpeg,image/webp" hidden></label>
+          </section>
           <section class="card cfg-section"><h3>${icon('bell')} Reglas de alertas</h3>
             <p class="muted small">Reglas internas configurables. No representan plazos legales ni de retención documental; esos deben venir de los instrumentos archivísticos oficiales de la entidad.</p>
             <div class="field"><span>Campos que generan alerta si están vacíos</span><div class="row">${camposOpc.map((k) => html`<label class="check"><input type="checkbox" class="cfg-campo" value="${k}" ${R.camposObligatorios.includes(k) ? 'checked' : ''}> ${AI.catalog.CAMPOS[k]}</label>`)}</div></div>
@@ -230,6 +241,16 @@
             <ul class="reasons"><li>Ley 594 de 2000 — Ley General de Archivos.</li><li>Ley 1712 de 2014 — Transparencia y acceso a la información pública.</li><li>Ley 1581 de 2012 — Protección de datos personales.</li><li>Decreto 1080 de 2015 — Sector Cultura (disposiciones archivísticas).</li><li>Decreto 1078 de 2015 — Sector TIC y Gobierno Digital.</li><li>Modelo Integrado de Planeación y Gestión (MIPG).</li><li>Lineamientos vigentes del Archivo General de la Nación; TRD y CCD de la entidad.</li></ul>
           </section>
         </div>`);
+      $('#cfg-logo').addEventListener('change', (e) => {
+        const file = e.target.files[0]; e.target.value = '';
+        if (!file) return;
+        if (!$('#cfg-logo-auth').checked) { AI.toast('Confirme primero que cuenta con autorización de la entidad.', 'warn'); return; }
+        if (!/^image\/(png|jpeg|webp)$/.test(file.type)) { AI.toast('Formato no permitido. Use PNG, JPG o WEBP.', 'err'); return; }
+        if (file.size > 300 * 1024) { AI.toast('El logo supera 300 KB.', 'err'); return; }
+        const rd = new FileReader();
+        rd.onload = async () => { c.logo = String(rd.result); await st().saveConfig(); await st().audit('sistema', { id: 'logo', codigo: 'Configuración' }, 'Logo institucional cargado', 'Uso declarado como autorizado por la entidad'); AI.syncShell(); AI.refresh(); AI.toast('Logo cargado en este navegador.'); };
+        rd.readAsDataURL(file);
+      });
       $('#cfg-import').addEventListener('change', async (e) => {
         const file = e.target.files[0]; e.target.value = '';
         if (!file) return;
@@ -262,6 +283,7 @@
     Object.assign(ia, { modo, endpoint: ep, autorizado: modo === 'real' && $('#cfg-auth').checked });
     await st().saveConfig(); AI.toast(modo === 'demo' ? 'ARCHI en modo demostración.' : 'Modo IA real configurado (requiere backend disponible).');
   };
+  AI.actions['cfg-logo-del'] = async () => { delete st().cfg().logo; await st().saveConfig(); AI.syncShell(); AI.refresh(); AI.toast('Logo eliminado.'); };
   AI.actions['cfg-export'] = () => {
     AI.download(`respaldo-archivo-inteligente-${AI.todayISO()}.json`, JSON.stringify(st().exportBackup(), null, 2), 'application/json');
     AI.toast('Respaldo JSON descargado.');

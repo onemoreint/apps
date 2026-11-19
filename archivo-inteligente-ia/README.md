@@ -35,6 +35,12 @@ Al abrirla por primera vez se generan **72 expedientes ficticios** de 7 dependen
 | 8 | Productividad | Simulador hipotético: proceso tradicional frente a proceso digital |
 | 9 | Configuración | Municipio, perfil demo, reglas, modo de IA, catálogo, respaldo JSON y restauración |
 
+## Datos institucionales por municipio
+
+El selector de municipio carga una **ficha pública de referencia**: departamento, subregión, código DANE, población proyectada 2026 por el DANE y sitio web oficial. También pone los nombres reales de las dependencias que aparecen en documentos públicos (SIGEP, decretos e informes de gestión), con sus fuentes visibles en **Configuración**. Antes de una presentación formal, verifique estos datos con la estructura administrativa vigente.
+
+**Logo:** la app no incluye escudos ni logotipos oficiales. Si la alcaldía autoriza por escrito el uso de su imagen, se puede cargar en **Configuración › Identidad visual institucional**. El logo queda solo en ese navegador, no se publica y la leyenda de prototipo se mantiene.
+
 ## Estructura
 
 ```

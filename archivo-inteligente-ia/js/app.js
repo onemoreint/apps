@@ -32,6 +32,8 @@
     const sel = $('#muni-select');
     sel.innerHTML = AI.fmt(Object.values(AI.catalog.MUNICIPIOS).map((m) => html`<option value="${m.id}" ${m.id === AI.state.config.municipio ? 'selected' : ''}>${m.nombre}</option>`));
     document.title = `Archivo Inteligente IA · ${AI.store.municipio().nombre} (demo)`;
+    const logo = AI.state.config.logo;
+    $$('.brand-mark, .brand-mini').forEach((el) => { el.classList.toggle('has-logo', !!logo); el.innerHTML = AI.fmt(logo ? html`<img src="${logo}" alt="Logo institucional (cargado localmente)">` : html`<svg viewBox="0 0 24 24"><use href="#i-archive"/></svg>`); });
   }
 
   function render() {

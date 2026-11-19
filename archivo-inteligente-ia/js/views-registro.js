@@ -17,7 +17,7 @@
   const TRB = { 'Borrador': 'borrador', 'En revisión': 'revision', 'Pendiente de aprobación': 'pendiente', 'Aprobada': 'aprobada', 'Completada': 'completada', 'Devuelta para corrección': 'devuelta' };
   const trBadge = (e) => html`<span class="badge b-tr-${TRB[e] || 'borrador'}">${e}</span>`;
   const sevBadge = (s) => html`<span class="badge b-${s}">${s === 'alta' ? 'Alta' : s === 'media' ? 'Media' : 'Baja'}</span>`;
-  const depOptions = (sel, todas = 'Todas las dependencias') => html`${todas ? html`<option value="">${todas}</option>` : html`<option value="">Seleccione…</option>`}${st().catalogo().dependencias.map((d) => html`<option value="${d.id}" ${d.id === sel ? 'selected' : ''}>${d.nombre}</option>`)}`;
+  const depOptions = (sel, todas = 'Todas las dependencias') => html`${todas ? html`<option value="">${todas}</option>` : html`<option value="">Seleccione…</option>`}${st().deps().map((d) => html`<option value="${d.id}" ${d.id === sel ? 'selected' : ''}>${d.nombre}</option>`)}`;
   const serieOptions = (sel, label = 'Todas las series') => html`<option value="">${label}</option>${st().catalogo().series.map((s) => html`<option value="${s.id}" ${s.id === sel ? 'selected' : ''}>${s.id} · ${s.nombre}</option>`)}`;
   const subOptions = (serieId, sel) => { const s = st().serieById(serieId); return html`<option value="">${s ? 'Seleccione subserie…' : 'Primero elija la serie'}</option>${s ? s.subseries.map((u) => html`<option value="${u.id}" ${u.id === sel ? 'selected' : ''}>${u.id} · ${u.nombre}</option>`) : ''}`; };
   const clasif = (e) => (e.serie ? html`${st().serieName(e.serie)}${e.subserie ? html` <span class="muted">/ ${st().subName(e.subserie)}</span>` : ''}` : html`<span class="badge b-pend">Pendiente de clasificación</span>`);
@@ -177,7 +177,7 @@
       const count = (field) => months.map((m) => E.filter((e) => (e[field] || '').startsWith(m.key)).length);
       const series = [{ nombre: 'Aperturas', color: '#12657C', valores: count('fechaApertura') }, { nombre: 'Cierres', color: '#10B981', valores: count('fechaCierre') }];
       // Por dependencia
-      const deps = st().catalogo().dependencias;
+      const deps = st().deps();
       const rows = deps.map((d) => { const de = E.filter((e) => e.dependencia === d.id); return { label: d.nombre.replace('Secretaría de ', 'Sec. '), segs: [{ v: de.filter((e) => e.estado === 'Activo').length, color: '#10B981', title: 'Activos' }, { v: de.filter((e) => e.estado === 'Cerrado').length, color: '#12657C', title: 'Cerrados' }, { v: de.filter((e) => e.estado === 'Transferido').length, color: '#8B6FE8', title: 'Transferidos' }] }; });
       const hace30 = new Date(Date.now() - 30 * 86400000).toISOString();
       const act = deps.map((d) => ({ d, n: S.auditoria.filter((a) => a.dependencia === d.id && a.fecha >= hace30).length, al: alertas.filter((a) => a.dependencia === d.id).length, pend: E.filter((e) => e.dependencia === d.id && st().isPendienteClasif(e)).length })).sort((a, b) => b.n - a.n);
@@ -185,6 +185,7 @@
       const recientes = S.auditoria.slice().sort((a, b) => b.fecha.localeCompare(a.fecha)).slice(0, 6);
       const KPI = (href, label, val, sub, ic, cls) => html`<a class="card kpi" href="${href}"><div class="kpi-top"><span>${label}</span><span class="kpi-ic ${cls}">${icon(ic)}</span></div><div class="val">${val}</div><div class="sub">${sub}</div></a>`;
       root.innerHTML = AI.fmt(html`
+        <div class="muni-strip"><span class="muni-strip-t">${icon('map')} ${st().municipio().etiqueta}</span>${st().municipio().ficha.filter(([k]) => k !== 'Sitio web oficial' && k !== 'Uso').map(([k, v]) => html`<span><b>${k}:</b> ${v}</span>`)}<a href="#/configuracion">Ver ficha y fuentes</a></div>
         <div class="kpis">
           ${KPI('#/inventario', 'Expedientes registrados', k.total, `${k.transferidos} en archivo central`, 'folder', '')}
           ${KPI('#/expedientes', 'Expedientes activos', k.activos, `${Math.round((k.activos / Math.max(1, k.total)) * 100)}% del total`, 'trend', 'em')}

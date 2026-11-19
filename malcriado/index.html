@@ -505,6 +505,20 @@ body.panel-abierto #aviso.ver{transform:translate(-50%,0)}
 .firu-salta{animation:firuSalta .65s cubic-bezier(.2,.9,.3,1.6)}
 @keyframes firuSalta{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-9px) rotate(-8deg)}60%{transform:translateY(0) rotate(6deg)}}
 
+.firu-campo{display:flex;gap:7px;width:100%}
+.firu-campo input{
+  flex:1;min-width:0;padding:11px 14px;border-radius:99px;border:1px solid var(--linea);
+  background:var(--negro-2);color:var(--texto);font-family:inherit;font-size:.9rem;outline:none;transition:border-color .2s;
+}
+.firu-campo input:focus{border-color:var(--verde)}
+.firu-campo button{
+  width:42px;height:42px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--verde),var(--verde-claro));color:#06250e;font-size:1rem;
+  display:grid;place-items:center;transition:transform .2s;
+}
+.firu-campo button:hover{transform:scale(1.08)}
+a.firu-op{text-decoration:none;display:inline-flex;align-items:center}
+
 @media(min-width:720px){
   .barra-marca{display:block}
   .seccion{padding:70px 24px}
@@ -1045,13 +1059,19 @@ function vaciar(){
 
 function textoPedido(){
   const {n, t} = totales();
-  if(n === 0) return '¡Hola MALCRIADO! 🧇 Quiero hacer un pedido.';
-  let txt = '*¡Hola MALCRIADO!* 🧇\nQuiero hacer este pedido:\n\n';
+  const quien = (typeof cliente === 'object' && cliente.nombre) ? ' Soy ' + cliente.nombre + '.' : '';
+  if(n === 0) return '¡Hola MALCRIADO! 🧇' + quien + ' Quiero hacer un pedido.';
+  let txt = '*¡Hola MALCRIADO!* 🧇' + quien + '\nQuiero hacer este pedido:\n\n';
   for(const k in pedido){
     const i = pedido[k];
     txt += '• ' + i.q + ' x ' + i.n + ' — ' + formato(i.q * i.p) + '\n';
   }
   txt += '\n*TOTAL: ' + formato(t) + '*';
+  if(typeof cliente === 'object'){
+    if(cliente.modo === 'llevar') txt += '\n🛵 Para llevar';
+    if(cliente.modo === 'mesa') txt += '\n🍽️ Para consumir en el local';
+    if(cliente.alergia) txt += '\n⚠️ Alergia o restricción: ' + cliente.alergia;
+  }
   const campo = $('#nota');
   const nota = campo ? campo.value.trim() : '';
   if(nota) txt += '\n\n📝 Nota: ' + nota;
@@ -1297,6 +1317,13 @@ const FIRU_TEASERS = {
 };
 const FIRU_FRASES = ['Confía en mí 😏','Palabra de mesero.','Nadie se ha arrepentido.','Este nunca falla.','Ojo, es de los que repiten.'];
 
+let cliente = {nombre:'', modo:'', alergia:''};
+try{ const g = localStorage.getItem('malcriado_cliente'); if(g) cliente = Object.assign(cliente, JSON.parse(g)||{}); }catch(e){}
+const guardarCliente = () => {
+  try{ localStorage.setItem('malcriado_cliente', JSON.stringify(cliente)); }catch(e){}
+  if(typeof refrescarEnlacesWA === 'function') refrescarEnlacesWA();
+};
+
 let firuAbierto = false, firuGloboVisto = false, firuPistaDada = false;
 
 /* ---- el cuerpo reacciona al pedido ---- */
@@ -1448,13 +1475,49 @@ function firuOpciones(ops){
   const pie = $('#firu-pie');
   pie.innerHTML = '';
   ops.forEach((o,i)=>{
-    const b = document.createElement('button');
+    const b = document.createElement(o.href ? 'a' : 'button');
     b.className = 'firu-op' + (o.d ? ' destacada' : '');
     b.textContent = o.t;
     b.style.animationDelay = (i*45)+'ms';
-    b.onclick = ()=> firuElige(o);
+    if(o.href){
+      b.href = o.href; b.target = '_blank'; b.rel = 'noopener';
+      b.addEventListener('click', ()=>{
+        firuMsj(o.t, 'yo');
+        if(o.luego) setTimeout(()=> firuFlujo(o.luego), 500);
+      });
+    } else {
+      b.onclick = ()=> firuElige(o);
+    }
     pie.appendChild(b);
   });
+}
+
+/* El mesero pregunta y el cliente escribe (nombre, notas) */
+function firuPregunta(placeholder, alResponder, opcional){
+  const pie = $('#firu-pie');
+  pie.innerHTML = '';
+  const caja = document.createElement('form');
+  caja.className = 'firu-campo';
+  caja.innerHTML = '<input type="text" maxlength="40" placeholder="' + placeholder + '" autocomplete="off">' +
+                   '<button type="submit" aria-label="Enviar">➤</button>';
+  const input = caja.querySelector('input');
+  caja.onsubmit = e=>{
+    e.preventDefault();
+    const v = input.value.trim();
+    if(!v) return;
+    firuMsj(v, 'yo');
+    pie.innerHTML = '';
+    setTimeout(()=> alResponder(v), 220);
+  };
+  pie.appendChild(caja);
+  if(opcional){
+    const salta = document.createElement('button');
+    salta.className = 'firu-op';
+    salta.textContent = 'Mejor no';
+    salta.onclick = ()=>{ pie.innerHTML = ''; setTimeout(()=> alResponder(''), 200); };
+    pie.appendChild(salta);
+  }
+  setTimeout(()=> input.focus(), 250);
 }
 
 function firuElige(o){
@@ -1493,6 +1556,20 @@ function firuAgregar(id, btn){
 }
 
 function firuMenu(){
+  const {n} = totales();
+  const ops = [{t:'🍽️ Recomiéndame algo', a:'antojo', d:true}];
+  if(n > 0){
+    ops.push({t:'📝 Repíteme el pedido', a:'comanda'});
+    ops.push({t:'➕ ¿Qué me falta?', a:'completar'});
+    ops.push({t:'🧾 La cuenta', a:'cuenta'});
+  }
+  ops.push({t:'🛵 Domicilios y ubicación', a:'donde'});
+  ops.push({t:'🙋 ¿Tienen para alergias?', a:'alergias'});
+  ops.push({t:'👋 Nada más, gracias', a:'despedida'});
+  firuOpciones(ops);
+}
+
+function firuAntojos(){
   firuOpciones([
     {t:'🧇 Algo dulce', a:'dulce'},
     {t:'🥓 Algo salado', a:'salado'},
@@ -1500,7 +1577,8 @@ function firuMenu(){
     {t:'🍦 Algo frío', a:'dulcefrio'},
     {t:'💸 Rico y barato', a:'barato'},
     {t:'👫 Para compartir', a:'compartir'},
-    {t:'🎲 Sorpréndeme', a:'sorpresa', d:true}
+    {t:'🎲 Sorpréndeme', a:'sorpresa', d:true},
+    {t:'⬅️ Volver', a:'menu'}
   ]);
 }
 
@@ -1508,13 +1586,107 @@ function firuFlujo(accion){
   if(accion === 'inicio'){
     const h = firuHora();
     firuEscribe(FIRU_SALUDOS[h], 700, ()=>{
-      firuEscribe('¿Qué se te antoja hoy?', 600, firuMenu, 'feliz');
+      firuEscribe((cliente.nombre ? '¡Qué bueno verte de nuevo, <b>' + cliente.nombre + '</b>! ' : '') + 'Soy Firu y hoy te atiendo yo. ¿En qué te ayudo?', 650, firuMenu, 'feliz');
     }, h === 'noche' ? 'picaro' : 'saluda');
     return;
   }
   if(accion === 'cerrar'){ cerrarFiru(); return; }
   if(accion === 'menu'){
     firuEscribe('Listo, dime otra vez 👇', 500, firuMenu, 'feliz');
+    return;
+  }
+  if(accion === 'antojo'){
+    firuEscribe('¿Y qué te pide el cuerpo?', 500, firuAntojos, 'feliz');
+    return;
+  }
+  if(accion === 'comanda'){
+    const {n, t} = totales();
+    if(!n){ firuEscribe('Todavía no me has pedido nada 😅', 550, firuMenu, 'sorpresa'); return; }
+    let lista = 'Te repito la comanda, que no se me escape nada 📝<br><br>';
+    for(const k in pedido) lista += '• <b>' + pedido[k].q + ' x ' + pedido[k].n + '</b> — ' + formato(pedido[k].q * pedido[k].p) + '<br>';
+    lista += '<br>Total: <b>' + formato(t) + '</b>';
+    firuEscribe(lista, 850, ()=>{
+      firuOpciones([
+        {t:'✅ Así está', a:'cuenta', d:true},
+        {t:'➕ Falta algo', a:'completar'},
+        {t:'✏️ Quiero cambiar algo', a:'editar'},
+        {t:'⬅️ Volver', a:'menu'}
+      ]);
+    }, 'pensando');
+    return;
+  }
+  if(accion === 'editar'){
+    firuEscribe('Dale, ahí te abro el pedido para que lo ajustes 👌', 500, ()=>{
+      setTimeout(()=>{ cerrarFiru(); setTimeout(abrirPanel, 320); }, 500);
+    }, 'feliz');
+    return;
+  }
+  if(accion === 'cuenta'){
+    const {n, t} = totales();
+    if(!n){ firuEscribe('No hay cuenta todavía 😄 Primero pidamos algo.', 550, firuMenu, 'feliz'); return; }
+    firuEscribe('Son <b>' + formato(t) + '</b> en total. ¿Es para llevar o te quedas con nosotros?', 700, ()=>{
+      firuOpciones([
+        {t:'🛵 Para llevar', a:'modo-llevar'},
+        {t:'🍽️ Me quedo acá', a:'modo-mesa', d:true},
+        {t:'⬅️ Volver', a:'menu'}
+      ]);
+    }, 'feliz');
+    return;
+  }
+  if(accion === 'modo-llevar' || accion === 'modo-mesa'){
+    cliente.modo = accion === 'modo-llevar' ? 'llevar' : 'mesa';
+    guardarCliente();
+    if(cliente.nombre){ firuFlujo('pasar'); return; }
+    firuEscribe('Anotado ✍️ ¿A nombre de quién pongo el pedido?', 600, ()=>{
+      firuPregunta('Tu nombre', nombre=>{
+        if(nombre){ cliente.nombre = nombre; guardarCliente(); }
+        firuEscribe(nombre ? '¡Mucho gusto, <b>' + nombre + '</b>! 🐶' : 'Tranquilo, lo paso sin nombre.', 550, ()=> firuFlujo('pasar'), 'celebra');
+      }, true);
+    }, 'pensando');
+    return;
+  }
+  if(accion === 'pasar'){
+    const url = 'https://wa.me/' + TEL + '?text=' + encodeURIComponent(textoPedido());
+    const quien = cliente.nombre ? cliente.nombre + ', ' : '';
+    firuEscribe('Listo ' + quien + 'yo le paso tu pedido a la cocina 🧑‍🍳<br>Solo confírmalo por WhatsApp y arrancamos.', 800, ()=>{
+      firuOpciones([
+        {t:'💬 Pasar el pedido a cocina', href:url, d:true, luego:'despedida'},
+        {t:'⬅️ Todavía no', a:'menu'}
+      ]);
+    }, 'celebra');
+    return;
+  }
+  if(accion === 'alergias'){
+    firuEscribe('Mejor saberlo antes. Dime qué no puedes comer y lo anoto en tu pedido 🙌', 650, ()=>{
+      firuPregunta('Ej: maní, lactosa, gluten…', txt=>{
+        if(txt){
+          cliente.alergia = txt; guardarCliente(); refrescarEnlacesWA();
+          firuEscribe('Anotado: <b>' + txt + '</b>. Va con tu pedido para que en cocina lo tengan presente 👌', 650, firuMenu, 'feliz');
+        } else {
+          firuEscribe('Listo, sin anotaciones.', 450, firuMenu, 'feliz');
+        }
+      }, true);
+    }, 'pensando');
+    return;
+  }
+  if(accion === 'donde'){
+    firuEscribe('Estamos en <b>CL 75 S # 54A - 150, Local 9803</b>, La Estrella, Antioquia 📍<br>Para domicilios: <b>301 525 9674</b>.', 800, ()=>{
+      firuOpciones([
+        {t:'💬 Escribir por WhatsApp', href:'https://wa.me/' + TEL, d:true},
+        {t:'⬅️ Volver', a:'menu'}
+      ]);
+    }, 'feliz');
+    return;
+  }
+  if(accion === 'despedida'){
+    const quien = cliente.nombre ? ' ' + cliente.nombre : '';
+    firuEscribe('¡Gracias por venir' + quien + '! 🐶 Aquí te esperamos siempre.<br>Si te gustó, cuéntalo en nuestro Instagram.', 750, ()=>{
+      firuOpciones([
+        {t:'📷 @malcriadocoffee', href:'https://instagram.com/malcriadocoffee'},
+        {t:'⬅️ Seguir viendo', a:'menu'},
+        {t:'👋 Cerrar', a:'cerrar', d:true}
+      ]);
+    }, 'amor');
     return;
   }
   if(accion === 'completar'){
@@ -1538,16 +1710,15 @@ function firuFlujo(accion){
 }
 
 function firuCierre(){
-  firuOpciones([
-    {t:'🔁 Ver otra cosa', a:'menu'},
-    {t:'➕ ¿Qué me falta?', a:'completar'},
-    {t:'🛒 Ver mi pedido', a:'pedido', d:true},
-    {t:'👍 Así está bien', a:'cerrar'}
-  ]);
-  const pie = $('#firu-pie');
-  [...pie.children].forEach(b=>{
-    if(b.textContent.includes('Ver mi pedido')) b.onclick = ()=>{ cerrarFiru(); setTimeout(abrirPanel, 300); };
-  });
+  const {n} = totales();
+  const ops = [{t:'🔁 Ver otra cosa', a:'antojo'}];
+  if(n > 0){
+    ops.push({t:'📝 Repíteme el pedido', a:'comanda'});
+    ops.push({t:'🧾 La cuenta', a:'cuenta', d:true});
+  }
+  ops.push({t:'➕ ¿Qué me falta?', a:'completar'});
+  ops.push({t:'⬅️ Volver', a:'menu'});
+  firuOpciones(ops);
 }
 
 function abrirFiru(accion){

@@ -25,6 +25,7 @@ import { ComboSheet } from './ComboSheet';
 import { CravingSheet } from './CravingSheet';
 import { HomeView } from './HomeView';
 import { OffersView } from './OffersView';
+import { VitrinaView } from './VitrinaView';
 import { BottomNav, type View } from './BottomNav';
 import { MenuSkeleton } from './MenuSkeleton';
 import { NoticeScreen } from './NoticeScreen';
@@ -46,7 +47,7 @@ const VIEW_PARAM = 'vista';
 
 function viewFromUrl(): View {
   const v = new URLSearchParams(window.location.search).get(VIEW_PARAM);
-  return v === 'menu' || v === 'ofertas' ? v : 'inicio';
+  return v === 'menu' || v === 'ofertas' || v === 'vitrina' ? v : 'inicio';
 }
 
 function sessionFlag(key: string): boolean {
@@ -316,7 +317,7 @@ export default function MenuPage() {
 
   return (
     <>
-      <div className="mx-auto max-w-3xl pb-28">
+      <div className={`mx-auto max-w-3xl ${current === 'vitrina' ? 'pb-16' : 'pb-28'}`}>
         {current === 'inicio' && (
           <HomeView
             idx={idx}
@@ -329,7 +330,12 @@ export default function MenuPage() {
             }}
             onCraving={() => setSheet({ kind: 'craving' })}
             onAllMenu={() => setView('menu')}
+            onVitrina={() => setView('vitrina')}
           />
+        )}
+
+        {current === 'vitrina' && (
+          <VitrinaView idx={idx} qtyInCart={qtyInCart} onOpen={open} onQuickAdd={(p) => quickAdd(p)} onClose={() => setView('inicio')} />
         )}
 
         {current === 'menu' && (
@@ -382,6 +388,7 @@ export default function MenuPage() {
 
         {current === 'ofertas' && <OffersView idx={idx} products={offerList} qtyInCart={qtyInCart} onOpen={open} onQuickAdd={(p) => quickAdd(p)} />}
 
+        {current !== 'vitrina' && (
         <footer className="mt-10 space-y-2 px-4 text-sm text-ink-2">
           <a href={waLink(business.whatsapp, `Hola ${business.name}, tengo una consulta.`)} className="flex items-center gap-2 font-semibold text-send">
             <MessageCircle size={16} aria-hidden /> WhatsApp {displayPhone(business.whatsapp)}
@@ -405,6 +412,7 @@ export default function MenuPage() {
           <p className="text-ink-3">Fotos referenciales.</p>
           {DEMO_MODE && <p className="text-ink-3">Modo demostración: los pedidos se envían por WhatsApp pero no se guardan en el sistema.</p>}
         </footer>
+        )}
       </div>
 
       <BottomNav view={current} showOffers={offerList.length > 0} totals={totals} onView={(v) => setView(v)} onCart={() => setSheet({ kind: 'cart' })} />

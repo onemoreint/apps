@@ -2,7 +2,7 @@ import { Flame, Home, ShoppingBag, UtensilsCrossed } from 'lucide-react';
 import { formatUsd, fromCents } from '@/shared/lib/money';
 import type { CartTotals } from '@/features/cart/cartMath';
 
-export type View = 'inicio' | 'menu' | 'ofertas';
+export type View = 'inicio' | 'menu' | 'ofertas' | 'vitrina';
 
 interface Props {
   view: View;

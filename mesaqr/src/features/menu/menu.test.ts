@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { loadCustomer, saveCustomer } from './session';
 import { groupRule, groupsFor, indexMenu, needsChoice, unavailableIn } from './menuIndex';
 import type { Menu, MenuProduct } from '@/shared/types/menu';
-import { comboFor, cravingMatches, economicCeilingCents, favorites, normalize, offers, savingsCents, searchProducts, suggestions } from './catalog';
+import { comboFor, cravingMatches, economicCeilingCents, favorites, normalize, offers, savingsCents, searchProducts, suggestions, vitrinaProducts } from './catalog';
 
 const prod = (p: Partial<MenuProduct> & Pick<MenuProduct, 'id' | 'name' | 'price_usd'>): MenuProduct => ({
   category_id: 'c1', type: 'simple', description: null, image_url: null, available: true, featured: false, upsell: false,
@@ -121,5 +121,29 @@ describe('Mesero digital (catálogo)', () => {
     // 7 disponibles → el tercio más barato son 3: 4.50, 5, 5
     expect(economicCeilingCents(idx)).toBe(500);
     expect(ids(cravingMatches(idx, 'economico'))).toEqual(['s1', 's3', 's4']);
+  });
+});
+
+describe('Vitrina', () => {
+  const vMenu: Menu = {
+    ...menu,
+    categories: [
+      { id: 'c1', name: 'Bebidas', emoji: null, image_url: null },
+      { id: 'c2', name: 'Burgers', emoji: null, image_url: null },
+    ],
+    products: [
+      prod({ id: 'a', name: 'Pepsi', price_usd: 1 }),
+      prod({ id: 'b', name: 'Clásica', price_usd: 7, category_id: 'c2' }),
+      prod({ id: 'c', name: 'Especial', price_usd: 9, category_id: 'c2', featured: true }),
+      prod({ id: 'd', name: 'Agotada', price_usd: 8, category_id: 'c2', available: false }),
+    ],
+  };
+  const idx = indexMenu(vMenu);
+  it('muestra solo disponibles, con los destacados primero', () => {
+    expect(vitrinaProducts(idx, null).map((p) => p.id)).toEqual(['c', 'a', 'b']);
+  });
+  it('filtra por categoría', () => {
+    expect(vitrinaProducts(idx, 'c2').map((p) => p.id)).toEqual(['c', 'b']);
+    expect(vitrinaProducts(idx, 'c-vacia')).toEqual([]);
   });
 });

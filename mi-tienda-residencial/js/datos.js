@@ -113,6 +113,9 @@
     if (cot.subtotal < C.entrega.pedidoMinimo) {
       return { ok: false, error: `El pedido mínimo es ${U.dinero(C.entrega.pedidoMinimo)}.` };
     }
+    if (datos.entrega.tipo === "domicilio" && cot.subtotal < (C.entrega.domicilioMinimo || 0)) {
+      return { ok: false, error: `El domicilio es para compras desde ${U.dinero(C.entrega.domicilioMinimo)}.` };
+    }
     // El residente aprobó un monto: si el total real cambió (precio o domicilio),
     // no se crea el pedido y se le pide aprobar de nuevo.
     if (Number(datos.totalAprobado) !== cot.total) {

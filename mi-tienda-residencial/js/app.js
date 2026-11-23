@@ -74,6 +74,7 @@
       partes.push(e.costoDomicilio > 0
         ? `Domicilio a tu apartamento por ${U.dinero(e.costoDomicilio)}`
         : "Domicilio gratis a tu apartamento");
+      if (e.domicilioMinimo > 0) partes.push(`compra mínima ${U.dinero(e.domicilioMinimo)}`);
       if (e.domicilioGratisDesde > 0 && e.costoDomicilio > 0) {
         partes.push(`gratis desde ${U.dinero(e.domicilioGratisDesde)}`);
       }
@@ -261,7 +262,11 @@
         </div>`;
     }).join("");
 
-    const faltante = C.entrega.pedidoMinimo - cot.subtotal;
+    const faltaMinimo = C.entrega.pedidoMinimo - cot.subtotal;
+    const faltaDomicilio = C.entrega.domicilioActivo ? (C.entrega.domicilioMinimo || 0) - cot.subtotal : 0;
+    // Solo se bloquea si no alcanza el mínimo general, o si no alcanza el del
+    // domicilio y la tienda no ofrece recogida.
+    const faltante = Math.max(faltaMinimo, C.entrega.recogidaActiva ? 0 : faltaDomicilio);
     const gratisDesde = C.entrega.domicilioGratisDesde;
     const faltaGratis = gratisDesde > 0 && C.entrega.domicilioActivo && C.entrega.costoDomicilio > 0
       ? gratisDesde - cot.subtotal : 0;
@@ -271,7 +276,8 @@
         ${faltaGratis > 0 ? `<p class="ayuda">Agrega ${U.dinero(faltaGratis)} más y el domicilio te sale gratis.</p>` : ""}
         <p class="ayuda">El costo del domicilio se calcula en el siguiente paso.</p>
       </div>
-      ${faltante > 0 ? `<p class="alerta">El pedido mínimo es ${U.dinero(C.entrega.pedidoMinimo)}. Te faltan ${U.dinero(faltante)}.</p>` : ""}
+      ${faltaMinimo > 0 ? `<p class="alerta">El pedido mínimo es ${U.dinero(C.entrega.pedidoMinimo)}. Te faltan ${U.dinero(faltaMinimo)}.</p>`
+        : faltaDomicilio > 0 ? `<p class="alerta">🏠 El domicilio es para compras desde ${U.dinero(C.entrega.domicilioMinimo)}. Te faltan ${U.dinero(faltaDomicilio)}.${C.entrega.recogidaActiva ? " También puedes recoger en la tienda." : ""}</p>` : ""}
       <a class="boton boton--principal boton--bloque ${faltante > 0 ? "deshabilitado" : ""}"
          href="#/pedido" ${faltante > 0 ? 'aria-disabled="true" tabindex="-1"' : ""}>Continuar con el pedido</a>
       <button type="button" class="boton boton--fantasma boton--bloque" data-accion="vaciar">Vaciar carrito</button>`;
@@ -285,7 +291,7 @@
     const opcEntrega = [];
     if (e.domicilioActivo) opcEntrega.push({
       id: "domicilio", titulo: "A mi apartamento", icono: "🏠",
-      detalle: e.costoDomicilio > 0 ? `${U.dinero(e.costoDomicilio)} · ${e.tiempoEstimado}` : `Gratis · ${e.tiempoEstimado}`
+      detalle: textoDomicilio()
     });
     if (e.recogidaActiva) opcEntrega.push({
       id: "recogida", titulo: "Recojo en la tienda", icono: "🛍️", detalle: e.puntoRecogida
@@ -306,6 +312,32 @@
     if (guardado) {
       ["nombre", "telefono", "torre", "apto"].forEach((k) => { if (guardado[k]) $("#" + k).value = guardado[k]; });
       $("#recordarDatos").checked = true;
+    }
+  }
+
+  function textoDomicilio() {
+    const e = C.entrega;
+    const costo = e.costoDomicilio > 0 ? U.dinero(e.costoDomicilio) : "Gratis";
+    return `${costo} · ${e.tiempoEstimado}` + (e.domicilioMinimo > 0 ? ` · compra mínima ${U.dinero(e.domicilioMinimo)}` : "");
+  }
+
+  /** Habilita o bloquea el domicilio según la compra mínima. */
+  function actualizarDomicilioDisponible() {
+    const radio = document.querySelector('#opcionesEntrega input[value="domicilio"]');
+    if (!radio) return;
+    const minimo = C.entrega.domicilioMinimo || 0;
+    const falta = minimo - cotizacion("recogida").subtotal;
+    const bloqueado = falta > 0 && C.entrega.recogidaActiva;
+    radio.disabled = bloqueado;
+    radio.closest(".opcion").classList.toggle("opcion--bloqueada", bloqueado);
+    radio.closest(".opcion").querySelector(".opcion__detalle").textContent = bloqueado
+      ? `Disponible desde ${U.dinero(minimo)} · te faltan ${U.dinero(falta)}`
+      : textoDomicilio();
+    if (bloqueado && estado.entrega === "domicilio") {
+      estado.entrega = "recogida";
+      const r = document.querySelector('#opcionesEntrega input[value="recogida"]');
+      if (r) r.checked = true;
+      $("#camposApto").hidden = true;
     }
   }
 
@@ -330,6 +362,7 @@
   }
 
   function pintarResumenPedido() {
+    actualizarDomicilioDisponible();
     const cot = cotizacion();
     const aviso = estado.abierta ? "" :
       `<p class="alerta">La tienda está cerrada en este momento. Tu pedido se atenderá cuando abra.</p>`;

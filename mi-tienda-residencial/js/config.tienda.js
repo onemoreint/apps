@@ -35,7 +35,8 @@ window.TIENDA_CONFIG = {
     recogidaActiva: true,
     costoDomicilio: 2000,
     domicilioGratisDesde: 50000, // pon 0 para no ofrecer domicilio gratis
-    pedidoMinimo: 5000,
+    domicilioMinimo: 7000, // compra mínima para pedir domicilio (0 = sin mínimo)
+    pedidoMinimo: 0,       // compra mínima para cualquier pedido, incluso recogida
     puntoRecogida: "Local 1, junto a la portería principal",
     tiempoEstimado: "20 a 40 minutos"
   },

@@ -120,9 +120,9 @@ h2{font:800 1.75rem/1.12 var(--display);font-stretch:112%;margin:6px 0 6px}
 .opts li{animation:rise .5s cubic-bezier(.2,.8,.2,1) both}
 .opts li:nth-child(2){animation-delay:.06s}.opts li:nth-child(3){animation-delay:.12s}.opts li:nth-child(4){animation-delay:.18s}.opts li:nth-child(5){animation-delay:.24s}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}}
-.opt{--c:var(--b6);--mx:50%;--my:50%;position:relative;overflow:hidden;width:100%;display:grid;grid-template-columns:58px 1fr 24px;gap:16px;align-items:center;text-align:left;
+.opt{--c:var(--b6);--mx:50%;--my:50%;position:relative;overflow:hidden;width:100%;display:grid;grid-template-columns:84px 1fr 24px;gap:18px;align-items:center;text-align:left;
   background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px 18px;cursor:pointer;
-  font:inherit;color:inherit;min-height:88px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  font:inherit;color:inherit;min-height:112px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   transition:transform .25s cubic-bezier(.2,.8,.2,1),border-color .25s,box-shadow .25s}
 .opt::before{content:"";position:absolute;inset:0;background:radial-gradient(260px circle at var(--mx) var(--my),color-mix(in srgb,var(--c) 30%,transparent),transparent 70%);opacity:0;transition:opacity .3s}
 .opt::after{content:"";position:absolute;left:0;top:14%;bottom:14%;width:4px;border-radius:0 4px 4px 0;background:var(--c);transform:scaleY(.3);opacity:.6;transition:transform .3s,opacity .3s}
@@ -133,10 +133,41 @@ h2{font:800 1.75rem/1.12 var(--display);font-stretch:112%;margin:6px 0 6px}
 .opt>*{position:relative}
 .opt b{display:block;font:800 1.28rem/1.15 var(--display);font-stretch:112%}
 .opt small{display:block;color:var(--ink2);font-size:.98rem;margin-top:4px}
-.opt .ic{width:58px;height:58px;border-radius:15px;display:grid;place-items:center;color:var(--c);
-  background:color-mix(in srgb,var(--c) 16%,transparent);border:1px solid color-mix(in srgb,var(--c) 35%,transparent);transition:background .3s,color .3s,transform .3s}
-.opt:hover .ic,.opt:focus-visible .ic{background:var(--c);color:#060912;transform:rotate(-6deg) scale(1.06)}
-.opt .ic svg{width:30px;height:30px}
+.opt .ic{position:relative;width:84px;height:84px;border-radius:24px;display:grid;place-items:center;color:var(--c);
+  background:radial-gradient(120% 120% at 30% 20%,color-mix(in srgb,var(--c) 26%,#0C1222),#070A14 75%);
+  border:1px solid color-mix(in srgb,var(--c) 45%,transparent);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 10px 26px -12px color-mix(in srgb,var(--c) 80%,transparent);
+  transition:transform .35s cubic-bezier(.3,1.6,.5,1),box-shadow .35s,background .35s;animation:icon-on .7s cubic-bezier(.2,.8,.2,1) both}
+.opt .ic::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(160deg,rgba(255,255,255,.18),transparent 40%),repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 3px)}
+.opts li:nth-child(1) .ic{animation-delay:.08s}.opts li:nth-child(2) .ic{animation-delay:.18s}.opts li:nth-child(3) .ic{animation-delay:.28s}
+.opts li:nth-child(4) .ic{animation-delay:.38s}.opts li:nth-child(5) .ic{animation-delay:.48s}
+@keyframes icon-on{0%{transform:scale(1,.04);filter:brightness(5) saturate(0);opacity:0}45%{transform:scale(1,.08);opacity:1}100%{transform:none;filter:none}}
+.opt:hover .ic,.opt:focus-visible .ic{transform:scale(1.08) rotate(-4deg);
+  background:radial-gradient(120% 120% at 30% 20%,color-mix(in srgb,var(--c) 48%,#0C1222),#0A0F1E 80%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 0 0 2px color-mix(in srgb,var(--c) 70%,transparent),0 16px 34px -10px var(--c)}
+.opt .ic svg{width:52px;height:52px;overflow:visible;filter:drop-shadow(0 0 6px color-mix(in srgb,var(--c) 60%,transparent))}
+.opt .ic svg *{transform-box:fill-box;transform-origin:center}
+/* Gestos de cada icono: suaves en reposo, rápidos al enfocar */
+.ic svg [class*="i-"]{animation-duration:var(--sp,3.2s);animation-iteration-count:infinite;animation-timing-function:ease-in-out}
+.opt:hover .ic,.opt:focus-visible .ic{--sp:1.3s}
+.i-play{animation-name:i-pulse}@keyframes i-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.22)}}
+.i-scan{animation-name:i-scan;animation-timing-function:linear!important}@keyframes i-scan{0%{transform:translateY(0);opacity:0}15%{opacity:.5}100%{transform:translateY(19px);opacity:0}}
+.i-eye{animation-name:i-blink}@keyframes i-blink{0%,42%,52%,100%{transform:scaleY(1)}47%{transform:scaleY(.1)}}
+.i-smile{animation-name:i-fade}
+.i-bar{transform-origin:left center!important;animation-name:i-bar}.i-bar.b2{animation-delay:-.6s}.i-bar.b3{animation-delay:-1.2s}
+@keyframes i-bar{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.45)}}
+.i-dot{animation-name:i-hop}.i-dot.d2{animation-delay:.2s}.i-dot.d3{animation-delay:.4s}
+@keyframes i-hop{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.i-q{transform-origin:50% 90%!important;animation-name:i-tilt}@keyframes i-tilt{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(10deg)}}
+.i-wave{animation-name:i-fade}.i-wave.w2{animation-delay:.35s}.i-wave.w3{animation-delay:.7s}
+@keyframes i-fade{0%,100%{opacity:.15}40%{opacity:1}}
+.i-spark{animation-name:i-twinkle}.i-spark.s2{animation-delay:-1.4s}
+@keyframes i-twinkle{0%,100%{transform:scale(.7) rotate(0);opacity:.6}50%{transform:scale(1.25) rotate(90deg);opacity:1}}
+.i-hand{transform-origin:30% 100%!important;animation-name:i-waveh}@keyframes i-waveh{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(10deg)}}
+.i-check{stroke-dasharray:30;animation-name:i-draw}@keyframes i-draw{0%{stroke-dashoffset:30}40%,85%{stroke-dashoffset:0}100%{stroke-dashoffset:-30}}
+.i-bolt{animation-name:i-zap}@keyframes i-zap{0%,70%,100%{transform:scale(1);opacity:1}74%{opacity:.35}78%{transform:scale(1.18);opacity:1}84%{opacity:.5}}
+.i-ring{animation-name:i-ring}@keyframes i-ring{0%{transform:scale(.6);opacity:.6}100%{transform:scale(1.25);opacity:0}}
 .opt .chev{width:24px;height:24px;color:var(--ink3);transition:transform .25s,color .25s}
 .opt:hover .chev,.opt:focus-visible .chev{transform:translateX(4px);color:var(--c)}
 
@@ -224,7 +255,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);padding-top:
 .sig a:hover{color:var(--ink);text-decoration:underline}
 .credits{font-size:.88rem;color:var(--ink3);max-width:66ch}
 .credits a{color:var(--ink2)}
-@media (max-width:420px){.opt{grid-template-columns:46px 1fr 20px;gap:12px;padding:14px}.opt .ic{width:46px;height:46px}.opt .ic svg{width:26px;height:26px}
+@media (max-width:420px){.opt{grid-template-columns:68px 1fr 20px;gap:14px;padding:14px;min-height:100px}.opt .ic{width:68px;height:68px;border-radius:20px}.opt .ic svg{width:42px;height:42px}
   .step{padding-left:64px}.step::before{left:14px;width:36px;height:36px}.step::after{left:31px;top:56px}}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
@@ -276,18 +307,18 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);padding-top:
 'use strict';
 var WA='573126387467';
 var ic={
-  android:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M10 9l4 2-4 2z" fill="currentColor"/></svg>',
-  lg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 8v8h4" stroke-linecap="round"/><circle cx="15" cy="9" r="1" fill="currentColor"/></svg>',
-  samsung:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 9h10M7 13h6"/></svg>',
-  other:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/><circle cx="8" cy="11" r="1" fill="currentColor"/><circle cx="12" cy="11" r="1" fill="currentColor"/><circle cx="16" cy="11" r="1" fill="currentColor"/></svg>',
-  ask:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>',
-  phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>',
-  pc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M2 20h20"/></svg>',
-  hand:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12V5.5a1.5 1.5 0 0 1 3 0V11m0-1V4.5a1.5 1.5 0 0 1 3 0V11m0-4.5a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7h-.5a6 6 0 0 1-5-2.7L3 15.5a1.5 1.5 0 0 1 2.5-1.7L8 17"/></svg>',
-  yes:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  android:'<svg viewBox="0 0 48 48" fill="none"><rect x="5" y="8" width="38" height="26" rx="5" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 44h14M24 34v10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><g class="i-play"><path d="M20 15.5l10.5 5.5L20 26.5z" fill="currentColor"/></g><rect class="i-scan" x="8" y="11" width="32" height="2.5" rx="1" fill="#fff" opacity=".45"/></svg>',
+  lg:'<svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="18" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 14v17h9" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><g class="i-eye"><circle cx="31" cy="18" r="3" fill="currentColor"/></g><path class="i-smile" d="M15 35q9 5 18 0" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/></svg>',
+  samsung:'<svg viewBox="0 0 48 48" fill="none"><rect x="5" y="8" width="38" height="26" rx="5" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 44h14M24 34v10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path class="i-bar b1" d="M12 16h24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path class="i-bar b2" d="M12 21h17" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path class="i-bar b3" d="M12 26h21" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  other:'<svg viewBox="0 0 48 48" fill="none"><rect x="5" y="8" width="38" height="26" rx="5" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 44h14" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle class="i-dot d1" cx="15" cy="21" r="3" fill="currentColor"/><circle class="i-dot d2" cx="24" cy="21" r="3" fill="currentColor"/><circle class="i-dot d3" cx="33" cy="21" r="3" fill="currentColor"/></svg>',
+  ask:'<svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="18" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><g class="i-q"><path d="M18.5 18.5a5.5 5.5 0 1 1 7.7 5c-1.3.6-2.2 1.9-2.2 3.4v1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="34" r="1.9" fill="currentColor"/></g></svg>',
+  phone:'<svg viewBox="0 0 48 48" fill="none"><rect x="9" y="10" width="18" height="33" rx="4" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 38h4" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path class="i-wave w1" d="M32 17a5 5 0 0 1 0 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path class="i-wave w2" d="M36 13a11 11 0 0 1 0 15" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path class="i-wave w3" d="M40 9a17 17 0 0 1 0 23" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  pc:'<svg viewBox="0 0 48 48" fill="none"><rect x="5" y="10" width="34" height="24" rx="3" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 40h40" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><g class="i-spark"><path d="M16 13.5c.9 5.2 2 6.3 7.2 7.2-5.2.9-6.3 2-7.2 7.2-.9-5.2-2-6.3-7.2-7.2 5.2-.9 6.3-2 7.2-7.2z" fill="currentColor"/></g><text x="24.5" y="27" font-family="Archivo,system-ui,sans-serif" font-weight="800" font-size="11" fill="#fff">IA</text><g class="i-spark s2"><path d="M42 3c.5 2.8 1.1 3.4 3.9 3.9-2.8.5-3.4 1.1-3.9 3.9-.5-2.8-1.1-3.4-3.9-3.9 2.8-.5 3.4-1.1 3.9-3.9z" fill="#fff"/></g></svg>',
+  hand:'<svg viewBox="0 0 48 48" fill="none"><g class="i-hand"><path d="M16 24V11a3 3 0 0 1 6 0v11m0-2V8a3 3 0 0 1 6 0v14m0-9a3 3 0 0 1 6 0v15a14 14 0 0 1-14 14h-1a12 12 0 0 1-10-5.4L6 31a3 3 0 0 1 5-3.4L16 34" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g><path class="i-wave w1" d="M38 8a8 8 0 0 1 4 6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path class="i-wave w2" d="M37 3a13 13 0 0 1 8 9" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  yes:'<svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="18" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path class="i-check" d="M15 24.5l6.5 6.5L33.5 18" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   no:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
-  bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4.5 13.5H11L10 22l8.5-11.5H12L13 2z"/></svg>',
-  remote:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="7" y="2" width="10" height="20" rx="4"/><circle cx="12" cy="8" r="2"/><path d="M10 14h4M10 17h4"/></svg>',
+  bolt:'<svg viewBox="0 0 48 48" fill="none"><circle class="i-ring" cx="24" cy="24" r="19" stroke="currentColor" stroke-width="2" opacity=".35"/><g class="i-bolt"><path d="M27 5L12 27h11l-3 16 16-23H25l2-15z" fill="currentColor" fill-opacity=".9" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g></svg>',
+  remote:'<svg viewBox="0 0 48 48" fill="none"><rect x="16" y="15" width="16" height="30" rx="6" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="24" r="3.4" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 33h6M21 38h6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path class="i-wave w1" d="M19 9.5a7 7 0 0 1 10 0" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path class="i-wave w2" d="M15.5 5.5a12 12 0 0 1 17 0" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   chev:'<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
   backc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>',
   ext:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>',

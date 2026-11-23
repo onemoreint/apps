@@ -1,7 +1,7 @@
 /* Service worker: permite abrir la tienda sin internet (catálogo guardado).
    Cada vez que cambies archivos, sube el número de VERSION para que los
    teléfonos descarguen la versión nueva. */
-const VERSION = "mtr-v1.0.1";
+const VERSION = "mtr-v1.0.2";
 const ARCHIVOS = [
   "./",
   "index.html",

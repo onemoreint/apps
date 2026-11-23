@@ -125,8 +125,8 @@ Nunca pongas contraseñas ni claves.
 3. En 1 o 2 minutos quedará en `https://onemoreint.github.io/apps/mi-tienda-residencial/`
    (si GitHub Pages ya está activo en ese repo, como en tus otras microapps).
 
-Cuando cambies archivos más adelante, sube el número de `VERSION` en `sw.js`
-(ej. `mtr-v1.0.1`) para que los celulares descarguen la versión nueva.
+Cuando cambies archivos más adelante, sube el número de `VERSION` en `sw.js` y el `?v=`
+de los archivos en `index.html` (ej. `?v=1.2.2`) para que los celulares descarguen la versión nueva.
 
 ---
 

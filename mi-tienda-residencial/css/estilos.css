@@ -77,7 +77,7 @@ h1, h2, h3 { line-height: 1.15; margin: 0; }
   color: var(--blanco);
 }
 .cabecera__marca { display: flex; align-items: center; gap: 12px; min-width: 0; }
-.cabecera__logo { width: 44px; height: 44px; border-radius: 12px; background: var(--blanco); object-fit: contain; flex: none; }
+.cabecera__logo { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; flex: none; box-shadow: 0 0 0 2px var(--dorado); }
 .cabecera__nombre { font-family: var(--fuente-titulos); font-size: 19px; font-weight: 700; letter-spacing: .2px; }
 .cabecera__conjunto { margin: 2px 0 0; font-size: 13px; opacity: .8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cabecera .boton--fantasma { white-space: nowrap; flex: none; color: var(--blanco); border-color: rgba(255,255,255,.35); background: transparent; }
@@ -93,6 +93,12 @@ h1, h2, h3 { line-height: 1.15; margin: 0; }
   content: ""; position: absolute; left: 16px; right: 16px; bottom: 40px; height: 1px;
   background: linear-gradient(90deg, transparent, var(--dorado), transparent); opacity: .6;
 }
+.portada { text-align: center; }
+.portada__logo {
+  display: block; width: 168px; height: 168px; margin: 4px auto 14px; border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(201,165,90,.6), 0 14px 34px rgba(0,0,0,.35);
+}
+.portada__texto { margin-left: auto !important; margin-right: auto !important; }
 .portada__titulo { font-family: var(--fuente-titulos); font-size: 30px; font-weight: 700; margin-top: 12px; }
 .portada__texto { margin: 8px 0 0; opacity: .88; max-width: 52ch; }
 
@@ -314,7 +320,7 @@ h1, h2, h3 { line-height: 1.15; margin: 0; }
 
 .chips-estado { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 10px 0; }
 .chip { padding: 6px 12px; border-radius: 999px; font-size: 14px; font-weight: 700; background: var(--fondo); }
-.chip--pendiente, .chip--pendiente_verificacion { background: var(--ambar-suave); color: var(--ambar); }
+.chip--pendiente, .chip--pendiente_verificacion, .chip--contra_entrega { background: var(--ambar-suave); color: var(--ambar); }
 .chip--confirmado, .chip--preparando, .chip--listo { background: var(--verde-suave); color: var(--verde); }
 .chip--entregado, .chip--verificado { background: var(--verde); color: var(--blanco); }
 .chip--cancelado, .chip--rechazado { background: var(--rojo-suave); color: var(--rojo); }
@@ -366,3 +372,30 @@ h1, h2, h3 { line-height: 1.15; margin: 0; }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* ---------- Pago: efectivo, aprobación y QR ---------- */
+.ayuda--destacada { margin: 4px 0 14px; padding: 10px 12px; border-radius: 12px; background: var(--verde-suave); color: var(--verde); }
+.billetes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.billete {
+  min-height: 44px; padding: 0 14px; border-radius: 12px; cursor: pointer;
+  border: 1.5px solid var(--borde); background: var(--blanco); font-weight: 700; font-size: 16px;
+}
+.billete[aria-pressed="true"] { background: var(--verde); border-color: var(--verde); color: var(--blanco); }
+.cambio p { margin: 0 0 8px; padding: 12px 14px; border-radius: 12px; font-size: 16px; }
+.cambio__ok { background: var(--verde-suave); color: var(--verde); }
+.cambio__falta { background: var(--ambar-suave); color: var(--ambar); font-weight: 600; }
+
+.aprobacion { border: 2px solid var(--dorado); background: #FFFDF7; }
+.aprobacion--alerta { border-color: var(--rojo); box-shadow: 0 0 0 3px var(--rojo-suave); }
+.casilla--grande { align-items: flex-start; font-size: 17px; }
+.casilla--grande input { width: 26px; height: 26px; margin-top: 1px; flex: none; }
+
+.pago__titulo { margin: 0 0 10px; font-size: 19px; font-weight: 800; color: var(--verde); text-align: center; }
+.pago-qr, .pago-efectivo { text-align: left; border: 2px solid var(--verde-suave); }
+.qr { width: min(240px, 70vw); margin: 0 auto; padding: 8px; border-radius: 14px; background: var(--blanco); box-shadow: var(--sombra); }
+.qr svg, .qr__imagen { display: block; width: 100%; height: auto; }
+.pago__datos { margin: 12px 0; }
+.pago__datos div { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid var(--borde); }
+.pago__datos dt { color: var(--texto-suave); }
+.pago__datos dd { margin: 0; font-weight: 700; text-align: right; }
+.pago-qr .boton { display: flex; width: 100%; }

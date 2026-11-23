@@ -34,6 +34,7 @@
 
   const ESTADOS_PAGO = {
     pendiente_verificacion: "Pago por verificar",
+    contra_entrega: "Pago en efectivo al recibir",
     verificado: "Pago verificado",
     rechazado: "Pago rechazado"
   };
@@ -112,6 +113,21 @@
     if (cot.subtotal < C.entrega.pedidoMinimo) {
       return { ok: false, error: `El pedido mínimo es ${U.dinero(C.entrega.pedidoMinimo)}.` };
     }
+    // El residente aprobó un monto: si el total real cambió (precio o domicilio),
+    // no se crea el pedido y se le pide aprobar de nuevo.
+    if (Number(datos.totalAprobado) !== cot.total) {
+      return { ok: false, error: `El total cambió a ${U.dinero(cot.total)}. Revísalo y apruébalo de nuevo.`, totalNuevo: cot.total };
+    }
+    const metodo = C.pagos.find((m) => m.id === datos.pago.metodo && m.activo);
+    if (!metodo) return { ok: false, error: "Elige un método de pago válido." };
+    const esEfectivo = metodo.id === "efectivo";
+    let efectivoCon = 0;
+    if (esEfectivo) {
+      efectivoCon = Math.round(Number(datos.pago.efectivoCon) || 0);
+      if (efectivoCon < cot.total) {
+        return { ok: false, error: `El efectivo con el que pagas debe ser de al menos ${U.dinero(cot.total)}.` };
+      }
+    }
 
     const ahora = new Date().toISOString();
     const pedido = {
@@ -125,11 +141,14 @@
       subtotal: cot.subtotal,
       costoDomicilio: cot.costoDomicilio,
       total: cot.total,
+      totalAprobado: cot.total,
       pago: {
-        metodo: datos.pago.metodo,
-        referencia: datos.pago.referencia || "",
-        comprobanteAdjunto: !!datos.pago.comprobanteNombre,
-        estado: "pendiente_verificacion"
+        metodo: metodo.id,
+        referencia: esEfectivo ? "" : (datos.pago.referencia || ""),
+        comprobanteAdjunto: !esEfectivo && !!datos.pago.comprobanteNombre,
+        efectivoCon: esEfectivo ? efectivoCon : 0,
+        cambio: esEfectivo ? efectivoCon - cot.total : 0,
+        estado: esEfectivo ? "contra_entrega" : "pendiente_verificacion"
       },
       notas: datos.notas || "",
       estado: "pendiente",

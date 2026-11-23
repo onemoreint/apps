@@ -1,7 +1,7 @@
 /* Service worker: permite abrir la tienda sin internet (catálogo guardado).
    Cada vez que cambies archivos, sube el número de VERSION para que los
    teléfonos descarguen la versión nueva. */
-const VERSION = "mtr-v1.0.2";
+const VERSION = "mtr-v1.2.0";
 const ARCHIVOS = [
   "./",
   "index.html",
@@ -9,11 +9,11 @@ const ARCHIVOS = [
   "js/config.tienda.js",
   "js/productos.demo.js",
   "js/utilidades.js",
+  "js/qr.js",
   "js/datos.js",
   "js/carrito.js",
   "js/app.js",
-  "img/logo.svg",
-  "img/icono.svg",
+  "img/logo-flor-de-loto.webp",
   "img/icono-192.png",
   "manifest.webmanifest"
 ];

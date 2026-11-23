@@ -21,6 +21,7 @@
     entrega: C.entrega.domicilioActivo ? "domicilio" : "recogida",
     metodoPago: null,
     solicitudId: null, // se crea al abrir el formulario; evita pedidos duplicados
+    totalAprobado: null, // monto que el residente aprobó con la casilla
     enviando: false
   };
 
@@ -60,7 +61,13 @@
     document.title = C.nombre;
     $("#nombreTienda").textContent = C.nombre;
     $("#nombreConjunto").textContent = C.conjunto;
-    if (C.logo) $("#logoTienda").src = C.logo;
+    if (C.logo) {
+      $("#logoTienda").src = C.logo;
+      $("#logoPortada").src = C.logo;
+      $("#logoPortada").alt = `Logo de ${C.nombre}`;
+    } else {
+      $("#logoPortada").hidden = true;
+    }
     const e = C.entrega;
     const partes = [];
     if (e.domicilioActivo) {
@@ -286,9 +293,10 @@
     $("#opcionesEntrega").innerHTML = opcEntrega.map((o) => opcionHTML("entrega", o, o.id === estado.entrega)).join("");
 
     const pagos = C.pagos.filter((p) => p.activo);
-    const iconos = { nequi: "📱", daviplata: "📲", transferencia: "🏦" };
+    const iconos = { nequi: "📱", daviplata: "📲", transferencia: "🏦", efectivo: "💵" };
     $("#opcionesPago").innerHTML = pagos.map((p) => opcionHTML("pago", {
-      id: p.id, titulo: p.nombre, icono: iconos[p.id] || "💳", detalle: p.banco || p.numero
+      id: p.id, titulo: p.nombre, icono: iconos[p.id] || "💳",
+      detalle: p.id === "efectivo" ? "Pagas al recibir · te llevamos el cambio" : (p.banco || p.numero)
     }, false)).join("");
 
     $("#torre").innerHTML = `<option value="">Elige</option>` +
@@ -317,6 +325,7 @@
     if (!estado.solicitudId) estado.solicitudId = U.idUnico();
     $("#camposApto").hidden = estado.entrega !== "domicilio";
     $("#errorGeneral").textContent = "";
+    mostrarCamposPago();
     pintarResumenPedido();
   }
 
@@ -333,8 +342,60 @@
       <div class="total-fila"><span>Subtotal</span><span>${U.dinero(cot.subtotal)}</span></div>
       <div class="total-fila"><span>Domicilio</span><span>${estado.entrega === "domicilio" ? (cot.costoDomicilio ? U.dinero(cot.costoDomicilio) : "Gratis") : "No aplica"}</span></div>
       <div class="total-fila total-fila--grande"><span>Total a pagar</span><strong>${U.dinero(cot.total)}</strong></div>`;
+    // Si el total cambió después de aprobarlo, la aprobación se anula
+    if (estado.totalAprobado !== null && estado.totalAprobado !== cot.total) {
+      estado.totalAprobado = null;
+      $("#apruebaTotal").checked = false;
+    }
+    $("#textoAprobacion").innerHTML =
+      `Revisé mi pedido y <strong>apruebo pagar ${U.dinero(cot.total)}</strong>` +
+      (estado.entrega === "domicilio" && cot.costoDomicilio ? " (incluye domicilio)." : ".");
+    $("#botonConfirmar").textContent = `Aprobar y confirmar · ${U.dinero(cot.total)}`;
+
     const cuenta = C.pagos.find((p) => p.id === estado.metodoPago);
-    if (cuenta) pintarDatosCuenta(cuenta, cot.total);
+    if (cuenta && cuenta.id !== "efectivo") pintarDatosCuenta(cuenta, cot.total);
+    if (estado.metodoPago === "efectivo") pintarEfectivo(cot.total);
+  }
+
+  /* ---------------------------------------------------------------------
+     Pago en efectivo: con cuánto paga y cuánto cambio llevar
+     --------------------------------------------------------------------- */
+  function valorEfectivo() {
+    return Number(U.soloDigitos($("#efectivoCon").value)) || 0;
+  }
+
+  function sugerenciasBilletes(total) {
+    const opciones = new Set([total]);
+    [10000, 20000, 50000, 100000].forEach((b) => {
+      const v = Math.ceil(total / b) * b;
+      if (v > total) opciones.add(v);
+    });
+    return [...opciones].sort((a, b) => a - b).slice(0, 4);
+  }
+
+  function pintarEfectivo(total) {
+    const actual = valorEfectivo();
+    $("#billetes").innerHTML = sugerenciasBilletes(total).map((v) => `
+      <button type="button" class="billete" data-accion="billete" data-valor="${v}"
+        aria-pressed="${actual === v}">${v === total ? "Exacto" : U.dinero(v)}</button>`).join("");
+    const caja = $("#cambio");
+    if (!actual) { caja.innerHTML = ""; return; }
+    if (actual < total) {
+      caja.innerHTML = `<p class="cambio__falta">Faltan ${U.dinero(total - actual)} para cubrir el total.</p>`;
+      return;
+    }
+    const cambio = actual - total;
+    caja.innerHTML = cambio === 0
+      ? `<p class="cambio__ok">Pagas el valor exacto. No necesitas cambio.</p>`
+      : `<p class="cambio__ok">Pagas con <strong>${U.dinero(actual)}</strong> ·
+         el domiciliario te lleva <strong>${U.dinero(cambio)}</strong> de cambio.</p>`;
+  }
+
+  function mostrarCamposPago() {
+    const efectivo = estado.metodoPago === "efectivo";
+    $("#camposEfectivo").hidden = !efectivo;
+    $("#camposTransferencia").hidden = efectivo;
+    $("#datosCuenta").hidden = efectivo || !estado.metodoPago;
   }
 
   function pintarDatosCuenta(p, total) {
@@ -364,7 +425,7 @@
   }
 
   function validarFormulario() {
-    ["nombre", "telefono", "torre", "apto", "metodo", "comprobante"].forEach((c) => mostrarError(c, ""));
+    ["nombre", "telefono", "torre", "apto", "metodo", "comprobante", "efectivoCon", "apruebaTotal"].forEach((c) => mostrarError(c, ""));
     const errores = {};
     const nombre = $("#nombre").value.trim().replace(/\s+/g, " ");
     if (nombre.length < 3) errores.nombre = "Escribe tu nombre.";
@@ -377,7 +438,17 @@
       if (!/^[0-9A-Z-]{1,6}$/.test(apto)) errores.apto = "Escribe tu apartamento.";
     }
     if (!estado.metodoPago) errores.metodo = "Elige cómo vas a pagar.";
-    const archivo = $("#comprobante").files[0];
+    const total = cotizacion().total;
+    const efectivoCon = valorEfectivo();
+    if (estado.metodoPago === "efectivo" && efectivoCon < total) {
+      errores.efectivoCon = efectivoCon
+        ? `Debe ser al menos ${U.dinero(total)}.`
+        : "Escribe con cuánto vas a pagar o toca «Exacto».";
+    }
+    if (!$("#apruebaTotal").checked || estado.totalAprobado !== total) {
+      errores.apruebaTotal = "Marca la casilla para aprobar el total del pedido.";
+    }
+    const archivo = estado.metodoPago === "efectivo" ? null : $("#comprobante").files[0];
     if (archivo) {
       if (archivo.size > 5 * 1024 * 1024) errores.comprobante = "El archivo pesa más de 5 MB.";
       else if (!/^image\/|application\/pdf/.test(archivo.type)) errores.comprobante = "Solo imágenes o PDF.";
@@ -386,6 +457,7 @@
     const primero = Object.keys(errores)[0];
     if (primero) {
       const el = document.getElementById(primero === "metodo" ? "opcionesPago" : primero);
+      if (primero === "apruebaTotal") $("#apruebaTotal").closest(".aprobacion").classList.add("aprobacion--alerta");
       el && el.scrollIntoView({ behavior: "smooth", block: "center" });
       if (el && el.focus && primero !== "metodo") el.focus({ preventScroll: true });
       return null;
@@ -396,7 +468,8 @@
       apto: estado.entrega === "domicilio" ? apto : "",
       notas: $("#notas").value.trim().slice(0, 200),
       referencia: $("#referencia").value.trim().slice(0, 40),
-      comprobanteNombre: archivo ? archivo.name : ""
+      comprobanteNombre: archivo ? archivo.name : "",
+      efectivoCon: estado.metodoPago === "efectivo" ? efectivoCon : 0
     };
   }
 
@@ -418,11 +491,16 @@
         lineas: K.lineas(),
         cliente: { nombre: datos.nombre, telefono: datos.telefono, torre: datos.torre, apto: datos.apto },
         entrega: { tipo: estado.entrega },
-        pago: { metodo: estado.metodoPago, referencia: datos.referencia, comprobanteNombre: datos.comprobanteNombre },
+        pago: {
+          metodo: estado.metodoPago, referencia: datos.referencia,
+          comprobanteNombre: datos.comprobanteNombre, efectivoCon: datos.efectivoCon
+        },
+        totalAprobado: estado.totalAprobado,
         notas: datos.notas
       });
       if (!r.ok) {
         $("#errorGeneral").textContent = r.error;
+        if (r.totalNuevo) { estado.totalAprobado = null; $("#apruebaTotal").checked = false; pintarResumenPedido(); }
         return;
       }
       if ($("#recordarDatos").checked) {
@@ -435,6 +513,9 @@
       $("#referencia").value = "";
       $("#comprobante").value = "";
       $("#notas").value = "";
+      $("#efectivoCon").value = "";
+      $("#apruebaTotal").checked = false;
+      estado.totalAprobado = null;
       // Recargar catálogo (stock actualizado)
       const cat = await D.obtenerCatalogo();
       estado.productos = cat.productos;
@@ -446,7 +527,7 @@
     } finally {
       estado.enviando = false;
       boton.disabled = false;
-      boton.textContent = "Confirmar pedido";
+      pintarResumenPedido();
     }
   }
 
@@ -472,9 +553,15 @@
     if (p.entrega.tipo === "domicilio") l.push(`Domicilio: ${p.costoDomicilio ? U.dinero(p.costoDomicilio) : "Gratis"}`);
     l.push(`*Total: ${U.dinero(p.total)}*`);
     l.push("");
-    l.push(`💳 Pago: ${metodo}`);
-    l.push(p.pago.referencia ? `Referencia: ${p.pago.referencia}` : "Referencia: la envío en este chat");
-    if (p.pago.comprobanteAdjunto) l.push("Adjunto el comprobante en este chat.");
+    l.push(`✅ Aprobé el total de ${U.dinero(p.totalAprobado || p.total)}`);
+    if (p.pago.metodo === "efectivo") {
+      l.push(`💵 Pago en efectivo: pago con ${U.dinero(p.pago.efectivoCon)}`);
+      l.push(p.pago.cambio > 0 ? `*Traer cambio de ${U.dinero(p.pago.cambio)}*` : "Pago exacto, no necesito cambio.");
+    } else {
+      l.push(`💳 Pago: ${metodo}`);
+      l.push(p.pago.referencia ? `Referencia: ${p.pago.referencia}` : "Referencia: la envío en este chat");
+      if (p.pago.comprobanteAdjunto) l.push("Adjunto el comprobante en este chat.");
+    }
     if (p.notas) { l.push(""); l.push(`📝 ${p.notas}`); }
     return l.join("\n");
   }
@@ -521,6 +608,7 @@
         Enviar pedido por WhatsApp
       </a>
       ${chipsEstado(p)}
+      ${bloquePago(p)}
       <div class="tarjeta tarjeta--resumen">
         <ul class="resumen__items">
           ${p.items.map((i) => `<li><span>${i.cantidad} × ${U.escaparHTML(i.nombre)}</span><span>${U.dinero(i.subtotal)}</span></li>`).join("")}
@@ -530,9 +618,59 @@
           ? `Entrega en Torre ${U.escaparHTML(p.cliente.torre)}, Apto ${U.escaparHTML(p.cliente.apto)}.`
           : `Recoges en: ${U.escaparHTML(C.entrega.puntoRecogida)}.`}</p>
       </div>
-      <p class="ayuda centrado">La tienda verifica tu pago manualmente y te confirma por WhatsApp.
-        ${p.pago.comprobanteAdjunto ? "Recuerda adjuntar el comprobante en el chat." : ""}</p>
+      <p class="ayuda centrado">${p.pago.metodo === "efectivo"
+        ? "Ten listo el efectivo al recibir tu pedido."
+        : "La tienda verifica tu pago manualmente y te confirma por WhatsApp. Envía el comprobante en el chat."}</p>
       <a class="boton boton--fantasma boton--bloque" href="#/">Volver a la tienda</a>`;
+  }
+
+  /** Texto que va dentro del QR: datos de la cuenta y valor a pagar. */
+  function textoQR(p, cuenta) {
+    const l = [`Pago pedido ${p.numero}`, C.nombre, cuenta.nombre];
+    if (cuenta.banco) l.push(`${cuenta.banco}${cuenta.tipoCuenta ? " · " + cuenta.tipoCuenta : ""}`);
+    l.push(`${cuenta.id === "transferencia" ? "Cuenta" : "Número"}: ${cuenta.numero}`);
+    l.push(`Titular: ${cuenta.titular}`);
+    if (cuenta.documento) l.push(cuenta.documento);
+    l.push(`Valor: ${U.dinero(p.total)}`);
+    return l.join("\n");
+  }
+
+  function bloquePago(p) {
+    if (p.pago.metodo === "efectivo") {
+      return `
+        <div class="tarjeta pago-efectivo">
+          <p class="pago__titulo">💵 Pago en efectivo al recibir</p>
+          <div class="total-fila"><span>Total aprobado</span><strong>${U.dinero(p.total)}</strong></div>
+          <div class="total-fila"><span>Pagas con</span><strong>${U.dinero(p.pago.efectivoCon)}</strong></div>
+          <div class="total-fila total-fila--grande"><span>Cambio que te llevan</span><strong>${U.dinero(p.pago.cambio)}</strong></div>
+        </div>`;
+    }
+    const cuenta = C.pagos.find((c) => c.id === p.pago.metodo);
+    if (!cuenta) return "";
+    let qr;
+    if (cuenta.qrImagen) {
+      qr = `<img class="qr__imagen" src="${U.escaparHTML(cuenta.qrImagen)}" alt="Código QR oficial de ${U.escaparHTML(cuenta.nombre)}">`;
+    } else {
+      try { qr = window.QR.svg(textoQR(p, cuenta), { margen: 3, color: "#0E3B2E" }); }
+      catch (e) { qr = window.QR.svg(`${cuenta.nombre} ${cuenta.numero} ${U.dinero(p.total)}`, { margen: 3 }); }
+    }
+    return `
+      <div class="tarjeta pago-qr">
+        <p class="pago__titulo">Paga ${U.dinero(p.total)} por ${U.escaparHTML(cuenta.nombre)}</p>
+        <div class="qr">${qr}</div>
+        <p class="ayuda centrado">${cuenta.qrImagen
+          ? "Escanéalo desde la app de tu banco para pagar."
+          : "Escanéalo con la cámara para ver los datos de la cuenta, o cópialos aquí:"}</p>
+        <dl class="pago__datos">
+          ${cuenta.banco ? `<div><dt>Banco</dt><dd>${U.escaparHTML(cuenta.banco)}${cuenta.tipoCuenta ? " · " + U.escaparHTML(cuenta.tipoCuenta) : ""}</dd></div>` : ""}
+          <div><dt>${cuenta.id === "transferencia" ? "Cuenta" : "Número"}</dt><dd>${U.escaparHTML(cuenta.numero)}</dd></div>
+          <div><dt>Titular</dt><dd>${U.escaparHTML(cuenta.titular)}</dd></div>
+          ${cuenta.documento ? `<div><dt>Documento</dt><dd>${U.escaparHTML(cuenta.documento)}</dd></div>` : ""}
+          <div><dt>Valor exacto</dt><dd>${U.dinero(p.total)}</dd></div>
+        </dl>
+        <button type="button" class="boton boton--fantasma boton--chico" data-accion="copiar"
+          data-texto="${U.escaparHTML(U.soloDigitos(cuenta.numero))}">Copiar número de cuenta</button>
+      </div>`;
   }
 
   function tarjetaEstado(p) {
@@ -617,6 +755,11 @@
           $("#buscar").value = ""; pintarCategorias(); pintarProductos();
           break;
         case "copiar": copiar(b.dataset.texto); break;
+        case "billete":
+          $("#efectivoCon").value = Number(b.dataset.valor).toLocaleString("es-CO");
+          mostrarError("efectivoCon", "");
+          pintarEfectivo(cotizacion().total);
+          break;
       }
     });
 
@@ -628,7 +771,19 @@
     $("#opcionesPago").addEventListener("change", (e) => {
       estado.metodoPago = e.target.value;
       mostrarError("metodo", "");
+      mostrarCamposPago();
       pintarResumenPedido();
+    });
+    $("#efectivoCon").addEventListener("input", (e) => {
+      const n = U.soloDigitos(e.target.value).slice(0, 8);
+      e.target.value = n ? Number(n).toLocaleString("es-CO") : "";
+      mostrarError("efectivoCon", "");
+      pintarEfectivo(cotizacion().total);
+    });
+    $("#apruebaTotal").addEventListener("change", (e) => {
+      estado.totalAprobado = e.target.checked ? cotizacion().total : null;
+      mostrarError("apruebaTotal", "");
+      e.target.closest(".aprobacion").classList.remove("aprobacion--alerta");
     });
     $("#telefono").addEventListener("input", (e) => {
       e.target.value = e.target.value.replace(/[^\d+\s]/g, "");

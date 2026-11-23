@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Mi Tienda Residencial</title>
+  <title>Flor de Loto · Minimercado</title>
   <meta name="description" content="Pide a la tienda de tu conjunto y recibe en tu apartamento.">
   <meta name="theme-color" content="#0E3B2E">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="img/icono.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="img/icono-192.png">
+  <link rel="icon" href="img/icono-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
   <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
@@ -21,9 +21,9 @@
 
   <header class="cabecera">
     <div class="cabecera__marca">
-      <img id="logoTienda" class="cabecera__logo" src="img/logo.svg" alt="" width="44" height="44">
+      <img id="logoTienda" class="cabecera__logo" src="img/logo-flor-de-loto.webp" alt="" width="48" height="48">
       <div>
-        <h1 class="cabecera__nombre" id="nombreTienda">Mi Tienda Residencial</h1>
+        <h1 class="cabecera__nombre" id="nombreTienda">Flor de Loto</h1>
         <p class="cabecera__conjunto" id="nombreConjunto"></p>
       </div>
     </div>
@@ -34,6 +34,7 @@
     <!-- ================= PANTALLA: CATÁLOGO ================= -->
     <section class="pantalla" data-pantalla="catalogo" aria-labelledby="tituloCatalogo">
       <div class="portada">
+        <img id="logoPortada" class="portada__logo" src="img/logo-flor-de-loto.webp" alt="Logo de la tienda" width="168" height="168">
         <p class="chip-horario" id="chipHorario"><span class="punto"></span><span>…</span></p>
         <h2 class="portada__titulo" id="tituloCatalogo">¿Qué necesitas hoy?</h2>
         <p class="portada__texto" id="textoEntrega"></p>
@@ -114,23 +115,45 @@
           <div class="opciones" id="opcionesPago"></div>
           <p class="error" data-error-de="metodo"></p>
           <div id="datosCuenta" class="datos-cuenta" hidden></div>
-          <div class="campo">
-            <label for="referencia">Referencia de la transferencia</label>
-            <input id="referencia" name="referencia" maxlength="40" autocomplete="off" placeholder="Número que te da la app al pagar">
-            <p class="ayuda">Si aún no has pagado, puedes enviarla después por WhatsApp.</p>
+          <div id="camposTransferencia">
+            <p class="ayuda ayuda--destacada">Al confirmar te mostramos un <strong>código QR</strong> con los datos de la cuenta y el valor exacto a pagar.</p>
+            <div class="campo">
+              <label for="referencia">Referencia de la transferencia <span class="opcional">(si ya pagaste)</span></label>
+              <input id="referencia" name="referencia" maxlength="40" autocomplete="off" placeholder="Número que te da la app al pagar">
+              <p class="ayuda">Si aún no has pagado, puedes enviarla después por WhatsApp.</p>
+            </div>
+            <div class="campo">
+              <label for="comprobante">Comprobante <span class="opcional">(opcional)</span></label>
+              <input id="comprobante" name="comprobante" type="file" accept="image/*,application/pdf">
+              <p class="ayuda">En esta versión el comprobante <strong>no se sube</strong> a ningún servidor: adjúntalo en el chat de WhatsApp después de enviar el pedido.</p>
+              <p class="error" data-error-de="comprobante"></p>
+            </div>
           </div>
-          <div class="campo">
-            <label for="comprobante">Comprobante <span class="opcional">(opcional)</span></label>
-            <input id="comprobante" name="comprobante" type="file" accept="image/*,application/pdf">
-            <p class="ayuda">En esta versión el comprobante <strong>no se sube</strong> a ningún servidor: adjúntalo en el chat de WhatsApp después de enviar el pedido.</p>
-            <p class="error" data-error-de="comprobante"></p>
+
+          <div id="camposEfectivo" hidden>
+            <div class="campo">
+              <label for="efectivoCon">¿Con cuánto vas a pagar?</label>
+              <input id="efectivoCon" name="efectivoCon" inputmode="numeric" autocomplete="off" placeholder="Ej: 100.000">
+              <div class="billetes" id="billetes" aria-label="Valores rápidos"></div>
+              <p class="error" data-error-de="efectivoCon"></p>
+            </div>
+            <div class="cambio" id="cambio" aria-live="polite"></div>
           </div>
         </fieldset>
 
         <div class="tarjeta tarjeta--resumen" id="resumenPedido"></div>
+
+        <div class="tarjeta aprobacion">
+          <label class="casilla casilla--grande">
+            <input type="checkbox" id="apruebaTotal">
+            <span id="textoAprobacion">Revisé mi pedido y apruebo el total.</span>
+          </label>
+          <p class="error" data-error-de="apruebaTotal"></p>
+        </div>
+
         <p class="error error--general" id="errorGeneral" role="alert"></p>
-        <button class="boton boton--principal boton--bloque" id="botonConfirmar" type="submit">Confirmar pedido</button>
-        <p class="ayuda centrado">Al confirmar se genera tu número de pedido y se abre WhatsApp para enviarlo a la tienda.</p>
+        <button class="boton boton--principal boton--bloque" id="botonConfirmar" type="submit">Aprobar y confirmar pedido</button>
+        <p class="ayuda centrado">Al confirmar se genera tu número de pedido, el código QR de pago y el mensaje para enviar por WhatsApp.</p>
       </form>
     </section>
 
@@ -148,7 +171,7 @@
       <form id="formEstado" class="tarjeta formulario" novalidate>
         <div class="campo">
           <label for="numeroConsulta">Número de pedido</label>
-          <input id="numeroConsulta" autocomplete="off" placeholder="MTR-261123-AB12" maxlength="24" style="text-transform:uppercase">
+          <input id="numeroConsulta" autocomplete="off" placeholder="FDL-261123-AB12" maxlength="24" style="text-transform:uppercase">
         </div>
         <div class="campo">
           <label for="ultimos4">Últimos 4 dígitos de tu celular</label>
@@ -179,6 +202,7 @@
   <script src="js/config.tienda.js"></script>
   <script src="js/productos.demo.js"></script>
   <script src="js/utilidades.js"></script>
+  <script src="js/qr.js"></script>
   <script src="js/datos.js"></script>
   <script src="js/carrito.js"></script>
   <script src="js/app.js"></script>

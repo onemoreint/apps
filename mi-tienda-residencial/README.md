@@ -18,6 +18,9 @@ instalar en el celular como aplicación (PWA).
 | Domicilio al apartamento o recogida en tienda, costo y domicilio gratis desde un monto | ✅ Funciona |
 | Formulario con nombre, celular, torre y apartamento (validado) | ✅ Funciona |
 | Datos de pago Nequi / Daviplata / transferencia con botón "Copiar número" | ✅ Funciona |
+| Aprobación del total: el residente marca "apruebo pagar $X" antes de confirmar (si el total cambia, debe aprobar de nuevo) | ✅ Funciona |
+| Código QR en el pedido con los datos de la cuenta y el valor exacto | ✅ Funciona (QR informativo; ver nota abajo) |
+| Pago en efectivo: el residente dice con cuánto paga y el pedido muestra el cambio que debe llevar el domiciliario | ✅ Funciona |
 | Número de pedido único (ej. `MTR-261123-RXE3`) | ✅ Se genera en el teléfono del residente |
 | Evitar pedidos duplicados por doble toque | ✅ Funciona |
 | Envío del pedido completo a la tienda por WhatsApp | ✅ Funciona |
@@ -91,7 +94,13 @@ Abre `js/config.tienda.js` con un editor de texto (TextEdit en modo texto, o VS 
 - `torres`: la lista de torres del conjunto
 - `entrega`: costo de domicilio, desde cuánto es gratis, pedido mínimo, punto de recogida
 - `horarios`: días y horas de atención
-- `pagos`: titular, número, banco. Pon `activo: false` para ocultar un método
+- `pagos`: titular, número, banco. Pon `activo: false` para ocultar un método (incluido "Efectivo")
+
+**Sobre el código QR:** si la tienda no tiene QR propio, la app genera uno con los datos de la
+cuenta y el valor. Al escanearlo con la cámara se leen esos datos, pero **no abre el pago
+automático** en Nequi o Daviplata. Si la tienda tiene el QR **oficial** de su banco (Nequi,
+Daviplata o Bre-B), guarda esa imagen en `img/` y pon su ruta en `qrImagen` del método de pago:
+la app mostrará ese QR, que sí se puede escanear para pagar desde la app del banco.
 
 Para los productos, edita `js/productos.demo.js`. Las fotos actuales son **de referencia** (Unsplash, licencia gratuita) solo para la demostración; reemplázalas por fotos propias de cada tienda. Para usar fotos reales, guarda las imágenes
 en `img/productos/` (cuadradas, idealmente 600×600 px, en .webp o .jpg) y agrega al producto

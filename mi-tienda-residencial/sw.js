@@ -1,19 +1,19 @@
 /* Service worker: permite abrir la tienda sin internet (catálogo guardado).
    Cada vez que cambies archivos: sube VERSION aquí y el ?v= de index.html
    (y de esta lista) para que los teléfonos descarguen la versión nueva. */
-const VERSION = "mtr-v1.2.1b";
+const VERSION = "mtr-v1.2.2";
 const ARCHIVOS = [
   "./",
   "index.html",
-  "css/estilos.css?v=1.2.1",
-  "js/config.tienda.js?v=1.2.1",
-  "js/productos.demo.js?v=1.2.1",
-  "js/utilidades.js?v=1.2.1",
-  "js/qr.js?v=1.2.1",
-  "js/datos.js?v=1.2.1",
-  "js/carrito.js?v=1.2.1",
-  "js/app.js?v=1.2.1",
-  "img/logo-flor-de-loto.webp",
+  "css/estilos.css?v=1.2.2",
+  "js/config.tienda.js?v=1.2.2",
+  "js/productos.demo.js?v=1.2.2",
+  "js/utilidades.js?v=1.2.2",
+  "js/qr.js?v=1.2.2",
+  "js/datos.js?v=1.2.2",
+  "js/carrito.js?v=1.2.2",
+  "js/app.js?v=1.2.2",
+  "img/logo-flor-de-lotto.webp",
   "img/icono-192.png",
   "manifest.webmanifest"
 ];

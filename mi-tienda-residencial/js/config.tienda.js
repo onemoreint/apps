@@ -17,10 +17,10 @@ window.TIENDA_CONFIG = {
   slug: "demo",
   prefijoPedido: "FDL",
 
-  nombre: "Flor de Loto",
+  nombre: "Flor de Lotto",
   conjunto: "Conjunto Residencial Demo",
   eslogan: "Minimercado · Víveres y consumo en general",
-  logo: "img/logo-flor-de-loto.webp", // Logo redondo de la tienda (ideal 384×384 px)
+  logo: "img/logo-flor-de-lotto.webp", // Logo redondo de la tienda (ideal 384×384 px)
 
   // WhatsApp de la tienda: código de país + número, solo dígitos.
   whatsapp: "573000000000",

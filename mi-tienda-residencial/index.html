@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mi Tienda Residencial</title>
+  <meta name="description" content="Pide a la tienda de tu conjunto y recibe en tu apartamento.">
+  <meta name="theme-color" content="#0E3B2E">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="img/icono.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="img/icono-192.png">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <div class="aviso-demo" id="avisoDemo" role="note">
+    <strong>Versión de demostración.</strong>
+    Tu pedido se envía a la tienda por WhatsApp. El pago lo verifica la tienda manualmente.
+  </div>
+
+  <header class="cabecera">
+    <div class="cabecera__marca">
+      <img id="logoTienda" class="cabecera__logo" src="img/logo.svg" alt="" width="44" height="44">
+      <div>
+        <h1 class="cabecera__nombre" id="nombreTienda">Mi Tienda Residencial</h1>
+        <p class="cabecera__conjunto" id="nombreConjunto"></p>
+      </div>
+    </div>
+    <a class="boton boton--fantasma boton--chico" href="#/estado">Mi pedido</a>
+  </header>
+
+  <main id="contenido">
+    <!-- ================= PANTALLA: CATÁLOGO ================= -->
+    <section class="pantalla" data-pantalla="catalogo" aria-labelledby="tituloCatalogo">
+      <div class="portada">
+        <p class="chip-horario" id="chipHorario"><span class="punto"></span><span>…</span></p>
+        <h2 class="portada__titulo" id="tituloCatalogo">¿Qué necesitas hoy?</h2>
+        <p class="portada__texto" id="textoEntrega"></p>
+      </div>
+
+      <div class="barra-busqueda">
+        <label class="buscador">
+          <span class="visualmente-oculto">Buscar productos</span>
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M10 2a8 8 0 0 1 6.32 12.9l5.39 5.4-1.41 1.4-5.4-5.38A8 8 0 1 1 10 2Zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12Z"/></svg>
+          <input id="buscar" type="search" placeholder="Buscar: leche, pan, arroz…" autocomplete="off" enterkeyhint="search">
+        </label>
+        <nav class="categorias" id="categorias" aria-label="Categorías"></nav>
+      </div>
+
+      <p class="resultado-busqueda" id="resultadoBusqueda" aria-live="polite"></p>
+      <div class="grilla" id="grillaProductos" aria-busy="true"></div>
+    </section>
+
+    <!-- ================= PANTALLA: CARRITO ================= -->
+    <section class="pantalla" data-pantalla="carrito" hidden aria-labelledby="tituloCarrito">
+      <div class="encabezado-pantalla">
+        <a class="volver" href="#/">← Seguir comprando</a>
+        <h2 id="tituloCarrito">Tu carrito</h2>
+      </div>
+      <div id="listaCarrito" class="lista-carrito"></div>
+      <div id="resumenCarrito"></div>
+    </section>
+
+    <!-- ================= PANTALLA: DATOS DEL PEDIDO ================= -->
+    <section class="pantalla" data-pantalla="pedido" hidden aria-labelledby="tituloPedido">
+      <div class="encabezado-pantalla">
+        <a class="volver" href="#/carrito">← Volver al carrito</a>
+        <h2 id="tituloPedido">Finalizar pedido</h2>
+      </div>
+
+      <form id="formPedido" class="formulario" novalidate>
+        <fieldset class="tarjeta">
+          <legend><span class="paso">1</span> ¿Cómo lo recibes?</legend>
+          <div class="opciones" id="opcionesEntrega"></div>
+        </fieldset>
+
+        <fieldset class="tarjeta">
+          <legend><span class="paso">2</span> Tus datos</legend>
+          <div class="campo">
+            <label for="nombre">Nombre completo</label>
+            <input id="nombre" name="nombre" autocomplete="name" required maxlength="80">
+            <p class="error" data-error-de="nombre"></p>
+          </div>
+          <div class="campo">
+            <label for="telefono">Celular (WhatsApp)</label>
+            <input id="telefono" name="telefono" type="tel" inputmode="numeric" autocomplete="tel" placeholder="300 123 4567" required maxlength="16">
+            <p class="error" data-error-de="telefono"></p>
+          </div>
+          <div class="fila-2" id="camposApto">
+            <div class="campo">
+              <label for="torre">Torre</label>
+              <select id="torre" name="torre"></select>
+              <p class="error" data-error-de="torre"></p>
+            </div>
+            <div class="campo">
+              <label for="apto">Apartamento</label>
+              <input id="apto" name="apto" inputmode="numeric" maxlength="6" placeholder="Ej: 502">
+              <p class="error" data-error-de="apto"></p>
+            </div>
+          </div>
+          <div class="campo">
+            <label for="notas">Indicaciones <span class="opcional">(opcional)</span></label>
+            <textarea id="notas" name="notas" rows="2" maxlength="200" placeholder="Ej: timbre dañado, llamar al llegar"></textarea>
+          </div>
+          <label class="casilla">
+            <input type="checkbox" id="recordarDatos">
+            <span>Recordar mis datos en este teléfono</span>
+          </label>
+        </fieldset>
+
+        <fieldset class="tarjeta">
+          <legend><span class="paso">3</span> ¿Cómo pagas?</legend>
+          <div class="opciones" id="opcionesPago"></div>
+          <p class="error" data-error-de="metodo"></p>
+          <div id="datosCuenta" class="datos-cuenta" hidden></div>
+          <div class="campo">
+            <label for="referencia">Referencia de la transferencia</label>
+            <input id="referencia" name="referencia" maxlength="40" autocomplete="off" placeholder="Número que te da la app al pagar">
+            <p class="ayuda">Si aún no has pagado, puedes enviarla después por WhatsApp.</p>
+          </div>
+          <div class="campo">
+            <label for="comprobante">Comprobante <span class="opcional">(opcional)</span></label>
+            <input id="comprobante" name="comprobante" type="file" accept="image/*,application/pdf">
+            <p class="ayuda">En esta versión el comprobante <strong>no se sube</strong> a ningún servidor: adjúntalo en el chat de WhatsApp después de enviar el pedido.</p>
+            <p class="error" data-error-de="comprobante"></p>
+          </div>
+        </fieldset>
+
+        <div class="tarjeta tarjeta--resumen" id="resumenPedido"></div>
+        <p class="error error--general" id="errorGeneral" role="alert"></p>
+        <button class="boton boton--principal boton--bloque" id="botonConfirmar" type="submit">Confirmar pedido</button>
+        <p class="ayuda centrado">Al confirmar se genera tu número de pedido y se abre WhatsApp para enviarlo a la tienda.</p>
+      </form>
+    </section>
+
+    <!-- ================= PANTALLA: CONFIRMACIÓN ================= -->
+    <section class="pantalla" data-pantalla="confirmacion" hidden aria-labelledby="tituloConfirmacion">
+      <div id="confirmacion" class="confirmacion"></div>
+    </section>
+
+    <!-- ================= PANTALLA: ESTADO DEL PEDIDO ================= -->
+    <section class="pantalla" data-pantalla="estado" hidden aria-labelledby="tituloEstado">
+      <div class="encabezado-pantalla">
+        <a class="volver" href="#/">← Volver a la tienda</a>
+        <h2 id="tituloEstado">Consultar mi pedido</h2>
+      </div>
+      <form id="formEstado" class="tarjeta formulario" novalidate>
+        <div class="campo">
+          <label for="numeroConsulta">Número de pedido</label>
+          <input id="numeroConsulta" autocomplete="off" placeholder="MTR-261123-AB12" maxlength="24" style="text-transform:uppercase">
+        </div>
+        <div class="campo">
+          <label for="ultimos4">Últimos 4 dígitos de tu celular</label>
+          <input id="ultimos4" inputmode="numeric" maxlength="4" placeholder="4567">
+        </div>
+        <button class="boton boton--principal boton--bloque" type="submit">Consultar</button>
+        <p class="ayuda">Por ahora solo se encuentran los pedidos hechos desde este mismo teléfono. El seguimiento en tiempo real llega con el panel de la tienda (fase 2).</p>
+      </form>
+      <div id="resultadoEstado" aria-live="polite"></div>
+      <div id="misPedidos"></div>
+    </section>
+  </main>
+
+  <!-- Barra flotante del carrito -->
+  <a class="barra-carrito" id="barraCarrito" href="#/carrito" hidden>
+    <span class="barra-carrito__cantidad" id="barraCantidad">0</span>
+    <span class="barra-carrito__texto">Ver carrito</span>
+    <span class="barra-carrito__total" id="barraTotal">$ 0</span>
+  </a>
+
+  <div class="aviso-flotante" id="avisoFlotante" role="status" aria-live="polite"></div>
+
+  <footer class="pie">
+    <p id="pieTienda"></p>
+    <p class="pie__creditos" id="pieCreditos"></p>
+  </footer>
+
+  <script src="js/config.tienda.js"></script>
+  <script src="js/productos.demo.js"></script>
+  <script src="js/utilidades.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/carrito.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

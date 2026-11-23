@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>TV Limpia | José Lugo</title>
-<meta name="description" content="Quita la publicidad y el rastreo de tu televisor. Elige tu marca y sigue los pasos con botones, sin comandos.">
+<meta name="description" content="Quita la publicidad y el rastreo de tu televisor, y acelera los TV lentos. Elige tu marca y sigue los pasos con botones, sin comandos.">
 <meta name="author" content="José Lugo">
 <meta name="theme-color" content="#060912">
 <meta property="og:title" content="TV Limpia: tu televisor sin publicidad">
@@ -267,8 +267,8 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);padding-top:
     <a href="https://github.com/udhaykumarbala/cleanyourtv-app" rel="noopener">su app para celular</a>,
     <a href="https://github.com/lasharor/cleanyourtv-WebOS" rel="noopener">CleanYourTV for LG webOS</a> y
     <a href="https://github.com/simbasjungles/free-my-tv" rel="noopener">Free My TV</a>.
-    Enlaza además <a href="https://github.com/MinatoXmohith/Google-TV-Ad-Free-Home-Screen-Modern-UI" rel="noopener">Lumen</a>, el panel estilo Apple TV de mkdziner (MIT). También recomienda <a href="https://alogus.github.io/Borealis/" rel="noopener">Borealis</a> de Alogus Tov, gratuito solo para uso no comercial (licencia PolyForm Noncommercial 1.0.0); TV Limpia no lo distribuye ni lo modifica, solo enlaza a su página oficial.
-    No tiene relación con esos proyectos ni con ningún fabricante. Los nombres de marcas pertenecen a sus dueños. Cambiar el software de tu TV es bajo tu responsabilidad y puede afectar la garantía. Guía revisada el 4 de noviembre de 2026, con Clean Your TV v3.3.0.</p>
+    Enlaza además <a href="https://github.com/MinatoXmohith/Google-TV-Ad-Free-Home-Screen-Modern-UI" rel="noopener">Lumen</a>, el panel estilo Apple TV de mkdziner (MIT), y <a href="https://github.com/mylnzon58/velotv" rel="noopener">VeloTV</a>, la pantalla de inicio liviana de Juan José Monzón (MIT). También recomienda <a href="https://alogus.github.io/Borealis/" rel="noopener">Borealis</a> de Alogus Tov, gratuito solo para uso no comercial (licencia PolyForm Noncommercial 1.0.0); TV Limpia no lo distribuye ni lo modifica, solo enlaza a su página oficial.
+    No tiene relación con esos proyectos ni con ningún fabricante. Los nombres de marcas pertenecen a sus dueños. Cambiar el software de tu TV es bajo tu responsabilidad y puede afectar la garantía. Guía revisada el 23 de noviembre de 2026, con Clean Your TV v3.3.0 y VeloTV v1.1.0.</p>
 </footer>
 
 <script>
@@ -286,6 +286,7 @@ var ic={
   hand:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12V5.5a1.5 1.5 0 0 1 3 0V11m0-1V4.5a1.5 1.5 0 0 1 3 0V11m0-4.5a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7h-.5a6 6 0 0 1-5-2.7L3 15.5a1.5 1.5 0 0 1 2.5-1.7L8 17"/></svg>',
   yes:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
   no:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4.5 13.5H11L10 22l8.5-11.5H12L13 2z"/></svg>',
   remote:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="7" y="2" width="10" height="20" rx="4"/><circle cx="12" cy="8" r="2"/><path d="M10 14h4M10 17h4"/></svg>',
   chev:'<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
   backc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>',
@@ -314,7 +315,34 @@ var S={
     {to:'and-phone',ic:'phone',b:'Sí, tengo celular Android',s:'Android 9 o más reciente, con bloqueo de pantalla'},
     {to:'and-pc',ic:'pc',b:'No, pero tengo computador',s:'Windows, Mac o Linux en el mismo Wi-Fi'},
     {to:'and-remote',ic:'remote',b:'No, solo tengo el control remoto',s:'Cambia la pantalla de inicio con Borealis (beta)'},
+    {to:'and-velo',ic:'bolt',b:'Mi TV es lento',s:'Pantalla de inicio liviana y sin anuncios con VeloTV, para TV de 1 o 2 GB de RAM'},
     {to:'help',ic:'hand',b:'Prefiero que lo hagan por mí',s:'Te acompañamos paso a paso'}
+  ]},
+
+  /* VELOTV: launcher liviano para TV lentos */
+  'and-velo':{title:'Acelera tu TV con VeloTV',help:'VeloTV es una pantalla de inicio gratuita, sin publicidad y sin rastreo, hecha para televisores Android de 1 o 2 GB de RAM. Usa cerca de un tercio de la memoria de la pantalla original. ¿Cómo quieres instalarla?',opts:[
+    {to:'velo-pc',ic:'pc',b:'Con un computador',s:'Recomendado: un instalador con botones la deja como pantalla de inicio'},
+    {to:'velo-remote',ic:'remote',b:'Solo con el control remoto',s:'Se instala como app; en algunos TV no reemplaza la pantalla original'},
+    {to:'help',ic:'hand',b:'Prefiero que lo hagan por mí',s:'Te acompañamos paso a paso'}
+  ]},
+  'velo-pc':{title:'Instala VeloTV con un computador',help:'Unos diez minutos. El TV y el computador deben estar en el mismo Wi-Fi.',warn:'velo',after:'velo',
+    note:'<strong>Lo que necesita el computador.</strong> Windows, Mac o Linux con <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">Python 3</a>. El instalador descarga solo lo demás.',
+    steps:[
+    {h:'Activa el modo desarrollador y la depuración en el TV',p:'Ve a <span class="path">Ajustes → Preferencias del dispositivo → Información</span> (en Google TV: <span class="path">Ajustes → Sistema → Información</span>) y presiona OK siete veces sobre <span class="path">Compilación</span>. Luego en <span class="path">Opciones para desarrolladores</span> enciende <span class="path">Depuración USB</span> y, si aparece, la depuración por red.'},
+    {h:'Reinicia el TV',p:'Así el TV queda listo para recibir la conexión del computador por Wi-Fi.'},
+    {h:'Descarga el instalador en tu computador',p:'Descarga el archivo <span class="path">velotv_installer.py</span> y ábrelo con doble clic. Si prefieres un acceso directo para Windows, Mac o Linux, están en la carpeta del instalador.',
+      links:[{t:'Descargar el instalador',u:'https://github.com/mylnzon58/velotv/releases/download/v1.1.0/velotv_installer.py',primary:true},{t:'Accesos para Windows, Mac y Linux',u:'https://github.com/mylnzon58/velotv/tree/main/tools/installer'}]},
+    {h:'Deja que encuentre tu TV',p:'El instalador busca el TV en tu Wi-Fi y comprueba que el archivo de VeloTV sea el original. En la pantalla del TV aparece «¿Permitir depuración?»: marca <span class="path">Permitir siempre</span> y presiona OK.'},
+    {h:'Instala VeloTV',p:'Elige instalar. La optimización es opcional: apaga apps del sistema que consumen memoria, sin borrarlas, y se puede deshacer. No toca Play Store ni las apps de streaming. Al terminar, presiona el botón de inicio del control.'},
+    {h:'Apaga la depuración al terminar',p:'En <span class="path">Opciones para desarrolladores</span>, apaga la depuración USB, por red e inalámbrica, revoca las autorizaciones de depuración USB y reinicia el TV. VeloTV sigue funcionando sin depuración.'}
+  ]},
+  'velo-remote':{title:'Instala VeloTV con el control',help:'Unos diez minutos y conexión a internet. Sin computador.',warn:'velo',after:'velo',
+    steps:[
+    {h:'Instala Downloader',p:'Abre la tienda de apps del TV, busca <span class="path">Downloader</span> de AFTVnews e instálala.'},
+    {h:'Permite que Downloader instale apps',p:'Cuando el TV lo pida, activa el permiso para instalar apps de fuentes desconocidas en Downloader. Si no aparece, búscalo en los ajustes de seguridad del TV.'},
+    {h:'Descarga VeloTV',p:'En Downloader escribe <span class="path">github.com/mylnzon58/velotv/releases</span>, abre la versión más reciente y elige el archivo <span class="path">VeloTV-…-universal.apk</span>. Instálalo cuando el TV lo pregunte.'},
+    {h:'Déjala como pantalla de inicio',p:'Presiona el botón de inicio del control. Si el TV pregunta qué pantalla usar, elige <span class="path">VeloTV</span> y <span class="path">Siempre</span>. Si no pregunta, VeloTV queda en tu lista de apps: para que sea la pantalla de inicio, usa la opción del computador.',
+      links:[{t:'Ver la opción del computador',go:'velo-pc'}]}
   ]},
   'and-phone':{title:'Limpia tu TV desde el celular',help:'Unos diez minutos. El TV y el celular deben estar en el mismo Wi-Fi.',
     warn:'phone',after:'phone',steps:[
@@ -393,9 +421,11 @@ var S={
 
 var WARN={
   phone:'<strong>Antes de empezar.</strong> La app no cambia la pantalla de inicio en todos los TV. En la mayoría de los Google TV, en Chromecast, Google TV Streamer, Fire TV, algunos Kalley y PRISM+ y en los modelos que aún no conoce, solo apaga publicidad de fondo, rastreo y apps: la pantalla original se queda, con los anuncios que ella misma muestra. <a href="https://udhaykumarbala.github.io/cleanyourtv-app/tvs/" target="_blank" rel="noopener">Mira qué hace en tu modelo</a>.',
+  velo:'<strong>Antes de empezar.</strong> VeloTV v1.1.0 funciona en Android TV y Google TV desde Android 7 hasta Android 15. Su autor la midió en un Skyworth de 2 GB con Android TV 8. Cambia la pantalla de inicio y quita sus anuncios; tus apps siguen igual. <a href="https://mylnzon58.github.io/velotv/" target="_blank" rel="noopener">Conoce VeloTV</a>.',
   pc:'<strong>Antes de empezar.</strong> En Fire TV solo se apaga la publicidad y se conserva la pantalla de inicio original, y algunos TCL del mercado chino no aceptan otra pantalla. <a href="https://cleanyour.tv/tvs" target="_blank" rel="noopener">Busca tu modelo</a> para ver qué se probó.'
 };
 var AFTER={
+  velo:'<strong>Para volver a la pantalla original.</strong> Si usaste el instalador, ábrelo otra vez y elige restaurar: vuelve a encender todo lo que apagó. Si la instalaste con el control, ve a <span class="path">Ajustes → Apps → VeloTV</span> y desinstálala.<br><br><strong>VeloTV es gratis.</strong> La hace Juan José Monzón, de Argentina. Si te sirvió, puedes <a href="https://github.com/mylnzon58/velotv#readme" target="_blank" rel="noopener">apoyar su proyecto</a>.',
   phone:'<strong>Si el TV se actualiza.</strong> Una actualización del fabricante puede volver a encender las apps y traer la pantalla original. Enciende otra vez la depuración y abre la app para revisarlo.<br><br><strong>Para deshacer.</strong> Desde la app puedes volver a encender una app o todo, con el punto de restauración.',
   pc:'<strong>Conserva la carpeta del proyecto.</strong> Ahí está lo que necesitas para revisar o deshacer los cambios.<br><br><strong>Si el TV se actualiza.</strong> Una actualización del fabricante puede volver a encender las apps y traer la pantalla original. <a href="https://github.com/Gathin23/cleanyourtv/blob/main/docs/firmware-updates.md" target="_blank" rel="noopener">Sigue la guía</a> o pídele al asistente que lo revise.<br><br><strong>Para deshacer.</strong> Pídele al asistente que restaure el TV o sigue la <a href="https://github.com/Gathin23/cleanyourtv/blob/main/docs/restore.md" target="_blank" rel="noopener">guía de restauración</a>.'
 };
@@ -413,7 +443,7 @@ function waLink(id){
 }
 
 var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-var tint={android:'b3',lg:'b4',samsung:'b6',other:'b2',ask:'b1',phone:'b2',pc:'b6',hand:'b3',remote:'b1',yes:'b3'};
+var tint={android:'b3',lg:'b4',samsung:'b6',other:'b2',ask:'b1',phone:'b2',pc:'b6',hand:'b3',remote:'b1',yes:'b3',bolt:'b5'};
 var tick='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 
 function render(id,push){
@@ -429,7 +459,7 @@ function render(id,push){
     if(id==='home')h+='<ul class="safe"><li>No se desinstala nada: las apps se apagan y se pueden volver a encender.</li><li>Cada paso se puede deshacer.</li><li>Tus apps de streaming siguen funcionando.</li></ul>';
   }else{
     if(d.note)h+='<div class="note">'+d.note+'</div>';
-    if(d.warn)h+='<div class="note">'+WARN[d.warn]+' Los sitios oficiales de Clean Your TV son cleanyour.tv y su GitHub; cleanyourtv.com y clean-your-tv.net no lo son.</div>';
+    if(d.warn)h+='<div class="note">'+WARN[d.warn]+(d.warn==='velo'?'':' Los sitios oficiales de Clean Your TV son cleanyour.tv y su GitHub; cleanyourtv.com y clean-your-tv.net no lo son.')+'</div>';
     h+='<div class="prog" role="status"><div class="track"><div class="fill"></div></div><span></span></div>';
     h+='<div class="party"><b>¡Tu TV quedó limpio!</b><span>Completaste todos los pasos.</span></div>';
     h+='<ol class="steps">';

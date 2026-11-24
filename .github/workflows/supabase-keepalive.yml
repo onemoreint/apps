@@ -1,0 +1,40 @@
+# Mantiene activa la base de Supabase (proyecto "mesaqr") que usan Delicias Eliana, MesaQR y Dulce Pedido.
+# El plan gratuito pausa la base cuando pasa varios días sin uso; esta consulta mínima cada 3 días lo evita.
+# Solo lee: pregunta por un pedido que no existe. No guarda claves: toma la clave pública que ya usa la página.
+name: Supabase activo (Delicias Eliana)
+
+on:
+  schedule:
+    - cron: "17 13 */3 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: delicias-eliana/index.html
+          sparse-checkout-cone-mode: false
+
+      - name: Consultar la base
+        run: |
+          set -eu
+          f=delicias-eliana/index.html
+          api=$(grep -o "https://[a-z0-9]*\.supabase\.co/rest/v1/rpc/" "$f" | head -n1)
+          key=$(grep -o "sb_publishable_[A-Za-z0-9_-]*" "$f" | head -n1)
+          [ -n "$api" ] && [ -n "$key" ] || { echo "No encontré la dirección o la clave pública en $f"; exit 1; }
+          for i in 1 2 3; do
+            code=$(curl -sS -o /tmp/r.json -w "%{http_code}" -X POST "${api}de_track" \
+              -H "apikey: $key" -H "Content-Type: application/json" \
+              -d '{"p_token":"00000000-0000-4000-8000-000000000000"}' || echo 000)
+            echo "Intento $i: HTTP $code"
+            [ "$code" = "200" ] && { echo "Base activa"; exit 0; }
+            sleep 30
+          done
+          echo "La base no respondió. Puede estar pausada: reactívala en supabase.com (proyecto mesaqr)."
+          exit 1

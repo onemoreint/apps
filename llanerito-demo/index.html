@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#14100c">
+<meta name="robots" content="noindex">
+<meta name="description" content="Muestra de menú digital para El Llanerito La Estrella: carta en el celular y pedido armado por WhatsApp.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<title>El Llanerito · Menú Digital (muestra)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brasa:#e86a23;
+  --brasa-claro:#ff8c4a;
+  --negro:#14100c;
+  --carta:#1e1813;
+  --carta-2:#271f18;
+  --linea:rgba(255,255,255,.08);
+  --texto:#f6efe7;
+  --tenue:#b3a594;
+  --verde-wa:#25d366;
+  --radio:18px;
+  --max:720px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--negro);color:var(--texto);font-family:'Outfit',system-ui,sans-serif;line-height:1.5;padding-bottom:110px;-webkit-tap-highlight-color:transparent}
+a{color:inherit}
+.envoltura{max-width:var(--max);margin:0 auto;padding:0 16px}
+
+/* Cinta discreta de muestra */
+.muestra{position:fixed;top:0;left:0;right:0;z-index:60;background:rgba(20,16,12,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--linea);color:var(--tenue);font-size:.74rem;text-align:center;padding:5px 12px;letter-spacing:.02em}
+.muestra b{color:var(--texto);font-weight:600}
+
+/* Portada */
+.hero{padding:64px 0 28px;background:radial-gradient(120% 80% at 50% 0%,rgba(232,106,35,.28),transparent 70%)}
+.hero .tag{display:inline-block;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--brasa-claro);margin-bottom:10px}
+.hero h1{font-family:'Baloo 2',sans-serif;font-weight:800;font-size:clamp(2.2rem,9vw,3.4rem);line-height:1.02}
+.hero h1 span{color:var(--brasa)}
+.hero p{color:var(--tenue);margin:12px 0 22px;max-width:30em}
+.botones{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:12px 20px;font-weight:600;text-decoration:none;border:0;font:inherit;font-weight:600;cursor:pointer}
+.btn-brasa{background:var(--brasa);color:#fff}
+.btn-fantasma{background:transparent;color:var(--texto);border:1px solid var(--linea)}
+
+/* Carta */
+.seccion{padding:18px 0}
+.seccion h2{font-family:'Baloo 2',sans-serif;font-size:1.5rem;margin-bottom:4px}
+.seccion .sub{color:var(--tenue);font-size:.9rem;margin-bottom:14px}
+.categoria{margin-bottom:22px}
+.categoria h3{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--brasa-claro);margin:0 0 10px}
+.nota-cat{font-size:.84rem;color:var(--tenue);margin:-4px 0 10px}
+.plato{display:flex;gap:14px;align-items:flex-start;background:var(--carta);border:1px solid var(--linea);border-radius:var(--radio);padding:14px;margin-bottom:10px;transition:border-color .2s}
+.plato.en-pedido{border-color:var(--brasa)}
+.plato-info{flex:1;min-width:0}
+.plato-nom{font-weight:700;font-size:1.04rem}
+.plato-desc{color:var(--tenue);font-size:.88rem;margin:2px 0 8px}
+.plato-precio{font-weight:700;color:var(--brasa-claro)}
+.mas{flex:none;width:42px;height:42px;border-radius:50%;border:0;background:var(--brasa);color:#fff;font-size:1.5rem;line-height:1;cursor:pointer}
+.contador-plato{display:flex;align-items:center;gap:8px;background:var(--carta-2);border-radius:999px;padding:4px}
+.contador-plato button{width:34px;height:34px;border-radius:50%;border:0;background:var(--brasa);color:#fff;font-size:1.2rem;cursor:pointer}
+.contador-plato span{min-width:18px;text-align:center;font-weight:700}
+
+/* Pie */
+.pie{border-top:1px solid var(--linea);margin-top:12px;padding:20px 0;color:var(--tenue);font-size:.82rem}
+
+/* Burbuja del pedido */
+.burbuja{position:fixed;left:50%;bottom:18px;transform:translate(-50%,140%);z-index:40;display:flex;gap:12px;align-items:center;background:var(--brasa);color:#fff;border:0;border-radius:999px;padding:14px 22px;font:inherit;font-weight:700;box-shadow:0 12px 30px rgba(0,0,0,.5);transition:transform .3s;cursor:pointer;max-width:calc(100% - 32px)}
+.burbuja.visible{transform:translate(-50%,0)}
+.burbuja-n{background:#fff;color:var(--brasa);border-radius:999px;min-width:24px;padding:0 6px;text-align:center}
+
+/* Panel */
+.velo{position:fixed;inset:0;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .25s;z-index:70}
+.velo.abierto{opacity:1;pointer-events:auto}
+.panel{position:fixed;left:0;right:0;bottom:0;max-height:88vh;background:var(--carta);border-radius:22px 22px 0 0;transform:translateY(100%);transition:transform .3s;z-index:80;display:flex;flex-direction:column;max-width:var(--max);margin:0 auto}
+.panel.abierto{transform:translateY(0)}
+.panel-cab{display:flex;justify-content:space-between;align-items:center;padding:18px 18px 10px}
+.panel-cab h2{font-family:'Baloo 2',sans-serif;font-size:1.4rem}
+.panel-cab p{color:var(--tenue);font-size:.85rem}
+.cerrar{background:var(--carta-2);border:0;color:var(--texto);width:36px;height:36px;border-radius:50%;font-size:1rem;cursor:pointer}
+.panel-lista{overflow:auto;padding:0 18px}
+.fila{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--linea)}
+.fila-info{flex:1;min-width:0}
+.fila-nom{font-weight:600}
+.fila-precio{color:var(--tenue);font-size:.82rem}
+.fila-sub{font-weight:700;min-width:78px;text-align:right}
+.vacio{text-align:center;color:var(--tenue);padding:26px 0}
+.panel-pie{padding:14px 18px calc(18px + env(safe-area-inset-bottom))}
+.nota-pedido{width:100%;background:var(--carta-2);border:1px solid var(--linea);border-radius:12px;color:var(--texto);font:inherit;padding:10px;margin-bottom:10px;resize:vertical}
+.total-fila{display:flex;justify-content:space-between;color:var(--tenue);font-size:.9rem}
+.total-fila.grande{color:var(--texto);font-size:1.25rem;font-weight:800;margin:4px 0 12px}
+.btn-wa{display:flex;justify-content:center;align-items:center;gap:8px;background:var(--verde-wa);color:#06290f;text-decoration:none;font-weight:700;border-radius:999px;padding:14px}
+.btn-wa svg{width:22px;height:22px;fill:currentColor}
+.vaciar{display:block;margin:10px auto 0;background:none;border:0;color:var(--tenue);font:inherit;font-size:.85rem;text-decoration:underline;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div class="muestra">Muestra preparada por <b>José Lugo</b> · no es la página oficial de El Llanerito</div>
+
+<header class="hero">
+  <div class="envoltura">
+    <span class="tag">La Estrella · Carne a la llanera</span>
+    <h1>El <span>Llanerito</span></h1>
+    <p>Mira la carta, toca el + en lo que se te antoje y el pedido llega armado a nuestro WhatsApp de domicilios.</p>
+    <div class="botones">
+      <a class="btn btn-brasa" href="#carta">Ver la carta</a>
+      <a class="btn btn-fantasma" id="wa-hero" href="https://wa.me/573054040013" target="_blank" rel="noopener">💬 Pedir domicilio</a>
+    </div>
+  </div>
+</header>
+
+<main class="envoltura">
+  <section class="seccion" id="carta">
+    <h2>La carta</h2>
+    <p class="sub">Muestra con 5 platos de la carta 2026.</p>
+    <div id="menu"></div>
+  </section>
+
+  <footer class="pie">
+    Platos y precios tomados de la carta publicada en el Linktree de El Llanerito La Estrella (noviembre de 2026). Precios en pesos colombianos (COP).
+  </footer>
+</main>
+
+<button class="burbuja" id="burbuja" onclick="abrirPanel()" aria-label="Ver mi pedido">
+  <span>🛒</span><span class="burbuja-n" id="burbuja-n">0</span><span id="burbuja-total">$0</span>
+</button>
+
+<div class="velo" id="velo" onclick="cerrarPanel()"></div>
+<aside class="panel" id="panel" aria-label="Tu pedido">
+  <div class="panel-cab">
+    <div><h2>Tu pedido</h2><p id="panel-sub">Nada por aquí todavía</p></div>
+    <button class="cerrar" onclick="cerrarPanel()" aria-label="Cerrar">✕</button>
+  </div>
+  <div class="panel-lista" id="panel-lista"></div>
+  <div class="panel-pie" id="panel-pie" style="display:none">
+    <textarea class="nota-pedido" id="nota" rows="2" placeholder="¿Alguna nota? Ej: dirección, sin cebolla, para recoger…"></textarea>
+    <div class="total-fila"><span id="cuenta-items">0 productos</span><span></span></div>
+    <div class="total-fila grande"><span>Total</span><span id="total-grande">$0</span></div>
+    <a class="btn-wa" id="wa-enviar" href="https://wa.me/573054040013" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 2a8 8 0 1 1-4.2 14.8l-.4-.2-2.6.7.7-2.5-.3-.4A8 8 0 0 1 12 4zm-3.3 4.3c-.2 0-.5 0-.7.3-.3.3-.9.9-.9 2.1s.9 2.4 1 2.6c.2.2 1.8 2.9 4.5 4 2.2.9 2.7.7 3.2.7.5 0 1.6-.6 1.8-1.3.2-.6.2-1.2.2-1.3l-.6-.4-1.6-.8c-.2-.1-.4-.2-.6.1l-.8 1c-.2.2-.3.2-.6.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4 0-.5.2-.7l.4-.5.3-.5v-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.1z"/></svg> Enviar pedido por WhatsApp</a>
+    <button class="vaciar" onclick="vaciar()">Vaciar pedido</button>
+  </div>
+</aside>
+
+<script>
+/* WhatsApp de pedidos: Línea 1 de El Llanerito (Linktree) */
+const TEL = '573054040013';
+
+const CATEGORIAS = [
+  { id:'entradas', nombre:'Para comenzar' },
+  { id:'picadas',  nombre:'Picadas', nota:'Todas las picadas vienen acompañadas de papa y yuca al vapor, guacamole, chimichurri y ají de la casa.' },
+  { id:'especiales', nombre:'Especiales' }
+];
+
+/* Textos y precios tal como aparecen en la carta del Drive */
+const MENU = [
+  { c:'entradas',   n:'Chicharrón Llanero', d:'Acompañado de arepa frita, guacamole y limón.', p:23000 },
+  { c:'picadas',    n:'Personal Mixta',     d:'Picada de ternera, cerdo y costilla.', p:39500 },
+  { c:'picadas',    n:'Personal Especial',  d:'Picada de ternera, cerdo, costilla y chorizo.', p:50000 },
+  { c:'picadas',    n:'Para Dos Mixta',     d:'Para compartir. Picada de ternera, cerdo y costilla.', p:69900 },
+  { c:'especiales', n:'Bandeja Paisa',      d:'Fríjoles, arroz blanco, carne molida, chicharrón llanero crocante, chorizo de la casa, huevo frito, aguacate, arepa y plátano maduro.', p:44900 }
+];
+
+const $ = s => document.querySelector(s);
+const formato = n => '$' + n.toLocaleString('es-CO');
+const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const idDe = it => norm(it.c + '-' + it.n).replace(/[^a-z0-9]+/g,'-');
+const itemPorId = id => MENU.find(m => idDe(m) === id);
+
+let pedido = {};
+try{ const g = localStorage.getItem('llanerito_demo_pedido'); if(g) pedido = JSON.parse(g)||{}; }catch(e){}
+const guardar = () => { try{ localStorage.setItem('llanerito_demo_pedido', JSON.stringify(pedido)); }catch(e){} };
+
+function totales(){
+  let n = 0, t = 0;
+  for(const k in pedido){ n += pedido[k].q; t += pedido[k].q * pedido[k].p; }
+  return {n, t};
+}
+
+function controlHTML(id){
+  const cant = pedido[id] ? pedido[id].q : 0;
+  return cant > 0
+    ? `<div class="contador-plato"><button onclick="cambiar('${id}',-1)" aria-label="Quitar">−</button><span>${cant}</span><button onclick="cambiar('${id}',1)" aria-label="Agregar">+</button></div>`
+    : `<button class="mas" onclick="cambiar('${id}',1)" aria-label="Agregar">+</button>`;
+}
+
+function pintarMenu(){
+  $('#menu').innerHTML = CATEGORIAS.map(c => {
+    const items = MENU.filter(m => m.c === c.id);
+    return `<section class="categoria"><h3>${c.nombre}</h3>${c.nota ? `<p class="nota-cat">${c.nota}</p>` : ''}
+      ${items.map(it => { const id = idDe(it); return `<article class="plato ${pedido[id]?'en-pedido':''}" id="card-${id}">
+        <div class="plato-info"><div class="plato-nom">${it.n}</div><div class="plato-desc">${it.d}</div><div class="plato-precio">${formato(it.p)}</div></div>
+        <div id="ctl-${id}">${controlHTML(id)}</div></article>`; }).join('')}
+    </section>`;
+  }).join('');
+}
+
+function refrescarTarjeta(id){
+  const card = document.getElementById('card-' + id);
+  if(!card) return;
+  card.classList.toggle('en-pedido', !!pedido[id]);
+  document.getElementById('ctl-' + id).innerHTML = controlHTML(id);
+}
+
+function cambiar(id, d){
+  const it = itemPorId(id); if(!it) return;
+  if(!pedido[id]) pedido[id] = { n: it.n, p: it.p, q: 0 };
+  pedido[id].q += d;
+  if(pedido[id].q <= 0) delete pedido[id];
+  guardar(); refrescarTarjeta(id); refrescarCarrito();
+}
+
+function refrescarCarrito(){
+  const {n, t} = totales();
+  $('#burbuja-n').textContent = n;
+  $('#burbuja-total').textContent = formato(t);
+  $('#burbuja').classList.toggle('visible', n > 0);
+  $('#total-grande').textContent = formato(t);
+  $('#cuenta-items').textContent = n + (n === 1 ? ' producto' : ' productos');
+  $('#panel-sub').textContent = n > 0 ? n + (n===1?' producto':' productos') + ' · ' + formato(t) : 'Nada por aquí todavía';
+  $('#panel-pie').style.display = n > 0 ? 'block' : 'none';
+  refrescarEnlacesWA();
+  const lista = $('#panel-lista');
+  if(n === 0){ lista.innerHTML = '<div class="vacio"><strong>Tu pedido está vacío</strong><br>Toca el + en cualquier plato</div>'; return; }
+  lista.innerHTML = Object.keys(pedido).map(id => { const i = pedido[id]; return `<div class="fila">
+    <div class="fila-info"><div class="fila-nom">${i.n}</div><div class="fila-precio">${formato(i.p)} c/u</div></div>
+    <div class="contador-plato"><button onclick="cambiar('${id}',-1)" aria-label="Quitar">−</button><span>${i.q}</span><button onclick="cambiar('${id}',1)" aria-label="Agregar">+</button></div>
+    <div class="fila-sub">${formato(i.q * i.p)}</div></div>`; }).join('');
+}
+
+function vaciar(){
+  const ids = Object.keys(pedido);
+  pedido = {}; guardar(); ids.forEach(refrescarTarjeta); refrescarCarrito();
+}
+
+function textoPedido(){
+  const {n, t} = totales();
+  if(n === 0) return '¡Hola El Llanerito! Quiero hacer un pedido a domicilio.';
+  let txt = '*¡Hola El Llanerito!*\nQuiero hacer este pedido:\n\n';
+  for(const k in pedido){ const i = pedido[k]; txt += '• ' + i.q + ' x ' + i.n + ' — ' + formato(i.q * i.p) + '\n'; }
+  txt += '\n*TOTAL: ' + formato(t) + '*';
+  const nota = $('#nota').value.trim();
+  if(nota) txt += '\n\n📝 Nota: ' + nota;
+  txt += '\n\n_Pedido hecho desde el menú digital_';
+  return txt;
+}
+
+/* Enlaces reales (no window.open: hay navegadores que lo bloquean) */
+function refrescarEnlacesWA(){
+  const url = 'https://wa.me/' + TEL + '?text=' + encodeURIComponent(textoPedido());
+  ['#wa-enviar','#wa-hero'].forEach(sel => { const a = $(sel); if(a) a.href = url; });
+}
+
+function abrirPanel(){ $('#panel').classList.add('abierto'); $('#velo').classList.add('abierto'); document.body.style.overflow='hidden'; }
+function cerrarPanel(){ $('#panel').classList.remove('abierto'); $('#velo').classList.remove('abierto'); document.body.style.overflow=''; }
+document.addEventListener('keydown', e => { if(e.key === 'Escape') cerrarPanel(); });
+$('#nota').addEventListener('input', refrescarEnlacesWA);
+
+/* Si el pedido guardado trae platos que ya no están, se descartan */
+for(const k in pedido){ if(!itemPorId(k)) delete pedido[k]; }
+pintarMenu(); refrescarCarrito();
+
+if('serviceWorker' in navigator){ window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{})); }
+</script>
+</body>
+</html>

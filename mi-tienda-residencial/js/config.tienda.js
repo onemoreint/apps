@@ -7,14 +7,25 @@
    IMPORTANTE:
    - Aquí solo van datos PÚBLICOS (los que el residente igual verá en pantalla).
    - Nunca pongas aquí contraseñas, claves secretas de Supabase ni tokens.
-   - En la fase 2 estos datos se leerán desde Supabase y se editarán desde
-     el panel administrativo. Este archivo quedará como respaldo.
+   - Con Supabase configurado (abajo), los datos de la tienda (nombre,
+     WhatsApp, pagos, horarios, domicilio, productos) se leen de la base de
+     datos; lo de este archivo queda como respaldo para el modo demo.
    ========================================================================== */
 
 window.TIENDA_CONFIG = {
   // Identificador corto de la tienda (sin espacios ni tildes). Se usa en los
   // números de pedido y, en la fase 2, para separar los datos de cada tienda.
-  slug: "demo",
+  slug: "flor-de-lotto",
+
+  // Base de datos (fase 2). Con esto, la tienda lee su configuración,
+  // catálogo y existencias de Supabase, y los pedidos quedan registrados allá.
+  // La "clave" es la PUBLICABLE (sb_publishable_…), hecha para páginas
+  // públicas. NUNCA pongas aquí la clave secreta (sb_secret_… o service_role).
+  // Si borras este bloque, la tienda vuelve al modo demostración local.
+  supabase: {
+    url: "https://vwijmfizggjxcxluqvnm.supabase.co",
+    clave: "sb_publishable_tSmyBGQh-WAk1qMyGkY0nw_xEdsC9BV"
+  },
   prefijoPedido: "FDL",
 
   nombre: "Flor de Lotto",

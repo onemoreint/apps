@@ -29,6 +29,15 @@
      Arranque
      --------------------------------------------------------------------- */
   async function iniciar() {
+    try {
+      const carga = await D.cargarTienda();
+      if (carga.enLinea === false) avisar("Sin conexión: mostrando el último catálogo guardado.");
+    } catch (e) {
+      $("#grillaProductos").innerHTML = `<div class="vacio"><p class="vacio__icono">📡</p>
+        <p>No se pudo cargar la tienda. Revisa tu conexión a internet e intenta de nuevo.</p>
+        <button type="button" class="boton boton--principal" onclick="location.reload()">Reintentar</button></div>`;
+      return;
+    }
     aplicarMarca();
     pintarHorario();
     setInterval(pintarHorario, 60000);
@@ -534,6 +543,7 @@
       });
       if (!r.ok) {
         $("#errorGeneral").textContent = r.error;
+        await recargarCatalogo(); // precios/existencias pudieron cambiar
         if (r.totalNuevo) { estado.totalAprobado = null; $("#apruebaTotal").checked = false; pintarResumenPedido(); }
         return;
       }
@@ -550,19 +560,27 @@
       $("#efectivoCon").value = "";
       $("#apruebaTotal").checked = false;
       estado.totalAprobado = null;
-      // Recargar catálogo (stock actualizado)
-      const cat = await D.obtenerCatalogo();
-      estado.productos = cat.productos;
-      estado.porId = new Map(cat.productos.map((p) => [p.id, p]));
-      pintarProductos();
       location.hash = `#/confirmacion/${encodeURIComponent(r.pedido.numero)}`;
+      recargarCatalogo(); // existencias actualizadas
     } catch (e) {
-      $("#errorGeneral").textContent = "Ocurrió un problema. Intenta de nuevo; no se duplicará tu pedido.";
+      $("#errorGeneral").textContent = "No se pudo enviar el pedido (revisa tu conexión). Toca Confirmar de nuevo: no se duplicará.";
     } finally {
       estado.enviando = false;
       boton.disabled = false;
       pintarResumenPedido();
     }
+  }
+
+  async function recargarCatalogo() {
+    try {
+      const cat = await D.obtenerCatalogo(true);
+      estado.categorias = cat.categorias;
+      estado.productos = cat.productos;
+      estado.porId = new Map(cat.productos.map((p) => [p.id, p]));
+      K.sincronizar(estado.productos);
+      pintarProductos();
+      if (pantallaActual() === "pedido") pintarResumenPedido();
+    } catch (e) { /* sin conexión: se mantiene lo que hay */ }
   }
 
   /* ---------------------------------------------------------------------
@@ -750,13 +768,20 @@
       caja.innerHTML = `<p class="alerta">Escribe el número de pedido y los últimos 4 dígitos de tu celular.</p>`;
       return;
     }
-    const p = await D.consultarPedido(numero, ult);
+    let p;
+    try { p = await D.consultarPedido(numero, ult); }
+    catch (e) { caja.innerHTML = `<p class="alerta">No hay conexión. Intenta de nuevo en un momento.</p>`; return; }
     caja.innerHTML = p ? tarjetaEstado(p)
-      : `<p class="alerta">No encontramos ese pedido en este dispositivo. Revisa el número o pregunta a la tienda por WhatsApp.</p>`;
+      : `<p class="alerta">No encontramos ese pedido. Revisa el número y los 4 dígitos, o pregunta a la tienda por WhatsApp.</p>`;
   }
 
-  function pintarMisPedidos() {
-    const lista = D.pedidosDeEsteDispositivo().slice(0, 5);
+  async function pintarMisPedidos() {
+    dibujarMisPedidos(D.pedidosDeEsteDispositivo());
+    try { dibujarMisPedidos(await D.actualizarPedidosLocales()); } catch (e) { /* sin conexión */ }
+  }
+
+  function dibujarMisPedidos(todos) {
+    const lista = todos.slice(0, 5);
     $("#misPedidos").innerHTML = lista.length
       ? `<h3 class="subtitulo">Pedidos hechos en este teléfono</h3>` + lista.map(tarjetaEstado).join("")
       : "";

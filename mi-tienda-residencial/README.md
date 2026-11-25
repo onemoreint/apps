@@ -1,4 +1,4 @@
-# Mi Tienda Residencial · Fase 1
+# Mi Tienda Residencial · Fase 2 (con base de datos)
 
 Tienda web para residentes de un conjunto: catálogo, carrito, pedido con domicilio
 o recogida, pago por Nequi, Daviplata o transferencia, y envío del pedido por WhatsApp.
@@ -21,17 +21,29 @@ instalar en el celular como aplicación (PWA).
 | Aprobación del total: el residente marca "apruebo pagar $X" antes de confirmar (si el total cambia, debe aprobar de nuevo) | ✅ Funciona |
 | Código QR en el pedido con los datos de la cuenta y el valor exacto | ✅ Funciona (QR informativo; ver nota abajo) |
 | Pago en efectivo: el residente dice con cuánto paga y el pedido muestra el cambio que debe llevar el domiciliario | ✅ Funciona |
-| Número de pedido único (ej. `MTR-261123-RXE3`) | ✅ Se genera en el teléfono del residente |
+| Número de pedido único (ej. `FDL-261124-RXE3`) | ✅ Lo genera el servidor |
+| Pedidos guardados en la base de datos (Supabase) | ✅ Precios, domicilio, total y existencias los calcula y valida el servidor |
 | Evitar pedidos duplicados por doble toque | ✅ Funciona |
 | Envío del pedido completo a la tienda por WhatsApp | ✅ Funciona |
 | Horario de atención (abierto/cerrado) | ✅ Funciona |
 | Instalable y abre sin internet | ✅ Funciona (al publicarla en GitHub Pages) |
-| Consulta del estado del pedido | ⚠️ Solo encuentra pedidos hechos **en ese mismo teléfono**, y el estado siempre dice "Pendiente" porque aún no hay panel |
+| Consulta del estado del pedido | ✅ Desde cualquier teléfono (número + 4 dígitos). El estado avanza cuando la tienda lo cambie (panel, fase 3) |
 | Comprobante de pago | ⚠️ **No se sube** a ningún lado; el residente lo adjunta en el chat de WhatsApp |
-| Inventario | ⚠️ Es de demostración: se descuenta solo en el teléfono de quien compra |
-| Panel administrativo, inicio de sesión, base de datos | ❌ Fase 2 y 3 (Supabase) |
+| Inventario | ✅ Se descuenta en la base de datos con cada pedido; no deja vender más de lo que hay |
+| Panel administrativo con inicio de sesión | ❌ Fase 3. Mientras tanto, los pedidos se ven en Supabase → Table Editor → `pedidos` |
 
-La página lo dice abiertamente con la franja amarilla de "Versión de demostración".
+La página lo dice con la franja amarilla de "Versión de prueba".
+
+## Base de datos (fase 2)
+
+- Proyecto Supabase: `mi-tienda-residencial` (São Paulo). El SQL está en la carpeta `supabase/`.
+- La tienda se identifica por `slug` en `js/config.tienda.js` (`flor-de-lotto`). Nombre, WhatsApp,
+  pagos, horarios, domicilio y productos se editan **en la base de datos** (tablas `tiendas`,
+  `metodos_pago`, `horarios`, `categorias`, `productos`); el panel de la fase 3 lo hará con botones.
+- Sin internet, la tienda muestra el último catálogo guardado; crear o consultar pedidos sí necesita conexión.
+- Si se borra el bloque `supabase` de `js/config.tienda.js`, todo vuelve al modo demostración local.
+- **Nueva tienda (otro conjunto):** insertar otra fila en `tiendas` con su `slug`, y publicar una
+  copia de la carpeta con ese `slug` y su logo en `js/config.tienda.js`.
 
 ---
 

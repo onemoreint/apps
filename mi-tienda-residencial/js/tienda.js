@@ -19,8 +19,12 @@
   const CLAVE_VENTAS = `mtr:${C.slug}:tienda:ventas`;
   const METODOS = { nequi: "Nequi", daviplata: "Daviplata", transferencia: "Transferencia", efectivo: "Efectivo" };
 
-  const productos = window.PRODUCTOS_DEMO.filter((p) => p.activo);
-  const porCodigo = new Map(productos.filter((p) => p.codigoBarras).map((p) => [p.codigoBarras, p]));
+  let productos = window.PRODUCTOS_DEMO.filter((p) => p.activo);
+  let categorias = window.CATEGORIAS_DEMO;
+  let porCodigo = new Map();
+  function indexar() {
+    porCodigo = new Map(productos.filter((p) => p.codigoBarras).map((p) => [p.codigoBarras, p]));
+  }
 
   const estado = {
     pestana: "pedido",
@@ -32,7 +36,15 @@
   /* ---------------------------------------------------------------------
      Arranque
      --------------------------------------------------------------------- */
-  function iniciar() {
+  async function iniciar() {
+    if (window.Datos) {
+      try {
+        await window.Datos.cargarTienda();
+        const cat = await window.Datos.obtenerCatalogo();
+        productos = cat.productos; categorias = cat.categorias;
+      } catch (e) { avisar("Sin conexión: usando el catálogo de demostración."); }
+    }
+    indexar();
     document.title = `Modo tienda · ${C.nombre}`;
     $("#nombreTienda").textContent = C.nombre;
     if (C.logo) $("#logoTienda").src = C.logo;
@@ -244,7 +256,7 @@
      Productos
      --------------------------------------------------------------------- */
   function pintarProducto(p) {
-    const cat = (window.CATEGORIAS_DEMO.find((c) => c.id === p.categoria) || {}).nombre || "";
+    const cat = (categorias.find((c) => c.id === p.categoria) || {}).nombre || "";
     $("#productoEscaneado").innerHTML = `
       <div class="tarjeta producto-leido">
         <div class="producto-leido__imagen">${p.imagen

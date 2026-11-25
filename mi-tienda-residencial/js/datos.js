@@ -5,7 +5,10 @@
    directamente con la base de datos: llama a Datos.obtenerCatalogo(),
    Datos.crearPedido(), Datos.consultarPedido().
 
-   FASE 1 (este archivo): MODO DEMO LOCAL
+   Si config.tienda.js tiene datos de Supabase, js/nube.js reemplaza estas
+   funciones por las de la base de datos (fase 2). Sin Supabase se usa:
+
+   MODO DEMO LOCAL
      - Los pedidos se guardan SOLO en el navegador de quien los hace.
      - La tienda NO los recibe por aquí: los recibe por el mensaje de WhatsApp.
      - La consulta de estado solo encuentra pedidos hechos en este mismo
@@ -190,8 +193,11 @@
     localStorage.removeItem(CLAVE_PEDIDOS);
   }
 
+  async function cargarTienda() { return { modo: "demo", enLinea: true }; }
+  async function actualizarPedidosLocales() { return pedidosDeEsteDispositivo(); }
+
   window.Datos = {
-    modo: "demo",
+    modo: "demo", cargarTienda, actualizarPedidosLocales,
     ESTADOS_PEDIDO, ESTADOS_PAGO,
     obtenerCatalogo, cotizar, calcularEnvio, crearPedido,
     consultarPedido, pedidosDeEsteDispositivo, reiniciarDemo

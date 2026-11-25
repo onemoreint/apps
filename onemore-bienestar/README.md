@@ -2,7 +2,7 @@
 
 Página de distribuidor independiente con productos ONE MORE International, en un solo `index.html`. Estilo oscuro premium (negro y naranja) con fotos de estilo de vida del catálogo oficial.
 
-**Embudo:** Atención (hero) → Problema → Cómo funciona → Oferta (paquete PNG $150) → Asesor rápido → Catálogo (12 productos con foto real y ficha) → Video → Elige tu camino (cliente o socio) + plan de carrera de 17 rangos → Sobre José → Preguntas → Llamado final.
+**Embudo:** Atención (hero) → Escena cinemática al hacer scroll (`#cine`, `js/cine.js`: polvo → parche → red) → Problema → Cómo funciona → Oferta (paquete PNG $150) → Asesor rápido → Catálogo (12 productos con foto real y ficha) → Video → Elige tu camino (cliente o socio) + plan de carrera de 17 rangos → Sobre José → Preguntas → Llamado final.
 
 - La compra y la afiliación van a `STORE` (enlace de afiliado).
 - Los pedidos y las dudas van por WhatsApp a `WA`.
@@ -23,7 +23,7 @@ Página de distribuidor independiente con productos ONE MORE International, en u
 - La primera vez, FormSubmit envía un correo de activación que hay que confirmar.
 
 **Seguridad:**
-- Política de seguridad de contenido (CSP) estricta: solo se ejecutan los scripts propios (`js/app.js`, `js/intro.js`), sin código en línea, y solo se conecta a FormSubmit, YouTube y Google Fonts.
+- Política de seguridad de contenido (CSP) estricta: solo se ejecutan los scripts propios (`js/app.js`, `js/intro.js`, `js/cine.js`), sin código en línea, y solo se conecta a FormSubmit, YouTube y Google Fonts.
 - Protección contra clickjacking: la página no se deja mostrar dentro de marcos ajenos.
 - Lo que escribe el visitante se limpia antes de usarlo (sin etiquetas HTML ni caracteres raros, con largo máximo).
 - Anti-spam en los formularios: campo trampa, tiempo mínimo de 4 segundos, máximo un envío por minuto y 3 por hora, y lista de palabras bloqueadas en FormSubmit.

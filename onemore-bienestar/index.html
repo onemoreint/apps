@@ -563,6 +563,19 @@ html.intro-on #intro{display:grid}
 @keyframes ibar{to{width:100%}}
 @media (max-width:640px){.i-stage{flex-direction:column;gap:6px}.i-emb{width:34vw}.i-word{width:78vw}.i-word img{transform-origin:center;transform:translateZ(-120px) rotateX(30deg)}.i-sub{bottom:14%}}
 @media (prefers-reduced-motion:reduce){#intro{display:none!important}html.intro-on,html.intro-on body{overflow:auto}}
+/* ===== Escena cinemática: polvo → parche → red (js/cine.js) ===== */
+.cine{position:relative;height:380vh}
+.cine-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:radial-gradient(120% 70% at 50% 110%,#5a2306 0%,#24120a 38%,var(--bg) 70%)}
+.cine-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.cine-cap{position:absolute;left:max(5vw,20px);bottom:clamp(70px,12vh,140px);max-width:min(640px,90vw);opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease;pointer-events:none}
+.cine-cap.on{opacity:1;transform:none;pointer-events:auto}
+.cine-cap h2{font-size:clamp(44px,8vw,112px);line-height:.92;margin:14px 0 0}
+.cine-cap p{margin-top:18px;font-size:clamp(16px,1.6vw,19px);line-height:1.6;color:#D8C9B8;max-width:36ch}
+.cine-cap .btn{margin-top:24px}
+.cine-bar{position:absolute;right:max(5vw,20px);bottom:40px;width:120px;height:2px;background:var(--line2)}
+.cine-bar i{display:block;height:100%;width:0;background:var(--orange)}
+.cine-hint{position:absolute;right:max(5vw,20px);bottom:52px;font-size:13px;color:var(--muted);transition:opacity .4s}
+@media (max-width:720px){.cine{height:340vh}.cine-cap{bottom:168px}.cine-bar,.cine-hint{display:none}}
 </style>
 </head>
 <body>
@@ -625,6 +638,29 @@ html.intro-on #intro{display:grid}
 </section>
 
 <div class="reel" aria-hidden="true"><div class="track" id="reel"></div></div>
+
+<!-- 1b · ESCENA CINEMÁTICA (js/cine.js) -->
+<section class="cine" id="cine">
+  <div class="cine-stage">
+    <canvas id="cineFx" aria-hidden="true"></canvas>
+    <div class="cine-cap on" data-step="0">
+      <span class="tag">Así funciona ONE MORE</span>
+      <h2>Tu día ya tiene <span class="fire">demasiado.</span></h2>
+      <p>Trabajo, estrés, poco descanso. Lo último que necesitas es otra rutina complicada.</p>
+    </div>
+    <div class="cine-cap" data-step="1">
+      <h2>Un parche.<br><span class="fire">Todo el día.</span></h2>
+      <p>Te lo pones en la mañana y sigues con tu vida. Sin pastillas que tragar ni horarios que recordar.</p>
+    </div>
+    <div class="cine-cap" data-step="2">
+      <h2>Y lo que te funciona, <span class="fire">se comparte.</span></h2>
+      <p>Con el paquete PNG quedas como cliente y socio. Jaqueline y yo te enseñamos a construir tu equipo.</p>
+      <a href="#oferta" class="btn btn-fire">Ver el paquete PNG · $150</a>
+    </div>
+    <div class="cine-bar" aria-hidden="true"><i></i></div>
+    <p class="cine-hint" aria-hidden="true">Desliza</p>
+  </div>
+</section>
 
 <!-- 2 · PROBLEMA -->
 <section class="sec wrap" id="problema">
@@ -908,5 +944,6 @@ html.intro-on #intro{display:grid}
 <div class="toast" id="toast"></div>
 
 <script src="js/app.js"></script>
+<script src="js/cine.js"></script>
 </body>
 </html>

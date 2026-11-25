@@ -60,6 +60,33 @@ Los archivos con ★ son los que se editan para cada tienda nueva.
 
 ---
 
+## Modo tienda (pistola lectora de códigos)
+
+Página para el personal de la tienda: **`tienda.html`**
+(en línea: `https://onemoreint.github.io/apps/mi-tienda-residencial/tienda.html`).
+No aparece en la tienda de los residentes; se abre con ese enlace y se puede instalar
+como app en el computador o tablet de la tienda.
+
+**La pistola:** cualquier lector USB o Bluetooth en modo teclado (HID). Debe ser **2D** para
+leer los QR de pedido; una 1D solo lee códigos de barras. Lo leído entra en la casilla grande
+y la app decide qué es. En Chrome de Android aparece además un botón 📷 para leer con la cámara.
+
+| Pestaña | Qué hace |
+|---|---|
+| 📦 Pedidos | El cliente muestra el **código de su pedido** (sale en la confirmación). Al escanearlo se ven el número, la torre y el apartamento, el total, el método de pago y, si es efectivo, el **cambio a entregar**. "Marcar como entregado" lo registra y avisa si se escanea dos veces. |
+| 🧾 Mostrador | Venta en mostrador: cada producto escaneado suma una unidad. Muestra el total, calcula el cambio y registra la venta del día. |
+| 🏷️ Productos | Al escanear un producto se ven su precio y existencias. Incluye una **hoja de códigos de prueba** para imprimir y probar la pistola. |
+
+**Límites de esta fase (dilo así al cliente):**
+- Entregas y ventas se guardan **solo en ese equipo**. Las existencias no se descuentan.
+- El QR del pedido trae los datos principales del pedido (no la lista de productos). La tienda
+  los compara con el mensaje de WhatsApp. Con la base de datos (fase 2), escanear el pedido
+  traerá el pedido completo y su estado real.
+- Los códigos de barras de la demo son **de prueba** (`7709990…`). En la fase 3 cada producto
+  se registrará escaneando el código real de su empaque.
+
+---
+
 ## Paso 1 · Probarla en tu Mac
 
 1. Descomprime el ZIP.

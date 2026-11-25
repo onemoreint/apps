@@ -151,6 +151,7 @@
       if (estado.filtroCategoria !== "todas" && p.categoria !== estado.filtroCategoria) return false;
       if (!q) return true;
       const cat = estado.categorias.find((c) => c.id === p.categoria);
+      if (p.codigoBarras && p.codigoBarras === q) return true; // escaneado con pistola
       return U.normalizar(`${p.nombre} ${p.descripcion || ""} ${cat ? cat.nombre : ""}`).includes(q);
     }).sort((a, b) => (b.stock > 0) - (a.stock > 0));
   }
@@ -642,6 +643,7 @@
       </a>
       ${chipsEstado(p)}
       ${bloquePago(p)}
+      ${bloqueQRPedido(p)}
       <div class="tarjeta tarjeta--resumen">
         <ul class="resumen__items">
           ${p.items.map((i) => `<li><span>${i.cantidad} × ${U.escaparHTML(i.nombre)}</span><span>${U.dinero(i.subtotal)}</span></li>`).join("")}
@@ -703,6 +705,22 @@
         </dl>
         <button type="button" class="boton boton--fantasma boton--chico" data-accion="copiar"
           data-texto="${U.escaparHTML(U.soloDigitos(cuenta.numero))}">Copiar número de cuenta</button>
+      </div>`;
+  }
+
+  /** QR del pedido: la tienda lo escanea al entregar o cuando lo recoges. */
+  function bloqueQRPedido(p) {
+    let qr = "";
+    try { qr = window.QR.svg(window.Codigos.textoPedido(p), { margen: 3, color: "#111" }); } catch (e) { return ""; }
+    return `
+      <div class="tarjeta qr-pedido">
+        <div class="qr qr--chico">${qr}</div>
+        <div>
+          <p class="pago__titulo">Código de tu pedido</p>
+          <p class="ayuda">${p.entrega.tipo === "domicilio"
+            ? "Muéstralo al domiciliario cuando te entregue."
+            : "Muéstralo en la tienda cuando vayas a recoger."}</p>
+        </div>
       </div>`;
   }
 

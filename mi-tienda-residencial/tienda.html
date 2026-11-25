@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Modo tienda</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0E3B2E">
+  <link rel="manifest" href="manifest-tienda.webmanifest">
+  <link rel="icon" href="img/icono-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/estilos.css?v=1.3.1">
+  <link rel="stylesheet" href="css/tienda.css?v=1.3.1">
+</head>
+<body class="modo-tienda">
+  <div class="aviso-demo" role="note">
+    <strong>Modo tienda · versión de demostración.</strong>
+    Lo que registres aquí se guarda solo en este equipo. El inventario y los pedidos compartidos llegan con la base de datos (fase 2).
+  </div>
+
+  <header class="cabecera">
+    <div class="cabecera__marca">
+      <img id="logoTienda" class="cabecera__logo" src="img/logo-flor-de-lotto.webp" alt="" width="48" height="48">
+      <div>
+        <h1 class="cabecera__nombre" id="nombreTienda">Modo tienda</h1>
+        <p class="cabecera__conjunto">Modo tienda · lector de códigos</p>
+      </div>
+    </div>
+    <a class="boton boton--fantasma boton--chico" href="./">Ver tienda</a>
+  </header>
+
+  <main class="tienda" id="contenido">
+    <!-- Barra del lector: la pistola escribe aquí y presiona Enter -->
+    <form class="lector" id="formLector" autocomplete="off">
+      <label for="entradaCodigo" class="lector__etiqueta">
+        <span class="lector__punto" id="lectorPunto" aria-hidden="true"></span>
+        <span id="lectorEstado">Listo para escanear</span>
+      </label>
+      <div class="lector__fila">
+        <input id="entradaCodigo" class="lector__entrada" inputmode="none" autocomplete="off" autocapitalize="characters" spellcheck="false"
+          placeholder="Escanea o escribe un código y presiona Enter">
+        <button type="button" class="boton boton--principal lector__camara" id="botonCamara" hidden aria-label="Escanear con la cámara">📷</button>
+      </div>
+      <p class="ayuda">Funciona con pistola lectora USB o Bluetooth (modo teclado). Para leer los QR de pedido la pistola debe ser <strong>2D</strong>.</p>
+    </form>
+
+    <nav class="pestanas" role="tablist" aria-label="Secciones">
+      <button role="tab" id="tab-pedido" aria-controls="panel-pedido" aria-selected="true">📦 Pedidos</button>
+      <button role="tab" id="tab-mostrador" aria-controls="panel-mostrador" aria-selected="false">🧾 Mostrador</button>
+      <button role="tab" id="tab-productos" aria-controls="panel-productos" aria-selected="false">🏷️ Productos</button>
+    </nav>
+
+    <!-- ============ PEDIDOS ============ -->
+    <section class="panel" id="panel-pedido" role="tabpanel" aria-labelledby="tab-pedido">
+      <div id="pedidoEscaneado">
+        <div class="vacio">
+          <p class="vacio__icono">📦</p>
+          <p>Escanea el <strong>código del pedido</strong> que el cliente muestra en su celular.</p>
+        </div>
+      </div>
+      <h3 class="subtitulo">Entregados hoy en este equipo</h3>
+      <div id="listaEntregas"></div>
+    </section>
+
+    <!-- ============ MOSTRADOR ============ -->
+    <section class="panel" id="panel-mostrador" role="tabpanel" aria-labelledby="tab-mostrador" hidden>
+      <div id="ventaLineas" class="lista-carrito"></div>
+      <div id="ventaResumen"></div>
+      <h3 class="subtitulo">Ventas de hoy en este equipo</h3>
+      <div id="ventasDia"></div>
+    </section>
+
+    <!-- ============ PRODUCTOS ============ -->
+    <section class="panel" id="panel-productos" role="tabpanel" aria-labelledby="tab-productos" hidden>
+      <div id="productoEscaneado">
+        <div class="vacio">
+          <p class="vacio__icono">🏷️</p>
+          <p>Escanea el código de barras de un producto para ver su precio y existencias.</p>
+        </div>
+      </div>
+      <div class="hoja-codigos__encabezado">
+        <h3 class="subtitulo">Códigos de prueba</h3>
+        <button type="button" class="boton boton--fantasma boton--chico" id="botonImprimir">Imprimir</button>
+      </div>
+      <p class="ayuda">Son códigos de demostración para probar la pistola (desde la pantalla o impresos). En la fase 3 cada producto tendrá el código real de su empaque.</p>
+      <div class="hoja-codigos" id="hojaCodigos"></div>
+    </section>
+  </main>
+
+  <!-- Cámara (solo navegadores que lo permiten, p. ej. Chrome en Android) -->
+  <div class="camara" id="camara" hidden>
+    <video id="video" playsinline muted></video>
+    <div class="camara__marco" aria-hidden="true"></div>
+    <button type="button" class="boton boton--fantasma camara__cerrar" id="cerrarCamara">Cerrar cámara</button>
+  </div>
+
+  <div class="aviso-flotante" id="avisoFlotante" role="status" aria-live="polite"></div>
+
+  <script src="js/config.tienda.js?v=1.3.1"></script>
+  <script src="js/productos.demo.js?v=1.3.1"></script>
+  <script src="js/utilidades.js?v=1.3.1"></script>
+  <script src="js/codigos.js?v=1.3.1"></script>
+  <script src="js/tienda.js?v=1.3.1"></script>
+</body>
+</html>

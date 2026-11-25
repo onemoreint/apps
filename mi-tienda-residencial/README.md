@@ -1,4 +1,4 @@
-# Mi Tienda Residencial · Fase 2 (con base de datos)
+# Mi Tienda Residencial · Fase 3 (con panel administrativo)
 
 Tienda web para residentes de un conjunto: catálogo, carrito, pedido con domicilio
 o recogida, pago por Nequi, Daviplata o transferencia, y envío del pedido por WhatsApp.
@@ -30,7 +30,7 @@ instalar en el celular como aplicación (PWA).
 | Consulta del estado del pedido | ✅ Desde cualquier teléfono (número + 4 dígitos). El estado avanza cuando la tienda lo cambie (panel, fase 3) |
 | Comprobante de pago | ⚠️ **No se sube** a ningún lado; el residente lo adjunta en el chat de WhatsApp |
 | Inventario | ✅ Se descuenta en la base de datos con cada pedido; no deja vender más de lo que hay |
-| Panel administrativo con inicio de sesión | ❌ Fase 3. Mientras tanto, los pedidos se ven en Supabase → Table Editor → `pedidos` |
+| Panel administrativo con inicio de sesión | ✅ `panel.html` (ver abajo) |
 
 La página lo dice con la franja amarilla de "Versión de prueba".
 
@@ -71,6 +71,30 @@ mi-tienda-residencial/
 Los archivos con ★ son los que se editan para cada tienda nueva.
 
 ---
+
+## Panel administrativo (fase 3)
+
+Dirección: **`panel.html`** (`https://onemoreint.github.io/apps/mi-tienda-residencial/panel.html`).
+Se puede instalar como app en el celular o computador de la tienda.
+
+**Primer ingreso del dueño** (con el correo que quedó invitado en la base de datos):
+1. Abrir el panel → «Primera vez: crear mi cuenta» → correo + contraseña (mínimo 8 caracteres).
+2. Abrir el correo de Supabase y tocar el enlace de confirmación.
+   Si el enlace abre una página que no carga, no pasa nada: la cuenta ya quedó confirmada.
+3. Volver al panel → «Entrar».
+
+| Sección | Qué hace |
+|---|---|
+| 📦 Pedidos | Lista en vivo (se revisa cada 30 s, con sonido al llegar uno nuevo). Filtros: activos, pago por verificar, hoy, entregados, cancelados. En cada pedido: avanzar estado (Confirmar → Preparando → Listo → Entregado), marcar pago recibido / no recibido, cancelar (las existencias vuelven), escribir al cliente por WhatsApp con mensaje listo, e historial con hora y quién lo cambió. |
+| 🔎 Escáner | Pistola o cámara. QR del pedido → abre el pedido. Código de barras → abre el producto; si es nuevo, ofrece crearlo con ese código. |
+| 🏷️ Productos | Crear, editar, ocultar. Foto (se reduce sola a 600×600), precio, existencias con botones + y −, categoría, código de barras. Filtros: pocas existencias, agotados, ocultos. |
+| 📈 Ventas | Hoy, 7 o 30 días: ventas, pedidos, ticket promedio, entregado, pagos por verificar, ventas por día, productos más pedidos y método de pago. |
+| ⚙️ Ajustes | Nombre, WhatsApp, domicilio (costo, mínimo, gratis desde), torres, horario, métodos de pago, equipo (invitar vendedores o administradores) y QR de la tienda para pegar en portería. |
+
+**Roles:** Dueño y Administrador pueden todo. Vendedor ve y atiende pedidos y consulta productos, pero no edita productos ni ajustes.
+
+**Seguridad:** solo entra quien tenga invitación con ese correo **y** lo haya confirmado.
+Los estados solo cambian con la función del servidor (queda registro de quién y cuándo).
 
 ## Modo tienda (pistola lectora de códigos)
 

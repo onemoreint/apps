@@ -1,24 +1,29 @@
 /* Service worker: permite abrir la tienda sin internet (catálogo guardado).
    Cada vez que cambies archivos: sube VERSION aquí y el ?v= de index.html
    (y de esta lista) para que los teléfonos descarguen la versión nueva. */
-const VERSION = "mtr-v1.4.0";
+const VERSION = "mtr-v1.5.1";
 const ARCHIVOS = [
   "./",
   "index.html",
-  "css/estilos.css?v=1.4.0",
-  "js/config.tienda.js?v=1.4.0",
-  "js/productos.demo.js?v=1.4.0",
-  "js/utilidades.js?v=1.4.0",
-  "js/qr.js?v=1.4.0",
-  "js/codigos.js?v=1.4.0",
-  "js/tienda.js?v=1.4.0",
-  "css/tienda.css?v=1.4.0",
+  "css/estilos.css?v=1.5.1",
+  "js/config.tienda.js?v=1.5.1",
+  "js/productos.demo.js?v=1.5.1",
+  "js/utilidades.js?v=1.5.1",
+  "js/qr.js?v=1.5.1",
+  "js/codigos.js?v=1.5.1",
+  "js/tienda.js?v=1.5.1",
+  "css/tienda.css?v=1.5.1",
   "tienda.html",
+  "panel.html",
+  "manifest-panel.webmanifest",
+  "css/panel.css?v=1.5.1",
+  "js/auth.js?v=1.5.1",
+  "js/panel.js?v=1.5.1",
   "manifest-tienda.webmanifest",
-  "js/datos.js?v=1.4.0",
-  "js/nube.js?v=1.4.0",
-  "js/carrito.js?v=1.4.0",
-  "js/app.js?v=1.4.0",
+  "js/datos.js?v=1.5.1",
+  "js/nube.js?v=1.5.1",
+  "js/carrito.js?v=1.5.1",
+  "js/app.js?v=1.5.1",
   "img/logo-flor-de-lotto.webp",
   "img/icono-192.png",
   "manifest.webmanifest"

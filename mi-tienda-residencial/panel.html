@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Panel de la tienda</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0E3B2E">
+  <link rel="manifest" href="manifest-panel.webmanifest">
+  <link rel="icon" href="img/icono-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/estilos.css?v=1.5.1">
+  <link rel="stylesheet" href="css/tienda.css?v=1.5.1">
+  <link rel="stylesheet" href="css/panel.css?v=1.5.1">
+</head>
+<body class="modo-tienda panel">
+  <header class="cabecera">
+    <div class="cabecera__marca">
+      <img id="logoTienda" class="cabecera__logo" src="img/logo-flor-de-lotto.webp" alt="" width="48" height="48">
+      <div>
+        <h1 class="cabecera__nombre" id="nombreTienda">Panel</h1>
+        <p class="cabecera__conjunto" id="usuarioActual">Panel de la tienda</p>
+      </div>
+    </div>
+    <button type="button" class="boton boton--fantasma boton--chico" id="botonSalir" hidden>Salir</button>
+  </header>
+
+  <!-- ================= ACCESO ================= -->
+  <main class="tienda" id="vistaAcceso" hidden>
+    <div class="tarjeta acceso">
+      <h2 class="acceso__titulo" id="tituloAcceso">Entrar al panel</h2>
+      <p class="ayuda" id="ayudaAcceso">Solo para el personal de la tienda.</p>
+
+      <form id="formAcceso" class="formulario" novalidate>
+        <div class="campo">
+          <label for="correo">Correo</label>
+          <input id="correo" type="email" autocomplete="username" required>
+        </div>
+        <div class="campo" id="campoClave">
+          <label for="clave">Contraseña</label>
+          <input id="clave" type="password" autocomplete="current-password" minlength="8" required>
+        </div>
+        <p class="error error--general" id="errorAcceso" role="alert"></p>
+        <p class="aviso-ok" id="okAcceso" role="status" hidden></p>
+        <button class="boton boton--principal boton--bloque" id="botonAcceso" type="submit">Entrar</button>
+      </form>
+
+      <div class="acceso__enlaces">
+        <button type="button" class="enlace" data-modo="entrar" hidden>Ya tengo cuenta: entrar</button>
+        <button type="button" class="enlace" data-modo="registro">Primera vez: crear mi cuenta</button>
+        <button type="button" class="enlace" data-modo="recuperar">Olvidé mi contraseña</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= NUEVA CONTRASEÑA ================= -->
+  <main class="tienda" id="vistaNuevaClave" hidden>
+    <form class="tarjeta formulario" id="formNuevaClave" novalidate>
+      <h2 class="acceso__titulo">Nueva contraseña</h2>
+      <div class="campo">
+        <label for="nuevaClave">Escribe tu nueva contraseña (mínimo 8 caracteres)</label>
+        <input id="nuevaClave" type="password" autocomplete="new-password" minlength="8" required>
+      </div>
+      <p class="error error--general" id="errorNuevaClave" role="alert"></p>
+      <button class="boton boton--principal boton--bloque" type="submit">Guardar contraseña</button>
+    </form>
+  </main>
+
+  <!-- ================= SIN ACCESO ================= -->
+  <main class="tienda" id="vistaSinTienda" hidden>
+    <div class="tarjeta vacio">
+      <p class="vacio__icono">🔒</p>
+      <p>Tu cuenta <strong id="correoSinTienda"></strong> todavía no tiene acceso a ninguna tienda.</p>
+      <p class="ayuda">Pide al dueño de la tienda que te invite con este mismo correo y vuelve a entrar.</p>
+      <button type="button" class="boton boton--principal" id="botonReintentar">Volver a revisar</button>
+    </div>
+  </main>
+
+  <!-- ================= PANEL ================= -->
+  <main class="tienda panel__principal" id="vistaPanel" hidden>
+    <nav class="pestanas pestanas--panel" role="tablist" aria-label="Secciones">
+      <button role="tab" id="tab-pedidos" aria-selected="true">📦 Pedidos <span class="contador" id="contadorNuevos" hidden></span></button>
+      <button role="tab" id="tab-escaner" aria-selected="false">🔎 Escáner</button>
+      <button role="tab" id="tab-productos" aria-selected="false">🏷️ Productos</button>
+      <button role="tab" id="tab-ventas" aria-selected="false">📈 Ventas</button>
+      <button role="tab" id="tab-ajustes" aria-selected="false">⚙️ Ajustes</button>
+    </nav>
+
+    <!-- PEDIDOS -->
+    <section class="panel" id="panel-pedidos">
+      <div class="filtros" id="filtrosPedidos">
+        <button type="button" class="categoria" data-filtro="activos" aria-pressed="true">Activos</button>
+        <button type="button" class="categoria" data-filtro="pago">Pago por verificar</button>
+        <button type="button" class="categoria" data-filtro="hoy">Hoy</button>
+        <button type="button" class="categoria" data-filtro="entregados">Entregados</button>
+        <button type="button" class="categoria" data-filtro="cancelados">Cancelados</button>
+      </div>
+      <p class="ayuda" id="actualizadoPedidos"></p>
+      <div id="listaPedidos" class="lista-pedidos"></div>
+    </section>
+
+    <!-- ESCÁNER -->
+    <section class="panel" id="panel-escaner" hidden>
+      <form class="lector" id="formLector" autocomplete="off">
+        <label for="entradaCodigo" class="lector__etiqueta">
+          <span class="lector__punto" id="lectorPunto" aria-hidden="true"></span>
+          <span id="lectorEstado">Listo para escanear</span>
+        </label>
+        <div class="lector__fila">
+          <input id="entradaCodigo" class="lector__entrada" inputmode="none" autocomplete="off" autocapitalize="characters" spellcheck="false"
+            placeholder="Escanea un pedido o un producto">
+          <button type="button" class="boton boton--principal lector__camara" id="botonCamara" hidden aria-label="Escanear con la cámara">📷</button>
+        </div>
+        <p class="ayuda">QR de pedido → abre el pedido. Código de barras → abre el producto (o lo crea si es nuevo).</p>
+      </form>
+      <div id="resultadoEscaner"></div>
+    </section>
+
+    <!-- PRODUCTOS -->
+    <section class="panel" id="panel-productos" hidden>
+      <div class="barra-acciones">
+        <label class="buscador">
+          <span class="visualmente-oculto">Buscar productos</span>
+          <input id="buscarProducto" type="search" placeholder="Buscar por nombre o código" autocomplete="off">
+        </label>
+        <button type="button" class="boton boton--principal" data-accion="nuevo-producto">+ Nuevo</button>
+      </div>
+      <div class="filtros">
+        <button type="button" class="categoria" data-filtro-prod="todos" aria-pressed="true">Todos</button>
+        <button type="button" class="categoria" data-filtro-prod="pocos">Pocas existencias</button>
+        <button type="button" class="categoria" data-filtro-prod="agotados">Agotados</button>
+        <button type="button" class="categoria" data-filtro-prod="inactivos">Ocultos</button>
+      </div>
+      <div id="listaProductos" class="lista-productos"></div>
+    </section>
+
+    <!-- VENTAS -->
+    <section class="panel" id="panel-ventas" hidden>
+      <div class="filtros">
+        <button type="button" class="categoria" data-dias="1" aria-pressed="true">Hoy</button>
+        <button type="button" class="categoria" data-dias="7">7 días</button>
+        <button type="button" class="categoria" data-dias="30">30 días</button>
+      </div>
+      <div id="resumenVentas"></div>
+    </section>
+
+    <!-- AJUSTES -->
+    <section class="panel" id="panel-ajustes" hidden>
+      <div id="ajustes"></div>
+    </section>
+  </main>
+
+  <!-- Ventana de detalle / edición -->
+  <div class="hoja" id="hoja" hidden>
+    <div class="hoja__fondo" data-accion="cerrar-hoja"></div>
+    <div class="hoja__caja" role="dialog" aria-modal="true" aria-labelledby="hojaTitulo">
+      <div class="hoja__cabecera">
+        <h2 id="hojaTitulo"></h2>
+        <button type="button" class="boton boton--fantasma boton--chico" data-accion="cerrar-hoja">Cerrar</button>
+      </div>
+      <div id="hojaCuerpo"></div>
+    </div>
+  </div>
+
+  <div class="camara" id="camara" hidden>
+    <video id="video" playsinline muted></video>
+    <div class="camara__marco" aria-hidden="true"></div>
+    <button type="button" class="boton boton--fantasma camara__cerrar" id="cerrarCamara">Cerrar cámara</button>
+  </div>
+
+  <div class="aviso-flotante" id="avisoFlotante" role="status" aria-live="polite"></div>
+
+  <script src="js/config.tienda.js?v=1.5.1"></script>
+  <script src="js/utilidades.js?v=1.5.1"></script>
+  <script src="js/qr.js?v=1.5.1"></script>
+  <script src="js/codigos.js?v=1.5.1"></script>
+  <script src="js/auth.js?v=1.5.1"></script>
+  <script src="js/panel.js?v=1.5.1"></script>
+</body>
+</html>

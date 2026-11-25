@@ -8,9 +8,13 @@ Sirve para documentar y para crear la misma estructura en otro proyecto
 
 | Archivo | Qué hace |
 |---|---|
+| `00_semilla_flor_de_lotto.sql` | Datos iniciales de ejemplo (tienda, pagos, horarios, catálogo) |
 | `01_esquema_tienda.sql` | Tablas, reglas de seguridad (RLS) y permisos por rol |
 | `02_funciones_pedidos.sql` | `crear_pedido` y `consultar_pedido` (precios, existencias, total y número los calcula el servidor) |
 | `03_ajustes.sql` | Función de roles en esquema privado y corrección de validación |
+| `04_panel_administrativo.sql` | Invitaciones, cambio de estados con historial, reporte de ventas y fotos de productos |
+
+El orden para un proyecto nuevo es 01 → 02 → 03 → 04 → 00 (cambiar el correo del dueño en 04).
 
 **Seguridad**
 - Los residentes solo pueden **leer** el catálogo activo y usar las dos funciones.

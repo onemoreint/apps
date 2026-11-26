@@ -785,13 +785,14 @@ async function enterCloud(fresh) {
   try {
     if (!session.email) { try { const u = await authGet(); session.email = u.email; setSession(session); } catch {} }
     const ok = await rest('rpc/claim_admin', { method: 'POST', body: '{}' });
-    if (!ok) { setSession(null); return toast('Esta cuenta no tiene acceso al panel de SH Barber Studio', 'err'); }
+    if (!ok) { setSession(null); sheetLogin(); return toast('Tu correo no tiene invitación o está desactivado. Pide acceso al administrador.', 'err'); }
+    try { const me = await rest('rpc/my_role', { method: 'POST', body: '{}' }); session.role = me.role; session.name = me.name; session.userId = me.userId; setSession(session); } catch {}
     const d = await pullCloud();
     dataMode = 'cloud'; db = d; snap = makeSnap(d);
     try { localStorage.setItem(DB_KEYS.cloud, JSON.stringify(d)); } catch {}
     closeSheet();
     Object.assign(ui, { tab: 'inicio', agendaDate: today(), agendaMode: 'dia', cajaPeriod: 'hoy', masSub: null, clientQuery: '', appointmentQuery: '', clientFilter: 'todos' });
-    $('#dataMode').textContent = 'NUBE';
+    $('#dataMode').textContent = session.role === 'superadmin' ? 'ADMIN' : 'NUBE';
     $('#splash').hidden = true; $('#shell').hidden = false;
     render(true);
     lastAct = Date.now();
@@ -809,7 +810,8 @@ function sheetLogin(msg) {
     try {
       const r = await fetch(SB_URL + '/rest/v1/rpc/panel_status', { method: 'POST', headers: { apikey: SB_KEY, 'Content-Type': 'application/json' }, body: '{}' });
       const j = await r.json();
-      if (j && j.hasAdmin === false) { const b = $('#signupBtn'), n = $('#signupNote'); if (b) b.hidden = false; if (n) n.hidden = false; }
+      const b = $('#signupBtn'), n = $('#signupNote'); if (b) b.hidden = false; if (n) n.hidden = false;
+      if (j && j.hasAdmin === false && b) b.textContent = 'Crear cuenta del administrador';
     } catch {}
   }, 0);
   openSheet(head('Panel del barbero', 'Acceso con correo y contraseña') + `
@@ -819,8 +821,8 @@ function sheetLogin(msg) {
       <label class="lbl" for="lgPass">Contraseña</label><input id="lgPass" name="password" type="password" autocomplete="current-password" minlength="6" required>
       <div class="sh-actions"><button class="btn btn-gold" type="submit">${ic('lock', 19)}Entrar</button>
       <button type="button" class="link" data-act="forgot" style="text-align:center">¿Olvidaste tu contraseña?</button>
-      <button type="button" class="btn btn-ghost" data-act="signup" id="signupBtn" hidden>Crear la cuenta del barbero (solo la primera vez)</button></div>
-      <p class="muted tiny" id="signupNote" style="margin-top:10px" hidden>La primera cuenta que entra queda como dueña del panel. Usa una contraseña de 8 o más caracteres con letras y números.</p>
+      <button type="button" class="btn btn-ghost" data-act="signup" id="signupBtn" hidden>Tengo invitación: crear mi cuenta</button></div>
+      <p class="muted tiny" id="signupNote" style="margin-top:10px" hidden>Solo pueden entrar los correos invitados por el administrador. Usa una contraseña de 8 o más caracteres con letras y números.</p>
       <p class="muted tiny" style="margin-top:10px">🔒 Acceso solo para el barbero. Los clientes reservan en el portal.</p>
     </form>`);
 }
@@ -1276,6 +1278,20 @@ function viewMas() {
       ${P.qrData ? '<label class="check-row"><input type="checkbox" name="qrReset">Volver al QR original de SH Barber Studio</label>' : ''}
       <button class="btn btn-gold" style="margin-top:16px" type="submit">Guardar datos de pago</button></form>`;
   }
+  if (sub === 'admin') {
+    if (!session || session.role !== 'superadmin') return back('Administración') + '<div class="empty"><p style="margin:0">Solo el superadministrador puede ver esta sección.</p></div>';
+    return back('Administración') + `<div class="banner gold">${ic('lock', 18)}<div><b>Superadministrador:</b> ${esc(session.name || session.email || '')}. Aquí das o quitas acceso a los barberos.</div></div>
+    <div class="sec-h"><h2>Equipo</h2></div>
+    <div id="staffBox" class="list"><div class="empty"><p style="margin:0">Cargando equipo…</p></div></div>
+    <div class="sec-h"><h2>Invitar a un barbero</h2></div>
+    <form data-form="invite" class="card" autocomplete="off">
+      <label class="lbl" style="margin-top:0" for="invName">Nombre</label><input id="invName" name="name" maxlength="50" placeholder="Ej. Santiago Gutiérrez" required>
+      <label class="lbl" for="invEmail">Correo</label><input id="invEmail" name="email" type="email" maxlength="120" placeholder="correo@ejemplo.com" required>
+      <label class="lbl" for="invRole">Rol</label><select id="invRole" name="role"><option value="barbero" selected>Barbero (agenda, clientes, caja)</option><option value="superadmin">Superadministrador (todo + equipo)</option></select>
+      <button class="btn btn-gold" style="margin-top:16px" type="submit">${ic('userPlus', 19)}Enviar invitación</button>
+      <p class="muted tiny" style="margin-top:10px">El invitado abre el panel, toca <b>Entrar como barbero → Tengo invitación: crear mi cuenta</b> con ese mismo correo, y confirma su correo. Ningún otro correo puede entrar.</p>
+    </form>`;
+  }
   if (sub === 'seguridad') {
     const has = !!pinCfg();
     return back('Seguridad') + `<div class="card" style="padding:6px 16px">
@@ -1316,6 +1332,7 @@ function viewMas() {
     ${item('exportData', '', 'download', 'Descargar respaldo', 'Archivo JSON con los datos de esta agenda')}
     ${dataMode === 'demo' ? item('resetDemo', '', 'refresh', 'Restablecer datos demo', 'Vuelve a los datos ficticios iniciales', 'danger') : ''}
     ${dataMode === 'cloud' ? (pushOn() ? item('testNotif', '', 'chat', 'Notificaciones push', 'Activas en este teléfono ✓ · toca para enviar una prueba') : item('enableNotif', '', 'chat', 'Notificaciones push', notifState() === 'denied' ? 'Bloqueadas en el navegador' : 'Toca para recibir avisos aunque el navegador esté cerrado')) : ''}
+    ${dataMode === 'cloud' && session && session.role === 'superadmin' ? item('goMas', 'admin', 'users', 'Administración', 'Superadministrador · barberos y accesos', '') : ''}
     ${dataMode === 'cloud' ? item('goMas', 'seguridad', 'lock', 'Seguridad', pinCfg() ? 'PIN activo · bloqueo en ' + lockMinutes() + ' min' : 'Crea tu PIN y cambia tu contraseña') : ''}
     ${dataMode === 'cloud' ? item('portalLink', '', 'store', 'Portal de reservas del cliente', 'Copia o comparte el enlace para tus clientes') : ''}
     ${dataMode === 'cloud' && localStorage.getItem(DB_KEYS.local) ? item('importLocal', '', 'refresh', 'Subir mi agenda local a la nube', 'Copia lo guardado en este navegador') : ''}
@@ -1339,6 +1356,7 @@ function render(animate) {
   fab.setAttribute('aria-label', ui.tab === 'clientes' ? 'Nuevo cliente' : ui.tab === 'caja' ? 'Registrar pago' : 'Nueva cita');
   if (ui.tab === 'clientes') renderClientList();
   if (ui.tab === 'agenda') renderAppointmentSearch();
+  if (ui.tab === 'mas' && ui.masSub === 'admin') loadStaff();
 }
 
 /* =========================================================
@@ -1513,6 +1531,33 @@ function handleAuthRedirect() {
   history.replaceState(null, '', panelUrl());
   if (h.get('type') === 'recovery') sheetNewPassword(true);
   else enterCloud(true);
+}
+
+/* --- Administración del equipo (solo superadmin) --- */
+async function loadStaff() {
+  const box = $('#staffBox'); if (!box) return;
+  try {
+    const j = await rest('rpc/list_staff', { method: 'POST', body: '{}' });
+    const me = session && session.userId;
+    const roleChip = r => r === 'superadmin' ? '<span class="chip c-gold">Superadmin</span>' : '<span class="chip c-muted">Barbero</span>';
+    const staff = (j.staff || []).map(m => `<div class="pay"><span class="avatar">${esc(initials(m.name || m.email))}</span>
+      <div class="pay-body"><b>${esc(m.name || m.email)}${m.userId === me ? ' (tú)' : ''}</b><small>${esc(m.email)} · ${m.active ? 'Activo' : 'Desactivado'}${m.lastSignIn ? ' · último ingreso ' + fmtShort(String(m.lastSignIn).slice(0, 10)) : ''}</small>
+      <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap">${roleChip(m.role)}${m.userId === me ? '' : `
+        <button class="chip c-muted" data-act="staffRole" data-id="${m.userId}" data-r="${m.role === 'superadmin' ? 'barbero' : 'superadmin'}">${m.role === 'superadmin' ? 'Pasar a barbero' : 'Hacer superadmin'}</button>`}</div></div>
+      ${m.userId === me ? '' : `<button class="switch ${m.active ? 'on' : ''}" data-act="staffActive" data-id="${m.userId}" data-on="${m.active ? '1' : ''}" aria-label="Activar o desactivar acceso"></button>`}</div>`).join('');
+    const inv = (j.invites || []).map(i => `<div class="pay"><span class="ic" style="background:rgba(232,182,79,.12);color:var(--warn)">${ic('clock', 19)}</span>
+      <div class="pay-body"><b>${esc(i.name || i.email)}</b><small>${esc(i.email)} · invitación pendiente · ${i.role === 'superadmin' ? 'Superadmin' : 'Barbero'}</small></div>
+      <button class="btn btn-dark btn-sm" data-act="shareInvite" data-email="${esc(i.email)}" data-name="${esc(i.name || '')}">Avisar</button>
+      <button class="icon-btn" style="width:34px;height:34px" data-act="removeInvite" data-email="${esc(i.email)}" aria-label="Quitar invitación">${ic('x', 16)}</button></div>`).join('');
+    box.innerHTML = (staff || '<div class="empty"><p style="margin:0">Aún no hay miembros.</p></div>') + (inv ? `<p class="muted tiny" style="margin:8px 0 2px">Invitaciones pendientes</p>${inv}` : '');
+  } catch (e) { box.innerHTML = `<div class="closed" style="margin:0">${esc(e.message)}</div>`; }
+}
+function sheetShareInvite(email, name) {
+  const txt = `Hola ${name ? name.split(' ')[0] : ''} 👋, te di acceso al panel de SH Barber Studio.\n\n1. Entra a: ${panelUrl()}\n2. Toca "Entrar como barbero" → "Tengo invitación: crear mi cuenta".\n3. Usa este correo: ${email} y crea tu contraseña.\n4. Confirma el correo que te llega y entra.`;
+  openSheet(head('Invitación lista', esc(email)) + `<div class="card" style="margin-top:12px;white-space:pre-line;font-size:14px">${esc(txt)}</div>
+    <div class="sh-actions"><a class="btn btn-wa" href="https://wa.me/?text=${encodeURIComponent(txt)}" target="_blank" rel="noopener">${ic('chat', 18)}Enviar por WhatsApp</a>
+    <button class="btn btn-dark" data-act="copyVal" data-v="${esc(txt)}" data-l="Instrucciones">${ic('copy', 18)}Copiar instrucciones</button>
+    <button class="btn btn-ghost" data-act="closeSheet">Listo</button></div>`);
 }
 
 /* --- Cita: crear / editar / reprogramar --- */
@@ -1867,6 +1912,24 @@ const acts = {
   async testNotif() { try { await rest('rpc/send_test_push', { method: 'POST', body: '{}' }); toast('Notificación de prueba enviada'); } catch (e) { toast(e.message, 'err'); } },
   removePin() { confirmSheet('¿Quitar el PIN?', 'La app ya no pedirá PIN al abrirse en este teléfono.', 'Quitar PIN', () => { localStorage.removeItem(PIN_KEY); render(); toast('PIN eliminado'); }); },
   changePw() { sheetNewPassword(false); },
+  async staffActive(d) {
+    const on = !d.on;
+    try { await rest('rpc/update_staff', { method: 'POST', body: JSON.stringify({ p_user: d.id, p_active: on, p_role: null }) }); toast(on ? 'Acceso activado' : 'Acceso desactivado'); loadStaff(); }
+    catch (e) { toast(e.message, 'err'); }
+  },
+  staffRole(d) {
+    confirmSheet(d.r === 'superadmin' ? '¿Hacer superadministrador?' : '¿Pasar a barbero?', d.r === 'superadmin' ? 'Tendrá acceso total, incluida la administración del equipo.' : 'Perderá el acceso a la administración del equipo.', 'Confirmar', async () => {
+      try { await rest('rpc/update_staff', { method: 'POST', body: JSON.stringify({ p_user: d.id, p_active: null, p_role: d.r }) }); toast('Rol actualizado'); render(); }
+      catch (e) { toast(e.message, 'err'); }
+    }, false);
+  },
+  removeInvite(d) {
+    confirmSheet('¿Quitar invitación?', `${esc(d.email)} ya no podrá crear cuenta.`, 'Quitar', async () => {
+      try { await rest('rpc/remove_invite', { method: 'POST', body: JSON.stringify({ p_email: d.email }) }); toast('Invitación eliminada'); render(); }
+      catch (e) { toast(e.message, 'err'); }
+    });
+  },
+  shareInvite(d) { sheetShareInvite(d.email, d.name); },
   lockNow() { if (!showLock()) toast('Primero crea un PIN', 'err'); },
   async signup(d, el) {
     const f = el.closest('form'), E = f.elements;
@@ -2214,6 +2277,14 @@ const forms = {
     r.onload = () => { P.qrData = r.result; done(); };
     r.onerror = () => toast('No se pudo leer la imagen', 'err');
     r.readAsDataURL(file);
+  },
+  async invite(f) {
+    const E = f.elements, email = E.email.value.trim().toLowerCase(), name = E.name.value.trim();
+    if (name.length < 2) return toast('Escribe el nombre', 'err');
+    try {
+      await rest('rpc/invite_staff', { method: 'POST', body: JSON.stringify({ p_email: email, p_name: name, p_role: E.role.value }) });
+      f.reset(); render(); sheetShareInvite(email, name);
+    } catch (e) { toast(e.message, 'err'); }
   },
   async newpw(f) {
     const E = f.elements, weak = pwWeak(E.pw1.value);

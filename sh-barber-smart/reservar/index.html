@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0a0a0b">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src https://srvckfxewcpkzsiaeuzs.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" type="image/png" href="../brand/logo-mark.png">
 <link rel="apple-touch-icon" href="../brand/icon-180.png">
 <meta name="description" content="Reserva tu cita en SH Barber Studio: elige servicio, día y hora disponible.">
@@ -99,10 +101,11 @@ footer{text-align:center;color:var(--muted2);font-size:11.5px;margin-top:34px}
     <section class="step" id="stepTime" hidden><h2><i>3</i>Elige la hora</h2><div id="slots"></div></section>
     <section class="step" id="stepData" hidden><h2><i>4</i>Tus datos</h2>
       <form id="form" autocomplete="on">
+        <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden"><label>No llenar<input id="website" name="website" tabindex="-1" autocomplete="off"></label></div>
         <label class="f" for="name">Nombre</label><input id="name" name="name" autocomplete="name" maxlength="60" placeholder="Nombre y apellido" required>
         <label class="f" for="phone">WhatsApp</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="300 123 4567" required>
         <label class="check"><input type="checkbox" id="accept" required><span>Autorizo el tratamiento de mis datos personales para gestionar mi cita (Ley 1581 de 2012). <button type="button" class="link" id="togglePolicy">Leer más</button></span></label>
-        <div class="policy" id="policy" hidden>SH Barber Studio, como responsable, usará tu nombre y número de WhatsApp únicamente para agendar, confirmar, recordar o reprogramar tus citas. No compartimos tus datos con terceros. Puedes conocer, actualizar, rectificar o pedir que eliminemos tus datos escribiéndonos por WhatsApp.</div>
+        <div class="policy" id="policy" hidden>SH Barber Studio, como responsable, usará tu nombre y número de WhatsApp únicamente para agendar, confirmar, recordar o reprogramar tus citas. No compartimos tus datos con terceros. Puedes conocer, actualizar, rectificar o pedir que eliminemos tus datos escribiéndonos por WhatsApp. <a class="link" href="privacidad.html" target="_blank" rel="noopener">Política de tratamiento de datos</a></div>
         <label class="check"><input type="checkbox" id="marketing"><span>Quiero recibir promociones e invitaciones por WhatsApp (opcional).</span></label>
         <div class="err" id="err" hidden></div>
       </form>
@@ -110,7 +113,7 @@ footer{text-align:center;color:var(--muted2);font-size:11.5px;margin-top:34px}
   </main>
 
   <section id="done" hidden></section>
-  <footer><span class="script" style="font-size:20px;color:#C9CDD2">Tu estilo es nuestra esencia</span><br>SH Barber Studio · Reservas en línea<br>Desarrollado por José Lugo</footer>
+  <footer><a class="link" href="privacidad.html" style="font-size:12px">Política de tratamiento de datos</a><br><span class="script" style="font-size:20px;color:#C9CDD2">Tu estilo es nuestra esencia</span><br>SH Barber Studio · Reservas en línea<br>Desarrollado por José Lugo</footer>
 </div>
 
 <div class="bar" id="bar" hidden><div class="bar-in"><div id="summary"></div><button class="btn btn-gold" id="send" form="form" type="submit" disabled>Solicitar cita</button></div></div>
@@ -145,6 +148,8 @@ async function api(path, body) {
 }
 
 const st = { services: [], info: null, svc: null, date: null, slot: null };
+const OPENED = Date.now();
+const NAME_RE = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ][A-Za-zÁÉÍÓÚÜÑáéíóúüñ .'-]{1,59}$/;
 let toastT;
 function toast(m) { const t = $('#toast'); t.textContent = m; t.className = 'show'; clearTimeout(toastT); toastT = setTimeout(() => { t.className = ''; }, 2200); }
 
@@ -211,8 +216,9 @@ $('#form').addEventListener('submit', async e => {
   const err = $('#err'); err.hidden = true;
   const name = $('#name').value.trim(), phone = $('#phone').value;
   const digits = phone.replace(/\D/g, '').replace(/^57(?=\d{10}$)/, '');
-  if (name.length < 2) { err.textContent = 'Escribe tu nombre.'; err.hidden = false; return; }
-  if (digits.length !== 10) { err.textContent = 'Escribe tu WhatsApp de 10 dígitos (ej. 300 123 4567).'; err.hidden = false; return; }
+  if ($('#website').value || Date.now() - OPENED < 4000) { err.textContent = 'No pudimos enviar la solicitud. Intenta de nuevo en unos segundos.'; err.hidden = false; return; }
+  if (!NAME_RE.test(name.replace(/\s+/g, ' '))) { err.textContent = 'Escribe tu nombre (solo letras).'; err.hidden = false; return; }
+  if (!/^3\d{9}$/.test(digits)) { err.textContent = 'Escribe tu celular de 10 dígitos (ej. 300 123 4567).'; err.hidden = false; return; }
   if (!$('#accept').checked) { err.textContent = 'Debes autorizar el tratamiento de datos para reservar.'; err.hidden = false; return; }
   const btn = $('#send'); btn.disabled = true; btn.textContent = 'Enviando…';
   try {
@@ -229,18 +235,18 @@ function showDone(r, name) {
   const P = st.info && st.info.payment, phone = st.info && st.info.barberPhone;
   const qr = P && (P.qrData || '../qr-pago.jpg');
   const row = (l, v) => `<div class="kv"><span>${l}</span><span><b>${esc(v)}</b><button class="copy" data-copy="${esc(v)}" data-label="${esc(l)}">Copiar</button></span></div>`;
-  const msg = `Hola, soy ${name}. Acabo de solicitar una cita de ${r.service} para el ${longDate(r.date)} a las ${t12(r.time)}.`;
+  const msg = `Hola, soy ${name}. Acabo de solicitar una cita en el portal:\n✂️ ${r.service}\n📅 ${longDate(r.date)}\n🕐 ${t12(r.time)}\n💵 ${money(r.price)}\n¿Me la confirmas? Gracias.`;
   $('#app').hidden = true; $('#bar').hidden = true;
   const done = $('#done'); done.hidden = false;
   done.innerHTML = `<div class="done"><div class="ok"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
     <h2 class="script" style="font-size:40px;line-height:1.1">¡Solicitud enviada!</h2>
-    <p class="note" style="margin-top:6px">El barbero confirmará tu cita por WhatsApp.</p>
+    <p class="note" style="margin-top:6px">Tu hora quedó apartada. El barbero confirmará tu cita por WhatsApp.</p>
+    ${phone ? `<a class="btn btn-wa" style="margin-top:16px" target="_blank" rel="noopener" href="https://wa.me/57${esc(phone)}?text=${encodeURIComponent(msg)}">Avisar al barbero por WhatsApp</a><p class="note" style="margin-top:6px">Recomendado: tócalo para que el barbero vea tu solicitud de inmediato.</p>` : ''}
     <div class="card"><div class="kv"><span>Servicio</span><b>${esc(r.service)}</b></div><div class="kv"><span>Día</span><b>${longDate(r.date)}</b></div>
       <div class="kv"><span>Hora</span><b>${t12(r.time)}${r.special ? ' 🌙' : ''}</b></div><div class="kv"><span>Valor</span><b style="color:var(--gold-l)">${money(r.price)}</b></div></div>
     ${P ? `<div class="card"><b>💳 Datos de pago</b><p class="note" style="margin:4px 0 10px">Puedes pagar por Bre-B o transferencia desde la app de tu banco.</p>
       <img class="qr" src="${esc(qr)}" alt="Código QR de pago">
       ${P.key ? row('Llave Bre-B', P.key) : ''}${P.account ? row(`${P.type || ''} ${P.bank || ''}`.trim(), P.account) : ''}${P.holder ? row('Titular', P.holder) : ''}</div>` : ''}
-    ${phone ? `<a class="btn btn-wa" style="margin-top:16px" target="_blank" rel="noopener" href="https://wa.me/57${esc(phone)}?text=${encodeURIComponent(msg)}">Escribir al barbero por WhatsApp</a>` : ''}
     <button class="btn btn-dark" style="margin-top:10px" id="again">Pedir otra cita</button></div>`;
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }

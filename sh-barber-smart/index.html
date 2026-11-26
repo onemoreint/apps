@@ -793,7 +793,8 @@ async function enterCloud(fresh) {
     $('#splash').hidden = true; $('#shell').hidden = false;
     render(true);
     lastAct = Date.now();
-    if (!fresh && pinCfg()) showLock(); else toast('Conectado ✓ ' + (session.email || ''));
+    if (!fresh && pinCfg()) showLock(); else { toast('Conectado ✓ ' + (session.email || '')); openPendingAppt(); }
+    if (pushSupported() && notifState() === 'granted' && localStorage.getItem(PUSH_FLAG)) pushSubscribe().catch(() => {});
     if (fresh && !pinCfg()) setTimeout(() => { if (dataMode === 'cloud' && !pinCfg()) toast('Consejo: crea un PIN en Más → Seguridad'); }, 3500);
   } catch (e) {
     if (e.auth) setSession(null);
@@ -1009,7 +1010,7 @@ function viewInicio() {
   return `
   <div class="hello"><p class="muted small">${cap(fmtLong(T))}</p><h1 class="serif">${greet}, ${esc(db.settings.barberName.split(' ')[0])}</h1></div>
   <button class="hero-cta" data-act="newAppt"><span class="ic">${ic('plus', 26)}</span><span><b>Nueva cita</b><small>Agenda a un cliente en segundos</small></span></button>
-  ${dataMode === 'cloud' && notifState() === 'default' ? `<button class="demo-note" style="margin:12px 0 0" data-act="enableNotif">${ic('chat', 18)}<span><b>Activa los avisos de nuevas citas.</b> Sonará y te llegará una notificación cuando un cliente reserve en el portal.</span></button>` : ''}
+  ${dataMode === 'cloud' && !pushOn() && notifState() !== 'denied' ? `<button class="demo-note" style="margin:12px 0 0" data-act="enableNotif">${ic('chat', 18)}<span><b>Activa las notificaciones push.</b> Te llegará un aviso a este teléfono cada vez que un cliente pida una cita, aunque tengas el navegador cerrado.</span></button>` : ''}
   ${remList.length ? `<button class="hero-cta wa" data-act="reminders"><span class="ic">${ic('chat', 24)}</span><span><b>Recordar citas de mañana</b><small>${remPend ? `${remPend} de ${remList.length} por recordar por WhatsApp` : `✓ Las ${remList.length} citas ya fueron recordadas`}</small></span></button>` : ''}
   <div class="stats">
     <button class="stat" data-act="goAgenda" data-date="${T}"><span class="ic">${ic('calendar', 19)}</span><b>${todays.length}</b><span>Citas para hoy</span></button>
@@ -1285,7 +1286,7 @@ function viewMas() {
     </div>
     <label class="lbl" for="lockMin">Bloqueo automático por inactividad</label>
     <select id="lockMin">${[1, 3, 5, 10, 15, 30].map(m => `<option value="${m}" ${lockMinutes() === m ? 'selected' : ''}>${m} minuto${m > 1 ? 's' : ''}</option>`).join('')}</select>
-    <div class="sh-actions"><button class="btn btn-dark" data-act="changePw">${ic('edit', 18)}Cambiar contraseña</button>
+    <div class="sh-actions">${pushOn() ? `<button class="btn btn-ghost" data-act="disableNotif">Desactivar notificaciones en este teléfono</button>` : ''}<button class="btn btn-dark" data-act="changePw">${ic('edit', 18)}Cambiar contraseña</button>
       <button class="btn btn-danger" data-act="logout">${ic('logout', 18)}Cerrar sesión en este teléfono</button></div>
     <div class="card" style="margin-top:16px"><b>🔒 Cómo se protege tu información</b>
       <ul class="tiny muted" style="margin:8px 0 0 18px;line-height:1.6">
@@ -1312,7 +1313,7 @@ function viewMas() {
     ${item('demoInfo', '', 'info', 'Datos y almacenamiento', 'Información sobre esta agenda')}
     ${item('exportData', '', 'download', 'Descargar respaldo', 'Archivo JSON con los datos de esta agenda')}
     ${dataMode === 'demo' ? item('resetDemo', '', 'refresh', 'Restablecer datos demo', 'Vuelve a los datos ficticios iniciales', 'danger') : ''}
-    ${dataMode === 'cloud' ? item('enableNotif', '', 'chat', 'Avisos de nuevas citas', notifState() === 'granted' ? 'Activados ✓ (con el panel abierto)' : notifState() === 'denied' ? 'Bloqueados en el navegador' : 'Toca para activar sonido y notificación') : ''}
+    ${dataMode === 'cloud' ? (pushOn() ? item('testNotif', '', 'chat', 'Notificaciones push', 'Activas en este teléfono ✓ · toca para enviar una prueba') : item('enableNotif', '', 'chat', 'Notificaciones push', notifState() === 'denied' ? 'Bloqueadas en el navegador' : 'Toca para recibir avisos aunque el navegador esté cerrado')) : ''}
     ${dataMode === 'cloud' ? item('goMas', 'seguridad', 'lock', 'Seguridad', pinCfg() ? 'PIN activo · bloqueo en ' + lockMinutes() + ' min' : 'Crea tu PIN y cambia tu contraseña') : ''}
     ${dataMode === 'cloud' ? item('portalLink', '', 'store', 'Portal de reservas del cliente', 'Copia o comparte el enlace para tus clientes') : ''}
     ${dataMode === 'cloud' && localStorage.getItem(DB_KEYS.local) ? item('importLocal', '', 'refresh', 'Subir mi agenda local a la nube', 'Copia lo guardado en este navegador') : ''}
@@ -1376,7 +1377,7 @@ function notifyNew(list) {
   beep();
   try { navigator.vibrate && navigator.vibrate([180, 80, 180]); } catch {}
   if (document.visibilityState !== 'visible') { unseen += list.length; document.title = `(${unseen}) Nueva cita · ${BASE_TITLE}`; }
-  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  if (!('Notification' in window) || Notification.permission !== 'granted' || pushOn()) return;
   list.slice(0, 3).forEach(a => {
     try {
       const n = new Notification('📥 Nueva cita solicitada', { body: `${getClient(a.clientId).name} · ${svcName(a)} · ${cap(fmtShort(a.date))} ${t12(a.time)}`, icon: 'brand/logo-mark.png', tag: a.id });
@@ -1386,6 +1387,47 @@ function notifyNew(list) {
 }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { unseen = 0; document.title = BASE_TITLE; } });
 const notifState = () => !('Notification' in window) ? 'no' : Notification.permission;
+
+/* ---------- Notificaciones PUSH (llegan aunque el navegador esté cerrado) ---------- */
+const VAPID_PUBLIC = 'BErRQwC897RDGJMNZg5n-FS_zKRkOUWto2vOqkAwNNcFUDbJLUimOnlEOIit9lrWNvgZ0diiHtw8FlVmATGVz4I'; // llave pública (la privada vive solo en el servidor)
+const PUSH_FLAG = 'shbarbersmart_push_endpoint_v1';
+let pendingAppt = null;
+const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+const pushSupported = () => 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window && window.isSecureContext;
+const pushOn = () => notifState() === 'granted' && !!localStorage.getItem(PUSH_FLAG);
+function b64ToU8(b64) {
+  const p = '='.repeat((4 - b64.length % 4) % 4), raw = atob((b64 + p).replace(/-/g, '+').replace(/_/g, '/'));
+  return Uint8Array.from(raw, ch => ch.charCodeAt(0));
+}
+async function pushSubscribe() {
+  const reg = await navigator.serviceWorker.register('sw.js');
+  await navigator.serviceWorker.ready;
+  let sub = await reg.pushManager.getSubscription();
+  if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64ToU8(VAPID_PUBLIC) });
+  const j = sub.toJSON();
+  await rest('push_subscriptions?on_conflict=endpoint', { method: 'POST', headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
+    body: JSON.stringify([{ endpoint: j.endpoint, p256dh: j.keys.p256dh, auth: j.keys.auth, ua: navigator.userAgent.slice(0, 180) }]) });
+  localStorage.setItem(PUSH_FLAG, j.endpoint);
+  return true;
+}
+async function pushUnsubscribe() {
+  const ep = localStorage.getItem(PUSH_FLAG);
+  try {
+    const reg = 'serviceWorker' in navigator && await navigator.serviceWorker.getRegistration();
+    const sub = reg && await reg.pushManager.getSubscription();
+    if (sub) await sub.unsubscribe();
+  } catch {}
+  if (ep && session) { try { await rest('push_subscriptions?endpoint=eq.' + encodeURIComponent(ep), { method: 'DELETE' }); } catch {} }
+  localStorage.removeItem(PUSH_FLAG);
+}
+if ('serviceWorker' in navigator) navigator.serviceWorker.addEventListener('message', e => {
+  if (!e.data || e.data.type !== 'openAppt' || !e.data.id) return;
+  if (dataMode === 'cloud' && !locked) syncFromCloud(true).catch(() => {}).finally(() => sheetApptDetail(e.data.id));
+  else pendingAppt = e.data.id;
+});
+function openPendingAppt() {
+  if (pendingAppt && dataMode === 'cloud' && !locked) { const id = pendingAppt; pendingAppt = null; if (getAppt(id)) sheetApptDetail(id); }
+}
 
 /* =========================================================
    SEGURIDAD: contraseña, recuperación, PIN y bloqueo automático
@@ -1435,10 +1477,10 @@ async function pinPress(k) {
   if (pinBuf.length < 4) return;
   const cfg = pinCfg();
   const ok = cfg && (await sha256(cfg.salt + pinBuf)) === cfg.hash;
-  if (ok) { pinFails = 0; hideLock(); lastAct = Date.now(); toast('Desbloqueado ✓'); syncFromCloud().catch(() => {}); return; }
+  if (ok) { pinFails = 0; hideLock(); lastAct = Date.now(); toast('Desbloqueado ✓'); syncFromCloud().catch(() => {}).finally(openPendingAppt); return; }
   pinFails++; pinBuf = '';
   const dots = $('#pinDots'); dots.classList.remove('shake'); void dots.offsetWidth; dots.classList.add('shake');
-  if (pinFails >= 5) { pinFails = 0; hideLock(); acts.logout(true); toast('Demasiados intentos. Entra con tu contraseña.', 'err'); return sheetLogin(); }
+  if (pinFails >= 5) { pinFails = 0; hideLock(); await acts.logout(true); toast('Demasiados intentos. Entra con tu contraseña.', 'err'); return sheetLogin(); }
   renderPin(`PIN incorrecto · te quedan ${5 - pinFails} intento(s)`, true);
 }
 function sheetNewPassword(first) {
@@ -1463,6 +1505,7 @@ function sheetPin() {
 function handleAuthRedirect() {
   const h = new URLSearchParams(location.hash.replace(/^#/, ''));
   if (h.get('error_description')) { history.replaceState(null, '', panelUrl()); return toast('El enlace del correo no es válido o ya venció. Pide uno nuevo.', 'err'); }
+  if (h.get('cita')) { pendingAppt = h.get('cita'); history.replaceState(null, '', panelUrl()); if (session) enterCloud(false); return; }
   if (!h.get('access_token')) return;
   keepSession({ access_token: h.get('access_token'), refresh_token: h.get('refresh_token'), expires_in: Number(h.get('expires_in') || 3600) });
   history.replaceState(null, '', panelUrl());
@@ -1802,15 +1845,24 @@ const acts = {
     catch (e) { toast(e.message, 'err'); }
   },
   pinKey(d) { pinPress(d.k); },
-  lockForgot() { hideLock(); acts.logout(true); sheetLogin('Entra con tu correo y contraseña. Luego puedes crear un PIN nuevo en Más → Seguridad.'); },
+  async lockForgot() { hideLock(); await acts.logout(true); sheetLogin('Entra con tu correo y contraseña. Luego puedes crear un PIN nuevo en Más → Seguridad.'); },
   setPin() { sheetPin(); },
   async enableNotif() {
-    if (!('Notification' in window)) return toast('Este navegador no permite avisos. Instala la app en la pantalla de inicio o usa Chrome.', 'err');
+    if (!pushSupported()) {
+      if (isIOS) return confirmSheet('Notificaciones en iPhone', 'Apple solo permite notificaciones a páginas agregadas a la pantalla de inicio: en Safari toca <b>Compartir → Agregar a inicio</b>, abre el panel desde ese ícono y vuelve a tocar “Notificaciones”. En Android y computador funciona sin instalar nada.', 'Entendido', () => {}, false);
+      return toast('Este navegador no permite notificaciones push. Usa Chrome.', 'err');
+    }
     const r = await Notification.requestPermission();
-    render();
-    if (r === 'granted') { notifyNew([]); try { new Notification('✅ Avisos activados', { body: 'Te avisaremos cuando un cliente pida una cita.', icon: 'brand/logo-mark.png' }); } catch {} toast('Avisos activados ✓'); }
-    else toast('Permiso negado. Actívalo en la configuración del navegador (candado junto a la dirección).', 'err');
+    if (r !== 'granted') { render(); return toast('Permiso negado. Actívalo en el candado junto a la dirección del navegador.', 'err'); }
+    try {
+      toast('Activando notificaciones…');
+      await pushSubscribe();
+      await rest('rpc/send_test_push', { method: 'POST', body: '{}' });
+      render(); toast('Notificaciones activas ✓ Te enviamos una de prueba');
+    } catch (e) { render(); toast('No se pudieron activar: ' + e.message, 'err'); }
   },
+  async disableNotif() { await pushUnsubscribe(); render(); toast('Notificaciones desactivadas en este teléfono'); },
+  async testNotif() { try { await rest('rpc/send_test_push', { method: 'POST', body: '{}' }); toast('Notificación de prueba enviada'); } catch (e) { toast(e.message, 'err'); } },
   removePin() { confirmSheet('¿Quitar el PIN?', 'La app ya no pedirá PIN al abrirse en este teléfono.', 'Quitar PIN', () => { localStorage.removeItem(PIN_KEY); render(); toast('PIN eliminado'); }); },
   changePw() { sheetNewPassword(false); },
   lockNow() { if (!showLock()) toast('Primero crea un PIN', 'err'); },
@@ -1825,7 +1877,7 @@ const acts = {
     } catch (e) { toast(e.message, 'err'); }
   },
   logout(silent) {
-    const go = () => { setSession(null); snap = null; dataMode = 'demo'; try { localStorage.removeItem(DB_KEYS.cloud); } catch {} db = initialData(); hideLock(); closeSheet(); $('#shell').hidden = true; $('#splash').hidden = false; if (silent !== true) toast('Sesión cerrada'); };
+    const go = async () => { await pushUnsubscribe(); setSession(null); snap = null; dataMode = 'demo'; try { localStorage.removeItem(DB_KEYS.cloud); } catch {} db = initialData(); hideLock(); closeSheet(); $('#shell').hidden = true; $('#splash').hidden = false; if (silent !== true) toast('Sesión cerrada'); };
     if (silent === true) return go();
     confirmSheet('¿Cerrar sesión?', 'Para volver a entrar necesitarás tu correo y contraseña.', 'Cerrar sesión', go, false);
   },

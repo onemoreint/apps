@@ -6,6 +6,9 @@
 <meta name="theme-color" content="#0a0a0b">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://srvckfxewcpkzsiaeuzs.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/png" href="brand/logo-mark.png">
 <link rel="apple-touch-icon" href="brand/icon-180.png">
 <meta name="description" content="SH BARBER SMART — Agenda diaria y semanal, clientes y caja de SH Barber Studio.">
@@ -308,6 +311,20 @@ svg{flex:none}
 .qr-wrap{display:block;margin:6px auto 10px;border-radius:16px;overflow:hidden;max-width:210px;background:#2b2b2b;border:1px solid var(--line2)}
 .qr-wrap img{display:block;width:100%}
 .qr-big{display:block;width:100%;max-width:360px;margin:8px auto 0;border-radius:18px}
+#lock{position:fixed;inset:0;z-index:100;background:radial-gradient(70% 45% at 50% 0%,rgba(255,255,255,.08),transparent 70%),#0a0a0b;display:flex;align-items:center;justify-content:center;padding:24px}
+.lock-in{width:100%;max-width:320px;text-align:center}
+.lock-logo{width:96px;height:96px;object-fit:contain;margin:0 auto 6px;display:block}
+.lock-title{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:20px;letter-spacing:2px;text-transform:uppercase}
+.lock-sub{color:var(--muted);font-size:14px;margin-top:4px;min-height:20px}
+.lock-sub.err{color:var(--bad)}
+.pin-dots{display:flex;gap:16px;justify-content:center;margin:22px 0 26px}
+.pin-dots i{width:16px;height:16px;border-radius:50%;border:2px solid var(--gold);display:block;transition:background .15s}
+.pin-dots i.on{background:var(--gold)}
+.pin-dots.shake{animation:shake .4s}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;justify-items:center}
+.keypad button{width:72px;height:72px;border-radius:50%;background:var(--card);border:1px solid var(--line);font-size:26px;font-weight:600;color:var(--white)}
+.keypad button:active{background:var(--card2);transform:scale(.95)}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @keyframes pop{from{opacity:0;transform:scale(.7) rotate(-8deg)}to{opacity:1;transform:none}}
 @keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
@@ -338,11 +355,11 @@ svg{flex:none}
   </div>
   <div class="splash-actions">
     <button class="btn btn-gold" data-act="login">Entrar como barbero</button>
-    <button class="btn btn-dark" data-act="enter" data-mode="demo">Explorar demo</button>
-    <button class="btn btn-dark" data-act="enter" data-mode="local">Agenda local (sin nube)</button>
-    <button class="btn btn-ghost" data-act="demoInfo">¿Qué incluye esta demo?</button>
+    <button class="btn btn-dark demo-only" data-act="enter" data-mode="demo" hidden>Explorar demo</button>
+    <button class="btn btn-dark demo-only" data-act="enter" data-mode="local" hidden>Agenda local (sin nube)</button>
+    <button class="btn btn-ghost demo-only" data-act="demoInfo" hidden>¿Qué incluye esta demo?</button>
   </div>
-  <p class="splash-foot"><span class="barber-pole"></span>La agenda local y la demo guardan sus citas por separado.<br><span style="opacity:.8">Desarrollado por José Lugo</span></p>
+  <p class="splash-foot"><span class="barber-pole"></span>🔒 Acceso exclusivo del barbero · Conexión cifrada<br><span style="opacity:.8">Desarrollado por José Lugo</span></p>
 </section>
 
 <!-- ============ APLICACIÓN ============ -->
@@ -357,6 +374,16 @@ svg{flex:none}
   <nav class="bottomnav" id="nav"></nav>
 </div>
 
+<div id="lock" hidden role="dialog" aria-modal="true" aria-label="Panel bloqueado">
+  <div class="lock-in">
+    <img src="brand/logo-mark.png" alt="SH" class="lock-logo">
+    <p class="lock-title">Panel bloqueado</p>
+    <p class="lock-sub" id="lockMsg">Ingresa tu PIN de 4 dígitos</p>
+    <div class="pin-dots" id="pinDots"><i></i><i></i><i></i><i></i></div>
+    <div class="keypad"><button data-act="pinKey" data-k="1">1</button><button data-act="pinKey" data-k="2">2</button><button data-act="pinKey" data-k="3">3</button><button data-act="pinKey" data-k="4">4</button><button data-act="pinKey" data-k="5">5</button><button data-act="pinKey" data-k="6">6</button><button data-act="pinKey" data-k="7">7</button><button data-act="pinKey" data-k="8">8</button><button data-act="pinKey" data-k="9">9</button><span></span><button data-act="pinKey" data-k="0">0</button><button data-act="pinKey" data-k="del" aria-label="Borrar">⌫</button></div>
+    <button class="link" data-act="lockForgot" style="margin-top:18px">Olvidé el PIN · entrar con contraseña</button>
+  </div>
+</div>
 <div class="backdrop" id="backdrop"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
 
@@ -746,13 +773,15 @@ async function syncFromCloud(force) {
   if (!force && JSON.stringify(sn) === JSON.stringify(snap)) return;
   snap = sn; db = d;
   try { localStorage.setItem(DB_KEYS.cloud, JSON.stringify(d)); } catch {}
-  const nuevas = d.appointments.filter(a => a.source === 'web' && !before.has(a.id)).length;
-  if (nuevas && !force) toast(`📥 ${nuevas} nueva${nuevas > 1 ? 's' : ''} solicitud${nuevas > 1 ? 'es' : ''} del portal`);
+  const nuevasList = d.appointments.filter(a => a.source === 'web' && !before.has(a.id));
+  const nuevas = nuevasList.length;
+  if (nuevas && !force) { toast(`📥 ${nuevas} nueva${nuevas > 1 ? 's' : ''} solicitud${nuevas > 1 ? 'es' : ''} del portal`); notifyNew(nuevasList); }
   if (!$('#backdrop').classList.contains('open')) render();
 }
-async function enterCloud() {
+async function enterCloud(fresh) {
   toast('Conectando con la nube…');
   try {
+    if (!session.email) { try { const u = await authGet(); session.email = u.email; setSession(session); } catch {} }
     const ok = await rest('rpc/claim_admin', { method: 'POST', body: '{}' });
     if (!ok) { setSession(null); return toast('Esta cuenta no tiene acceso al panel de SH Barber Studio', 'err'); }
     const d = await pullCloud();
@@ -763,7 +792,9 @@ async function enterCloud() {
     $('#dataMode').textContent = 'NUBE';
     $('#splash').hidden = true; $('#shell').hidden = false;
     render(true);
-    toast('Conectado ✓ ' + (session.email || ''));
+    lastAct = Date.now();
+    if (!fresh && pinCfg()) showLock(); else toast('Conectado ✓ ' + (session.email || ''));
+    if (fresh && !pinCfg()) setTimeout(() => { if (dataMode === 'cloud' && !pinCfg()) toast('Consejo: crea un PIN en Más → Seguridad'); }, 3500);
   } catch (e) {
     if (e.auth) setSession(null);
     toast(e.auth ? 'Vuelve a iniciar sesión' : 'No se pudo conectar: ' + e.message, 'err');
@@ -771,14 +802,23 @@ async function enterCloud() {
   }
 }
 function sheetLogin(msg) {
+  setTimeout(async () => {
+    try {
+      const r = await fetch(SB_URL + '/rest/v1/rpc/panel_status', { method: 'POST', headers: { apikey: SB_KEY, 'Content-Type': 'application/json' }, body: '{}' });
+      const j = await r.json();
+      if (j && j.hasAdmin === false) { const b = $('#signupBtn'), n = $('#signupNote'); if (b) b.hidden = false; if (n) n.hidden = false; }
+    } catch {}
+  }, 0);
   openSheet(head('Panel del barbero', 'Acceso con correo y contraseña') + `
     ${msg ? `<div class="banner">${ic('check', 18)}<div>${msg}</div></div>` : ''}
     <form data-form="login" autocomplete="on">
       <label class="lbl" for="lgEmail">Correo</label><input id="lgEmail" name="email" type="email" autocomplete="username" required>
       <label class="lbl" for="lgPass">Contraseña</label><input id="lgPass" name="password" type="password" autocomplete="current-password" minlength="6" required>
       <div class="sh-actions"><button class="btn btn-gold" type="submit">${ic('lock', 19)}Entrar</button>
-      <button type="button" class="btn btn-ghost" data-act="signup">Crear la cuenta del barbero (solo la primera vez)</button></div>
-      <p class="muted tiny" style="margin-top:10px">La primera cuenta que entra queda como dueña del panel. Los clientes nunca entran aquí: ellos reservan en el portal.</p>
+      <button type="button" class="link" data-act="forgot" style="text-align:center">¿Olvidaste tu contraseña?</button>
+      <button type="button" class="btn btn-ghost" data-act="signup" id="signupBtn" hidden>Crear la cuenta del barbero (solo la primera vez)</button></div>
+      <p class="muted tiny" id="signupNote" style="margin-top:10px" hidden>La primera cuenta que entra queda como dueña del panel. Usa una contraseña de 8 o más caracteres con letras y números.</p>
+      <p class="muted tiny" style="margin-top:10px">🔒 Acceso solo para el barbero. Los clientes reservan en el portal.</p>
     </form>`);
 }
 
@@ -969,6 +1009,7 @@ function viewInicio() {
   return `
   <div class="hello"><p class="muted small">${cap(fmtLong(T))}</p><h1 class="serif">${greet}, ${esc(db.settings.barberName.split(' ')[0])}</h1></div>
   <button class="hero-cta" data-act="newAppt"><span class="ic">${ic('plus', 26)}</span><span><b>Nueva cita</b><small>Agenda a un cliente en segundos</small></span></button>
+  ${dataMode === 'cloud' && notifState() === 'default' ? `<button class="demo-note" style="margin:12px 0 0" data-act="enableNotif">${ic('chat', 18)}<span><b>Activa los avisos de nuevas citas.</b> Sonará y te llegará una notificación cuando un cliente reserve en el portal.</span></button>` : ''}
   ${remList.length ? `<button class="hero-cta wa" data-act="reminders"><span class="ic">${ic('chat', 24)}</span><span><b>Recordar citas de mañana</b><small>${remPend ? `${remPend} de ${remList.length} por recordar por WhatsApp` : `✓ Las ${remList.length} citas ya fueron recordadas`}</small></span></button>` : ''}
   <div class="stats">
     <button class="stat" data-act="goAgenda" data-date="${T}"><span class="ic">${ic('calendar', 19)}</span><b>${todays.length}</b><span>Citas para hoy</span></button>
@@ -1232,6 +1273,28 @@ function viewMas() {
       ${P.qrData ? '<label class="check-row"><input type="checkbox" name="qrReset">Volver al QR original de SH Barber Studio</label>' : ''}
       <button class="btn btn-gold" style="margin-top:16px" type="submit">Guardar datos de pago</button></form>`;
   }
+  if (sub === 'seguridad') {
+    const has = !!pinCfg();
+    return back('Seguridad') + `<div class="card" style="padding:6px 16px">
+      <div class="kv"><span>Cuenta</span><span>${esc((session && session.email) || '—')}</span></div>
+      <div class="kv"><span>PIN de bloqueo</span><span>${has ? '<span class="paid-dot">' + ic('check', 14) + 'Activo</span>' : '<span class="muted">Sin PIN</span>'}</span></div>
+    </div>
+    <div class="sh-actions">
+      <button class="btn btn-gold" data-act="setPin">${ic('lock', 19)}${has ? 'Cambiar PIN' : 'Crear PIN de bloqueo'}</button>
+      ${has ? `<button class="btn btn-dark" data-act="lockNow">${ic('lock', 19)}Bloquear ahora</button><button class="btn btn-ghost" data-act="removePin">Quitar PIN</button>` : ''}
+    </div>
+    <label class="lbl" for="lockMin">Bloqueo automático por inactividad</label>
+    <select id="lockMin">${[1, 3, 5, 10, 15, 30].map(m => `<option value="${m}" ${lockMinutes() === m ? 'selected' : ''}>${m} minuto${m > 1 ? 's' : ''}</option>`).join('')}</select>
+    <div class="sh-actions"><button class="btn btn-dark" data-act="changePw">${ic('edit', 18)}Cambiar contraseña</button>
+      <button class="btn btn-danger" data-act="logout">${ic('logout', 18)}Cerrar sesión en este teléfono</button></div>
+    <div class="card" style="margin-top:16px"><b>🔒 Cómo se protege tu información</b>
+      <ul class="tiny muted" style="margin:8px 0 0 18px;line-height:1.6">
+        <li>Tus citas, clientes y pagos solo se leen con tu sesión (reglas de seguridad en la base de datos).</li>
+        <li>La conexión va cifrada (HTTPS) y la contraseña nunca se guarda en el teléfono.</li>
+        <li>El portal de clientes solo ve servicios y horas libres, con límite de solicitudes contra abusos.</li>
+        <li>Al cerrar sesión se borra la copia de datos de este teléfono.</li>
+      </ul></div>`;
+  }
   if (sub === 'negocio') {
     const s = db.settings;
     return back('Datos del barbero') + `<form data-form="biz" class="card"><label class="lbl" style="margin-top:0">Nombre del barbero (aparece en los mensajes)</label><input name="barberName" value="${esc(s.barberName)}" maxlength="40" required>
@@ -1249,6 +1312,8 @@ function viewMas() {
     ${item('demoInfo', '', 'info', 'Datos y almacenamiento', 'Información sobre esta agenda')}
     ${item('exportData', '', 'download', 'Descargar respaldo', 'Archivo JSON con los datos de esta agenda')}
     ${dataMode === 'demo' ? item('resetDemo', '', 'refresh', 'Restablecer datos demo', 'Vuelve a los datos ficticios iniciales', 'danger') : ''}
+    ${dataMode === 'cloud' ? item('enableNotif', '', 'chat', 'Avisos de nuevas citas', notifState() === 'granted' ? 'Activados ✓ (con el panel abierto)' : notifState() === 'denied' ? 'Bloqueados en el navegador' : 'Toca para activar sonido y notificación') : ''}
+    ${dataMode === 'cloud' ? item('goMas', 'seguridad', 'lock', 'Seguridad', pinCfg() ? 'PIN activo · bloqueo en ' + lockMinutes() + ' min' : 'Crea tu PIN y cambia tu contraseña') : ''}
     ${dataMode === 'cloud' ? item('portalLink', '', 'store', 'Portal de reservas del cliente', 'Copia o comparte el enlace para tus clientes') : ''}
     ${dataMode === 'cloud' && localStorage.getItem(DB_KEYS.local) ? item('importLocal', '', 'refresh', 'Subir mi agenda local a la nube', 'Copia lo guardado en este navegador') : ''}
     ${dataMode === 'cloud' ? item('logout', '', 'logout', 'Cerrar sesión', esc((session && session.email) || '')) : item('exit', '', 'logout', 'Salir a la pantalla de inicio', 'SH BARBER SMART')}
@@ -1291,6 +1356,118 @@ function confirmSheet(title, msg, okLabel, cb, danger) {
   openSheet(head(title) + `<p class="muted" style="margin-top:8px">${msg}</p><div class="sh-actions">
     <button class="btn ${danger === false ? 'btn-gold' : 'btn-danger'}" data-act="confirmYes">${okLabel}</button>
     <button class="btn btn-dark" data-act="closeSheet">Volver</button></div>`);
+}
+
+/* =========================================================
+   AVISOS de nuevas solicitudes (sonido, vibración y notificación del sistema)
+   ========================================================= */
+const BASE_TITLE = document.title;
+let unseen = 0;
+function beep() {
+  try {
+    const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
+    const ctx = new C(), t = ctx.currentTime;
+    [0, .18].forEach((o, i) => { const g = ctx.createGain(), osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.value = i ? 1320 : 880;
+      g.gain.setValueAtTime(.0001, t + o); g.gain.exponentialRampToValueAtTime(.25, t + o + .02); g.gain.exponentialRampToValueAtTime(.0001, t + o + .16);
+      osc.connect(g).connect(ctx.destination); osc.start(t + o); osc.stop(t + o + .18); });
+  } catch {}
+}
+function notifyNew(list) {
+  beep();
+  try { navigator.vibrate && navigator.vibrate([180, 80, 180]); } catch {}
+  if (document.visibilityState !== 'visible') { unseen += list.length; document.title = `(${unseen}) Nueva cita · ${BASE_TITLE}`; }
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  list.slice(0, 3).forEach(a => {
+    try {
+      const n = new Notification('📥 Nueva cita solicitada', { body: `${getClient(a.clientId).name} · ${svcName(a)} · ${cap(fmtShort(a.date))} ${t12(a.time)}`, icon: 'brand/logo-mark.png', tag: a.id });
+      n.onclick = () => { window.focus(); n.close(); if (!locked) sheetApptDetail(a.id); };
+    } catch {}
+  });
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { unseen = 0; document.title = BASE_TITLE; } });
+const notifState = () => !('Notification' in window) ? 'no' : Notification.permission;
+
+/* =========================================================
+   SEGURIDAD: contraseña, recuperación, PIN y bloqueo automático
+   ========================================================= */
+const PIN_KEY = 'shbarbersmart_pin_v1', LOCK_MIN_KEY = 'shbarbersmart_lock_min_v1';
+const panelUrl = () => location.origin + location.pathname;
+let lastAct = Date.now(), pinBuf = '', pinFails = 0, locked = false;
+function pwWeak(pw) {
+  if (!pw || pw.length < 8) return 'La contraseña debe tener al menos 8 caracteres';
+  if (!/[A-Za-z]/.test(pw) || !/\d/.test(pw)) return 'Usa letras y números en la contraseña';
+  return '';
+}
+async function authGet() {
+  const tok = await freshToken();
+  const r = await fetch(SB_URL + '/auth/v1/user', { headers: { apikey: SB_KEY, Authorization: 'Bearer ' + tok } });
+  if (!r.ok) throw new Error('No se pudo leer la cuenta');
+  return r.json();
+}
+async function authUpdate(body) {
+  const tok = await freshToken();
+  const r = await fetch(SB_URL + '/auth/v1/user', { method: 'PUT', headers: { apikey: SB_KEY, Authorization: 'Bearer ' + tok, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(authMsg(j));
+  return j;
+}
+const pinCfg = () => { try { return JSON.parse(localStorage.getItem(PIN_KEY) || 'null'); } catch { return null; } };
+const lockMinutes = () => Number(localStorage.getItem(LOCK_MIN_KEY) || 5);
+async function sha256(t) {
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+}
+function renderPin(msg, err) {
+  document.querySelectorAll('#pinDots i').forEach((d, i) => d.classList.toggle('on', i < pinBuf.length));
+  const m = $('#lockMsg'); m.textContent = msg || 'Ingresa tu PIN de 4 dígitos'; m.classList.toggle('err', !!err);
+}
+function showLock() {
+  if (dataMode !== 'cloud' || !pinCfg()) return false;
+  locked = true; pinBuf = ''; closeSheet(); renderPin(); $('#lock').hidden = false;
+  return true;
+}
+function hideLock() { locked = false; pinBuf = ''; const l = $('#lock'); if (l) l.hidden = true; }
+async function pinPress(k) {
+  if (!locked) return;
+  if (k === 'del') { pinBuf = pinBuf.slice(0, -1); return renderPin(); }
+  if (pinBuf.length >= 4) return;
+  pinBuf += k; renderPin();
+  if (pinBuf.length < 4) return;
+  const cfg = pinCfg();
+  const ok = cfg && (await sha256(cfg.salt + pinBuf)) === cfg.hash;
+  if (ok) { pinFails = 0; hideLock(); lastAct = Date.now(); toast('Desbloqueado ✓'); syncFromCloud().catch(() => {}); return; }
+  pinFails++; pinBuf = '';
+  const dots = $('#pinDots'); dots.classList.remove('shake'); void dots.offsetWidth; dots.classList.add('shake');
+  if (pinFails >= 5) { pinFails = 0; hideLock(); acts.logout(true); toast('Demasiados intentos. Entra con tu contraseña.', 'err'); return sheetLogin(); }
+  renderPin(`PIN incorrecto · te quedan ${5 - pinFails} intento(s)`, true);
+}
+function sheetNewPassword(first) {
+  openSheet(head(first ? 'Crea tu nueva contraseña' : 'Cambiar contraseña', 'Mínimo 8 caracteres, con letras y números') + `
+    <form data-form="newpw" autocomplete="off">
+      <label class="lbl" for="npw1">Nueva contraseña</label><input id="npw1" name="pw1" type="password" autocomplete="new-password" minlength="8" required>
+      <label class="lbl" for="npw2">Repite la contraseña</label><input id="npw2" name="pw2" type="password" autocomplete="new-password" minlength="8" required>
+      <div class="sh-actions"><button class="btn btn-gold" type="submit">${ic('lock', 19)}Guardar contraseña</button></div>
+    </form>`);
+}
+function sheetPin() {
+  const has = !!pinCfg();
+  openSheet(head(has ? 'Cambiar PIN' : 'Crear PIN de bloqueo', 'Se pide al abrir la app y tras un tiempo sin uso') + `
+    <form data-form="pinset" autocomplete="off">
+      <label class="lbl" for="pin1">PIN de 4 dígitos</label><input id="pin1" name="p1" type="password" inputmode="numeric" pattern="\\d{4}" maxlength="4" required>
+      <label class="lbl" for="pin2">Repite el PIN</label><input id="pin2" name="p2" type="password" inputmode="numeric" pattern="\\d{4}" maxlength="4" required>
+      <div class="sh-actions"><button class="btn btn-gold" type="submit">${ic('lock', 19)}Guardar PIN</button></div>
+      <p class="muted tiny" style="margin-top:10px">El PIN se guarda cifrado solo en este dispositivo. Si lo olvidas, entras con tu correo y contraseña.</p>
+    </form>`);
+}
+/* Enlaces del correo (confirmación de cuenta o recuperación de contraseña) */
+function handleAuthRedirect() {
+  const h = new URLSearchParams(location.hash.replace(/^#/, ''));
+  if (h.get('error_description')) { history.replaceState(null, '', panelUrl()); return toast('El enlace del correo no es válido o ya venció. Pide uno nuevo.', 'err'); }
+  if (!h.get('access_token')) return;
+  keepSession({ access_token: h.get('access_token'), refresh_token: h.get('refresh_token'), expires_in: Number(h.get('expires_in') || 3600) });
+  history.replaceState(null, '', panelUrl());
+  if (h.get('type') === 'recovery') sheetNewPassword(true);
+  else enterCloud(true);
 }
 
 /* --- Cita: crear / editar / reprogramar --- */
@@ -1617,18 +1794,38 @@ const acts = {
     $('#shell').hidden = false;
     render(true);
   },
-  login() { if (session) enterCloud(); else sheetLogin(); },
+  login() { if (session) enterCloud(false); else sheetLogin(); },
+  async forgot(d, el) {
+    const f = el.closest('form'), email = f.elements.email.value.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return toast('Escribe tu correo arriba y vuelve a tocar “¿Olvidaste tu contraseña?”', 'err');
+    try { await authCall('recover?redirect_to=' + encodeURIComponent(panelUrl()), { email }); sheetLogin('Si el correo está registrado, te llegará un enlace para crear una nueva contraseña. Ábrelo en este mismo teléfono.'); }
+    catch (e) { toast(e.message, 'err'); }
+  },
+  pinKey(d) { pinPress(d.k); },
+  lockForgot() { hideLock(); acts.logout(true); sheetLogin('Entra con tu correo y contraseña. Luego puedes crear un PIN nuevo en Más → Seguridad.'); },
+  setPin() { sheetPin(); },
+  async enableNotif() {
+    if (!('Notification' in window)) return toast('Este navegador no permite avisos. Instala la app en la pantalla de inicio o usa Chrome.', 'err');
+    const r = await Notification.requestPermission();
+    render();
+    if (r === 'granted') { notifyNew([]); try { new Notification('✅ Avisos activados', { body: 'Te avisaremos cuando un cliente pida una cita.', icon: 'brand/logo-mark.png' }); } catch {} toast('Avisos activados ✓'); }
+    else toast('Permiso negado. Actívalo en la configuración del navegador (candado junto a la dirección).', 'err');
+  },
+  removePin() { confirmSheet('¿Quitar el PIN?', 'La app ya no pedirá PIN al abrirse en este teléfono.', 'Quitar PIN', () => { localStorage.removeItem(PIN_KEY); render(); toast('PIN eliminado'); }); },
+  changePw() { sheetNewPassword(false); },
+  lockNow() { if (!showLock()) toast('Primero crea un PIN', 'err'); },
   async signup(d, el) {
     const f = el.closest('form'), E = f.elements;
-    if (!E.email.value || E.password.value.length < 6) return toast('Escribe tu correo y una contraseña de 6 o más caracteres', 'err');
+    if (!E.email.value) return toast('Escribe tu correo', 'err');
+    const weak = pwWeak(E.password.value); if (weak) return toast(weak, 'err');
     try {
-      const j = await authCall('signup', { email: E.email.value.trim(), password: E.password.value });
-      if (j.access_token) { keepSession(j); return enterCloud(); }
+      const j = await authCall('signup?redirect_to=' + encodeURIComponent(panelUrl()), { email: E.email.value.trim(), password: E.password.value });
+      if (j.access_token) { keepSession(j); return enterCloud(true); }
       sheetLogin('Cuenta creada. Te enviamos un correo: ábrelo para confirmar y luego entra aquí con tu contraseña.');
     } catch (e) { toast(e.message, 'err'); }
   },
   logout(silent) {
-    const go = () => { setSession(null); snap = null; dataMode = 'demo'; closeSheet(); $('#shell').hidden = true; $('#splash').hidden = false; if (silent !== true) toast('Sesión cerrada'); };
+    const go = () => { setSession(null); snap = null; dataMode = 'demo'; try { localStorage.removeItem(DB_KEYS.cloud); } catch {} db = initialData(); hideLock(); closeSheet(); $('#shell').hidden = true; $('#splash').hidden = false; if (silent !== true) toast('Sesión cerrada'); };
     if (silent === true) return go();
     confirmSheet('¿Cerrar sesión?', 'Para volver a entrar necesitarás tu correo y contraseña.', 'Cerrar sesión', go, false);
   },
@@ -1964,10 +2161,26 @@ const forms = {
     r.onerror = () => toast('No se pudo leer la imagen', 'err');
     r.readAsDataURL(file);
   },
+  async newpw(f) {
+    const E = f.elements, weak = pwWeak(E.pw1.value);
+    if (weak) return toast(weak, 'err');
+    if (E.pw1.value !== E.pw2.value) return toast('Las contraseñas no coinciden', 'err');
+    try { await authUpdate({ password: E.pw1.value }); toast('Contraseña actualizada ✓'); closeSheet(); if (dataMode !== 'cloud') enterCloud(true); }
+    catch (e) { toast(e.message, 'err'); }
+  },
+  async pinset(f) {
+    const E = f.elements;
+    if (!/^\d{4}$/.test(E.p1.value)) return toast('El PIN debe tener 4 números', 'err');
+    if (E.p1.value !== E.p2.value) return toast('Los PIN no coinciden', 'err');
+    if (/^(\d)\1{3}$/.test(E.p1.value) || '0123456789'.includes(E.p1.value)) return toast('Elige un PIN menos obvio', 'err');
+    const salt = Array.from(crypto.getRandomValues(new Uint8Array(16)), x => x.toString(16).padStart(2, '0')).join('');
+    localStorage.setItem(PIN_KEY, JSON.stringify({ salt, hash: await sha256(salt + E.p1.value) }));
+    closeSheet(); render(); toast('PIN guardado ✓');
+  },
   async login(f) {
     const E = f.elements, btn = f.querySelector('button[type=submit]');
     btn.disabled = true;
-    try { keepSession(await authCall('token?grant_type=password', { email: E.email.value.trim(), password: E.password.value })); await enterCloud(); }
+    try { keepSession(await authCall('token?grant_type=password', { email: E.email.value.trim(), password: E.password.value })); await enterCloud(true); }
     catch (e) { toast(e.message, 'err'); }
     finally { btn.disabled = false; }
   },
@@ -2024,6 +2237,15 @@ document.addEventListener('input', e => {
   if (e.target.id === 'appointmentQuery') { ui.appointmentQuery = e.target.value; renderAppointmentSearch(); }
   if (e.target.name === 'time' && e.target.form && e.target.form.dataset.form === 'walkin') checkWalkin();
 });
+
+/* Seguridad: actividad e inactividad */
+['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, () => { if (!locked) lastAct = Date.now(); }, { passive: true }));
+document.addEventListener('change', e => { if (e.target.id === 'lockMin') { localStorage.setItem(LOCK_MIN_KEY, e.target.value); toast('Bloqueo automático: ' + e.target.value + ' min'); } });
+setInterval(() => { if (dataMode === 'cloud' && !locked && pinCfg() && !$('#shell').hidden && Date.now() - lastAct > lockMinutes() * 60000) showLock(); }, 10000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && dataMode === 'cloud' && !locked && pinCfg() && Date.now() - lastAct > lockMinutes() * 60000) showLock(); });
+const DEMO_ON = /[?&#]demo\b/.test(location.search + location.hash);
+document.querySelectorAll('.demo-only').forEach(el => { el.hidden = !DEMO_ON; });
+handleAuthRedirect();
 
 /* Arranque */
 $('#splashLogo').innerHTML = '<img class="splash-brand" src="brand/logo-sh.png" alt="SH Barber Studio · Tu estilo es nuestra esencia">';

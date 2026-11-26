@@ -267,6 +267,26 @@ svg{flex:none}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 #toast.err{border-color:rgba(226,112,111,.5);background:#3a2526}
 
+.gap{width:100%;display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:14px;border:1px dashed var(--line2);background:rgba(216,183,122,.04);color:var(--gold-l);text-align:left}
+.gap>span:nth-of-type(1){flex:1;min-width:0}
+.gap b{display:block;font-size:14px;font-weight:600}
+.gap small{font-size:12px;color:var(--muted)}
+.gap .plus{display:flex;align-items:center;gap:4px;font-weight:700;font-size:13px;color:var(--gold);flex:none}
+.gap.night{border-color:rgba(155,140,255,.45);background:rgba(155,140,255,.06);color:#d9d3ff}
+.slot.night{border-color:rgba(155,140,255,.4);color:#d9d3ff}
+.slot.night.on{background:#9b8cff;color:#15171b;border-color:#9b8cff}
+.slot-h{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#cfc8ff;margin:12px 0 8px}
+.brk{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:12px;background:var(--card2);color:var(--muted);font-size:12.5px}
+.brk.night{background:rgba(155,140,255,.1);color:#cfc8ff}
+.chip.c-night{background:rgba(155,140,255,.14);color:#cfc8ff}
+.filters{display:flex;gap:8px;margin:0 0 12px;overflow-x:auto;scrollbar-width:none}
+.filters button{padding:8px 14px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-size:13px;font-weight:600;color:var(--muted);white-space:nowrap}
+.filters button.on{background:var(--gold);color:#15171b;border-color:var(--gold)}
+.banner.gold{background:rgba(216,183,122,.1);border-color:var(--line2);color:var(--gold-l)}
+.banner.gold svg{color:var(--gold)}
+.cli-main{display:flex;align-items:center;gap:12px;flex:1;min-width:0;text-align:left}
+.hero-cta.wa{background:rgba(37,211,102,.07);border-color:rgba(37,211,102,.3);margin-top:12px}
+.hero-cta.wa .ic{background:var(--wa);color:#0b2015}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @keyframes pop{from{opacity:0;transform:scale(.7) rotate(-8deg)}to{opacity:1;transform:none}}
 @keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
@@ -433,15 +453,17 @@ function initialData() {
     barberName: 'Barbero SH',
     barberPhone: '',
     hours: {
-      0: { on: true,  open: '09:00', close: '14:00' },
-      1: { on: true,  open: '09:00', close: '19:00' },
-      2: { on: true,  open: '09:00', close: '19:00' },
-      3: { on: true,  open: '09:00', close: '19:00' },
-      4: { on: true,  open: '09:00', close: '19:00' },
-      5: { on: true,  open: '09:00', close: '20:00' },
-      6: { on: true,  open: '08:00', close: '20:00' }
+      0: { on: true, open: '09:00', close: '18:00' },
+      1: { on: true, open: '09:00', close: '18:00' },
+      2: { on: true, open: '09:00', close: '18:00' },
+      3: { on: true, open: '09:00', close: '18:00' },
+      4: { on: true, open: '09:00', close: '18:00' },
+      5: { on: true, open: '09:00', close: '18:00' },
+      6: { on: true, open: '09:00', close: '18:00' }
     },
     breakOn: true, breakStart: '13:00', breakEnd: '14:00',
+    special: { on: true, until: '22:00', surcharge: 7000 },
+    buffer: 0, recoverDays: 30,
     blocked: [],
     loyalty: { on: true, visits: 5, reward: 'Corte clásico gratis (ejemplo demostrativo)' }
   };
@@ -480,7 +502,8 @@ function seed() {
     const h = settings.hours[parseD(date).getDay()];
     if (!h.on) continue;
     const starts = [];
-    for (let m = toMin(h.open); m + 60 <= toMin(h.close); m += 60) {
+    const endDay = settings.special.on ? toMin(settings.special.until) : toMin(h.close);
+    for (let m = toMin(h.open); m + 60 <= endDay; m += 60) {
       if (settings.breakOn && m < toMin(settings.breakEnd) && m + 60 > toMin(settings.breakStart)) continue;
       starts.push(m);
     }
@@ -492,14 +515,46 @@ function seed() {
       if (off < 0) { const r = rnd(); status = r < .86 ? 'atendida' : r < .93 ? 'no_asistio' : 'cancelada'; }
       else if (off === 0) status = (m + svc.duration <= nm) ? 'atendida' : (i % 2 ? 'pendiente' : 'confirmada');
       else status = rnd() < .5 ? 'confirmada' : 'pendiente';
-      const a = { id: uid() + i, clientId: cl.id, serviceId: svc.id, date, time: toTime(m), duration: svc.duration, price: svc.price, status, notes: '', createdAt: Date.now() };
+      const extra = settings.special.on && m >= toMin(h.close) ? settings.special.surcharge : 0;
+      const a = { id: uid() + i, clientId: cl.id, serviceId: svc.id, date, time: toTime(m), duration: svc.duration, price: svc.price + extra, surcharge: extra, status, notes: '', createdAt: Date.now() };
       appointments.push(a);
       if (status === 'atendida') {
         const r = rnd();
-        payments.push({ id: uid() + 'p' + i, date, clientId: cl.id, serviceId: svc.id, serviceName: svc.name, amount: svc.price, method: r < .45 ? 'Efectivo' : r < .75 ? 'Nequi' : r < .87 ? 'Daviplata' : r < .95 ? 'Transferencia' : 'Tarjeta', appointmentId: a.id, note: '', createdAt: Date.now() });
+        payments.push({ id: uid() + 'p' + i, date, clientId: cl.id, serviceId: svc.id, serviceName: svc.name, amount: a.price, method: r < .45 ? 'Efectivo' : r < .75 ? 'Nequi' : r < .87 ? 'Daviplata' : r < .95 ? 'Transferencia' : 'Tarjeta', appointmentId: a.id, note: '', createdAt: Date.now() });
       }
     });
   }
+  addDormant(data);
+  return data;
+}
+
+/* Clientes de ejemplo que dejaron de venir (para "Por recuperar") */
+function addDormant(data) {
+  const T = today();
+  [['c9', 'Esteban Vélez', 'Clásico con raya, barba corta', true, [-95, -72, -50], 's2'],
+   ['c10', 'Julián Henao', 'Fade medio, sin diseño', false, [-70, -48], 's1']].forEach(([id, name, prefs, consent, offs, sid]) => {
+    if (data.clients.some(c => c.id === id)) return;
+    data.clients.push({ id, name, phone: '30055501' + id.slice(1).padStart(2, '0'), prefs, consent, notes: '', createdAt: Date.now() });
+    const svc = data.services.find(x => x.id === sid) || data.services[0];
+    offs.forEach((o, i) => {
+      const date = addDays(T, o);
+      const a = { id: uid() + id + i, clientId: id, serviceId: svc.id, date, time: '10:00', duration: svc.duration, price: svc.price, surcharge: 0, status: 'atendida', notes: '', createdAt: Date.now() };
+      data.appointments.push(a);
+      data.payments.push({ id: uid() + 'pd' + id + i, date, clientId: id, serviceId: svc.id, serviceName: svc.name, amount: svc.price, method: 'Efectivo', appointmentId: a.id, note: '', createdAt: Date.now() });
+    });
+  });
+}
+
+/* Actualiza datos guardados con versiones anteriores */
+function migrate(data, mode) {
+  const s = data.settings;
+  if (!s.special) {
+    for (let d = 0; d < 7; d++) if (s.hours[d]) s.hours[d] = { ...s.hours[d], open: '09:00', close: '18:00' };
+    s.special = { on: true, until: '22:00', surcharge: 7000 };
+  }
+  if (s.buffer == null) s.buffer = 0;
+  if (s.recoverDays == null) s.recoverDays = 30;
+  if (mode === 'demo') addDormant(data);
   return data;
 }
 
@@ -514,7 +569,7 @@ function load(mode) {
       !['services', 'clients', 'appointments', 'payments'].every(key => Array.isArray(data[key]))) {
     throw new Error('Formato de datos inválido');
   }
-  return data;
+  return migrate(data, mode);
 }
 
 function save(next = db) {
@@ -552,19 +607,60 @@ function dayInfo(date) {
   if (b) return { closed: true, blocked: true, reason: 'Fecha bloqueada' + (b.reason ? ': ' + b.reason : '') };
   const h = db.settings.hours[parseD(date).getDay()];
   if (!h || !h.on) return { closed: true, reason: 'Día no laborable según tu horario' };
-  return { closed: false, open: toMin(h.open), close: toMin(h.close) };
+  const sp = db.settings.special || {};
+  const normalClose = toMin(h.close);
+  const close = sp.on && toMin(sp.until) > normalClose ? toMin(sp.until) : normalClose;
+  return { closed: false, open: toMin(h.open), close, normalClose };
 }
+/* Recargo del horario especial: aplica si la cita empieza después del cierre normal */
+function surchargeAt(date, start) {
+  const d = dayInfo(date), sp = db.settings.special || {};
+  return !d.closed && sp.on && start >= d.normalClose && d.close > d.normalClose ? (Number(sp.surcharge) || 0) : 0;
+}
+const bufferMin = () => Number(db.settings.buffer) || 0;
 function busyRanges(date, excludeId) {
-  const r = db.appointments.filter(a => a.date === date && a.id !== excludeId && !['cancelada', 'no_asistio'].includes(a.status))
-    .map(a => [toMin(a.time), toMin(a.time) + a.duration]);
-  if (db.settings.breakOn) r.push([toMin(db.settings.breakStart), toMin(db.settings.breakEnd)]);
-  return r;
+  const buf = bufferMin();
+  return db.appointments.filter(a => a.date === date && a.id !== excludeId && !['cancelada', 'no_asistio'].includes(a.status))
+    .map(a => [toMin(a.time), toMin(a.time) + a.duration + buf]);
+}
+function inBreak(start, dur) {
+  const s = db.settings;
+  return s.breakOn && start < toMin(s.breakEnd) && start + dur > toMin(s.breakStart);
 }
 function isFree(date, start, dur, excludeId, allowPast) {
   const d = dayInfo(date);
   if (d.closed || start < d.open || start + dur > d.close) return false;
   if (!allowPast && (date < today() || (date === today() && start <= nowMin()))) return false;
-  return !busyRanges(date, excludeId).some(([s, e]) => start < e && start + dur > s);
+  if (inBreak(start, dur)) return false;
+  const buf = bufferMin();
+  return !busyRanges(date, excludeId).some(([s, e]) => start < e && start + dur + buf > s);
+}
+function conflictReason(date, start, dur) {
+  const d = dayInfo(date);
+  if (d.closed) return d.reason;
+  if (start < d.open || start + dur > d.close) return `Fuera del horario (${t12(toTime(d.open))} – ${t12(toTime(d.close))})`;
+  if (inBreak(start, dur)) return 'Se cruza con tu descanso';
+  const buf = bufferMin();
+  const a = db.appointments.find(x => x.date === date && !['cancelada', 'no_asistio'].includes(x.status) &&
+    start < toMin(x.time) + x.duration + buf && start + dur + buf > toMin(x.time));
+  return a ? `Se cruza con la cita de ${getClient(a.clientId).name} a las ${t12(a.time)}` : '';
+}
+/* Huecos libres del día (para la línea de tiempo) */
+function dayGaps(date) {
+  const d = dayInfo(date), T = today();
+  if (d.closed || date < T) return [];
+  const act = db.services.filter(s => s.active);
+  const minDur = act.length ? Math.min(...act.map(s => s.duration)) : 30;
+  const s = db.settings, gaps = [];
+  const blocks = busyRanges(date, null);
+  if (s.breakOn) blocks.push([toMin(s.breakStart), toMin(s.breakEnd)]);
+  blocks.sort((x, y) => x[0] - y[0]);
+  const add = (a, b) => { const st = Math.ceil(a / 15) * 15; if (b - st >= minDur) gaps.push([st, b]); };
+  const push = (a, b) => { const nc = d.normalClose; if (d.close > nc && a < nc && b > nc) { add(a, nc); add(nc, b); } else add(a, b); };
+  let cur = date === T ? Math.max(d.open, nowMin() + 1) : d.open;
+  for (const [a, b] of blocks) { if (a > cur) push(cur, Math.min(a, d.close)); cur = Math.max(cur, b); }
+  if (d.close > cur) push(cur, d.close);
+  return gaps;
 }
 function freeSlots(date, dur, excludeId) {
   const d = dayInfo(date);
@@ -599,7 +695,7 @@ function waText(kind, a, c) {
 const WA_LABEL = { confirmacion: 'Confirmación', recordatorio: 'Recordatorio', reprogramacion: 'Reprogramación', agradecimiento: 'Agradecimiento', regreso: 'Invitación a regresar' };
 
 /* ---------- Estado de la interfaz ---------- */
-const ui = { tab: 'inicio', agendaDate: today(), agendaMode: 'dia', cajaPeriod: 'hoy', masSub: null, clientQuery: '', appointmentQuery: '' };
+const ui = { tab: 'inicio', agendaDate: today(), agendaMode: 'dia', cajaPeriod: 'hoy', masSub: null, clientQuery: '', appointmentQuery: '', clientFilter: 'todos' };
 let formState = {};
 let confirmCb = null;
 
@@ -615,7 +711,7 @@ function apptCard(a, showDate) {
   const sub = showDate ? (a.date === today() ? 'Hoy' : a.date === addDays(today(), 1) ? 'Mañana' : fmtShort(a.date)) : a.duration + ' min';
   return `<button class="appt st-${a.status}" data-act="openAppt" data-id="${a.id}">
     <div class="appt-time"><b>${t12(a.time).replace(' ', '&nbsp;')}</b><small>${esc(sub)}</small></div>
-    <div class="appt-body"><b>${esc(c.name)}</b><small>${esc(svcName(a))} · ${money(a.price)}${paid ? ' · <span class="paid-dot">' + ic('check', 13) + 'Pagado</span>' : ''}</small></div>
+    <div class="appt-body"><b>${esc(c.name)}</b><small>${esc(svcName(a))} · ${money(a.price)}${a.surcharge ? ' · 🌙' : ''}${paid ? ' · <span class="paid-dot">' + ic('check', 13) + 'Pagado</span>' : ''}</small></div>
     <span class="chip c-${a.status}">${STATUS[a.status].label}</span></button>`;
 }
 
@@ -629,9 +725,12 @@ function viewInicio() {
   const hr = Math.floor(nowMin() / 60);
   const greet = hr < 12 ? 'Buenos días' : hr < 19 ? 'Buenas tardes' : 'Buenas noches';
   const unpaid = todays.filter(a => a.status === 'atendida' && !paymentFor(a.id)).length;
+  const remList = db.appointments.filter(a => a.date === addDays(T, 1) && ['pendiente', 'confirmada'].includes(a.status));
+  const remPend = remList.filter(a => !a.remindedAt).length;
   return `
   <div class="hello"><p class="muted small">${cap(fmtLong(T))}</p><h1 class="serif">${greet}, ${esc(db.settings.barberName.split(' ')[0])}</h1></div>
   <button class="hero-cta" data-act="newAppt"><span class="ic">${ic('plus', 26)}</span><span><b>Nueva cita</b><small>Agenda a un cliente en segundos</small></span></button>
+  ${remList.length ? `<button class="hero-cta wa" data-act="reminders"><span class="ic">${ic('chat', 24)}</span><span><b>Recordar citas de mañana</b><small>${remPend ? `${remPend} de ${remList.length} por recordar por WhatsApp` : `✓ Las ${remList.length} citas ya fueron recordadas`}</small></span></button>` : ''}
   <div class="stats">
     <button class="stat" data-act="goAgenda" data-date="${T}"><span class="ic">${ic('calendar', 19)}</span><b>${todays.length}</b><span>Citas para hoy</span></button>
     <button class="stat" data-act="goAgenda" data-date="${T}" data-mode="semana"><span class="ic">${ic('clock', 19)}</span><b>${pend}</b><span>Pendientes por confirmar</span></button>
@@ -640,10 +739,10 @@ function viewInicio() {
   </div>
   ${unpaid ? `<div class="alert" style="margin-top:14px">${ic('alert', 18)}<div>Tienes <b>${unpaid}</b> cita${unpaid > 1 ? 's' : ''} atendida${unpaid > 1 ? 's' : ''} hoy sin pago registrado. <button class="link" data-act="goCaja" data-p="hoy">Ir a caja</button></div></div>` : ''}
   <div class="quick">
+    <button data-act="walkin">${ic('scissors')}Atender sin cita</button>
     <button data-act="newPay">${ic('wallet')}Registrar pago</button>
     <button data-act="newClient">${ic('userPlus')}Nuevo cliente</button>
     <button data-act="goAgenda" data-date="${T}" data-mode="semana">${ic('week')}Agenda semanal</button>
-    <button data-act="goMas" data-sub="servicios">${ic('scissors')}Servicios</button>
   </div>
   <div class="sec-h"><h2>Próximas citas</h2><button class="link" data-act="goAgenda" data-date="${T}">Ver agenda</button></div>
   <div class="list">${upcoming.length ? upcoming.map(a => apptCard(a, true)).join('') :
@@ -668,15 +767,16 @@ function viewAgenda() {
       return ca === cb ? a.time.localeCompare(b.time) : ca ? 1 : -1;
     });
     const s = db.settings;
-    const hoursTxt = info.closed ? '' : `Horario ${t12(toTime(info.open))} – ${t12(toTime(info.close))}${s.breakOn ? ` · Descanso ${t12(s.breakStart)} – ${t12(s.breakEnd)}` : ''}`;
+    const hoursTxt = info.closed ? '' : `Normal ${t12(toTime(info.open))} – ${t12(toTime(info.normalClose))}${info.close > info.normalClose ? ` · Especial hasta ${t12(toTime(info.close))}` : ''}${s.breakOn ? ` · Descanso ${t12(s.breakStart)} – ${t12(s.breakEnd)}` : ''}`;
     body = `<div class="day-title"><div><h2>${cap(fmtLong(D))}${D === T ? ' <span class="chip c-gold">Hoy</span>' : ''}</h2><p>${hoursTxt}</p></div></div>
     ${info.closed ? `<div class="closed">${ic(info.blocked ? 'ban' : 'lock', 26)}<p>${esc(info.reason)}</p>
        ${info.blocked ? `<button class="btn btn-ghost btn-sm" style="margin:12px auto 0" data-act="unblock" data-date="${D}">Desbloquear fecha</button>` : `<button class="btn btn-ghost btn-sm" style="margin:12px auto 0" data-act="goMas" data-sub="horarios">Configurar horarios</button>`}</div>` : ''}
-    <div class="list">${list.length ? list.map(a => apptCard(a, false)).join('') : (info.closed ? '' : `<div class="empty">${ic('calendar', 30)}<p>Día libre: aún no hay citas.</p></div>`)}</div>
+    <div class="list">${info.closed ? list.map(a => apptCard(a, false)).join('') : dayItems(D, list, info)}</div>
     <div class="day-actions">
       <button class="btn btn-gold" data-act="newAppt" data-date="${D}" ${info.closed || D < T ? 'disabled' : ''}>${ic('plus', 20)}Crear cita</button>
       ${info.blocked ? `<button class="btn btn-dark" data-act="unblock" data-date="${D}">${ic('refresh', 19)}Desbloquear</button>` : `<button class="btn btn-dark" data-act="blockDay" data-date="${D}" ${info.closed ? 'disabled' : ''}>${ic('ban', 19)}Bloquear día</button>`}
-    </div>`;
+    </div>
+    ${D === T && !info.closed ? `<button class="btn btn-ghost" style="margin-top:10px" data-act="walkin">${ic('scissors', 19)}Atender sin cita (llegó ahora)</button>` : ''}`;
   } else {
     body = '<div style="margin-top:14px">' + days.map(d => {
       const list = db.appointments.filter(a => a.date === d && a.status !== 'cancelada').sort(byDT);
@@ -703,6 +803,22 @@ function viewAgenda() {
     <button class="icon-btn" data-act="agWeek" data-n="7" aria-label="Semana siguiente">${ic('right', 18)}</button></div>
   ${D !== T ? `<div style="text-align:center;margin-top:6px"><button class="link" data-act="setDay" data-date="${T}">Volver a hoy</button></div>` : ''}
   ${body}</section>`;
+}
+
+function gapCard(D, a, b, info) {
+  const len = b - a, h = Math.floor(len / 60), m = len % 60;
+  const night = a >= info.normalClose && info.close > info.normalClose;
+  return `<button class="gap ${night ? 'night' : ''}" data-act="newAppt" data-date="${D}" data-time="${toTime(a)}">${ic('clock', 17)}<span><b>Libre ${t12(toTime(a))} – ${t12(toTime(b))}</b><small>${h ? h + ' h ' : ''}${m ? m + ' min' : ''}${night ? ' · horario especial +' + money(db.settings.special.surcharge) : ''}</small></span><span class="plus">${ic('plus', 16)}Agendar</span></button>`;
+}
+function dayItems(D, list, info) {
+  const s = db.settings, items = [];
+  const dead = x => ['cancelada', 'no_asistio'].includes(x.status);
+  list.filter(a => !dead(a)).forEach(a => items.push([toMin(a.time), 1, apptCard(a, false)]));
+  if (s.breakOn) items.push([toMin(s.breakStart), 0, `<div class="brk">${ic('clock', 16)}Descanso ${t12(s.breakStart)} – ${t12(s.breakEnd)}</div>`]);
+  if (info.close > info.normalClose) items.push([info.normalClose, 0, `<div class="brk night">${ic('star', 16)}Horario especial desde ${t12(toTime(info.normalClose))} · +${money(s.special.surcharge)} por servicio</div>`]);
+  dayGaps(D).forEach(([a, b]) => items.push([a, 2, gapCard(D, a, b, info)]));
+  items.sort((x, y) => x[0] - y[0] || x[1] - y[1]);
+  return items.map(i => i[2]).join('') + list.filter(dead).map(a => apptCard(a, false)).join('');
 }
 
 function findAppointments(query) {
@@ -733,16 +849,35 @@ function renderAppointmentSearch() {
 function viewClientes() {
   return `<div class="ag-head" style="margin-bottom:14px"><h1 class="serif">Clientes</h1><button class="btn btn-gold btn-sm" data-act="newClient">${ic('plus', 18)}Nuevo</button></div>
   <div class="search">${ic('search', 19)}<input id="cq" type="search" placeholder="Buscar por nombre o WhatsApp" value="${esc(ui.clientQuery)}" autocomplete="off"></div>
+  <div class="filters">${[['todos', 'Todos'], ['recuperar', `Por recuperar (${toRecover().length})`], ['premio', 'Con premio']].map(([k, l]) => `<button class="${ui.clientFilter === k ? 'on' : ''}" data-act="cFilter" data-f="${k}">${l}</button>`).join('')}</div>
+  ${ui.clientFilter === 'recuperar' ? `<p class="muted tiny" style="margin:0 0 12px">Clientes que ya pasaron su frecuencia habitual (o más de ${db.settings.recoverDays || 30} días) sin volver y sin cita agendada.</p>` : ''}
   <p class="muted tiny" style="margin:0 0 12px">${dataMode === 'demo' ? 'Clientes de demostración · ' : ''}<span id="ccount"></span></p>
   <div class="list" id="clist"></div>`;
+}
+function toRecover() {
+  const T = today(), base = Number(db.settings.recoverDays) || 30;
+  return db.clients.map(c => ({ c, st: clientStats(c.id) }))
+    .filter(x => x.st.count > 0 && !x.st.next)
+    .map(x => { x.since = daysBetween(x.st.last, T); x.limit = Math.max(base, x.st.freq ? Math.round(x.st.freq * 1.5) : base); return x; })
+    .filter(x => x.since > x.limit).sort((a, b) => b.since - a.since);
 }
 function renderClientList() {
   const box = $('#clist'); if (!box) return;
   const q = ui.clientQuery.trim().toLowerCase();
   const qd = q.replace(/\D/g, '');
+  if (ui.clientFilter === 'recuperar') {
+    const rl = toRecover().filter(({ c }) => !q || c.name.toLowerCase().includes(q) || (qd && c.phone.includes(qd)));
+    $('#ccount').textContent = `${rl.length} por recuperar`;
+    box.innerHTML = rl.length ? rl.map(({ c, st, since }) => `<div class="cli"><button class="cli-main" data-act="openClient" data-id="${c.id}"><span class="avatar">${esc(initials(c.name))}</span>
+      <span class="cli-body"><b>${esc(c.name)}</b><small>Hace ${since} días · ${st.freq ? 'suele venir cada ' + st.freq + ' días' : st.count + ' visita(s)'}${c.lastInviteAt ? ' · invitado ' + fmtShort(iso(new Date(c.lastInviteAt))) : ''}</small></span></button>
+      ${c.consent && c.phone ? `<button class="btn btn-wa btn-sm" data-act="waClient" data-kind="regreso" data-from="list" data-id="${c.id}">Invitar</button>` : '<span class="chip c-muted">Sin autorización</span>'}</div>`).join('')
+      : `<div class="empty">${ic('check', 30)}<p style="margin:0">Nadie por recuperar: todos tus clientes están al día.</p></div>`;
+    return;
+  }
   const list = db.clients.filter(c => !q || c.name.toLowerCase().includes(q) || (qd && c.phone.includes(qd)))
     .map(c => ({ c, st: clientStats(c.id) }))
-    .sort((a, b) => (b.st.last || '').localeCompare(a.st.last || '') || a.c.name.localeCompare(b.c.name));
+    .sort((a, b) => (b.st.last || '').localeCompare(a.st.last || '') || a.c.name.localeCompare(b.c.name))
+    .filter(({ st }) => ui.clientFilter !== 'premio' || (db.settings.loyalty.on && st.count > 0 && st.count % db.settings.loyalty.visits === 0));
   $('#ccount').textContent = `${list.length} de ${db.clients.length}`;
   const L = db.settings.loyalty;
   box.innerHTML = list.length ? list.map(({ c, st }) => {
@@ -790,23 +925,34 @@ function viewMas() {
   const sub = ui.masSub;
   const back = t => `<div class="sub-head"><button class="icon-btn" data-act="goMas" data-sub="" aria-label="Volver">${ic('left', 20)}</button><h1 class="serif">${t}</h1></div>`;
   if (sub === 'servicios') {
-    return back('Servicios') + `<div class="alert">${ic('info', 18)}<div>Revisa los precios y duraciones del catálogo antes de agendar.</div></div>
+    const sp = db.settings.special || {};
+    const [mf, mt] = periodRange('mes');
+    const mp = paymentsIn(mf, mt);
+    const prod = id => { const l = mp.filter(p => p.serviceId === id); return [l.length, sum(l)]; };
+    return back('Servicios') + `<div class="alert">${ic('info', 18)}<div>${sp.on ? `Las citas que empiezan desde las <b>${t12(db.settings.hours[1].close)}</b> (horario especial) suman <b>${money(sp.surcharge)}</b> al precio.` : 'Revisa los precios y duraciones del catálogo antes de agendar.'}</div></div>
     <button class="btn btn-gold" data-act="editSvc" data-id="">${ic('plus', 20)}Nuevo servicio</button>
     <div class="list" style="margin-top:14px">${db.services.map(s => `<div class="card svc ${s.active ? '' : 'inactive'}">
       <div class="svc-body"><b>${esc(s.name)}</b><p>${esc(s.desc || 'Sin descripción')}</p>
-      <div class="svc-meta"><span class="chip c-gold">${money(s.price)}</span><span class="chip c-muted">${ic('clock', 12)} ${s.duration} min</span>${s.active ? '' : '<span class="chip c-cancelada">Inactivo</span>'}</div></div>
+      <div class="svc-meta"><span class="chip c-gold">${money(s.price)}</span>${sp.on ? `<span class="chip c-night">🌙 ${money(s.price + (Number(sp.surcharge) || 0))}</span>` : ''}<span class="chip c-muted">${ic('clock', 12)} ${s.duration} min</span>${s.active ? '' : '<span class="chip c-cancelada">Inactivo</span>'}</div>
+      <p class="tiny muted" style="margin:8px 0 0">Este mes: ${prod(s.id)[0]} cobro(s) · ${money(prod(s.id)[1])}</p></div>
       <div style="display:grid;gap:8px;justify-items:end"><button class="switch ${s.active ? 'on' : ''}" data-act="toggleSvc" data-id="${s.id}" aria-label="Activar o desactivar"></button>
       <button class="icon-btn" data-act="editSvc" data-id="${s.id}" aria-label="Editar">${ic('edit', 18)}</button></div></div>`).join('')}</div>`;
   }
   if (sub === 'horarios') {
     const s = db.settings;
-    return back('Horarios y descansos') + `<form data-form="hours" class="card">
+    const sp = s.special || { on: false, until: '22:00', surcharge: 7000 };
+    return back('Horarios y agenda') + `<form data-form="hours" class="card">
+      <p class="muted tiny" style="margin-bottom:4px">Horario normal: abre · cierra</p>
       ${[1, 2, 3, 4, 5, 6, 0].map(d => { const h = s.hours[d]; return `<div class="hours-row"><label><input type="checkbox" name="on_${d}" ${h.on ? 'checked' : ''}>${DAYS[d]}</label>
       <input type="time" name="open_${d}" value="${h.open}" step="900"><input type="time" name="close_${d}" value="${h.close}" step="900"></div>`; }).join('')}
       <label class="check-row" style="color:var(--white);font-weight:600"><input type="checkbox" name="breakOn" ${s.breakOn ? 'checked' : ''}>Descanso diario (almuerzo)</label>
       <div class="grid2" style="margin-top:10px"><div><label class="lbl">Desde</label><input type="time" name="breakStart" value="${s.breakStart}" step="900"></div><div><label class="lbl">Hasta</label><input type="time" name="breakEnd" value="${s.breakEnd}" step="900"></div></div>
+      <label class="check-row" style="color:var(--white);font-weight:600;margin-top:18px"><input type="checkbox" name="spOn" ${sp.on ? 'checked' : ''}>🌙 Horario especial después del cierre normal</label>
+      <div class="grid2" style="margin-top:10px"><div><label class="lbl">Hasta</label><input type="time" name="spUntil" value="${sp.until}" step="900"></div><div><label class="lbl">Recargo (COP)</label><input type="number" name="spSur" min="0" step="500" inputmode="numeric" value="${sp.surcharge}"></div></div>
+      <div class="grid2" style="margin-top:6px"><div><label class="lbl">Tiempo entre citas</label><select name="buffer">${[0, 5, 10, 15].map(m => `<option value="${m}" ${Number(s.buffer || 0) === m ? 'selected' : ''}>${m ? m + ' min (limpieza)' : 'Sin espacio'}</option>`).join('')}</select></div>
+      <div><label class="lbl">“Por recuperar” después de</label><select name="recoverDays">${[21, 30, 45, 60].map(m => `<option value="${m}" ${Number(s.recoverDays || 30) === m ? 'selected' : ''}>${m} días</option>`).join('')}</select></div></div>
       <button class="btn btn-gold" style="margin-top:18px" type="submit">Guardar horarios</button></form>
-      <p class="muted tiny" style="margin-top:10px">Las citas solo se pueden crear dentro de estos horarios y nunca durante el descanso.</p>`;
+      <p class="muted tiny" style="margin-top:10px">Las citas que empiezan después del cierre normal se cobran con el recargo del horario especial. Nunca se agenda durante el descanso.</p>`;
   }
   if (sub === 'bloqueos') {
     const list = db.settings.blocked.slice().sort((a, b) => a.date.localeCompare(b.date));
@@ -837,7 +983,7 @@ function viewMas() {
   const item = (act, sub2, icn, t, d, cls) => `<button class="menu-item ${cls || ''}" data-act="${act}" ${sub2 ? `data-sub="${sub2}"` : ''}><span class="ic">${ic(icn, 21)}</span><span><b>${t}</b><small>${d}</small></span>${ic('right', 18)}</button>`;
   return `<h1 class="serif" style="font-size:26px;margin-bottom:16px">Más opciones</h1><div class="menu">
     ${item('goMas', 'servicios', 'scissors', 'Servicios', `${db.services.filter(s => s.active).length} activos`)}
-    ${item('goMas', 'horarios', 'clock', 'Horarios y descansos', 'Días de atención y hora de almuerzo')}
+    ${item('goMas', 'horarios', 'clock', 'Horarios y agenda', db.settings.special && db.settings.special.on ? `Normal hasta ${t12(db.settings.hours[1].close)} · especial hasta ${t12(db.settings.special.until)}` : 'Días de atención y descanso')}
     ${item('goMas', 'bloqueos', 'ban', 'Fechas bloqueadas', `${db.settings.blocked.length} fecha(s) bloqueada(s)`)}
     ${item('goMas', 'fidelizacion', 'gift', 'Fidelización', `Cada ${db.settings.loyalty.visits} visitas: beneficio`)}
     ${item('goMas', 'negocio', 'store', 'Datos del barbero', esc(db.settings.barberName))}
@@ -846,7 +992,7 @@ function viewMas() {
     ${dataMode === 'demo' ? item('resetDemo', '', 'refresh', 'Restablecer datos demo', 'Vuelve a los datos ficticios iniciales', 'danger') : ''}
     ${item('exit', '', 'logout', 'Salir a la pantalla de inicio', 'SH BARBER SMART')}
   </div>
-  <p class="muted tiny" style="text-align:center;margin-top:22px">SH BARBER SMART · v1.1</p>
+  <p class="muted tiny" style="text-align:center;margin-top:22px">SH BARBER SMART · v2.0 · Fase 2</p>
   <p class="tiny" style="text-align:center;margin-top:6px;color:var(--muted2)">Desarrollado por <b class="gold">José Lugo</b> · <a href="https://wa.me/573126387467" target="_blank" rel="noopener" style="color:var(--gold)">+57 312 638 7467</a> · jose.lugocdv@gmail.com</p>`;
 }
 
@@ -893,12 +1039,12 @@ function sheetAppt(o) {
   const T = today();
   const date = a ? a.date : (o.date && o.date >= T ? o.date : (ui.agendaDate >= T ? ui.agendaDate : T));
   const svcs = db.services.filter(s => s.active || (a && s.id === a.serviceId));
-  const svcId = a ? a.serviceId : (svcs[0] || {}).id;
+  const svcId = a ? a.serviceId : (svcs.some(s => s.id === o.serviceId) ? o.serviceId : (svcs[0] || {}).id);
   const requestedClient = a ? a.clientId : o.clientId;
   const cid = db.clients.some(c => c.id === requestedClient) ? requestedClient : (db.clients.length ? '' : '__new');
-  formState = { editId: a ? a.id : null, time: a ? a.time : null, origDate: a ? a.date : null, origTime: a ? a.time : null };
+  formState = { editId: a ? a.id : null, time: a ? a.time : (o.time || null), origDate: a ? a.date : null, origTime: a ? a.time : null };
   const clients = db.clients.slice().sort((x, y) => x.name.localeCompare(y.name));
-  openSheet(head(a ? 'Editar o reprogramar' : 'Nueva cita', a ? esc(getClient(a.clientId).name) : 'Solo verás horarios realmente disponibles') + `
+  openSheet(head(a ? 'Editar o reprogramar' : 'Nueva cita', a ? esc(getClient(a.clientId).name) : 'Solo verás horarios realmente disponibles') + (o.hint ? `<div class="banner gold">${ic('refresh', 18)}<div>${o.hint}</div></div>` : '') + `
   <form data-form="appt" autocomplete="off">
     <label class="lbl" for="appointmentClient">Cliente</label>
     <select id="appointmentClient" name="clientId" required><option value="">Selecciona un cliente…</option><option value="__new" ${cid === '__new' ? 'selected' : ''}>＋ Cliente nuevo</option>
@@ -913,7 +1059,7 @@ function sheetAppt(o) {
     <label class="lbl" for="appointmentDate">Fecha</label>
     <input id="appointmentDate" type="date" name="date" value="${date}" ${a ? '' : `min="${T}"`} required>
     <label class="lbl">Hora disponible</label>
-    <div id="slots"></div><input type="hidden" name="time" value="${a ? a.time : ''}">
+    <div id="slots"></div><input type="hidden" name="time" value="${a ? a.time : (o.time || '')}">
     ${a ? '' : `<label class="lbl">Estado inicial</label><div class="pills"><label class="pill"><input type="radio" name="status" value="pendiente" checked><span>Pendiente</span></label><label class="pill"><input type="radio" name="status" value="confirmada"><span>Confirmada</span></label></div>`}
     <label class="lbl">Notas (opcional)</label>
     <textarea name="notes" maxlength="200" rows="2" placeholder="Ej. viene con su hijo, prefiere tijera…">${esc(a ? a.notes : '')}</textarea>
@@ -933,8 +1079,14 @@ function refreshSlots() {
   if (!list.includes(E.time.value)) E.time.value = '';
   if (r.closed) box.innerHTML = `<div class="closed" style="margin:0;padding:14px">${esc(r.closed)}. Elige otra fecha.</div>`;
   else if (!list.length) box.innerHTML = `<div class="closed" style="margin:0;padding:14px">No quedan horarios libres para este servicio en esta fecha.</div>`;
-  else box.innerHTML = `<div class="slots">${list.map(t => `<button type="button" class="slot ${t === E.time.value ? 'on' : ''}" data-act="pickSlot" data-t="${t}">${t12(t)}</button>`).join('')}</div>
-    <p class="muted tiny" style="margin-top:6px">${list.length} horario(s) libre(s) · los ocupados y el descanso no aparecen</p>`;
+  else {
+    const nc = dayInfo(date).normalClose, sur = surchargeAt(date, nc);
+    const norm = list.filter(t => toMin(t) < nc), night = list.filter(t => toMin(t) >= nc);
+    const chip = t => `<button type="button" class="slot ${toMin(t) >= nc ? 'night' : ''} ${t === E.time.value ? 'on' : ''}" data-act="pickSlot" data-t="${t}">${t12(t)}</button>`;
+    box.innerHTML = `${norm.length ? `<div class="slots">${norm.map(chip).join('')}</div>` : ''}
+      ${night.length ? `<p class="slot-h">${ic('star', 14)} Horario especial · ${money(svc.price + sur)} (incluye +${money(sur)})</p><div class="slots">${night.map(chip).join('')}</div>` : ''}
+      <p class="muted tiny" style="margin-top:6px">${list.length} horario(s) libre(s) · precio normal ${money(svc.price)} · los ocupados y el descanso no aparecen</p>`;
+  }
 }
 
 /* --- Cita: detalle --- */
@@ -942,23 +1094,29 @@ function sheetApptDetail(id, flag) {
   const a = getAppt(id); if (!a) return closeSheet();
   const c = getClient(a.clientId), pay = paymentFor(a.id);
   const end = toTime(toMin(a.time) + a.duration);
+  const ns = c.id ? db.appointments.filter(x => x.clientId === c.id && x.status === 'no_asistio').length : 0;
+  const nextC = c.id ? clientStats(c.id).next : null;
   const stb = (s, cls, icn, l) => `<button class="st-btn ${cls} ${a.status === s ? 'cur' : ''}" data-act="setStatus" data-id="${a.id}" data-s="${s}">${ic(icn, 17)}${l}</button>`;
   const wab = (k, hl) => `<button class="wa-btn ${hl ? 'hl' : ''}" data-act="wa" data-kind="${k}" data-id="${a.id}" ${c.phone ? '' : 'disabled'}>${ic('chat', 18)}${WA_LABEL[k]}</button>`;
   openSheet(head(esc(c.name), esc(svcName(a))) + `
   ${flag === 'new' ? `<div class="banner">${ic('check', 18)}<div><b>¡Cita agendada!</b> Ya aparece en tu agenda. Si quieres, prepárale la confirmación por WhatsApp.</div></div>` : ''}
   ${flag === 'reprog' ? `<div class="banner">${ic('refresh', 18)}<div><b>Cita reprogramada.</b> Avísale al cliente con el mensaje de reprogramación.</div></div>` : ''}
-  ${flag === 'paid' ? `<div class="banner">${ic('cash', 18)}<div><b>Pago registrado.</b> Ya suma en la caja. ¿Le envías un agradecimiento?</div></div>` : ''}
+  ${flag === 'paid' ? `<div class="banner">${ic('cash', 18)}<div><b>Pago registrado.</b> Ya suma en la caja. Agéndale de una vez su próxima visita.</div></div>` : ''}
+  ${flag === 'walkin' ? `<div class="banner">${ic('scissors', 18)}<div><b>Cliente sin cita en curso.</b> El espacio quedó ocupado. Al terminar toca “Atendida” para cobrar.</div></div>` : ''}
   <div class="card" style="margin-top:12px;padding:6px 16px">
     <div class="kv"><span>Fecha</span><span>${cap(fmtLong(a.date))}</span></div>
     <div class="kv"><span>Hora</span><span>${t12(a.time)} – ${t12(end)}</span></div>
-    <div class="kv"><span>Valor</span><span>${money(a.price)}</span></div>
+    <div class="kv"><span>Valor</span><span>${money(a.price)}${a.surcharge ? `<br><small class="muted">incluye +${money(a.surcharge)} horario especial</small>` : ''}</span></div>
     <div class="kv"><span>Estado</span><span><span class="chip c-${a.status}">${STATUS[a.status].label}</span></span></div>
     <div class="kv"><span>Pago</span><span>${pay ? `<span class="paid-dot">${ic('check', 14)}${money(pay.amount)} · ${esc(pay.method)}</span>` : '<span class="muted">Sin registrar</span>'}</span></div>
     <div class="kv"><span>WhatsApp</span><span>${c.phone ? fmtPhone(c.phone) : '—'}</span></div>
     ${a.notes ? `<div class="kv"><span>Notas</span><span>${esc(a.notes)}</span></div>` : ''}
     ${c.prefs ? `<div class="kv"><span>Preferencia</span><span>${esc(c.prefs)}</span></div>` : ''}
+    ${ns ? `<div class="kv"><span>Inasistencias</span><span style="color:var(--warn)">${ns}${ns >= 2 ? ' · considera pedir anticipo' : ''}</span></div>` : ''}
+    ${a.remindedAt ? `<div class="kv"><span>Recordatorio</span><span class="paid-dot">${ic('check', 14)}Enviado</span></div>` : ''}
   </div>
   ${a.status === 'atendida' && !pay ? `<button class="btn btn-gold" style="margin-top:14px" data-act="payAppt" data-id="${a.id}">${ic('wallet', 20)}Registrar pago de esta cita</button>` : ''}
+  ${a.status === 'atendida' && c.id ? (nextC ? `<p class="small muted" style="margin-top:12px">Próxima cita: ${cap(fmtShort(nextC.date))} · ${t12(nextC.time)}</p>` : `<button class="btn ${flag === 'paid' ? 'btn-gold' : 'btn-ghost'}" style="margin-top:12px" data-act="rebook" data-id="${a.id}">${ic('refresh', 19)}Agendar próxima visita</button>`) : ''}
   <div class="sec-t">Cambiar estado</div>
   <div class="st-btns">${stb('confirmada', 'info', 'check', 'Confirmada')}${stb('atendida', 'ok', 'scissors', 'Atendida')}${stb('no_asistio', 'warn', 'ban', 'No asistió')}${stb('cancelada', 'bad', 'x', 'Cancelar')}</div>
   ${a.status !== 'pendiente' ? `<button class="link" style="margin-top:10px" data-act="setStatus" data-id="${a.id}" data-s="pendiente">Volver a “Pendiente”</button>` : ''}
@@ -971,9 +1129,59 @@ function sheetApptDetail(id, flag) {
   </div>`);
 }
 
+/* --- Recordatorios de mañana --- */
+function sheetReminders() {
+  const tom = addDays(today(), 1);
+  const list = db.appointments.filter(a => a.date === tom && ['pendiente', 'confirmada'].includes(a.status)).sort(byDT);
+  openSheet(head('Recordatorios de mañana', cap(fmtLong(tom))) + (list.length ? `<div class="list" style="margin-top:12px">${list.map(a => {
+    const c = getClient(a.clientId);
+    return `<div class="pay"><span class="ic" style="${a.remindedAt ? '' : 'background:rgba(37,211,102,.12);color:var(--wa)'}">${ic(a.remindedAt ? 'check' : 'chat', 19)}</span>
+      <div class="pay-body"><b>${t12(a.time)} · ${esc(c.name)}</b><small>${esc(svcName(a))}${a.remindedAt ? ' · Recordado ✓' : ''}</small></div>
+      <button class="btn ${a.remindedAt ? 'btn-dark' : 'btn-wa'} btn-sm" data-act="remindOne" data-id="${a.id}" ${c.phone ? '' : 'disabled'}>${a.remindedAt ? 'Otra vez' : 'Recordar'}</button></div>`;
+  }).join('')}</div>` : `<div class="empty" style="margin-top:12px"><p style="margin:0">No hay citas pendientes para mañana.</p></div>`) + `
+    <p class="muted tiny" style="margin-top:10px">Cada botón abre WhatsApp con el recordatorio listo. Al volver, la cita queda marcada como recordada.</p>
+    <div class="sh-actions"><button class="btn btn-dark" data-act="closeSheet">Listo</button></div>`);
+}
+
+/* --- Atender sin cita --- */
+function sheetWalkin() {
+  const T = today(), info = dayInfo(T);
+  if (info.closed) return toast('Hoy está cerrado según tu horario', 'err');
+  const now = Math.floor(nowMin() / 5) * 5;
+  const svcs = db.services.filter(s => s.active);
+  const clients = db.clients.slice().sort((x, y) => x.name.localeCompare(y.name));
+  openSheet(head('Atender sin cita', 'Cliente que llega sin reserva') + `
+  <form data-form="walkin" autocomplete="off">
+    <label class="lbl">Cliente</label>
+    <select name="clientId"><option value="">Cliente ocasional (sin registro)</option><option value="__new">＋ Cliente nuevo</option>
+      ${clients.map(c => `<option value="${c.id}">${esc(c.name)}${c.phone ? ' · ' + fmtPhone(c.phone) : ''}</option>`).join('')}</select>
+    <div id="newClient" hidden>
+      <div class="grid2"><div><label class="lbl">Nombre</label><input name="ncName" maxlength="50" placeholder="Nombre y apellido"></div>
+      <div><label class="lbl">WhatsApp (opcional)</label><input name="ncPhone" type="tel" maxlength="20" placeholder="3001234567"></div></div>
+      <label class="check-row"><input type="checkbox" name="ncConsent">Autoriza recibir promociones e invitaciones por WhatsApp (Ley 1581 de 2012).</label>
+    </div>
+    <label class="lbl">Servicio</label>
+    <select name="serviceId">${svcs.map(s => `<option value="${s.id}">${esc(s.name)} · ${money(s.price)} · ${s.duration} min</option>`).join('')}</select>
+    <label class="lbl">Hora de inicio</label><input type="time" name="time" value="${toTime(now)}" step="300" required>
+    <div id="wkCheck"></div>
+    <div class="sh-actions"><button class="btn btn-gold" type="submit">${ic('scissors', 20)}Iniciar servicio</button></div>
+  </form>`);
+  checkWalkin();
+}
+function checkWalkin() {
+  const f = document.querySelector('#sheet form[data-form="walkin"]'); if (!f) return;
+  const E = f.elements, svc = getSvc(E.serviceId.value), t = E.time.value, box = $('#wkCheck');
+  if (!svc || !t) { box.innerHTML = ''; return; }
+  const start = toMin(t), T = today();
+  const why = conflictReason(T, start, svc.duration);
+  const sur = surchargeAt(T, start);
+  box.innerHTML = why ? `<div class="closed" style="margin:10px 0 0;padding:12px">${esc(why)}</div>`
+    : `<p class="small" style="color:var(--ok);margin-top:10px">✓ Espacio libre hasta ${t12(toTime(start + svc.duration))} · ${money(svc.price + sur)}${sur ? ` (incluye +${money(sur)} horario especial)` : ''}</p>`;
+}
+
 /* --- WhatsApp: vista previa editable --- */
 function sheetWA(kind, phone, text, back) {
-  formState.waPhone = phone; formState.waBack = back;
+  formState.waPhone = phone; formState.waBack = back; formState.waKind = kind;
   openSheet(head('Mensaje: ' + WA_LABEL[kind], 'Para ' + fmtPhone(phone)) + `
     <label class="lbl">Puedes ajustar el texto antes de abrir WhatsApp</label>
     <textarea id="waText" rows="7" maxlength="900">${esc(text)}</textarea>
@@ -998,6 +1206,7 @@ function sheetPayment(o) {
     <label class="lbl">Cliente</label><select name="clientId"><option value="">Cliente ocasional (sin registro)</option>${clients.map(c => `<option value="${c.id}" ${c.id === cid ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select>
     <label class="lbl">Servicio</label><select name="serviceId">${svcs.map(s => `<option value="${s.id}" ${svc && s.id === svc.id ? 'selected' : ''}>${esc(s.name)} · ${money(s.price)}</option>`).join('')}</select>
     <label class="lbl">Valor cobrado (COP)</label><input name="amount" type="number" inputmode="numeric" min="0" step="500" value="${a ? a.price : (svc ? svc.price : '')}" required>
+    ${!a && db.settings.special && db.settings.special.on ? `<label class="check-row"><input type="checkbox" name="special">🌙 Horario especial (+${money(db.settings.special.surcharge)})</label>` : ''}
     <label class="lbl">Método de pago</label>
     <div class="pills">${METHODS.map((m, i) => `<label class="pill"><input type="radio" name="method" value="${m}" ${i === 0 ? 'checked' : ''}><span>${m}</span></label>`).join('')}</div>
     <label class="lbl">Fecha</label><input type="date" name="date" value="${a ? a.date : today()}" max="${today()}" required>
@@ -1080,11 +1289,15 @@ function sheetDemoInfo() {
       <div class="sh-actions"><button class="btn btn-gold" data-act="closeSheet">Entendido</button></div>`);
     return;
   }
-  openSheet(head('¿Qué incluye esta demo?', 'Fase 1 · Prototipo funcional') + `
+  openSheet(head('¿Qué incluye esta demo?', 'Fase 2 · Agenda y servicios') + `
   <div class="sec-t">Funciona ya en esta demo (en este dispositivo)</div>
   <ul class="feat-list ok">
     ${li('ok', 'Dashboard con citas, pendientes, atendidos e ingresos del día')}
     ${li('ok', 'Agenda diaria y semanal: crear, editar, reprogramar, cancelar y cambiar estados')}
+    ${li('ok', 'Horario normal y horario especial nocturno con recargo automático')}
+    ${li('ok', 'Línea de tiempo del día con huecos libres: toca uno y agenda')}
+    ${li('ok', 'Atender sin cita, tiempo de limpieza entre citas y re-agendar en un toque')}
+    ${li('ok', 'Recordatorios de mañana por WhatsApp y lista de clientes por recuperar')}
     ${li('ok', 'Horarios de atención, descanso y fechas bloqueadas')}
     ${li('ok', 'Bloqueo de reservas simultáneas: solo se ofrecen horas libres')}
     ${li('ok', 'Catálogo de servicios editable (precios demostrativos)')}
@@ -1127,7 +1340,7 @@ const acts = {
       if (!save(initial)) return;
     }
     Object.assign(ui, { tab: 'inicio', agendaDate: today(), agendaMode: 'dia', cajaPeriod: 'hoy',
-      masSub: null, clientQuery: '', appointmentQuery: '' });
+      masSub: null, clientQuery: '', appointmentQuery: '', clientFilter: 'todos' });
     $('#dataMode').textContent = mode === 'demo' ? 'DEMO' : 'LOCAL';
     $('#splash').hidden = true;
     $('#shell').hidden = false;
@@ -1142,7 +1355,30 @@ const acts = {
   goCaja(d) { ui.tab = 'caja'; ui.cajaPeriod = d.p || 'hoy'; render(true); },
   goMas(d) { ui.tab = 'mas'; ui.masSub = d.sub || null; render(true); },
   fab() { if (ui.tab === 'clientes') sheetClientForm(); else if (ui.tab === 'caja') sheetPayment(); else sheetAppt({ date: ui.tab === 'agenda' ? ui.agendaDate : today() }); },
-  newAppt(d) { if (!db.services.some(s => s.active)) return toast('Activa al menos un servicio primero', 'err'); sheetAppt({ date: d.date, clientId: d.client }); },
+  newAppt(d) { if (!db.services.some(s => s.active)) return toast('Activa al menos un servicio primero', 'err'); sheetAppt({ date: d.date, clientId: d.client, time: d.time }); },
+  walkin() { if (!db.services.some(s => s.active)) return toast('Activa al menos un servicio primero', 'err'); sheetWalkin(); },
+  reminders() { sheetReminders(); },
+  remindOne(d) {
+    const a = getAppt(d.id); if (!a) return;
+    const c = getClient(a.clientId);
+    if (!c.phone) return toast('Este cliente no tiene WhatsApp registrado', 'err');
+    sheetWA('recordatorio', c.phone, waText('recordatorio', a, c), { type: 'remind', id: a.id });
+  },
+  cFilter(d) { ui.clientFilter = d.f; render(); },
+  rebook(d) {
+    const a = getAppt(d.id); if (!a) return;
+    const c = getClient(a.clientId), st = c.id ? clientStats(c.id) : null;
+    const every = (st && st.freq) || 21;
+    const svc = getSvc(a.serviceId), dur = svc ? svc.duration : a.duration;
+    const tom = addDays(today(), 1);
+    let target = addDays(a.date, every); if (target < tom) target = tom;
+    let date = null, time = null;
+    for (let i = 0; i < 14 && !time; i++) { const dt = addDays(target, i); if (isFree(dt, toMin(a.time), dur, null, false)) { date = dt; time = a.time; } }
+    for (let i = 0; i < 14 && !time; i++) { const dt = addDays(target, i); const r = freeSlots(dt, dur, null); if (r.slots.length) { date = dt; time = r.slots[0]; } }
+    if (!time) return toast('No encontré espacio en las próximas dos semanas', 'err');
+    sheetAppt({ date, time, clientId: c.id, serviceId: svc && svc.active ? svc.id : undefined,
+      hint: `Próxima visita sugerida: <b>${cap(fmtLong(date))}, ${t12(time)}</b>${st && st.freq ? ` (suele venir cada ${every} días)` : ' (cada 3 semanas por defecto)'}. Puedes cambiar la fecha o la hora.` });
+  },
   newPay() { sheetPayment(); },
   newClient() { sheetClientForm(); },
   openAppt(d) { sheetApptDetail(d.id); },
@@ -1183,16 +1419,30 @@ const acts = {
     const c = getClient(d.id);
     if (d.kind === 'regreso' && !c.consent) return toast('Sin autorización para mensajes comerciales', 'err');
     const last = clientStats(c.id).visits.slice(-1)[0];
-    sheetWA(d.kind, c.phone, waText(d.kind, last || null, c), { type: 'client', id: c.id });
+    sheetWA(d.kind, c.phone, waText(d.kind, last || null, c), { type: d.from === 'list' ? 'list' : 'client', id: c.id });
   },
-  waGo(d, el) { const t = $('#waText').value; el.href = waLink(formState.waPhone, t); toast('Abriendo WhatsApp…'); },
+  waGo(d, el) {
+    const t = $('#waText').value; el.href = waLink(formState.waPhone, t);
+    const b = formState.waBack, k = formState.waKind;
+    if (b && k === 'recordatorio' && (b.type === 'appt' || b.type === 'remind'))
+      save({ ...db, appointments: db.appointments.map(x => x.id === b.id ? { ...x, remindedAt: Date.now() } : x) });
+    if (b && k === 'regreso' && (b.type === 'client' || b.type === 'list'))
+      save({ ...db, clients: db.clients.map(x => x.id === b.id ? { ...x, lastInviteAt: Date.now() } : x) });
+    render();
+    toast('Abriendo WhatsApp…');
+  },
   copyWA() {
     const t = $('#waText').value;
     const done = () => toast('Texto copiado');
     if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(done, () => { $('#waText').select(); document.execCommand('copy'); done(); });
     else { $('#waText').select(); document.execCommand('copy'); done(); }
   },
-  waBack() { const b = formState.waBack; if (!b) return closeSheet(); b.type === 'appt' ? sheetApptDetail(b.id) : sheetClient(b.id); },
+  waBack() {
+    const b = formState.waBack;
+    if (!b || b.type === 'list') return closeSheet();
+    if (b.type === 'remind') return sheetReminders();
+    b.type === 'appt' ? sheetApptDetail(b.id) : sheetClient(b.id);
+  },
   delPay(d) {
     const p = db.payments.find(x => x.id === d.id); if (!p) return;
     confirmSheet('¿Eliminar este pago?', `${money(p.amount)} · ${esc(p.serviceName || '')} del ${fmtShort(p.date)}. Se descontará de la caja.`, 'Eliminar pago', () => {
@@ -1263,6 +1513,7 @@ const forms = {
     const editing = formState.editId;
     const allowPast = !!editing && date === formState.origDate && time === formState.origTime;
     if (!isFree(date, toMin(time), svc.duration, editing, allowPast)) { refreshSlots(); return toast('Ese horario ya no está disponible', 'err'); }
+    const sur = surchargeAt(date, toMin(time));
     const clients = newC ? [...db.clients, newC] : db.clients;
     if (newC) clientId = newC.id;
     if (editing) {
@@ -1270,7 +1521,7 @@ const forms = {
       if (!a) return toast('La cita no está disponible', 'err');
       const moved = a.date !== date || a.time !== time;
       const updated = { ...a, clientId, serviceId: svc.id, date, time, duration: svc.duration,
-        price: a.serviceId === svc.id ? a.price : svc.price, notes: E.notes.value.trim() };
+        price: (a.serviceId === svc.id ? a.price - (a.surcharge || 0) : svc.price) + sur, surcharge: sur, notes: E.notes.value.trim() };
       if (moved) {
         updated.rescheduled = true;
         if (['cancelada', 'no_asistio'].includes(a.status)) updated.status = 'pendiente';
@@ -1281,13 +1532,35 @@ const forms = {
       toast(moved ? 'Cita reprogramada' : 'Cambios guardados');
       sheetApptDetail(a.id, moved ? 'reprog' : null);
     } else {
-      const a = { id: uid(), clientId, serviceId: svc.id, date, time, duration: svc.duration, price: svc.price, status: (f.querySelector('input[name=status]:checked') || {}).value || 'pendiente', notes: E.notes.value.trim(), createdAt: Date.now() };
+      const a = { id: uid(), clientId, serviceId: svc.id, date, time, duration: svc.duration, price: svc.price + sur, surcharge: sur, status: (f.querySelector('input[name=status]:checked') || {}).value || 'pendiente', notes: E.notes.value.trim(), createdAt: Date.now() };
       if (!save({ ...db, clients, appointments: [...db.appointments, a] })) return;
       ui.appointmentQuery = '';
       ui.tab = 'agenda'; ui.agendaDate = date; ui.agendaMode = 'dia'; render(true);
       toast('Cita agendada ✓');
       sheetApptDetail(a.id, 'new');
     }
+  },
+  walkin(f) {
+    const E = f.elements, T = today();
+    let clientId = E.clientId.value, newC = null;
+    if (clientId === '__new') {
+      const name = E.ncName.value.trim(), phone = normPhone(E.ncPhone.value);
+      if (name.length < 2) return toast('Escribe el nombre del cliente', 'err');
+      if (!validClientPhone(E.ncPhone.value)) return toast('Revisa el WhatsApp (ej. 3001234567)', 'err');
+      if (phone && db.clients.some(c => c.phone === phone)) return toast('Ya existe un cliente con ese WhatsApp', 'err');
+      newC = { id: uid(), name, phone, prefs: '', consent: E.ncConsent.checked, notes: '', createdAt: Date.now() };
+      clientId = newC.id;
+    }
+    const svc = getSvc(E.serviceId.value); if (!svc) return toast('Selecciona un servicio', 'err');
+    if (!E.time.value) return toast('Indica la hora de inicio', 'err');
+    const start = toMin(E.time.value);
+    if (!isFree(T, start, svc.duration, null, true)) return toast(conflictReason(T, start, svc.duration) || 'Ese espacio no está libre', 'err');
+    const sur = surchargeAt(T, start);
+    const a = { id: uid(), clientId, serviceId: svc.id, date: T, time: E.time.value, duration: svc.duration, price: svc.price + sur, surcharge: sur, status: 'confirmada', walkin: true, notes: 'Llegó sin cita', createdAt: Date.now() };
+    if (!save({ ...db, clients: newC ? [...db.clients, newC] : db.clients, appointments: [...db.appointments, a] })) return;
+    ui.appointmentQuery = ''; ui.tab = 'agenda'; ui.agendaDate = T; ui.agendaMode = 'dia'; render(true);
+    toast('Servicio iniciado');
+    sheetApptDetail(a.id, 'walkin');
   },
   pay(f) {
     const E = f.elements;
@@ -1337,7 +1610,11 @@ const forms = {
     }
     const bOn = E.breakOn.checked, bs = E.breakStart.value, be = E.breakEnd.value;
     if (bOn && (!bs || !be || toMin(bs) >= toMin(be))) return toast('Revisa el horario de descanso', 'err');
-    Object.assign(db.settings, { hours: h, breakOn: bOn, breakStart: bs || '13:00', breakEnd: be || '14:00' });
+    const spOn = E.spOn.checked, spUntil = E.spUntil.value, spSur = Math.round(Number(E.spSur.value));
+    if (spOn && (!spUntil || !(spSur >= 0) || E.spSur.value === '')) return toast('Revisa el horario especial', 'err');
+    Object.assign(db.settings, { hours: h, breakOn: bOn, breakStart: bs || '13:00', breakEnd: be || '14:00',
+      special: { on: spOn, until: spUntil || '22:00', surcharge: spSur >= 0 ? spSur : 0 },
+      buffer: Number(E.buffer.value) || 0, recoverDays: Number(E.recoverDays.value) || 30 });
     save(); render(); toast('Horarios guardados');
   },
   block(f) {
@@ -1394,11 +1671,19 @@ document.addEventListener('change', e => {
     if (t.name === 'serviceId' || t.name === 'date') refreshSlots();
     if (t.name === 'clientId') $('#newClient').hidden = t.value !== '__new';
   }
-  if (f.dataset.form === 'pay' && t.name === 'serviceId') { const s = getSvc(t.value); if (s) f.elements.amount.value = s.price; }
+  if (f.dataset.form === 'pay' && (t.name === 'serviceId' || t.name === 'special')) {
+    const s = getSvc(f.elements.serviceId.value), sp = f.elements.special;
+    if (s) f.elements.amount.value = s.price + (sp && sp.checked ? Number(db.settings.special.surcharge) || 0 : 0);
+  }
+  if (f.dataset.form === 'walkin') {
+    if (t.name === 'clientId') $('#newClient').hidden = t.value !== '__new';
+    if (t.name === 'serviceId' || t.name === 'time') checkWalkin();
+  }
 });
 document.addEventListener('input', e => {
   if (e.target.id === 'cq') { ui.clientQuery = e.target.value; renderClientList(); }
   if (e.target.id === 'appointmentQuery') { ui.appointmentQuery = e.target.value; renderAppointmentSearch(); }
+  if (e.target.name === 'time' && e.target.form && e.target.form.dataset.form === 'walkin') checkWalkin();
 });
 
 /* Arranque */

@@ -1019,7 +1019,7 @@ function apptCard(a, showDate) {
   const sub = showDate ? (a.date === today() ? 'Hoy' : a.date === addDays(today(), 1) ? 'Mañana' : fmtShort(a.date)) : a.duration + ' min';
   return `<button class="appt st-${a.status}" data-act="openAppt" data-id="${a.id}">
     <div class="appt-time"><b>${t12(a.time).replace(' ', '&nbsp;')}</b><small>${esc(sub)}</small></div>
-    <div class="appt-body"><b>${esc(c.name)}</b><small>${esc(svcName(a))} · ${money(a.price)}${a.surcharge ? ' · 🌙' : ''}${a.source === 'web' ? ' · 🌐' : ''}${depWaiting(a) ? (depOf(a).reported ? ' · <span style="color:var(--warn)">💵 dice que pagó</span>' : ' · <span style="color:var(--warn)">⏳ anticipo</span>') : depPaid(a) && !paid ? ' · <span class="paid-dot">💵 anticipo</span>' : ''}${paid ? ' · <span class="paid-dot">' + ic('check', 13) + 'Pagado</span>' : ''}</small></div>
+    <div class="appt-body"><b>${esc(c.name)}</b><small>${depWaiting(a) ? (depOf(a).reported ? '<span style="color:var(--warn)">💵 Dice que pagó</span> · ' : '<span style="color:var(--warn)">⏳ Sin anticipo</span> · ') : depPaid(a) && !paid ? '<span class="paid-dot">💵 Anticipo</span> · ' : ''}${esc(svcName(a))} · ${money(a.price)}${a.surcharge ? ' · 🌙' : ''}${a.source === 'web' ? ' · 🌐' : ''}${paid ? ' · <span class="paid-dot">' + ic('check', 13) + 'Pagado</span>' : ''}</small></div>
     <span class="chip c-${a.status}">${STATUS[a.status].label}</span></button>`;
 }
 

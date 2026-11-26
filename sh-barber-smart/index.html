@@ -623,10 +623,14 @@ function surchargeAt(date, start) {
 }
 const bufferMin = () => Number(db.settings.buffer) || 0;
 const slotStep = () => Number(db.settings.slotStep) || 60;
+/* Minutos que ocupa una cita en la agenda.
+   Turnos en punto: cada servicio ocupa turnos completos de 1 hora (el descanso va dentro del turno).
+   Otros modos: duración del servicio + descanso configurado. */
+const occ = dur => slotStep() === 60 ? Math.ceil(dur / 60) * 60 : dur + bufferMin();
 function busyRanges(date, excludeId) {
   const buf = bufferMin();
   return db.appointments.filter(a => a.date === date && a.id !== excludeId && !['cancelada', 'no_asistio'].includes(a.status))
-    .map(a => [toMin(a.time), toMin(a.time) + a.duration + buf]);
+    .map(a => [toMin(a.time), toMin(a.time) + occ(a.duration)]);
 }
 function inBreak(start, dur) {
   const s = db.settings;
@@ -637,17 +641,15 @@ function isFree(date, start, dur, excludeId, allowPast) {
   if (d.closed || start < d.open || start + dur > d.close) return false;
   if (!allowPast && (date < today() || (date === today() && start <= nowMin()))) return false;
   if (inBreak(start, dur)) return false;
-  const buf = bufferMin();
-  return !busyRanges(date, excludeId).some(([s, e]) => start < e && start + dur + buf > s);
+  return !busyRanges(date, excludeId).some(([s, e]) => start < e && start + occ(dur) > s);
 }
 function conflictReason(date, start, dur) {
   const d = dayInfo(date);
   if (d.closed) return d.reason;
   if (start < d.open || start + dur > d.close) return `Fuera del horario (${t12(toTime(d.open))} – ${t12(toTime(d.close))})`;
   if (inBreak(start, dur)) return 'Se cruza con tu descanso';
-  const buf = bufferMin();
   const a = db.appointments.find(x => x.date === date && !['cancelada', 'no_asistio'].includes(x.status) &&
-    start < toMin(x.time) + x.duration + buf && start + dur + buf > toMin(x.time));
+    start < toMin(x.time) + occ(x.duration) && start + occ(dur) > toMin(x.time));
   return a ? `Se cruza con la cita de ${getClient(a.clientId).name} a las ${t12(a.time)}` : '';
 }
 /* Huecos libres del día (para la línea de tiempo) */
@@ -956,8 +958,8 @@ function viewMas() {
       <div class="grid2" style="margin-top:10px"><div><label class="lbl">Desde</label><input type="time" name="breakStart" value="${s.breakStart}" step="900"></div><div><label class="lbl">Hasta</label><input type="time" name="breakEnd" value="${s.breakEnd}" step="900"></div></div>
       <label class="check-row" style="color:var(--white);font-weight:600;margin-top:18px"><input type="checkbox" name="spOn" ${sp.on ? 'checked' : ''}>🌙 Horario especial después del cierre normal</label>
       <div class="grid2" style="margin-top:10px"><div><label class="lbl">Hasta</label><input type="time" name="spUntil" value="${sp.until}" step="900"></div><div><label class="lbl">Recargo (COP)</label><input type="number" name="spSur" min="0" step="500" inputmode="numeric" value="${sp.surcharge}"></div></div>
-      <div class="grid2" style="margin-top:6px"><div><label class="lbl">Las citas empiezan</label><select name="slotStep">${[[60, 'En punto'], [30, 'Cada 30 min'], [15, 'Cada 15 min']].map(([m, l]) => `<option value="${m}" ${Number(s.slotStep || 60) === m ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
-      <div><label class="lbl">Descanso tras cada cita</label><select name="buffer">${[0, 5, 10, 15, 20].map(m => `<option value="${m}" ${Number(s.buffer || 0) === m ? 'selected' : ''}>${m ? m + ' min' : 'Sin descanso'}</option>`).join('')}</select></div></div>
+      <div class="grid2" style="margin-top:6px"><div><label class="lbl">Las citas empiezan</label><select name="slotStep">${[[60, 'En punto (turnos de 1 h)'], [30, 'Cada 30 min'], [15, 'Cada 15 min']].map(([m, l]) => `<option value="${m}" ${Number(s.slotStep || 60) === m ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+      <div><label class="lbl">Descanso tras cada cita${Number(s.slotStep || 60) === 60 ? ' (solo si no es en punto)' : ''}</label><select name="buffer">${[0, 5, 10, 15, 20].map(m => `<option value="${m}" ${Number(s.buffer || 0) === m ? 'selected' : ''}>${m ? m + ' min' : 'Sin descanso'}</option>`).join('')}</select></div></div>
       <div class="grid2" style="margin-top:6px">
       <div><label class="lbl">“Por recuperar” después de</label><select name="recoverDays">${[21, 30, 45, 60].map(m => `<option value="${m}" ${Number(s.recoverDays || 30) === m ? 'selected' : ''}>${m} días</option>`).join('')}</select></div></div>
       <button class="btn btn-gold" style="margin-top:18px" type="submit">Guardar horarios</button></form>
@@ -1094,7 +1096,7 @@ function refreshSlots() {
     const chip = t => `<button type="button" class="slot ${toMin(t) >= nc ? 'night' : ''} ${t === E.time.value ? 'on' : ''}" data-act="pickSlot" data-t="${t}">${t12(t)}</button>`;
     box.innerHTML = `${norm.length ? `<div class="slots">${norm.map(chip).join('')}</div>` : ''}
       ${night.length ? `<p class="slot-h">${ic('star', 14)} Horario especial · ${money(svc.price + sur)} (incluye +${money(sur)})</p><div class="slots">${night.map(chip).join('')}</div>` : ''}
-      <p class="muted tiny" style="margin-top:6px">${list.length} horario(s) libre(s) · precio normal ${money(svc.price)} · cada cita deja ${bufferMin()} min de descanso al barbero</p>`;
+      <p class="muted tiny" style="margin-top:6px">${list.length} horario(s) libre(s) · precio normal ${money(svc.price)} · ${slotStep() === 60 ? 'turnos de 1 hora en punto (incluye el descanso del barbero)' : `cada cita deja ${bufferMin()} min de descanso al barbero`}</p>`;
   }
 }
 

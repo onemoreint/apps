@@ -14,10 +14,12 @@
 @font-face{font-family:"Great Vibes";src:url("../fonts/great-vibes-latin-400-normal.woff2") format("woff2");font-weight:400;font-display:swap}
 @font-face{font-family:"Playfair Display";src:url("../fonts/playfair-display-latin-400-normal.woff2") format("woff2");font-weight:400;font-display:swap}
 @font-face{font-family:"Playfair Display";src:url("../fonts/playfair-display-latin-700-normal.woff2") format("woff2");font-weight:700;font-display:swap}
-:root{--bg:#0a0a0b;--card:#161719;--card2:#1f2124;--field:#0e0f10;--gold:#C9CDD2;--gold-l:#F4F5F7;--gold-d:#7E838A;--white:#fff;--muted:#9aa0aa;--muted2:#6d737d;--line:rgba(255,255,255,.07);--line2:rgba(205,210,216,.25);--ok:#5fc08f;--bad:#e2706f;--night:#9b8cff;--wa:#25D366;--sb:env(safe-area-inset-bottom,0px)}
+:root{--bg:#0a0a0b;--card:rgba(20,21,23,.66);--card2:rgba(31,33,36,.8);--field:rgba(10,10,11,.78);--gold:#C9CDD2;--gold-l:#F4F5F7;--gold-d:#7E838A;--white:#fff;--muted:#9aa0aa;--muted2:#6d737d;--line:rgba(255,255,255,.07);--line2:rgba(205,210,216,.25);--ok:#5fc08f;--bad:#e2706f;--night:#9b8cff;--wa:#25D366;--sb:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{background:var(--bg);color:var(--white);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
-body{min-height:100dvh;background:radial-gradient(70% 40% at 10% 0%,rgba(255,255,255,.07),transparent 70%),radial-gradient(60% 40% at 95% 30%,rgba(255,255,255,.04),transparent 70%),radial-gradient(70% 50% at 30% 100%,rgba(255,255,255,.04),transparent 70%),var(--bg);background-attachment:fixed}
+html{background:#0a0a0b}
+body{min-height:100dvh;background:transparent!important}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:#0a0a0b url("../brand/smoke.jpg") center/cover no-repeat}
 .serif{font-family:"Playfair Display",Georgia,serif;font-weight:700}
 .script{font-family:"Great Vibes",cursive;font-weight:400}
 .chrome{background:linear-gradient(180deg,#FFFFFF 0%,#E9EBEE 36%,#9EA3AA 52%,#F4F5F7 68%,#B4B8BE 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -36,20 +38,24 @@ header p{color:var(--muted);margin-top:4px}
 .step h2{display:flex;align-items:center;gap:10px;font-family:"Playfair Display",Georgia,serif;font-size:18px;margin-bottom:12px}
 .step h2 i{font-style:normal;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:#15171b;font-size:13px;font-weight:800}
 .note{font-size:13px;color:var(--muted)}
-.svc{width:100%;display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--line);margin-bottom:10px;transition:border-color .2s,background .2s}
-.svc.on{border-color:var(--gold);background:linear-gradient(135deg,rgba(205,210,216,.16),rgba(205,210,216,.04))}
-.svc div{flex:1;min-width:0}
-.svc b{display:block}
-.svc small{color:var(--muted);font-size:13px;display:block}
-.svc .p{text-align:right;flex:none}
-.svc .p b{color:var(--gold-l)}
+.svc{width:100%;display:block;padding:10px 14px 12px;border-radius:16px;background:rgba(12,12,13,.45);border:1px solid rgba(255,255,255,.06);margin-bottom:8px;transition:border-color .2s,background .2s,box-shadow .2s;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.svc.on{border-color:rgba(230,233,237,.75);background:rgba(40,42,46,.55);box-shadow:0 0 0 1px rgba(230,233,237,.25),0 8px 30px rgba(255,255,255,.06)}
+.svc-line{display:flex;align-items:baseline;gap:10px}
+.svc-name{font-family:"Great Vibes",cursive;font-size:34px;line-height:1.15;color:#F4F5F7;white-space:nowrap;text-shadow:0 1px 8px rgba(255,255,255,.15)}
+.svc-dots{flex:1;min-width:24px;border-bottom:2px dotted rgba(220,224,230,.6);transform:translateY(-7px)}
+.svc-price{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:25px;white-space:nowrap;background:linear-gradient(180deg,#FFFFFF 0%,#E9EBEE 36%,#9EA3AA 54%,#F4F5F7 70%,#B4B8BE 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.svc-meta{display:block;font-size:12.5px;color:var(--muted);margin-top:1px}
+.price-title{display:flex;align-items:center;justify-content:center;gap:12px;margin:4px 0 14px}
+.price-title:before,.price-title:after{content:"";flex:1;max-width:70px;height:1px;background:linear-gradient(90deg,transparent,rgba(220,224,230,.6),transparent)}
+.price-title span{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:24px;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(180deg,#FFFFFF 0%,#E9EBEE 36%,#9EA3AA 54%,#F4F5F7 70%,#B4B8BE 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+@media (max-width:380px){.svc-name{font-size:28px}.svc-price{font-size:21px}}
 .days{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
 .day{flex:none;width:62px;padding:9px 0;border-radius:14px;background:var(--card);border:1px solid var(--line);text-align:center;font-size:12px;color:var(--muted)}
 .day b{display:block;font-size:19px;color:var(--white)}
 .day.on{background:var(--gold);border-color:var(--gold);color:#1a1b1d}
 .day.on b{color:#15171b}
 .slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:8px}
-.slot{padding:11px 4px;border-radius:12px;background:var(--card);border:1px solid var(--line);text-align:center;font-weight:600;font-size:14.5px}
+.slot{padding:11px 4px;border-radius:12px;background:var(--card);border:1px solid var(--line);text-align:center;font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:15.5px}
 .slot small{display:block;font-size:11.5px;font-weight:500;color:var(--muted)}
 .slot.night{border-color:rgba(155,140,255,.4);color:#d9d3ff}
 .slot.on{background:var(--gold);color:#15171b;border-color:var(--gold)}
@@ -154,8 +160,12 @@ let toastT;
 function toast(m) { const t = $('#toast'); t.textContent = m; t.className = 'show'; clearTimeout(toastT); toastT = setTimeout(() => { t.className = ''; }, 2200); }
 
 function renderServices() {
-  $('#services').innerHTML = st.services.length ? st.services.map(s => `<button type="button" class="svc ${st.svc && st.svc.id === s.id ? 'on' : ''}" data-svc="${esc(s.id)}">
-    <div><b>${esc(s.name)}</b><small>${esc(s.description || '')}</small><small>${s.duration} min</small></div><span class="p"><b>${money(s.price)}</b></span></button>`).join('')
+  const ORDER = ['corte', 'bases', 'cejas', 'barba', 'corte + barba'];
+  const rank = s => { const i = ORDER.indexOf(String(s.name).trim().toLowerCase()); return i < 0 ? 99 : i; };
+  const list = st.services.slice().sort((a, b) => rank(a) - rank(b) || a.price - b.price);
+  $('#services').innerHTML = list.length ? '<div class="price-title"><span>Lista de precios</span></div>' + list.map(s => `<button type="button" class="svc ${st.svc && st.svc.id === s.id ? 'on' : ''}" data-svc="${esc(s.id)}" aria-label="${esc(s.name)}, ${money(s.price)}">
+    <span class="svc-line"><span class="svc-name">${esc(s.name)}</span><span class="svc-dots"></span><span class="svc-price">$${Math.round(s.price).toLocaleString('es-CO')}</span></span>
+    <span class="svc-meta">${esc(s.description || '')}${s.description ? ' · ' : ''}${s.duration} min</span></button>`).join('')
     : '<div class="empty">Por ahora no hay servicios disponibles.</div>';
   const sp = st.info && st.info.special;
   $('#nightNote').textContent = sp && sp.on ? `🌙 Horario especial desde las 6:00 p. m. hasta las ${t12(sp.until)}: +${money(sp.surcharge)} por servicio.` : '';

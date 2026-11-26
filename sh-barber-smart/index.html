@@ -289,6 +289,12 @@ svg{flex:none}
 .cli-main{display:flex;align-items:center;gap:12px;flex:1;min-width:0;text-align:left}
 .hero-cta.wa{background:rgba(37,211,102,.07);border-color:rgba(37,211,102,.3);margin-top:12px}
 .hero-cta.wa .ic{background:var(--wa);color:#0b2015}
+.copy-v{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:6px}
+.copy-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 10px;border-radius:9px;background:rgba(216,183,122,.12);color:var(--gold);font-size:12px;font-weight:700}
+.copy-btn:active{transform:scale(.96)}
+.qr-wrap{display:block;margin:6px auto 10px;border-radius:16px;overflow:hidden;max-width:210px;background:#2b2b2b;border:1px solid var(--line2)}
+.qr-wrap img{display:block;width:100%}
+.qr-big{display:block;width:100%;max-width:360px;margin:8px auto 0;border-radius:18px}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @keyframes pop{from{opacity:0;transform:scale(.7) rotate(-8deg)}to{opacity:1;transform:none}}
 @keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
@@ -350,7 +356,8 @@ svg{flex:none}
 
 const DB_KEYS = { demo: 'shbarbersmart_demo_v1', local: 'shbarbersmart_local_v1' };
 const BUSINESS = 'SH Barber Studio';
-const METHODS = ['Efectivo', 'Nequi', 'Daviplata', 'Transferencia', 'Tarjeta'];
+const METHODS = ['Efectivo', 'Bre-B', 'Nequi', 'Daviplata', 'Transferencia', 'Tarjeta'];
+const DEFAULT_PAYMENT = { on: true, key: '@shbarberstudio', bank: 'Bancolombia', type: 'Ahorros', account: '54251786138', holder: 'Santiago Gutierrez', qrData: '' };
 const DAYS = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 const DAYS_S = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 const STATUS = {
@@ -430,7 +437,9 @@ const IC = {
   star:'<path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9L12 3.5Z"/>',
   alert:'<path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v4.5M12 17.2v.1"/>',
   phone:'<path d="M5 3.5h3.5l1.8 4.6-2.3 1.4a11 11 0 0 0 6.5 6.5l1.4-2.3 4.6 1.8V19a1.5 1.5 0 0 1-1.6 1.5A16.5 16.5 0 0 1 3.5 5.1 1.5 1.5 0 0 1 5 3.5Z"/>',
-  download:'<path d="M12 4v11M7 10.5l5 5 5-5M4.5 19.5h15"/>'
+  download:'<path d="M12 4v11M7 10.5l5 5 5-5M4.5 19.5h15"/>',
+  copy:'<rect x="8.5" y="8.5" width="12" height="12" rx="2.5"/><path d="M15.5 8.5V6a2.5 2.5 0 0 0-2.5-2.5H6A2.5 2.5 0 0 0 3.5 6v7A2.5 2.5 0 0 0 6 15.5h2.5"/>',
+  qr:'<rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><path d="M13.5 13.5h3v3h-3zM17.5 17.5h3v3h-3zM20.5 13.5v1M13.5 20.5h1"/>'
 };
 const ic = (n, s = 22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n] || ''}</svg>`;
 
@@ -466,6 +475,7 @@ function initialData() {
     breakOn: true, breakStart: '13:00', breakEnd: '14:00',
     special: { on: true, until: '22:00', surcharge: 7000 },
     buffer: 15, slotStep: 60, recoverDays: 30,
+    payment: { ...DEFAULT_PAYMENT },
     blocked: [],
     loyalty: { on: true, visits: 5, reward: 'Corte clásico gratis (ejemplo demostrativo)' }
   };
@@ -558,6 +568,7 @@ function migrate(data, mode) {
   if (s.slotStep == null) { s.slotStep = 60; s.buffer = 15; }
   if (s.buffer == null) s.buffer = 15;
   if (s.recoverDays == null) s.recoverDays = 30;
+  if (!s.payment) s.payment = { ...DEFAULT_PAYMENT };
   if (mode === 'demo') addDormant(data);
   return data;
 }
@@ -689,7 +700,8 @@ function waText(kind, a, c) {
   const firma = `\n\n— ${db.settings.barberName}, ${BUSINESS} 💈`;
   const s = a ? svcName(a) : '';
   switch (kind) {
-    case 'confirmacion': return `Hola ${n} 👋, tu cita de *${s}* quedó confirmada para el *${fmtLong(a.date)}* a las *${t12(a.time)}*. ¡Te esperamos!${firma}`;
+    case 'confirmacion': return `Hola ${n} 👋, tu cita de *${s}* quedó confirmada para el *${fmtLong(a.date)}* a las *${t12(a.time)}*. ¡Te esperamos!${payCfg().on ? `\n\nValor: *${money(a.price)}*\n${payText(true)}` : ''}${firma}`;
+    case 'pago': return `Hola ${n} 👋, te comparto los datos para pagar tu cita de *${s}* (${money(a.price)}):\n\n${payText(true)}${firma}`;
     case 'recordatorio': return `Hola ${n}, te recordamos tu cita de *${s}* ${relDay(a.date)} a las *${t12(a.time)}*. Si no puedes asistir, avísanos para reprogramar. 🙌${firma}`;
     case 'reprogramacion': return `Hola ${n}, tu cita de *${s}* fue reprogramada para el *${fmtLong(a.date)}* a las *${t12(a.time)}*. ¿Nos confirmas que te queda bien? ✂️${firma}`;
     case 'agradecimiento': return `¡Gracias por tu visita, ${n}! 🙏 Fue un gusto atenderte. Cuando quieras repetir, aquí estamos.${firma}`;
@@ -701,7 +713,41 @@ function waText(kind, a, c) {
   }
   return '';
 }
-const WA_LABEL = { confirmacion: 'Confirmación', recordatorio: 'Recordatorio', reprogramacion: 'Reprogramación', agradecimiento: 'Agradecimiento', regreso: 'Invitación a regresar' };
+/* ---------- Datos de pago (Bre-B / cuenta) ---------- */
+const payCfg = () => db.settings.payment || DEFAULT_PAYMENT;
+const qrSrc = () => payCfg().qrData || 'qr-pago.jpg';
+const qrUrl = () => (!payCfg().qrData && /^https?:$/.test(location.protocol)) ? new URL('qr-pago.jpg', location.href).href : '';
+function payText(withMarks) {
+  const P = payCfg(), b = t => withMarks ? `*${t}*` : t;
+  return `💳 ${b('Datos de pago')}\nLlave Bre-B: ${P.key}\nCuenta de ${P.type.toLowerCase()} ${P.bank}: ${P.account}\nTitular: ${P.holder}${qrUrl() ? `\nCódigo QR: ${qrUrl()}` : ''}`;
+}
+function payInfoCard(a) {
+  const P = payCfg(); if (!P.on) return '';
+  const row = (label, val) => `<div class="kv"><span>${label}</span><span class="copy-v"><b>${esc(val)}</b><button class="copy-btn" data-act="copyVal" data-v="${esc(val)}" data-l="${esc(label)}">${ic('copy', 14)}Copiar</button></span></div>`;
+  return `<div class="sec-t">Datos de pago para el cliente</div>
+  <div class="card" style="padding:12px 16px">
+    <button class="qr-wrap" data-act="showQR" aria-label="Ver código QR de pago"><img src="${esc(qrSrc())}" alt="Código QR de pago Bre-B ${esc(P.key)}"></button>
+    ${row('Llave Bre-B', P.key)}
+    ${row(`${esc(P.type)} ${esc(P.bank)}`, P.account)}
+    ${row('Titular', P.holder)}
+    <div class="grid2" style="margin-top:10px">
+      <button class="btn btn-dark btn-sm" style="width:100%" data-act="copyAllPay">${ic('copy', 16)}Copiar todo</button>
+      <button class="btn btn-dark btn-sm" style="width:100%" data-act="showQR">${ic('qr', 16)}Ver QR</button>
+    </div>
+    ${a ? `<p class="tiny muted" style="margin-top:8px">Valor a pagar: <b class="gold">${money(a.price)}</b></p>` : ''}
+  </div>`;
+}
+function copyText(t, label) {
+  const done = () => toast((label || 'Texto') + ' copiado ✓');
+  const fallback = () => {
+    const ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0'; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); done(); } catch { toast('No se pudo copiar', 'err'); }
+    ta.remove();
+  };
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(done, fallback); else fallback();
+}
+const WA_LABEL = { pago: 'Datos de pago', confirmacion: 'Confirmación', recordatorio: 'Recordatorio', reprogramacion: 'Reprogramación', agradecimiento: 'Agradecimiento', regreso: 'Invitación a regresar' };
 
 /* ---------- Estado de la interfaz ---------- */
 const ui = { tab: 'inicio', agendaDate: today(), agendaMode: 'dia', cajaPeriod: 'hoy', masSub: null, clientQuery: '', appointmentQuery: '', clientFilter: 'todos' };
@@ -985,6 +1031,21 @@ function viewMas() {
       <div class="sec-h"><h2>Clientes con beneficio disponible</h2></div>
       <div class="list">${ready.length ? ready.map(({ c, n }) => `<button class="cli" data-act="openClient" data-id="${c.id}"><span class="avatar">${esc(initials(c.name))}</span><span class="cli-body"><b>${esc(c.name)}</b><small>${n} visitas acumuladas</small></span><span class="chip c-gold">${ic('gift', 12)} Premio</span></button>`).join('') : '<div class="empty"><p style="margin:0">Ningún cliente ha completado el ciclo todavía.</p></div>'}</div>`;
   }
+  if (sub === 'pagos') {
+    const P = payCfg();
+    return back('Datos de pago') + `<form data-form="payinfo" class="card">
+      <label class="check-row" style="color:var(--white);font-weight:600;margin-top:0"><input type="checkbox" name="on" ${P.on ? 'checked' : ''}>Mostrar datos de pago en citas confirmadas y mensajes</label>
+      <label class="lbl">Llave Bre-B</label><input name="key" value="${esc(P.key)}" maxlength="40">
+      <div class="grid2"><div><label class="lbl">Banco</label><input name="bank" value="${esc(P.bank)}" maxlength="30"></div>
+      <div><label class="lbl">Tipo de cuenta</label><select name="type">${['Ahorros', 'Corriente'].map(t => `<option ${P.type === t ? 'selected' : ''}>${t}</option>`).join('')}</select></div></div>
+      <label class="lbl">Número de cuenta</label><input name="account" value="${esc(P.account)}" inputmode="numeric" maxlength="20">
+      <label class="lbl">Titular</label><input name="holder" value="${esc(P.holder)}" maxlength="50">
+      <label class="lbl">Código QR</label>
+      <img src="${esc(qrSrc())}" alt="QR actual" style="display:block;width:120px;border-radius:12px;margin-bottom:8px">
+      <input type="file" name="qr" accept="image/*">
+      ${P.qrData ? '<label class="check-row"><input type="checkbox" name="qrReset">Volver al QR original de SH Barber Studio</label>' : ''}
+      <button class="btn btn-gold" style="margin-top:16px" type="submit">Guardar datos de pago</button></form>`;
+  }
   if (sub === 'negocio') {
     const s = db.settings;
     return back('Datos del barbero') + `<form data-form="biz" class="card"><label class="lbl" style="margin-top:0">Nombre del barbero (aparece en los mensajes)</label><input name="barberName" value="${esc(s.barberName)}" maxlength="40" required>
@@ -997,6 +1058,7 @@ function viewMas() {
     ${item('goMas', 'horarios', 'clock', 'Horarios y agenda', db.settings.special && db.settings.special.on ? `Normal hasta ${t12(db.settings.hours[1].close)} · especial hasta ${t12(db.settings.special.until)}` : 'Días de atención y descanso')}
     ${item('goMas', 'bloqueos', 'ban', 'Fechas bloqueadas', `${db.settings.blocked.length} fecha(s) bloqueada(s)`)}
     ${item('goMas', 'fidelizacion', 'gift', 'Fidelización', `Cada ${db.settings.loyalty.visits} visitas: beneficio`)}
+    ${item('goMas', 'pagos', 'qr', 'Datos de pago', payCfg().on ? `Bre-B ${esc(payCfg().key)} · ${esc(payCfg().bank)}` : 'Desactivados')}
     ${item('goMas', 'negocio', 'store', 'Datos del barbero', esc(db.settings.barberName))}
     ${item('demoInfo', '', 'info', 'Datos y almacenamiento', 'Información sobre esta agenda')}
     ${item('exportData', '', 'download', 'Descargar respaldo', 'Archivo JSON con los datos de esta agenda')}
@@ -1128,11 +1190,12 @@ function sheetApptDetail(id, flag) {
   </div>
   ${a.status === 'atendida' && !pay ? `<button class="btn btn-gold" style="margin-top:14px" data-act="payAppt" data-id="${a.id}">${ic('wallet', 20)}Registrar pago de esta cita</button>` : ''}
   ${a.status === 'atendida' && c.id ? (nextC ? `<p class="small muted" style="margin-top:12px">Próxima cita: ${cap(fmtShort(nextC.date))} · ${t12(nextC.time)}</p>` : `<button class="btn ${flag === 'paid' ? 'btn-gold' : 'btn-ghost'}" style="margin-top:12px" data-act="rebook" data-id="${a.id}">${ic('refresh', 19)}Agendar próxima visita</button>`) : ''}
+  ${['confirmada', 'atendida'].includes(a.status) && !pay ? payInfoCard(a) : ''}
   <div class="sec-t">Cambiar estado</div>
   <div class="st-btns">${stb('confirmada', 'info', 'check', 'Confirmada')}${stb('atendida', 'ok', 'scissors', 'Atendida')}${stb('no_asistio', 'warn', 'ban', 'No asistió')}${stb('cancelada', 'bad', 'x', 'Cancelar')}</div>
   ${a.status !== 'pendiente' ? `<button class="link" style="margin-top:10px" data-act="setStatus" data-id="${a.id}" data-s="pendiente">Volver a “Pendiente”</button>` : ''}
   <div class="sec-t">Preparar mensaje de WhatsApp</div>
-  <div class="wa-btns">${wab('confirmacion', flag === 'new')}${wab('recordatorio')}${wab('reprogramacion', flag === 'reprog')}${wab('agradecimiento', flag === 'paid')}</div>
+  <div class="wa-btns">${wab('confirmacion', flag === 'new')}${wab('recordatorio')}${wab('reprogramacion', flag === 'reprog')}${wab('agradecimiento', flag === 'paid')}${payCfg().on ? wab('pago') : ''}</div>
   <p class="muted tiny" style="margin-top:8px">Se abre WhatsApp con el mensaje listo; tú decides si lo envías. El envío automático llegará en una fase posterior.</p>
   <div class="grid2" style="margin-top:18px">
     <button class="btn btn-dark" data-act="editAppt" data-id="${a.id}">${ic('edit', 19)}Editar / Reprogramar</button>
@@ -1309,6 +1372,7 @@ function sheetDemoInfo() {
     ${li('ok', 'Línea de tiempo del día con huecos libres: toca uno y agenda')}
     ${li('ok', 'Atender sin cita, tiempo de limpieza entre citas y re-agendar en un toque')}
     ${li('ok', 'Recordatorios de mañana por WhatsApp y lista de clientes por recuperar')}
+    ${li('ok', 'Datos de pago (QR Bre-B, llave y cuenta) con botones de copiar en cada cita confirmada')}
     ${li('ok', 'Horarios de atención, descanso y fechas bloqueadas')}
     ${li('ok', 'Bloqueo de reservas simultáneas: solo se ofrecen horas libres')}
     ${li('ok', 'Catálogo de servicios editable (precios demostrativos)')}
@@ -1369,6 +1433,16 @@ const acts = {
   newAppt(d) { if (!db.services.some(s => s.active)) return toast('Activa al menos un servicio primero', 'err'); sheetAppt({ date: d.date, clientId: d.client, time: d.time }); },
   walkin() { if (!db.services.some(s => s.active)) return toast('Activa al menos un servicio primero', 'err'); sheetWalkin(); },
   reminders() { sheetReminders(); },
+  copyVal(d) { copyText(d.v, d.l); },
+  copyAllPay() { copyText(payText(false), 'Datos de pago'); },
+  showQR() {
+    const P = payCfg();
+    openSheet(head('Código QR de pago', `Bre-B · ${esc(P.key)}`) + `<img class="qr-big" src="${esc(qrSrc())}" alt="Código QR de pago">
+      <div class="sh-actions"><a class="btn btn-gold" href="${esc(qrSrc())}" download="qr-pago-shbarberstudio.jpg">${ic('download', 19)}Descargar QR para enviarlo</a>
+      <button class="btn btn-dark" data-act="copyAllPay">${ic('copy', 18)}Copiar datos de pago</button>
+      <button class="btn btn-ghost" data-act="closeSheet">Cerrar</button></div>
+      <p class="muted tiny" style="margin-top:10px">Descarga el QR y adjúntalo en el chat de WhatsApp del cliente. El cliente paga desde la app de su banco.</p>`);
+  },
   remindOne(d) {
     const a = getAppt(d.id); if (!a) return;
     const c = getClient(a.clientId);
@@ -1642,6 +1716,20 @@ const forms = {
     if (!E.reward.value.trim()) return toast('Describe el beneficio', 'err');
     db.settings.loyalty = { on: E.on.checked, visits: v, reward: E.reward.value.trim() };
     save(); render(); toast('Regla de fidelización guardada');
+  },
+  payinfo(f) {
+    const E = f.elements;
+    const account = E.account.value.replace(/\D/g, '');
+    if (E.on.checked && (!E.key.value.trim() && !account)) return toast('Escribe la llave Bre-B o el número de cuenta', 'err');
+    const P = { on: E.on.checked, key: E.key.value.trim(), bank: E.bank.value.trim() || 'Bancolombia', type: E.type.value, account, holder: E.holder.value.trim(), qrData: (E.qrReset && E.qrReset.checked) ? '' : payCfg().qrData || '' };
+    const done = () => { db.settings.payment = P; if (save()) { render(); toast('Datos de pago guardados'); } };
+    const file = E.qr.files && E.qr.files[0];
+    if (!file) return done();
+    if (file.size > 1500000) return toast('La imagen del QR es muy pesada (máx. 1,5 MB)', 'err');
+    const r = new FileReader();
+    r.onload = () => { P.qrData = r.result; done(); };
+    r.onerror = () => toast('No se pudo leer la imagen', 'err');
+    r.readAsDataURL(file);
   },
   biz(f) {
     const E = f.elements, name = E.barberName.value.trim();

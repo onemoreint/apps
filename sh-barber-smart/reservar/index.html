@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111318">
+<meta name="description" content="Reserva tu cita en SH Barber Studio: elige servicio, día y hora disponible.">
+<title>Reserva tu cita · SH Barber Studio</title>
+<style>
+:root{--bg:#111318;--card:#202329;--card2:#262a31;--field:#16181d;--gold:#D8B77A;--gold-l:#F0D9A8;--gold-d:#A9834A;--white:#fff;--muted:#9aa0aa;--muted2:#6d737d;--line:rgba(255,255,255,.07);--line2:rgba(216,183,122,.25);--ok:#5fc08f;--bad:#e2706f;--night:#9b8cff;--wa:#25D366;--sb:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--white);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+body{min-height:100dvh;background:radial-gradient(120% 50% at 50% 0%,rgba(216,183,122,.13),transparent 60%),var(--bg)}
+.serif{font-family:"Didot","Bodoni 72","Bodoni MT","Playfair Display",Georgia,serif;font-weight:400}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-align:inherit}
+input{font:inherit;font-size:16px;color:var(--white);background:var(--field);border:1px solid var(--line);border-radius:12px;padding:13px 14px;width:100%;outline:none}
+input:focus{border-color:var(--gold)}
+input[type=checkbox]{width:22px;height:22px;accent-color:var(--gold);flex:none;margin-top:1px}
+[hidden]{display:none!important}
+.wrap{max-width:560px;margin:0 auto;padding:22px 18px calc(120px + var(--sb))}
+header{text-align:center;padding:10px 0 6px}
+header svg{width:84px;height:84px}
+header h1{font-size:28px;letter-spacing:2px;margin-top:10px}
+header h1 span{color:var(--gold)}
+header p{color:var(--muted);margin-top:4px}
+.step{margin-top:26px;animation:up .35s ease both}
+.step h2{display:flex;align-items:center;gap:10px;font-size:17px;margin-bottom:12px}
+.step h2 i{font-style:normal;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:#15171b;font-size:13px;font-weight:800}
+.note{font-size:13px;color:var(--muted)}
+.svc{width:100%;display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--line);margin-bottom:10px;transition:border-color .2s,background .2s}
+.svc.on{border-color:var(--gold);background:linear-gradient(135deg,rgba(216,183,122,.16),rgba(216,183,122,.04))}
+.svc div{flex:1;min-width:0}
+.svc b{display:block}
+.svc small{color:var(--muted);font-size:13px;display:block}
+.svc .p{text-align:right;flex:none}
+.svc .p b{color:var(--gold-l)}
+.days{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.day{flex:none;width:62px;padding:9px 0;border-radius:14px;background:var(--card);border:1px solid var(--line);text-align:center;font-size:12px;color:var(--muted)}
+.day b{display:block;font-size:19px;color:var(--white)}
+.day.on{background:var(--gold);border-color:var(--gold);color:#2b2416}
+.day.on b{color:#15171b}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:8px}
+.slot{padding:11px 4px;border-radius:12px;background:var(--card);border:1px solid var(--line);text-align:center;font-weight:600;font-size:14.5px}
+.slot small{display:block;font-size:11.5px;font-weight:500;color:var(--muted)}
+.slot.night{border-color:rgba(155,140,255,.4);color:#d9d3ff}
+.slot.on{background:var(--gold);color:#15171b;border-color:var(--gold)}
+.slot.on small{color:#3a3020}
+.slot.night.on{background:var(--night);border-color:var(--night)}
+.sub{font-size:12.5px;font-weight:600;color:#cfc8ff;margin:14px 0 8px}
+.empty{padding:18px;border-radius:14px;border:1px dashed var(--line2);color:var(--muted);text-align:center;font-size:14px}
+label.f{display:block;font-size:13px;color:var(--muted);margin:12px 0 6px}
+.check{display:flex;gap:12px;align-items:flex-start;margin-top:14px;font-size:13.5px;color:#d5d8de;cursor:pointer}
+.policy{margin-top:8px;padding:12px;border-radius:12px;background:var(--card);font-size:12.5px;color:var(--muted)}
+.link{color:var(--gold);font-weight:600;font-size:13px}
+.bar{position:fixed;left:0;right:0;bottom:0;padding:12px 18px calc(12px + var(--sb));background:rgba(22,24,29,.96);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line);z-index:10}
+.bar-in{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.bar-in div{flex:1;min-width:0;font-size:13px;color:var(--muted)}
+.bar-in div b{display:block;color:var(--white);font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:12px 18px;border-radius:14px;font-weight:700;text-decoration:none;width:100%}
+.btn-gold{background:linear-gradient(135deg,var(--gold-l),var(--gold) 45%,var(--gold-d));color:#15171b}
+.btn-gold[disabled]{opacity:.4;pointer-events:none}
+.btn-dark{background:var(--card2);border:1px solid var(--line);color:var(--white)}
+.btn-wa{background:var(--wa);color:#0b2015}
+.bar .btn{width:auto;flex:none}
+.done{text-align:center;padding-top:20px;animation:up .4s ease both}
+.done .ok{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;margin:0 auto 14px;background:rgba(95,192,143,.15);color:var(--ok)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;text-align:left;margin-top:16px}
+.kv{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.kv:last-child{border-bottom:0}
+.kv span:first-child{color:var(--muted)}
+.copy{padding:6px 10px;border-radius:9px;background:rgba(216,183,122,.12);color:var(--gold);font-size:12px;font-weight:700;margin-left:6px}
+.qr{display:block;width:100%;max-width:230px;margin:4px auto 8px;border-radius:14px}
+.err{margin-top:12px;padding:12px;border-radius:12px;background:rgba(226,112,111,.12);border:1px solid rgba(226,112,111,.35);color:#ffc4c3;font-size:14px}
+footer{text-align:center;color:var(--muted2);font-size:11.5px;margin-top:34px}
+#toast{position:fixed;left:50%;bottom:calc(100px + var(--sb));transform:translate(-50%,20px);background:#2b2f37;border:1px solid var(--line2);padding:11px 16px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;transition:.25s;z-index:20;pointer-events:none}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F0D9A8"/><stop offset=".5" stop-color="#D8B77A"/><stop offset="1" stop-color="#A9834A"/></linearGradient></defs>
+      <circle cx="60" cy="60" r="56" fill="#16181d" stroke="url(#g)" stroke-width="3"/><circle cx="60" cy="60" r="47" fill="none" stroke="url(#g)" stroke-width="1" stroke-dasharray="1.5 4.5"/>
+      <text x="60" y="76" text-anchor="middle" font-family="Didot,'Bodoni 72',Georgia,serif" font-size="40" fill="url(#g)">SH</text>
+      <text x="60" y="99" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="8" font-weight="700" letter-spacing="4" fill="#D8B77A">BARBER</text></svg>
+    <h1 class="serif">SH <span>BARBER</span> STUDIO</h1>
+    <p>Reserva tu cita en menos de un minuto</p>
+  </header>
+
+  <main id="app">
+    <section class="step"><h2><i>1</i>Elige tu servicio</h2><div id="services"><div class="empty">Cargando servicios…</div></div>
+      <p class="note" id="nightNote"></p></section>
+    <section class="step" id="stepDay" hidden><h2><i>2</i>Elige el día</h2><div class="days" id="days"></div></section>
+    <section class="step" id="stepTime" hidden><h2><i>3</i>Elige la hora</h2><div id="slots"></div></section>
+    <section class="step" id="stepData" hidden><h2><i>4</i>Tus datos</h2>
+      <form id="form" autocomplete="on">
+        <label class="f" for="name">Nombre</label><input id="name" name="name" autocomplete="name" maxlength="60" placeholder="Nombre y apellido" required>
+        <label class="f" for="phone">WhatsApp</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="300 123 4567" required>
+        <label class="check"><input type="checkbox" id="accept" required><span>Autorizo el tratamiento de mis datos personales para gestionar mi cita (Ley 1581 de 2012). <button type="button" class="link" id="togglePolicy">Leer más</button></span></label>
+        <div class="policy" id="policy" hidden>SH Barber Studio, como responsable, usará tu nombre y número de WhatsApp únicamente para agendar, confirmar, recordar o reprogramar tus citas. No compartimos tus datos con terceros. Puedes conocer, actualizar, rectificar o pedir que eliminemos tus datos escribiéndonos por WhatsApp.</div>
+        <label class="check"><input type="checkbox" id="marketing"><span>Quiero recibir promociones e invitaciones por WhatsApp (opcional).</span></label>
+        <div class="err" id="err" hidden></div>
+      </form>
+    </section>
+  </main>
+
+  <section id="done" hidden></section>
+  <footer>SH Barber Studio · Reservas en línea<br>Desarrollado por José Lugo</footer>
+</div>
+
+<div class="bar" id="bar" hidden><div class="bar-in"><div id="summary"></div><button class="btn btn-gold" id="send" form="form" type="submit" disabled>Solicitar cita</button></div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+'use strict';
+/* Clave pública (publishable): solo permite ver servicios activos, horas libres y crear solicitudes. */
+const SB_URL = 'https://srvckfxewcpkzsiaeuzs.supabase.co';
+const SB_KEY = 'sb_publishable__eGt9ry2LJRjMP5JuZmLHg_RxkPSAt5';
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const money = n => '$ ' + Math.round(n || 0).toLocaleString('es-CO');
+const pad = n => String(n).padStart(2, '0');
+const t12 = t => { let [h, m] = t.split(':').map(Number); const ap = h >= 12 ? 'p. m.' : 'a. m.'; h = h % 12 || 12; return `${h}:${pad(m)} ${ap}`; };
+const fmt = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Bogota', year: 'numeric', month: '2-digit', day: '2-digit' });
+const today = () => fmt.format(new Date());
+const parseD = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const addDays = (s, n) => { const d = parseD(s); d.setDate(d.getDate() + n); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
+const longDate = s => { const t = parseD(s).toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' }); return t.charAt(0).toUpperCase() + t.slice(1); };
+const DAYS_S = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+
+async function api(path, body) {
+  let r;
+  try {
+    r = await fetch(SB_URL + path, { method: body ? 'POST' : 'GET', headers: { apikey: SB_KEY, 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
+  } catch { throw new Error('Sin conexión. Revisa tu internet e intenta de nuevo.'); }
+  const t = await r.text(); let j = null; try { j = t ? JSON.parse(t) : null; } catch {}
+  if (!r.ok) throw new Error((j && (j.message || j.hint)) || 'No pudimos completar la solicitud.');
+  return j;
+}
+
+const st = { services: [], info: null, svc: null, date: null, slot: null };
+let toastT;
+function toast(m) { const t = $('#toast'); t.textContent = m; t.className = 'show'; clearTimeout(toastT); toastT = setTimeout(() => { t.className = ''; }, 2200); }
+
+function renderServices() {
+  $('#services').innerHTML = st.services.length ? st.services.map(s => `<button type="button" class="svc ${st.svc && st.svc.id === s.id ? 'on' : ''}" data-svc="${esc(s.id)}">
+    <div><b>${esc(s.name)}</b><small>${esc(s.description || '')}</small><small>${s.duration} min</small></div><span class="p"><b>${money(s.price)}</b></span></button>`).join('')
+    : '<div class="empty">Por ahora no hay servicios disponibles.</div>';
+  const sp = st.info && st.info.special;
+  $('#nightNote').textContent = sp && sp.on ? `🌙 Horario especial desde las 6:00 p. m. hasta las ${t12(sp.until)}: +${money(sp.surcharge)} por servicio.` : '';
+}
+function renderDays() {
+  const T = today();
+  $('#days').innerHTML = Array.from({ length: 14 }, (_, i) => addDays(T, i)).map(d => `<button type="button" class="day ${st.date === d ? 'on' : ''}" data-day="${d}">${i0(d, T)}<b>${parseD(d).getDate()}</b>${parseD(d).toLocaleDateString('es-CO', { month: 'short' }).replace('.', '')}</button>`).join('');
+}
+const i0 = (d, T) => d === T ? 'Hoy' : d === addDays(T, 1) ? 'Mañana' : DAYS_S[parseD(d).getDay()];
+
+async function loadSlots() {
+  const box = $('#slots');
+  box.innerHTML = '<div class="empty">Buscando horas libres…</div>';
+  st.slot = null; updateBar();
+  try {
+    const list = await api('/rest/v1/rpc/public_slots', { p_date: st.date, p_service: st.svc.id });
+    const norm = list.filter(s => !s.special), night = list.filter(s => s.special);
+    const chip = s => `<button type="button" class="slot ${s.special ? 'night' : ''}" data-slot="${s.slot}" data-price="${s.price}">${t12(s.slot)}<small>${money(s.price)}</small></button>`;
+    box.innerHTML = list.length ? `${norm.length ? `<div class="slots">${norm.map(chip).join('')}</div>` : ''}${night.length ? `<p class="sub">🌙 Horario especial</p><div class="slots">${night.map(chip).join('')}</div>` : ''}`
+      : '<div class="empty">No quedan horas libres este día. Prueba otro día.</div>';
+  } catch (e) { box.innerHTML = `<div class="err">${esc(e.message)}</div>`; }
+}
+function updateBar() {
+  const ready = st.svc && st.date && st.slot;
+  $('#bar').hidden = !st.svc;
+  $('#summary').innerHTML = st.svc ? `<b>${esc(st.svc.name)}</b>${st.date ? longDate(st.date) : 'Elige el día'}${st.slot ? ' · ' + t12(st.slot.time) + ' · ' + money(st.slot.price) : ''}` : '';
+  $('#send').disabled = !ready;
+  $('#stepData').hidden = !ready;
+}
+
+document.addEventListener('click', e => {
+  const s = e.target.closest('[data-svc]'), d = e.target.closest('[data-day]'), t = e.target.closest('[data-slot]'), c = e.target.closest('[data-copy]');
+  if (s) {
+    st.svc = st.services.find(x => x.id === s.dataset.svc); renderServices();
+    $('#stepDay').hidden = false; if (!st.date) st.date = today(); renderDays();
+    $('#stepTime').hidden = false; loadSlots(); updateBar();
+    $('#stepDay').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  if (d) { st.date = d.dataset.day; renderDays(); loadSlots(); }
+  if (t) {
+    st.slot = { time: t.dataset.slot, price: Number(t.dataset.price) };
+    document.querySelectorAll('.slot').forEach(b => b.classList.toggle('on', b === t)); updateBar();
+    setTimeout(() => $('#stepData').scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  }
+  if (c) copy(c.dataset.copy, c.dataset.label);
+  if (e.target.id === 'togglePolicy') $('#policy').hidden = !$('#policy').hidden;
+  if (e.target.id === 'again') location.reload();
+});
+
+function copy(v, label) {
+  const ok = () => toast((label || 'Dato') + ' copiado ✓');
+  const fb = () => { const ta = document.createElement('textarea'); ta.value = v; ta.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); ok(); } catch {} ta.remove(); };
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(v).then(ok, fb); else fb();
+}
+
+$('#form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const err = $('#err'); err.hidden = true;
+  const name = $('#name').value.trim(), phone = $('#phone').value;
+  const digits = phone.replace(/\D/g, '').replace(/^57(?=\d{10}$)/, '');
+  if (name.length < 2) { err.textContent = 'Escribe tu nombre.'; err.hidden = false; return; }
+  if (digits.length !== 10) { err.textContent = 'Escribe tu WhatsApp de 10 dígitos (ej. 300 123 4567).'; err.hidden = false; return; }
+  if (!$('#accept').checked) { err.textContent = 'Debes autorizar el tratamiento de datos para reservar.'; err.hidden = false; return; }
+  const btn = $('#send'); btn.disabled = true; btn.textContent = 'Enviando…';
+  try {
+    const r = await api('/rest/v1/rpc/request_booking', { p_name: name, p_phone: digits, p_service: st.svc.id, p_date: st.date, p_time: st.slot.time, p_accept_data: true, p_marketing: $('#marketing').checked });
+    showDone(r, name);
+  } catch (ex) {
+    err.textContent = ex.message; err.hidden = false;
+    btn.disabled = false; btn.textContent = 'Solicitar cita';
+    if (/disponible/i.test(ex.message)) loadSlots();
+  }
+});
+
+function showDone(r, name) {
+  const P = st.info && st.info.payment, phone = st.info && st.info.barberPhone;
+  const qr = P && (P.qrData || '../qr-pago.jpg');
+  const row = (l, v) => `<div class="kv"><span>${l}</span><span><b>${esc(v)}</b><button class="copy" data-copy="${esc(v)}" data-label="${esc(l)}">Copiar</button></span></div>`;
+  const msg = `Hola, soy ${name}. Acabo de solicitar una cita de ${r.service} para el ${longDate(r.date)} a las ${t12(r.time)}.`;
+  $('#app').hidden = true; $('#bar').hidden = true;
+  const done = $('#done'); done.hidden = false;
+  done.innerHTML = `<div class="done"><div class="ok"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
+    <h2 class="serif" style="font-size:26px">¡Solicitud enviada!</h2>
+    <p class="note" style="margin-top:6px">El barbero confirmará tu cita por WhatsApp.</p>
+    <div class="card"><div class="kv"><span>Servicio</span><b>${esc(r.service)}</b></div><div class="kv"><span>Día</span><b>${longDate(r.date)}</b></div>
+      <div class="kv"><span>Hora</span><b>${t12(r.time)}${r.special ? ' 🌙' : ''}</b></div><div class="kv"><span>Valor</span><b style="color:var(--gold-l)">${money(r.price)}</b></div></div>
+    ${P ? `<div class="card"><b>💳 Datos de pago</b><p class="note" style="margin:4px 0 10px">Puedes pagar por Bre-B o transferencia desde la app de tu banco.</p>
+      <img class="qr" src="${esc(qr)}" alt="Código QR de pago">
+      ${P.key ? row('Llave Bre-B', P.key) : ''}${P.account ? row(`${P.type || ''} ${P.bank || ''}`.trim(), P.account) : ''}${P.holder ? row('Titular', P.holder) : ''}</div>` : ''}
+    ${phone ? `<a class="btn btn-wa" style="margin-top:16px" target="_blank" rel="noopener" href="https://wa.me/57${esc(phone)}?text=${encodeURIComponent(msg)}">Escribir al barbero por WhatsApp</a>` : ''}
+    <button class="btn btn-dark" style="margin-top:10px" id="again">Pedir otra cita</button></div>`;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+(async () => {
+  try {
+    const [services, info] = await Promise.all([
+      api('/rest/v1/services?select=id,name,description,price,duration&active=eq.true&order=price.desc'),
+      api('/rest/v1/rpc/public_info', {})
+    ]);
+    st.services = services; st.info = info || {};
+    renderServices();
+  } catch (e) { $('#services').innerHTML = `<div class="err">${esc(e.message)}</div>`; }
+})();
+})();
+</script>
+</body>
+</html>

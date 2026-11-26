@@ -324,8 +324,9 @@ svg{flex:none}
     <span>Agenda inteligente</span><span>Clientes</span><span>Caja diaria</span><span>WhatsApp</span><span>Fidelización</span>
   </div>
   <div class="splash-actions">
-    <button class="btn btn-gold" data-act="enter" data-mode="local">Abrir agenda local</button>
+    <button class="btn btn-gold" data-act="login">Entrar como barbero</button>
     <button class="btn btn-dark" data-act="enter" data-mode="demo">Explorar demo</button>
+    <button class="btn btn-dark" data-act="enter" data-mode="local">Agenda local (sin nube)</button>
     <button class="btn btn-ghost" data-act="demoInfo">¿Qué incluye esta demo?</button>
   </div>
   <p class="splash-foot"><span class="barber-pole"></span>La agenda local y la demo guardan sus citas por separado.<br><span style="opacity:.8">Desarrollado por José Lugo</span></p>
@@ -354,7 +355,7 @@ svg{flex:none}
    SH BARBER SMART — Agenda local y demostración
    ========================================================= */
 
-const DB_KEYS = { demo: 'shbarbersmart_demo_v1', local: 'shbarbersmart_local_v1' };
+const DB_KEYS = { demo: 'shbarbersmart_demo_v1', local: 'shbarbersmart_local_v1', cloud: 'shbarbersmart_cloud_cache_v1' };
 const BUSINESS = 'SH Barber Studio';
 const METHODS = ['Efectivo', 'Bre-B', 'Nequi', 'Daviplata', 'Transferencia', 'Tarjeta'];
 const DEFAULT_PAYMENT = { on: true, key: '@shbarberstudio', bank: 'Bancolombia', type: 'Ahorros', account: '54251786138', holder: 'Santiago Gutierrez', qrData: '' };
@@ -588,6 +589,12 @@ function load(mode) {
 }
 
 function save(next = db) {
+  if (dataMode === 'cloud') {
+    db = next;
+    try { localStorage.setItem(DB_KEYS.cloud, JSON.stringify(next)); } catch {}
+    queuePush();
+    return true;
+  }
   try {
     localStorage.setItem(DB_KEYS[dataMode], JSON.stringify(next));
     db = next;
@@ -596,6 +603,170 @@ function save(next = db) {
     toast('No se pudo guardar en este navegador', 'err');
     return false;
   }
+}
+
+/* =========================================================
+   NUBE (Supabase) — panel del barbero con contraseña
+   La clave de abajo es la pública (publishable): por sí sola no da acceso
+   a citas ni clientes; eso lo protegen las políticas de la base de datos.
+   ========================================================= */
+const SB_URL = 'https://srvckfxewcpkzsiaeuzs.supabase.co';
+const SB_KEY = 'sb_publishable__eGt9ry2LJRjMP5JuZmLHg_RxkPSAt5';
+const SESSION_KEY = 'shbarbersmart_session_v1';
+const portalUrl = () => new URL('reservar/', location.href).href;
+const TABLES = ['services', 'clients', 'appointments', 'payments'];
+const MAP = {
+  services: { id: 'id', name: 'name', desc: 'description', price: 'price', duration: 'duration', active: 'active' },
+  clients: { id: 'id', name: 'name', phone: 'phone', prefs: 'prefs', consent: 'consent', notes: 'notes' },
+  appointments: { id: 'id', clientId: 'client_id', serviceId: 'service_id', date: 'date', time: 'time', duration: 'duration', price: 'price', surcharge: 'surcharge', status: 'status', notes: 'notes', source: 'source' },
+  payments: { id: 'id', date: 'date', clientId: 'client_id', serviceId: 'service_id', serviceName: 'service_name', amount: 'amount', method: 'method', appointmentId: 'appointment_id', note: 'note' }
+};
+let session = null;
+try { session = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch {}
+let snap = null, pushChain = Promise.resolve(), pushing = 0;
+
+function setSession(sv) { session = sv; try { sv ? localStorage.setItem(SESSION_KEY, JSON.stringify(sv)) : localStorage.removeItem(SESSION_KEY); } catch {} }
+function authMsg(j) {
+  const m = String(j.error_description || j.msg || j.message || j.error_code || '').toLowerCase();
+  if (m.includes('invalid login') || m.includes('invalid_credentials')) return 'Correo o contraseña incorrectos';
+  if (m.includes('not confirmed')) return 'Primero confirma tu correo: abre el enlace que te enviamos';
+  if (m.includes('already registered') || m.includes('already exists')) return 'Ese correo ya tiene cuenta: usa “Entrar”';
+  if (m.includes('password')) return 'La contraseña debe tener al menos 6 caracteres';
+  return j.error_description || j.msg || j.message || 'No se pudo conectar';
+}
+async function authCall(path, body) {
+  let r;
+  try { r = await fetch(SB_URL + '/auth/v1/' + path, { method: 'POST', headers: { apikey: SB_KEY, 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); }
+  catch { throw new Error('Sin conexión a internet'); }
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(authMsg(j));
+  return j;
+}
+function keepSession(j) {
+  setSession({ access_token: j.access_token, refresh_token: j.refresh_token,
+    expires_at: j.expires_at || Math.floor(Date.now() / 1000) + (j.expires_in || 3600), email: j.user && j.user.email });
+}
+async function freshToken() {
+  if (!session) { const e = new Error('Sesión cerrada'); e.auth = true; throw e; }
+  if (session.expires_at * 1000 - Date.now() < 90000) {
+    try { keepSession(await authCall('token?grant_type=refresh_token', { refresh_token: session.refresh_token })); }
+    catch (ex) { if (/conexión/.test(ex.message)) throw ex; setSession(null); const e = new Error('Tu sesión expiró'); e.auth = true; throw e; }
+  }
+  return session.access_token;
+}
+async function rest(path, opts = {}) {
+  const tok = await freshToken();
+  let r;
+  try { r = await fetch(SB_URL + '/rest/v1/' + path, { ...opts, headers: { apikey: SB_KEY, Authorization: 'Bearer ' + tok, 'Content-Type': 'application/json', ...(opts.headers || {}) } }); }
+  catch { throw new Error('Sin conexión a internet'); }
+  const t = await r.text(); let j = null; try { j = t ? JSON.parse(t) : null; } catch {}
+  if (!r.ok) { const e = new Error((j && (j.message || j.hint)) || ('Error ' + r.status)); e.code = j && j.code; e.status = r.status; if (r.status === 401) e.auth = true; throw e; }
+  return j;
+}
+function toRow(t, r) {
+  const m = MAP[t], row = {}, data = {};
+  for (const k in m) row[m[k]] = r[k] === undefined ? null : r[k];
+  for (const k in r) if (!m[k]) data[k] = r[k];
+  if (t !== 'services') row.data = data;
+  if (t === 'appointments') { row.start_min = toMin(r.time); row.occ_min = occ(r.duration); row.source = r.source || 'panel'; }
+  if (t === 'services') row.active = r.active !== false;
+  return row;
+}
+function fromRow(t, row) {
+  const m = MAP[t], r = { ...(row.data || {}) };
+  for (const k in m) if (row[m[k]] !== null && row[m[k]] !== undefined) r[k] = row[m[k]];
+  return r;
+}
+async function fetchAll(t) {
+  const out = [];
+  for (let from = 0; ; from += 1000) {
+    const rows = await rest(`${t}?select=*&order=id`, { headers: { Range: `${from}-${from + 999}`, 'Range-Unit': 'items' } });
+    out.push(...rows);
+    if (rows.length < 1000) break;
+  }
+  return out.map(r => fromRow(t, r));
+}
+async function pullCloud() {
+  const [st, ...lists] = await Promise.all([rest('app_settings?select=data&id=eq.1'), ...TABLES.map(fetchAll)]);
+  const d = initialData();
+  if (st && st[0]) d.settings = st[0].data;
+  TABLES.forEach((t, i) => { d[t] = lists[i]; });
+  return migrate(d, 'cloud');
+}
+function makeSnap(d) {
+  const sn = { settings: JSON.stringify(d.settings) };
+  TABLES.forEach(t => { sn[t] = {}; d[t].forEach(r => { sn[t][r.id] = JSON.stringify(r); }); });
+  return sn;
+}
+function queuePush() {
+  pushing++;
+  pushChain = pushChain.then(doPush).catch(cloudError).finally(() => { pushing--; });
+}
+async function doPush() {
+  if (dataMode !== 'cloud' || !snap) return;
+  const cur = makeSnap(db);
+  const up = (t, rows) => rest(`${t}?on_conflict=id`, { method: 'POST', headers: { Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify(rows) });
+  if (cur.settings !== snap.settings) {
+    await up('app_settings', [{ id: 1, data: JSON.parse(cur.settings), updated_at: new Date().toISOString() }]);
+    snap.settings = cur.settings;
+  }
+  for (const t of TABLES) {
+    const del = Object.keys(snap[t]).filter(id => !(id in cur[t]));
+    const rows = Object.keys(cur[t]).filter(id => cur[t][id] !== snap[t][id]).map(id => toRow(t, JSON.parse(cur[t][id])));
+    if (del.length) await rest(`${t}?id=in.(${encodeURIComponent(del.map(i => '"' + i.replace(/"/g, '') + '"').join(','))})`, { method: 'DELETE' });
+    for (let i = 0; i < rows.length; i += 500) await up(t, rows.slice(i, i + 500));
+    snap[t] = cur[t];
+  }
+}
+async function cloudError(e) {
+  if (e && e.auth) { toast('Tu sesión expiró. Vuelve a entrar.', 'err'); return acts.logout(true); }
+  if (e && e.code === '23P01') toast('Ese horario ya lo tomó otra reserva. Actualicé la agenda.', 'err');
+  else toast('No se pudo guardar en la nube: ' + (e && e.message), 'err');
+  try { await syncFromCloud(true); } catch {}
+}
+async function syncFromCloud(force) {
+  if (dataMode !== 'cloud' || pushing) return;
+  const before = new Set(db.appointments.map(a => a.id));
+  const d = await pullCloud();
+  if (dataMode !== 'cloud' || pushing) return;
+  const sn = makeSnap(d);
+  if (!force && JSON.stringify(sn) === JSON.stringify(snap)) return;
+  snap = sn; db = d;
+  try { localStorage.setItem(DB_KEYS.cloud, JSON.stringify(d)); } catch {}
+  const nuevas = d.appointments.filter(a => a.source === 'web' && !before.has(a.id)).length;
+  if (nuevas && !force) toast(`📥 ${nuevas} nueva${nuevas > 1 ? 's' : ''} solicitud${nuevas > 1 ? 'es' : ''} del portal`);
+  if (!$('#backdrop').classList.contains('open')) render();
+}
+async function enterCloud() {
+  toast('Conectando con la nube…');
+  try {
+    const ok = await rest('rpc/claim_admin', { method: 'POST', body: '{}' });
+    if (!ok) { setSession(null); return toast('Esta cuenta no tiene acceso al panel de SH Barber Studio', 'err'); }
+    const d = await pullCloud();
+    dataMode = 'cloud'; db = d; snap = makeSnap(d);
+    try { localStorage.setItem(DB_KEYS.cloud, JSON.stringify(d)); } catch {}
+    closeSheet();
+    Object.assign(ui, { tab: 'inicio', agendaDate: today(), agendaMode: 'dia', cajaPeriod: 'hoy', masSub: null, clientQuery: '', appointmentQuery: '', clientFilter: 'todos' });
+    $('#dataMode').textContent = 'NUBE';
+    $('#splash').hidden = true; $('#shell').hidden = false;
+    render(true);
+    toast('Conectado ✓ ' + (session.email || ''));
+  } catch (e) {
+    if (e.auth) setSession(null);
+    toast(e.auth ? 'Vuelve a iniciar sesión' : 'No se pudo conectar: ' + e.message, 'err');
+    if (e.auth) sheetLogin();
+  }
+}
+function sheetLogin(msg) {
+  openSheet(head('Panel del barbero', 'Acceso con correo y contraseña') + `
+    ${msg ? `<div class="banner">${ic('check', 18)}<div>${msg}</div></div>` : ''}
+    <form data-form="login" autocomplete="on">
+      <label class="lbl" for="lgEmail">Correo</label><input id="lgEmail" name="email" type="email" autocomplete="username" required>
+      <label class="lbl" for="lgPass">Contraseña</label><input id="lgPass" name="password" type="password" autocomplete="current-password" minlength="6" required>
+      <div class="sh-actions"><button class="btn btn-gold" type="submit">${ic('lock', 19)}Entrar</button>
+      <button type="button" class="btn btn-ghost" data-act="signup">Crear la cuenta del barbero (solo la primera vez)</button></div>
+      <p class="muted tiny" style="margin-top:10px">La primera cuenta que entra queda como dueña del panel. Los clientes nunca entran aquí: ellos reservan en el portal.</p>
+    </form>`);
 }
 
 /* ---------- Accesos a datos ---------- */
@@ -766,7 +937,7 @@ function apptCard(a, showDate) {
   const sub = showDate ? (a.date === today() ? 'Hoy' : a.date === addDays(today(), 1) ? 'Mañana' : fmtShort(a.date)) : a.duration + ' min';
   return `<button class="appt st-${a.status}" data-act="openAppt" data-id="${a.id}">
     <div class="appt-time"><b>${t12(a.time).replace(' ', '&nbsp;')}</b><small>${esc(sub)}</small></div>
-    <div class="appt-body"><b>${esc(c.name)}</b><small>${esc(svcName(a))} · ${money(a.price)}${a.surcharge ? ' · 🌙' : ''}${paid ? ' · <span class="paid-dot">' + ic('check', 13) + 'Pagado</span>' : ''}</small></div>
+    <div class="appt-body"><b>${esc(c.name)}</b><small>${esc(svcName(a))} · ${money(a.price)}${a.surcharge ? ' · 🌙' : ''}${a.source === 'web' ? ' · 🌐' : ''}${paid ? ' · <span class="paid-dot">' + ic('check', 13) + 'Pagado</span>' : ''}</small></div>
     <span class="chip c-${a.status}">${STATUS[a.status].label}</span></button>`;
 }
 
@@ -799,10 +970,12 @@ function viewInicio() {
     <button data-act="newClient">${ic('userPlus')}Nuevo cliente</button>
     <button data-act="goAgenda" data-date="${T}" data-mode="semana">${ic('week')}Agenda semanal</button>
   </div>
+  ${(() => { const req = db.appointments.filter(a => a.source === 'web' && a.status === 'pendiente' && a.date >= T).sort(byDT);
+    return req.length ? `<div class="sec-h"><h2>📥 Solicitudes del portal</h2><span class="chip c-pendiente">${req.length} por confirmar</span></div><div class="list">${req.map(a => apptCard(a, true)).join('')}</div>` : ''; })()}
   <div class="sec-h"><h2>Próximas citas</h2><button class="link" data-act="goAgenda" data-date="${T}">Ver agenda</button></div>
   <div class="list">${upcoming.length ? upcoming.map(a => apptCard(a, true)).join('') :
     `<div class="empty">${ic('calendar', 30)}<p>No hay citas próximas.</p><button class="btn btn-gold btn-sm" style="margin:auto" data-act="newAppt">Crear una cita</button></div>`}</div>
-  <button class="demo-note" data-act="demoInfo">${ic('info', 18)}<span>${dataMode === 'demo' ? '<b>Modo demostración.</b> Los datos de ejemplo se guardan en este navegador.' : '<b>Agenda local.</b> Las citas se guardan en este navegador. Hora de Colombia.'}</span></button>`;
+  <button class="demo-note" data-act="demoInfo">${ic('info', 18)}<span>${dataMode === 'demo' ? '<b>Modo demostración.</b> Los datos de ejemplo se guardan en este navegador.' : dataMode === 'cloud' ? '<b>Agenda en la nube.</b> Protegida con tu contraseña. Comparte el portal de reservas desde Más.' : '<b>Agenda local.</b> Las citas se guardan en este navegador. Hora de Colombia.'}</span></button>`;
 }
 
 function viewAgenda() {
@@ -1063,7 +1236,9 @@ function viewMas() {
     ${item('demoInfo', '', 'info', 'Datos y almacenamiento', 'Información sobre esta agenda')}
     ${item('exportData', '', 'download', 'Descargar respaldo', 'Archivo JSON con los datos de esta agenda')}
     ${dataMode === 'demo' ? item('resetDemo', '', 'refresh', 'Restablecer datos demo', 'Vuelve a los datos ficticios iniciales', 'danger') : ''}
-    ${item('exit', '', 'logout', 'Salir a la pantalla de inicio', 'SH BARBER SMART')}
+    ${dataMode === 'cloud' ? item('portalLink', '', 'store', 'Portal de reservas del cliente', 'Copia o comparte el enlace para tus clientes') : ''}
+    ${dataMode === 'cloud' && localStorage.getItem(DB_KEYS.local) ? item('importLocal', '', 'refresh', 'Subir mi agenda local a la nube', 'Copia lo guardado en este navegador') : ''}
+    ${dataMode === 'cloud' ? item('logout', '', 'logout', 'Cerrar sesión', esc((session && session.email) || '')) : item('exit', '', 'logout', 'Salir a la pantalla de inicio', 'SH BARBER SMART')}
   </div>
   <p class="muted tiny" style="text-align:center;margin-top:22px">SH BARBER SMART · v2.0 · Fase 2</p>
   <p class="tiny" style="text-align:center;margin-top:6px;color:var(--muted2)">Desarrollado por <b class="gold">José Lugo</b> · <a href="https://wa.me/573126387467" target="_blank" rel="noopener" style="color:var(--gold)">+57 312 638 7467</a> · jose.lugocdv@gmail.com</p>`;
@@ -1175,6 +1350,7 @@ function sheetApptDetail(id, flag) {
   ${flag === 'new' ? `<div class="banner">${ic('check', 18)}<div><b>¡Cita agendada!</b> Ya aparece en tu agenda. Si quieres, prepárale la confirmación por WhatsApp.</div></div>` : ''}
   ${flag === 'reprog' ? `<div class="banner">${ic('refresh', 18)}<div><b>Cita reprogramada.</b> Avísale al cliente con el mensaje de reprogramación.</div></div>` : ''}
   ${flag === 'paid' ? `<div class="banner">${ic('cash', 18)}<div><b>Pago registrado.</b> Ya suma en la caja. Agéndale de una vez su próxima visita.</div></div>` : ''}
+  ${a.source === 'web' && a.status === 'pendiente' ? `<div class="banner gold">${ic('info', 18)}<div><b>Solicitud del portal.</b> Toca “Confirmada” y envíale la confirmación por WhatsApp con los datos de pago.</div></div>` : ''}
   ${flag === 'walkin' ? `<div class="banner">${ic('scissors', 18)}<div><b>Cliente sin cita en curso.</b> El espacio quedó ocupado. Al terminar toca “Atendida” para cobrar.</div></div>` : ''}
   <div class="card" style="margin-top:12px;padding:6px 16px">
     <div class="kv"><span>Fecha</span><span>${cap(fmtLong(a.date))}</span></div>
@@ -1357,6 +1533,13 @@ function sheetService(id) {
 /* --- Demo vs producción --- */
 function sheetDemoInfo() {
   const li = (cls, t) => `<li>${ic(cls === 'ok' ? 'check' : 'lock', 17)}<span>${t}</span></li>`;
+  if (dataMode === 'cloud' && !$('#shell').hidden) {
+    openSheet(head('Agenda en la nube') + `
+      <p class="small">Tus citas, clientes y pagos se guardan en la nube (Supabase) y solo se ven con tu correo y contraseña. Puedes entrar desde cualquier celular o computador.</p>
+      <p class="small" style="margin-top:10px">Tus clientes reservan en el portal: solo ven servicios y horas libres. El servidor impide que dos citas se crucen.</p>
+      <div class="sh-actions"><button class="btn btn-gold" data-act="portalLink">Ver enlace del portal</button><button class="btn btn-dark" data-act="closeSheet">Entendido</button></div>`);
+    return;
+  }
   if (dataMode === 'local' && !$('#shell').hidden) {
     openSheet(head('Datos de la agenda local') + `
       <p class="small">Tus citas, clientes y pagos se guardan en este navegador. La demo tiene su propio historial.</p>
@@ -1420,6 +1603,43 @@ const acts = {
     $('#splash').hidden = true;
     $('#shell').hidden = false;
     render(true);
+  },
+  login() { if (session) enterCloud(); else sheetLogin(); },
+  async signup(d, el) {
+    const f = el.closest('form'), E = f.elements;
+    if (!E.email.value || E.password.value.length < 6) return toast('Escribe tu correo y una contraseña de 6 o más caracteres', 'err');
+    try {
+      const j = await authCall('signup', { email: E.email.value.trim(), password: E.password.value });
+      if (j.access_token) { keepSession(j); return enterCloud(); }
+      sheetLogin('Cuenta creada. Te enviamos un correo: ábrelo para confirmar y luego entra aquí con tu contraseña.');
+    } catch (e) { toast(e.message, 'err'); }
+  },
+  logout(silent) {
+    const go = () => { setSession(null); snap = null; dataMode = 'demo'; closeSheet(); $('#shell').hidden = true; $('#splash').hidden = false; if (silent !== true) toast('Sesión cerrada'); };
+    if (silent === true) return go();
+    confirmSheet('¿Cerrar sesión?', 'Para volver a entrar necesitarás tu correo y contraseña.', 'Cerrar sesión', go, false);
+  },
+  portalLink() {
+    const url = portalUrl(), txt = `Reserva tu cita en SH Barber Studio aquí 💈 ${url}`;
+    openSheet(head('Portal de reservas', 'El enlace que compartes con tus clientes') + `
+      <div class="card" style="margin-top:12px;word-break:break-all"><b>${esc(url)}</b></div>
+      <div class="sh-actions">
+        <button class="btn btn-gold" data-act="copyVal" data-v="${esc(url)}" data-l="Enlace">${ic('copy', 18)}Copiar enlace</button>
+        <a class="btn btn-wa" href="https://wa.me/?text=${encodeURIComponent(txt)}" target="_blank" rel="noopener">${ic('chat', 18)}Compartir por WhatsApp</a>
+        <a class="btn btn-dark" href="${esc(url)}" target="_blank" rel="noopener">Abrir el portal</a></div>
+      <p class="muted tiny" style="margin-top:10px">En el portal el cliente solo ve tus servicios y las horas libres. No ve nombres, pagos ni datos de otros clientes. Su solicitud te llega aquí como “Pendiente”.</p>`);
+  },
+  importLocal() {
+    let local = null; try { local = load('local'); } catch {}
+    if (!local) return toast('No hay agenda local en este navegador', 'err');
+    const add = t => (local[t] || []).filter(r => !db[t].some(x => x.id === r.id)).length;
+    const n = TABLES.reduce((acc, t) => acc + add(t), 0);
+    if (!n) return toast('Tu agenda local ya está en la nube');
+    confirmSheet('¿Subir la agenda local?', `Se agregarán ${n} registro(s) de este navegador a tu agenda en la nube. No se borra nada.`, 'Subir a la nube', () => {
+      const next = { ...db };
+      TABLES.forEach(t => { next[t] = [...db[t], ...(local[t] || []).filter(r => !db[t].some(x => x.id === r.id))]; });
+      save(next); render(); toast('Subiendo a la nube…');
+    }, false);
   },
   exit() { $('#shell').hidden = true; $('#splash').hidden = false; window.scrollTo(0, 0); },
   demoInfo: sheetDemoInfo,
@@ -1731,6 +1951,13 @@ const forms = {
     r.onerror = () => toast('No se pudo leer la imagen', 'err');
     r.readAsDataURL(file);
   },
+  async login(f) {
+    const E = f.elements, btn = f.querySelector('button[type=submit]');
+    btn.disabled = true;
+    try { keepSession(await authCall('token?grant_type=password', { email: E.email.value.trim(), password: E.password.value })); await enterCloud(); }
+    catch (e) { toast(e.message, 'err'); }
+    finally { btn.disabled = false; }
+  },
   biz(f) {
     const E = f.elements, name = E.barberName.value.trim();
     if (name.length < 2) return toast('Escribe el nombre', 'err');
@@ -1789,6 +2016,8 @@ document.addEventListener('input', e => {
 $('#splashLogo').innerHTML = logoSVG('gSplash', 150);
 $('#topMark').innerHTML = logoSVG('gTop', 34);
 setInterval(() => { if (!$('#shell').hidden && !$('#backdrop').classList.contains('open') && ui.tab === 'inicio') render(); }, 60000);
+setInterval(() => { if (dataMode === 'cloud' && !$('#shell').hidden && document.visibilityState === 'visible') syncFromCloud().catch(() => {}); }, 30000);
+document.addEventListener('visibilitychange', () => { if (dataMode === 'cloud' && document.visibilityState === 'visible') syncFromCloud().catch(() => {}); });
 })();
 </script>
 </body>

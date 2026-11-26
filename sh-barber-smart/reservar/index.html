@@ -90,6 +90,11 @@ footer{text-align:center;color:var(--muted2);font-size:11.5px;margin-top:34px}
 #toast{position:fixed;left:50%;bottom:calc(100px + var(--sb));transform:translate(-50%,20px);background:#2b2f37;border:1px solid var(--line2);padding:11px 16px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;transition:.25s;z-index:20;pointer-events:none}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.dep-box{margin:14px 0 4px;padding:12px 14px;border:1px solid rgba(201,205,210,.35);border-radius:14px;background:rgba(10,10,11,.55)}
+.dep-box b.amt{color:var(--gold-l)}
+.dep-box .check{margin-top:8px}
+.dep-steps{margin:8px 0 0;padding-left:18px;font-size:13px;line-height:1.5;color:#C9CDD2}
+.timer{font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
@@ -112,6 +117,7 @@ footer{text-align:center;color:var(--muted2);font-size:11.5px;margin-top:34px}
         <label class="f" for="phone">WhatsApp</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="300 123 4567" required>
         <label class="check"><input type="checkbox" id="accept" required><span>Autorizo el tratamiento de mis datos personales para gestionar mi cita (Ley 1581 de 2012). <button type="button" class="link" id="togglePolicy">Leer más</button></span></label>
         <div class="policy" id="policy" hidden>SH Barber Studio, como responsable, usará tu nombre y número de WhatsApp únicamente para agendar, confirmar, recordar o reprogramar tus citas. No compartimos tus datos con terceros. Puedes conocer, actualizar, rectificar o pedir que eliminemos tus datos escribiéndonos por WhatsApp. <a class="link" href="privacidad.html" target="_blank" rel="noopener">Política de tratamiento de datos</a></div>
+        <div class="dep-box" id="depBox" hidden></div>
         <label class="check"><input type="checkbox" id="marketing"><span>Quiero recibir promociones e invitaciones por WhatsApp (opcional).</span></label>
         <div class="err" id="err" hidden></div>
       </form>
@@ -188,12 +194,27 @@ async function loadSlots() {
       : '<div class="empty">No quedan horas libres este día. Prueba otro día.</div>';
   } catch (e) { box.innerHTML = `<div class="err">${esc(e.message)}</div>`; }
 }
+const depCfg = () => st.info && st.info.deposit;
+const depAmt = () => { const d = depCfg(); return d ? Math.min(d.amount, st.slot ? st.slot.price : d.amount) : 0; };
+function renderDep() {
+  const d = depCfg(), box = $('#depBox');
+  if (!d) { box.hidden = true; box.innerHTML = ''; return; }
+  const total = st.slot ? st.slot.price : 0, a = depAmt();
+  box.hidden = false;
+  box.innerHTML = `<b>💵 Anticipo para asegurar tu hora: <b class="amt">${money(a)}</b></b>
+    <p class="note" style="margin:6px 0 0">Se descuenta del valor total${total ? `: pagas ${money(a)} ahora y ${money(total - a)} en la barbería` : ''}.</p>
+    <ol class="dep-steps"><li>Solicita la cita: tu hora queda apartada${d.holdMin ? ` por ${d.holdMin >= 60 && d.holdMin % 60 === 0 ? (d.holdMin / 60) + (d.holdMin === 60 ? ' hora' : ' horas') : d.holdMin + ' minutos'}` : ''}.</li><li>Paga el anticipo por Bre-B o transferencia.</li><li>Envía el comprobante: el barbero confirma tu cita.</li></ol>
+    ${d.holdMin ? '<p class="note" style="margin:6px 0 0">Si no se paga a tiempo, la hora se libera para otro cliente.</p>' : ''}
+    <label class="check"><input type="checkbox" id="depAccept" required><span>Entiendo que mi cita se confirma al pagar el anticipo de ${money(a)}.</span></label>`;
+}
 function updateBar() {
   const ready = st.svc && st.date && st.slot;
   $('#bar').hidden = !st.svc;
   $('#summary').innerHTML = st.svc ? `<b>${esc(st.svc.name)}</b>${st.date ? longDate(st.date) : 'Elige el día'}${st.slot ? ' · ' + t12(st.slot.time) + ' · ' + money(st.slot.price) : ''}` : '';
   $('#send').disabled = !ready;
   $('#stepData').hidden = !ready;
+  $('#send').textContent = depCfg() ? 'Apartar mi hora' : 'Solicitar cita';
+  if (ready) { const k = $('#depAccept') && $('#depAccept').checked; renderDep(); if (k && $('#depAccept')) $('#depAccept').checked = true; }
 }
 
 document.addEventListener('click', e => {
@@ -230,34 +251,70 @@ $('#form').addEventListener('submit', async e => {
   if (!NAME_RE.test(name.replace(/\s+/g, ' '))) { err.textContent = 'Escribe tu nombre (solo letras).'; err.hidden = false; return; }
   if (!/^3\d{9}$/.test(digits)) { err.textContent = 'Escribe tu celular de 10 dígitos (ej. 300 123 4567).'; err.hidden = false; return; }
   if (!$('#accept').checked) { err.textContent = 'Debes autorizar el tratamiento de datos para reservar.'; err.hidden = false; return; }
+  if (depCfg() && !($('#depAccept') && $('#depAccept').checked)) { err.textContent = 'Marca la casilla del anticipo para continuar.'; err.hidden = false; return; }
   const btn = $('#send'); btn.disabled = true; btn.textContent = 'Enviando…';
   try {
     const r = await api('/rest/v1/rpc/request_booking', { p_name: name, p_phone: digits, p_service: st.svc.id, p_date: st.date, p_time: st.slot.time, p_accept_data: true, p_marketing: $('#marketing').checked });
     showDone(r, name);
   } catch (ex) {
     err.textContent = ex.message; err.hidden = false;
-    btn.disabled = false; btn.textContent = 'Solicitar cita';
+    btn.disabled = false; btn.textContent = depCfg() ? 'Apartar mi hora' : 'Solicitar cita';
     if (/disponible/i.test(ex.message)) loadSlots();
   }
 });
 
+let timerT;
 function showDone(r, name) {
-  const P = st.info && st.info.payment, phone = st.info && st.info.barberPhone;
+  const P = st.info && st.info.payment, phone = st.info && st.info.barberPhone, D = r.deposit;
   const qr = P && (P.qrData || '../qr-pago.jpg');
   const row = (l, v) => `<div class="kv"><span>${l}</span><span><b>${esc(v)}</b><button class="copy" data-copy="${esc(v)}" data-label="${esc(l)}">Copiar</button></span></div>`;
-  const msg = `Hola, soy ${name}. Acabo de solicitar una cita en el portal:\n✂️ ${r.service}\n📅 ${longDate(r.date)}\n🕐 ${t12(r.time)}\n💵 ${money(r.price)}\n¿Me la confirmas? Gracias.`;
+  const head = `✂️ ${r.service}\n📅 ${longDate(r.date)}\n🕐 ${t12(r.time)}\n💵 ${money(r.price)}`;
+  const msgReq = `Hola, soy ${name}. Acabo de solicitar una cita en el portal:\n${head}\n¿Me la confirmas? Gracias.`;
+  const msgPaid = D ? `Hola, soy ${name}. Ya pagué el anticipo de ${money(D.amount)} para mi cita:\n${head}\nSaldo en la barbería: ${money(r.price - D.amount)}\nTe envío el comprobante 👇` : '';
+  const wa = t => `https://wa.me/57${esc(phone)}?text=${encodeURIComponent(t)}`;
+  const payCard = P ? `<div class="card"><b>💳 ${D ? `Paga el anticipo: <span style="color:var(--gold-l)">${money(D.amount)}</span>` : 'Datos de pago'}</b><p class="note" style="margin:4px 0 10px">Por Bre-B o transferencia desde la app de tu banco.</p>
+      <img class="qr" src="${esc(qr)}" alt="Código QR de pago">
+      ${P.key ? row('Llave Bre-B', P.key) : ''}${P.account ? row(`${P.type || ''} ${P.bank || ''}`.trim(), P.account) : ''}${P.holder ? row('Titular', P.holder) : ''}${D ? row('Valor del anticipo', String(D.amount)) : ''}</div>` : '';
+  const resume = `<div class="card"><div class="kv"><span>Servicio</span><b>${esc(r.service)}</b></div><div class="kv"><span>Día</span><b>${longDate(r.date)}</b></div>
+      <div class="kv"><span>Hora</span><b>${t12(r.time)}${r.special ? ' 🌙' : ''}</b></div><div class="kv"><span>Valor total</span><b>${money(r.price)}</b></div>
+      ${D ? `<div class="kv"><span>Anticipo (ahora)</span><b style="color:var(--gold-l)">${money(D.amount)}</b></div><div class="kv"><span>Saldo en la barbería</span><b>${money(r.price - D.amount)}</b></div>` : ''}</div>`;
   $('#app').hidden = true; $('#bar').hidden = true;
   const done = $('#done'); done.hidden = false;
-  done.innerHTML = `<div class="done"><div class="ok"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
+  const okIcon = `<div class="ok"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>`;
+  if (D) {
+    done.innerHTML = `<div class="done">${okIcon}
+    <h2 class="script" style="font-size:40px;line-height:1.1">¡Hora apartada!</h2>
+    <p class="note" style="margin-top:6px">Para <b>confirmar</b> tu cita paga el anticipo de <b style="color:var(--gold-l)">${money(D.amount)}</b>. Se descuenta del total.</p>
+    ${D.dueAt ? `<p class="note" id="depTimer" style="margin-top:6px">⏳ Tienes <b class="timer" id="depLeft">—</b> para pagar (hasta las ${new Date(D.dueAt).toLocaleTimeString('es-CO', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Bogota' })}).</p>` : ''}
+    ${payCard}
+    <div id="paidBox">${phone ? `<a class="btn btn-wa" style="margin-top:14px" id="paidBtn" target="_blank" rel="noopener" href="${wa(msgPaid)}">Ya pagué: enviar comprobante por WhatsApp</a>` : `<button class="btn btn-gold" style="margin-top:14px" id="paidBtn">Ya pagué el anticipo</button>`}
+    <p class="note" style="margin-top:6px">Al tocarlo le avisamos al barbero; en el chat adjunta la foto del comprobante.</p></div>
+    ${resume}
+    <button class="btn btn-dark" style="margin-top:10px" id="again">Pedir otra cita</button></div>`;
+    $('#paidBtn').addEventListener('click', () => {
+      fetch(SB_URL + '/rest/v1/rpc/report_deposit', { method: 'POST', keepalive: true, headers: { apikey: SB_KEY, 'Content-Type': 'application/json' }, body: JSON.stringify({ p_id: r.id, p_token: D.token }) }).catch(() => {});
+      setTimeout(() => {
+        clearInterval(timerT); const t = $('#depTimer'); if (t) t.innerHTML = '✅ Avisamos al barbero. Tu hora queda reservada mientras él verifica el pago.';
+        $('#paidBox').insertAdjacentHTML('beforeend', '<p class="note" style="margin-top:6px;color:var(--gold-l)">Listo. Recibirás la confirmación por WhatsApp.</p>');
+      }, 300);
+    });
+    if (D.dueAt) {
+      const tick = () => {
+        const ms = D.dueAt - Date.now(), el = $('#depLeft'); if (!el) return clearInterval(timerT);
+        if (ms <= 0) { clearInterval(timerT); $('#depTimer').innerHTML = '⌛ El tiempo para pagar terminó y la hora pudo liberarse. Si ya pagaste, escríbele al barbero.'; return; }
+        const m = Math.floor(ms / 60000), sec = Math.floor(ms / 1000) % 60;
+        el.textContent = `${m}:${pad(sec)} min`;
+      };
+      tick(); timerT = setInterval(tick, 1000);
+    }
+  } else {
+    done.innerHTML = `<div class="done">${okIcon}
     <h2 class="script" style="font-size:40px;line-height:1.1">¡Solicitud enviada!</h2>
     <p class="note" style="margin-top:6px">Tu hora quedó apartada. El barbero confirmará tu cita por WhatsApp.</p>
-    ${phone ? `<a class="btn btn-wa" style="margin-top:16px" target="_blank" rel="noopener" href="https://wa.me/57${esc(phone)}?text=${encodeURIComponent(msg)}">Avisar al barbero por WhatsApp</a><p class="note" style="margin-top:6px">Recomendado: tócalo para que el barbero vea tu solicitud de inmediato.</p>` : ''}
-    <div class="card"><div class="kv"><span>Servicio</span><b>${esc(r.service)}</b></div><div class="kv"><span>Día</span><b>${longDate(r.date)}</b></div>
-      <div class="kv"><span>Hora</span><b>${t12(r.time)}${r.special ? ' 🌙' : ''}</b></div><div class="kv"><span>Valor</span><b style="color:var(--gold-l)">${money(r.price)}</b></div></div>
-    ${P ? `<div class="card"><b>💳 Datos de pago</b><p class="note" style="margin:4px 0 10px">Puedes pagar por Bre-B o transferencia desde la app de tu banco.</p>
-      <img class="qr" src="${esc(qr)}" alt="Código QR de pago">
-      ${P.key ? row('Llave Bre-B', P.key) : ''}${P.account ? row(`${P.type || ''} ${P.bank || ''}`.trim(), P.account) : ''}${P.holder ? row('Titular', P.holder) : ''}</div>` : ''}
+    ${phone ? `<a class="btn btn-wa" style="margin-top:16px" target="_blank" rel="noopener" href="${wa(msgReq)}">Avisar al barbero por WhatsApp</a><p class="note" style="margin-top:6px">Recomendado: tócalo para que el barbero vea tu solicitud de inmediato.</p>` : ''}
+    ${resume}${payCard}
     <button class="btn btn-dark" style="margin-top:10px" id="again">Pedir otra cita</button></div>`;
+  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 

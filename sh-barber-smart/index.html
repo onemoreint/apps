@@ -400,6 +400,7 @@ svg{flex:none}
 const DB_KEYS = { demo: 'shbarbersmart_demo_v1', local: 'shbarbersmart_local_v1', cloud: 'shbarbersmart_cloud_cache_v1' };
 const BUSINESS = 'SH Barber Studio';
 const METHODS = ['Efectivo', 'Bre-B', 'Nequi', 'Daviplata', 'Transferencia', 'Tarjeta'];
+const DEFAULT_DEPOSIT = { on: true, amount: 15000, holdMin: 60 };
 const DEFAULT_PAYMENT = { on: true, key: '@shbarberstudio', bank: 'Bancolombia', type: 'Ahorros', account: '54251786138', holder: 'Santiago Gutierrez', qrData: '' };
 const DAYS = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 const DAYS_S = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
@@ -612,6 +613,7 @@ function migrate(data, mode) {
   if (s.buffer == null) s.buffer = 15;
   if (s.recoverDays == null) s.recoverDays = 30;
   if (!s.payment) s.payment = { ...DEFAULT_PAYMENT };
+  if (!s.deposit) s.deposit = { ...DEFAULT_DEPOSIT };
   if (mode === 'demo') addDormant(data);
   return data;
 }
@@ -729,6 +731,7 @@ async function fetchAll(t) {
   return out.map(r => fromRow(t, r));
 }
 async function pullCloud() {
+  try { await rest('rpc/release_expired_holds', { method: 'POST', body: '{}' }); } catch {}
   const [st, ...lists] = await Promise.all([rest('app_settings?select=data&id=eq.1'), ...TABLES.map(fetchAll)]);
   const d = initialData();
   if (st && st[0]) d.settings = st[0].data;
@@ -929,8 +932,13 @@ function waText(kind, a, c) {
   const firma = `\n\n— ${db.settings.barberName}, ${BUSINESS} 💈`;
   const s = a ? svcName(a) : '';
   switch (kind) {
-    case 'confirmacion': return `Hola ${n} 👋, tu cita de *${s}* quedó confirmada para el *${fmtLong(a.date)}* a las *${t12(a.time)}*. ¡Te esperamos!${payCfg().on ? `\n\nValor: *${money(a.price)}*\n${payText(true)}` : ''}${firma}`;
-    case 'pago': return `Hola ${n} 👋, te comparto los datos para pagar tu cita de *${s}* (${money(a.price)}):\n\n${payText(true)}${firma}`;
+    case 'confirmacion':
+      if (depPaid(a)) return `Hola ${n} 👋, recibimos tu anticipo de *${money(depPaid(a))}*. Tu cita de *${s}* quedó confirmada para el *${fmtLong(a.date)}* a las *${t12(a.time)}*. ✅\n\nSaldo a pagar en la barbería: *${money(balanceOf(a))}*. ¡Te esperamos!${firma}`;
+      return `Hola ${n} 👋, tu cita de *${s}* quedó confirmada para el *${fmtLong(a.date)}* a las *${t12(a.time)}*. ¡Te esperamos!${payCfg().on ? `\n\nValor: *${money(a.price)}*\n${payText(true)}` : ''}${firma}`;
+    case 'pago':
+      if (depWaiting(a)) return `Hola ${n} 👋, para confirmar tu cita de *${s}* del *${fmtLong(a.date)}* a las *${t12(a.time)}* envía el anticipo de *${money(depOf(a).amount)}* (se descuenta del total de ${money(a.price)}):\n\n${payText(true)}\n\nCuando pagues, mándanos el comprobante por aquí. 🙌${firma}`;
+      if (depPaid(a)) return `Hola ${n} 👋, ya tienes abonados *${money(depPaid(a))}*. El saldo de tu cita de *${s}* es *${money(balanceOf(a))}*:\n\n${payText(true)}${firma}`;
+      return `Hola ${n} 👋, te comparto los datos para pagar tu cita de *${s}* (${money(a.price)}):\n\n${payText(true)}${firma}`;
     case 'recordatorio': return `Hola ${n}, te recordamos tu cita de *${s}* ${relDay(a.date)} a las *${t12(a.time)}*. Si no puedes asistir, avísanos para reprogramar. 🙌${firma}`;
     case 'reprogramacion': return `Hola ${n}, tu cita de *${s}* fue reprogramada para el *${fmtLong(a.date)}* a las *${t12(a.time)}*. ¿Nos confirmas que te queda bien? ✂️${firma}`;
     case 'agradecimiento': return `¡Gracias por tu visita, ${n}! 🙏 Fue un gusto atenderte. Cuando quieras repetir, aquí estamos.${firma}`;
@@ -942,6 +950,22 @@ function waText(kind, a, c) {
   }
   return '';
 }
+/* ---------- Anticipo para reservar ---------- */
+const depCfg = () => db.settings.deposit || DEFAULT_DEPOSIT;
+const depOf = a => (a && a.deposit && a.deposit.amount > 0) ? a.deposit : null;
+const depPaid = a => { const d = depOf(a); return d && d.status === 'pagado' ? d.amount : 0; };
+const depWaiting = a => { const d = depOf(a); return !!(d && d.status === 'pendiente' && !['cancelada', 'no_asistio'].includes(a.status)); };
+const depExpired = a => { const d = depOf(a); return !!(d && d.status === 'pendiente' && !d.reported && d.dueAt > 0 && d.dueAt < Date.now()); };
+const balanceOf = a => Math.max(0, (a.price || 0) - depPaid(a));
+function depLabel(a) {
+  const d = depOf(a); if (!d) return '';
+  if (d.status === 'pagado') return `<span class="paid-dot">${ic('check', 14)}${money(d.amount)} recibido</span>`;
+  if (d.status === 'vencido' || depExpired(a)) return `<span style="color:var(--bad)">${money(d.amount)} · venció sin pago</span>`;
+  if (d.status === 'devuelto') return `<span class="muted">${money(d.amount)} · devuelto</span>`;
+  if (d.reported) return `<span style="color:var(--warn)">${money(d.amount)} · el cliente dice que ya pagó</span>`;
+  return `<span style="color:var(--warn)">${money(d.amount)} · esperando pago${d.dueAt ? ` (vence ${new Date(d.dueAt).toLocaleTimeString('es-CO', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Bogota' })})` : ''}</span>`;
+}
+
 /* ---------- Datos de pago (Bre-B / cuenta) ---------- */
 const payCfg = () => db.settings.payment || DEFAULT_PAYMENT;
 const qrSrc = () => payCfg().qrData || 'qr-pago.jpg';
@@ -995,7 +1019,7 @@ function apptCard(a, showDate) {
   const sub = showDate ? (a.date === today() ? 'Hoy' : a.date === addDays(today(), 1) ? 'Mañana' : fmtShort(a.date)) : a.duration + ' min';
   return `<button class="appt st-${a.status}" data-act="openAppt" data-id="${a.id}">
     <div class="appt-time"><b>${t12(a.time).replace(' ', '&nbsp;')}</b><small>${esc(sub)}</small></div>
-    <div class="appt-body"><b>${esc(c.name)}</b><small>${esc(svcName(a))} · ${money(a.price)}${a.surcharge ? ' · 🌙' : ''}${a.source === 'web' ? ' · 🌐' : ''}${paid ? ' · <span class="paid-dot">' + ic('check', 13) + 'Pagado</span>' : ''}</small></div>
+    <div class="appt-body"><b>${esc(c.name)}</b><small>${esc(svcName(a))} · ${money(a.price)}${a.surcharge ? ' · 🌙' : ''}${a.source === 'web' ? ' · 🌐' : ''}${depWaiting(a) ? (depOf(a).reported ? ' · <span style="color:var(--warn)">💵 dice que pagó</span>' : ' · <span style="color:var(--warn)">⏳ anticipo</span>') : depPaid(a) && !paid ? ' · <span class="paid-dot">💵 anticipo</span>' : ''}${paid ? ' · <span class="paid-dot">' + ic('check', 13) + 'Pagado</span>' : ''}</small></div>
     <span class="chip c-${a.status}">${STATUS[a.status].label}</span></button>`;
 }
 
@@ -1276,6 +1300,11 @@ function viewMas() {
       <img src="${esc(qrSrc())}" alt="QR actual" style="display:block;width:120px;border-radius:12px;margin-bottom:8px">
       <input type="file" name="qr" accept="image/*">
       ${P.qrData ? '<label class="check-row"><input type="checkbox" name="qrReset">Volver al QR original de SH Barber Studio</label>' : ''}
+      <div class="sec-t">Anticipo para reservar en el portal</div>
+      <label class="check-row" style="color:var(--white);font-weight:600;margin-top:0"><input type="checkbox" name="depOn" ${depCfg().on ? 'checked' : ''}>Pedir anticipo para apartar la hora</label>
+      <div class="grid2"><div><label class="lbl">Valor (COP)</label><input name="depAmount" type="number" inputmode="numeric" min="1000" step="1000" value="${esc(depCfg().amount)}"></div>
+      <div><label class="lbl">Tiempo para pagar</label><select name="depHold">${[[30, '30 minutos'], [60, '1 hora'], [120, '2 horas'], [240, '4 horas'], [0, 'Sin límite']].map(([v, l]) => `<option value="${v}" ${Number(depCfg().holdMin) === v ? 'selected' : ''}>${l}</option>`).join('')}</select></div></div>
+      <p class="muted tiny" style="margin-top:6px">Se descuenta del total. Si el cliente no paga ni avisa que pagó dentro del tiempo, la hora se libera sola. Cuando veas el dinero en tu cuenta, toca “Anticipo recibido” en la cita.</p>
       <button class="btn btn-gold" style="margin-top:16px" type="submit">Guardar datos de pago</button></form>`;
   }
   if (sub === 'admin') {
@@ -1326,7 +1355,7 @@ function viewMas() {
     ${item('goMas', 'horarios', 'clock', 'Horarios y agenda', db.settings.special && db.settings.special.on ? `Normal hasta ${t12(db.settings.hours[1].close)} · especial hasta ${t12(db.settings.special.until)}` : 'Días de atención y descanso')}
     ${item('goMas', 'bloqueos', 'ban', 'Fechas bloqueadas', `${db.settings.blocked.length} fecha(s) bloqueada(s)`)}
     ${item('goMas', 'fidelizacion', 'gift', 'Fidelización', `Cada ${db.settings.loyalty.visits} visitas: beneficio`)}
-    ${item('goMas', 'pagos', 'qr', 'Datos de pago', payCfg().on ? `Bre-B ${esc(payCfg().key)} · ${esc(payCfg().bank)}` : 'Desactivados')}
+    ${item('goMas', 'pagos', 'qr', 'Datos de pago y anticipo', payCfg().on ? `Bre-B ${esc(payCfg().key)} · ${depCfg().on ? 'anticipo ' + money(depCfg().amount) : 'sin anticipo'}` : 'Desactivados')}
     ${item('goMas', 'negocio', 'store', 'Datos del barbero', esc(db.settings.barberName))}
     ${item('demoInfo', '', 'info', 'Datos y almacenamiento', 'Información sobre esta agenda')}
     ${item('exportData', '', 'download', 'Descargar respaldo', 'Archivo JSON con los datos de esta agenda')}
@@ -1630,13 +1659,17 @@ function sheetApptDetail(id, flag) {
   ${flag === 'new' ? `<div class="banner">${ic('check', 18)}<div><b>¡Cita agendada!</b> Ya aparece en tu agenda. Si quieres, prepárale la confirmación por WhatsApp.</div></div>` : ''}
   ${flag === 'reprog' ? `<div class="banner">${ic('refresh', 18)}<div><b>Cita reprogramada.</b> Avísale al cliente con el mensaje de reprogramación.</div></div>` : ''}
   ${flag === 'paid' ? `<div class="banner">${ic('cash', 18)}<div><b>Pago registrado.</b> Ya suma en la caja. Agéndale de una vez su próxima visita.</div></div>` : ''}
-  ${a.source === 'web' && a.status === 'pendiente' ? `<div class="banner gold">${ic('info', 18)}<div><b>Solicitud del portal.</b> Toca “Confirmada” y envíale la confirmación por WhatsApp con los datos de pago.</div></div>` : ''}
+  ${a.source === 'web' && a.status === 'pendiente' && !depOf(a) ? `<div class="banner gold">${ic('info', 18)}<div><b>Solicitud del portal.</b> Toca “Confirmada” y envíale la confirmación por WhatsApp con los datos de pago.</div></div>` : ''}
+  ${depWaiting(a) ? `<div class="banner gold">${ic('cash', 18)}<div><b>${depOf(a).reported ? 'El cliente dice que ya pagó el anticipo.' : 'Esperando el anticipo.'}</b> Revisa en tu cuenta que llegaron ${money(depOf(a).amount)} y toca “Anticipo recibido”: la cita queda confirmada.</div></div>
+    <button class="btn btn-gold" style="margin-top:12px" data-act="depositPaid" data-id="${a.id}">${ic('check', 20)}Anticipo recibido · confirmar cita</button>` : ''}
   ${flag === 'walkin' ? `<div class="banner">${ic('scissors', 18)}<div><b>Cliente sin cita en curso.</b> El espacio quedó ocupado. Al terminar toca “Atendida” para cobrar.</div></div>` : ''}
   <div class="card" style="margin-top:12px;padding:6px 16px">
     <div class="kv"><span>Fecha</span><span>${cap(fmtLong(a.date))}</span></div>
     <div class="kv"><span>Hora</span><span>${t12(a.time)} – ${t12(end)}</span></div>
     <div class="kv"><span>Valor</span><span>${money(a.price)}${a.surcharge ? `<br><small class="muted">incluye +${money(a.surcharge)} horario especial</small>` : ''}</span></div>
     <div class="kv"><span>Estado</span><span><span class="chip c-${a.status}">${STATUS[a.status].label}</span></span></div>
+    ${depOf(a) ? `<div class="kv"><span>Anticipo</span><span>${depLabel(a)}</span></div>` : ''}
+    ${depPaid(a) && !pay ? `<div class="kv"><span>Saldo por cobrar</span><span class="gold">${money(balanceOf(a))}</span></div>` : ''}
     <div class="kv"><span>Pago</span><span>${pay ? `<span class="paid-dot">${ic('check', 14)}${money(pay.amount)} · ${esc(pay.method)}</span>` : '<span class="muted">Sin registrar</span>'}</span></div>
     <div class="kv"><span>WhatsApp</span><span>${c.phone ? fmtPhone(c.phone) : '—'}</span></div>
     ${a.notes ? `<div class="kv"><span>Notas</span><span>${esc(a.notes)}</span></div>` : ''}
@@ -1735,12 +1768,13 @@ function sheetPayment(o) {
   <form data-form="pay"><input type="hidden" name="appointmentId" value="${a ? a.id : ''}">
     <label class="lbl">Cliente</label><select name="clientId"><option value="">Cliente ocasional (sin registro)</option>${clients.map(c => `<option value="${c.id}" ${c.id === cid ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select>
     <label class="lbl">Servicio</label><select name="serviceId">${svcs.map(s => `<option value="${s.id}" ${svc && s.id === svc.id ? 'selected' : ''}>${esc(s.name)} · ${money(s.price)}</option>`).join('')}</select>
-    <label class="lbl">Valor cobrado (COP)</label><input name="amount" type="number" inputmode="numeric" min="0" step="500" value="${a ? a.price : (svc ? svc.price : '')}" required>
+    ${a && depPaid(a) ? `<div class="banner gold" style="margin-top:12px">${ic('cash', 18)}<div>Ya abonó <b>${money(depPaid(a))}</b> de anticipo. Cobra solo el saldo: <b>${money(balanceOf(a))}</b>.</div></div>` : ''}
+    <label class="lbl">${a && depPaid(a) ? 'Saldo cobrado (COP)' : 'Valor cobrado (COP)'}</label><input name="amount" type="number" inputmode="numeric" min="0" step="500" value="${a ? balanceOf(a) : (svc ? svc.price : '')}" required>
     ${!a && db.settings.special && db.settings.special.on ? `<label class="check-row"><input type="checkbox" name="special">🌙 Horario especial (+${money(db.settings.special.surcharge)})</label>` : ''}
     <label class="lbl">Método de pago</label>
     <div class="pills">${METHODS.map((m, i) => `<label class="pill"><input type="radio" name="method" value="${m}" ${i === 0 ? 'checked' : ''}><span>${m}</span></label>`).join('')}</div>
     <label class="lbl">Fecha</label><input type="date" name="date" value="${a ? a.date : today()}" max="${today()}" required>
-    <label class="lbl">Nota (opcional)</label><input name="note" maxlength="80" placeholder="Ej. propina incluida">
+    <label class="lbl">Nota (opcional)</label><input name="note" maxlength="80" placeholder="Ej. propina incluida" value="${a && depPaid(a) ? 'Saldo · anticipo de ' + money(depPaid(a)) + ' ya registrado' : ''}">
     <div class="sh-actions"><button class="btn btn-gold" type="submit">${ic('check', 20)}Registrar pago</button></div>
   </form>`);
 }
@@ -2042,6 +2076,20 @@ const acts = {
     else apply();
   },
   payAppt(d) { sheetPayment({ appointmentId: d.id }); },
+  depositPaid(d) {
+    const a = getAppt(d.id), dep = depOf(a); if (!a || !dep || dep.status === 'pagado') return;
+    if (a.status === 'cancelada' && !isFree(a.date, toMin(a.time), a.duration, a.id, true)) return toast('Esa hora ya la tomó otra cita. Reprográmala antes de confirmar.', 'err');
+    const c = getClient(a.clientId);
+    confirmSheet('¿Llegó el anticipo?', `Confirma que recibiste <b>${money(dep.amount)}</b> de ${esc(c.name)}. Se registra en la caja de hoy y la cita queda <b>confirmada</b>.`, 'Sí, lo recibí', () => {
+      const payId = uid();
+      const pay = { id: payId, date: today(), clientId: a.clientId || null, serviceId: a.serviceId, serviceName: 'Anticipo · ' + svcName(a), amount: dep.amount, method: 'Bre-B', appointmentId: null, depositFor: a.id, note: `Anticipo cita ${fmtShort(a.date)} ${t12(a.time)}`, createdAt: Date.now() };
+      const appointments = db.appointments.map(x => x.id === a.id ? { ...x, status: 'confirmada', deposit: { ...dep, status: 'pagado', paidAt: Date.now(), payId } } : x);
+      if (!save({ ...db, appointments, payments: [...db.payments, pay] })) return;
+      render(); toast('Anticipo registrado · cita confirmada');
+      sheetApptDetail(a.id);
+      if (c.phone) sheetWA('confirmacion', c.phone, waText('confirmacion', getAppt(a.id), c), { type: 'appt', id: a.id });
+    }, false);
+  },
   wa(d) {
     const a = getAppt(d.id), c = getClient(a.clientId);
     if (!c.phone) return toast('Este cliente no tiene WhatsApp registrado', 'err');
@@ -2197,7 +2245,8 @@ const forms = {
   pay(f) {
     const E = f.elements;
     const amount = Math.round(Number(E.amount.value));
-    if (!(amount > 0)) return toast('Escribe el valor cobrado', 'err');
+    const apA = E.appointmentId.value ? getAppt(E.appointmentId.value) : null;
+    if (!(amount > 0) && !(amount === 0 && apA && depPaid(apA))) return toast('Escribe el valor cobrado', 'err');
     if (!E.date.value) return toast('Elige la fecha', 'err');
     if (E.date.value > today()) return toast('No puedes registrar pagos en fechas futuras', 'err');
     const apptId = E.appointmentId.value || null;
@@ -2269,7 +2318,11 @@ const forms = {
     const account = E.account.value.replace(/\D/g, '');
     if (E.on.checked && (!E.key.value.trim() && !account)) return toast('Escribe la llave Bre-B o el número de cuenta', 'err');
     const P = { on: E.on.checked, key: E.key.value.trim(), bank: E.bank.value.trim() || 'Bancolombia', type: E.type.value, account, holder: E.holder.value.trim(), qrData: (E.qrReset && E.qrReset.checked) ? '' : payCfg().qrData || '' };
-    const done = () => { db.settings.payment = P; if (save()) { render(); toast('Datos de pago guardados'); } };
+    const depAmount = Math.round(Number(E.depAmount.value));
+    if (E.depOn.checked && !(depAmount >= 1000)) return toast('El anticipo debe ser de al menos $ 1.000', 'err');
+    if (E.depOn.checked && !E.on.checked) return toast('Para pedir anticipo, activa los datos de pago', 'err');
+    const DEP = { on: E.depOn.checked, amount: depAmount >= 1000 ? depAmount : depCfg().amount, holdMin: Number(E.depHold.value) || 0 };
+    const done = () => { db.settings.payment = P; db.settings.deposit = DEP; if (save()) { render(); toast('Datos de pago guardados'); } };
     const file = E.qr.files && E.qr.files[0];
     if (!file) return done();
     if (file.size > 1500000) return toast('La imagen del QR es muy pesada (máx. 1,5 MB)', 'err');

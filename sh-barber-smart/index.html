@@ -614,6 +614,7 @@ function migrate(data, mode) {
   if (s.recoverDays == null) s.recoverDays = 30;
   if (!s.payment) s.payment = { ...DEFAULT_PAYMENT };
   if (!s.deposit) s.deposit = { ...DEFAULT_DEPOSIT };
+  if (!Array.isArray(s.seasons)) s.seasons = [];
   if (mode === 'demo') addDormant(data);
   return data;
 }
@@ -852,17 +853,23 @@ function clientStats(id) {
 function dayInfo(date) {
   const b = db.settings.blocked.find(x => x.date === date);
   if (b) return { closed: true, blocked: true, reason: 'Fecha bloqueada' + (b.reason ? ': ' + b.reason : '') };
+  const se = seasonFor(date), brk = !!db.settings.breakOn;
+  if (se) return { closed: false, open: toMin(se.open), close: toMin(se.close), normalClose: toMin(se.open), surcharge: Number(se.surcharge) || 0, season: se, breakOn: brk && se.breakOn !== false };
   const h = db.settings.hours[parseD(date).getDay()];
   if (!h || !h.on) return { closed: true, reason: 'Día no laborable según tu horario' };
   const sp = db.settings.special || {};
   const normalClose = toMin(h.close);
   const close = sp.on && toMin(sp.until) > normalClose ? toMin(sp.until) : normalClose;
-  return { closed: false, open: toMin(h.open), close, normalClose };
+  return { closed: false, open: toMin(h.open), close, normalClose, surcharge: Number(sp.surcharge) || 0, breakOn: brk };
+}
+/* Fechas especiales (temporadas): todo el día es horario especial con su propio horario y recargo */
+function seasonFor(date) {
+  return (db.settings.seasons || []).filter(x => x.on !== false && x.from <= date && date <= x.to).sort((a, b) => a.from.localeCompare(b.from))[0] || null;
 }
 /* Recargo del horario especial: aplica si la cita empieza después del cierre normal */
 function surchargeAt(date, start) {
-  const d = dayInfo(date), sp = db.settings.special || {};
-  return !d.closed && sp.on && start >= d.normalClose && d.close > d.normalClose ? (Number(sp.surcharge) || 0) : 0;
+  const d = dayInfo(date);
+  return !d.closed && start >= d.normalClose && d.close > d.normalClose ? d.surcharge : 0;
 }
 const bufferMin = () => Number(db.settings.buffer) || 0;
 const slotStep = () => Number(db.settings.slotStep) || 60;
@@ -875,22 +882,22 @@ function busyRanges(date, excludeId) {
   return db.appointments.filter(a => a.date === date && a.id !== excludeId && !['cancelada', 'no_asistio'].includes(a.status))
     .map(a => [toMin(a.time), toMin(a.time) + occ(a.duration)]);
 }
-function inBreak(start, dur) {
+function inBreak(start, dur, date) {
   const s = db.settings;
-  return s.breakOn && start < toMin(s.breakEnd) && start + dur > toMin(s.breakStart);
+  return (date ? dayInfo(date).breakOn : s.breakOn) && start < toMin(s.breakEnd) && start + dur > toMin(s.breakStart);
 }
 function isFree(date, start, dur, excludeId, allowPast) {
   const d = dayInfo(date);
   if (d.closed || start < d.open || start + dur > d.close) return false;
   if (!allowPast && (date < today() || (date === today() && start <= nowMin()))) return false;
-  if (inBreak(start, dur)) return false;
+  if (inBreak(start, dur, date)) return false;
   return !busyRanges(date, excludeId).some(([s, e]) => start < e && start + occ(dur) > s);
 }
 function conflictReason(date, start, dur) {
   const d = dayInfo(date);
   if (d.closed) return d.reason;
   if (start < d.open || start + dur > d.close) return `Fuera del horario (${t12(toTime(d.open))} – ${t12(toTime(d.close))})`;
-  if (inBreak(start, dur)) return 'Se cruza con tu descanso';
+  if (inBreak(start, dur, date)) return 'Se cruza con tu descanso';
   const a = db.appointments.find(x => x.date === date && !['cancelada', 'no_asistio'].includes(x.status) &&
     start < toMin(x.time) + occ(x.duration) && start + occ(dur) > toMin(x.time));
   return a ? `Se cruza con la cita de ${getClient(a.clientId).name} a las ${t12(a.time)}` : '';
@@ -903,7 +910,7 @@ function dayGaps(date) {
   const minDur = act.length ? Math.min(...act.map(s => s.duration)) : 30;
   const s = db.settings, gaps = [];
   const blocks = busyRanges(date, null);
-  if (s.breakOn) blocks.push([toMin(s.breakStart), toMin(s.breakEnd)]);
+  if (d.breakOn) blocks.push([toMin(s.breakStart), toMin(s.breakEnd)]);
   blocks.sort((x, y) => x[0] - y[0]);
   const step = slotStep();
   const add = (a, b) => { const st = d.open + Math.ceil((a - d.open) / step) * step; if (b - st >= minDur) gaps.push([st, b]); };
@@ -1078,7 +1085,7 @@ function viewAgenda() {
       return ca === cb ? a.time.localeCompare(b.time) : ca ? 1 : -1;
     });
     const s = db.settings;
-    const hoursTxt = info.closed ? '' : `Normal ${t12(toTime(info.open))} – ${t12(toTime(info.normalClose))}${info.close > info.normalClose ? ` · Especial hasta ${t12(toTime(info.close))}` : ''}${s.breakOn ? ` · Descanso ${t12(s.breakStart)} – ${t12(s.breakEnd)}` : ''}`;
+    const hoursTxt = info.closed ? '' : info.season ? `🎄 ${esc(info.season.name)} · ${t12(toTime(info.open))} – ${t12(toTime(info.close))} · todo el día +${money(info.surcharge)}${info.breakOn ? ` · Descanso ${t12(s.breakStart)} – ${t12(s.breakEnd)}` : ''}` : `Normal ${t12(toTime(info.open))} – ${t12(toTime(info.normalClose))}${info.close > info.normalClose ? ` · Especial hasta ${t12(toTime(info.close))}` : ''}${s.breakOn ? ` · Descanso ${t12(s.breakStart)} – ${t12(s.breakEnd)}` : ''}`;
     body = `<div class="day-title"><div><h2>${cap(fmtLong(D))}${D === T ? ' <span class="chip c-gold">Hoy</span>' : ''}</h2><p>${hoursTxt}</p></div></div>
     ${info.closed ? `<div class="closed">${ic(info.blocked ? 'ban' : 'lock', 26)}<p>${esc(info.reason)}</p>
        ${info.blocked ? `<button class="btn btn-ghost btn-sm" style="margin:12px auto 0" data-act="unblock" data-date="${D}">Desbloquear fecha</button>` : `<button class="btn btn-ghost btn-sm" style="margin:12px auto 0" data-act="goMas" data-sub="horarios">Configurar horarios</button>`}</div>` : ''}
@@ -1119,14 +1126,14 @@ function viewAgenda() {
 function gapCard(D, a, b, info) {
   const len = b - a, h = Math.floor(len / 60), m = len % 60;
   const night = a >= info.normalClose && info.close > info.normalClose;
-  return `<button class="gap ${night ? 'night' : ''}" data-act="newAppt" data-date="${D}" data-time="${toTime(a)}">${ic('clock', 17)}<span><b>Libre ${t12(toTime(a))} – ${t12(toTime(b))}</b><small>${h ? h + ' h ' : ''}${m ? m + ' min' : ''}${night ? ' · horario especial +' + money(db.settings.special.surcharge) : ''}</small></span><span class="plus">${ic('plus', 16)}Agendar</span></button>`;
+  return `<button class="gap ${night ? 'night' : ''}" data-act="newAppt" data-date="${D}" data-time="${toTime(a)}">${ic('clock', 17)}<span><b>Libre ${t12(toTime(a))} – ${t12(toTime(b))}</b><small>${h ? h + ' h ' : ''}${m ? m + ' min' : ''}${night ? (info.season ? ' · ' + esc(info.season.name) + ' +' : ' · horario especial +') + money(info.surcharge) : ''}</small></span><span class="plus">${ic('plus', 16)}Agendar</span></button>`;
 }
 function dayItems(D, list, info) {
   const s = db.settings, items = [];
   const dead = x => ['cancelada', 'no_asistio'].includes(x.status);
   list.filter(a => !dead(a)).forEach(a => items.push([toMin(a.time), 1, apptCard(a, false)]));
-  if (s.breakOn) items.push([toMin(s.breakStart), 0, `<div class="brk">${ic('clock', 16)}Descanso ${t12(s.breakStart)} – ${t12(s.breakEnd)}</div>`]);
-  if (info.close > info.normalClose) items.push([info.normalClose, 0, `<div class="brk night">${ic('star', 16)}Horario especial desde ${t12(toTime(info.normalClose))} · +${money(s.special.surcharge)} por servicio</div>`]);
+  if (info.breakOn) items.push([toMin(s.breakStart), 0, `<div class="brk">${ic('clock', 16)}Descanso ${t12(s.breakStart)} – ${t12(s.breakEnd)}</div>`]);
+  if (info.close > info.normalClose) items.push([info.normalClose, 0, `<div class="brk night">${ic('star', 16)}${info.season ? `${esc(info.season.name)}: todo el día es horario especial · +${money(info.surcharge)} por servicio` : `Horario especial desde ${t12(toTime(info.normalClose))} · +${money(info.surcharge)} por servicio`}</div>`]);
   dayGaps(D).forEach(([a, b]) => items.push([a, 2, gapCard(D, a, b, info)]));
   items.sort((x, y) => x[0] - y[0] || x[1] - y[1]);
   return items.map(i => i[2]).join('') + list.filter(dead).map(a => apptCard(a, false)).join('');
@@ -1267,6 +1274,27 @@ function viewMas() {
       <button class="btn btn-gold" style="margin-top:18px" type="submit">Guardar horarios</button></form>
       <p class="muted tiny" style="margin-top:10px">Las citas que empiezan después del cierre normal se cobran con el recargo del horario especial. Nunca se agenda durante el descanso.</p>`;
   }
+  if (sub === 'temporadas') {
+    const list = (db.settings.seasons || []).slice().sort((a, b) => a.from.localeCompare(b.from));
+    const ed = list.find(x => x.id === ui.seasonEdit) || null;
+    const v = ed || { name: '', from: today(), to: today(), open: '09:00', close: '22:00', surcharge: (db.settings.special || {}).surcharge || 7000, breakOn: true };
+    const range = x => x.from === x.to ? cap(fmtLong(x.from)) : `${fmtShort(x.from)} → ${fmtShort(x.to)}`;
+    return back('Fechas especiales') + `<div class="alert">${ic('info', 18)}<div>En estas fechas <b>todo el día es horario especial</b>: usa su propio horario y cada servicio suma el recargo. Aplica en el panel y en el portal de reservas.</div></div>
+      <div class="list" style="margin-top:4px">${list.length ? list.map(x => `<div class="card svc ${x.on === false || x.to < today() ? 'inactive' : ''}">
+        <div class="svc-body"><b>🎄 ${esc(x.name)}</b><p>${range(x)} · ${t12(x.open)} – ${t12(x.close)}</p>
+        <div class="svc-meta"><span class="chip c-night">+${money(x.surcharge)} por servicio</span>${x.breakOn === false ? '<span class="chip c-muted">Sin descanso</span>' : ''}${x.to < today() ? '<span class="chip c-cancelada">Terminó</span>' : ''}</div></div>
+        <div style="display:grid;gap:8px;justify-items:end"><button class="switch ${x.on === false ? '' : 'on'}" data-act="toggleSeason" data-id="${x.id}" aria-label="Activar o desactivar"></button>
+        <div style="display:flex;gap:6px"><button class="icon-btn" data-act="editSeason" data-id="${x.id}" aria-label="Editar">${ic('edit', 18)}</button><button class="icon-btn" data-act="delSeason" data-id="${x.id}" aria-label="Eliminar">${ic('trash', 18)}</button></div></div></div>`).join('') : '<div class="empty"><p style="margin:0">No hay fechas especiales.</p></div>'}</div>
+      <div class="sec-h"><h2>${ed ? 'Editar fecha especial' : 'Agregar fecha especial'}</h2>${ed ? '<button class="link" data-act="editSeason" data-id="">Cancelar</button>' : ''}</div>
+      <form data-form="season" class="card"><input type="hidden" name="id" value="${ed ? ed.id : ''}">
+        <label class="lbl" style="margin-top:0">Nombre</label><input name="name" maxlength="40" placeholder="Ej. Temporada navideña" value="${esc(v.name)}" required>
+        <div class="grid2"><div><label class="lbl">Desde</label><input type="date" name="from" value="${v.from}" required></div><div><label class="lbl">Hasta</label><input type="date" name="to" value="${v.to}" required></div></div>
+        <div class="grid2"><div><label class="lbl">Abre</label><input type="time" name="open" value="${v.open}" step="900" required></div><div><label class="lbl">Cierra</label><input type="time" name="close" value="${v.close}" step="900" required></div></div>
+        <label class="lbl">Recargo por servicio (COP)</label><input type="number" name="surcharge" min="0" step="500" inputmode="numeric" value="${esc(v.surcharge)}" required>
+        <label class="check-row"><input type="checkbox" name="breakOn" ${v.breakOn !== false ? 'checked' : ''}>Respetar el descanso de almuerzo${db.settings.breakOn ? '' : ' (hoy está desactivado en Horarios)'}</label>
+        <button class="btn btn-gold" style="margin-top:16px" type="submit">${ic('check', 19)}${ed ? 'Guardar cambios' : 'Agregar fecha especial'}</button></form>
+      <p class="muted tiny" style="margin-top:10px">Las citas ya agendadas conservan su precio. Si una fecha está bloqueada, el bloqueo manda.</p>`;
+  }
   if (sub === 'bloqueos') {
     const list = db.settings.blocked.slice().sort((a, b) => a.date.localeCompare(b.date));
     return back('Fechas bloqueadas') + `<form data-form="block" class="card"><label class="lbl" style="margin-top:0">Fecha</label><input type="date" name="date" min="${today()}" value="${today()}" required>
@@ -1353,6 +1381,7 @@ function viewMas() {
   return `<h1 class="serif" style="font-size:26px;margin-bottom:16px">Más opciones</h1><div class="menu">
     ${item('goMas', 'servicios', 'scissors', 'Servicios', `${db.services.filter(s => s.active).length} activos`)}
     ${item('goMas', 'horarios', 'clock', 'Horarios y agenda', db.settings.special && db.settings.special.on ? `Normal hasta ${t12(db.settings.hours[1].close)} · especial hasta ${t12(db.settings.special.until)}` : 'Días de atención y descanso')}
+    ${item('goMas', 'temporadas', 'star', 'Fechas especiales', (() => { const n = (db.settings.seasons || []).filter(x => x.on !== false && x.to >= today()); return n.length ? n.map(x => esc(x.name)).join(' · ') : 'Temporadas con horario y precio especial'; })())}
     ${item('goMas', 'bloqueos', 'ban', 'Fechas bloqueadas', `${db.settings.blocked.length} fecha(s) bloqueada(s)`)}
     ${item('goMas', 'fidelizacion', 'gift', 'Fidelización', `Cada ${db.settings.loyalty.visits} visitas: beneficio`)}
     ${item('goMas', 'pagos', 'qr', 'Datos de pago y anticipo', payCfg().on ? `Bre-B ${esc(payCfg().key)} · ${depCfg().on ? 'anticipo ' + money(depCfg().amount) : 'sin anticipo'}` : 'Desactivados')}
@@ -1641,7 +1670,7 @@ function refreshSlots() {
     const norm = list.filter(t => toMin(t) < nc), night = list.filter(t => toMin(t) >= nc);
     const chip = t => `<button type="button" class="slot ${toMin(t) >= nc ? 'night' : ''} ${t === E.time.value ? 'on' : ''}" data-act="pickSlot" data-t="${t}">${t12(t)}</button>`;
     box.innerHTML = `${norm.length ? `<div class="slots">${norm.map(chip).join('')}</div>` : ''}
-      ${night.length ? `<p class="slot-h">${ic('star', 14)} Horario especial · ${money(svc.price + sur)} (incluye +${money(sur)})</p><div class="slots">${night.map(chip).join('')}</div>` : ''}
+      ${night.length ? `<p class="slot-h">${ic('star', 14)} ${dayInfo(date).season ? esc(dayInfo(date).season.name) : 'Horario especial'} · ${money(svc.price + sur)} (incluye +${money(sur)})</p><div class="slots">${night.map(chip).join('')}</div>` : ''}
       <p class="muted tiny" style="margin-top:6px">${list.length} horario(s) libre(s) · precio normal ${money(svc.price)} · ${slotStep() === 60 ? 'turnos de 1 hora en punto (incluye el descanso del barbero)' : `cada cita deja ${bufferMin()} min de descanso al barbero`}</p>`;
   }
 }
@@ -1769,8 +1798,8 @@ function sheetPayment(o) {
     <label class="lbl">Cliente</label><select name="clientId"><option value="">Cliente ocasional (sin registro)</option>${clients.map(c => `<option value="${c.id}" ${c.id === cid ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select>
     <label class="lbl">Servicio</label><select name="serviceId">${svcs.map(s => `<option value="${s.id}" ${svc && s.id === svc.id ? 'selected' : ''}>${esc(s.name)} · ${money(s.price)}</option>`).join('')}</select>
     ${a && depPaid(a) ? `<div class="banner gold" style="margin-top:12px">${ic('cash', 18)}<div>Ya abonó <b>${money(depPaid(a))}</b> de anticipo. Cobra solo el saldo: <b>${money(balanceOf(a))}</b>.</div></div>` : ''}
-    <label class="lbl">${a && depPaid(a) ? 'Saldo cobrado (COP)' : 'Valor cobrado (COP)'}</label><input name="amount" type="number" inputmode="numeric" min="0" step="500" value="${a ? balanceOf(a) : (svc ? svc.price : '')}" required>
-    ${!a && db.settings.special && db.settings.special.on ? `<label class="check-row"><input type="checkbox" name="special">🌙 Horario especial (+${money(db.settings.special.surcharge)})</label>` : ''}
+    <label class="lbl">${a && depPaid(a) ? 'Saldo cobrado (COP)' : 'Valor cobrado (COP)'}</label><input name="amount" type="number" inputmode="numeric" min="0" step="500" value="${a ? balanceOf(a) : (svc ? svc.price + (seasonFor(today()) ? Number(seasonFor(today()).surcharge) || 0 : 0) : '')}" required>
+    ${!a && (seasonFor(today()) || (db.settings.special && db.settings.special.on)) ? `<label class="check-row"><input type="checkbox" name="special" ${seasonFor(today()) ? 'checked' : ''}>${seasonFor(today()) ? '🎄 ' + esc(seasonFor(today()).name) : '🌙 Horario especial'} (+${money(seasonFor(today()) ? seasonFor(today()).surcharge : db.settings.special.surcharge)})</label>` : ''}
     <label class="lbl">Método de pago</label>
     <div class="pills">${METHODS.map((m, i) => `<label class="pill"><input type="radio" name="method" value="${m}" ${i === 0 ? 'checked' : ''}><span>${m}</span></label>`).join('')}</div>
     <label class="lbl">Fecha</label><input type="date" name="date" value="${a ? a.date : today()}" max="${today()}" required>
@@ -2154,6 +2183,14 @@ const acts = {
       db.settings.blocked.push({ date: d.date, reason: 'Bloqueado desde la agenda' }); save(); render(); toast('Día bloqueado');
     });
   },
+  editSeason(d) { ui.seasonEdit = d.id || null; render(); if (d.id) setTimeout(() => { const f = document.querySelector('form[data-form=season]'); if (f) f.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50); },
+  toggleSeason(d) { db.settings.seasons = (db.settings.seasons || []).map(x => x.id === d.id ? { ...x, on: x.on === false } : x); save(); render(); },
+  delSeason(d) {
+    const x = (db.settings.seasons || []).find(y => y.id === d.id); if (!x) return;
+    confirmSheet('¿Eliminar fecha especial?', `Se elimina <b>${esc(x.name)}</b>. Esas fechas vuelven al horario y precio normal. Las citas ya agendadas no cambian.`, 'Eliminar', () => {
+      db.settings.seasons = db.settings.seasons.filter(y => y.id !== d.id); if (ui.seasonEdit === d.id) ui.seasonEdit = null; save(); render(); toast('Fecha especial eliminada');
+    });
+  },
   unblock(d) { db.settings.blocked = db.settings.blocked.filter(b => b.date !== d.date); save(); render(); toast('Fecha desbloqueada'); },
   exportData() {
     const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
@@ -2298,6 +2335,22 @@ const forms = {
       buffer: Number(E.buffer.value) || 0, slotStep: Number(E.slotStep.value) || 60, recoverDays: Number(E.recoverDays.value) || 30 });
     save(); render(); toast('Horarios guardados');
   },
+  season(f) {
+    const E = f.elements, name = E.name.value.trim(), from = E.from.value, to = E.to.value, open = E.open.value, close = E.close.value;
+    const surcharge = Math.round(Number(E.surcharge.value));
+    if (!name) return toast('Escribe un nombre', 'err');
+    if (!from || !to || to < from) return toast('Revisa las fechas: “Hasta” debe ser igual o posterior a “Desde”', 'err');
+    if (!open || !close || toMin(open) >= toMin(close)) return toast('Revisa el horario', 'err');
+    if (!(surcharge >= 0) || E.surcharge.value === '') return toast('Revisa el recargo', 'err');
+    const id = E.id.value || 'se' + uid();
+    const others = (db.settings.seasons || []).filter(x => x.id !== id);
+    const clash = others.find(x => x.on !== false && !(to < x.from || from > x.to));
+    if (clash) return toast(`Se cruza con “${clash.name}”. Ajusta las fechas.`, 'err');
+    const prev = (db.settings.seasons || []).find(x => x.id === id) || {};
+    db.settings.seasons = [...others, { ...prev, id, name, from, to, open, close, surcharge, breakOn: E.breakOn.checked, on: prev.on !== false }];
+    ui.seasonEdit = null;
+    if (save()) { render(); toast(E.id.value ? 'Fecha especial actualizada' : 'Fecha especial agregada'); }
+  },
   block(f) {
     const E = f.elements, date = E.date.value;
     if (!date) return toast('Elige una fecha', 'err');
@@ -2403,7 +2456,7 @@ document.addEventListener('change', e => {
   }
   if (f.dataset.form === 'pay' && (t.name === 'serviceId' || t.name === 'special')) {
     const s = getSvc(f.elements.serviceId.value), sp = f.elements.special;
-    if (s) f.elements.amount.value = s.price + (sp && sp.checked ? Number(db.settings.special.surcharge) || 0 : 0);
+    if (s) f.elements.amount.value = s.price + (sp && sp.checked ? Number(seasonFor(today()) ? seasonFor(today()).surcharge : db.settings.special.surcharge) || 0 : 0);
   }
   if (f.dataset.form === 'walkin') {
     if (t.name === 'clientId') $('#newClient').hidden = t.value !== '__new';

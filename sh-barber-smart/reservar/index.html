@@ -177,7 +177,7 @@ function renderServices() {
   const sp = st.info && st.info.special, se = seasons();
   const rng = x => x.from === x.to ? longDate(x.from) : `del ${shortD(x.from)} al ${shortD(x.to)}`;
   $('#nightNote').innerHTML = [sp && sp.on ? `🌙 Horario especial en la noche, hasta las ${t12(sp.until)}: +${money(sp.surcharge)} por servicio.` : '',
-    ...se.map(x => `🎄 <b>${esc(x.name)}</b> (${rng(x)}): horario especial todo el día, ${t12(x.open)} – ${t12(x.close)}, +${money(x.surcharge)} por servicio.`)].filter(Boolean).join('<br>');
+    ...se.map(x => `🎄 <b>${esc(x.name)}</b> (${rng(x)}): atendemos ${t12(x.open)} – ${t12(x.close)}; horario especial ${x.specialFrom && x.specialFrom > x.open ? 'desde las ' + t12(x.specialFrom) : 'todo el día'}: +${money(x.surcharge)} por servicio.`)].filter(Boolean).join('<br>');
 }
 const seasons = () => ((st.info && st.info.seasons) || []).slice().sort((a, b) => a.from.localeCompare(b.from));
 const seasonOf = d => seasons().find(x => x.from <= d && d <= x.to) || null;

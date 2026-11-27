@@ -95,6 +95,7 @@ footer{text-align:center;color:var(--muted2);font-size:11.5px;margin-top:34px}
 .dep-box .check{margin-top:8px}
 .dep-steps{margin:8px 0 0;padding-left:18px;font-size:13px;line-height:1.5;color:#C9CDD2}
 .timer{font-variant-numeric:tabular-nums}
+.day{position:relative}.se-dot{position:absolute;top:2px;right:4px;font-style:normal;font-size:12px}
 </style>
 </head>
 <body>
@@ -173,12 +174,17 @@ function renderServices() {
     <span class="svc-line"><span class="svc-name">${esc(s.name)}</span><span class="svc-dots"></span><span class="svc-price">$${Math.round(s.price).toLocaleString('es-CO')}</span></span>
     <span class="svc-meta">${esc(s.description || '')}${s.description ? ' · ' : ''}${s.duration} min</span></button>`).join('')
     : '<div class="empty">Por ahora no hay servicios disponibles.</div>';
-  const sp = st.info && st.info.special;
-  $('#nightNote').textContent = sp && sp.on ? `🌙 Horario especial desde las 6:00 p. m. hasta las ${t12(sp.until)}: +${money(sp.surcharge)} por servicio.` : '';
+  const sp = st.info && st.info.special, se = seasons();
+  const rng = x => x.from === x.to ? longDate(x.from) : `del ${shortD(x.from)} al ${shortD(x.to)}`;
+  $('#nightNote').innerHTML = [sp && sp.on ? `🌙 Horario especial en la noche, hasta las ${t12(sp.until)}: +${money(sp.surcharge)} por servicio.` : '',
+    ...se.map(x => `🎄 <b>${esc(x.name)}</b> (${rng(x)}): horario especial todo el día, ${t12(x.open)} – ${t12(x.close)}, +${money(x.surcharge)} por servicio.`)].filter(Boolean).join('<br>');
 }
+const seasons = () => ((st.info && st.info.seasons) || []).slice().sort((a, b) => a.from.localeCompare(b.from));
+const seasonOf = d => seasons().find(x => x.from <= d && d <= x.to) || null;
+const shortD = d => parseD(d).toLocaleDateString('es-CO', { day: 'numeric', month: 'short' }).replace('.', '');
 function renderDays() {
   const T = today();
-  $('#days').innerHTML = Array.from({ length: 14 }, (_, i) => addDays(T, i)).map(d => `<button type="button" class="day ${st.date === d ? 'on' : ''}" data-day="${d}">${i0(d, T)}<b>${parseD(d).getDate()}</b>${parseD(d).toLocaleDateString('es-CO', { month: 'short' }).replace('.', '')}</button>`).join('');
+  $('#days').innerHTML = Array.from({ length: 14 }, (_, i) => addDays(T, i)).map(d => `<button type="button" class="day ${st.date === d ? 'on' : ''}" data-day="${d}" ${seasonOf(d) ? `title="${esc(seasonOf(d).name)}"` : ''}>${i0(d, T)}<b>${parseD(d).getDate()}</b>${parseD(d).toLocaleDateString('es-CO', { month: 'short' }).replace('.', '')}${seasonOf(d) ? '<i class="se-dot">🎄</i>' : ''}</button>`).join('');
 }
 const i0 = (d, T) => d === T ? 'Hoy' : d === addDays(T, 1) ? 'Mañana' : DAYS_S[parseD(d).getDay()];
 
@@ -190,7 +196,7 @@ async function loadSlots() {
     const list = await api('/rest/v1/rpc/public_slots', { p_date: st.date, p_service: st.svc.id });
     const norm = list.filter(s => !s.special), night = list.filter(s => s.special);
     const chip = s => `<button type="button" class="slot ${s.special ? 'night' : ''}" data-slot="${s.slot}" data-price="${s.price}">${t12(s.slot)}<small>${money(s.price)}</small></button>`;
-    box.innerHTML = list.length ? `${norm.length ? `<div class="slots">${norm.map(chip).join('')}</div>` : ''}${night.length ? `<p class="sub">🌙 Horario especial</p><div class="slots">${night.map(chip).join('')}</div>` : ''}`
+    box.innerHTML = list.length ? `${norm.length ? `<div class="slots">${norm.map(chip).join('')}</div>` : ''}${night.length ? `<p class="sub">${seasonOf(st.date) ? '🎄 ' + esc(seasonOf(st.date).name) + ' · horario especial' : '🌙 Horario especial'}</p><div class="slots">${night.map(chip).join('')}</div>` : ''}`
       : '<div class="empty">No quedan horas libres este día. Prueba otro día.</div>';
   } catch (e) { box.innerHTML = `<div class="err">${esc(e.message)}</div>`; }
 }
@@ -276,7 +282,7 @@ function showDone(r, name) {
       <img class="qr" src="${esc(qr)}" alt="Código QR de pago">
       ${P.key ? row('Llave Bre-B', P.key) : ''}${P.account ? row(`${P.type || ''} ${P.bank || ''}`.trim(), P.account) : ''}${P.holder ? row('Titular', P.holder) : ''}${D ? row('Valor del anticipo', String(D.amount)) : ''}</div>` : '';
   const resume = `<div class="card"><div class="kv"><span>Servicio</span><b>${esc(r.service)}</b></div><div class="kv"><span>Día</span><b>${longDate(r.date)}</b></div>
-      <div class="kv"><span>Hora</span><b>${t12(r.time)}${r.special ? ' 🌙' : ''}</b></div><div class="kv"><span>Valor total</span><b>${money(r.price)}</b></div>
+      <div class="kv"><span>Hora</span><b>${t12(r.time)}${r.special ? (seasonOf(r.date) ? ' 🎄' : ' 🌙') : ''}</b></div><div class="kv"><span>Valor total</span><b>${money(r.price)}</b></div>
       ${D ? `<div class="kv"><span>Anticipo (ahora)</span><b style="color:var(--gold-l)">${money(D.amount)}</b></div><div class="kv"><span>Saldo en la barbería</span><b>${money(r.price - D.amount)}</b></div>` : ''}</div>`;
   $('#app').hidden = true; $('#bar').hidden = true;
   const done = $('#done'); done.hidden = false;

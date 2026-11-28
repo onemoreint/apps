@@ -342,6 +342,39 @@ svg{flex:none}
   .hours-row{grid-template-columns:1fr 1fr}
   .hours-row label{grid-column:1/-1}
 }
+.ref-warn{display:flex;gap:8px;align-items:flex-start;margin-top:8px;padding:10px 12px;border-radius:12px;background:rgba(226,112,111,.12);border:1px solid rgba(226,112,111,.4);color:#ffc9c8;font-size:13px}
+.ref-warn svg{flex:none;margin-top:2px}
+.part{display:grid;grid-template-columns:1.1fr 1fr 1fr auto;gap:6px;margin-top:8px;align-items:center}
+.part select,.part input{min-height:44px;padding:8px 10px;font-size:14px}
+.part .icon-btn{width:36px;height:36px}
+.prod-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.prod-row .pn{flex:1;min-width:0;font-size:14px}.prod-row .pn small{display:block;color:var(--muted);font-size:12px}
+.step{display:flex;align-items:center;gap:6px}.step input{width:52px;text-align:center;min-height:38px;padding:6px}
+.step button{width:34px;height:34px;border-radius:10px;background:var(--card2);border:1px solid var(--line);color:var(--white);font-size:18px}
+.pay-total{margin-top:14px;padding:4px 14px;border-radius:16px;background:var(--card);border:1px solid var(--line2)}
+.denoms{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.den{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 10px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:13.5px}
+.den input{width:70px;min-height:38px;padding:6px;text-align:center}
+.close-sum{margin-top:12px;padding:4px 14px;border-radius:16px;background:var(--card);border:1px solid var(--line2)}
+.comm{margin-top:12px}.comm-h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
+.comm-act{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.rcpt-wrap{margin-top:12px;border-radius:14px;overflow:hidden}
+.rcpt{background:#fff;color:#111;padding:18px 16px;font:13px/1.45 ui-monospace,Menlo,Consolas,monospace;max-width:380px;margin:0 auto}
+.rcpt .rc-h{text-align:center;display:grid;gap:2px;margin-bottom:8px}.rcpt .rc-h b{font-size:16px}
+.rcpt .rc-nf{text-align:center;font-size:11px;margin:6px 0;color:#444}
+.rcpt table{width:100%;border-collapse:collapse;border-top:1px dashed #999;margin-top:6px}
+.rcpt td{padding:3px 0;vertical-align:top}.rcpt td.r{text-align:right;white-space:nowrap;padding-left:10px}
+.rcpt tr.tot td{font-weight:700;border-top:1px solid #ccc}
+.rcpt .rc-f{text-align:center;margin-top:10px;font-size:12px;color:#333}
+#dataMode.off{background:var(--bad)!important;color:#fff!important}
+#printArea{display:none}
+@media print{
+  html,body{background:#fff!important}
+  body.printing::before{display:none!important}
+  body.printing>*:not(#printArea){display:none!important}
+  body.printing #printArea{display:block!important}
+  body.printing .rcpt{max-width:none;font-size:12px}
+}
 </style>
 </head>
 <body>
@@ -452,6 +485,7 @@ const byDT = (a, b) => (a.date + a.time).localeCompare(b.date + b.time);
 
 /* ---------- Iconos ---------- */
 const IC = {
+  file:'<path d="M6 2.5h8l4 4v15H6z"/><path d="M14 2.5v4h4M9 12h6M9 16h6"/>',
   home:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/>',
   calendar:'<rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
   week:'<rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M9 9.5V21M15 9.5V21"/>',
@@ -615,6 +649,11 @@ function migrate(data, mode) {
   if (!s.payment) s.payment = { ...DEFAULT_PAYMENT };
   if (!s.deposit) s.deposit = { ...DEFAULT_DEPOSIT };
   if (!Array.isArray(s.seasons)) s.seasons = [];
+  if (!Array.isArray(s.team)) s.team = [{ id: 'b1', name: s.barberName || 'Barbero', email: '', phone: s.barberPhone || '', type: 'pct', value: 50, active: true }];
+  if (!Array.isArray(s.products)) s.products = [];
+  if (!Array.isArray(s.payouts)) s.payouts = [];
+  if (!Array.isArray(s.closings)) s.closings = [];
+  if (!s.business) s.business = { name: BUSINESS, nit: '', address: '', phone: s.barberPhone || '', footer: 'Gracias por tu visita' };
   if (mode === 'demo') addDormant(data);
   return data;
 }
@@ -763,8 +802,11 @@ async function doPush() {
     for (let i = 0; i < rows.length; i += 500) await up(t, rows.slice(i, i + 500));
     snap[t] = cur[t];
   }
+  saveSnap();
+  if (offline) setOffline(false);
 }
 async function cloudError(e) {
+  if (isNetErr(e)) { setOffline(true); return; }
   if (e && e.auth) { toast('Tu sesión expiró. Vuelve a entrar.', 'err'); return acts.logout(true); }
   if (e && e.code === '23P01') toast('Ese horario ya lo tomó otra reserva. Actualicé la agenda.', 'err');
   else toast('No se pudo guardar en la nube: ' + (e && e.message), 'err');
@@ -772,12 +814,14 @@ async function cloudError(e) {
 }
 async function syncFromCloud(force) {
   if (dataMode !== 'cloud' || pushing) return;
+  if (hasPending()) { queuePush(); return; }
   const before = new Set(db.appointments.map(a => a.id));
   const d = await pullCloud();
   if (dataMode !== 'cloud' || pushing) return;
   const sn = makeSnap(d);
   if (!force && JSON.stringify(sn) === JSON.stringify(snap)) return;
-  snap = sn; db = d;
+  snap = sn; db = d; saveSnap();
+  if (offline) setOffline(false);
   try { localStorage.setItem(DB_KEYS.cloud, JSON.stringify(d)); } catch {}
   const nuevasList = d.appointments.filter(a => a.source === 'web' && !before.has(a.id));
   const nuevas = nuevasList.length;
@@ -792,7 +836,7 @@ async function enterCloud(fresh) {
     if (!ok) { setSession(null); sheetLogin(); return toast('Tu correo no tiene invitación o está desactivado. Pide acceso al administrador.', 'err'); }
     try { const me = await rest('rpc/my_role', { method: 'POST', body: '{}' }); session.role = me.role; session.name = me.name; session.userId = me.userId; setSession(session); } catch {}
     const d = await pullCloud();
-    dataMode = 'cloud'; db = d; snap = makeSnap(d);
+    dataMode = 'cloud'; db = d; snap = makeSnap(d); saveSnap(); offline = false;
     try { localStorage.setItem(DB_KEYS.cloud, JSON.stringify(d)); } catch {}
     closeSheet();
     Object.assign(ui, { tab: 'inicio', agendaDate: today(), agendaMode: 'dia', cajaPeriod: 'hoy', masSub: null, clientQuery: '', appointmentQuery: '', clientFilter: 'todos' });
@@ -804,10 +848,26 @@ async function enterCloud(fresh) {
     if (pushSupported() && notifState() === 'granted' && localStorage.getItem(PUSH_FLAG)) pushSubscribe().catch(() => {});
     if (fresh && !pinCfg()) setTimeout(() => { if (dataMode === 'cloud' && !pinCfg()) toast('Consejo: crea un PIN en Más → Seguridad'); }, 3500);
   } catch (e) {
+    if (!e.auth && isNetErr(e) && enterOfflineCache()) return;
     if (e.auth) setSession(null);
     toast(e.auth ? 'Vuelve a iniciar sesión' : 'No se pudo conectar: ' + e.message, 'err');
     if (e.auth) sheetLogin();
   }
+}
+/* Entrar sin internet con la última copia guardada en este equipo */
+function enterOfflineCache() {
+  let cache = null, sn = null;
+  try { cache = JSON.parse(localStorage.getItem(DB_KEYS.cloud) || 'null'); sn = JSON.parse(localStorage.getItem(SNAP_KEY) || 'null'); } catch {}
+  if (!cache || !session || !Array.isArray(cache.appointments)) return false;
+  dataMode = 'cloud'; db = migrate(cache, 'cloud'); snap = sn || makeSnap(db);
+  closeSheet();
+  Object.assign(ui, { tab: 'inicio', agendaDate: today(), agendaMode: 'dia', cajaPeriod: 'hoy', masSub: null });
+  $('#splash').hidden = true; $('#shell').hidden = false;
+  offline = false; setOffline(true);
+  render(true);
+  lastAct = Date.now();
+  if (pinCfg()) showLock();
+  return true;
 }
 function sheetLogin(msg) {
   setTimeout(async () => {
@@ -980,6 +1040,324 @@ function depLabel(a) {
   return `<span style="color:var(--warn)">${money(d.amount)} · esperando pago${d.dueAt ? ` (vence ${new Date(d.dueAt).toLocaleTimeString('es-CO', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Bogota' })})` : ''}</span>`;
 }
 
+/* =========================================================
+   CAJA AVANZADA — referencias anti-fraude, pago mixto, productos,
+   comisiones, cierre de caja y recibo digital
+   ========================================================= */
+const DENOMS = [100000, 50000, 20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50];
+const isCash = m => m === 'Efectivo';
+const normRef = r => String(r || '').replace(/[^0-9a-z]/gi, '').toUpperCase();
+/* Partes de un pago: los pagos antiguos tienen un solo método */
+function payParts(p) {
+  if (Array.isArray(p.parts) && p.parts.length) return p.parts;
+  return [{ method: p.method || 'Efectivo', amount: (Number(p.amount) || 0) + (Number(p.tip) || 0), ref: p.ref || '' }];
+}
+/* ¿Dónde se usó antes esta referencia? (anti capturas repetidas) */
+function refUses(ref, exceptId) {
+  const r = normRef(ref); if (r.length < 4) return [];
+  const out = [];
+  db.payments.forEach(p => { if (p.id !== exceptId) payParts(p).forEach(x => { if (normRef(x.ref) === r) out.push({ p, part: x }); }); });
+  return out;
+}
+function refWarnHTML(ref) {
+  const u = refUses(ref); if (!u.length) return '';
+  const x = u[0];
+  return `<div class="ref-warn">${ic('alert', 16)}<div><b>Esta referencia ya se registró</b> el ${fmtShort(x.p.date)}: ${money(x.part.amount)} por ${esc(x.part.method)} · ${esc(getClient(x.p.clientId).name)}. Puede ser una captura repetida: revisa tu cuenta antes de aceptar.</div></div>`;
+}
+
+/* ---------- Equipo y comisiones ---------- */
+const teamAll = () => db.settings.team || [];
+const team = () => teamAll().filter(b => b.active !== false);
+const getBarber = id => teamAll().find(b => b.id === id) || null;
+const barberLabel = id => (getBarber(id) || {}).name || 'Sin asignar';
+function myBarber() {
+  const e = (session && session.email || '').toLowerCase();
+  return e ? teamAll().find(b => b.email && b.email.toLowerCase() === e) || null : null;
+}
+const defaultBarberId = () => (myBarber() || team()[0] || {}).id || '';
+const isOwnerView = () => dataMode !== 'cloud' || (session && session.role === 'superadmin');
+/* Base de comisión: lo cobrado por el servicio (sin productos ni propina) + el anticipo de esa cita */
+function commBase(p) {
+  if (p.depositFor) return 0;
+  let base = (Number(p.amount) || 0) - (Number(p.productsTotal) || 0);
+  if (p.appointmentId) { const a = getAppt(p.appointmentId); if (a) base += depPaid(a); }
+  return Math.max(0, base);
+}
+function commOf(p) {
+  const b = getBarber(p.barberId); if (!b || p.depositFor) return 0;
+  if (b.type === 'fixed') return (p.serviceId || p.appointmentId) ? Number(b.value) || 0 : 0;
+  return Math.round(commBase(p) * (Number(b.value) || 0) / 100);
+}
+function commSummary(from, to) {
+  const list = paymentsIn(from, to).filter(p => !p.depositFor);
+  return teamAll().map(b => {
+    const l = list.filter(p => p.barberId === b.id);
+    return { b, list: l, n: l.filter(p => p.serviceId || p.appointmentId).length, sales: l.reduce((s, p) => s + commBase(p), 0),
+      comm: l.reduce((s, p) => s + commOf(p), 0), tips: l.reduce((s, p) => s + (Number(p.tip) || 0), 0) };
+  });
+}
+const commRule = b => b.type === 'fixed' ? `${money(b.value)} por servicio` : `${Number(b.value) || 0}% de los servicios`;
+const payoutFor = (bid, from, to) => (db.settings.payouts || []).find(x => x.barberId === bid && x.from === from && x.to === to);
+
+/* ---------- Productos ---------- */
+const products = () => db.settings.products || [];
+const getProduct = id => products().find(p => p.id === id) || null;
+function adjustStock(items, sign) {
+  if (!items || !items.length) return;
+  db.settings.products = products().map(p => {
+    const it = items.find(i => i.productId === p.id);
+    return it ? { ...p, stock: (Number(p.stock) || 0) + sign * (Number(it.qty) || 0) } : p;
+  });
+}
+
+/* ---------- Impresión (recibos y cierres → imprimir o guardar PDF) ---------- */
+function printHTML(html) {
+  let el = $('#printArea');
+  if (!el) { el = document.createElement('div'); el.id = 'printArea'; document.body.appendChild(el); }
+  el.innerHTML = html;
+  document.body.classList.add('printing');
+  setTimeout(() => { window.print(); setTimeout(() => document.body.classList.remove('printing'), 600); }, 60);
+}
+const bizInfo = () => ({ name: BUSINESS, nit: '', address: '', phone: db.settings.barberPhone || '', footer: 'Gracias por tu visita', ...(db.settings.business || {}) });
+
+/* ---------- Recibo digital ---------- */
+function receiptNo(p) { return p.receiptNo || ('R' + String(p.date).replace(/-/g, '').slice(2) + '-' + String(p.id).slice(-4).toUpperCase()); }
+function receiptData(p) {
+  const a = p.appointmentId ? getAppt(p.appointmentId) : null;
+  const dep = a ? depPaid(a) : 0;
+  const svcAmt = (Number(p.amount) || 0) - (Number(p.productsTotal) || 0);
+  const lines = [];
+  if (p.serviceId || p.appointmentId || p.depositFor) lines.push([p.serviceName || 'Servicio', svcAmt + dep]);
+  (p.items || []).forEach(i => lines.push([`${i.name} × ${i.qty}`, i.price * i.qty]));
+  if (!lines.length) lines.push([p.serviceName || 'Venta', Number(p.amount) || 0]);
+  return { a, dep, lines, tip: Number(p.tip) || 0, total: (Number(p.amount) || 0) + dep + (Number(p.tip) || 0), paid: (Number(p.amount) || 0) + (Number(p.tip) || 0) };
+}
+function receiptHTML(p) {
+  const B = bizInfo(), R = receiptData(p), c = getClient(p.clientId);
+  const when = new Date(p.createdAt || Date.now());
+  const row = (l, v, cls) => `<tr class="${cls || ''}"><td>${esc(l)}</td><td class="r">${v}</td></tr>`;
+  return `<div class="rcpt">
+    <div class="rc-h"><b>${esc(B.name)}</b>${B.nit ? `<span>NIT/CC: ${esc(B.nit)}</span>` : ''}${B.address ? `<span>${esc(B.address)}</span>` : ''}${B.phone ? `<span>Tel: ${esc(B.phone)}</span>` : ''}</div>
+    <p class="rc-nf">*** COMPROBANTE NO FISCAL ***<br>Control interno de pago</p>
+    <table>${row('Recibo', esc(receiptNo(p)))}${row('Fecha', `${fmtShort(p.date)} · ${when.toLocaleTimeString('es-CO', { hour: 'numeric', minute: '2-digit' })}`)}
+    ${row('Cliente', esc(c.name))}${p.barberId ? row('Barbero', esc(barberLabel(p.barberId))) : ''}</table>
+    <table class="rc-items">${R.lines.map(([l, v]) => row(l, money(v))).join('')}
+    ${R.tip ? row('Propina', money(R.tip)) : ''}${row('TOTAL', money(R.total), 'tot')}
+    ${R.dep ? row('Anticipo abonado antes', '− ' + money(R.dep)) : ''}</table>
+    <table>${payParts(p).map(x => row(`Pago · ${x.method}${x.ref ? ' (Ref. ' + x.ref + ')' : ''}`, money(x.amount))).join('')}
+    ${p.cashGiven ? row('Efectivo recibido', money(p.cashGiven)) + row('Vuelto', money(p.change || 0)) : ''}</table>
+    <p class="rc-f">${esc(B.footer)}<br>${esc(BUSINESS)} 💈</p></div>`;
+}
+function receiptText(p) {
+  const B = bizInfo(), R = receiptData(p), c = getClient(p.clientId);
+  const n = (c.name || '').split(' ')[0] || 'cliente';
+  return `Hola ${n} 👋, este es tu recibo de *${B.name}*:\n\n🧾 Recibo ${receiptNo(p)} · ${fmtShort(p.date)}\n` +
+    R.lines.map(([l, v]) => `• ${l}: ${money(v)}`).join('\n') +
+    (R.tip ? `\n• Propina: ${money(R.tip)}` : '') + `\n*Total: ${money(R.total)}*` + (R.dep ? `\n(Incluye anticipo de ${money(R.dep)} ya pagado)` : '') +
+    `\nPagado: ${payParts(p).map(x => `${x.method} ${money(x.amount)}`).join(' + ')}` +
+    (p.barberId ? `\nTe atendió: ${barberLabel(p.barberId)}` : '') + `\n\n${B.footer} — ${B.name} 💈\n_Comprobante no fiscal_`;
+}
+function sheetReceipt(id) {
+  const p = db.payments.find(x => x.id === id); if (!p) return closeSheet();
+  const c = getClient(p.clientId);
+  openSheet(head('Recibo', esc(receiptNo(p))) + `<div class="rcpt-wrap">${receiptHTML(p)}</div>
+    ${c.phone ? '' : `<label class="lbl">WhatsApp del cliente (para enviarle el recibo)</label><input id="rcPhone" type="tel" inputmode="tel" placeholder="3001234567">`}
+    <div class="sh-actions" style="display:grid;gap:10px">
+      <button class="btn btn-wa" data-act="sendReceipt" data-id="${p.id}">${ic('chat', 19)}Enviar recibo por WhatsApp</button>
+      <button class="btn btn-dark" data-act="printReceipt" data-id="${p.id}">${ic('file', 19)}Imprimir o guardar PDF</button>
+      ${p.appointmentId ? `<button class="btn btn-ghost" data-act="openAppt" data-id="${p.appointmentId}">Ver la cita</button>` : ''}
+    </div>`);
+}
+
+/* ---------- Cierre de caja ---------- */
+function cashExpected(date) {
+  const list = paymentsIn(date, date);
+  const byM = {};
+  list.forEach(p => payParts(p).forEach(x => { byM[x.method] = (byM[x.method] || 0) + (Number(x.amount) || 0); }));
+  return { cash: byM.Efectivo || 0, byM, n: list.length, total: sum(list), tips: list.reduce((s, p) => s + (Number(p.tip) || 0), 0) };
+}
+function sheetClosing(date) {
+  date = date || today();
+  const E = cashExpected(date), last = (db.settings.closings || [])[0];
+  const base = last && last.baseNext != null ? last.baseNext : (db.settings.cashBase || 0);
+  openSheet(head('Cerrar caja', cap(fmtLong(date))) + `<form data-form="closing"><input type="hidden" name="date" value="${date}">
+    <div class="kv"><span>Cobros del día</span><b>${E.n} · ${money(E.total)}</b></div>
+    ${Object.entries(E.byM).filter(([m]) => !isCash(m)).map(([m, v]) => `<div class="kv"><span>${esc(m)} <span class="muted tiny">(verifica en tu app)</span></span><b>${money(v)}</b></div>`).join('')}
+    <div class="kv"><span>Efectivo cobrado</span><b>${money(E.cash)}</b></div>
+    <label class="lbl">Base inicial en la gaveta (COP)</label><input name="base" type="number" inputmode="numeric" min="0" step="1000" value="${base}">
+    <p class="lbl" style="margin-bottom:6px">Cuenta los billetes y monedas</p>
+    <div class="denoms">${DENOMS.map(d => `<label class="den"><span>${money(d)}</span><input type="number" inputmode="numeric" min="0" step="1" name="d_${d}" placeholder="0"></label>`).join('')}</div>
+    <div class="close-sum" id="closeSum"></div>
+    <label class="lbl">Dejar de base para mañana (COP)</label><input name="baseNext" type="number" inputmode="numeric" min="0" step="1000" value="${base}">
+    <label class="lbl">Nota (opcional)</label><input name="note" maxlength="100" placeholder="Ej. faltante por vuelto mal dado">
+    <div class="sh-actions"><button class="btn btn-gold" type="submit">${ic('check', 20)}Guardar cierre</button></div></form>`);
+  updateClosing($('form[data-form=closing]'));
+}
+function closingCount(f) { return DENOMS.reduce((s, d) => s + d * (Number(f.elements['d_' + d].value) || 0), 0); }
+function updateClosing(f) {
+  if (!f) return;
+  const E = cashExpected(f.elements.date.value), base = Number(f.elements.base.value) || 0;
+  const exp = base + E.cash, cnt = closingCount(f), diff = cnt - exp;
+  $('#closeSum').innerHTML = `<div class="kv"><span>Debería haber (base + efectivo)</span><b>${money(exp)}</b></div>
+    <div class="kv"><span>Contado</span><b>${money(cnt)}</b></div>
+    <div class="kv"><span>${diff === 0 ? 'Cuadre' : diff > 0 ? 'Sobrante' : 'Faltante'}</span><b style="color:${diff === 0 ? 'var(--ok)' : diff > 0 ? 'var(--info)' : 'var(--bad)'}">${diff === 0 ? '✓ Exacto' : money(Math.abs(diff))}</b></div>`;
+}
+function closingHTML(k) {
+  const B = bizInfo();
+  const row = (l, v, cls) => `<tr class="${cls || ''}"><td>${l}</td><td class="r">${v}</td></tr>`;
+  return `<div class="rcpt"><div class="rc-h"><b>${esc(B.name)}</b>${B.nit ? `<span>NIT/CC: ${esc(B.nit)}</span>` : ''}<span>CIERRE DE CAJA</span></div>
+    <table>${row('Fecha', cap(fmtLong(k.date)))}${row('Cerrado', new Date(k.at).toLocaleString('es-CO'))}${row('Por', esc(k.by || ''))}</table>
+    <table>${row('Cobros', k.n)}${row('Total del día', money(k.total))}${k.tips ? row('Propinas incluidas', money(k.tips)) : ''}
+    ${Object.entries(k.byM || {}).map(([m, v]) => row(esc(m), money(v))).join('')}</table>
+    <table>${row('Base inicial', money(k.base))}${row('Efectivo cobrado', money(k.cash))}${row('Debería haber', money(k.expected), 'tot')}</table>
+    <table>${DENOMS.filter(d => k.denoms && k.denoms[d]).map(d => row(`${money(d)} × ${k.denoms[d]}`, money(d * k.denoms[d]))).join('')}${row('Contado', money(k.counted), 'tot')}
+    ${row(k.diff === 0 ? 'Cuadre' : k.diff > 0 ? 'Sobrante' : 'Faltante', k.diff === 0 ? 'Exacto' : money(Math.abs(k.diff)), 'tot')}${row('Base para mañana', money(k.baseNext || 0))}</table>
+    ${k.note ? `<p class="rc-f">Nota: ${esc(k.note)}</p>` : ''}<p class="rc-f">Firma: ____________________</p></div>`;
+}
+function closingText(k) {
+  return `🧾 *Cierre de caja · ${bizInfo().name}*\n${cap(fmtLong(k.date))}\n\nCobros: ${k.n} · ${money(k.total)}\n` +
+    Object.entries(k.byM || {}).map(([m, v]) => `• ${m}: ${money(v)}`).join('\n') +
+    `\n\nBase: ${money(k.base)}\nDebería haber: ${money(k.expected)}\nContado: ${money(k.counted)}\n${k.diff === 0 ? '✅ Cuadre exacto' : (k.diff > 0 ? '🔵 Sobrante: ' : '🔴 Faltante: ') + money(Math.abs(k.diff))}` +
+    (k.note ? `\nNota: ${k.note}` : '') + `\nCerrado por: ${k.by || ''}`;
+}
+function sheetClosingView(id) {
+  const k = (db.settings.closings || []).find(x => x.id === id); if (!k) return closeSheet();
+  openSheet(head('Cierre de caja', cap(fmtLong(k.date))) + `<div class="rcpt-wrap">${closingHTML(k)}</div>
+    <div class="sh-actions" style="display:grid;gap:10px">
+      <button class="btn btn-dark" data-act="printClosing" data-id="${k.id}">${ic('file', 19)}Imprimir o guardar PDF</button>
+      <button class="btn btn-wa" data-act="shareClosing" data-id="${k.id}">${ic('chat', 19)}Compartir por WhatsApp</button></div>`);
+}
+
+/* ---------- Vistas de caja: comisiones y cierres ---------- */
+function viewComisiones() {
+  const [from, to, label] = periodRange(ui.cajaPeriod);
+  const me = myBarber();
+  let rows = commSummary(from, to);
+  if (!isOwnerView()) rows = me ? rows.filter(r => r.b.id === me.id) : [];
+  const unassigned = paymentsIn(from, to).filter(p => !p.depositFor && !p.barberId && (p.serviceId || p.appointmentId)).length;
+  return `${!isOwnerView() && !me ? `<div class="alert">${ic('info', 18)}<div>Tu correo aún no está enlazado a un barbero del equipo. Pídele al administrador que lo agregue en Más → Equipo y comisiones.</div></div>` : ''}
+  ${rows.map(r => {
+    const po = payoutFor(r.b.id, from, to), total = r.comm + r.tips;
+    return `<div class="card comm"><div class="comm-h"><b>${esc(r.b.name)}</b><span class="chip c-muted">${commRule(r.b)}</span></div>
+      <div class="kv"><span>Servicios atendidos</span><b>${r.n}</b></div>
+      <div class="kv"><span>Vendido en servicios</span><b>${money(r.sales)}</b></div>
+      <div class="kv"><span>Comisión</span><b>${money(r.comm)}</b></div>
+      <div class="kv"><span>Propinas</span><b>${money(r.tips)}</b></div>
+      <div class="kv"><span><b>A pagar · ${esc(label)}</b></span><b class="gold">${money(total)}</b></div>
+      ${po ? `<p class="paid-dot" style="margin-top:10px">${ic('check', 14)}Liquidado el ${new Date(po.at).toLocaleDateString('es-CO')} · ${money(po.amount)}</p>` : ''}
+      <div class="comm-act">${r.list.length ? `<button class="btn btn-dark btn-sm" data-act="commDetail" data-id="${r.b.id}">Ver detalle</button>` : ''}
+      ${isOwnerView() && total > 0 && !po ? `<button class="btn btn-gold btn-sm" data-act="payout" data-id="${r.b.id}">Marcar liquidado</button>` : ''}
+      ${r.b.phone ? `<button class="btn btn-ghost btn-sm" data-act="commWA" data-id="${r.b.id}">${ic('chat', 15)}Enviar</button>` : ''}</div></div>`;
+  }).join('') || `<div class="empty"><p style="margin:0">No hay barberos en el equipo.</p></div>`}
+  ${unassigned && isOwnerView() ? `<p class="muted tiny" style="margin-top:10px">${unassigned} cobro(s) de este periodo no tienen barbero asignado y no suman comisión.</p>` : ''}
+  ${isOwnerView() ? `<button class="btn btn-ghost" style="margin-top:12px" data-act="goTeam">${ic('users', 18)}Configurar equipo y comisiones</button>` : ''}`;
+}
+function viewCierres() {
+  const list = db.settings.closings || [];
+  const todayK = list.find(k => k.date === today());
+  return `<button class="btn btn-gold" data-act="newClosing">${ic('wallet', 19)}${todayK ? 'Hacer otro cierre de hoy' : 'Cerrar la caja de hoy'}</button>
+  <div class="sec-h"><h2>Historial de cierres</h2><span class="muted small">${list.length}</span></div>
+  <div class="list">${list.length ? list.slice(0, 40).map(k => `<button class="pay" style="width:100%;text-align:left" data-act="viewClosing" data-id="${k.id}"><span class="ic">${ic('file', 19)}</span><div class="pay-body"><b>${cap(fmtLong(k.date))}</b><small>Contado ${money(k.counted)} · ${k.diff === 0 ? 'cuadre exacto' : (k.diff > 0 ? 'sobrante ' : 'faltante ') + money(Math.abs(k.diff))}</small></div><span class="pay-amt" style="color:${k.diff === 0 ? 'var(--ok)' : k.diff > 0 ? 'var(--info)' : 'var(--bad)'}">${k.diff === 0 ? '✓' : (k.diff > 0 ? '+' : '−') + kMoney(Math.abs(k.diff))}</span></button>`).join('')
+    : '<div class="empty"><p style="margin:0">Aún no hay cierres. Al final del día cuenta la gaveta y compárala con lo cobrado.</p></div>'}</div>`;
+}
+
+/* ---------- Más: equipo y productos ---------- */
+function viewTeam(back) {
+  return back('Equipo y comisiones') + `<div class="alert">${ic('info', 18)}<div>Al cobrar eliges qué barbero atendió. La comisión se calcula sobre el valor de los servicios (sin productos ni propinas); las propinas van completas al barbero. Si enlazas el correo con el que el barbero entra al panel, verá sus comisiones en Caja → Comisiones.</div></div>
+  <button class="btn btn-gold" data-act="editBarber" data-id="">${ic('plus', 20)}Agregar barbero</button>
+  <div class="list" style="margin-top:14px">${teamAll().map(b => `<div class="card svc ${b.active === false ? 'inactive' : ''}"><div class="svc-body"><b>${esc(b.name)}</b><p>${commRule(b)}${b.email ? ' · ' + esc(b.email) : ''}</p></div>
+    <div style="display:grid;gap:8px;justify-items:end"><button class="switch ${b.active === false ? '' : 'on'}" data-act="toggleBarber" data-id="${b.id}" aria-label="Activar o desactivar"></button>
+    <button class="icon-btn" data-act="editBarber" data-id="${b.id}" aria-label="Editar">${ic('edit', 18)}</button></div></div>`).join('')}</div>`;
+}
+function sheetBarber(id) {
+  const b = id ? getBarber(id) : null;
+  openSheet(head(b ? 'Editar barbero' : 'Agregar barbero') + `<form data-form="barber"><input type="hidden" name="id" value="${b ? b.id : ''}">
+    <label class="lbl">Nombre</label><input name="name" maxlength="40" value="${esc(b ? b.name : '')}" required>
+    <div class="grid2"><div><label class="lbl">Tipo de comisión</label><select name="type"><option value="pct" ${!b || b.type !== 'fixed' ? 'selected' : ''}>Porcentaje</option><option value="fixed" ${b && b.type === 'fixed' ? 'selected' : ''}>Valor fijo por servicio</option></select></div>
+    <div><label class="lbl">Valor (% o COP)</label><input name="value" type="number" inputmode="numeric" min="0" step="1" value="${b ? b.value : 50}" required></div></div>
+    <label class="lbl">Correo con el que entra al panel (opcional)</label><input name="email" type="email" maxlength="80" value="${esc(b ? b.email || '' : '')}" placeholder="barbero@correo.com">
+    <label class="lbl">WhatsApp (opcional, para enviarle su liquidación)</label><input name="phone" type="tel" inputmode="tel" maxlength="20" value="${esc(b ? b.phone || '' : '')}" placeholder="3001234567">
+    <div class="sh-actions"><button class="btn btn-gold" type="submit">${ic('check', 20)}Guardar</button></div></form>`);
+}
+function viewProducts(back) {
+  const list = products().slice().sort((a, b) => a.name.localeCompare(b.name));
+  const [mf, mt] = periodRange('mes'), mp = paymentsIn(mf, mt);
+  const sold = id => mp.reduce((s, p) => s + (p.items || []).filter(i => i.productId === id).reduce((x, i) => x + i.qty, 0), 0);
+  return back('Productos') + `<div class="alert">${ic('info', 18)}<div>Vende productos (cera, aceite para barba, shampoo…) en el mismo cobro del corte. El inventario baja solo con cada venta y vuelve si eliminas el pago.</div></div>
+  <button class="btn btn-gold" data-act="editProduct" data-id="">${ic('plus', 20)}Nuevo producto</button>
+  <div class="list" style="margin-top:14px">${list.length ? list.map(p => `<div class="card svc ${p.active === false ? 'inactive' : ''}"><div class="svc-body"><b>${esc(p.name)}</b>
+    <div class="svc-meta"><span class="chip c-gold">${money(p.price)}</span><span class="chip ${(Number(p.stock) || 0) <= 0 ? 'c-cancelada' : (Number(p.stock) || 0) <= 3 ? 'c-pendiente' : 'c-muted'}">${Number(p.stock) || 0} en stock</span>${p.active === false ? '<span class="chip c-cancelada">Inactivo</span>' : ''}</div>
+    <p class="tiny muted" style="margin:8px 0 0">Este mes: ${sold(p.id)} vendido(s)</p></div>
+    <div style="display:grid;gap:8px;justify-items:end"><button class="switch ${p.active === false ? '' : 'on'}" data-act="toggleProduct" data-id="${p.id}" aria-label="Activar o desactivar"></button>
+    <button class="icon-btn" data-act="editProduct" data-id="${p.id}" aria-label="Editar">${ic('edit', 18)}</button></div></div>`).join('')
+    : '<div class="empty"><p style="margin:0">Aún no hay productos.</p></div>'}</div>`;
+}
+function sheetProduct(id) {
+  const p = id ? getProduct(id) : null;
+  openSheet(head(p ? 'Editar producto' : 'Nuevo producto') + `<form data-form="product"><input type="hidden" name="id" value="${p ? p.id : ''}">
+    <label class="lbl">Nombre</label><input name="name" maxlength="50" value="${esc(p ? p.name : '')}" placeholder="Ej. Cera mate 100 g" required>
+    <div class="grid2"><div><label class="lbl">Precio (COP)</label><input name="price" type="number" inputmode="numeric" min="0" step="500" value="${p ? p.price : ''}" required></div>
+    <div><label class="lbl">Unidades en stock</label><input name="stock" type="number" inputmode="numeric" step="1" value="${p ? Number(p.stock) || 0 : 0}" required></div></div>
+    <div class="sh-actions" style="display:grid;gap:10px"><button class="btn btn-gold" type="submit">${ic('check', 20)}Guardar</button>
+    ${p ? `<button type="button" class="btn btn-danger" data-act="delProduct" data-id="${p.id}">${ic('trash', 18)}Eliminar producto</button>` : ''}</div></form>`);
+}
+
+/* ---------- Formulario de cobro: totales en vivo ---------- */
+function payVals(f) {
+  const E = f.elements;
+  const svcAmt = E.serviceId.value || E.appointmentId.value ? Math.max(0, Math.round(Number(E.amount.value) || 0)) : 0;
+  const items = products().map(p => ({ productId: p.id, name: p.name, price: Number(p.price) || 0, qty: Number((E['q_' + p.id] || {}).value) || 0 })).filter(i => i.qty > 0);
+  const productsTotal = items.reduce((s, i) => s + i.price * i.qty, 0);
+  const tip = Math.max(0, Math.round(Number(E.tip.value) || 0));
+  const mixed = E.mixed.value === '1';
+  const due = svcAmt + productsTotal + tip;
+  let parts;
+  if (mixed) parts = [...f.querySelectorAll('.part')].map(r => ({ method: r.querySelector('select').value, amount: Math.round(Number(r.querySelector('.p-amt').value) || 0), ref: r.querySelector('.p-ref').value.trim() })).filter(x => x.amount > 0);
+  else { const m = (f.querySelector('input[name=method]:checked') || {}).value || 'Efectivo'; parts = [{ method: m, amount: due, ref: isCash(m) ? '' : (E.ref.value || '').trim() }]; }
+  const cashPart = parts.filter(x => isCash(x.method)).reduce((s, x) => s + x.amount, 0);
+  const cashGiven = Math.round(Number(E.cashGiven.value) || 0);
+  return { svcAmt, items, productsTotal, tip, due, parts, mixed, paidSum: parts.reduce((s, x) => s + x.amount, 0), cashPart, cashGiven, change: cashGiven > 0 ? cashGiven - cashPart : 0 };
+}
+function updatePay(f) {
+  if (!f) return;
+  const V = payVals(f), E = f.elements;
+  const single = (f.querySelector('input[name=method]:checked') || {}).value || 'Efectivo';
+  $('#refBox').hidden = V.mixed || isCash(single);
+  $('#mixBox').hidden = !V.mixed;
+  $('#cashBox').hidden = !V.cashPart;
+  const dupHTML = V.parts.map(x => refWarnHTML(x.ref)).find(Boolean) || '';
+  $('#refWarn').innerHTML = dupHTML ? dupHTML + `<label class="check-row" style="margin-top:8px"><input type="checkbox" name="refOk">Ya verifiqué en mi cuenta que este pago sí llegó</label>` : '';
+  const diff = V.paidSum - V.due;
+  $('#payTotal').innerHTML = `<div class="kv"><span>Servicio</span><b>${money(V.svcAmt)}</b></div>
+    ${V.productsTotal ? `<div class="kv"><span>Productos</span><b>${money(V.productsTotal)}</b></div>` : ''}
+    ${V.tip ? `<div class="kv"><span>Propina</span><b>${money(V.tip)}</b></div>` : ''}
+    <div class="kv"><span><b>Total a cobrar</b></span><b class="gold" style="font-size:18px">${money(V.due)}</b></div>
+    ${V.mixed ? `<div class="kv"><span>${diff === 0 ? 'Pagos completos' : diff < 0 ? 'Falta por cubrir' : 'Sobra en los pagos'}</span><b style="color:${diff === 0 ? 'var(--ok)' : 'var(--bad)'}">${diff === 0 ? '✓' : money(Math.abs(diff))}</b></div>` : ''}
+    ${V.cashPart && V.cashGiven ? `<div class="kv"><span>Vuelto</span><b style="color:${V.change < 0 ? 'var(--bad)' : 'var(--ok)'}">${V.change < 0 ? 'Faltan ' + money(-V.change) : money(V.change)}</b></div>` : ''}`;
+  if (E.cashGiven) E.cashGiven.placeholder = V.cashPart ? String(V.cashPart) : '';
+}
+function partRow(m, amt, ref) {
+  return `<div class="part"><select>${METHODS.map(x => `<option ${x === m ? 'selected' : ''}>${x}</option>`).join('')}</select>
+    <input class="p-amt" type="number" inputmode="numeric" min="0" step="500" placeholder="Valor" value="${amt || ''}">
+    <input class="p-ref" maxlength="30" placeholder="Referencia" value="${esc(ref || '')}">
+    <button type="button" class="icon-btn" data-act="delPart" aria-label="Quitar">${ic('x', 15)}</button></div>`;
+}
+
+/* ---------- Sin internet: cambios pendientes ---------- */
+const SNAP_KEY = 'shbarbersmart_cloud_snap_v1';
+let offline = false;
+function saveSnap() { try { localStorage.setItem(SNAP_KEY, JSON.stringify(snap)); } catch {} }
+function hasPending() { return dataMode === 'cloud' && snap && JSON.stringify(makeSnap(db)) !== JSON.stringify(snap); }
+function setOffline(v) {
+  if (offline === v) return;
+  offline = v;
+  const el = $('#dataMode');
+  if (el) { el.textContent = v ? 'SIN RED' : (session && session.role === 'superadmin' ? 'ADMIN' : 'NUBE'); el.classList.toggle('off', v); }
+  if (v) toast('Sin internet: sigue trabajando, los cambios se guardan aquí y se suben al volver la señal');
+  else toast('Conexión recuperada ✓ cambios sincronizados');
+}
+const isNetErr = e => !!(e && (/conexión/i.test(e.message || '') || !navigator.onLine));
+
 /* ---------- Datos de pago (Bre-B / cuenta) ---------- */
 const payCfg = () => db.settings.payment || DEFAULT_PAYMENT;
 const qrSrc = () => payCfg().qrData || 'qr-pago.jpg';
@@ -1014,7 +1392,7 @@ function copyText(t, label) {
   };
   if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(done, fallback); else fallback();
 }
-const WA_LABEL = { pago: 'Datos de pago', confirmacion: 'Confirmación', recordatorio: 'Recordatorio', reprogramacion: 'Reprogramación', agradecimiento: 'Agradecimiento', regreso: 'Invitación a regresar' };
+const WA_LABEL = { recibo: 'Recibo', liquidacion: 'Liquidación', pago: 'Datos de pago', confirmacion: 'Confirmación', recordatorio: 'Recordatorio', reprogramacion: 'Reprogramación', agradecimiento: 'Agradecimiento', regreso: 'Invitación a regresar' };
 
 /* ---------- Estado de la interfaz ---------- */
 const ui = { tab: 'inicio', agendaDate: today(), agendaMode: 'dia', cajaPeriod: 'hoy', masSub: null, clientQuery: '', appointmentQuery: '', clientFilter: 'todos' };
@@ -1228,21 +1606,31 @@ function viewCaja() {
   const days = Array.from({ length: 7 }, (_, i) => addDays(T, i - 6));
   const vals = days.map(d => sum(paymentsIn(d, d)));
   const max = Math.max(...vals, 1);
-  const byM = METHODS.map(m => [m, sum(list.filter(p => p.method === m))]).filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]);
+  const mTot = {}; list.forEach(p => payParts(p).forEach(x => { mTot[x.method] = (mTot[x.method] || 0) + (Number(x.amount) || 0); }));
+  const recv = Object.values(mTot).reduce((a, b) => a + b, 0) || 1;
+  const byM = Object.entries(mTot).filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]);
+  const tips = list.reduce((s2, p) => s2 + (Number(p.tip) || 0), 0), prodT = list.reduce((s2, p) => s2 + (Number(p.productsTotal) || 0), 0);
+  const cv = ui.cajaView || 'resumen';
+  const periodSeg = `<div class="seg" style="margin-top:14px;display:flex">${[['hoy', 'Hoy'], ['semana', 'Semana'], ['mes', 'Mes']].map(([k, l]) => `<button style="flex:1" class="${ui.cajaPeriod === k ? 'on' : ''}" data-act="cajaPeriod" data-p="${k}">${l}</button>`).join('')}</div>`;
+  const viewSeg = `<div class="seg" style="margin-top:12px;display:flex">${[['resumen', 'Resumen'], ['comisiones', isOwnerView() ? 'Comisiones' : 'Mis comisiones'], ['cierres', 'Cierres']].map(([k, l]) => `<button style="flex:1" class="${cv === k ? 'on' : ''}" data-act="cajaView" data-v="${k}">${l}</button>`).join('')}</div>`;
+  if (cv === 'comisiones') return `<div class="ag-head"><h1 class="serif">Caja</h1></div>${viewSeg}${periodSeg}<div style="margin-top:6px">${viewComisiones()}</div>`;
+  if (cv === 'cierres') return `<div class="ag-head"><h1 class="serif">Caja</h1></div>${viewSeg}<div style="margin-top:14px">${viewCierres()}</div>`;
   const unpaid = db.appointments.filter(a => a.status === 'atendida' && a.date >= from && a.date <= to && !paymentFor(a.id)).sort(byDT);
   return `<div class="ag-head"><h1 class="serif">Caja</h1><button class="btn btn-gold btn-sm" data-act="newPay">${ic('plus', 18)}Registrar pago</button></div>
-  <div class="seg" style="margin-top:14px;display:flex">${[['hoy', 'Hoy'], ['semana', 'Semana'], ['mes', 'Mes']].map(([k, l]) => `<button style="flex:1" class="${ui.cajaPeriod === k ? 'on' : ''}" data-act="cajaPeriod" data-p="${k}">${l}</button>`).join('')}</div>
+  ${viewSeg}${periodSeg}
   <div class="total-card"><span>Ingresos · ${esc(label)}</span><b>${money(total)}</b>
-    <div class="kpis"><div><strong>${count}</strong>servicios cobrados</div><div><strong>${money(count ? total / count : 0)}</strong>ticket promedio</div></div></div>
-  <p class="muted tiny" style="margin-top:8px">Solo se suman pagos registrados. Las citas pendientes o confirmadas no cuentan como ingreso.</p>
+    <div class="kpis"><div><strong>${count}</strong>cobros</div><div><strong>${money(count ? total / count : 0)}</strong>ticket promedio</div></div>
+    ${tips || prodT ? `<div class="kpis"><div><strong>${money(prodT)}</strong>en productos</div><div><strong>${money(tips)}</strong>propinas (aparte)</div></div>` : ''}</div>
+  <p class="muted tiny" style="margin-top:8px">Solo se suman pagos registrados. Las propinas son de los barberos y no suman al ingreso.</p>
+  ${ui.cajaPeriod === 'hoy' ? `<button class="btn btn-ghost" style="margin-top:10px" data-act="newClosing">${ic('wallet', 18)}Cerrar la caja de hoy</button>` : ''}
   ${unpaid.length ? `<div class="sec-h"><h2>Atendidas sin cobrar</h2></div><div class="alert">${ic('alert', 18)}<div>Estas citas se marcaron como atendidas pero aún no tienen pago.</div></div>
     <div class="list">${unpaid.map(a => `<div class="pay"><span class="ic" style="background:rgba(232,182,79,.12);color:var(--warn)">${ic('clock', 19)}</span><div class="pay-body"><b>${esc(getClient(a.clientId).name)}</b><small>${esc(svcName(a))} · ${fmtShort(a.date)} ${t12(a.time)}</small></div><button class="btn btn-gold btn-sm" data-act="payAppt" data-id="${a.id}">Cobrar</button></div>`).join('')}</div>` : ''}
   <div class="sec-h"><h2>Últimos 7 días</h2><span class="muted small">${money(vals.reduce((x, y) => x + y, 0))}</span></div>
   <div class="card"><div class="chart">${days.map((d, i) => `<div class="bar-col ${d === T ? 'today' : ''}"><div class="bar-val">${vals[i] ? kMoney(vals[i]) : ''}</div><div class="bar ${vals[i] ? '' : 'zero'}" style="height:${Math.max(3, vals[i] / max * 100)}%;animation-delay:${i * 50}ms"></div><span>${DAYS_S[parseD(d).getDay()]}</span></div>`).join('')}</div></div>
-  <div class="sec-h"><h2>Por método de pago</h2></div>
-  <div class="card meth">${byM.length ? byM.map(([m, v]) => `<div class="meth-row"><div class="t"><span>${m}</span><b>${money(v)} <span class="muted small">· ${Math.round(v / total * 100)}%</span></b></div><div class="track"><div class="fill" style="width:${v / total * 100}%"></div></div></div>`).join('') : '<p class="muted small">Sin pagos en este periodo.</p>'}</div>
+  <div class="sec-h"><h2>Dinero recibido por método</h2></div>
+  <div class="card meth">${byM.length ? byM.map(([m, v]) => `<div class="meth-row"><div class="t"><span>${esc(m)}</span><b>${money(v)} <span class="muted small">· ${Math.round(v / recv * 100)}%</span></b></div><div class="track"><div class="fill" style="width:${v / recv * 100}%"></div></div></div>`).join('') : '<p class="muted small">Sin pagos en este periodo.</p>'}</div>
   <div class="sec-h"><h2>Movimientos</h2><span class="muted small">${count}</span></div>
-  <div class="list">${list.length ? list.slice(0, 60).map(p => `<div class="pay"><span class="ic">${ic('cash', 19)}</span><div class="pay-body"><b>${esc(p.serviceName || 'Servicio')} · ${esc(getClient(p.clientId).name)}</b><small>${fmtShort(p.date)} · ${esc(p.method)}${p.note ? ' · ' + esc(p.note) : ''}</small></div><span class="pay-amt">${money(p.amount)}</span><button class="icon-btn" style="width:34px;height:34px" data-act="delPay" data-id="${p.id}" aria-label="Eliminar pago">${ic('trash', 16)}</button></div>`).join('') :
+  <div class="list">${list.length ? list.slice(0, 60).map(p => `<div class="pay"><button class="ic" data-act="openReceipt" data-id="${p.id}" aria-label="Ver recibo">${ic('file', 19)}</button><div class="pay-body" data-act="openReceipt" data-id="${p.id}" style="cursor:pointer"><b>${esc(p.serviceName || 'Servicio')}${(p.items || []).length ? ' + ' + p.items.reduce((s2, i) => s2 + i.qty, 0) + ' prod.' : ''} · ${esc(getClient(p.clientId).name)}</b><small>${fmtShort(p.date)} · ${esc(payParts(p).map(x => x.method).join(' + '))}${p.barberId ? ' · ' + esc(barberLabel(p.barberId)) : ''}${p.tip ? ' · propina ' + money(p.tip) : ''}${p.note ? ' · ' + esc(p.note) : ''}</small></div><span class="pay-amt">${money(p.amount)}</span><button class="icon-btn" style="width:34px;height:34px" data-act="delPay" data-id="${p.id}" aria-label="Eliminar pago">${ic('trash', 16)}</button></div>`).join('') :
     `<div class="empty">${ic('wallet', 30)}<p>Aún no hay pagos en este periodo.</p><button class="btn btn-gold btn-sm" style="margin:auto" data-act="newPay">Registrar pago</button></div>`}</div>`;
 }
 
@@ -1281,6 +1669,8 @@ function viewMas() {
       <button class="btn btn-gold" style="margin-top:18px" type="submit">Guardar horarios</button></form>
       <p class="muted tiny" style="margin-top:10px">Las citas que empiezan después del cierre normal se cobran con el recargo del horario especial. Nunca se agenda durante el descanso.</p>`;
   }
+  if (sub === 'productos') return viewProducts(back);
+  if (sub === 'equipo' && isOwnerView()) return viewTeam(back);
   if (sub === 'temporadas') {
     const list = (db.settings.seasons || []).slice().sort((a, b) => a.from.localeCompare(b.from));
     const ed = list.find(x => x.id === ui.seasonEdit) || null;
@@ -1384,6 +1774,12 @@ function viewMas() {
     const s = db.settings;
     return back('Datos del barbero') + `<form data-form="biz" class="card"><label class="lbl" style="margin-top:0">Nombre del barbero (aparece en los mensajes)</label><input name="barberName" value="${esc(s.barberName)}" maxlength="40" required>
       <label class="lbl">WhatsApp del negocio (opcional)</label><input name="barberPhone" value="${esc(s.barberPhone)}" inputmode="tel" placeholder="3001234567">
+      <div class="sec-t">Datos para el recibo digital</div>
+      <label class="lbl" style="margin-top:0">Nombre del negocio</label><input name="bizName" maxlength="50" value="${esc(bizInfo().name)}">
+      <label class="lbl">NIT o cédula (opcional)</label><input name="bizNit" maxlength="30" value="${esc(bizInfo().nit)}" placeholder="Ej. 1.234.567.890">
+      <label class="lbl">Dirección (opcional)</label><input name="bizAddress" maxlength="80" value="${esc(bizInfo().address)}">
+      <label class="lbl">Mensaje al pie del recibo</label><input name="bizFooter" maxlength="80" value="${esc(bizInfo().footer)}">
+      <p class="muted tiny" style="margin-top:6px">El recibo es un comprobante no fiscal. La factura electrónica de la DIAN requiere un proveedor autorizado.</p>
       <button class="btn btn-gold" style="margin-top:16px" type="submit">Guardar</button></form>`;
   }
   const item = (act, sub2, icn, t, d, cls) => `<button class="menu-item ${cls || ''}" data-act="${act}" ${sub2 ? `data-sub="${sub2}"` : ''}><span class="ic">${ic(icn, 21)}</span><span><b>${t}</b><small>${d}</small></span>${ic('right', 18)}</button>`;
@@ -1394,7 +1790,9 @@ function viewMas() {
     ${item('goMas', 'bloqueos', 'ban', 'Fechas bloqueadas', `${db.settings.blocked.length} fecha(s) bloqueada(s)`)}
     ${item('goMas', 'fidelizacion', 'gift', 'Fidelización', `Cada ${db.settings.loyalty.visits} visitas: beneficio`)}
     ${item('goMas', 'pagos', 'qr', 'Datos de pago y anticipo', payCfg().on ? `Bre-B ${esc(payCfg().key)} · ${depCfg().on ? 'anticipo ' + money(depCfg().amount) : 'sin anticipo'}` : 'Desactivados')}
-    ${item('goMas', 'negocio', 'store', 'Datos del barbero', esc(db.settings.barberName))}
+    ${item('goMas', 'negocio', 'store', 'Datos del barbero y del negocio', esc(db.settings.barberName) + (bizInfo().nit ? ' · NIT ' + esc(bizInfo().nit) : ' · datos del recibo'))}
+    ${item('goMas', 'productos', 'gift', 'Productos e inventario', products().length ? `${products().filter(p => p.active !== false).length} activos · ${products().filter(p => p.active !== false && (Number(p.stock) || 0) <= 3).length} con poco stock` : 'Vende cera, aceites y más en el cobro')}
+    ${isOwnerView() ? item('goMas', 'equipo', 'users', 'Equipo y comisiones', team().map(b => esc(b.name) + ' ' + (b.type === 'fixed' ? money(b.value) : b.value + '%')).join(' · ') || 'Barberos y su comisión') : ''}
     ${item('demoInfo', '', 'info', 'Datos y almacenamiento', 'Información sobre esta agenda')}
     ${item('exportData', '', 'download', 'Descargar respaldo', 'Archivo JSON con los datos de esta agenda')}
     ${dataMode === 'demo' ? item('resetDemo', '', 'refresh', 'Restablecer datos demo', 'Vuelve a los datos ficticios iniciales', 'danger') : ''}
@@ -1708,7 +2106,8 @@ function sheetApptDetail(id, flag) {
     <div class="kv"><span>Estado</span><span><span class="chip c-${a.status}">${STATUS[a.status].label}</span></span></div>
     ${depOf(a) ? `<div class="kv"><span>Anticipo</span><span>${depLabel(a)}</span></div>` : ''}
     ${depPaid(a) && !pay ? `<div class="kv"><span>Saldo por cobrar</span><span class="gold">${money(balanceOf(a))}</span></div>` : ''}
-    <div class="kv"><span>Pago</span><span>${pay ? `<span class="paid-dot">${ic('check', 14)}${money(pay.amount)} · ${esc(pay.method)}</span>` : '<span class="muted">Sin registrar</span>'}</span></div>
+    <div class="kv"><span>Pago</span><span>${pay ? `<button class="link paid-dot" data-act="openReceipt" data-id="${pay.id}">${ic('check', 14)}${money(pay.amount + (Number(pay.tip) || 0))} · ${esc(payParts(pay).map(x => x.method).join(' + '))} · recibo</button>` : '<span class="muted">Sin registrar</span>'}</span></div>
+    ${pay && pay.barberId ? `<div class="kv"><span>Atendió</span><span>${esc(barberLabel(pay.barberId))}</span></div>` : ''}
     <div class="kv"><span>WhatsApp</span><span>${c.phone ? fmtPhone(c.phone) : '—'}</span></div>
     ${a.notes ? `<div class="kv"><span>Notas</span><span>${esc(a.notes)}</span></div>` : ''}
     ${c.prefs ? `<div class="kv"><span>Preferencia</span><span>${esc(c.prefs)}</span></div>` : ''}
@@ -1785,7 +2184,7 @@ function sheetWA(kind, phone, text, back) {
   formState.waPhone = phone; formState.waBack = back; formState.waKind = kind;
   openSheet(head('Mensaje: ' + WA_LABEL[kind], 'Para ' + fmtPhone(phone)) + `
     <label class="lbl">Puedes ajustar el texto antes de abrir WhatsApp</label>
-    <textarea id="waText" rows="7" maxlength="900">${esc(text)}</textarea>
+    <textarea id="waText" rows="9" maxlength="1800">${esc(text)}</textarea>
     <div class="sh-actions">
       <a class="btn btn-wa" id="waGo" data-act="waGo" href="${waLink(phone, text)}" target="_blank" rel="noopener">${ic('chat', 20)}Abrir WhatsApp con el mensaje</a>
       <button class="btn btn-dark" data-act="copyWA">Copiar texto</button>
@@ -1802,19 +2201,35 @@ function sheetPayment(o) {
   const svc = a ? getSvc(a.serviceId) : svcs[0];
   const clients = db.clients.slice().sort((x, y) => x.name.localeCompare(y.name));
   const cid = a ? a.clientId : (o.clientId || '');
-  openSheet(head('Registrar pago', a ? `${esc(getClient(a.clientId).name)} · ${esc(svcName(a))}` : 'Servicio realizado y cobrado') + `
-  <form data-form="pay"><input type="hidden" name="appointmentId" value="${a ? a.id : ''}">
+  const se = seasonFor(today()), seOn = se && nowMin() >= seasonSpecialFrom(se);
+  const prods = products().filter(p => p.active !== false);
+  const bid = (a && a.barberId) || defaultBarberId();
+  openSheet(head('Registrar pago', a ? `${esc(getClient(a.clientId).name)} · ${esc(svcName(a))}` : 'Servicio, productos y propina') + `
+  <form data-form="pay"><input type="hidden" name="appointmentId" value="${a ? a.id : ''}"><input type="hidden" name="mixed" value="0">
     <label class="lbl">Cliente</label><select name="clientId"><option value="">Cliente ocasional (sin registro)</option>${clients.map(c => `<option value="${c.id}" ${c.id === cid ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select>
-    <label class="lbl">Servicio</label><select name="serviceId">${svcs.map(s => `<option value="${s.id}" ${svc && s.id === svc.id ? 'selected' : ''}>${esc(s.name)} · ${money(s.price)}</option>`).join('')}</select>
+    ${team().length ? `<label class="lbl">Barbero que atendió</label><select name="barberId">${team().map(b => `<option value="${b.id}" ${b.id === bid ? 'selected' : ''}>${esc(b.name)}</option>`).join('')}<option value="">Sin asignar</option></select>` : '<input type="hidden" name="barberId" value="">'}
+    <label class="lbl">Servicio</label><select name="serviceId">${a ? '' : '<option value="">— Solo productos (sin servicio) —</option>'}${svcs.map(s => `<option value="${s.id}" ${svc && s.id === svc.id ? 'selected' : ''}>${esc(s.name)} · ${money(s.price)}</option>`).join('')}</select>
     ${a && depPaid(a) ? `<div class="banner gold" style="margin-top:12px">${ic('cash', 18)}<div>Ya abonó <b>${money(depPaid(a))}</b> de anticipo. Cobra solo el saldo: <b>${money(balanceOf(a))}</b>.</div></div>` : ''}
-    <label class="lbl">${a && depPaid(a) ? 'Saldo cobrado (COP)' : 'Valor cobrado (COP)'}</label><input name="amount" type="number" inputmode="numeric" min="0" step="500" value="${a ? balanceOf(a) : (svc ? svc.price + (seasonFor(today()) && nowMin() >= seasonSpecialFrom(seasonFor(today())) ? Number(seasonFor(today()).surcharge) || 0 : 0) : '')}" required>
-    ${!a && (seasonFor(today()) || (db.settings.special && db.settings.special.on)) ? `<label class="check-row"><input type="checkbox" name="special" ${seasonFor(today()) && nowMin() >= seasonSpecialFrom(seasonFor(today())) ? 'checked' : ''}>${seasonFor(today()) ? '🎄 ' + esc(seasonFor(today()).name) : '🌙 Horario especial'} (+${money(seasonFor(today()) ? seasonFor(today()).surcharge : db.settings.special.surcharge)})</label>` : ''}
+    <label class="lbl">${a && depPaid(a) ? 'Saldo del servicio (COP)' : 'Valor del servicio (COP)'}</label><input name="amount" type="number" inputmode="numeric" min="0" step="500" value="${a ? balanceOf(a) : (svc ? svc.price + (seOn ? Number(se.surcharge) || 0 : 0) : 0)}">
+    ${!a && (se || (db.settings.special && db.settings.special.on)) ? `<label class="check-row"><input type="checkbox" name="special" ${seOn ? 'checked' : ''}>${se ? '🎄 ' + esc(se.name) : '🌙 Horario especial'} (+${money(se ? se.surcharge : db.settings.special.surcharge)})</label>` : ''}
+    ${prods.length ? `<label class="lbl">Productos</label><div class="card" style="padding:2px 12px">${prods.map(p => `<div class="prod-row"><span class="pn">${esc(p.name)}<small>${money(p.price)} · ${Number(p.stock) || 0} en stock</small></span>
+      <span class="step"><button type="button" data-act="qty" data-id="${p.id}" data-n="-1" aria-label="Menos">−</button><input name="q_${p.id}" type="number" inputmode="numeric" min="0" step="1" value="0"><button type="button" data-act="qty" data-id="${p.id}" data-n="1" aria-label="Más">+</button></span></div>`).join('')}</div>` : ''}
+    <label class="lbl">Propina (opcional, va completa al barbero)</label><input name="tip" type="number" inputmode="numeric" min="0" step="500" placeholder="0">
     <label class="lbl">Método de pago</label>
     <div class="pills">${METHODS.map((m, i) => `<label class="pill"><input type="radio" name="method" value="${m}" ${i === 0 ? 'checked' : ''}><span>${m}</span></label>`).join('')}</div>
+    <button type="button" class="link" style="margin-top:10px" data-act="payMix">${ic('plus', 14)} Dividir en varios métodos (pago mixto)</button>
+    <div id="refBox" hidden><label class="lbl">Referencia o número de comprobante</label><input name="ref" maxlength="30" placeholder="Ej. M12345678 (recomendado)"></div>
+    <div id="mixBox" hidden><p class="muted tiny" style="margin-top:10px">Escribe cuánto pagó con cada método. Ej.: $20.000 en efectivo + el resto por Nequi.</p>
+      <div id="parts">${partRow('Efectivo', '', '')}${partRow('Nequi', '', '')}</div>
+      <button type="button" class="btn btn-dark btn-sm" style="margin-top:8px" data-act="addPart">${ic('plus', 15)}Agregar método</button></div>
+    <div id="refWarn"></div>
+    <div id="cashBox" hidden><label class="lbl">Efectivo que entregó el cliente (para calcular el vuelto)</label><input name="cashGiven" type="number" inputmode="numeric" min="0" step="1000"></div>
+    <div class="pay-total" id="payTotal"></div>
     <label class="lbl">Fecha</label><input type="date" name="date" value="${a ? a.date : today()}" max="${today()}" required>
-    <label class="lbl">Nota (opcional)</label><input name="note" maxlength="80" placeholder="Ej. propina incluida" value="${a && depPaid(a) ? 'Saldo · anticipo de ' + money(depPaid(a)) + ' ya registrado' : ''}">
+    <label class="lbl">Nota (opcional)</label><input name="note" maxlength="80" value="${a && depPaid(a) ? 'Saldo · anticipo de ' + money(depPaid(a)) + ' ya registrado' : ''}">
     <div class="sh-actions"><button class="btn btn-gold" type="submit">${ic('check', 20)}Registrar pago</button></div>
   </form>`);
+  updatePay($('form[data-form=pay]'));
 }
 
 /* --- Clientes --- */
@@ -2118,9 +2533,19 @@ const acts = {
     const a = getAppt(d.id), dep = depOf(a); if (!a || !dep || dep.status === 'pagado') return;
     if (a.status === 'cancelada' && !isFree(a.date, toMin(a.time), a.duration, a.id, true)) return toast('Esa hora ya la tomó otra cita. Reprográmala antes de confirmar.', 'err');
     const c = getClient(a.clientId);
-    confirmSheet('¿Llegó el anticipo?', `Confirma que recibiste <b>${money(dep.amount)}</b> de ${esc(c.name)}. Se registra en la caja de hoy y la cita queda <b>confirmada</b>.`, 'Sí, lo recibí', () => {
+    confirmSheet('¿Llegó el anticipo?', `Confirma que recibiste <b>${money(dep.amount)}</b> de ${esc(c.name)}. Se registra en la caja de hoy y la cita queda <b>confirmada</b>.
+      <label class="lbl">Método</label><select id="depMethod">${METHODS.filter(m => !isCash(m)).map(m => `<option ${m === 'Bre-B' ? 'selected' : ''}>${m}</option>`).join('')}<option>Efectivo</option></select>
+      <label class="lbl">Referencia del comprobante (recomendado)</label><input id="depRef" maxlength="30" placeholder="Ej. M12345678" value="${esc(formState.depRef || '')}">
+      <div id="depRefWarn">${formState.depRef ? refWarnHTML(formState.depRef) : ''}</div>`, 'Sí, lo recibí', () => {
+      const ref = ($('#depRef') && $('#depRef').value || '').trim(), method = ($('#depMethod') && $('#depMethod').value) || 'Bre-B';
+      if (refUses(ref).length && formState.depRefAck !== normRef(ref)) {
+        formState.depRef = ref; formState.depRefAck = normRef(ref);
+        toast('Esa referencia ya se registró antes. Revisa tu cuenta; si el pago sí llegó, confirma de nuevo.', 'err');
+        return acts.depositPaid(d);
+      }
+      formState.depRef = ''; formState.depRefAck = '';
       const payId = uid();
-      const pay = { id: payId, date: today(), clientId: a.clientId || null, serviceId: a.serviceId, serviceName: 'Anticipo · ' + svcName(a), amount: dep.amount, method: 'Bre-B', appointmentId: null, depositFor: a.id, note: `Anticipo cita ${fmtShort(a.date)} ${t12(a.time)}`, createdAt: Date.now() };
+      const pay = { id: payId, date: today(), clientId: a.clientId || null, serviceId: a.serviceId, serviceName: 'Anticipo · ' + svcName(a), amount: dep.amount, method, parts: [{ method, amount: dep.amount, ref }], appointmentId: null, depositFor: a.id, note: `Anticipo cita ${fmtShort(a.date)} ${t12(a.time)}`, createdAt: Date.now() };
       const appointments = db.appointments.map(x => x.id === a.id ? { ...x, status: 'confirmada', deposit: { ...dep, status: 'pagado', paidAt: Date.now(), payId } } : x);
       if (!save({ ...db, appointments, payments: [...db.payments, pay] })) return;
       render(); toast('Anticipo registrado · cita confirmada');
@@ -2163,9 +2588,72 @@ const acts = {
   },
   delPay(d) {
     const p = db.payments.find(x => x.id === d.id); if (!p) return;
-    confirmSheet('¿Eliminar este pago?', `${money(p.amount)} · ${esc(p.serviceName || '')} del ${fmtShort(p.date)}. Se descontará de la caja.`, 'Eliminar pago', () => {
+    confirmSheet('¿Eliminar este pago?', `${money(p.amount)} · ${esc(p.serviceName || '')} del ${fmtShort(p.date)}. Se descontará de la caja${(p.items || []).length ? ' y los productos vuelven al inventario' : ''}.`, 'Eliminar pago', () => {
+      adjustStock(p.items, 1);
       db.payments = db.payments.filter(x => x.id !== d.id); save(); render(); toast('Pago eliminado');
     });
+  },
+  cajaView(d) { ui.cajaView = d.v; render(); },
+  openReceipt(d) { sheetReceipt(d.id); },
+  printReceipt(d) { const p = db.payments.find(x => x.id === d.id); if (p) printHTML(receiptHTML(p)); },
+  sendReceipt(d) {
+    const p = db.payments.find(x => x.id === d.id); if (!p) return;
+    let phone = getClient(p.clientId).phone;
+    if (!phone) { const v = $('#rcPhone') && $('#rcPhone').value; if (!validClientPhone(v) || !normPhone(v)) return toast('Escribe el WhatsApp del cliente (10 dígitos)', 'err'); phone = normPhone(v); }
+    sheetWA('recibo', phone, receiptText(p), { type: 'list' });
+  },
+  newClosing() { sheetClosing(today()); },
+  viewClosing(d) { sheetClosingView(d.id); },
+  printClosing(d) { const k = (db.settings.closings || []).find(x => x.id === d.id); if (k) printHTML(closingHTML(k)); },
+  shareClosing(d) {
+    const k = (db.settings.closings || []).find(x => x.id === d.id); if (!k) return;
+    window.open('https://wa.me/?text=' + encodeURIComponent(closingText(k)), '_blank', 'noopener');
+  },
+  goTeam() { ui.tab = 'mas'; ui.masSub = 'equipo'; render(true); },
+  editBarber(d) { sheetBarber(d.id); },
+  toggleBarber(d) {
+    if (team().length <= 1 && (getBarber(d.id) || {}).active !== false) return toast('Debe quedar al menos un barbero activo', 'err');
+    db.settings.team = teamAll().map(b => b.id === d.id ? { ...b, active: b.active === false } : b); save(); render();
+  },
+  editProduct(d) { sheetProduct(d.id); },
+  toggleProduct(d) { db.settings.products = products().map(p => p.id === d.id ? { ...p, active: p.active === false } : p); save(); render(); },
+  delProduct(d) {
+    const p = getProduct(d.id); if (!p) return;
+    confirmSheet('¿Eliminar producto?', `Se elimina <b>${esc(p.name)}</b> del catálogo. Las ventas ya registradas no cambian.`, 'Eliminar', () => {
+      db.settings.products = products().filter(x => x.id !== d.id); save(); render(); toast('Producto eliminado');
+    });
+  },
+  qty(d) {
+    const f = $('form[data-form=pay]'), el = f && f.elements['q_' + d.id]; if (!el) return;
+    el.value = Math.max(0, (Number(el.value) || 0) + Number(d.n)); updatePay(f);
+  },
+  payMix(d, el) {
+    const f = $('form[data-form=pay]'); if (!f) return;
+    const on = f.elements.mixed.value !== '1';
+    f.elements.mixed.value = on ? '1' : '0';
+    el.innerHTML = on ? `${ic('x', 14)} Volver a un solo método` : `${ic('plus', 14)} Dividir en varios métodos (pago mixto)`;
+    f.querySelector('.pills').style.display = on ? 'none' : '';
+    if (on) { const V = payVals(f), first = f.querySelector('.part .p-amt'); if (first && !first.value) first.value = ''; }
+    updatePay(f);
+  },
+  addPart() { const box = $('#parts'); if (box && box.children.length < 4) { box.insertAdjacentHTML('beforeend', partRow('Bre-B', '', '')); updatePay($('form[data-form=pay]')); } },
+  delPart(d, el) { const box = $('#parts'); if (box && box.children.length > 1) { el.closest('.part').remove(); updatePay($('form[data-form=pay]')); } },
+  commDetail(d) {
+    const [from, to, label] = periodRange(ui.cajaPeriod), r = commSummary(from, to).find(x => x.b.id === d.id); if (!r) return;
+    openSheet(head(esc(r.b.name), `Comisiones · ${esc(label)}`) + `<div class="list" style="margin-top:10px">${r.list.map(p => `<div class="pay"><div class="pay-body"><b>${esc(p.serviceName || 'Servicio')} · ${esc(getClient(p.clientId).name)}</b><small>${fmtShort(p.date)} · base ${money(commBase(p))}${p.tip ? ' · propina ' + money(p.tip) : ''}</small></div><span class="pay-amt">${money(commOf(p) + (Number(p.tip) || 0))}</span></div>`).join('')}</div>
+      <div class="kv" style="margin-top:10px"><span><b>Total a pagar</b></span><b class="gold">${money(r.comm + r.tips)}</b></div>`);
+  },
+  payout(d) {
+    const [from, to, label] = periodRange(ui.cajaPeriod), r = commSummary(from, to).find(x => x.b.id === d.id); if (!r) return;
+    confirmSheet('¿Marcar como liquidado?', `Registra que le pagaste <b>${money(r.comm + r.tips)}</b> a ${esc(r.b.name)} por ${esc(label)} (comisión ${money(r.comm)} + propinas ${money(r.tips)}).`, 'Sí, ya le pagué', () => {
+      db.settings.payouts = [...(db.settings.payouts || []), { id: uid(), barberId: r.b.id, from, to, amount: r.comm + r.tips, comm: r.comm, tips: r.tips, at: Date.now(), by: (session && session.email) || '' }];
+      save(); render(); toast('Liquidación registrada');
+    }, false);
+  },
+  commWA(d) {
+    const [from, to, label] = periodRange(ui.cajaPeriod), r = commSummary(from, to).find(x => x.b.id === d.id); if (!r || !r.b.phone) return;
+    const t = `Hola ${r.b.name.split(' ')[0]} 👋, tu liquidación de *${label}* en ${bizInfo().name}:\n\n✂️ Servicios: ${r.n}\n💵 Vendido en servicios: ${money(r.sales)}\n📊 Comisión (${commRule(r.b)}): ${money(r.comm)}\n🙌 Propinas: ${money(r.tips)}\n\n*Total: ${money(r.comm + r.tips)}*`;
+    sheetWA('liquidacion', r.b.phone, t, { type: 'list' });
   },
   delClient(d) {
     const c = db.clients.find(x => x.id === d.id); if (!c) return;
@@ -2289,19 +2777,64 @@ const forms = {
     sheetApptDetail(a.id, 'walkin');
   },
   pay(f) {
-    const E = f.elements;
-    const amount = Math.round(Number(E.amount.value));
+    const E = f.elements, V = payVals(f);
     const apA = E.appointmentId.value ? getAppt(E.appointmentId.value) : null;
-    if (!(amount > 0) && !(amount === 0 && apA && depPaid(apA))) return toast('Escribe el valor cobrado', 'err');
+    if (!E.serviceId.value && !apA && !V.items.length) return toast('Elige un servicio o agrega productos', 'err');
+    if (!(V.svcAmt + V.productsTotal > 0) && !(apA && depPaid(apA))) return toast('Escribe el valor cobrado', 'err');
     if (!E.date.value) return toast('Elige la fecha', 'err');
     if (E.date.value > today()) return toast('No puedes registrar pagos en fechas futuras', 'err');
     const apptId = E.appointmentId.value || null;
     if (apptId && paymentFor(apptId)) return toast('Esta cita ya tiene un pago registrado', 'err');
+    if (V.mixed && V.paidSum !== V.due) return toast(V.paidSum < V.due ? `Faltan ${money(V.due - V.paidSum)} por cubrir entre los métodos` : `Los pagos suman ${money(V.paidSum - V.due)} de más`, 'err');
+    if (V.parts.some(x => refUses(x.ref).length) && !(E.refOk && E.refOk.checked)) return toast('Esa referencia ya se usó. Verifica en tu cuenta y marca la casilla para continuar.', 'err');
+    if (V.cashGiven && V.change < 0) return toast('El efectivo entregado no alcanza', 'err');
+    const low = V.items.find(i => i.qty > (Number((getProduct(i.productId) || {}).stock) || 0));
+    if (low) toast(`Ojo: “${low.name}” queda con stock negativo. Revisa el inventario.`);
     const svc = getSvc(E.serviceId.value);
-    db.payments.push({ id: uid(), date: E.date.value, clientId: E.clientId.value || null, serviceId: svc ? svc.id : null, serviceName: svc ? svc.name : 'Servicio', amount, method: (f.querySelector('input[name=method]:checked') || {}).value || 'Efectivo', appointmentId: apptId, note: E.note.value.trim(), createdAt: Date.now() });
-    if (apptId) { const a = getAppt(apptId); if (a && a.status !== 'atendida') a.status = 'atendida'; }
-    save(); render(); toast('Pago registrado: ' + money(amount));
-    if (apptId) sheetApptDetail(apptId, 'paid'); else closeSheet();
+    const parts = V.parts.length ? V.parts : [{ method: 'Efectivo', amount: 0, ref: '' }];
+    const pay = { id: uid(), date: E.date.value, clientId: E.clientId.value || null, serviceId: svc ? svc.id : null,
+      serviceName: svc ? svc.name : (V.items.length ? 'Productos' : 'Servicio'), amount: V.svcAmt + V.productsTotal,
+      method: parts.length > 1 ? 'Mixto' : parts[0].method, appointmentId: apptId, note: E.note.value.trim(), createdAt: Date.now(),
+      parts, barberId: E.barberId.value || null, tip: V.tip || 0, items: V.items, productsTotal: V.productsTotal,
+      cashGiven: V.cashPart && V.cashGiven ? V.cashGiven : 0, change: V.cashPart && V.cashGiven ? V.change : 0 };
+    pay.receiptNo = receiptNo(pay);
+    db.payments.push(pay);
+    adjustStock(V.items, -1);
+    if (apptId) { const a = getAppt(apptId); if (a) { if (a.status !== 'atendida') a.status = 'atendida'; if (pay.barberId) a.barberId = pay.barberId; } }
+    save(); render(); toast('Pago registrado: ' + money(pay.amount + pay.tip) + (pay.change ? ' · vuelto ' + money(pay.change) : ''));
+    sheetReceipt(pay.id);
+  },
+  closing(f) {
+    const E = f.elements, date = E.date.value, X = cashExpected(date);
+    const base = Math.max(0, Math.round(Number(E.base.value) || 0)), counted = closingCount(f);
+    const denoms = {}; DENOMS.forEach(d => { const n = Number(E['d_' + d].value) || 0; if (n) denoms[d] = n; });
+    if (!counted && !confirm('No contaste billetes ni monedas. ¿Guardar el cierre con $0 en la gaveta?')) return;
+    const k = { id: uid(), date, at: Date.now(), by: (session && session.email) || db.settings.barberName, base, cash: X.cash, expected: base + X.cash, counted, diff: counted - (base + X.cash),
+      denoms, byM: X.byM, n: X.n, total: X.total, tips: X.tips, baseNext: Math.max(0, Math.round(Number(E.baseNext.value) || 0)), note: E.note.value.trim() };
+    db.settings.closings = [k, ...(db.settings.closings || [])].slice(0, 120);
+    save(); ui.cajaView = 'cierres'; render(); toast(k.diff === 0 ? 'Cierre guardado · cuadre exacto ✓' : 'Cierre guardado · ' + (k.diff > 0 ? 'sobrante ' : 'faltante ') + money(Math.abs(k.diff)));
+    sheetClosingView(k.id);
+  },
+  barber(f) {
+    const E = f.elements, id = E.id.value || 'b' + uid(), name = E.name.value.trim(), value = Math.round(Number(E.value.value));
+    if (name.length < 2) return toast('Escribe el nombre', 'err');
+    if (!(value >= 0) || E.value.value === '') return toast('Revisa el valor de la comisión', 'err');
+    if (E.type.value === 'pct' && value > 100) return toast('El porcentaje no puede pasar de 100', 'err');
+    const email = E.email.value.trim().toLowerCase();
+    if (email && teamAll().some(b => b.id !== id && (b.email || '').toLowerCase() === email)) return toast('Ese correo ya está enlazado a otro barbero', 'err');
+    const phone = normPhone(E.phone.value);
+    const prev = getBarber(id) || { active: true };
+    db.settings.team = [...teamAll().filter(b => b.id !== id), { ...prev, id, name, type: E.type.value, value, email, phone }];
+    save(); closeSheet(); render(); toast('Barbero guardado');
+  },
+  product(f) {
+    const E = f.elements, id = E.id.value || 'p' + uid(), name = E.name.value.trim(), price = Math.round(Number(E.price.value)), stock = Math.round(Number(E.stock.value));
+    if (name.length < 2) return toast('Escribe el nombre', 'err');
+    if (!(price >= 0) || E.price.value === '') return toast('Revisa el precio', 'err');
+    if (!Number.isFinite(stock)) return toast('Revisa el stock', 'err');
+    const prev = getProduct(id) || { active: true };
+    db.settings.products = [...products().filter(p => p.id !== id), { ...prev, id, name, price, stock }];
+    save(); closeSheet(); render(); toast('Producto guardado');
   },
   client(f) {
     const E = f.elements, id = E.id.value;
@@ -2432,6 +2965,7 @@ const forms = {
     const p = normPhone(E.barberPhone.value);
     if (p && p.length !== 10) return toast('El WhatsApp debe tener 10 dígitos', 'err');
     db.settings.barberName = name; db.settings.barberPhone = p;
+    db.settings.business = { ...bizInfo(), name: E.bizName.value.trim() || BUSINESS, nit: E.bizNit.value.trim(), address: E.bizAddress.value.trim(), phone: p, footer: E.bizFooter.value.trim() || 'Gracias por tu visita' };
     save(); render(); toast('Datos guardados');
   }
 };
@@ -2467,8 +3001,10 @@ document.addEventListener('change', e => {
   }
   if (f.dataset.form === 'pay' && (t.name === 'serviceId' || t.name === 'special')) {
     const s = getSvc(f.elements.serviceId.value), sp = f.elements.special;
-    if (s) f.elements.amount.value = s.price + (sp && sp.checked ? Number(seasonFor(today()) ? seasonFor(today()).surcharge : db.settings.special.surcharge) || 0 : 0);
+    f.elements.amount.value = s ? s.price + (sp && sp.checked ? Number(seasonFor(today()) ? seasonFor(today()).surcharge : db.settings.special.surcharge) || 0 : 0) : 0;
   }
+  if (f.dataset.form === 'pay') updatePay(f);
+  if (f.dataset.form === 'closing') updateClosing(f);
   if (f.dataset.form === 'walkin') {
     if (t.name === 'clientId') $('#newClient').hidden = t.value !== '__new';
     if (t.name === 'serviceId' || t.name === 'time') checkWalkin();
@@ -2478,6 +3014,9 @@ document.addEventListener('input', e => {
   if (e.target.id === 'cq') { ui.clientQuery = e.target.value; renderClientList(); }
   if (e.target.id === 'appointmentQuery') { ui.appointmentQuery = e.target.value; renderAppointmentSearch(); }
   if (e.target.name === 'time' && e.target.form && e.target.form.dataset.form === 'walkin') checkWalkin();
+  if (e.target.form && e.target.form.dataset.form === 'pay' && e.target.name !== 'refOk') updatePay(e.target.form);
+  if (e.target.form && e.target.form.dataset.form === 'closing') updateClosing(e.target.form);
+  if (e.target.id === 'depRef') { const w = $('#depRefWarn'); if (w) w.innerHTML = refWarnHTML(e.target.value); }
 });
 
 /* Seguridad: actividad e inactividad */
@@ -2493,7 +3032,9 @@ handleAuthRedirect();
 $('#splashLogo').innerHTML = '<img class="splash-brand" src="brand/logo-sh.png" alt="SH Barber Studio · Tu estilo es nuestra esencia">';
 $('#topMark').innerHTML = '<img src="brand/logo-mark.png" alt="SH">';
 setInterval(() => { if (!$('#shell').hidden && !$('#backdrop').classList.contains('open') && ui.tab === 'inicio') render(); }, 60000);
-setInterval(() => { if (dataMode === 'cloud' && !$('#shell').hidden && document.visibilityState === 'visible') syncFromCloud().catch(() => {}); }, 30000);
+setInterval(() => { if (dataMode === 'cloud' && !$('#shell').hidden && document.visibilityState === 'visible') syncFromCloud().catch(e => { if (isNetErr(e)) setOffline(true); }); }, 30000);
+window.addEventListener('online', () => { if (dataMode === 'cloud' && !$('#shell').hidden) { if (hasPending()) queuePush(); else syncFromCloud().catch(() => {}); } });
+window.addEventListener('offline', () => { if (dataMode === 'cloud' && !$('#shell').hidden) setOffline(true); });
 document.addEventListener('visibilitychange', () => { if (dataMode === 'cloud' && document.visibilityState === 'visible') syncFromCloud().catch(() => {}); });
 })();
 </script>

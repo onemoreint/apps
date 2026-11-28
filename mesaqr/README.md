@@ -12,7 +12,7 @@ Primer cliente: **Lorenz Express**, comida rápida en Maracay, Aragua (Venezuela
 |---|---|
 | **Menú (enlace para clientes)** | https://onemoreint.github.io/apps/mesaqr/app/ |
 | **Panel del restaurante** | https://onemoreint.github.io/apps/mesaqr/app/#/dashboard |
-| **Base de datos** | Supabase, proyecto `mesaqr` (`nkzjjrbzdfyppsxvcvbg`, us-east-1) |
+| **Base de datos** | Supabase, proyecto `mesaqr` (`hftrdpymqqzjujmfuiir`, sa-east-1, cuenta supabaseclaude2) |
 
 Arquitectura y decisiones: [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md).
 
